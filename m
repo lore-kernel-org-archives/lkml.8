@@ -2,200 +2,260 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5937EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301CE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA512081A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mv8WKD75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405288AbgFYSf3 (ORCPT
+        id S2405660AbgFYSh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405208AbgFYSf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:35:29 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D426520789;
-        Thu, 25 Jun 2020 18:35:26 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:35:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200625143525.2f3a2902@oasis.local.home>
-In-Reply-To: <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-References: <20200625094454.732790f7@oasis.local.home>
-        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 25 Jun 2020 14:37:29 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:16778 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbgFYSh2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:37:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593110246; x=1624646246;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=qlB2s4Wgnet0CN8ARSsKtfvhK92eox5FVS24rLtb+rU=;
+  b=mv8WKD75KZXT2Wv6dMBRRMLqOZY6gIdejE/1xsodfAjR7J66l6IisIGZ
+   M9QYvjnLzLOi6uEWdopkyWVItVKiWoy0j1jYI85aaoreErVowFwB85Fzj
+   eE5LD6IuLHA02E6zjN3VH8OwvZGwGzESY5WChBz0KbuznJsA3d/xnoOQN
+   o=;
+IronPort-SDR: SCR/aF+rX11ye4y2opWfGY1ClwptB+a+zTCNmAF+d6fCjJf+qsOh77GBJkosreSA4gZmk3KUZB
+ UVvuNlnLGzMQ==
+X-IronPort-AV: E=Sophos;i="5.75,280,1589241600"; 
+   d="scan'208";a="39889028"
+Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and hibernation]
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 25 Jun 2020 18:37:25 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id E128AA275E;
+        Thu, 25 Jun 2020 18:37:16 +0000 (UTC)
+Received: from EX13D05UWB001.ant.amazon.com (10.43.161.181) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 25 Jun 2020 18:36:59 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D05UWB001.ant.amazon.com (10.43.161.181) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 25 Jun 2020 18:36:59 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 25 Jun 2020 18:36:59 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 66FC940359; Thu, 25 Jun 2020 18:36:59 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 18:36:59 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Message-ID: <20200625183659.GA26586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+ <20200604070548.GH1195@Air-de-Roger>
+ <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200617083528.GW735@Air-de-Roger>
+ <20200619234312.GA24846@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200622083846.GF735@Air-de-Roger>
+ <20200623004314.GA28586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200623081903.GP735@Air-de-Roger>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200623081903.GP735@Air-de-Roger>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote
-
-> > Here's the design of this solution:
-> > 
-> > All this is per cpu, and only needs to worry about nested events (not
-> > parallel events).
-> > 
-> > The players:
-> > 
-> > write_tail: The index in the buffer where new events can be written to.
-> >     It is incremented via local_add() to reserve space for a new event.
-> > 
-> > before_stamp: A time stamp set by all events before reserving space.
-> > 
-> > write_stamp: A time stamp updated by events after it has successfully
-> >     reserved space.  
+On Tue, Jun 23, 2020 at 10:19:03AM +0200, Roger Pau Monné wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> What are the types used for before_stamp and write_stamp ? If those
-> are 64-bit integers, how does sharing them between nested contexts
-> work on 32-bit architectures ?
-
-Well, write_stamp is updated via local64, which I believe handles this
-for us. I probably should make before_stamp handle it as well.
-
 > 
-> > 
-> > next_write: A copy of "write_tail" used to help with races.
-> > 
-> >	/* Save the current position of write */
-> > [A]	w = local_read(write_tail);
-> >	barrier();
-> >	/* Read both before and write stamps before touching
-> >	anything */ before = READ_ONCE(before_stamp);
-> >	after = local_read(write_stamp);
-> >	barrier();
-> > 
-> >	/*
-> >	 * If before and after are the same, then this event is not
-> >	 * preempting a time update. If it is, then reserve space
-> >	for adding  
 > 
-> You should use the term "interrupt" rather than "preempting", because
-> as you stated yourself, this algorithm only works with nested
-> interrupts, not with preemption.
-
-The two terms are basically interchangeable here, but for consistency,
-I will update it. Thanks.
-
-
+> On Tue, Jun 23, 2020 at 12:43:14AM +0000, Anchal Agarwal wrote:
+> > On Mon, Jun 22, 2020 at 10:38:46AM +0200, Roger Pau Monné wrote:
+> > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > >
+> > >
+> > >
+> > > On Fri, Jun 19, 2020 at 11:43:12PM +0000, Anchal Agarwal wrote:
+> > > > On Wed, Jun 17, 2020 at 10:35:28AM +0200, Roger Pau Monné wrote:
+> > > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > >
+> > > > >
+> > > > >
+> > > > > On Tue, Jun 16, 2020 at 09:49:25PM +0000, Anchal Agarwal wrote:
+> > > > > > On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
+> > > > > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > > > On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
+> > > > > > > >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > > > >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
+> > > > > > > >     > +                              "the device may become inconsistent state");
+> > > > > > > >
+> > > > > > > >     Leaving the device in this state is quite bad, as it's in a closed
+> > > > > > > >     state and with the queues frozen. You should make an attempt to
+> > > > > > > >     restore things to a working state.
+> > > > > > > >
+> > > > > > > > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
+> > > > > > > > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
+> > > > > > > > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
+> > > > > > > > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
+> > > > > > >
+> > > > > > > You can manually force this state, and then check that it will behave
+> > > > > > > correctly. I would expect that on a failure to disconnect from the
+> > > > > > > backend you should switch the frontend to the 'Init' state in order to
+> > > > > > > try to reconnect to the backend when possible.
+> > > > > > >
+> > > > > > From what I understand forcing manually is, failing the freeze without
+> > > > > > disconnect and try to revive the connection by unfreezing the
+> > > > > > queues->reconnecting to backend [which never got diconnected]. May be even
+> > > > > > tearing down things manually because I am not sure what state will frontend
+> > > > > > see if backend fails to to disconnect at any point in time. I assumed connected.
+> > > > > > Then again if its "CONNECTED" I may not need to tear down everything and start
+> > > > > > from Initialising state because that may not work.
+> > > > > >
+> > > > > > So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
+> > > > > > I don't see it getting handled in the backend then what will be backend's state?
+> > > > > > Will it still switch xenbus state to 'Closed'? If not what will frontend see,
+> > > > > > if it tries to read backend's state through xenbus_read_driver_state ?
+> > > > > >
+> > > > > > So the flow be like:
+> > > > > > Front end marks XenbusStateClosing
+> > > > > > Backend marks its state as XenbusStateClosing
+> > > > > >     Frontend marks XenbusStateClosed
+> > > > > >     Backend disconnects calls xen_blkif_disconnect
+> > > > > >        Backend fails to disconnect, the above function returns EBUSY
+> > > > > >        What will be state of backend here?
+> > > > >
+> > > > > Backend should stay in state 'Closing' then, until it can finish
+> > > > > tearing down.
+> > > > >
+> > > > It disconnects the ring after switching to connected state too.
+> > > > > >        Frontend did not tear down the rings if backend does not switches the
+> > > > > >        state to 'Closed' in case of failure.
+> > > > > >
+> > > > > > If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
+> > > > >
+> > > > > Backend will stay in state 'Closing' I think.
+> > > > >
+> > > > > > won't be calling connect(). {From reading code in frontend_changed}
+> > > > > > IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
+> > > > > > we did not tear down anything so calling talk_to_blkback may not be needed
+> > > > > >
+> > > > > > Does that sound correct?
+> > > > >
+> > > > > I think switching to the initial state in order to try to attempt a
+> > > > > reconnection would be our best bet here.
+> > > > >
+> > > > It does not seems to work correctly, I get hung tasks all over and all the
+> > > > requests to filesystem gets stuck. Backend does shows the state as connected
+> > > > after xenbus_dev_suspend fails but I think there may be something missing.
+> > > > I don't seem to get IO interrupts thereafter i.e hitting the function blkif_interrupts.
+> > > > I think just marking it initialised may not be the only thing.
+> > > > Here is a short description of what I am trying to do:
+> > > > So, on timeout:
+> > > >     Switch XenBusState to "Initialized"
+> > > >     unquiesce/unfreeze the queues and return
+> > > >     mark info->connected = BLKIF_STATE_CONNECTED
+> > >
+> > > If xenbus state is Initialized isn't it wrong to set info->connected
+> > > == CONNECTED?
+> > >
+> > Yes, you are right earlier I was marking it explicitly but that was not right,
+> > the connect path for blkfront will do that.
+> > > You should tear down all the internal state (like a proper close)?
+> > >
+> > Isn't that similar to disconnecting in the first place that failed during
+> > freeze? Do you mean re-try to close but this time re-connect after close
+> > basically do everything you would at "restore"?
 > 
-> >	 * a full time stamp (this can turn into a time extend which
-> >	is
-> >	 * just an extended time delta but fill up the extra space).
-> >	 */
-> >	if (after != before)
-> >		abs = true;
-> > 
-> >	ts = clock();
-> > 
-> >	/* Now update the before_stamp (everyone does this!) */
-> > [B]	WRITE_ONCE(before_stamp, ts);
-> > 
-> >	/* Read the current next_write and update it to what we want
-> >	write
-> >	 * to be after we reserve space. */
-> > 	next = READ_ONCE(next_write);
-> >	WRITE_ONCE(next_write, w + len);
-> > 
-> >	/* Now reserve space on the buffer */
-> > [C]	write = local_add_return(len, write_tail);  
+> Last time I checked blkfront supported reconnections (ie: disconnect
+> from a backend and connect again). I was assuming we could apply the
+> same here on timeout, and just follow the same path where the frontend
+> waits indefinitely for the backend to close and then attempts to
+> reconnect.
 > 
-> So the reservation is not "just" an add instruction, it's actually an
-> xadd on x86. Is that really faster than a cmpxchg ?
-
-I believe the answer is still yes. But I can run some benchmarks to
-make sure.
-
+> > Also, I experimented with that and it works intermittently. I want to take a
+> > step back on this issue and ask few questions here:
+> > 1. Is fixing this recovery a blocker for me sending in a V2 version?
 > 
-> > 
-> >	/* Set tail to be were this event's data is */
-> >	tail = write - len;
-> > 
-> > 	if (w == tail) {
-> > 
-> >		/* Nothing preempted this between A and C */
-> > [D]		local_set(write_stamp, ts);
-> >		barrier();
-> > [E]		save_before = READ_ONCE(before_stamp);
-> > 
-> > 		if (!abs) {
-> >			/* This did not preempt a time update */
-> >			delta = ts - a;  
+> At the end of day it's your feature. I would certainly prefer for it
+> to work as good as possible, this being a recovery in case of failure
+> just make sure it does something sane (ie: crash/close the frontend)
+> and add a TODO note.
 > 
-> What does "a" refer to ? What triggers its update ?
-
-Oops, When I first wrote this, I used "a" and "b" for "after" and
-"before" and had "after" and "before" be "after_stamp" and
-"before_stamp". I missed this update. Nice catch.
-
-
+> > 2. In our 2-3 years of supporting this feature at large scale we haven't seen this issue
+> > where backend fails to disconnect. What we are trying to do here is create a
+> > hypothetical situation where we leave backend in Closing state and try and see how it
+> > recovers. The reason why I think it "may not" occur and the timeout of 5HZ is
+> > sufficient is because we haven't come across even a single use-case where it
+> > caused hibernation to fail.
+> > The reason why I think "it may" occur is if we are running a really memory
+> > intensive workload and ring is busy and is unable to complete all the requests
+> > in the given timeout. This is very unlikely though.
 > 
-> >		} else {
-> >			/* slow path */
-> >			if (w == next) {  
+> As said above I would generally prefer for code to handle possible
+> failures the best way, and hence I think here it would be nice to
+> fallback to the normal disconnect path and just wait for the backend
+> to close.
+>
+Do you mind throwing some light in here, what that path may be, if its
+straight forward to fix I would like to debug it a bit more. May be I am
+missing some of the context here.
+
+I was of the view we may just want to mark frontend closed which should do 
+the job of freeing resources and then following the same flow as
+blkfront_restore. That does not seems to work correctly 100% of the time.
+
+> You likely have this very well tuned to your own environment and
+> workloads, since this will now be upstream others might have more
+> contended systems where it could start to fail.
 > 
-> If it's a slow path, why try to play games with a delta timestamp ?
-> Space should not be an issue for a slow path like this. It would be
-> simpler to just use the full timestamp here.
-
-Hmm, you may be right. Previous iterations of this code had a distinct
-difference here, but after restructuring it, I don't think that
-distinction is valid anymore. If anything, having this at least lets me
-validate that it's doing what I believe it should be doing (as I added
-a ton of trace_printk()s into this).
-
+I agree, however, this is also from the testing I did with 100 of runs 
+outside of EC2 running few tests of my own. 
+> > 3) Also, I do not think this may be straight forward to fix and expect
+> > hibernation to work flawlessly in subsequent invocations. I am open to
+> > all suggestions.
 > 
-> >				/* This event preempted the previous
-> >	event
-> >				 * just after it reserved its
-> >	buffer.  
-> 
-> You mean nesting after [C] but before [D].
+> Right, adding a TODO would seem appropriate then.
+>
+Just to double check, I will send in a V2 with this marked as TO-DO?
+> Roger.
 
-Yes. I can add that for clarity, but perhaps I don't need that if I
-merge the two.
-
-> 
-> >				 * It's timestamp should be
-> >	"before_stamp" */  
-> 
-> It's -> Its
-
-;-)
-
-My email client messed up your formatting of the rest of the email, so
-I'll send a separate reply.
-
--- Steve
+Thanks,
+Anchal
