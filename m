@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B690EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E64320773
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A6F207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MVXl0wtg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoR0BVfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390287AbgFYGqz (ORCPT
+        id S2390300AbgFYGrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        Thu, 25 Jun 2020 02:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390155AbgFYGqh (ORCPT
+        with ESMTP id S2390151AbgFYGqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:46:37 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4BBC061798
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g18so4626889wrm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:37 -0700 (PDT)
+        Thu, 25 Jun 2020 02:46:36 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E273C061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:36 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so4739332wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J2LvBowpzfqfQHnK/gnFZDPalEMEwUf10cp2QuQIuRg=;
-        b=MVXl0wtgTNbcqhYy50uwzSMS91a5du9fhzg4oeB/etwz+t21MCLhi+PSWsJnrEyp3H
-         37sCoamMGW5zxACUygyfAjblD0iWrElfagnCgzarbJmDFtDaBnfibzhRcELTWRTz6+f7
-         dAi5vForunxsCLorBb9k5irOYwFYlroFBnbYQ1jQfAosFB6pAR4irkMzKX7m8YjCMfG/
-         CtRLuLArlmcY/lmBV/bEL17oZ9ZujckJiDZXTLnMsNwn3W3g4RPRBmTy3T6cIdrOxqez
-         DbK7Q3oChBAP1tW0xprzEo4N3hk/VQGb0VfV/LS1HQKjjxRD12nh6V7Q/w8KLxSkDACU
-         DcAA==
+        bh=ZzLtCVZ0xnD69Tq7rrN3k4RXzAsRLvX+l/b23e7w5no=;
+        b=BoR0BVfFhS9za/tBEuj3YkwiY8nNI24M8p9fmhuCM6IiYJIEKM/q4XFtIYaAjPe2Dk
+         +nz7AdEJTpAE6Z+mq1fY/goiHr+ULfYi+dRbajh5fVCoRPVr0Q+zoCiJpLRmGQXpi0nF
+         hp5QBIuI6XCJpSCjUX0V3zfIn+ZbWxvJgbgmtqBW+2vkICODU7hu8BBVpkSerVZbYksH
+         3F+0fRc9wCbqjlgJjwvTx76agAqHN5CXzt9RhogHKW0HMD0Hsdt+C+QgFL5edj3pUqh/
+         qEeWE5X1U9a0rI6T84EX3KqVH/ST5X+6bwNw57W9gxqGVfLBP9icFRkYY03DiWqvKjBD
+         zDhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J2LvBowpzfqfQHnK/gnFZDPalEMEwUf10cp2QuQIuRg=;
-        b=D+x9Ve3Tt6KMlJUVYv0nApNiUH8xMrCXE9icaB1zfY/ZYFUxMSiWX5bAqFoTMixGQa
-         PEwnRu3Roflr2IokZd/O5eUeunHFaKu/drD6cE2VQcrFd/UjRfjRkXnlQ1FbacjhnbCG
-         pmFx4MQA1RqHy78AGlyMExtR4lOq3eDonI8nmb90tsujc7ppEWWiyfxT6iQR89/7rnpc
-         vczXnmNV4Eu61hptsnbORB3taLOAkiyZLyUkCGJEbZ1vjyex5JHyWRKFbF/0V+Co2y+0
-         yICtSxSeKOswIAqtbsudkHskxtaPV6BSpam8TuAHEDFwn4rwR5sO57mmp7/1oDYUT1Su
-         lnGQ==
-X-Gm-Message-State: AOAM532FPaSZB+mQGssug7zKDywNh02MRDMov84I8eWzomGvw5t3f9Lr
-        c1C5jX6Sr3wI1jl1Zx5tOQtbtg==
-X-Google-Smtp-Source: ABdhPJz8KzvsZKFGSyJkJ71Ru54KSb6+CeeKrbaJt/6Ar9O5KO9HCidzIoTFO4ALy3HXGkPV6umT0A==
-X-Received: by 2002:adf:8091:: with SMTP id 17mr33043279wrl.244.1593067596171;
-        Wed, 24 Jun 2020 23:46:36 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id c20sm27235363wrb.65.2020.06.24.23.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=ZzLtCVZ0xnD69Tq7rrN3k4RXzAsRLvX+l/b23e7w5no=;
+        b=pwT3oYgzor2lBoIeOd65K3OlgCNP/IDmT54rQ8A6mSSrQlHD/E3Ip4kH0oYAHVQcfb
+         ElCnJr56HstxqCqfMUhRPm+o0WJVngB7tR/j63Dpsskz3mtUNQ3lzim2NHEvoNPI9MJn
+         dhaBjtR/O50RuAAkdRviMJf+bljI24QL9uEhgdvK6ypovkQqLWC0FbwAnsHvmBR33gdP
+         YwuBspiYTVD4jCRFgf7o9qRsplVxux0wqL9y12Rmi0VIf6VjD9Fsp6BKwX+2SbsiV8BF
+         OIRT4mwumeadi694Md243UX4mw5awtKlgQI+YamqqSGBtNpzjv80QDZ/3f6D5raHZx5L
+         IY1Q==
+X-Gm-Message-State: AOAM532lQdfuO8pkqjnyHim1spJvT/QGAwOS8liwf7T9RAUDU0vDHUZ0
+        jn+k4ZmSc6jqBhP4E+kQ1+WYlA==
+X-Google-Smtp-Source: ABdhPJwbgPCP3KuminY9vt8AVhB+YH09uHBBW5EhL/706W7PsYH5XWdLmpQqngWOkPmCwNX2J/EVng==
+X-Received: by 2002:a1c:de07:: with SMTP id v7mr1737470wmg.56.1593067595221;
         Wed, 24 Jun 2020 23:46:35 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id c20sm27235363wrb.65.2020.06.24.23.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 23:46:34 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -67,25 +67,58 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 09/10] mfd: atmel-smc: Add missing colon(s) for 'conf' arguments
-Date:   Thu, 25 Jun 2020 07:46:18 +0100
-Message-Id: <20200625064619.2775707-10-lee.jones@linaro.org>
+Subject: [PATCH 08/10] mfd: atmel-smc: Silence comparison of unsigned expression < 0 is always false warning (W=1)
+Date:   Thu, 25 Jun 2020 07:46:17 +0100
+Message-Id: <20200625064619.2775707-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625064619.2775707-1-lee.jones@linaro.org>
 References: <20200625064619.2775707-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc valication gets confused if syntax isn't "@.*: ".
+GENMASK and it's callees conduct checking to ensure the passed
+parameters are valid.  One of those checks is for '< 0'.  So if an
+unsigned value is passed, in an invalid comparison takes place.
 
-Adding the missing colons squashes the following W=1 warnings:
+Judging from the current code, it looks as though 'unsigned int'
+is the correct type to use, so simply cast these small values
+with no chance of being false negative to signed int for
+comparison/error checking purposes.
 
-drivers/mfd/atmel-smc.c:247: warning: Function parameter or member 'conf' not described in 'atmel_smc_cs_conf_apply'
-drivers/mfd/atmel-smc.c:268: warning: Function parameter or member 'conf' not described in 'atmel_hsmc_cs_conf_apply'
+Squashes the following W=1 warnings:
+
+ In file included from /home/lee/projects/linux/kernel/include/linux/bits.h:23,
+ from /home/lee/projects/linux/kernel/include/linux/bitops.h:5,
+ from /home/lee/projects/linux/kernel/include/linux/kernel.h:12,
+ from /home/lee/projects/linux/kernel/include/linux/mfd/syscon/atmel-smc.h:14,
+ from /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c:11:
+ /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c: In function ‘atmel_smc_cs_encode_ncycles’:
+ /home/lee/projects/linux/kernel/include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+ 26 | __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+ | ^
+ /home/lee/projects/linux/kernel/include/linux/build_bug.h:16:62: note: in definition of macro ‘BUILD_BUG_ON_ZERO’
+ 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+ | ^
+ /home/lee/projects/linux/kernel/include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+ 39 | (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ | ^~~~~~~~~~~~~~~~~~~
+ /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro ‘GENMASK’
+ 49 | unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+ | ^~~~~~~
+ /home/lee/projects/linux/kernel/include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+ 26 | __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+ | ^
+ /home/lee/projects/linux/kernel/include/linux/build_bug.h:16:62: note: in definition of macro ‘BUILD_BUG_ON_ZERO’
+ 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+ | ^
+ /home/lee/projects/linux/kernel/include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+ 39 | (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ | ^~~~~~~~~~~~~~~~~~~
 
 Cc: <stable@vger.kernel.org>
 Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
@@ -98,27 +131,20 @@ Signed-off-by: Lee Jones <lee.jones@linaro.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mfd/atmel-smc.c b/drivers/mfd/atmel-smc.c
-index 17bbe9d1fa740..4aac96d213369 100644
+index 1fa2ec950e7df..17bbe9d1fa740 100644
 --- a/drivers/mfd/atmel-smc.c
 +++ b/drivers/mfd/atmel-smc.c
-@@ -237,7 +237,7 @@ EXPORT_SYMBOL_GPL(atmel_smc_cs_conf_set_cycle);
-  * atmel_smc_cs_conf_apply - apply an SMC CS conf
-  * @regmap: the SMC regmap
-  * @cs: the CS id
-- * @conf the SMC CS conf to apply
-+ * @conf: the SMC CS conf to apply
-  *
-  * Applies an SMC CS configuration.
-  * Only valid on at91sam9/avr32 SoCs.
-@@ -257,7 +257,7 @@ EXPORT_SYMBOL_GPL(atmel_smc_cs_conf_apply);
-  * @regmap: the HSMC regmap
-  * @cs: the CS id
-  * @layout: the layout of registers
-- * @conf the SMC CS conf to apply
-+ * @conf: the SMC CS conf to apply
-  *
-  * Applies an SMC CS configuration.
-  * Only valid on post-sama5 SoCs.
+@@ -46,8 +46,8 @@ static int atmel_smc_cs_encode_ncycles(unsigned int ncycles,
+ 				       unsigned int msbfactor,
+ 				       unsigned int *encodedval)
+ {
+-	unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+-	unsigned int msbmask = GENMASK(msbwidth - 1, 0);
++	unsigned int lsbmask = GENMASK((int)msbpos - 1, 0);
++	unsigned int msbmask = GENMASK((int)msbwidth - 1, 0);
+ 	unsigned int msb, lsb;
+ 	int ret = 0;
+ 
 -- 
 2.25.1
 
