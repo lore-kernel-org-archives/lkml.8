@@ -2,109 +2,126 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F803C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53823207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B606420789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t27txQYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406965AbgFYSMo (ORCPT
+        id S2407012AbgFYSNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405949AbgFYSMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:12:44 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3803420789;
-        Thu, 25 Jun 2020 18:12:42 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:12:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Korben Rusek <korben@google.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200625141240.53a4094b@oasis.local.home>
-In-Reply-To: <CAPo_bq3Bd4gRTeZHqD0p3KR+-339C=cmqgjgYMz1hvu1f+QAAQ@mail.gmail.com>
-References: <20200625094454.732790f7@oasis.local.home>
-        <126813531.12266.1593093195147.JavaMail.zimbra@efficios.com>
-        <20200625103753.4ac4a9a2@oasis.local.home>
-        <CAPo_bq3Bd4gRTeZHqD0p3KR+-339C=cmqgjgYMz1hvu1f+QAAQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 25 Jun 2020 14:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405949AbgFYSNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:13:08 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3EFC08C5C1;
+        Thu, 25 Jun 2020 11:13:08 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id cy7so4932835edb.5;
+        Thu, 25 Jun 2020 11:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qjRECT/og8CiMkjcDFR8HLBkQLY1B4U/hy+Z/zDlSkU=;
+        b=t27txQYMxlj/zCucGsF07tLWjNTGGi77bSyp6qtCbh0LiGuGz8XHqhviRQRERbXuAK
+         7UXeuZd6GuxC9TgqS7ThJboloEk6p5m0aC1LIeNOO09lwMzUDQPFkU3VXzmsTEAMmsz2
+         BbftHMcuz8OTERQPmN0gt9pEROP8ZBJ6yABfGpNjAgvf3OrjbRInQvxW8OqSFnI5S3X6
+         j7hu8rqXL0xwRM7xMHstNFsMmgrvsDTaf8fAX8QGYdZB3wybcA2NuHCRkHHh/0ziO9oi
+         f1hdKDMOyZv3mfZ51f0xNerlXrXl8GR5F7n9nBVj0708Jl8vnLjg1CCiuXU9/pUn6L8I
+         Y97w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qjRECT/og8CiMkjcDFR8HLBkQLY1B4U/hy+Z/zDlSkU=;
+        b=kj2jHPzLxcZERhLLvDJRfJMWXhN7NkPSpQqtsjuugHYDUkC78ifLmtWGN6m5Nmpgcz
+         reS5xEqYCHyOWbRQiZgXv9jtnNjrNTt5E6TfYsiLhbaN4iietHHElCycHuUlX6AbqLWL
+         NDjtD3WhYR4RQQTKt0KXutuJDF1SeizhP49e0JXzASag/XyEPK9rGwBP4iXbguNHJjPx
+         B6bEC2M9qdrV4AJfjdjTZhNHtU9ZUpHusgWOrxfgijJxv5dDMYbG7sidhd6RI6tOvpPj
+         BZWEZct1NorBvZ7pol86vpqAQfCXfUNd1I0cjk5F0pdY4Lh/R4Lq5OFUDYcIMo8ox51a
+         LE8g==
+X-Gm-Message-State: AOAM530tOyHJ8llJqgXhBqNGl9HTG/K5mCsGFNotMvA20Nn4J8wNWixA
+        JRdN/gl6BPLCjX8w8W+TSEE=
+X-Google-Smtp-Source: ABdhPJza+JMIeHSK9Q5smDNzCzouWe0mc0sLljzLvJEb6mMrM5Dx+AeOBnUvDIshudt39YwWIltp+w==
+X-Received: by 2002:aa7:c6d3:: with SMTP id b19mr6538667eds.207.1593108786672;
+        Thu, 25 Jun 2020 11:13:06 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 11:13:06 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/13] msm8992 DTS updates, peripheral enablement
+Date:   Thu, 25 Jun 2020 20:12:48 +0200
+Message-Id: <20200625181303.129874-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 09:42:34 -0700
-Korben Rusek <korben@google.com> wrote:
+changes since v2:
+- drop some superseeded patches
+- reduce the amount of commits
+- modernize the 8992 dts
+- add libra and talkman DTSes
+- do some housekeeping and fix minor issues
 
-> Great work! I'm not exactly qualified to review the code, but the
-> logic seems correct. I'm curious how unlikely a zero delta is now and
-> how you quantify it. Also does it negate the patch that I emailed out
+Tested on Libra and Talkman. Bullhead *shouldn't* break.
 
-Actually, in all my stress testing (where I also add nested
-trace_printk()s to read what is happening), I was never once able to
-trigger the zero delta path! I only tested it by adding code to inject
-the event to force the given race condition.
+Depends on my 8994 patchset [1] (because of compatibles
+and 8992-related SMD RPM patches) and my RPMCC patch [2].
 
-Note, zero deltas are still there between absolute time stamps and
-start of page, but that's still different than a zero delta from the
-previous event.
+[1] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=307939
+[2] https://patchwork.kernel.org/patch/11622057/
 
-> last week that adds a `force_abs_timestamp` trace/option in an attempt
-> to get around this particular issue?
-> 
-> In reading through, I did notice a couple simple typos in the comments
-> that are probably worth pointing out:
+Konrad Dybcio (13):
+  arm64: dts: qcom: msm8992: Modernize the DTS style
+  arm64: dts: qcom: msm8992: Fix SDHCI1
+  arm64: dts: qcom: bullhead: Add qcom,msm-id
+  arm64: dts: qcom: bullhead: Move UART pinctrl to SoC
+  arm64: dts: Add a proper CPU map for MSM8992
+  arm64: dts: msm8992: Add a SCM node
+  arm64: dts: qcom: msm8994: Add SPMI PMIC arbiter device
+  arm64: dts: qcom: msm8992: Add BLSP2_UART2 and I2C nodes
+  arm64: dts: msm8992: Add PMU node
+  arm64: dts: msm8992: Add PSCI support.
+  arm64: dts: qcom: msm8992: Add RPMCC node
+  arm64: dts: qcom: Add Xiaomi Libra (Mi 4C) device tree
+  arm64: dts: qcom: Add Microsoft Lumia 950 (Talkman) device tree
 
-Thanks.
+ arch/arm64/boot/dts/qcom/Makefile             |   2 +
+ .../dts/qcom/msm8992-bullhead-rev-101.dts     |  20 +-
+ .../dts/qcom/msm8992-msft-lumia-talkman.dts   |  39 ++
+ arch/arm64/boot/dts/qcom/msm8992-pins.dtsi    |  90 ---
+ .../boot/dts/qcom/msm8992-xiaomi-libra.dts    | 364 ++++++++++++
+ arch/arm64/boot/dts/qcom/msm8992.dtsi         | 522 +++++++++++++++---
+ 6 files changed, 852 insertions(+), 185 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
+ delete mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dts
 
--- Steve
-
-
-> 
-> > If preempting an event time update, we may need absolute timestamp.  
-> 
-> Not a big deal, but it should be "may need *an* absolute timestamp"
-> 
-> > * Preempted beween C and E:
-> > * Lost the previous events time stamp. Just set the
-> > * delta to zero, and this will be the same time as
-> > * the veent this event preempted. And the events that
-> > * came after this will still be correct (as they would
-> > * have built their delta on the previous event.  
-> 
-> Should be "the *event* this event preempted." It also needs a
-> parenthesis at the end of the comment to close the parenthetical
-> statement.
-> 
-> Thanks, Korben
+-- 
+2.27.0
 
