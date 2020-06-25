@@ -4,197 +4,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC857C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624B720720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853FD20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593086757;
-	bh=x46fnzFSGKD5mQYhgkMEi9s1sk7tZ+q4Wwhm8nJN0AI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gLZxCgpSZ6ie24hsvxmRv5IdzUlFicirYx1GGAbnaZl9yNmxPQ0vow/KrTS3oepEs
-	 pnsNSr+SqyQ7Mlx0E+15euz7gF9PBT1hi5SHFpF93Y5QBpb9dOSVZO9XQ7083kFupD
-	 aYOLFYntKW1bplEPg7U77flxd4Oa0l1H98IrZ0IU=
+	s=default; t=1593086808;
+	bh=uYA15OPi4WMZSM4xohqdnOhCSpX3DGNAuDnQL3l31bw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rsmdBeqNL6599duIkxAfdJVWQhEfknNPCoJ/xRMyTF4CHZYDGj4PWrm6nduTN7Rqj
+	 4zuyaRj/IO9v9L8TzyKVrW2NGXqTDGO7uVNTVLgWFH9MmwRZXW7YjA6/ctHIi89i1S
+	 +akS16eYrthOfJgXVtDT13LqpFfW/q3Y5XDIXkhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404451AbgFYMFz (ORCPT
+        id S2404492AbgFYMGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:05:55 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:46844 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404222AbgFYMFz (ORCPT
+        Thu, 25 Jun 2020 08:06:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33004 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404222AbgFYMGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:05:55 -0400
-Received: by mail-ej1-f67.google.com with SMTP id p20so5641334ejd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:05:53 -0700 (PDT)
+        Thu, 25 Jun 2020 08:06:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n6so5033395otl.0;
+        Thu, 25 Jun 2020 05:06:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8fk91U2s/m8+FIC5vyjKnNNYUZeJkJlznjUqWipzu6w=;
-        b=gs1ockmXEzFuy4JhrPprvim5DuIPRGHXVqII5uPwnIsED+5VE62+dM9bElkoIcQ128
-         86ejxhpx7tHuKSJnPzCqxqByn+HqDxlHLTBYohC/kr5QcP68qG+C2Pd8W0OvIVgMkMV0
-         gOyx3gtRdqzMgWeEpqaW4fheJnI5CyzkeMrspViXPeIOV3FYcUZIgfwQvXxXBNu6JaTu
-         HUTMROKFG0MT4kpgzqgYHkYoRe8JOPjmVRAMw+vetqnaw3XujMP0RLVRhlYLFGKqFh0o
-         onhl7qcX9XK85XpOwAZCpd8JSDM6cIQxo6U8s3zrXDQ9yszVOzqTNLdK8knKv2YgFYSt
-         ndXQ==
-X-Gm-Message-State: AOAM531dvUN4x7AAFVo2A8Qa9ObBQ2aHM9XDuRuWOnuJBMoSt2b9kAF0
-        i3sOfK7F4recXQ/UfgEeJxk=
-X-Google-Smtp-Source: ABdhPJygr5WUe7jrzHUM9eTvyZAL0A4EKJKuAUKFs4eQSkzv/SRbQIVpEMSD9P3fjiikyzcgLZBKmw==
-X-Received: by 2002:a17:906:d204:: with SMTP id w4mr29517792ejz.117.1593086753031;
-        Thu, 25 Jun 2020 05:05:53 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id l24sm16789159ejb.5.2020.06.25.05.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 05:05:52 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:05:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v3 5/8] mm/migrate: make a standard migration target
- allocation function
-Message-ID: <20200625120550.GF1320@dhcp22.suse.cz>
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rD/XDnXIKX8gNhT/DuKyWWpCmsBD1jr7T2XgYaQBYJQ=;
+        b=H+hiF3xg+yVjD5dVHOyzq6oMDavu21+adZp52vIq4/e9ER0Adx6yXhN6s+a3TeFUSs
+         2Bjsa0q1obKSn9fckL0V2qdFYOkOl/wow1tkdFyaCDETMZrahuOFa18ffXIMkuFzW2c+
+         aS04dAe3J5l7t1B0qO58jv/8w2oVguXMfo8c0hwttq2QQ+nZA7AZv0B3Jm50C5f3Amkt
+         YPgi9dvZ/eAHvoJPQbttFJTXqbJPl2rWHi8/4jZ/6JgYQyXQemuXh+pxuXQ1lIq718cq
+         SgfXLJ9L5FFW4E09f3Hg/nJs7y3b/beXQRZSgvGPyVx2NcaRsRCXQ6a0+if3w6321lhA
+         O0aw==
+X-Gm-Message-State: AOAM533LaEYkY4xFebpI2b3blXIIRIOzMVBaixFMcguyfMZHtL+tN5Kc
+        Aa0LezSo1iwguU0NH8Wq5G/h65+/bbmB22P6VFD2hnJ0
+X-Google-Smtp-Source: ABdhPJxZ5HE61KmrZClwMlPjhbYjedR8tZFyYwac2mmi23TtFNeN3JzwcImgSG9LuPFH0jGfiufbraqmXRuh6M68dPI=
+X-Received: by 2002:a9d:7d15:: with SMTP id v21mr25614213otn.118.1593086804897;
+ Thu, 25 Jun 2020 05:06:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com>
+References: <20200608174134.11157-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20200608174134.11157-1-sean.j.christopherson@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jun 2020 14:06:33 +0200
+Message-ID: <CAJZ5v0inhpW1vbYJYPqWgkekK7hKhgO_fE5JmemT+p2qh7RFaw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm-devel <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23-06-20 15:13:45, Joonsoo Kim wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> There are some similar functions for migration target allocation. Since
-> there is no fundamental difference, it's better to keep just one rather
-> than keeping all variants. This patch implements base migration target
-> allocation function. In the following patches, variants will be converted
-> to use this function.
-> 
-> Note that PageHighmem() call in previous function is changed to open-code
-> "is_highmem_idx()" since it provides more readability.
+On Mon, Jun 8, 2020 at 7:49 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
+> where firmware doesn't initialize or save/restore across S3.  This fixes
+> a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
+> taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
+>
+> Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
+> with the case where the MSR is locked, and because APs already redo
+> init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
+> used to reinitialize APs upon wakeup.  Do the call in the early wakeup
+> flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
+> a resume hook is not guaranteed to work, as KVM does VMXON in its own
+> resume hook, kvm_resume(), when KVM has active guests.
+>
+> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+> Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
+> Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: kvm@vger.kernel.org
+> Cc: stable@vger.kernel.org # v5.6
+> Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-I was little bit surprised that alloc_migration_target still uses
-private argument while it only accepts migration_target_control
-structure pointer but then I have noticed that you are using it as a
-real callback in a later patch.
+Given the regression fix nature of this patch, is it being taken care
+of by anyone (tip in particular) already?
 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Few questions inline
-[...]
-
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 47b8ccb..820ea5e 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1648,9 +1648,13 @@ EXPORT_SYMBOL(unpoison_memory);
->  
->  static struct page *new_page(struct page *p, unsigned long private)
->  {
-> -	int nid = page_to_nid(p);
-> +	struct migration_target_control mtc = {
-> +		.nid = page_to_nid(p),
-> +		.nmask = &node_states[N_MEMORY],
-
-This could be .namsk = NULL, right? alloc_migration_target doesn't
-modify the node mask and NULL nodemask is always interpreted as all
-available nodes.
-
-> +		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> +	};
->  
-> -	return new_page_nodemask(p, nid, &node_states[N_MEMORY]);
-> +	return alloc_migration_target(p, (unsigned long)&mtc);
+> ---
+>
+> v2:
+>   - Collect Reviewed/Tested tags. [Brad, Liam, Maxim].
+>   - Include asm/cpu.h to fix Zhaoxin and Centaur builds. [Brad, LKP]
+>   - Add Cc to stable. [Liam]
+>
+>  arch/x86/include/asm/cpu.h    | 5 +++++
+>  arch/x86/kernel/cpu/centaur.c | 1 +
+>  arch/x86/kernel/cpu/cpu.h     | 4 ----
+>  arch/x86/kernel/cpu/zhaoxin.c | 1 +
+>  arch/x86/power/cpu.c          | 6 ++++++
+>  5 files changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index dd17c2da1af5..da78ccbd493b 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned long ip)
+>         return false;
 >  }
->  
-[...]
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 634f1ea..3afff59 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1536,29 +1536,34 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->  	return rc;
->  }
->  
-> -struct page *new_page_nodemask(struct page *page,
-> -				int preferred_nid, nodemask_t *nodemask)
-> +struct page *alloc_migration_target(struct page *page, unsigned long private)
->  {
-> -	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
-> +	struct migration_target_control *mtc;
-> +	gfp_t gfp_mask;
->  	unsigned int order = 0;
->  	struct page *new_page = NULL;
-> +	int zidx;
-> +
-> +	mtc = (struct migration_target_control *)private;
-> +	gfp_mask = mtc->gfp_mask;
->  
->  	if (PageHuge(page)) {
->  		return alloc_huge_page_nodemask(
-> -				page_hstate(compound_head(page)),
-> -				preferred_nid, nodemask, 0, false);
-> +				page_hstate(compound_head(page)), mtc->nid,
-> +				mtc->nmask, gfp_mask, false);
->  	}
->  
->  	if (PageTransHuge(page)) {
-> +		gfp_mask &= ~__GFP_RECLAIM;
-
-What's up with this gfp_mask modification?
-
->  		gfp_mask |= GFP_TRANSHUGE;
->  		order = HPAGE_PMD_ORDER;
->  	}
+>  #endif
+> +#ifdef CONFIG_IA32_FEAT_CTL
+> +void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+> +#else
+> +static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
+> +#endif
+>  #endif /* _ASM_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+> index 426792565d86..c5cf336e5077 100644
+> --- a/arch/x86/kernel/cpu/centaur.c
+> +++ b/arch/x86/kernel/cpu/centaur.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/sched/clock.h>
+>
+> +#include <asm/cpu.h>
+>  #include <asm/cpufeature.h>
+>  #include <asm/e820/api.h>
+>  #include <asm/mtrr.h>
+> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+> index 37fdefd14f28..38ab6e115eac 100644
+> --- a/arch/x86/kernel/cpu/cpu.h
+> +++ b/arch/x86/kernel/cpu/cpu.h
+> @@ -80,8 +80,4 @@ extern void x86_spec_ctrl_setup_ap(void);
+>
+>  extern u64 x86_read_arch_cap_msr(void);
+>
+> -#ifdef CONFIG_IA32_FEAT_CTL
+> -void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+> -#endif
 > -
-> -	if (PageHighMem(page) || (zone_idx(page_zone(page)) == ZONE_MOVABLE))
-> +	zidx = zone_idx(page_zone(page));
-> +	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
->  		gfp_mask |= __GFP_HIGHMEM;
->  
->  	new_page = __alloc_pages_nodemask(gfp_mask, order,
-> -				preferred_nid, nodemask);
-> +				mtc->nid, mtc->nmask);
->  
->  	if (new_page && PageTransHuge(new_page))
->  		prep_transhuge_page(new_page);
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index aec26d9..adba031 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -309,7 +309,11 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
->  
->  struct page *alloc_migrate_target(struct page *page, unsigned long private)
+>  #endif /* ARCH_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+> index df1358ba622b..05fa4ef63490 100644
+> --- a/arch/x86/kernel/cpu/zhaoxin.c
+> +++ b/arch/x86/kernel/cpu/zhaoxin.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/sched/clock.h>
+>
+> +#include <asm/cpu.h>
+>  #include <asm/cpufeature.h>
+>
+>  #include "cpu.h"
+> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> index aaff9ed7ff45..b0d3c5ca6d80 100644
+> --- a/arch/x86/power/cpu.c
+> +++ b/arch/x86/power/cpu.c
+> @@ -193,6 +193,8 @@ static void fix_processor_context(void)
+>   */
+>  static void notrace __restore_processor_state(struct saved_context *ctxt)
 >  {
-> -	int nid = page_to_nid(page);
-> +	struct migration_target_control mtc = {
-> +		.nid = page_to_nid(page),
-> +		.nmask = &node_states[N_MEMORY],
-
-nmask = NULL again
-
-> +		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> +	};
->  
-> -	return new_page_nodemask(page, nid, &node_states[N_MEMORY]);
-> +	return alloc_migration_target(page, (unsigned long)&mtc);
+> +       struct cpuinfo_x86 *c;
+> +
+>         if (ctxt->misc_enable_saved)
+>                 wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
+>         /*
+> @@ -263,6 +265,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+>         mtrr_bp_restore();
+>         perf_restore_debug_store();
+>         msr_restore_context(ctxt);
+> +
+> +       c = &cpu_data(smp_processor_id());
+> +       if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
+> +               init_ia32_feat_ctl(c);
 >  }
-> -- 
-> 2.7.4
-
--- 
-Michal Hocko
-SUSE Labs
+>
+>  /* Needed by apm.c */
+> --
+> 2.26.0
+>
