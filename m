@@ -2,120 +2,156 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B06C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D7D20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE6720768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406974AbgFYVuO (ORCPT
+        id S2391242AbgFYVwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:50:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5758 "EHLO
+        Thu, 25 Jun 2020 17:52:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63924 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391209AbgFYVuG (ORCPT
+        by vger.kernel.org with ESMTP id S2389705AbgFYVwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:50:06 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PLXWtv120012;
-        Thu, 25 Jun 2020 17:50:04 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vxqkhqre-1
+        Thu, 25 Jun 2020 17:52:06 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PLVvxT189559;
+        Thu, 25 Jun 2020 17:52:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts13ecq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 17:50:04 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLk3iA023067;
-        Thu, 25 Jun 2020 21:50:02 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 31uuruu3mb-1
+        Thu, 25 Jun 2020 17:52:01 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PLVvwj189585;
+        Thu, 25 Jun 2020 17:52:01 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts13ec1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 21:50:02 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLo1uE41288188
+        Thu, 25 Jun 2020 17:52:00 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLpweL022074;
+        Thu, 25 Jun 2020 21:51:58 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06fra.de.ibm.com with ESMTP id 31uusps2un-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:51:58 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLpuEb41484542
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 21:50:01 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F03A28065;
-        Thu, 25 Jun 2020 21:50:01 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30D312805C;
-        Thu, 25 Jun 2020 21:50:01 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 21:50:01 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
+        Thu, 25 Jun 2020 21:51:56 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F6814C059;
+        Thu, 25 Jun 2020 21:51:56 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDF504C046;
+        Thu, 25 Jun 2020 21:51:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:51:54 +0000 (GMT)
+Message-ID: <1593121914.27152.411.camel@linux.ibm.com>
+Subject: Re: [PATCH 05/12] ima: Fail rule parsing when buffer hook functions
+ have an invalid action
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Cc:     Stefan Berger <stefanb@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v7 1/2] acpi: Extend TPM2 ACPI table with missing log fields
-Date:   Thu, 25 Jun 2020 17:49:59 -0400
-Message-Id: <20200625215000.2052086-2-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200625215000.2052086-1-stefanb@linux.vnet.ibm.com>
-References: <20200625215000.2052086-1-stefanb@linux.vnet.ibm.com>
-MIME-Version: 1.0
+Date:   Thu, 25 Jun 2020 17:51:54 -0400
+In-Reply-To: <20200623003236.830149-6-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-6-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 cotscore=-2147483648
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006250125
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ adultscore=0 mlxscore=0 malwarescore=0 clxscore=1015 phishscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> Buffer based hook functions, such as KEXEC_CMDLINE and KEY_CHECK, can
+> only measure. The process_buffer_measurement() function quietly ignores
+> all actions except measure so make this behavior clear at the time of
+> policy load.
+> 
+> The parsing of the keyrings conditional had a check to ensure that it
+> was only specified with measure actions but the check should be on the
+> hook function and not the keyrings conditional since
+> "appraise func=KEY_CHECK" is not a valid rule.
+> 
+> Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
+> Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+>  security/integrity/ima/ima_policy.c | 36 +++++++++++++++++++++++++++--
+>  1 file changed, 34 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index ee5152ecd3d9..ecc234b956a2 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -979,6 +979,39 @@ static void check_template_modsig(const struct ima_template_desc *template)
+>  #undef MSG
+>  }
+>  
+> +static bool ima_validate_rule(struct ima_rule_entry *entry)
+> +{
+> +	if (entry->action == UNKNOWN)
+> +		return false;
+> +
+> +	if (entry->flags & IMA_FUNC) {
+> +		switch (entry->func) {
+> +		case NONE:
+> +		case FILE_CHECK:
+> +		case MMAP_CHECK:
+> +		case BPRM_CHECK:
+> +		case CREDS_CHECK:
+> +		case POST_SETATTR:
+> +		case MODULE_CHECK:
+> +		case FIRMWARE_CHECK:
+> +		case KEXEC_KERNEL_CHECK:
+> +		case KEXEC_INITRAMFS_CHECK:
+> +		case POLICY_CHECK:
+> +			break;
+> +		case KEXEC_CMDLINE:
+> +		case KEY_CHECK:
+> +			if (entry->action & ~(MEASURE | DONT_MEASURE))
+> +				return false;
+> +
+> +			break;
+> +		default:
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
 
-Recent extensions of the TPM2 ACPI table added 3 more fields
-including 12 bytes of start method specific parameters and Log Area
-Minimum Length (u32) and Log Area Start Address (u64). So, we define
-a new structure acpi_tpm2_phy that holds these optional new fields.
-The new fields allow non-UEFI systems to access the TPM2's log.
+Good idea.  There are a couple of other examples that could be cleaned
+up as well.  For example, for performance reasons
+"appraise_flag=check_blacklist" is limited to files with appended
+signatures, like kernel modules and the kexec kernel image
+(OpenPower).
 
-The specification that has the new fields is the following:
-  TCG ACPI Specification
-  Family "1.2" and "2.0"
-  Version 1.2, Revision 8
-
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
-
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-acpi@vger.kernel.org
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- include/acpi/actbl3.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
-index b0b163b9efc6..bdcac69fa6bd 100644
---- a/include/acpi/actbl3.h
-+++ b/include/acpi/actbl3.h
-@@ -415,6 +415,13 @@ struct acpi_table_tpm2 {
- 	/* Platform-specific data follows */
- };
- 
-+/* Optional trailer for revision 4 holding platform-specific data */
-+struct acpi_tpm2_phy {
-+	u8  start_method_specific[12];
-+	u32 log_area_minimum_length;
-+	u64 log_area_start_address;
-+};
-+
- /* Values for start_method above */
- 
- #define ACPI_TPM2_NOT_ALLOWED                       0
--- 
-2.26.2
-
+Mimi
