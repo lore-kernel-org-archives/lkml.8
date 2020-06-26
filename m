@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F38C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0804C206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC50206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qjlr5ndi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cUmPbTOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgFZUB1 (ORCPT
+        id S1726074AbgFZUB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:01:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13485 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgFZUBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:01:25 -0400
+        Fri, 26 Jun 2020 16:01:26 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:46131 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbgFZUBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:01:22 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593201684; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1593201682; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=+BoTviuuFuUASUPv3f/YwplQ6t2//r78U5Hyc+PNRIA=; b=Qjlr5ndiBFlrpsGgzYhJU6ESNN8CF8hih0C5GGGT/z2hfT1ARH6bYTq9/l3kfIGh7EK5fNhv
- RP1rAHD53Z+8v23J+rZG51mDQZjq3x1QXxgXKJ1PH1TLTSKurQMSWf9o1QS0ecL7+NmyCCU2
- jxj6Y9kYLQ8x4Z8Z71FRj/q10zg=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ bh=I4mi9KRzY9q8x+8ibjGrJyjF0IRQt7yz1HbGjbPTjwA=; b=cUmPbTOzF6CbN8q/BX0zUdeFCuLxuIvtB7jShpeFZH9rj+yIcjK7YEgrmBYH5ktoIA1QNSkS
+ /YcM8yjRlRSDKBGwj7CeKDw1juxXTTMp9mMtqVfu0DJ6A1bBld9oPVyKsWdywL+HjdMrnxw/
+ Z60LfRX+a3k/AazP33V4Jpd8SU0=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5ef653fa4c9690533a911b64 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:00:58
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5ef653f6ad153efa349aad2f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:00:54
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 04327C43395; Fri, 26 Jun 2020 20:00:58 +0000 (UTC)
+        id 88F52C4339C; Fri, 26 Jun 2020 20:00:54 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BD6BC433CB;
-        Fri, 26 Jun 2020 20:00:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BD6BC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8FB7C433CA;
+        Fri, 26 Jun 2020 20:00:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8FB7C433CA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -52,16 +53,13 @@ To:     linux-arm-msm@vger.kernel.org
 Cc:     John Stultz <john.stultz@linaro.org>,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Shawn Guo <shawn.guo@linaro.org>, Takashi Iwai <tiwai@suse.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 6/7] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Fri, 26 Jun 2020 14:00:40 -0600
-Message-Id: <20200626200042.13713-7-jcrouse@codeaurora.org>
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 4/7] iommu/arm-smmu: Add a pointer to the attached device to smmu_domain
+Date:   Fri, 26 Jun 2020 14:00:38 -0600
+Message-Id: <20200626200042.13713-5-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
 References: <20200626200042.13713-1-jcrouse@codeaurora.org>
@@ -70,67 +68,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
+Add a link to the pointer to the struct device that is attached to a
+domain. This makes it easy to get the pointer if it is needed in the
+implementation specific code.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/iommu/arm-smmu.c | 6 ++++--
+ drivers/iommu/arm-smmu.h | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 5db06b590943..3e717c1ebb7f 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 048de2681670..060139452c54 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -668,7 +668,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ }
  
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xffffffff - SZ_16M);
-+	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
-+	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
-+
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..1b6635504069 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
+ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+-					struct arm_smmu_device *smmu)
++					struct arm_smmu_device *smmu,
++					struct device *dev)
  {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 	int irq, start, ret = 0;
+ 	unsigned long ias, oas;
+@@ -801,6 +802,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		cfg->asid = cfg->cbndx;
  
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	iommu_unmap(iommu->domain, iova, len);
+ 	smmu_domain->smmu = smmu;
++	smmu_domain->dev = dev;
  
- 	return 0;
+ 	pgtbl_cfg = (struct io_pgtable_cfg) {
+ 		.pgsize_bitmap	= smmu->pgsize_bitmap,
+@@ -1190,7 +1192,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 		return ret;
+ 
+ 	/* Ensure that the domain is finalised */
+-	ret = arm_smmu_init_domain_context(domain, smmu);
++	ret = arm_smmu_init_domain_context(domain, smmu, dev);
+ 	if (ret < 0)
+ 		goto rpm_put;
+ 
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index 5f2de20e883b..d33cfe26b2f5 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -345,6 +345,7 @@ struct arm_smmu_domain {
+ 	struct mutex			init_mutex; /* Protects smmu pointer */
+ 	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+ 	struct iommu_domain		domain;
++	struct device			*dev;	/* Device attached to this domain */
+ };
+ 
+ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
 -- 
 2.17.1
 
