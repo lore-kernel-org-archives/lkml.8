@@ -2,399 +2,126 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9744C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6EC2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EA62072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CJGYCOcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFZAHu (ORCPT
+        id S1726118AbgFZANz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:07:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11602 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgFZAHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:07:44 -0400
-IronPort-SDR: b/o3bgEBl/7LeFeX1JHUdZm4sOlTdzIbv1afLwrXrgGiEKvFytC19qBtJ8Lm5lfr6HF8FfgByU
- QGuCe1cwLxoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229870944"
-X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="229870944"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:13 -0700
-IronPort-SDR: SCgRkAYbql9izvCjtRPbr2DwF1vMkOGNMHYbkqJu0LzTl8avkpNjcmJg7/atMxWqexL8qG4xEt
- XvfjNyR2y/rw==
-X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="265491889"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:12 -0700
-Subject: [PATCH 07/12] tools/testing/nvdimm: Emulate firmware activation
- commands
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        vishal.l.verma@intel.com, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 25 Jun 2020 16:50:58 -0700
-Message-ID: <159312905799.1850128.2108805065253287501.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Thu, 25 Jun 2020 20:13:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:18004 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbgFZANw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:13:52 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q09Nfn030446
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=L+G+5ICmD+hXddYJtcmy5XMdUPoBv6VGsfT8fpChsDI=;
+ b=CJGYCOcsr6tdSepWqrREDfcoW7d9YzW3EzwEREokPhgduifDZ/zm2a4vVBDGx4nI7JSy
+ 1osPEHkEfTL4Zq84p7kvGg6f+ztmESU1PiM9nVZrQNcEAIWkPEKweQF6g0k7eLlogyh8
+ wKCS/sqAW5dQt0ROEMHYTTT5TYftokvBr2k= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31ux0u2u69-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:50 -0700
+Received: from intmgw003.08.frc2.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 25 Jun 2020 17:13:50 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 2DDAD62E4FA9; Thu, 25 Jun 2020 17:13:39 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v2 bpf-next 0/4] bpf: introduce bpf_get_task_stack()
+Date:   Thu, 25 Jun 2020 17:13:28 -0700
+Message-ID: <20200626001332.1554603-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0
+ cotscore=-2147483648 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
+ mlxscore=0 bulkscore=0 phishscore=0 suspectscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250142
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Augment the existing firmware update emulation to track activations and
-validate proper update vs activate sequencing.
+This set introduces a new helper bpf_get_task_stack(). The primary use ca=
+se
+is to dump all /proc/*/stack to seq_file via bpf_iter__task.
 
-The DIMM firmware activate capability has a concept of a maximum amount
-of time platform firmware will quiesce the system relative to how many
-DIMMs are being activated in parallel. Simulate that DIMM activation
-happens serially, 1 second per-DIMM, and limit the max at 3 seconds. The
-nfit_test0 bus emulates 5 DIMMs so it will take 2 activations to update
-all DIMMs.
+A few different approaches have been explored and compared:
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/acpi/nfit/intel.h        |    5 +
- tools/testing/nvdimm/test/nfit.c |  209 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 210 insertions(+), 4 deletions(-)
+  1. A simple wrapper around stack_trace_save_tsk(), as v1 [1].
 
-diff --git a/drivers/acpi/nfit/intel.h b/drivers/acpi/nfit/intel.h
-index 868d073731cc..49a598623024 100644
---- a/drivers/acpi/nfit/intel.h
-+++ b/drivers/acpi/nfit/intel.h
-@@ -132,6 +132,9 @@ struct nd_intel_fw_activate_dimminfo {
- 	u8 reserved[7];
- } __packed;
- 
-+#define ND_INTEL_DIMM_FWA_ARM 1
-+#define ND_INTEL_DIMM_FWA_DISARM 0
-+
- struct nd_intel_fw_activate_arm {
- 	u8 activate_arm;
- 	u32 status;
-@@ -160,6 +163,8 @@ struct nd_intel_bus_fw_activate_businfo {
- #define ND_INTEL_BUS_FWA_STATUS_NOIDLE (6 | 5 << 16)
- #define ND_INTEL_BUS_FWA_STATUS_ABORT  (6 | 6 << 16)
- 
-+#define ND_INTEL_BUS_FWA_IODEV_FORCE_IDLE (0)
-+#define ND_INTEL_BUS_FWA_IODEV_OS_IDLE (1)
- struct nd_intel_bus_fw_activate {
- 	u8 iodev_state;
- 	u32 status;
-diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
-index 2b0bfbfc0abb..a1a5dc645b40 100644
---- a/tools/testing/nvdimm/test/nfit.c
-+++ b/tools/testing/nvdimm/test/nfit.c
-@@ -173,6 +173,9 @@ struct nfit_test_fw {
- 	u64 version;
- 	u32 size_received;
- 	u64 end_time;
-+	bool armed;
-+	bool missed_activate;
-+	unsigned long last_activate;
- };
- 
- struct nfit_test {
-@@ -345,7 +348,7 @@ static int nd_intel_test_finish_fw(struct nfit_test *t,
- 			__func__, t, nd_cmd, buf_len, idx);
- 
- 	if (fw->state == FW_STATE_UPDATED) {
--		/* update already done, need cold boot */
-+		/* update already done, need activation */
- 		nd_cmd->status = 0x20007;
- 		return 0;
- 	}
-@@ -430,6 +433,7 @@ static int nd_intel_test_finish_query(struct nfit_test *t,
- 		}
- 		dev_dbg(dev, "%s: transition out verify\n", __func__);
- 		fw->state = FW_STATE_UPDATED;
-+		fw->missed_activate = false;
- 		/* fall through */
- 	case FW_STATE_UPDATED:
- 		nd_cmd->status = 0;
-@@ -1178,6 +1182,134 @@ static int nd_intel_test_cmd_master_secure_erase(struct nfit_test *t,
- 	return 0;
- }
- 
-+static unsigned long last_activate;
-+
-+static int nvdimm_bus_intel_fw_activate_businfo(struct nfit_test *t,
-+		struct nd_intel_bus_fw_activate_businfo *nd_cmd,
-+		unsigned int buf_len)
-+{
-+	int i, armed = 0;
-+	int state;
-+	u64 tmo;
-+
-+	for (i = 0; i < NUM_DCR; i++) {
-+		struct nfit_test_fw *fw = &t->fw[i];
-+
-+		if (fw->armed)
-+			armed++;
-+	}
-+
-+	/*
-+	 * Emulate 3 second activation max, and 1 second incremental
-+	 * quiesce time per dimm requiring multiple activates to get all
-+	 * DIMMs updated.
-+	 */
-+	if (armed)
-+		state = ND_INTEL_FWA_ARMED;
-+	else if (!last_activate || time_after(jiffies, last_activate + 3 * HZ))
-+		state = ND_INTEL_FWA_IDLE;
-+	else
-+		state = ND_INTEL_FWA_BUSY;
-+
-+	tmo = armed * USEC_PER_SEC;
-+	*nd_cmd = (struct nd_intel_bus_fw_activate_businfo) {
-+		.capability = ND_INTEL_BUS_FWA_CAP_FWQUIESCE
-+			| ND_INTEL_BUS_FWA_CAP_OSQUIESCE
-+			| ND_INTEL_BUS_FWA_CAP_RESET,
-+		.state = state,
-+		.activate_tmo = tmo,
-+		.cpu_quiesce_tmo = tmo,
-+		.io_quiesce_tmo = tmo,
-+		.max_quiesce_tmo = 3 * USEC_PER_SEC,
-+	};
-+
-+	return 0;
-+}
-+
-+static int nvdimm_bus_intel_fw_activate(struct nfit_test *t,
-+		struct nd_intel_bus_fw_activate *nd_cmd,
-+		unsigned int buf_len)
-+{
-+	struct nd_intel_bus_fw_activate_businfo info;
-+	u32 status = 0;
-+	int i;
-+
-+	nvdimm_bus_intel_fw_activate_businfo(t, &info, sizeof(info));
-+	if (info.state == ND_INTEL_FWA_BUSY)
-+		status = ND_INTEL_BUS_FWA_STATUS_BUSY;
-+	else if (info.activate_tmo > info.max_quiesce_tmo)
-+		status = ND_INTEL_BUS_FWA_STATUS_TMO;
-+	else if (info.state == ND_INTEL_FWA_IDLE)
-+		status = ND_INTEL_BUS_FWA_STATUS_NOARM;
-+
-+	dev_dbg(&t->pdev.dev, "status: %d\n", status);
-+	nd_cmd->status = status;
-+	if (status && status != ND_INTEL_BUS_FWA_STATUS_TMO)
-+		return 0;
-+
-+	last_activate = jiffies;
-+	for (i = 0; i < NUM_DCR; i++) {
-+		struct nfit_test_fw *fw = &t->fw[i];
-+
-+		if (!fw->armed)
-+			continue;
-+		if (fw->state != FW_STATE_UPDATED)
-+			fw->missed_activate = true;
-+		else
-+			fw->state = FW_STATE_NEW;
-+		fw->armed = false;
-+		fw->last_activate = last_activate;
-+	}
-+
-+	return 0;
-+}
-+
-+static int nd_intel_test_cmd_fw_activate_dimminfo(struct nfit_test *t,
-+		struct nd_intel_fw_activate_dimminfo *nd_cmd,
-+		unsigned int buf_len, int dimm)
-+{
-+	struct nd_intel_bus_fw_activate_businfo info;
-+	struct nfit_test_fw *fw = &t->fw[dimm];
-+	u32 result, state;
-+
-+	nvdimm_bus_intel_fw_activate_businfo(t, &info, sizeof(info));
-+
-+	if (info.state == ND_INTEL_FWA_BUSY)
-+		state = ND_INTEL_FWA_BUSY;
-+	else if (info.state == ND_INTEL_FWA_IDLE)
-+		state = ND_INTEL_FWA_IDLE;
-+	else if (fw->armed)
-+		state = ND_INTEL_FWA_ARMED;
-+	else
-+		state = ND_INTEL_FWA_IDLE;
-+
-+	result = ND_INTEL_DIMM_FWA_NONE;
-+	if (last_activate && fw->last_activate == last_activate &&
-+			state == ND_INTEL_FWA_IDLE) {
-+		if (fw->missed_activate)
-+			result = ND_INTEL_DIMM_FWA_NOTSTAGED;
-+		else
-+			result = ND_INTEL_DIMM_FWA_SUCCESS;
-+	}
-+
-+	*nd_cmd = (struct nd_intel_fw_activate_dimminfo) {
-+		.result = result,
-+		.state = state,
-+	};
-+
-+	return 0;
-+}
-+
-+static int nd_intel_test_cmd_fw_activate_arm(struct nfit_test *t,
-+		struct nd_intel_fw_activate_arm *nd_cmd,
-+		unsigned int buf_len, int dimm)
-+{
-+	struct nfit_test_fw *fw = &t->fw[dimm];
-+
-+	fw->armed = nd_cmd->activate_arm == ND_INTEL_DIMM_FWA_ARM;
-+	nd_cmd->status = 0;
-+	return 0;
-+}
- 
- static int get_dimm(struct nfit_mem *nfit_mem, unsigned int func)
- {
-@@ -1296,6 +1428,14 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
- 				rc = nd_intel_test_cmd_master_secure_erase(t,
- 						buf, buf_len, i);
- 				break;
-+			case NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO:
-+				rc = nd_intel_test_cmd_fw_activate_dimminfo(
-+					t, buf, buf_len, i);
-+				break;
-+			case NVDIMM_INTEL_FW_ACTIVATE_ARM:
-+				rc = nd_intel_test_cmd_fw_activate_arm(
-+					t, buf, buf_len, i);
-+				break;
- 			case ND_INTEL_ENABLE_LSS_STATUS:
- 				rc = nd_intel_test_cmd_set_lss_status(t,
- 						buf, buf_len);
-@@ -1380,9 +1520,9 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
- 		if (!nd_desc)
- 			return -ENOTTY;
- 
--		if (cmd == ND_CMD_CALL) {
-+		if (cmd == ND_CMD_CALL && call_pkg->nd_family
-+				== NVDIMM_BUS_FAMILY_NFIT) {
- 			func = call_pkg->nd_command;
--
- 			buf_len = call_pkg->nd_size_in + call_pkg->nd_size_out;
- 			buf = (void *) call_pkg->nd_payload;
- 
-@@ -1406,7 +1546,26 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
- 			default:
- 				return -ENOTTY;
- 			}
--		}
-+		} else if (cmd == ND_CMD_CALL && call_pkg->nd_family
-+				== NVDIMM_BUS_FAMILY_INTEL) {
-+			func = call_pkg->nd_command;
-+			buf_len = call_pkg->nd_size_in + call_pkg->nd_size_out;
-+			buf = (void *) call_pkg->nd_payload;
-+
-+			switch (func) {
-+			case NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO:
-+				rc = nvdimm_bus_intel_fw_activate_businfo(t,
-+						buf, buf_len);
-+				return rc;
-+			case NVDIMM_BUS_INTEL_FW_ACTIVATE:
-+				rc = nvdimm_bus_intel_fw_activate(t, buf,
-+						buf_len);
-+				return rc;
-+			default:
-+				return -ENOTTY;
-+			}
-+		} else if (cmd == ND_CMD_CALL)
-+			return -ENOTTY;
- 
- 		if (!nd_desc || !test_bit(cmd, &nd_desc->cmd_mask))
- 			return -ENOTTY;
-@@ -1832,6 +1991,7 @@ static void nfit_test0_setup(struct nfit_test *t)
- 	struct acpi_nfit_flush_address *flush;
- 	struct acpi_nfit_capabilities *pcap;
- 	unsigned int offset = 0, i;
-+	unsigned long *acpi_mask;
- 
- 	/*
- 	 * spa0 (interleave first half of dimm0 and dimm1, note storage
-@@ -2558,6 +2718,12 @@ static void nfit_test0_setup(struct nfit_test *t)
- 			&acpi_desc->dimm_cmd_force_en);
- 	set_bit(NVDIMM_INTEL_MASTER_SECURE_ERASE,
- 			&acpi_desc->dimm_cmd_force_en);
-+	set_bit(NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO, &acpi_desc->dimm_cmd_force_en);
-+	set_bit(NVDIMM_INTEL_FW_ACTIVATE_ARM, &acpi_desc->dimm_cmd_force_en);
-+
-+	acpi_mask = &acpi_desc->family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL];
-+	set_bit(NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO, acpi_mask);
-+	set_bit(NVDIMM_BUS_INTEL_FW_ACTIVATE, acpi_mask);
- }
- 
- static void nfit_test1_setup(struct nfit_test *t)
-@@ -2733,6 +2899,7 @@ static int nfit_ctl_test(struct device *dev)
- 			struct nd_cmd_clear_error clear_err;
- 			struct nd_cmd_ars_status ars_stat;
- 			struct nd_cmd_ars_cap ars_cap;
-+			struct nd_intel_bus_fw_activate_businfo fwa_info;
- 			char buf[sizeof(struct nd_cmd_ars_status)
- 				+ sizeof(struct nd_ars_record)];
- 		};
-@@ -2761,11 +2928,15 @@ static int nfit_ctl_test(struct device *dev)
- 			.module = THIS_MODULE,
- 			.provider_name = "ACPI.NFIT",
- 			.ndctl = acpi_nfit_ctl,
-+			.bus_family_mask = 1UL << NVDIMM_BUS_FAMILY_NFIT
-+				| 1UL << NVDIMM_BUS_FAMILY_INTEL,
- 		},
- 		.bus_dsm_mask = 1UL << NFIT_CMD_TRANSLATE_SPA
- 			| 1UL << NFIT_CMD_ARS_INJECT_SET
- 			| 1UL << NFIT_CMD_ARS_INJECT_CLEAR
- 			| 1UL << NFIT_CMD_ARS_INJECT_GET,
-+		.family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL] =
-+			NVDIMM_BUS_INTEL_FW_ACTIVATE_CMDMASK,
- 		.dev = &adev->dev,
- 	};
- 
-@@ -2932,6 +3103,36 @@ static int nfit_ctl_test(struct device *dev)
- 		return -EIO;
- 	}
- 
-+	/* test firmware activate bus info */
-+	cmd_size = sizeof(cmd.fwa_info);
-+	cmd = (struct nfit_ctl_test_cmd) {
-+		.pkg = {
-+			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO,
-+			.nd_family = NVDIMM_BUS_FAMILY_INTEL,
-+			.nd_size_out = cmd_size,
-+			.nd_fw_size = cmd_size,
-+		},
-+		.fwa_info = {
-+			.state = ND_INTEL_FWA_IDLE,
-+			.capability = ND_INTEL_BUS_FWA_CAP_FWQUIESCE
-+				| ND_INTEL_BUS_FWA_CAP_OSQUIESCE,
-+			.activate_tmo = 1,
-+			.cpu_quiesce_tmo = 1,
-+			.io_quiesce_tmo = 1,
-+			.max_quiesce_tmo = 1,
-+		},
-+	};
-+	rc = setup_result(cmd.buf, cmd_size);
-+	if (rc)
-+		return rc;
-+	rc = acpi_nfit_ctl(&acpi_desc->nd_desc, NULL, ND_CMD_CALL,
-+			&cmd, sizeof(cmd.pkg) + cmd_size, &cmd_rc);
-+	if (rc < 0 || cmd_rc) {
-+		dev_dbg(dev, "%s: failed at: %d rc: %d cmd_rc: %d\n",
-+				__func__, __LINE__, rc, cmd_rc);
-+		return -EIO;
-+	}
-+
- 	return 0;
- }
- 
+     This approach introduces new syntax, which is different to existing
+     helper bpf_get_stack(). Therefore, this is not ideal.
 
+  2. Extend get_perf_callchain() to support "task" as argument.
+
+     This approach reuses most of bpf_get_stack(). However, extending
+     get_perf_callchain() requires non-trivial changes to architecture
+     specific code. Which is error prone.
+
+  3. Current (v2) approach, leverages most of existing bpf_get_stack(), a=
+nd
+     uses stack_trace_save_tsk() to handle architecture specific logic.
+
+[1] https://lore.kernel.org/netdev/20200623070802.2310018-1-songliubravin=
+g@fb.com/
+
+Changes v1 =3D> v2:
+1. Reuse most of bpf_get_stack() logic. (Andrii)
+2. Fix unsigned long vs. u64 mismatch for 32-bit systems. (Yonghong)
+3. Add %pB support in bpf_trace_printk(). (Daniel)
+4. Fix buffer size to bytes.
+
+Song Liu (4):
+  perf: export get/put_chain_entry()
+  bpf: introduce helper bpf_get_task_stak()
+  bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
+  selftests/bpf: add bpf_iter test with bpf_get_task_stack_trace()
+
+ include/linux/bpf.h                           |  1 +
+ include/linux/perf_event.h                    |  2 +
+ include/uapi/linux/bpf.h                      | 35 +++++++-
+ kernel/bpf/stackmap.c                         | 79 ++++++++++++++++++-
+ kernel/events/callchain.c                     |  4 +-
+ kernel/trace/bpf_trace.c                      | 14 +++-
+ scripts/bpf_helpers_doc.py                    |  2 +
+ tools/include/uapi/linux/bpf.h                | 35 +++++++-
+ .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++
+ .../selftests/bpf/progs/bpf_iter_task_stack.c | 60 ++++++++++++++
+ 10 files changed, 239 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
+.c
+
+--
+2.24.1
