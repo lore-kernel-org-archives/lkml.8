@@ -2,75 +2,74 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B94EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41227C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E70B208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB3D20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgFZUkh (ORCPT
+        id S1725863AbgFZUoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUkh (ORCPT
+        Fri, 26 Jun 2020 16:44:08 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52375 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFZUoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:40:37 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24DBC03E979;
-        Fri, 26 Jun 2020 13:40:36 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 45D0511F5F637;
-        Fri, 26 Jun 2020 13:40:36 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 13:40:35 -0700 (PDT)
-Message-Id: <20200626.134035.2092614267932258749.davem@davemloft.net>
-To:     brgl@bgdev.pl
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, kuba@kernel.org, p.zabel@pengutronix.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bgolaszewski@baylibre.com
-Subject: Re: [PATCH 0/6] net: phy: relax PHY and MDIO reset handling
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200626155325.7021-1-brgl@bgdev.pl>
-References: <20200626155325.7021-1-brgl@bgdev.pl>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 26 Jun 2020 13:40:36 -0700 (PDT)
+        Fri, 26 Jun 2020 16:44:08 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id F23A3E0005;
+        Fri, 26 Jun 2020 20:44:02 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     a.zummo@towertech.it, ludovic.desroches@microchip.com,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        nicolas.ferre@microchip.com, robh+dt@kernel.org,
+        jason@lakedaemon.net, maz@kernel.org, tglx@linutronix.de
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] add RTT support for SAM9X60
+Date:   Fri, 26 Jun 2020 22:44:01 +0200
+Message-Id: <159320404890.1517140.1473221944024605941.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 26 Jun 2020 17:53:19 +0200
+On Wed, 10 Jun 2020 12:05:33 +0300, Claudiu Beznea wrote:
+> This series adds RTT support for SAM9X60.
+> 
+> Changes in v2:
+> - use "atmel,at91sam9260-rtt" as fallback for compatible
+> - in patch 1 keep only the addition of sam9x60_aic_irq_fixup
+> - get rid of patches 2/5 from v1
+> - squash patches 4/5, 5/5 from v1
+> - change commit title for patch "rtc: at91sam9: add microchip,sam9x60-rtt"
+>   from v1 into "dt-bindings: rtc: add microchip,sam9x60-rtt" and
+>   place it before device tree patch
+> 
+> [...]
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Previously these patches were submitted as part of a larger series[1]
-> but since the approach in it will have to be reworked I'm resending
-> the ones that were non-controversial and have been reviewed for upstream.
-> 
-> Florian suggested a better solution for managing multiple resets. While
-> I will definitely try to implement something at the driver model's bus
-> level (together with regulator support), the 'resets' and 'reset-gpios'
-> DT property is a stable ABI defined in mdio.yaml so improving its support
-> is in order as we'll have to stick with it anyway. Current implementation
-> contains an unnecessary limitation where drivers without probe() can't
-> define resets.
-> 
-> Changes from the previous version:
-> - order forward declarations in patch 4 alphabetically
-> - collect review tags
-> 
-> [1] https://lkml.org/lkml/2020/6/22/253
+Applied 2 and 3, thanks!
 
-Series applied, thank you.
+[2/3] dt-bindings: rtc: add microchip,sam9x60-rtt
+      commit: 73554069ded8fc6fa747423522c4295d5bbf6f52
+[3/3] ARM: dts: sam9x60: add rtt
+      commit: 5f6b33f463468b9595eebfed142756ba13ea2b60
+
+Best regards,
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
