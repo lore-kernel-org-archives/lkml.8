@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2797C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8FB207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4B72080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tgisD/XY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BFVCZMiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgFZH7z (ORCPT
+        id S1728978AbgFZICR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39584 "EHLO
+        Fri, 26 Jun 2020 04:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728913AbgFZH7A (ORCPT
+        with ESMTP id S1728897AbgFZICP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:59:00 -0400
+        Fri, 26 Jun 2020 04:02:15 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4EC8C08C5C1;
-        Fri, 26 Jun 2020 00:59:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF991C08C5DB;
+        Fri, 26 Jun 2020 01:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=sTsOMUcnMDqLSD97+IRNpD3MR/vvaG/xJH7og4zU1hM=; b=tgisD/XYQQc8TIeX5GjRVV5EBg
-        oxK0u7npEgEPc0UtjdZMbSm2M+G17NrPZSoSdZVGx2z4Zeu8x3Z794InO1EK8Syr0dqlNPB53R8TE
-        XJbLfxjICiCWl02epcH258gcvZzJOXkXxtadiftIjkoKV+/jbMVl2WBnkAWOMA03BWYCKDIG8vD73
-        E1ePzdpkDPpV8EUBTuTQikVKPweac1DEmJv9TbEbwLLLqlHPoY4ZCO2H+i78FqQpjg24rb3Gys+Mp
-        iAgx4fURFqnGEr5LQSv/EMycoKy/J82AdT2uM0aWdnP/x12vmcpBk+bCFbV657wbov6JMFXaWHcVM
-        9WioEHRA==;
+        bh=Gfq1cduFYABDR3Fkx1QZk2YcbgFvT9xrFNMNKHVTMCk=; b=BFVCZMiF66jSFs2WZSzt5u3sXh
+        Kt0mRsvbQWMJLalnuF8CWJe1ijTXjYfPsErTxAMsV5Qpw5yrjZxInpPpEIaR5MNjozZecaTXlSsER
+        hEZW0EIdKutG50THPjik/dvqEtBmXzSwAf9vuRqGEpKHZmPvW8z9XauIB/G9pRU2ZS7blhdyWEInS
+        LYpn6ompzFdQbQI/PZcThONE996q4V6fXk/3VtVPMB4/GTFOPqhfAmjSmIFdqhJqufOAjB06B6yZt
+        28poHFKuOZoyKbRyoA8hX71XP4c+XFPf1mCI59JVPSdbjkoPzS96yRJPD4PjvGGhdDk4Zn5L5JOgo
+        kfMj9HRQ==;
 Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jojFy-0006zL-8M; Fri, 26 Jun 2020 07:58:42 +0000
+        id 1jojJA-0007U7-Fd; Fri, 26 Jun 2020 08:02:00 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 3/9] seq_file: add seq_read_iter
-Date:   Fri, 26 Jun 2020 09:58:30 +0200
-Message-Id: <20200626075836.1998185-4-hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/7] floppy: use block_size
+Date:   Fri, 26 Jun 2020 10:01:52 +0200
+Message-Id: <20200626080158.1998621-2-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
-References: <20200626075836.1998185-1-hch@lst.de>
+In-Reply-To: <20200626080158.1998621-1-hch@lst.de>
+References: <20200626080158.1998621-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -61,129 +56,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iov_iter based variant for reading a seq_file.  seq_read is
-reimplemented on top of the iter variant.
+Use the block_size helper instead of open coding it.  Also remove the
+check for a 0 block size, as that can't happen.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/seq_file.c            | 34 +++++++++++++++++++++-------------
- include/linux/seq_file.h |  1 +
- 2 files changed, 22 insertions(+), 13 deletions(-)
+ drivers/block/floppy.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index 4e6239f33c066a..159a3e12cadd30 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -18,6 +18,7 @@
- #include <linux/mm.h>
- #include <linux/printk.h>
- #include <linux/string_helpers.h>
-+#include <linux/uio.h>
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 3e9db22db2a8f5..09079aee8dc430 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4205,7 +4205,6 @@ static int __floppy_read_block_0(struct block_device *bdev, int drive)
+ 	struct bio_vec bio_vec;
+ 	struct page *page;
+ 	struct rb0_cbdata cbdata;
+-	size_t size;
  
- #include <linux/uaccess.h>
- #include <asm/page.h>
-@@ -146,7 +147,17 @@ static int traverse(struct seq_file *m, loff_t offset)
-  */
- ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- {
--	struct seq_file *m = file->private_data;
-+	return iter_read(file, buf, size, ppos, seq_read_iter);
-+}
-+EXPORT_SYMBOL(seq_read);
-+
-+/*
-+ * Ready-made ->f_op->read_iter()
-+ */
-+ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	struct seq_file *m = iocb->ki_filp->private_data;
-+	size_t size = iov_iter_count(iter);
- 	size_t copied = 0;
- 	size_t n;
- 	void *p;
-@@ -158,14 +169,14 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 	 * if request is to read from zero offset, reset iterator to first
- 	 * record as it might have been already advanced by previous requests
- 	 */
--	if (*ppos == 0) {
-+	if (iocb->ki_pos == 0) {
- 		m->index = 0;
- 		m->count = 0;
+ 	page = alloc_page(GFP_NOIO);
+ 	if (!page) {
+@@ -4213,15 +4212,11 @@ static int __floppy_read_block_0(struct block_device *bdev, int drive)
+ 		return -ENOMEM;
  	}
  
--	/* Don't assume *ppos is where we left it */
--	if (unlikely(*ppos != m->read_pos)) {
--		while ((err = traverse(m, *ppos)) == -EAGAIN)
-+	/* Don't assume ki_pos is where we left it */
-+	if (unlikely(iocb->ki_pos != m->read_pos)) {
-+		while ((err = traverse(m, iocb->ki_pos)) == -EAGAIN)
- 			;
- 		if (err) {
- 			/* With prejudice... */
-@@ -174,7 +185,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 			m->count = 0;
- 			goto Done;
- 		} else {
--			m->read_pos = *ppos;
-+			m->read_pos = iocb->ki_pos;
- 		}
- 	}
+-	size = bdev->bd_block_size;
+-	if (!size)
+-		size = 1024;
+-
+ 	cbdata.drive = drive;
  
-@@ -187,13 +198,11 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 	/* if not empty - flush it first */
- 	if (m->count) {
- 		n = min(m->count, size);
--		err = copy_to_user(buf, m->buf + m->from, n);
--		if (err)
-+		if (copy_to_iter(m->buf + m->from, n, iter) != n)
- 			goto Efault;
- 		m->count -= n;
- 		m->from += n;
- 		size -= n;
--		buf += n;
- 		copied += n;
- 		if (!size)
- 			goto Done;
-@@ -254,8 +263,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 	}
- 	m->op->stop(m, p);
- 	n = min(m->count, size);
--	err = copy_to_user(buf, m->buf, n);
--	if (err)
-+	if (copy_to_iter(m->buf, n, iter) != n)
- 		goto Efault;
- 	copied += n;
- 	m->count -= n;
-@@ -264,7 +272,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 	if (!copied)
- 		copied = err;
- 	else {
--		*ppos += copied;
-+		iocb->ki_pos += copied;
- 		m->read_pos += copied;
- 	}
- 	mutex_unlock(&m->lock);
-@@ -276,7 +284,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 	err = -EFAULT;
- 	goto Done;
- }
--EXPORT_SYMBOL(seq_read);
-+EXPORT_SYMBOL(seq_read_iter);
+ 	bio_init(&bio, &bio_vec, 1);
+ 	bio_set_dev(&bio, bdev);
+-	bio_add_page(&bio, page, size, 0);
++	bio_add_page(&bio, page, block_size(bdev), 0);
  
- /**
-  *	seq_lseek -	->llseek() method for sequential files.
-diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-index 813614d4b71fbc..b83b3ae3c877f3 100644
---- a/include/linux/seq_file.h
-+++ b/include/linux/seq_file.h
-@@ -107,6 +107,7 @@ void seq_pad(struct seq_file *m, char c);
- char *mangle_path(char *s, const char *p, const char *esc);
- int seq_open(struct file *, const struct seq_operations *);
- ssize_t seq_read(struct file *, char __user *, size_t, loff_t *);
-+ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter);
- loff_t seq_lseek(struct file *, loff_t, int);
- int seq_release(struct inode *, struct file *);
- int seq_write(struct seq_file *seq, const void *data, size_t len);
+ 	bio.bi_iter.bi_sector = 0;
+ 	bio.bi_flags |= (1 << BIO_QUIET);
 -- 
 2.26.2
 
