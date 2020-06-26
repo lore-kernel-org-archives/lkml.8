@@ -2,171 +2,104 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A3A2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC611207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgFZArd (ORCPT
+        id S1726608AbgFZAyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:47:33 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54043 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgFZArd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:47:33 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 73C3B8231DC;
-        Fri, 26 Jun 2020 10:47:23 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jocWY-0001j2-CR; Fri, 26 Jun 2020 10:47:22 +1000
-Date:   Fri, 26 Jun 2020 10:47:22 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [Bug, sched, 5.8-rc2]: PREEMPT kernels crashing in
- check_preempt_wakeup() running fsx on XFS
-Message-ID: <20200626004722.GF2005@dread.disaster.area>
+        Thu, 25 Jun 2020 20:54:31 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:39628 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725834AbgFZAyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:54:31 -0400
+Received: by ajax-webmail-mail-app2 (Coremail) ; Fri, 26 Jun 2020 08:54:22
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Fri, 26 Jun 2020 08:54:22 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Stanimir Varbanov" <stanimir.varbanov@linaro.org>
+Cc:     kjlu@umn.edu, "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance
+ in venus_probe
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
+References: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
+ <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=Cn18mzZ-vmOijx-un8wA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Message-ID: <35c749cf.28af7.172ee1e4ac3.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: by_KCgBXITQ+R_Ve_Rt9AA--.16565W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgMDBlZdtO0wNAABsT
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVWDMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+Cj4gSGkgRGluZ2hhbywKPiAKPiBPbiA2LzI0LzIwIDk6MzAgQU0sIERpbmdoYW8gTGl1IHdyb3Rl
+Ogo+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1bnRpbWUgUE0gdXNh
+Z2UgY291bnRlciBldmVuCj4gPiB3aGVuIGl0IHJldHVybnMgYW4gZXJyb3IgY29kZS4gVGh1cyBh
+IHBhaXJpbmcgZGVjcmVtZW50IGlzIG5lZWRlZCBvbgo+ID4gdGhlIGVycm9yIGhhbmRsaW5nIHBh
+dGggdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNlZC4gRm9yIG90aGVyIGVycm9yCj4gPiBwYXRo
+cyBhZnRlciB0aGlzIGNhbGwsIHRoaW5ncyBhcmUgdGhlIHNhbWUuCj4gPiAKPiA+IFNpZ25lZC1v
+ZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4gLS0tCj4gPiAK
+PiA+IENoYW5nZWxvZzoKPiA+IAo+ID4gdjI6IC0gQWRkIHBtX3J1bnRpbWVfZ2V0X25vcmVzdW1l
+KCkgb24gZmFpbHVyZSBvZgo+ID4gICAgICAgcG1fcnVudGltZV9wdXRfc3luYygpIHRvIGJhbGFu
+Y2UgUE0gY291bnRlciBpbnN0ZWFkIG9mCj4gPiAgICAgICByZWxlYXNpbmcgZXZlcnl0aGluZyBo
+ZXJlLgo+IAo+IFlvdSBhcmUgYWRkaW5nIHBtX3J1bnRpbWVfZ2V0X25vcmVzdW1lIGluIHBtX3J1
+bnRpbWVfcHV0X3N5bmMgZXJyb3IgcGF0aAo+IGJ1dCB0aGUgcGF0Y2ggZGVzY3JpcHRpb24gaXMg
+cmVmZXJyaW5nIHRvIHBtX3J1bnRpbWVfZ2V0X3N5bmMuIEknbSBjb25mdXNlZC4KPiAKCldoZW4g
+cG1fcnVudGltZV9wdXRfc3luYyBmYWlsZWQsIHRoZSBjb250cm9sIGZsb3cgd2lsbCBqdW1wIHRv
+IAplcnJfZGV2X3VucmVnaXN0ZXIsIHdoZXJlIGhhcyBhbHJlYWR5IGJlZW4gYSBwbV9ydW50aW1l
+X3B1dF9ub2lkbGUuIApJZiB3ZSBkb24ndCBhZGQgYW4gZXh0cmEgcG1fcnVudGltZV9nZXRfbm9y
+ZXN1bWUgaGVyZSwgd2Ugd2lsbCAKZGVjcmVhc2UgUE0gdXNhZ2UgY291bnRlciB0d2ljZS4gCgpB
+bnl3YXksIHRoaXMgbWF5IHNlZW0gYSBsaXR0bGUgc3RyYW5nZS4gRG8geW91IGhhdmUgYSBiZXR0
+ZXIKc3RyYXRlZ3kgdG8gcmVvcmRlciB0aGUgbGFiZWxzPyAKClJlZ2FyZHMsCkRpbmdoYW8KCj4g
+PiAtLS0KPiA+ICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3Fjb20vdmVudXMvY29yZS5jIHwgNSAr
+KysrLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+PiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vcWNvbS92ZW51cy9j
+b3JlLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3Fjb20vdmVudXMvY29yZS5jCj4gPiBpbmRl
+eCAyMDNjNjUzODA0NGYuLmIwYjkzMmJmOGMwMiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvbWVk
+aWEvcGxhdGZvcm0vcWNvbS92ZW51cy9jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxh
+dGZvcm0vcWNvbS92ZW51cy9jb3JlLmMKPiA+IEBAIC0yODcsOCArMjg3LDEwIEBAIHN0YXRpYyBp
+bnQgdmVudXNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAJCWdvdG8g
+ZXJyX2NvcmVfZGVpbml0Owo+ID4gIAo+ID4gIAlyZXQgPSBwbV9ydW50aW1lX3B1dF9zeW5jKGRl
+dik7Cj4gPiAtCWlmIChyZXQpCj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCXBtX3J1bnRpbWVfZ2V0
+X25vcmVzdW1lKGRldik7Cj4gPiAgCQlnb3RvIGVycl9kZXZfdW5yZWdpc3RlcjsKPiA+ICsJfQo+
+ID4gIAo+ID4gIAlyZXR1cm4gMDsKPiA+ICAKPiA+IEBAIC0yOTksNiArMzAxLDcgQEAgc3RhdGlj
+IGludCB2ZW51c19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gIGVycl92
+ZW51c19zaHV0ZG93bjoKPiA+ICAJdmVudXNfc2h1dGRvd24oY29yZSk7Cj4gPiAgZXJyX3J1bnRp
+bWVfZGlzYWJsZToKPiA+ICsJcG1fcnVudGltZV9wdXRfbm9pZGxlKGRldik7Cj4gPiAgCXBtX3J1
+bnRpbWVfc2V0X3N1c3BlbmRlZChkZXYpOwo+ID4gIAlwbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsK
+PiA+ICAJaGZpX2Rlc3Ryb3koY29yZSk7Cj4gPiAKPiAKPiAtLSAKPiByZWdhcmRzLAo+IFN0YW4K
 
-I turned on CONFIG_PREEMPT=y yesterday to try to reproduce problems
-Darrick was having with one of my patchsets. We've both been seeing
-a dead stop panic on these configs, and I managed to find a
-relatively reliable reproducer in fstests generic/127. It's
-basically just single fsx process exercising a single file, and it
-results in this happening within 15 minutes of starting the test
-running in a loop:
-
-[ 1102.169209] BUG: kernel NULL pointer dereference, address: 0000000000000150
-[ 1102.171270] #PF: supervisor read access in kernel mode
-[ 1102.172894] #PF: error_code(0x0000) - not-present page
-[ 1102.174408] PGD 0 P4D 0
-[ 1102.175136] Oops: 0000 [#1] PREEMPT SMP
-[ 1102.176293] CPU: 2 PID: 909 Comm: kworker/2:1H Not tainted 5.8.0-rc2-dgc+ #2469
-[ 1102.178395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-[ 1102.180762] Workqueue: xfs-log/pmem0 xlog_ioend_work
-[ 1102.182286] RIP: 0010:check_preempt_wakeup+0xc8/0x1e0
-[ 1102.183804] Code: 39 c2 75 f2 89 d0 39 d0 7d 20 83 ea 01 4d 8b a4 24 48 01 00 00 39 d0 75 f1 eb 0f 48 8b 9b 48 01 00 00 4d 8b a4 24 48 01 00 00 <48> 8b bb 50 01 00 00 49 39 bc 24 b
-[ 1102.189125] RSP: 0018:ffffc9000071cea0 EFLAGS: 00010006
-[ 1102.190625] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff822305a0
-[ 1102.192737] RDX: 0000000000000000 RSI: ffff88853337cd80 RDI: ffff88853ea2a940
-[ 1102.194827] RBP: ffffc9000071ced8 R08: ffffffff822305a0 R09: ffff88853ec2b2d0
-[ 1102.196886] R10: ffff88800f74b010 R11: ffff88853ec2a970 R12: 0000000000000000
-[ 1102.199040] R13: ffff88853ea2a8c0 R14: 0000000000000001 R15: ffff88853e3b0000
-[ 1102.200883] FS:  0000000000000000(0000) GS:ffff88853ea00000(0000) knlGS:0000000000000000
-[ 1102.203306] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1102.205024] CR2: 0000000000000150 CR3: 00000000ae7b5004 CR4: 0000000000060ee0
-[ 1102.207117] Call Trace:
-[ 1102.207895]  <IRQ>
-[ 1102.208500]  ? enqueue_task_fair+0x1d7/0x9f0
-[ 1102.209709]  check_preempt_curr+0x74/0x80
-[ 1102.210931]  ttwu_do_wakeup+0x1e/0x170
-[ 1102.212064]  ttwu_do_activate+0x5b/0x70
-[ 1102.213225]  sched_ttwu_pending+0x94/0xe0
-[ 1102.214410]  flush_smp_call_function_queue+0xf1/0x190
-[ 1102.215885]  generic_smp_call_function_single_interrupt+0x13/0x20
-[ 1102.217790]  __sysvec_call_function_single+0x2b/0xe0
-[ 1102.219375]  asm_call_on_stack+0xf/0x20
-[ 1102.220599]  </IRQ>
-[ 1102.221280]  sysvec_call_function_single+0x7e/0x90
-[ 1102.222854]  asm_sysvec_call_function_single+0x12/0x20
-[ 1102.224515] RIP: 0010:_raw_spin_unlock_irqrestore+0x14/0x30
-[ 1102.226350] Code: e8 e8 20 25 ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 66 66 66 66 90 55 48 89 e5 53 48 89 f3 e8 5e 11 39 ff 53 9d <65> ff 0d c5 72 26 7e 74 03 5b 5d f
-[ 1102.232213] RSP: 0018:ffffc900020b7cc8 EFLAGS: 00000246
-[ 1102.233902] RAX: 0000000000000001 RBX: 0000000000000246 RCX: 0000000000000000
-[ 1102.236134] RDX: 0000000000000002 RSI: 0000000000000246 RDI: ffff88852679a400
-[ 1102.238402] RBP: ffffc900020b7cd0 R08: ffff88852679a400 R09: ffffc900020b7ce8
-[ 1102.240598] R10: ffff88852a04e480 R11: 0000000000000001 R12: 00000000ffffffff
-[ 1102.242906] R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-[ 1102.245191]  __wake_up_common_lock+0x8a/0xc0
-[ 1102.246572]  __wake_up+0x13/0x20
-[ 1102.247636]  xlog_state_clean_iclog+0xf7/0x1a0
-[ 1102.249075]  xlog_state_do_callback+0x257/0x300
-[ 1102.250548]  xlog_state_done_syncing+0x69/0xb0
-[ 1102.251958]  xlog_ioend_work+0x6c/0xc0
-[ 1102.253151]  process_one_work+0x1a6/0x390
-[ 1102.254403]  worker_thread+0x50/0x3b0
-[ 1102.255595]  ? process_one_work+0x390/0x390
-[ 1102.256913]  kthread+0x131/0x170
-[ 1102.257993]  ? __kthread_create_on_node+0x1b0/0x1b0
-[ 1102.259546]  ret_from_fork+0x1f/0x30
-[ 1102.260707] CR2: 0000000000000150
-[ 1102.261779] ---[ end trace d5f0aeef2eb333bd ]---
-[ 1102.263238] RIP: 0010:check_preempt_wakeup+0xc8/0x1e0
-[ 1102.264848] Code: 39 c2 75 f2 89 d0 39 d0 7d 20 83 ea 01 4d 8b a4 24 48 01 00 00 39 d0 75 f1 eb 0f 48 8b 9b 48 01 00 00 4d 8b a4 24 48 01 00 00 <48> 8b bb 50 01 00 00 49 39 bc 24 b
-[ 1102.270645] RSP: 0018:ffffc9000071cea0 EFLAGS: 00010006
-[ 1102.272237] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff822305a0
-[ 1102.274439] RDX: 0000000000000000 RSI: ffff88853337cd80 RDI: ffff88853ea2a940
-[ 1102.276613] RBP: ffffc9000071ced8 R08: ffffffff822305a0 R09: ffff88853ec2b2d0
-[ 1102.278797] R10: ffff88800f74b010 R11: ffff88853ec2a970 R12: 0000000000000000
-[ 1102.280930] R13: ffff88853ea2a8c0 R14: 0000000000000001 R15: ffff88853e3b0000
-[ 1102.283094] FS:  0000000000000000(0000) GS:ffff88853ea00000(0000) knlGS:0000000000000000
-[ 1102.285648] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1102.287415] CR2: 0000000000000150 CR3: 00000000ae7b5004 CR4: 0000000000060ee0
-[ 1102.289606] Kernel panic - not syncing: Fatal exception in interrupt
-[ 1102.291850] Kernel Offset: disabled
-[ 1102.293002] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-
-This was from a vanilla 5.8-rc2 kernel, a current linus tree also
-fails like this. It looks like it is taking a scheduler preempt IPI
-and trying to do a task akeup while already processing tasks wakeups
-on that CPU....
-
-A 5.7 kernel survived for about 20 minutes - not conclusive that the
-bug didn't exist on that kernel, but in general it reproduces within
-5 minutes of starting the test looping.  Pre-empt related config
-options:
-
-$ grep PREEMPT .config
-# CONFIG_PREEMPT_NONE is not set
-# CONFIG_PREEMPT_VOLUNTARY is not set
-CONFIG_PREEMPT=y
-CONFIG_PREEMPT_COUNT=y
-CONFIG_PREEMPTION=y
-CONFIG_PREEMPT_RCU=y
-CONFIG_PREEMPT_NOTIFIERS=y
-# CONFIG_DEBUG_PREEMPT is not set
-# CONFIG_PREEMPTIRQ_EVENTS is not set
-# CONFIG_PREEMPT_TRACER is not set
-$
-
-I just reproduced it on commit d479c5a1919b ("Merge tag
-'sched-core-2020-06-02' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip"), and I'm
-going to try to do a bisect it. I'm not sure this is going to be
-reliable, because running for 20+ minutes isn't a guarantee the
-problem isn't there...
-
-More info will follow as I find it.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
--- 
-Dave Chinner
-david@fromorbit.com
