@@ -2,142 +2,95 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4265BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2635621473
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32AE207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593195442;
+	bh=6cO14MahD2eqoTeBaK7We6L4gJrj2k+b/ftJFyuTMmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bc6R+3xI7tmu+T6SZnP0o+89/DljVEIf+XTJg5+Ky6fsO2Uu9aaV6xjlmEX/T0ln3
+	 jlFUZXHAuC6SuGBZ/7z6AvVqGl6f+9HhyKRRS4sizFuVfJF9iIa/Aoimvv6ye0JGJh
+	 3cxtjHkeyMpnjWdX9cLKe9h3+RTuPxOcxqvcK0YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgFZSQq (ORCPT
+        id S1726206AbgFZSRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:16:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64784 "EHLO mga11.intel.com"
+        Fri, 26 Jun 2020 14:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgFZSQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:16:45 -0400
-IronPort-SDR: l2oiloYgDf5NF7a/IY7RALemqzIFlH2c0CaSQ9XbLwxqqbgoghC6m8FTpoRzzQ23H7grnD80FX
- w5lApmuIqT+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143661750"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="143661750"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:16:44 -0700
-IronPort-SDR: LrvGyNnpWX6ik5OFFqZoBMW0OQOmmNpAFfodvXeT2j9bQlZKueLItipolrt/V64t2tcadV1dna
- D9NzoyBXgSJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="385835873"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2020 11:16:44 -0700
-Date:   Fri, 26 Jun 2020 11:16:24 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradeed.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v4 12/12] x86/traps: Fix up invalid PASID
-Message-ID: <20200626181624.GA32961@romley-ivt3.sc.intel.com>
-References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
- <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
- <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
+        id S1725780AbgFZSRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:17:19 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC37B207D8;
+        Fri, 26 Jun 2020 18:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593195439;
+        bh=6cO14MahD2eqoTeBaK7We6L4gJrj2k+b/ftJFyuTMmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jhr6fkibh+hp57t83vdQu2PSEEfVz2VsqS8Ffs1G0+2Kb2hGIZovYf+KpPD7blVjH
+         xMrpEboqbKgaCucHmEksLcAIUJvEbDePA15oWs/L//aJoUMmg4HBPVJ4jJjCewjYR9
+         SQov2Tb6PmGKynLwadAV2ktVQqo3ePRESlUwZgOY=
+Date:   Fri, 26 Jun 2020 21:17:13 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH 0/2] sparc32: srmmu: improve type safety of
+ __nocache_fix()
+Message-ID: <20200626181713.GA3547368@kernel.org>
+References: <20200524162151.3493-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200524162151.3493-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter,
+Any comments on this?
 
-On Fri, Jun 26, 2020 at 11:44:50AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 01:17:22PM -0700, Fenghua Yu wrote:
+On Sun, May 24, 2020 at 07:21:49PM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> > +static bool fixup_pasid_exception(void)
-> > +{
-> > +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
-> > +		return false;
-> > +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
-> > +		return false;
+> Hi,
 > 
-> elsewhere you had another variation:
+> As discussed at [1] the __nocache_fix() macro in sparc's SRMMU can be made
+> type safe and so the compiler will yell anout misuse of pXd pointers for
+> which the __nocache_fix() is primarily used.
 > 
-> +       if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
-> +               return;
-> +
-> +       if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
-> +               return;
+> The first patch is an fix of such misuse that I've discovered after adding
+> type cast to __nocache_fix(), but to avoid breaking bisection I've made it
+> the first commit.
 > 
-> Which is it, and why do we need the CONFIG thing when combined with the
-> enabled thing?
+> --
+> Sincerely yours,
+> Mike.
+> 
+> [1] https://lkml.kernel.org/r/CAHk-=wisORTa7QVPnFqNw9pFs62UiwgsD4C4d=MtYy1o4JPyGQ@mail.gmail.com
+> 
+> Mike Rapoport (2):
+>   sparc32: use PUD rather than PGD to get PMD in srmmu_inherit_prom_mappings()
+>   sparc32: srmmu: improve type safety of __nocache_fix()
+> 
+>  arch/sparc/include/asm/pgtsrmmu.h |  2 +-
+>  arch/sparc/mm/srmmu.c             | 18 +++++++++---------
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> -- 
+> 2.26.2
 > 
 
-I will use the second one with cpu_feature_enabled() for both cases.
-
-The CONFIG thing is for compilation time optimization when
-CONFIG_INTEL_IOMMU_SVM is not set.
-
-If CONFIG_INTEL_IOMMU_SVM is not set, IS_ENABLED(CONFIG_INTEL_IOMMU_SVM) 
-is "false" during compilation time. Then GCC will optimize 
-fixup_pasid_execption() to empty and will not define
-__fixup_pasid_exception() at all because no one calls it.
-
-If CONFIG_INTEL_IOMMU_SVM is set, IS_ENABLED(...) is always true.
-Depending on cpu_feature_enabled(X86_FEATURE_ENQCMD), __fixup_pasid_execption()
-will be called or not during run time.
-
-Does it make sense?
-
-Do you want me to define a helper enqcmd_enabled()?
-
-static inline bool enqcmd_enabled(void)
-{
-   if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
-           return false;
-   if (!static_cpu_has(X86_FEATURE_ENQCMD))
-           return false;
-   return true;
-}
-
-Then both fixup_pasid_execption() and free_pasid() can call it.
-
-static bool fixup_pasid_exception(void)
-{
-	if (!enqcmd_enabled())
-		return false;
-	
-	return __fixup_pasid_exception();
-}
-
-statis inline void free_pasid(struct m_struct *mm)
-{
-	if (!enqcmd_enabled())
-		return;
-
-	__free_pasid(mm);
-}
-
-Please advice.
-
--Fenghua
+-- 
+Sincerely yours,
+Mike.
