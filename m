@@ -2,216 +2,271 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4700C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4910207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833ED20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VrTDatHX"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SNSuklL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgFZSSq (ORCPT
+        id S1725811AbgFZSVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFZSSq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:18:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33ADC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:18:45 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ev7so4514679pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=36N04TxzlXqQd75WUAHX0Ml1yIpSCa6SZWR1zFDNcKI=;
-        b=VrTDatHX5KPH/5Ib+DwzQwS9K62nCL8DXbQ9TCdD3baJM1Bw1mrgYHLZynls3U0ZVZ
-         aUfeP1M/f7UDcBqiRGZE66rOKIA43o7kXoQlJR5qwA2EcE3mvKMERnAvUmuKEYs3hKUv
-         NK+2YzYDvubULdSpBHbv27AsWTPd47koCc72QBnoVbdepZwtxOZ/LlBFMEH9nXxnDIbu
-         SUAvoxn4oBBZjC3LTFtsw8n5LQCaNPR/9LshWoO7O8KKGXn+u8PVZ9P3cXCF1Zw5yZAQ
-         sMZVt82+4nz5vxU/UONdL2+84otYOxGsVsHlurZ36GfYq+nAkD9DcXeIn2SRBqnCwNqu
-         YLMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=36N04TxzlXqQd75WUAHX0Ml1yIpSCa6SZWR1zFDNcKI=;
-        b=nIlKLLPBXM+trSwWeOBu+sWPJZ5+d579ugum1R5j78roQvTnTa09VDoFwcf4WSg6S8
-         maCE1lOMfs9EqPchmEiIQwshQ1nEGjwiW4QrE+NtvyPUBqIrD78bV/HqJOmMWH1xS8JJ
-         mOv8Ws9NSmwFCUjp5rzTHfw4mo9N4NEyEd/MJk7sUtY/C6lVLH18HLqZLsR7TarFjoqz
-         FF5phh12SB1vyWBOhBbazM2o/tYNHhueM1mn+yUDqzwPFfr+IY6eQZqIeHVneHzIi2q0
-         OIF5rHQWiVoonYdF0mgWG/2F3hDL/R8BNifxZnLKNojh6UHwqAvEH7+xbRhrbUBLFXst
-         Jupw==
-X-Gm-Message-State: AOAM530NscAl7Xim3fMBmLBUa5cNaH7c0LGzZCLOxl9upSFUu41S7VfB
-        /HAI0eUvvjefExbjEvBZzyyHcN0199II+lWK1w5GFA==
-X-Google-Smtp-Source: ABdhPJzCzlwf5+hIj/AHmVbCJbm/ZzQCl2PTNNBAfPyDA3GR4+VckJCpDiSv5Bk1XxdgWA4b6Ark/Voa1hwNMjOXOuI=
-X-Received: by 2002:a17:90a:1e:: with SMTP id 30mr4474021pja.25.1593195525198;
- Fri, 26 Jun 2020 11:18:45 -0700 (PDT)
+        Fri, 26 Jun 2020 14:21:37 -0400
+Received: from mail-co1nam11on2134.outbound.protection.outlook.com ([40.107.220.134]:10408
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbgFZSVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:21:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hoA19WFCpq+bA2Lx+W5VQEKKmHzzeOdBj8HwZrmGWZ/on1/juGeUL+gqTjblgNRK9ixwjsk2BCqPx7GpB9OtvB4cRiabbIgUhP+Mj4VQRgILrLaZSgGYwSpiXIhfnXk3VJkXRNoxNaXFU54rxpHHAiQe9lTaTIif58i99TfhyD+2E8IFJr5mYetVTAsUF+Bcb48Ksqwbc2P3OCQec52Dbso39VkNW+yL+q7DDvUmq2X93DYWgca+xkTCKNXh5w1mU/7jI+jecUwWi5lSLoVqdNBRqpaIbly6cNPQn+npQ7VhEfo3UPX3+bpP4Xu/a0Ihe9J93scKBeljKJM6R0ZniA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbiOFPOmNVKfyi+d7Mwmct1M2kPEXZbW7RDEBHvPuUg=;
+ b=TcsoZwrDbt8mlWdX9cSzprh0OVs9bBzbcb/tdT3u6nUg5BLyHMUmWE4Hp83M03EXa+jylIpeACW3bnyC9INPvH8cRlAGs5cMqV0tnAV60yhwEy+5dQ6qHI3E1il4tqjweUHIELaCS981iXITlAQtT2tFN9ts1us6qZCSjddQ32nZGPgSSaROqmcR/E79RJZAHEfbSt6pW++E8nIegV0k3evILh6AAlnjcTXyqc/5CZEXlzLum8eoLYNOD2iE6U7dvReycxJrf1Wbh8fl806VEG0PQcpcGRBWhSHJaCt3aoz18MrPjAuvFoJXFi98s79qoifuvOB6eR0V8Glijxm3uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbiOFPOmNVKfyi+d7Mwmct1M2kPEXZbW7RDEBHvPuUg=;
+ b=SNSuklL2AK5tFSD7T3qpT46BaAc3FBBsLOc2KEhL3mxoc/9hFviZxF6cdK1lWZLSeCXDvonck/5Vauex4YHRTxN/NMn0x8PlGesw8AkvyTQo5TMnVHqoNB5c7y1J+oe1Prly3zwjSnun8/NX2gkDHQgvHfUGnRkllNmC1HX6Mvo=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from BN7PR21MB1620.namprd21.prod.outlook.com (2603:10b6:406:b7::27)
+ by BN7PR21MB1730.namprd21.prod.outlook.com (2603:10b6:406:aa::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.2; Fri, 26 Jun
+ 2020 18:21:31 +0000
+Received: from BN7PR21MB1620.namprd21.prod.outlook.com
+ ([fe80::dd79:4f67:5bc0:5ea2]) by BN7PR21MB1620.namprd21.prod.outlook.com
+ ([fe80::dd79:4f67:5bc0:5ea2%4]) with mapi id 15.20.3153.014; Fri, 26 Jun 2020
+ 18:21:31 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     tglx@linutronix.de, mingo@redhat.com, rdunlap@infradead.org,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, peterz@infradead.org,
+        allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, decui@microsoft.com, namit@vmware.com,
+        mikelley@microsoft.com, longli@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: [RESEND][PATCH v3] x86/apic/flat64: Add back the early_param("apic", parse_apic)
+Date:   Fri, 26 Jun 2020 11:21:06 -0700
+Message-Id: <20200626182106.57219-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MW2PR16CA0007.namprd16.prod.outlook.com (2603:10b6:907::20)
+ To BN7PR21MB1620.namprd21.prod.outlook.com (2603:10b6:406:b7::27)
 MIME-Version: 1.0
-References: <20200324220830.110002-1-ndesaulniers@google.com>
- <20200403231611.81444-1-ndesaulniers@google.com> <20200404160100.GB26298@redhat.com>
- <20200404170604.GN23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200404170604.GN23230@ZenIV.linux.org.uk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 26 Jun 2020 11:18:34 -0700
-Message-ID: <CAKwvOdkpxUkYT_oaNhtbNb2GW7omPjfJcV5xJ9Hc5Xaxn4VcFg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86: signal: move save_altstack_ex out of generic headers
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Marco Elver <elver@google.com>,
-        Brian Gerst <brgerst@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:1:cc31:af92:fd70:d080) by MW2PR16CA0007.namprd16.prod.outlook.com (2603:10b6:907::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Fri, 26 Jun 2020 18:21:29 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:4898:80e8:1:cc31:af92:fd70:d080]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7afb7a5f-8d91-44e1-ccbd-08d819fdbff3
+X-MS-TrafficTypeDiagnostic: BN7PR21MB1730:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN7PR21MB1730A10165CAE9909DC0F9A1BF930@BN7PR21MB1730.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0446F0FCE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5If0E5iXZJe+2D0KO/CJ2Moy0dvGCzjPShdNE+o/Ek0R2s5VuS7NmrSZJATgjJ20M+0jB1P9N9+EaGCnni+0VHjaTYHwkVmPpjSUyxK5HuwPlNLAoCQYdFHfHB+z9uMX+m8d5f/EN54noq8FZJwXaWYXWyZjVMCTM7aMLpyhmbt+KKHN4cDBBXj/3NpnkSLmhCSVGsl2YWIAJ7ymqAOE6cvAmgAunJmwTOYRQ4Oc0MC1Cf1bZynpEoXL9gl+26PO+bGaisLnAgGh53iPFYp37NCXHBkaKce9HBOdTvzgZU9PfvomSW4yikdLgYVmuYe3qdSG9ap2I7dUMKB6fIGtQ+bWCIw81tynl3sRPRf4oHfxCP11svKuMOYWwPvzZWORauJWsLv8L5y7W5Pw/ZpFOC+YeYthmkvVG87o1MUjeiOZ0c5nKnAX29rC+rmlIzpn
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR21MB1620.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(376002)(396003)(39860400002)(82960400001)(6636002)(86362001)(6486002)(7416002)(83380400001)(478600001)(4326008)(8936002)(3450700001)(66476007)(16526019)(66946007)(52116002)(36756003)(7696005)(66556008)(2906002)(186003)(5660300002)(316002)(82950400001)(1076003)(10290500003)(8676002)(6666004)(2616005)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 1yJVkQbYb11r2n7Felu75D5X0QbnCaOWsqf37m1dexOu+2g1b+jtL0W5TmL2VoiLbs+OMexxgrxHgFegDgyH3OT98o11v6X80iU44aMx7OKgQUjTi2WN0SdmdlD9VpOyojlVnhx6QBeuR2oZvxXM0XXfNOXYqjAE37FCxIqUgO57rP+ft0W8RbDXoyT6OhUJceOAdKJZ3JDpSd4sYRXxBJkWxaUE3NK3AZXw2BZjMP8GW/c3ZHrUeANN1eQlPwBe/dw6E+ujBwBwJ0N+8HYhjUFN2ymTei9ogX+6xfH0UY3ARzJAC/vQwPFwiySwrB4drEqlDL/qiz6ZHFYOwP/iqdtnCB9DSP4sK3XtV+dZeLauIVb/rS/pUT1l1zRUFjHhlp2czWF+f1VBqhg32u5eV474nlSy+jbTkbOIPRVNMXaDuDmDOAaoL+k8f2A7jcTbQxLHUU9/c+nkaBA4Fj2uydzEgpnmMXwRxagXqrArjKbv2q9rbnWBYxPmlTF9x2K8tBUwfDIl31xZcNRj2TESR1FaGG342sMFg+jbCx5Fo+8=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7afb7a5f-8d91-44e1-ccbd-08d819fdbff3
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR21MB1620.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 18:21:31.4529
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5aQFwd9WKniDRjhogJhBpFNcKogqSK2gofYmOcX5qIGbSAQ5ee4MCXjII+6VC2t5dg5wdUvrkrtuiDNYNG1/9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR21MB1730
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 10:06 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Sat, Apr 04, 2020 at 06:01:00PM +0200, Oleg Nesterov wrote:
-> > On 04/03, Nick Desaulniers wrote:
-> > >
-> > > --- a/arch/x86/kernel/signal.c
-> > > +++ b/arch/x86/kernel/signal.c
-> > > @@ -416,6 +416,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
-> > >     return 0;
-> > >  Efault:
-> > >     user_access_end();
-> > > +   reset_altstack();
-> > >     return -EFAULT;
-> > >  }
-> > >  #else /* !CONFIG_X86_32 */
-> > > @@ -507,6 +508,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
-> > >
-> > >  Efault:
-> > >     user_access_end();
-> > > +   reset_altstack();
-> > >     return -EFAULT;
-> > >  }
-> >
-> > I must have missed something, but this looks just wrong.
-> >
-> > reset_altstack() should be called when __setup_rt_frame() (and
-> > unsafe_save_altstack() in particular) succeeds, not when it fails.
-> >
-> > Nevermind, Al has already suggested to use signal_delivered()...
->
-> FWIW, I propose to do is the patch below (against the current mainline);
-> objections?
->
-> Don't do sas_ss_reset() until we are certain that sigframe won't be abandoned
->
-> Currently we handle SS_AUTODISARM as soon as we have stored the
-> altstack settings into sigframe - that's the point when we have
-> set the things up for eventual sigreturn to restore the old settings.
-> And if we manage to set the sigframe up (we are not done with that
-> yet), everything's fine.  However, in case of failure we end up
-> with sigframe-to-be abandoned and SIGSEGV force-delivered.  And
-> in that case we end up with inconsistent rules - late failures
-> have altstack reset, early ones do not.
->
-> It's trivial to get consistent behaviour - just handle SS_AUTODISARM
-> once we have set the sigframe up and are committed to entering
-> the handler, i.e. in signal_delivered().
->
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+parse_apic() allows the user to try a different APIC driver than the
+default one that's automatically chosen. It works for X86-32, but
+doesn't work for X86-64 because it was removed in 2009 for X86-64 by
+commit 7b38725318f4 ("x86: remove subarchitecture support code"),
+whose changelog doesn't explicitly describe the removal for X86-64.
 
-Hi Al,
-Have you had time to wrap this up as its own commit and send?  I was
-doing a bug scrub of our KernelCI warnings and noticed this is still
-an issue.  Looks like everyone was happy with your approach.  Let me
-know if you're too busy, and I'll collect all of the tags and send for
-you.  I appreciate you taking the time to help us fix this.
+The patch adds back the functionality for X86-64. The intent is mainly
+to work around an APIC emulation bug in Hyper-V in the case of kdump:
+currently Hyper-V does not honor the disabled state of the local APICs,
+so all the IOAPIC-based interrupts may not be delivered to the correct
+virtual CPU, if the logical-mode APIC driver is used (the kdump
+kernel usually uses the logical-mode APIC driver, since typically
+only 1 CPU is active). Luckily the kdump issue can be worked around by
+forcing the kdump kernel to use physical mode, before the fix to Hyper-V
+becomes widely available.
 
-> ---
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 0480ba4db592..f614967374f5 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -461,8 +461,6 @@ int __compat_save_altstack(compat_stack_t __user *, unsigned long);
->                         &__uss->ss_sp, label); \
->         unsafe_put_user(t->sas_ss_flags, &__uss->ss_flags, label); \
->         unsafe_put_user(t->sas_ss_size, &__uss->ss_size, label); \
-> -       if (t->sas_ss_flags & SS_AUTODISARM) \
-> -               sas_ss_reset(t); \
->  } while (0);
->
->  /*
-> diff --git a/include/linux/signal.h b/include/linux/signal.h
-> index 05bacd2ab135..28fe9cc134f7 100644
-> --- a/include/linux/signal.h
-> +++ b/include/linux/signal.h
-> @@ -450,8 +450,6 @@ int __save_altstack(stack_t __user *, unsigned long);
->         unsafe_put_user((void __user *)t->sas_ss_sp, &__uss->ss_sp, label); \
->         unsafe_put_user(t->sas_ss_flags, &__uss->ss_flags, label); \
->         unsafe_put_user(t->sas_ss_size, &__uss->ss_size, label); \
-> -       if (t->sas_ss_flags & SS_AUTODISARM) \
-> -               sas_ss_reset(t); \
->  } while (0);
->
->  #ifdef CONFIG_PROC_FS
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index e58a6c619824..4cfe0b9af588 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2769,6 +2769,8 @@ static void signal_delivered(struct ksignal *ksig, int stepping)
->         if (!(ksig->ka.sa.sa_flags & SA_NODEFER))
->                 sigaddset(&blocked, ksig->sig);
->         set_current_blocked(&blocked);
-> +       if (current->sas_ss_flags & SS_AUTODISARM)
-> +               sas_ss_reset(current);
->         tracehook_signal_handler(stepping);
->  }
->
-> @@ -4070,11 +4072,7 @@ int __save_altstack(stack_t __user *uss, unsigned long sp)
->         int err = __put_user((void __user *)t->sas_ss_sp, &uss->ss_sp) |
->                 __put_user(t->sas_ss_flags, &uss->ss_flags) |
->                 __put_user(t->sas_ss_size, &uss->ss_size);
-> -       if (err)
-> -               return err;
-> -       if (t->sas_ss_flags & SS_AUTODISARM)
-> -               sas_ss_reset(t);
-> -       return 0;
-> +       return err;
->  }
->
->  #ifdef CONFIG_COMPAT
-> @@ -4129,11 +4127,7 @@ int __compat_save_altstack(compat_stack_t __user *uss, unsigned long sp)
->                          &uss->ss_sp) |
->                 __put_user(t->sas_ss_flags, &uss->ss_flags) |
->                 __put_user(t->sas_ss_size, &uss->ss_size);
-> -       if (err)
-> -               return err;
-> -       if (t->sas_ss_flags & SS_AUTODISARM)
-> -               sas_ss_reset(t);
-> -       return 0;
-> +       return err;
->  }
->  #endif
->
+The current algorithm of choosing an APIC driver is:
 
+1. The global pointer "struct apic *apic" has a default value, i.e
+"apic_default" on X86-32, and "apic_flat" on X86-64.
 
+2. If the early_param "apic=" is specified, parse_apic() is called and
+the pointer "apic" is changed if a matching APIC driver is found.
+
+3. default_acpi_madt_oem_check() calls the acpi_madt_oem_check() method
+of all APIC drivers, which may override the "apic" pointer.
+
+4. default_setup_apic_routing() may override the "apic" pointer, e.g.
+by calling the probe() method of all APIC drivers. Note: refer to the
+order of the APIC drivers specified in arch/x86/kernel/apic/Makefile.
+
+The patch is safe because if the apic= early param is not specified,
+the current algorithm of choosing an APIC driver is unchanged; when the
+param is specified (e.g. on X86-64, "apic=physical flat"), the kernel
+still tries to find a "more suitable" APIC driver in the above step 3 and
+4: e.g. if the BIOS/firmware requires that apic_x2apic_phys should be used,
+the above step 4 will override the APIC driver to apic_x2apic_phys, even
+if an early_param "apic=physical flat" is specified.
+
+On Hyper-V, when a Linux VM has <= 8 virtual CPUs, if we use
+"apic=physical flat", sending IPIs to multiple vCPUs is still fast because
+Linux VM uses the para-virtualized IPI hypercalls: see hv_apic_init().
+
+The patch adds the __init tag for flat_acpi_madt_oem_check() and
+physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1":
+flat_acpi_madt_oem_check() accesses cmdline_apic, which has a __initdata
+tag.
+
+Fixes: 7b38725318f4 ("x86: remove subarchitecture support code")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Changes in v2 (5/28/2020):
+  Updated Documentation/admin-guide/kernel-parameters.txt. [Randy Dunlap]
+  Changed apic_set_verbosity().
+  Enhanced the changelog.
+
+Changes in v3 (5/31/2020):
+  Added the __init tag for flat_acpi_madt_oem_check() and
+physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1".
+  (Thanks to kbuild test robot <lkp@intel.com>).
+
+  Updated the changelog for the __init tag.
+
+Today is 6/26/2020 and this is just a RESEND of v3, which was posted
+on 5/31 (https://lkml.org/lkml/2020/5/31/198).
+
+ .../admin-guide/kernel-parameters.txt         | 11 +++++--
+ arch/x86/kernel/apic/apic.c                   | 11 +++----
+ arch/x86/kernel/apic/apic_flat_64.c           | 31 +++++++++++++++++--
+ 3 files changed, 40 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdf..c4503fff9348 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -341,10 +341,15 @@
+ 			Format: { quiet (default) | verbose | debug }
+ 			Change the amount of debugging information output
+ 			when initialising the APIC and IO-APIC components.
+-			For X86-32, this can also be used to specify an APIC
+-			driver name.
++			This can also be used to specify an APIC driver name.
+ 			Format: apic=driver_name
+-			Examples: apic=bigsmp
++			Examples:
++			  On X86-32:  apic=bigsmp
++			  On X86-64: "apic=physical flat"
++			  Note: the available driver names depend on the
++			  architecture and the kernel config; the setting may
++			  be overridden by the acpi_madt_oem_check() and probe()
++			  methods of other APIC drivers.
+ 
+ 	apic_extnmi=	[APIC,X86] External NMI delivery setting
+ 			Format: { bsp (default) | all | none }
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index e53dda210cd7..6f7d75b6358b 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2855,13 +2855,10 @@ static int __init apic_set_verbosity(char *arg)
+ 		apic_verbosity = APIC_DEBUG;
+ 	else if (strcmp("verbose", arg) == 0)
+ 		apic_verbosity = APIC_VERBOSE;
+-#ifdef CONFIG_X86_64
+-	else {
+-		pr_warn("APIC Verbosity level %s not recognised"
+-			" use apic=verbose or apic=debug\n", arg);
+-		return -EINVAL;
+-	}
+-#endif
++
++	/* Ignore unrecognized verbosity level setting. */
++
++	pr_info("APIC Verbosity level is %d\n", apic_verbosity);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+index 7862b152a052..da8f3640453f 100644
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -23,9 +23,34 @@ static struct apic apic_flat;
+ struct apic *apic __ro_after_init = &apic_flat;
+ EXPORT_SYMBOL_GPL(apic);
+ 
+-static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++static int cmdline_apic __initdata;
++static int __init parse_apic(char *arg)
+ {
+-	return 1;
++	struct apic **drv;
++
++	if (!arg)
++		return -EINVAL;
++
++	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
++		if (!strcmp((*drv)->name, arg)) {
++			apic = *drv;
++			cmdline_apic = 1;
++			return 0;
++		}
++	}
++
++	/* Parsed again by __setup for debug/verbose */
++	return 0;
++}
++early_param("apic", parse_apic);
++
++
++static int __init flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++{
++	if (!cmdline_apic)
++		return 1;
++
++	return apic == &apic_flat;
+ }
+ 
+ /*
+@@ -157,7 +182,7 @@ static struct apic apic_flat __ro_after_init = {
+  * We cannot use logical delivery in this case because the mask
+  * overflows, so use physical mode.
+  */
+-static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++static int __init physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ {
+ #ifdef CONFIG_ACPI
+ 	/*
 -- 
-Thanks,
-~Nick Desaulniers
+2.19.1
+
