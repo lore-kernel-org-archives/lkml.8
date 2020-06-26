@@ -2,161 +2,135 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D684C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39035C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFCD2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FBA2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PuYNfoCy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RthFPEqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgFZVg6 (ORCPT
+        id S1725934AbgFZViB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53068 "EHLO
+        Fri, 26 Jun 2020 17:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgFZVg5 (ORCPT
+        with ESMTP id S1725803AbgFZViA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:36:57 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE16C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:36:57 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e9so5483768pgo.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:36:57 -0700 (PDT)
+        Fri, 26 Jun 2020 17:38:00 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8E3C03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:59 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id m62so6255802vsd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nOBEqR855rhbveUnTuLRVA8ObPjWG2Dhr4Uq2zMSwAY=;
-        b=PuYNfoCyPSJ5Ee12cr1CtUbfE7ZlRGryAVARIshAUVXzmAnVWRFHzikYNNfSyo7a7F
-         a06g/eRMdwxj9OXD7QRHNxSF7eKxvk1j1lPH9PmdRDDg6kx4ZLd+rlLkMX+stfkvFRSo
-         3uYlvf2dcAbiq0b0Zur+XdSPJAOs7pyrko97x1g/OZZE5SAbKoR5//4HR0kMgybCUEcJ
-         qH5fO1qNpQUu5shtcqTXZ6i3vFopLDbDxc6vz9okSZ89qSoU9m5SXNS+uZg1J+VAhXel
-         mr1ancCaFIkK6ML+TUbpPKLFTOYu+NWJSaza3sWtRul6uvMdRWqHryQVHiXRHQ42JOKB
-         D6sQ==
+        bh=je2upLQiNvR0YfyZwqkhD75KKdpn0DZdcrHJes6BiIc=;
+        b=RthFPEqOul77xm5bP15m2z+OMgivB1Mb+BzePQWZ57fEQJvSG3Fkg3cCr5Me11XlqC
+         GURO9UDwDTHOKxcOHQkT/OprpV3A1IuPf6eh7TcHrZ/baw3UxLv7EZFzCgr+/TdAg6vx
+         RLikwq6ApS+HqQ3I/nbeo0DqT4sOsHQiaMKNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nOBEqR855rhbveUnTuLRVA8ObPjWG2Dhr4Uq2zMSwAY=;
-        b=EZfWuCI78RcWgnsMLvUk9vxb+R1tRznRke6aXUDQZ4fKZnbQ/q0lADejGSB1C8z8tD
-         riY8GmTwi6jFMuUoi4ilTtpBw3HuAj/coyuOeFe9SFrl2OJVTYq99YvC1GQSUz7239R7
-         ctvp6wLYFBCFReWAm2p5Vxu9sx0LIzo8mH1VwcRGAC182eU2x7Lmvziv172nFg7fwvZH
-         jYVLYZ1UvjkI6vmMrPjXiYB1GZ/AONq9sD0ztfCcIRM5GVa67/9sWvhudpsQl6QbTu5w
-         /2pmZkyo6kDiEqL43A3CdMe5Hs/8bdGTPsg1ZNNYQ92YE4X1xoJtrItyTZn2tQwKN1T1
-         zHjA==
-X-Gm-Message-State: AOAM5338ZZXlrOTvZBNXSNfVWJ8Y+qyF8c/mQ5gbFzF8fY577s/HhZnt
-        Mh6jYQW3cCqIWBVCEg4GUUI9WhAGCAr+Tu9UPgk7NQ==
-X-Google-Smtp-Source: ABdhPJzhTb+JgbH2pUdHbU3Lcn5mzANDYeWl9ZkkpeEFXuFi9qIgBYbbGiM0JwDKX1RI84GCkYbTlow0BnrH3GGtPow=
-X-Received: by 2002:a62:7e95:: with SMTP id z143mr4569412pfc.108.1593207416783;
- Fri, 26 Jun 2020 14:36:56 -0700 (PDT)
+        bh=je2upLQiNvR0YfyZwqkhD75KKdpn0DZdcrHJes6BiIc=;
+        b=H0FbtCFa6NQZ7WsvoeplQfZbex2H4dEgF251V0Zmw86wh889CsVK444/Ahq0xoS6Mm
+         v2t63OzFvmiFLNjdWad/5tlBJrI94jtkXxpPifjTIytRLtf8DG0vHraxEJQehbtyP/p6
+         sFPmRZ2bI8ALXurKgCI+f/DlNK0kgsNcoR7Ya2A5GmbjVEKsdDs+MgLKbMBHFbL62YhZ
+         d3TFuJantDDK1MfBZBnHrsVaPdBe/b8O7p9kSMx+YpzgnOXLtD5wfVd7P4Fi5aMGHJhz
+         oSjt4CqwiY0gjFVe1iV6gw076T/o2Lusi+Wlf0jI1sYnjh6vWtPq9x2CBNrXhAMrW8N+
+         eWMA==
+X-Gm-Message-State: AOAM532ooit+tgLnQe+ldD/Zy0lG8IQjxcHhJt94oD4MmSdGJieQtQ2N
+        dDBBK3FMsj8FwJR3Awdziw46U60D/B8=
+X-Google-Smtp-Source: ABdhPJwCXtq8Sw274bM8W72PW0giO3qESw2S8HuIVeoBTozucrtpBUYBw2njrK/QItToF2HDVcjwdg==
+X-Received: by 2002:a05:6102:243b:: with SMTP id l27mr3954372vsi.173.1593207478911;
+        Fri, 26 Jun 2020 14:37:58 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id 75sm516648uai.10.2020.06.26.14.37.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 14:37:58 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id g44so3482799uae.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:57 -0700 (PDT)
+X-Received: by 2002:ab0:54cd:: with SMTP id q13mr3917857uaa.91.1593207477223;
+ Fri, 26 Jun 2020 14:37:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622204915.2987555-1-keescook@chromium.org>
- <20200622204915.2987555-2-keescook@chromium.org> <CAKwvOdmYa6V=W2eupEmHcuF8+479F8XHxm1NAo0s2N=sawbKAw@mail.gmail.com>
-In-Reply-To: <CAKwvOdmYa6V=W2eupEmHcuF8+479F8XHxm1NAo0s2N=sawbKAw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 26 Jun 2020 14:36:44 -0700
-Message-ID: <CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] arm/build: Warn on orphan section placement
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eli Friedman <efriedma@quicinc.com>
+References: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 26 Jun 2020 14:37:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V_ynwukeR92nbJXkuQ7OAW4mLaTjxko7fXt5aEfDUNhA@mail.gmail.com>
+Message-ID: <CAD=FV=V_ynwukeR92nbJXkuQ7OAW4mLaTjxko7fXt5aEfDUNhA@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Add interrupt summary based CE processing
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 5:03 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+Hi,
+
+On Fri, Jun 26, 2020 at 10:53 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
 >
-> On Mon, Jun 22, 2020 at 1:49 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > --- a/arch/arm/kernel/vmlinux.lds.h
-> > +++ b/arch/arm/include/asm/vmlinux.lds.h
-> > @@ -1,4 +1,5 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> > +#include <asm-generic/vmlinux.lds.h>
-> >
-> >  #ifdef CONFIG_HOTPLUG_CPU
-> >  #define ARM_CPU_DISCARD(x)
-> > @@ -37,6 +38,13 @@
-> >                 *(.idmap.text)                                          \
-> >                 __idmap_text_end = .;                                   \
-> >
-> > +#define ARM_COMMON_DISCARD                                             \
-> > +               *(.ARM.attributes)                                      \
+> Currently the NAPI processing loops through all
+> the copy engines and processes a particular copy
+> engine is the copy completion is set for that copy
+> engine. The host driver is not supposed to access
+> any copy engine register after clearing the interrupt
+> status register.
 >
-> I could have sworn that someone (Eli?) once told me that this section
-> (.ARM.attributes) is used for disambiguating which ARM version or
-> which optional extensions were used when compiling, and that without
-> this section, one would not be able to disassemble 32b ARM precisely.
-> If that's the case, we might not want to discard it?
+> This might result in kernel crash like the one below
+> [ 1159.220143] Call trace:
+> [ 1159.220170]  ath10k_snoc_read32+0x20/0x40 [ath10k_snoc]
+> [ 1159.220193]  ath10k_ce_per_engine_service_any+0x78/0x130 [ath10k_core]
+> [ 1159.220203]  ath10k_snoc_napi_poll+0x38/0x8c [ath10k_snoc]
+> [ 1159.220270]  net_rx_action+0x100/0x3b0
+> [ 1159.220312]  __do_softirq+0x164/0x30c
+> [ 1159.220345]  run_ksoftirqd+0x2c/0x64
+> [ 1159.220380]  smpboot_thread_fn+0x1b0/0x288
+> [ 1159.220405]  kthread+0x11c/0x12c
+> [ 1159.220423]  ret_from_fork+0x10/0x18
+>
+> To avoid such a scenario, we generate an interrupt
+> summary by reading the copy completion for all the
+> copy engine before actually processing any of them.
+> This will avoid reading the interrupt status register
+> for any CE after the interrupt status is cleared.
+>
+> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  drivers/net/wireless/ath/ath10k/ce.c | 63 ++++++++++++++++++++++--------------
+>  drivers/net/wireless/ath/ath10k/ce.h |  5 +--
+>  2 files changed, 42 insertions(+), 26 deletions(-)
 
-Yep, looks like ELFObjectFileBase::getARMFeatures() in
-llvm/lib/Object/ELFObjectFile.cpp does exactly that and more.
-https://github.com/llvm/llvm-project/blob/8808574e7438c8768b78ae7dd0f029385c6df01d/llvm/lib/Object/ELFObjectFile.cpp#L359-L441
-https://github.com/llvm/llvm-project/blob/8808574e7438c8768b78ae7dd0f029385c6df01d/llvm/lib/Object/ELFObjectFile.cpp#L159-L287
+I'm not an expert on this driver, but your change seems sane to me.
 
-As a test, let's do:
-$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71 defconfig
-(so armv7)
-$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
-(then pick any random object file)
-$ llvm-readelf -S arch/arm/kernel/bugs.o | grep attri
-  [15] .ARM.attributes   ARM_ATTRIBUTES  00000000 0000f7 000037 00      0   0  1
-$ llvm-readelf --arch-specific arch/arm/kernel/bugs.o | grep -A 2 CPU_arch
-        TagName: CPU_arch
-        Description: ARM v7
-      }
-And let's see if this actually has a difference on the disassembly.
-$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
-(full build, since we're talking about linker script changes for vmlinux)
-$ llvm-objdump -d vmlinux > prepatch.txt
-(apply your patch)
-$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71 clean
-$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
-$ llvm-objdump -d vmlinux > postpatch.txt
-$ diff -u prepatch.txt postpatch.txt | less
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-No difference. Eh. Checking again with arm-linux-gnueabihf-objdump, it
-seems some constants are slightly different for `movw`'s though.  Not
-sure what's that about.
+With your patch I can no longer find a place to put in a magic delay
+and reproduce the crash, thus:
 
-If I enable CONFIG_THUMB2_KERNEL=y, is where things become
-interesting. llvm-objdump produces wildly different disassembly before
-vs after removing .ARM.attributes.  There's also lots of decode errors
-in the disassembly.
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-Repeating the thumb2 test with GNU objdump, I only see slight
-differences in constants values for operands to `movw`.  So it looks
-like GNU objdump doesn't rely on .ARM.attributes to disambiguate
-between ARM vs THUMB2 instructions like llvm-objdump does.  We can
-probably improve llvm-objdump, but I'd rather not discard this section
-for now.
 
-(also, I didn't test armv6, v5, etc, but those might be interesting
-tests, too, should we want to discard this section.  Also, I think we
-can explicitly specify --triple=thumbv7-linux-gnueabihf to
-llvm-objdump, but I'd prefer it if my disassembler did the work for
-me, since I'm lazy)
+If it matters, my WiFi firmware reports this:
 
-(oh man, the bytes are printed with different endianness between
-arm-linux-gnueabihf-objdump and llvm-objdump...guessing that's a bug
-in llvm).
+WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
 
---
-Thanks,
-~Nick Desaulniers
+...and it should also be WCN3990.
+
+
+-Doug
