@@ -2,352 +2,244 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3517C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D697DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE2D206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC060206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="Z46yHmAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgFZPDi (ORCPT
+        id S1728080AbgFZPEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:03:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:4351 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbgFZPDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:03:38 -0400
-IronPort-SDR: VXSZ8iWvVdJ33gQrx4R2Xstp2lqVT6edw9monCMJBVw7udidT5x1MADM4VvWd1gSDi5NJp60jC
- aa6Wra7RVmNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="146844710"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="gz'50?scan'50,208,50";a="146844710"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 08:03:34 -0700
-IronPort-SDR: UsNUgiTPvbGcbGoLhVMmHh0/oagskkGoA9htPhfIzUEc+X8nyLQ7ande8riu5wOsrkAeUyh5ed
- JAck3XwM1lkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="gz'50?scan'50,208,50";a="424099935"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 08:03:32 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jopt5-0002Gs-Ms; Fri, 26 Jun 2020 15:03:31 +0000
-Date:   Fri, 26 Jun 2020 23:03:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>, Ingo Molnar <mingo@redhat.com>
-Cc:     kbuild-all@lists.01.org, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] sched: Declare sched_rt_bandwidth_account() in include
- file
-Message-ID: <202006262217.JcoAijEw%lkp@intel.com>
-References: <20200626140253.141358-1-linux@roeck-us.net>
+        Fri, 26 Jun 2020 11:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgFZPET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:04:19 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EDBC03E979;
+        Fri, 26 Jun 2020 08:04:19 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 444FC1509; Fri, 26 Jun 2020 11:04:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 444FC1509
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1593183858;
+        bh=bDhiMSq/GuETPNBoBRrqQk+14eY/oLGXmwAu+loUjFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z46yHmAVdfOD1RLsbxo3o9Pfe0jZAW37yZSCdgaogotBo6AHkm3wne1hjcmko9VjX
+         Gu1KX1odzxFesm7Dmqrit35fzOMuF1JDx9L1H3IWCjBwS4ODsSDqdAC1ItPCMishX6
+         OaVtOUC+WHZzwXlheKRiqrWfUhZPxVYLAo4PewoI=
+Date:   Fri, 26 Jun 2020 11:04:18 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Luo Xiaogang <lxgrxd@163.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, falcon <falcon@tinylab.org>
+Subject: Re: Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
+Message-ID: <20200626150418.GA3565@fieldses.org>
+References: <20200615071211.31326-1-lxgrxd@163.com>
+ <20200624012901.GC18460@fieldses.org>
+ <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="jI8keyz6grp/JLjh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626140253.141358-1-linux@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cd7401f.3001.172f0a9407f.Coremail.lxgrxd@163.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 08:45:23PM +0800, Luo Xiaogang wrote:
+> At 2020-06-24 09:29:01, "J. Bruce Fields" <bfields@fieldses.org> wrote:
+> >On Mon, Jun 15, 2020 at 03:12:11PM +0800, Luo Xiaogang wrote:
+> >> We load nfsd module in the docker container, kernel crash as following.
+> >> 
+> >> The 'current->nsproxy->net_ns->gen->ptr[nfsd_net_id]' is overflow in the
+> >> nfsd_init_net.
+> >> 
+> >> We should use the net_ns which is being init in the nfsd_init_net,
+> >> not the 'current->nsproxy->net_ns'.
+> >
+> >Thanks!  Actually, I think my problem was that net init and exit are
+> >just the wrong place to be doing this--I moved them to nfsd start/stop
+> >instead.
+> >
+> >And then that exposed the fact that I had an inode leak.
+> >
+> >Do the following two patches help?
+> 
+> Just test it on Ubuntu 18.04 + Docker 19.03.6, and the docker image is ubuntu:18.04.
+> 
+> Your patchset helps, here is my reported-and-tested-by, Thanks very much.
+> 
+> Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you!
 
-Hi Guenter,
+--b.
 
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on tip/auto-latest linux/master linus/master v5.8-rc2 next-20200626]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use  as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Guenter-Roeck/sched-Declare-sched_rt_bandwidth_account-in-include-file/20200626-220544
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
-config: i386-tinyconfig (attached as .config)
-compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-reproduce (this is a W=1 build):
-        # save the attached .config to linux build tree
-        make W=1 ARCH=i386 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   kernel/sched/deadline.c: In function 'update_curr_dl':
->> kernel/sched/deadline.c:1315:7: error: implicit declaration of function 'sched_rt_bandwidth_account' [-Werror=implicit-function-declaration]
-    1315 |   if (sched_rt_bandwidth_account(rt_rq))
-         |       ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-vim +/sched_rt_bandwidth_account +1315 kernel/sched/deadline.c
-
-c52f14d384628d Luca Abeni      2017-05-18  1213  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1214  /*
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1215   * Update the current task's runtime statistics (provided it is still
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1216   * a -deadline task and has not been removed from the dl_rq).
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1217   */
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1218  static void update_curr_dl(struct rq *rq)
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1219  {
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1220  	struct task_struct *curr = rq->curr;
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1221  	struct sched_dl_entity *dl_se = &curr->dl;
-07881166a892fa Juri Lelli      2017-12-04  1222  	u64 delta_exec, scaled_delta_exec;
-07881166a892fa Juri Lelli      2017-12-04  1223  	int cpu = cpu_of(rq);
-6fe0ce1eb04f99 Wen Yang        2018-02-06  1224  	u64 now;
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1225  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1226  	if (!dl_task(curr) || !on_dl_rq(dl_se))
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1227  		return;
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1228  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1229  	/*
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1230  	 * Consumed budget is computed considering the time as
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1231  	 * observed by schedulable tasks (excluding time spent
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1232  	 * in hardirq context, etc.). Deadlines are instead
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1233  	 * computed using hard walltime. This seems to be the more
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1234  	 * natural solution, but the full ramifications of this
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1235  	 * approach need further study.
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1236  	 */
-6fe0ce1eb04f99 Wen Yang        2018-02-06  1237  	now = rq_clock_task(rq);
-6fe0ce1eb04f99 Wen Yang        2018-02-06  1238  	delta_exec = now - curr->se.exec_start;
-48be3a67da7413 Peter Zijlstra  2016-02-23  1239  	if (unlikely((s64)delta_exec <= 0)) {
-48be3a67da7413 Peter Zijlstra  2016-02-23  1240  		if (unlikely(dl_se->dl_yielded))
-48be3a67da7413 Peter Zijlstra  2016-02-23  1241  			goto throttle;
-734ff2a71f9e6a Kirill Tkhai    2014-03-04  1242  		return;
-48be3a67da7413 Peter Zijlstra  2016-02-23  1243  	}
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1244  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1245  	schedstat_set(curr->se.statistics.exec_max,
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1246  		      max(curr->se.statistics.exec_max, delta_exec));
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1247  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1248  	curr->se.sum_exec_runtime += delta_exec;
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1249  	account_group_exec_runtime(curr, delta_exec);
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1250  
-6fe0ce1eb04f99 Wen Yang        2018-02-06  1251  	curr->se.exec_start = now;
-d2cc5ed6949085 Tejun Heo       2017-09-25  1252  	cgroup_account_cputime(curr, delta_exec);
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1253  
-794a56ebd9a57d Juri Lelli      2017-12-04  1254  	if (dl_entity_is_special(dl_se))
-794a56ebd9a57d Juri Lelli      2017-12-04  1255  		return;
-794a56ebd9a57d Juri Lelli      2017-12-04  1256  
-07881166a892fa Juri Lelli      2017-12-04  1257  	/*
-07881166a892fa Juri Lelli      2017-12-04  1258  	 * For tasks that participate in GRUB, we implement GRUB-PA: the
-07881166a892fa Juri Lelli      2017-12-04  1259  	 * spare reclaimed bandwidth is used to clock down frequency.
-07881166a892fa Juri Lelli      2017-12-04  1260  	 *
-07881166a892fa Juri Lelli      2017-12-04  1261  	 * For the others, we still need to scale reservation parameters
-07881166a892fa Juri Lelli      2017-12-04  1262  	 * according to current frequency and CPU maximum capacity.
-07881166a892fa Juri Lelli      2017-12-04  1263  	 */
-07881166a892fa Juri Lelli      2017-12-04  1264  	if (unlikely(dl_se->flags & SCHED_FLAG_RECLAIM)) {
-07881166a892fa Juri Lelli      2017-12-04  1265  		scaled_delta_exec = grub_reclaim(delta_exec,
-07881166a892fa Juri Lelli      2017-12-04  1266  						 rq,
-07881166a892fa Juri Lelli      2017-12-04  1267  						 &curr->dl);
-07881166a892fa Juri Lelli      2017-12-04  1268  	} else {
-07881166a892fa Juri Lelli      2017-12-04  1269  		unsigned long scale_freq = arch_scale_freq_capacity(cpu);
-8ec59c0f5f4966 Vincent Guittot 2019-06-17  1270  		unsigned long scale_cpu = arch_scale_cpu_capacity(cpu);
-07881166a892fa Juri Lelli      2017-12-04  1271  
-07881166a892fa Juri Lelli      2017-12-04  1272  		scaled_delta_exec = cap_scale(delta_exec, scale_freq);
-07881166a892fa Juri Lelli      2017-12-04  1273  		scaled_delta_exec = cap_scale(scaled_delta_exec, scale_cpu);
-07881166a892fa Juri Lelli      2017-12-04  1274  	}
-07881166a892fa Juri Lelli      2017-12-04  1275  
-07881166a892fa Juri Lelli      2017-12-04  1276  	dl_se->runtime -= scaled_delta_exec;
-48be3a67da7413 Peter Zijlstra  2016-02-23  1277  
-48be3a67da7413 Peter Zijlstra  2016-02-23  1278  throttle:
-48be3a67da7413 Peter Zijlstra  2016-02-23  1279  	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) {
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1280  		dl_se->dl_throttled = 1;
-34be39305a77b8 Juri Lelli      2017-12-12  1281  
-34be39305a77b8 Juri Lelli      2017-12-12  1282  		/* If requested, inform the user about runtime overruns. */
-34be39305a77b8 Juri Lelli      2017-12-12  1283  		if (dl_runtime_exceeded(dl_se) &&
-34be39305a77b8 Juri Lelli      2017-12-12  1284  		    (dl_se->flags & SCHED_FLAG_DL_OVERRUN))
-34be39305a77b8 Juri Lelli      2017-12-12  1285  			dl_se->dl_overrun = 1;
-34be39305a77b8 Juri Lelli      2017-12-12  1286  
-1019a359d3dc4b Peter Zijlstra  2014-11-26  1287  		__dequeue_task_dl(rq, curr, 0);
-a649f237db1845 Peter Zijlstra  2015-06-11  1288  		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr)))
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1289  			enqueue_task_dl(rq, curr, ENQUEUE_REPLENISH);
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1290  
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1291  		if (!is_leftmost(curr, &rq->dl))
-8875125efe8402 Kirill Tkhai    2014-06-29  1292  			resched_curr(rq);
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1293  	}
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1294  
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1295  	/*
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1296  	 * Because -- for now -- we share the rt bandwidth, we need to
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1297  	 * account our runtime there too, otherwise actual rt tasks
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1298  	 * would be able to exceed the shared quota.
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1299  	 *
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1300  	 * Account to the root rt group for now.
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1301  	 *
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1302  	 * The solution we're working towards is having the RT groups scheduled
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1303  	 * using deadline servers -- however there's a few nasties to figure
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1304  	 * out before that can happen.
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1305  	 */
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1306  	if (rt_bandwidth_enabled()) {
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1307  		struct rt_rq *rt_rq = &rq->rt;
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1308  
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1309  		raw_spin_lock(&rt_rq->rt_runtime_lock);
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1310  		/*
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1311  		 * We'll let actual RT tasks worry about the overflow here, we
-faa5993736d9b4 Juri Lelli      2014-02-21  1312  		 * have our own CBS to keep us inline; only account when RT
-faa5993736d9b4 Juri Lelli      2014-02-21  1313  		 * bandwidth is relevant.
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1314  		 */
-faa5993736d9b4 Juri Lelli      2014-02-21 @1315  		if (sched_rt_bandwidth_account(rt_rq))
-faa5993736d9b4 Juri Lelli      2014-02-21  1316  			rt_rq->rt_time += delta_exec;
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1317  		raw_spin_unlock(&rt_rq->rt_runtime_lock);
-1724813d9f2c7f Peter Zijlstra  2013-12-17  1318  	}
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1319  }
-aab03e05e8f7e2 Dario Faggioli  2013-11-28  1320  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---jI8keyz6grp/JLjh
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---jI8keyz6grp/JLjh--
+> 
+> 
+> >--b.
+> >
+> >From 16f954bd5c481596a63271a91963bf260e2f3f46 Mon Sep 17 00:00:00 2001
+> >From: "J. Bruce Fields" <bfields@redhat.com>
+> >Date: Tue, 23 Jun 2020 16:00:33 -0400
+> >Subject: [PATCH 1/2] nfsd4: fix nfsdfs reference count loop
+> >
+> >We don't drop the reference on the nfsdfs filesystem with
+> >mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
+> >until the nfsd module's unloaded, and we can't unload the module as long
+> >as there's a reference on nfsdfs.  So this prevents module unloading.
+> >
+> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> >---
+> > fs/nfsd/nfs4state.c |  8 +++++++-
+> > fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
+> > fs/nfsd/nfsd.h      |  3 +++
+> > 3 files changed, 22 insertions(+), 11 deletions(-)
+> >
+> >diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> >index bb3d2c32664a..cce2510b2cca 100644
+> >--- a/fs/nfsd/nfs4state.c
+> >+++ b/fs/nfsd/nfs4state.c
+> >@@ -7912,9 +7912,14 @@ nfs4_state_start_net(struct net *net)
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 	int ret;
+> > 
+> >-	ret = nfs4_state_create_net(net);
+> >+	ret = get_nfsdfs(net);
+> > 	if (ret)
+> > 		return ret;
+> >+	ret = nfs4_state_create_net(net);
+> >+	if (ret) {
+> >+		mntput(nn->nfsd_mnt);
+> >+		return ret;
+> >+	}
+> > 	locks_start_grace(net, &nn->nfsd4_manager);
+> > 	nfsd4_client_tracking_init(net);
+> > 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+> >@@ -7984,6 +7989,7 @@ nfs4_state_shutdown_net(struct net *net)
+> > 
+> > 	nfsd4_client_tracking_exit(net);
+> > 	nfs4_state_destroy_net(net);
+> >+	mntput(nn->nfsd_mnt);
+> > }
+> > 
+> > void
+> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> >index b68e96681522..cf98a81ca1ea 100644
+> >--- a/fs/nfsd/nfsctl.c
+> >+++ b/fs/nfsd/nfsctl.c
+> >@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
+> > };
+> > MODULE_ALIAS_FS("nfsd");
+> > 
+> >+int get_nfsdfs(struct net *net)
+> >+{
+> >+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> >+	struct vfsmount *mnt;
+> >+
+> >+	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+> >+	if (IS_ERR(mnt))
+> >+		return PTR_ERR(mnt);
+> >+	nn->nfsd_mnt = mnt;
+> >+	return 0;
+> >+}
+> >+
+> > #ifdef CONFIG_PROC_FS
+> > static int create_proc_exports_entry(void)
+> > {
+> >@@ -1451,7 +1463,6 @@ unsigned int nfsd_net_id;
+> > static __net_init int nfsd_init_net(struct net *net)
+> > {
+> > 	int retval;
+> >-	struct vfsmount *mnt;
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 
+> > 	retval = nfsd_export_init(net);
+> >@@ -1478,16 +1489,8 @@ static __net_init int nfsd_init_net(struct net *net)
+> > 	init_waitqueue_head(&nn->ntf_wq);
+> > 	seqlock_init(&nn->boot_lock);
+> > 
+> >-	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+> >-	if (IS_ERR(mnt)) {
+> >-		retval = PTR_ERR(mnt);
+> >-		goto out_mount_err;
+> >-	}
+> >-	nn->nfsd_mnt = mnt;
+> > 	return 0;
+> > 
+> >-out_mount_err:
+> >-	nfsd_reply_cache_shutdown(nn);
+> > out_drc_error:
+> > 	nfsd_idmap_shutdown(net);
+> > out_idmap_error:
+> >@@ -1500,7 +1503,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
+> > {
+> > 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > 
+> >-	mntput(nn->nfsd_mnt);
+> > 	nfsd_reply_cache_shutdown(nn);
+> > 	nfsd_idmap_shutdown(net);
+> > 	nfsd_export_shutdown(net);
+> >diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> >index 36cdd81b6688..57c832d1b30f 100644
+> >--- a/fs/nfsd/nfsd.h
+> >+++ b/fs/nfsd/nfsd.h
+> >@@ -90,6 +90,8 @@ void		nfsd_destroy(struct net *net);
+> > 
+> > bool		i_am_nfsd(void);
+> > 
+> >+int get_nfsdfs(struct net *);
+> >+
+> > struct nfsdfs_client {
+> > 	struct kref cl_ref;
+> > 	void (*cl_release)(struct kref *kref);
+> >@@ -100,6 +102,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
+> > 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
+> > void nfsd_client_rmdir(struct dentry *dentry);
+> > 
+> >+
+> > #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> > #ifdef CONFIG_NFSD_V2_ACL
+> > extern const struct svc_version nfsd_acl_version2;
+> >-- 
+> >2.26.2
+> >
+> >
+> >From 51de3b460b39e862f7dcfd4d600e8de0afe73e29 Mon Sep 17 00:00:00 2001
+> >From: "J. Bruce Fields" <bfields@redhat.com>
+> >Date: Tue, 23 Jun 2020 21:01:19 -0400
+> >Subject: [PATCH 2/2] nfsd: fix nfsdfs inode reference count leak
+> >
+> >I don't understand this code well, but  I'm seeing a warning about a
+> >still-referenced inode on unmount, and every other similar filesystem
+> >does a dput() here.
+> >
+> >Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> >---
+> > fs/nfsd/nfsctl.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> >
+> >diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> >index cf98a81ca1ea..cd05732f8eaa 100644
+> >--- a/fs/nfsd/nfsctl.c
+> >+++ b/fs/nfsd/nfsctl.c
+> >@@ -1335,6 +1335,7 @@ void nfsd_client_rmdir(struct dentry *dentry)
+> > 	WARN_ON_ONCE(ret);
+> > 	fsnotify_rmdir(dir, dentry);
+> > 	d_delete(dentry);
+> >+	dput(dentry);
+> > 	inode_unlock(dir);
+> > }
+> > 
+> >-- 
+> >2.26.2
