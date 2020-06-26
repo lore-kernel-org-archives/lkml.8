@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55223C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEEB207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492F9207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgFZSba (ORCPT
+        id S1725835AbgFZScT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:31:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53242 "EHLO
+        Fri, 26 Jun 2020 14:32:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53248 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFZSba (ORCPT
+        with ESMTP id S1725283AbgFZScT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:31:30 -0400
+        Fri, 26 Jun 2020 14:32:19 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 93A7D2A5E82
-Message-ID: <74bf00b2df05d9ee373a41a8328f8ee43816a0b9.camel@collabora.com>
+        with ESMTPSA id 7D5122A5E82
+Message-ID: <7c9c5240c00764bf55f3ab51602e91ad8cf539ec.camel@collabora.com>
 Subject: Re: [PATCH 3/6] hantro: Rework how encoder and decoder are
  identified
 From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Fri, 26 Jun 2020 15:30:48 -0300
-In-Reply-To: <5d18057b7bc686eeb470810acd3ab63f9b4bf224.camel@pengutronix.de>
+To:     Robin Murphy <robin.murphy@arm.com>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Date:   Fri, 26 Jun 2020 15:31:36 -0300
+In-Reply-To: <119b9832-c1bc-9010-cca6-ea82d61c8e9b@arm.com>
 References: <20200625163525.5119-1-ezequiel@collabora.com>
          <20200625163525.5119-4-ezequiel@collabora.com>
-         <5d18057b7bc686eeb470810acd3ab63f9b4bf224.camel@pengutronix.de>
+         <119b9832-c1bc-9010-cca6-ea82d61c8e9b@arm.com>
 Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.36.0-1 
@@ -46,10 +46,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-26 at 09:58 +0200, Philipp Zabel wrote:
+On Fri, 2020-06-26 at 10:52 +0100, Robin Murphy wrote:
 > Hi Ezequiel,
 > 
-> On Thu, 2020-06-25 at 13:35 -0300, Ezequiel Garcia wrote:
+> On 2020-06-25 17:35, Ezequiel Garcia wrote:
 > > So far we've been using the .buf_finish hook to distinguish
 > > decoder from encoder. This is unnecessarily obfuscated.
 > > 
@@ -58,51 +58,50 @@ On Fri, 2020-06-26 at 09:58 +0200, Philipp Zabel wrote:
 > > 
 > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > > ---
-> >  drivers/staging/media/hantro/hantro.h     | 2 ++
-> >  drivers/staging/media/hantro/hantro_drv.c | 4 +++-
-> >  2 files changed, 5 insertions(+), 1 deletion(-)
+> >   drivers/staging/media/hantro/hantro.h     | 2 ++
+> >   drivers/staging/media/hantro/hantro_drv.c | 4 +++-
+> >   2 files changed, 5 insertions(+), 1 deletion(-)
 > > 
 > > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
 > > index 3005207fc6fb..028b788ad50f 100644
 > > --- a/drivers/staging/media/hantro/hantro.h
 > > +++ b/drivers/staging/media/hantro/hantro.h
 > > @@ -199,6 +199,7 @@ struct hantro_dev {
-> >   *
-> >   * @dev:		VPU driver data to which the context belongs.
-> >   * @fh:			V4L2 file handler.
+> >    *
+> >    * @dev:		VPU driver data to which the context belongs.
+> >    * @fh:			V4L2 file handler.
 > > + * @is_encoder:		Decoder or encoder context?
-> >   *
-> >   * @sequence_cap:       Sequence counter for capture queue
-> >   * @sequence_out:       Sequence counter for output queue
+> >    *
+> >    * @sequence_cap:       Sequence counter for capture queue
+> >    * @sequence_out:       Sequence counter for output queue
 > > @@ -223,6 +224,7 @@ struct hantro_dev {
-> >  struct hantro_ctx {
-> >  	struct hantro_dev *dev;
-> >  	struct v4l2_fh fh;
+> >   struct hantro_ctx {
+> >   	struct hantro_dev *dev;
+> >   	struct v4l2_fh fh;
 > > +	bool is_encoder;
-> >  
-> >  	u32 sequence_cap;
-> >  	u32 sequence_out;
+> >   
+> >   	u32 sequence_cap;
+> >   	u32 sequence_out;
 > > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
 > > index 0db8ad455160..112ed556eb90 100644
 > > --- a/drivers/staging/media/hantro/hantro_drv.c
 > > +++ b/drivers/staging/media/hantro/hantro_drv.c
 > > @@ -197,7 +197,7 @@ static void device_run(void *priv)
-> >  
-> >  bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx)
-> >  {
+> >   
+> >   bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx)
+> >   {
 > > -	return ctx->buf_finish == hantro_enc_buf_finish;
 > > +	return ctx->is_encoder;
-> >  }
 > 
-> Now this function feels a little superfluous. Why not replace
->   hantro_is_encoder_ctx(ctx)
-> with
->   ctx->is_encoder
-> everywhere?
+> FWIW I'd suggest removing the wrapper function entirely now - it makes 
+> sense when the check itself is implemented in a weird and non-obvious 
+> way, but a simple boolean flag named exactly what it means is already 
+> about as clear as it can get.
 > 
 
-Absolutely.
+Indeed, Philipp pointed out the same thing.
 
-Thanks for reviewing,
+Makes perfect sense, and thanks a lot for reviewing.
+
 Ezequiel
 
