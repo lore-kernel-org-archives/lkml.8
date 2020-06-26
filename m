@@ -2,99 +2,127 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A18C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D23C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB67520836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFB020836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:27:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="lxAr5vZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbgFZS0H (ORCPT
+        id S1725931AbgFZS1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:26:07 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:55225 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725768AbgFZS0G (ORCPT
+        Fri, 26 Jun 2020 14:27:13 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:56010 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgFZS1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:26:06 -0400
-Received: (qmail 305618 invoked by uid 1000); 26 Jun 2020 14:26:05 -0400
-Date:   Fri, 26 Jun 2020 14:26:05 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     syzbot <syzbot+145012a46658ac00fc9e@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Subject: Re: KASAN: use-after-free Read in line6_submit_audio_in_all_urbs
-Message-ID: <20200626182605.GA305214@rowland.harvard.edu>
-References: <000000000000d44c6d05a8ffe488@google.com>
+        Fri, 26 Jun 2020 14:27:12 -0400
+Received: from [192.168.254.4] (unknown [50.34.202.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail3.candelatech.com (Postfix) with ESMTPSA id C9AE213C2B0;
+        Fri, 26 Jun 2020 11:27:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com C9AE213C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1593196032;
+        bh=dy0SITDlk2z0CaojQeQfUun9EjYs6mSwSPWTP1Kn4rQ=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=lxAr5vZRYmxTZOOHqggAz9M+0O44hAA8zfASKAFAX6JdlmvFvu97phF7UVZFykrBB
+         XyYpyjNOpfJzCi/57DwG7xwERm2F9cIyrl4xe7XAwon+TuZTixUkSbDKkpMTari64X
+         0Qxd3gRkRNOd19TpyxnSUc9hOZgGou3y0WE8wxok=
+Subject: Re: [PATCH 2/2] ath10k: Skip wait for delete response if firmware is
+ down
+To:     Rakesh Pillai <pillair@codeaurora.org>, ath10k@lists.infradead.org
+References: <1593195100-24654-1-git-send-email-pillair@codeaurora.org>
+ <1593195100-24654-3-git-send-email-pillair@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <69ea745d-8d7c-6220-ad0e-f70ffa3e242a@candelatech.com>
+Date:   Fri, 26 Jun 2020 11:27:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000d44c6d05a8ffe488@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1593195100-24654-3-git-send-email-pillair@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 10:18:12AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    fb574682 usbip: tools: fix module name in man page
-> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> console output: https://syzkaller.appspot.com/x/log.txt?x=156560b1100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=63b40b2ae167bad6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=145012a46658ac00fc9e
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+145012a46658ac00fc9e@syzkaller.appspotmail.com
-> 
-> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
-> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
-> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
-> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
-> ==================================================================
-> BUG: KASAN: use-after-free in line6_submit_audio_in_all_urbs+0x10b/0x120 sound/usb/line6/capture.c:72
-> Read of size 8 at addr ffff8881cffb1800 by task kworker/1:5/3257
-> 
-> CPU: 1 PID: 3257 Comm: kworker/1:5 Not tainted 5.8.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: events line6_startup_work
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xf6/0x16e lib/dump_stack.c:118
->  print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
->  __kasan_report mm/kasan/report.c:513 [inline]
->  kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
->  line6_submit_audio_in_all_urbs+0x10b/0x120 sound/usb/line6/capture.c:72
->  line6_stream_start+0x207/0x230 sound/usb/line6/pcm.c:197
->  line6_pcm_acquire+0x161/0x210 sound/usb/line6/pcm.c:318
->  line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:734
->  process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
->  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
->  kthread+0x392/0x470 kernel/kthread.c:291
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-> 
-> Allocated by task 76:
->  save_stack+0x1b/0x40 mm/kasan/common.c:48
->  set_track mm/kasan/common.c:56 [inline]
->  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
->  kmalloc include/linux/slab.h:555 [inline]
->  kzalloc include/linux/slab.h:669 [inline]
->  line6_init_pcm+0x2a7/0x9e0 sound/usb/line6/pcm.c:533
->  toneport_init+0xdd/0x6b0 sound/usb/line6/toneport.c:419
->  line6_probe+0xaa0/0x1330 sound/usb/line6/driver.c:809
 
-It look like the cancel_delayed_work() in line6_disconnect() needs to be 
-cancel_delayed_work_sync().  Unfortunately we can't test this until syzbot 
-is able to reproduce the bug.
 
-Alan Stern
+On 06/26/2020 11:11 AM, Rakesh Pillai wrote:
+> Currently the driver waits for response from the
+> firmware for all the delete cmds, eg: vdev_delete,
+> peer delete. If the firmware is down, these wait
+> will always timeout and return an error.
+>
+> Also during subsytems recovery, any attempt to
+> send a WMI cmd to the FW will return the -ESHUTDOWN
+> status, which when returned to mac80211, can cause
+> unnecessary warnings to be printed on to the console,
+> as shown below
+>
+> [ 2559.529565] Call trace:
+> [ 2559.532214]  __sta_info_destroy_part2+0x160/0x168 [mac80211]
+> [ 2559.538157]  __sta_info_flush+0x124/0x180 [mac80211]
+> [ 2559.543402]  ieee80211_set_disassoc+0x130/0x2c0 [mac80211]
+> [ 2559.549172]  ieee80211_mgd_deauth+0x238/0x25c [mac80211]
+> [ 2559.554764]  ieee80211_deauth+0x24/0x30 [mac80211]
+> [ 2559.559860]  cfg80211_mlme_deauth+0x258/0x2b0 [cfg80211]
+> [ 2559.565446]  nl80211_deauthenticate+0xe4/0x110 [cfg80211]
+> [ 2559.571064]  genl_rcv_msg+0x3a0/0x440
+> [ 2559.574888]  netlink_rcv_skb+0xb4/0x11c
+> [ 2559.578877]  genl_rcv+0x34/0x48
+> [ 2559.582162]  netlink_unicast+0x14c/0x1e4
+> [ 2559.586235]  netlink_sendmsg+0x2f0/0x360
+> [ 2559.590317]  sock_sendmsg+0x44/0x5c
+> [ 2559.593951]  ____sys_sendmsg+0x1c8/0x290
+> [ 2559.598029]  ___sys_sendmsg+0xa8/0xfc
+> [ 2559.601840]  __sys_sendmsg+0x8c/0xd0
+> [ 2559.605572]  __arm64_compat_sys_sendmsg+0x2c/0x38
+> [ 2559.610468]  el0_svc_common+0xa8/0x160
+> [ 2559.614372]  el0_svc_compat_handler+0x2c/0x38
+> [ 2559.618905]  el0_svc_compat+0x8/0x10
+>
+> Skip the wait for delete response from the
+> firmware if the firmware is down. Also return
+> success to the mac80211 calls when the peer delete
+> cmd fails with return status -ESHUTDOWN.
+>
+> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  drivers/net/wireless/ath/ath10k/mac.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+> index dc7befc..7ac6549 100644
+> --- a/drivers/net/wireless/ath/ath10k/mac.c
+> +++ b/drivers/net/wireless/ath/ath10k/mac.c
+> @@ -701,7 +701,8 @@ static void ath10k_wait_for_peer_delete_done(struct ath10k *ar, u32 vdev_id,
+>  	unsigned long time_left;
+>  	int ret;
+>
+> -	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
+> +	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
+> +	    test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
+
+Don't you mean !test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags))  ???
+
+Or maybe I'm just mis-reading your patch?
+
+Thanks,
+Ben
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
