@@ -2,49 +2,48 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D692FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FECC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B000D20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2223820768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NZ7B7MTp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Cq8Pmimh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgFZOrf (ORCPT
+        id S1729451AbgFZOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:47:35 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26022 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbgFZOrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:47:24 -0400
+        Fri, 26 Jun 2020 10:47:40 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:39967 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729365AbgFZOrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:47:20 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593182843; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=PWopmoPYmvBb6c4l4UvCri+PTIKOehyoMRDeBLGjvow=; b=NZ7B7MTp8zX/gzOqqT4JJs6msSeH3RrqIUkAInLNZ8p+Hnv6bdgvVp+KpZe9O0Hu/ZcWvP05
- ER4NXaUNiH86XMlLtYTQVNqaO1C7BrZqQ7Op7+PjXE59hqLMGqQ1SEfLL56/hFjKDrS+wmit
- o6Or+v85MbCuiRaxm1OywdajHRI=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1593182840; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=40ZfmuZsHITt52aRQkvovH3nQD28PXyaeAQtAwwWdqo=; b=Cq8Pmimh7RzrLO3owWfKGH8WVu+pHdeifZaETln4EiE+qh0sAMsc1yhTg+OryrXfnqKwTwb5
+ SmZIPoapMmVMfszkS7/V7JvXAWn7wQWZGU0ggxdXGp0Hnvv6M0wlw0cwBf3VCOAGuxfY1Bf9
+ GQ9hvx90tf4hwslNSnRSdqGOMoY=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5ef60a79356bcc26ab20abab (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 14:47:21
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5ef60a71356bcc26ab20903c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 14:47:13
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E21E4C433C6; Fri, 26 Jun 2020 14:47:20 +0000 (UTC)
+        id 4BFCBC43391; Fri, 26 Jun 2020 14:47:12 +0000 (UTC)
 Received: from deesin-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD23FC433C8;
-        Fri, 26 Jun 2020 14:47:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD23FC433C8
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D616C433C6;
+        Fri, 26 Jun 2020 14:47:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D616C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
 From:   Deepak Kumar Singh <deesin@codeaurora.org>
@@ -52,114 +51,43 @@ To:     bjorn.andersson@linaro.org, clew@codeaurora.org,
         mathieu.poirier@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Deepak Kumar Singh <deesin@codeaurora.org>
-Subject: [PATCH V6 3/4] rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
-Date:   Fri, 26 Jun 2020 20:16:58 +0530
-Message-Id: <1593182819-30747-4-git-send-email-deesin@codeaurora.org>
+Subject: [PATCH V5 0/4] Signaling api support in glink/rpmsg clients
+Date:   Fri, 26 Jun 2020 20:16:55 +0530
+Message-Id: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
-References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Change from version 5
+[V5,4/4] rpmsg: char: Add signal callback and POLLPRI support
+Updated for sparse warning. Replaced POLLPRI => EPOLLPRI to fix
+warning.
 
-Add TICOMGET and TIOCMSET ioctl support for rpmsg char device nodes
-to get/set the low level transport signals.
+Change from version 4
+I am taking over these patches from aneela@codeaurora.org
+Fixed all the trivial review comments.
 
-Signed-off-by: Deepak Kumar Singh <deesin@codeaurora.org>
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
----
- drivers/rpmsg/rpmsg_char.c | 54 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 3 deletions(-)
+Signal conversion to and from native signal as done in patch V4,2/4
+is intentional.
 
-diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-index 4bbbacd..43ceac0 100644
---- a/drivers/rpmsg/rpmsg_char.c
-+++ b/drivers/rpmsg/rpmsg_char.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-+ * Copyright (c) 2018, The Linux Foundation.
-  * Copyright (c) 2016, Linaro Ltd.
-  * Copyright (c) 2012, Michal Simek <monstr@monstr.eu>
-  * Copyright (c) 2012, PetaLogix
-@@ -19,6 +20,7 @@
- #include <linux/rpmsg.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-+#include <linux/termios.h>
- #include <linux/uaccess.h>
- #include <uapi/linux/rpmsg.h>
- 
-@@ -269,15 +271,61 @@ static __poll_t rpmsg_eptdev_poll(struct file *filp, poll_table *wait)
- 	return mask;
- }
- 
-+static int rpmsg_eptdev_tiocmset(struct file *fp, unsigned int cmd,
-+				 int __user *arg)
-+{
-+	struct rpmsg_eptdev *eptdev = fp->private_data;
-+	u32 set, clear, val;
-+	int ret;
-+
-+	ret = get_user(val, arg);
-+	if (ret)
-+		return ret;
-+	set = clear = 0;
-+	switch (cmd) {
-+	case TIOCMBIS:
-+		set = val;
-+		break;
-+	case TIOCMBIC:
-+		clear = val;
-+		break;
-+	case TIOCMSET:
-+		set = val;
-+		clear = ~val;
-+		break;
-+	}
-+
-+	set &= TIOCM_DTR | TIOCM_RTS | TIOCM_CD | TIOCM_RI;
-+	clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_CD | TIOCM_RI;
-+
-+	return rpmsg_set_signals(eptdev->ept, set, clear);
-+}
-+
- static long rpmsg_eptdev_ioctl(struct file *fp, unsigned int cmd,
- 			       unsigned long arg)
- {
- 	struct rpmsg_eptdev *eptdev = fp->private_data;
-+	int ret;
- 
--	if (cmd != RPMSG_DESTROY_EPT_IOCTL)
--		return -EINVAL;
-+	switch (cmd) {
-+	case TIOCMGET:
-+		ret = rpmsg_get_signals(eptdev->ept);
-+		if (ret >= 0)
-+			ret = put_user(ret, (int __user *)arg);
-+		break;
-+	case TIOCMSET:
-+	case TIOCMBIS:
-+	case TIOCMBIC:
-+		ret = rpmsg_eptdev_tiocmset(fp, cmd, (int __user *)arg);
-+		break;
-+	case RPMSG_DESTROY_EPT_IOCTL:
-+		ret = rpmsg_eptdev_destroy(&eptdev->dev, NULL);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
- 
--	return rpmsg_eptdev_destroy(&eptdev->dev, NULL);
-+	return ret;
- }
- 
- static const struct file_operations rpmsg_eptdev_fops = {
+Arun Kumar Neelakantam (3):
+  rpmsg: glink: Add support to handle signals command
+  rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
+  rpmsg: char: Add signal callback and POLLPRI support
+
+Deepak Kumar Singh (1):
+  rpmsg: core: Add signal API support
+
+ drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
+ drivers/rpmsg/rpmsg_char.c        |  76 ++++++++++++++++++++++-
+ drivers/rpmsg/rpmsg_core.c        |  40 ++++++++++++
+ drivers/rpmsg/rpmsg_internal.h    |   5 ++
+ include/linux/rpmsg.h             |  27 ++++++++
+ 5 files changed, 270 insertions(+), 3 deletions(-)
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
