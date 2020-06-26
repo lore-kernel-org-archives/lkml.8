@@ -2,146 +2,142 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE074C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C562076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3702076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXd8cN7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbgFZIIg (ORCPT
+        id S1729586AbgFZIIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:08:36 -0400
-Received: from 8bytes.org ([81.169.241.247]:50188 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgFZIFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:05:49 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6BD1E391; Fri, 26 Jun 2020 10:05:48 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 1/2] iommu/amd: Add helper functions to update domain->pt_root
-Date:   Fri, 26 Jun 2020 10:05:46 +0200
-Message-Id: <20200626080547.24865-2-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200626080547.24865-1-joro@8bytes.org>
-References: <20200626080547.24865-1-joro@8bytes.org>
+        Fri, 26 Jun 2020 04:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729087AbgFZIFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:05:46 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99738C08C5DB
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:05:46 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q17so4319844pfu.8
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xHNRou80y9oPK1XHkY4t+2RP3g08PmvW2/CQnpLKVto=;
+        b=HXd8cN7WAwO9yXq0bU783f15thXywJzamPxWe9xXZ4bcbJvz8TFq7+Gma6SIN+40hM
+         DmQsLlFiGud8fA6ewGlYd9YVUDm8GVLwmJU3ZDSUG15sc0DG7wzRlEaw0MCiO48TaBhB
+         wNAeceavH0x/cC0f/ak2YlxFQbXeM2+SjLbME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xHNRou80y9oPK1XHkY4t+2RP3g08PmvW2/CQnpLKVto=;
+        b=nPmk6ro8uO/L7cNLhNrn9SRsFVHy2S4FKCFlrLx5XFAig/Qop64CkMWCxKXzMUbtJ8
+         eO0igK/stkXWFcFMRXeZE1WKd2qGFypRK51HbYkSnYMU/r9DoR79KZbUTForGAVMCI3z
+         RfrKQ93sQxls6NdcHVcmoF5rjpbkAlCCTXbb3SM94aZPnXgkaSOKh5H6Iu7YEOxpOyf2
+         qYzwbye17MkioY1LlBX+DnnZVFXwVZ0MzQxfZgjTcH+23PSlO93Qd+knieMobU1LgzBq
+         r9L0k9pXdC1C+AHhye3mOleWa6FgcRDFXa+tHd/r/zoaxHoDPJEAJJmxqLucSAU01yeE
+         Zx2w==
+X-Gm-Message-State: AOAM533NVxwMZbwRkVRYl//PQ2GtwBZPYJKiYTXpl8dlVZaIpk3trN4V
+        NsgE4X7LmYZOevMXNFC8ANnIBQ==
+X-Google-Smtp-Source: ABdhPJy+YEcSOIUz859rpa74XW+WHGJIXKdl+x6O21q/qCBPJQdhlzc9iwX2umrqS3Gsu/B1P+pw4A==
+X-Received: by 2002:aa7:87d3:: with SMTP id i19mr1572926pfo.203.1593158746196;
+        Fri, 26 Jun 2020 01:05:46 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
+        by smtp.gmail.com with ESMTPSA id 137sm21809843pgg.72.2020.06.26.01.05.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 01:05:45 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2 05/18] media: mtk-vcodec: venc: specify bitrate range per-chip
+Date:   Fri, 26 Jun 2020 17:04:29 +0900
+Message-Id: <20200626080442.292309-6-acourbot@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+In-Reply-To: <20200626080442.292309-1-acourbot@chromium.org>
+References: <20200626080442.292309-1-acourbot@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Different chips have different supported bitrate ranges. Move the min
+and max supported bitrates to the platform data.
 
-Do not call atomic64_set() directly to update the domain page-table
-root and use two new helper functions.
-
-This makes it easier to implement additional work necessary when
-the page-table is updated.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- drivers/iommu/amd/iommu.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h     | 4 ++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c     | 3 ++-
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 2 ++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 74cca1757172..5286ddcfc2f9 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -162,7 +162,18 @@ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
- 	pgtable->mode = pt_root & 7; /* lowest 3 bits encode pgtable mode */
- }
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index e7b155e7432e..b8f913de8d80 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -311,12 +311,16 @@ enum mtk_chip {
+  *
+  * @uses_ext: whether the encoder uses the extended firmware messaging format
+  * @has_lt_irq: whether the encoder uses the LT irq
++ * @min_birate: minimum supported encoding bitrate
++ * @max_bitrate: maximum supported encoding bitrate
+  */
+ struct mtk_vcodec_enc_pdata {
+ 	enum mtk_chip chip;
  
--static u64 amd_iommu_domain_encode_pgtable(u64 *root, int mode)
-+static void amd_iommu_domain_set_pt_root(struct protection_domain *domain, u64 root)
-+{
-+	atomic64_set(&domain->pt_root, root);
-+}
-+
-+static void amd_iommu_domain_clr_pt_root(struct protection_domain *domain)
-+{
-+	amd_iommu_domain_set_pt_root(domain, 0);
-+}
-+
-+static void amd_iommu_domain_set_pgtable(struct protection_domain *domain,
-+					 u64 *root, int mode)
- {
- 	u64 pt_root;
+ 	bool uses_ext;
+ 	bool has_lt_irq;
++	unsigned long min_bitrate;
++	unsigned long max_bitrate;
+ };
  
-@@ -170,7 +181,7 @@ static u64 amd_iommu_domain_encode_pgtable(u64 *root, int mode)
- 	pt_root = mode & 7;
- 	pt_root |= (u64)root;
+ /**
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index d469ff6464b2..50ba9da59153 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -1232,7 +1232,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
+ 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
  
--	return pt_root;
-+	amd_iommu_domain_set_pt_root(domain, pt_root);
- }
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
+-			1, 4000000, 1, 4000000);
++			  ctx->dev->venc_pdata->min_bitrate,
++			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_B_FRAMES,
+ 			0, 2, 1, 0);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+index c1365209263e..221fa0303075 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+@@ -380,6 +380,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+ static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
+ 	.chip = MTK_MT8173,
+ 	.has_lt_irq = true,
++	.min_bitrate = 1,
++	.max_bitrate = 4000000,
+ };
  
- static struct iommu_dev_data *alloc_dev_data(u16 devid)
-@@ -1410,7 +1421,7 @@ static bool increase_address_space(struct protection_domain *domain,
- 	struct domain_pgtable pgtable;
- 	unsigned long flags;
- 	bool ret = true;
--	u64 *pte, root;
-+	u64 *pte;
- 
- 	spin_lock_irqsave(&domain->lock, flags);
- 
-@@ -1438,8 +1449,7 @@ static bool increase_address_space(struct protection_domain *domain,
- 	 * Device Table needs to be updated and flushed before the new root can
- 	 * be published.
- 	 */
--	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode);
--	atomic64_set(&domain->pt_root, root);
-+	amd_iommu_domain_set_pgtable(domain, pte, pgtable.mode);
- 
- 	ret = true;
- 
-@@ -2319,7 +2329,7 @@ static void protection_domain_free(struct protection_domain *domain)
- 		domain_id_free(domain->id);
- 
- 	amd_iommu_domain_get_pgtable(domain, &pgtable);
--	atomic64_set(&domain->pt_root, 0);
-+	amd_iommu_domain_clr_pt_root(domain);
- 	free_pagetable(&pgtable);
- 
- 	kfree(domain);
-@@ -2327,7 +2337,7 @@ static void protection_domain_free(struct protection_domain *domain)
- 
- static int protection_domain_init(struct protection_domain *domain, int mode)
- {
--	u64 *pt_root = NULL, root;
-+	u64 *pt_root = NULL;
- 
- 	BUG_ON(mode < PAGE_MODE_NONE || mode > PAGE_MODE_6_LEVEL);
- 
-@@ -2343,8 +2353,7 @@ static int protection_domain_init(struct protection_domain *domain, int mode)
- 			return -ENOMEM;
- 	}
- 
--	root = amd_iommu_domain_encode_pgtable(pt_root, mode);
--	atomic64_set(&domain->pt_root, root);
-+	amd_iommu_domain_set_pgtable(domain, pt_root, mode);
- 
- 	return 0;
- }
-@@ -2713,8 +2722,8 @@ void amd_iommu_domain_direct_map(struct iommu_domain *dom)
- 	/* First save pgtable configuration*/
- 	amd_iommu_domain_get_pgtable(domain, &pgtable);
- 
--	/* Update data structure */
--	atomic64_set(&domain->pt_root, 0);
-+	/* Remove page-table from domain */
-+	amd_iommu_domain_clr_pt_root(domain);
- 
- 	/* Make changes visible to IOMMUs */
- 	update_domain(domain);
+ static const struct of_device_id mtk_vcodec_enc_match[] = {
 -- 
-2.27.0
+2.27.0.212.ge8ba1cc988-goog
 
