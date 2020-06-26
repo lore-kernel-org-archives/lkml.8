@@ -2,217 +2,244 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C831AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE7820768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5B520679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20150623.gappssmtp.com header.i=@mojatatu-com.20150623.gappssmtp.com header.b="Mvvrj24j"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="joXIMXVt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uLBxaHyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgFZN2M (ORCPT
+        id S1728320AbgFZNcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgFZN2M (ORCPT
+        Fri, 26 Jun 2020 09:32:39 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58173 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725864AbgFZNci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:28:12 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20008C03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:28:12 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id dm12so4452070qvb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0EXd1vhnNtrSwXMMNlWHuNp7c+1ntiJGP1iRQU299gU=;
-        b=Mvvrj24jfH5QmISu+fVAnHEZ4UZfa5swKApGEbK0SvSLKciMZg8UOQIPPF5lg9BXB+
-         UNg37aMUhRFv/V+RNUYfpGodsz/5CCRzlIddf5u88FlP/OhxPyuQHjfaxhXXrpkAYqZR
-         RPvfxFgOj6PO/MmHalHuO+iF9GbWGT7JTaSZZRRiJAy5xpcC6tN3qj8XhCRSF9YqLPWc
-         P8FBEE5kfbOmLSGPRDNlNC/mEp4qZYcKx/Mv0jCziLbhPQoZgzba6zmt26TTY7OIGzef
-         w9rfIdPwEyk7fseZrlgSeMsahvsn8NaaRjK2antdsxLY01ZS+nS3xH4oSMnO8tV18ILE
-         XGyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0EXd1vhnNtrSwXMMNlWHuNp7c+1ntiJGP1iRQU299gU=;
-        b=I8MKfYU4UYV6hZ351+dfSPWXjs9EADOZyFSnGmix1dlFkSmPxumTKk5UX3jm3Log7E
-         jfkoqXppm4FDbV25R9UIEOWIJOekSt/0z5wk6QcrBxrK8PM8pxpkrjk0zTK2MdWpuw1S
-         Q94+8VrvEBwz8hRi2xts5dgwSd6a3GzYgudJiHt3jlhZ7irOxIWORFP25PM1kQQ37D5Y
-         JSYK1ounV/o+uIjRcb9GSFHkBujFQL37/V2AxjLIaX2NrqaDbHgcns7EqtrTawyLVOq+
-         tCrJAr0+cSAAviGPMxIO6IF5baiIFUqaEOxtnbkZ1/9soMyqg402urwAyG0+GH0OSS0k
-         LmvA==
-X-Gm-Message-State: AOAM531gyLwERJAp91Pexfu5aiCz6ZVq71o6P3ii5HnjYxAqU339mIhg
-        m7BMIfMEIVd8AQcL3JtomrRt7A==
-X-Google-Smtp-Source: ABdhPJwwOoQhWPWx/VE3yv1GabHdfJhr3DZnb0oYKrL1gpTpCsPwqMSuLOa3IL7sbsM4AbM53+K/LQ==
-X-Received: by 2002:a0c:8583:: with SMTP id o3mr446203qva.108.1593178091324;
-        Fri, 26 Jun 2020 06:28:11 -0700 (PDT)
-Received: from [192.168.1.117] (23-233-27-60.cpe.pppoe.ca. [23.233.27.60])
-        by smtp.googlemail.com with ESMTPSA id r76sm7850870qka.30.2020.06.26.06.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 06:28:10 -0700 (PDT)
-Subject: Re: [v1,net-next 3/4] net: qos: police action add index for tc flower
- offloading
-To:     Po Liu <po.liu@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "idosch@idosch.org" <idosch@idosch.org>
-Cc:     "jiri@resnulli.us" <jiri@resnulli.us>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "vlad@buslov.dev" <vlad@buslov.dev>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
-        "vishal@chelsio.com" <vishal@chelsio.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "moshe@mellanox.com" <moshe@mellanox.com>,
-        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
-        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        Edward Cree <ecree@solarflare.com>
-References: <VE1PR04MB6496E5275AD00A8A65095DD192920@VE1PR04MB6496.eurprd04.prod.outlook.com>
-From:   Jamal Hadi Salim <jhs@mojatatu.com>
-Message-ID: <05d6df9a-4e84-0e8d-0c4c-7f04cb18bb6a@mojatatu.com>
-Date:   Fri, 26 Jun 2020 09:28:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 09:32:38 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0B1835800E9;
+        Fri, 26 Jun 2020 09:32:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 26 Jun 2020 09:32:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=3ULkGw0K1uowMBdVFivSKs3z/Pd
+        HGimtIeBF3iZ45OE=; b=joXIMXVtJ0FedsvAUBs29rqdOqRoKE6+f0RvjoPetJk
+        vVQ5ZU4+Uif0v2/m/l1QgFKlRU+/S0tFdE4eZgbf3GIOxAdjkv6+I57Qegp/HV8V
+        kx8ikbhgEa10QHm/ijgIp4Wnbk2oiHtvu0uC6hjXDGE5ZApy88f0O4dXttfgWGiH
+        wY6ZdT1EW6lPM7JIqgIGDdaiSiRr9zVfgGyGdTfk/b1vHHRm/ce88et+KiklK62I
+        GJBcRkAT5A3an6J74rdDDZJtFki9pScWCKa1AOhmK7xURUjGKOFFBbWziQBB4v8o
+        z0W/s+/8b3XMr70vhUuUnY+ZaGD/anIqQGizxzBr28w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3ULkGw
+        0K1uowMBdVFivSKs3z/PdHGimtIeBF3iZ45OE=; b=uLBxaHyPolUuINEWc1G8cq
+        +ZqwJsI3LaoIIY0XQ6JpQ6UFpgaKHwutk1uI0Rnalu+p1Quev56XwRYo9eoUC2Ox
+        qcoVya4iWbT3HjxL/pW9dUdzNOPYRQGcpLfpPBxPydkWfPoDSISO7vxzmhqMrf+0
+        Nerl8WwJDhW0JDG4gguXcXvDiMplnlRBlDFEpfO+D40RQYrOomrTEV/RH4WWihYJ
+        y+32vYweKfDm69MkPoxG3mIBr2DG8oIhlBXqH4VdZj0c1soGf/rKwlksypKwcB14
+        m5Cw7Ul+x7oO1y5Vyld+53MEe+Mb0tNHNlYW6gOT3A0Tt5GtcuviiK+KzAidrWXg
+        ==
+X-ME-Sender: <xms:8Pj1Xt0Z_6BU09s8thb6f0XU7sSR2BkYU1IVkQOSvaY2mMefFTv0iQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeluddgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnheptdfggfelgeehieeuieegfefgueduudefheffhfejleekheefjeevveegueel
+    ueefnecuffhomhgrihhnpehlihhnuhigqdhsuhhngihirdhorhhgnecukfhppeeltddrke
+    elrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:8Pj1XkGtjIO9a-ehEbiBU2LHmdk14NmwyBoWLDKqgX8CQ4FH9CZmvw>
+    <xmx:8Pj1Xt6C2nN0kmYtWJzHAcZ6Cqqg8zDSgRlqOKh9k8kvmMUp9MiCZg>
+    <xmx:8Pj1Xq2YKBOH0D40YMMS7KGYfEot6Ay9Su1yuQaozYSgps7duJIj2Q>
+    <xmx:9Pj1XrA--VmX1wt-SP_XjKrkaWuaT7waMCYAsj9YNBLDX2Mr4NZw-Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 313333280059;
+        Fri, 26 Jun 2020 09:32:32 -0400 (EDT)
+Date:   Fri, 26 Jun 2020 15:32:30 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 1/9] irqchip/sun6i-r: Use a stacked irqchip driver
+Message-ID: <20200626133230.yawpmhrhgd2pxzqn@gilmour.lan>
+References: <20200525041302.51213-1-samuel@sholland.org>
+ <20200525041302.51213-2-samuel@sholland.org>
+ <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
+ <fcfe6d02-2500-37de-e795-664bf2c7b5ee@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB6496E5275AD00A8A65095DD192920@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w2cxdmvddkia6p7z"
+Content-Disposition: inline
+In-Reply-To: <fcfe6d02-2500-37de-e795-664bf2c7b5ee@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 8:34 p.m., Po Liu wrote:
-> 
-> 
->> -----Original Message-----
 
->> That is the point i was trying to get to. Basically:
->> You have a counter table which is referenced by "index"
->> You also have a meter/policer table which is referenced by "index".
-> 
-> They should be one same group and same meaning.
-> 
+--w2cxdmvddkia6p7z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Didnt follow. You mean the index is the same for both the
-stat and policer?
+Hi Samuel,
 
->>
->> For policers, they maintain their own stats. So when i say:
->> tc ... flower ... action police ... index 5 The index referred to is in the
->> policer table
->>
-> 
-> Sure. Means police with No. 5 entry.
-> 
->> But for other actions, example when i say:
->> tc ... flower ... action drop index 10
-> 
-> Still the question, does gact action drop could bind with index? It doesn't meanful.
-> 
+On Mon, Jun 15, 2020 at 12:29:50AM -0500, Samuel Holland wrote:
+> On 6/8/20 3:48 AM, Maxime Ripard wrote:
+> > On Sun, May 24, 2020 at 11:12:54PM -0500, Samuel Holland wrote:
+> >> The R_INTC in the A31 and newer sun8i/sun50i SoCs is more similar to t=
+he
+> >> original sun4i interrupt controller than the sun7i/sun9i NMI controlle=
+r.
+> >> It is used for two distinct purposes:
+> >>  1) To control the trigger, latch, and mask for the NMI input pin
+> >>  2) To provide the interrupt input for the ARISC coprocessor
+> >>
+> >> As this interrupt controller is not documented, information about it
+> >> comes from vendor-provided ARISC firmware and from experimentation.
+> >>
+> >> Like the original sun4i interrupt controller, it has:
+> >>  - A VECTOR_REG at 0x00 (configurable via the BASE_ADDR_REG at 0x04)
+> >>  - A NMI_CTRL_REG, PENDING_REG, and ENABLE_REG as used by both the
+> >>    sun4i and sunxi-nmi drivers
+> >>  - A MASK_REG at 0x50
+> >>  - A RESP_REG at 0x60
+> >>
+> >> Differences from the sun4i interrupt controller appear to be:
+> >>  - It is only known to have one register of each kind (max 32 inputs)
+> >>  - There is no FIQ-related logic
+> >>  - There is no interrupt priority logic
+> >>
+> >> In order to fulfill its two purposes, this hardware block combines two
+> >> types of IRQs. First, the NMI pin is routed to the "IRQ 0" input on th=
+is
+> >> chip, with a trigger type controlled by the NMI_CTRL_REG. The "IRQ 0
+> >> pending" output from this chip, if enabled, is then routed to a SPI IRQ
+> >> input on the GIC, as IRQ_TYPE_LEVEL_HIGH. In other words, bit 0 of
+> >> ENABLE_REG *does* affect the NMI IRQ seen at the GIC.
+> >>
+> >> The NMI is then followed by a contiguous block of (at least) 15 IRQ
+> >> inputs that are connected in parallel to both R_INTC and the GIC. Or
+> >> in other words, the other bits of ENABLE_REG *do not* affect the IRQs
+> >> seen at the GIC.
+> >>
+> >> Finally, the global "IRQ pending" output from R_INTC, after being mask=
+ed
+> >> by MASK_REG and RESP_REG, is connected to the "external interrupt" inp=
+ut
+> >> of the ARISC CPU (an OR1200). This path is not relevant to Linux.
+> >>
+> >> Because of the 1:1 correspondence between R_INTC and GIC inputs, this =
+is
+> >> a perfect scenario for using a stacked irqchip driver. We want to hook
+> >> into enabling/disabling IRQs to add more features to the GIC
+> >> (specifically to allow masking the NMI and setting its trigger type),
+> >> but we don't need to actually handle the IRQ in this driver.
+> >>
+> >> And since R_INTC is in the always-on power domain, and its output is
+> >> connected directly in to the power management coprocessor, a stacked
+> >> irqchip driver provides a simple way to add wakeup support to this set
+> >> of IRQs. That is a future patch; for now, just the NMI is moved over.
+> >>
+> >> This driver keeps the same DT binding as the existing driver. The
+> >> "interrupt" property of the R_INTC node is used to determine 1) the
+> >> offset between GIC and R_INTC hwirq numbers and 2) the type of trigger
+> >> between the R_INTC "IRQ 0 pending" output and the GIC NMI input.
+> >>
+> >> This commit mostly reverts commit 173bda53b340 ("irqchip/sunxi-nmi:
+> >> Support sun6i-a31-r-intc compatible").
+> >>
+> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> >=20
+> > As usual, thanks for that commit log (and the experiments you did to
+> > write it in the first place).
+> >=20
+> > Acked-by: Maxime Ripard <mripard@kernel.org>
+> >=20
+> > Maxime
+>=20
+> I've done more experimenting, and I've learned what comes after the first=
+ 16
+> IRQs: all of the other SPI IRQs, multiplexed in clusters of 8, with per-I=
+RQ
+> masks for the inputs to each cluster.
+>=20
+> In fact, the H6 has so many IRQs that it begins to use the the second reg=
+ister
+> in each group (0x14, 0x44, 0x54). This means that more than one register =
+in each
+> group are in fact implemented.
+>=20
+> See https://linux-sunxi.org/INTC#IRQ_Mapping for more details.
+>=20
+> The ability to send other IRQs to the AR100 makes it possible to implement
+> functionality like USB Remote Wakeup or Wake on LAN without adding comple=
+xity to
+> the AR100 firmware.
+>=20
+> I will need to update the driver to take advantage of this ability, and it
+> raises some questions about the binding. Since the NMI is not the
+> lowest-numbered IRQ that can be mapped,
 
-Depends on your hardware. From this discussion i am
-trying to understand where the constraint is for your case.
-Whether it is your h/w or the TSN spec.
-For a sample counting which is flexible see here:
-https://p4.org/p4-spec/docs/PSA.html#sec-counters
+I'm not quite sure I get that part. From the link you mentionned above,
+the NMI is the interrupt 0 for all the SoCs, so we shouldn't have any
+number lower?
 
-That concept is not specific to P4 but rather to
-newer flow-based hardware.
+> the numbering scheme would need to change.
 
-More context:
-The assumption these days is we can have a _lot_ of flows with a lot
-of actions.
-Then you want to be able to collect the stats separately, possibly one
-counter entry for each action of interest.
-Why is this important?f For analytics uses cases,
-when you are retrieving the stats you want to reduce the amount of
-data being retrieved. Typically these stats are polled every X seconds.
-For starters, you dont dump filters (which in your case seems to be
-the only way to get the stats).
-In current tc, you dump the actions. But that could be improved so
-you can just dump the stats. The mapping of stats index to actions
-is known to the entity doing the dump.
+As far as I know, upstream we only ever use the 0 interrupt for the AXP,
+so it should be fairly easy to come up with a numbering scheme that is
+backward compatible with that.
 
-Does that make sense?
+> Maybe the IRQ number should be the same as the GIC SPI IRQ number? But
+> this would mean a new compatible.
+>=20
+> The other question is which devices should be routed through this irqchip
+> driver? Anything that provides a wakeup source needs to go through it, so=
+ it can
+> intercept irq_set_wake. Probably other devices should not, as 1) not quit=
+e all
+> IRQs can even be sent to the AR100 for wakeup (e.g. the A64 appears to st=
+op in
+> the middle of the GPU IRQs), and 2) stacking on another irqchip driver ad=
+ds a
+> (tiny) overhead to masking/unmasking during IRQ handling.
 
->> The index is in the counter/stats table.
->> It is not exactly "10" in hardware, the driver magically hides it from the
->> user - so it could be hw counter index 1234
-> 
-> Not exactly. Current flower offloading stats means get the chain index for that flow filter. The other actions should bind to that chain index.
- >
+It's probably a bit of a non-answer, but I guess all the devices for
+which it makes sense? The ethernet / USB controllers that you already
+mentionned would make sense, the GPIO banks too, possibly the UARTs?
 
-So if i read correctly: You have an index per filter pointing to the
-counter table.
-Is this something _you_ decided to do in software or is it how the
-hardware works? (note i referred to this as "legacy ACL" approach
-earlier. It worked like that in old hardware because the main use
-case was to have one action on a match (drop/accept kind).
+I guess we could just enable most of the one that makes sense at first,
+and then discuss cases we didn't consider as we discover them?
 
->Like IEEE802.1Qci, what I am doing is bind gate action to filter chain(mandatory). And also police action as optional.
+Maxime
 
-I cant seem to find this spec online. Is it freely available?
-Also, if i understand you correctly you are saying according to this
-spec you can only have the following type of policy:
-tc .. filter match-spec-here .. \
-action gate gate-action-attributes \
-action police ...
+--w2cxdmvddkia6p7z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That "action gate" MUST always be present
-but "action police" is optional?
+-----BEGIN PGP SIGNATURE-----
 
-> There is stream counter table which summary the counters pass gate action entry and police action entry for that chain index(there is a bit different if two chain sharing same action list).
-> One chain counter which tc show stats get counter source:
-> struct psfp_streamfilter_counters {
->          u64 matching_frames_count;
->          u64 passing_frames_count;
->          u64 not_passing_frames_count;
->          u64 passing_sdu_count;
->          u64 not_passing_sdu_count;
->          u64 red_frames_count;
-> };
->
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvX47gAKCRDj7w1vZxhR
+xRxyAPwL7ZoWHt8da2j7EhneJLKVCFwtc3+Gq4LllYPi+tCvFAEA1oY+SejBB//l
+AXnc3/m1MK4LWLArMpWj2bymYHiZlgY=
+=f1Iv
+-----END PGP SIGNATURE-----
 
-Assuming psfp is something defined in IEEE802.1Qci and the spec will
-describe these?
-Is the filter  "index" pointing to one of those in some counter table?
-
-
-> When pass to the user space, summarize as:
->          stats.pkts = counters.matching_frames_count +  counters.not_passing_sdu_count - filter->stats.pkts;
- >
->          stats.drops = counters.not_passing_frames_count + counters.not_passing_sdu_count +   counters.red_frames_count - filter->stats.drops;
->
-
-Thanks for the explanation.
-What is filter->stats?
-The rest of those counters seem related to the gate action.
-How do you account for policing actions?
-
-cheers,
-jamal
-
+--w2cxdmvddkia6p7z--
