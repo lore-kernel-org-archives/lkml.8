@@ -2,395 +2,239 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7BB20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DF7207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dpNh35xh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFZReW (ORCPT
+        id S1726458AbgFZRgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:34:22 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42218 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgFZReR (ORCPT
+        Fri, 26 Jun 2020 13:36:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35518 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgFZRgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:34:17 -0400
-Received: from 89-64-83-223.dynamic.chello.pl (89.64.83.223) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 85d3147370415763; Fri, 26 Jun 2020 19:34:13 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [RFT][PATCH v3 2/4] ACPI: OSL: Implement deferred unmapping of ACPI memory
-Date:   Fri, 26 Jun 2020 19:31:24 +0200
-Message-ID: <4507864.RZ40Oy75i1@kreacher>
-In-Reply-To: <2788992.3K7huLjdjL@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
+        Fri, 26 Jun 2020 13:36:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593192981; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q7Gk2/MvVNbeJ23s9omPDJ4FyKx8jvfy+MPVRv3ZRAU=;
+        b=dpNh35xh6edz0TF4NGaNqhL0AX6pDWk/dLxCI8uu3H344xi3wR0ABwOmo/WJ6tcLplTMmk
+        WZcpOv4RP1AFDBlRWOWBJYeOyegebjf6LDZ8V+ZmL5EQBeJDSt4GE7/+SXzR7Sae6cB9z+
+        Sn/ch/qdtFVPPDJkWQZuAlRhaTdyTSw=
+Date:   Fri, 26 Jun 2020 19:36:10 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] clk: X1000: Add support for calculat REFCLK of USB
+ PHY.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <AKNJCQ.6UUHR0DBDE8E2@crapouillou.net>
+In-Reply-To: <20200626164844.25436-3-zhouyanjie@wanyeetech.com>
+References: <20200626164844.25436-1-zhouyanjie@wanyeetech.com>
+        <20200626164844.25436-3-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Hi Zhou,
 
-Rework acpi_os_unmap_memory() so that it does not release the memory
-mapping matching the given address range right away but queues it
-up for later removal, implement acpi_os_release_unused_mappings()
-that will remove the unused ACPI memory mappings and add invocations
-of it to acpi_release_memory() and to the table loading/unloading
-code, to get rid of memory mappings that may be left behind.
+Le sam. 27 juin 2020 =C3=A0 0:48, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=
+=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add new functions to "x1000_otg_phy_ops" to calculat the rate of=20
+> REFCLK,
+> which is needed by USB PHY in the Ingenic X1000 SoC.
+>=20
+> Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>  drivers/clk/ingenic/x1000-cgu.c | 113=20
+> ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>=20
+> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+> b/drivers/clk/ingenic/x1000-cgu.c
+> index 453f3323cb99..a61c16f98a11 100644
+> --- a/drivers/clk/ingenic/x1000-cgu.c
+> +++ b/drivers/clk/ingenic/x1000-cgu.c
+> @@ -48,8 +48,114 @@
+>  #define USBPCR_SIDDQ		BIT(21)
+>  #define USBPCR_OTG_DISABLE	BIT(20)
+>=20
+> +/* bits within the USBPCR1 register */
+> +#define USBPCR1_REFCLKSEL_SHIFT	26
+> +#define USBPCR1_REFCLKSEL_MASK	(0x3 << USBPCR1_REFCLKSEL_SHIFT)
+> +#define USBPCR1_REFCLKSEL_CORE	(0x2 << USBPCR1_REFCLKSEL_SHIFT)
+> +#define USBPCR1_REFCLKDIV_SHIFT	24
+> +#define USBPCR1_REFCLKDIV_MASK	(0x3 << USBPCR1_REFCLKDIV_SHIFT)
+> +#define USBPCR1_REFCLKDIV_48	(0x2 << USBPCR1_REFCLKDIV_SHIFT)
+> +#define USBPCR1_REFCLKDIV_24	(0x1 << USBPCR1_REFCLKDIV_SHIFT)
+> +#define USBPCR1_REFCLKDIV_12	(0x0 << USBPCR1_REFCLKDIV_SHIFT)
+> +
+>  static struct ingenic_cgu *cgu;
+>=20
+> +static u8 x1000_otg_phy_get_parent(struct clk_hw *hw)
+> +{
+> +	/* we only use CLKCORE, revisit if that ever changes */
+> +	return 0;
+> +}
+> +
+> +static int x1000_otg_phy_set_parent(struct clk_hw *hw, u8 idx)
+> +{
+> +	unsigned long flags;
+> +	u32 usbpcr1;
+> +
+> +	if (idx > 0)
+> +		return -EINVAL;
+> +
+> +	spin_lock_irqsave(&cgu->lock, flags);
+> +
+> +	usbpcr1 =3D readl(cgu->base + CGU_REG_USBPCR1);
+> +	usbpcr1 &=3D ~USBPCR1_REFCLKSEL_MASK;
+> +	/* we only use CLKCORE */
+> +	usbpcr1 |=3D USBPCR1_REFCLKSEL_CORE;
+> +	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
+> +
+> +	spin_unlock_irqrestore(&cgu->lock, flags);
+> +	return 0;
+> +}
 
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpi_configfs.c      |   3 +
- drivers/acpi/osl.c                | 153 +++++++++++++++++++++++-------
- drivers/acpi/tables.c             |   2 +
- include/acpi/platform/aclinux.h   |   1 +
- include/acpi/platform/aclinuxex.h |   2 +
- 5 files changed, 125 insertions(+), 36 deletions(-)
+If you only support one parent, maybe set that bit in the=20
+x1000_cgu_init(), then you can drop the get_parent/set_parent.
 
-diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-index ece8c1a921cc..dd167ff87dc4 100644
---- a/drivers/acpi/acpi_configfs.c
-+++ b/drivers/acpi/acpi_configfs.c
-@@ -59,6 +59,8 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
- 		table->header = NULL;
- 	}
- 
-+	acpi_os_release_unused_mappings();
-+
- 	return ret;
- }
- 
-@@ -224,6 +226,7 @@ static void acpi_table_drop_item(struct config_group *group,
- 
- 	ACPI_INFO(("Host-directed Dynamic ACPI Table Unload"));
- 	acpi_unload_table(table->index);
-+	acpi_os_release_unused_mappings();
- }
- 
- static struct configfs_group_operations acpi_table_group_ops = {
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 762c5d50b8fe..749ae3e32193 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -77,12 +77,16 @@ struct acpi_ioremap {
- 	void __iomem *virt;
- 	acpi_physical_address phys;
- 	acpi_size size;
--	unsigned long refcount;
-+	union {
-+		unsigned long refcount;
-+		struct list_head gc;
-+	} track;
- };
- 
- static LIST_HEAD(acpi_ioremaps);
- static DEFINE_MUTEX(acpi_ioremap_lock);
- #define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
-+static LIST_HEAD(unused_mappings);
- 
- static void __init acpi_request_region (struct acpi_generic_address *gas,
- 	unsigned int length, char *desc)
-@@ -250,7 +254,7 @@ void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size)
- 	map = acpi_map_lookup(phys, size);
- 	if (map) {
- 		virt = map->virt + (phys - map->phys);
--		map->refcount++;
-+		map->track.refcount++;
- 	}
- 	mutex_unlock(&acpi_ioremap_lock);
- 	return virt;
-@@ -335,7 +339,7 @@ void __iomem __ref
- 	/* Check if there's a suitable mapping already. */
- 	map = acpi_map_lookup(phys, size);
- 	if (map) {
--		map->refcount++;
-+		map->track.refcount++;
- 		goto out;
- 	}
- 
-@@ -358,7 +362,7 @@ void __iomem __ref
- 	map->virt = virt;
- 	map->phys = pg_off;
- 	map->size = pg_sz;
--	map->refcount = 1;
-+	map->track.refcount = 1;
- 
- 	list_add_tail_rcu(&map->list, &acpi_ioremaps);
- 
-@@ -375,40 +379,39 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
- 
- /* Must be called with mutex_lock(&acpi_ioremap_lock) */
--static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
- {
--	unsigned long refcount = --map->refcount;
-+	if (--map->track.refcount)
-+		return true;
- 
--	if (!refcount)
--		list_del_rcu(&map->list);
--	return refcount;
-+	list_del_rcu(&map->list);
-+
-+	if (defer) {
-+		INIT_LIST_HEAD(&map->track.gc);
-+		list_add_tail(&map->track.gc, &unused_mappings);
-+	}
-+	return defer;
- }
- 
--static void acpi_os_map_cleanup(struct acpi_ioremap *map)
-+static void __acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	synchronize_rcu_expedited();
- 	acpi_unmap(map->phys, map->virt);
- 	kfree(map);
- }
- 
--/**
-- * acpi_os_unmap_iomem - Drop a memory mapping reference.
-- * @virt: Start of the address range to drop a reference to.
-- * @size: Size of the address range to drop a reference to.
-- *
-- * Look up the given virtual address range in the list of existing ACPI memory
-- * mappings, drop a reference to it and unmap it if there are no more active
-- * references to it.
-- *
-- * During early init (when acpi_permanent_mmap has not been set yet) this
-- * routine simply calls __acpi_unmap_table() to get the job done.  Since
-- * __acpi_unmap_table() is an __init function, the __ref annotation is needed
-- * here.
-- */
--void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
-+static void acpi_os_map_cleanup(struct acpi_ioremap *map)
-+{
-+	if (!map)
-+		return;
-+
-+	synchronize_rcu_expedited();
-+	__acpi_os_map_cleanup(map);
-+}
-+
-+static void __ref __acpi_os_unmap_iomem(void __iomem *virt, acpi_size size,
-+					bool defer)
- {
- 	struct acpi_ioremap *map;
--	unsigned long refcount;
- 
- 	if (!acpi_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -416,26 +419,97 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- 	}
- 
- 	mutex_lock(&acpi_ioremap_lock);
-+
- 	map = acpi_map_lookup_virt(virt, size);
- 	if (!map) {
- 		mutex_unlock(&acpi_ioremap_lock);
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
- 	}
--	refcount = acpi_os_drop_map_ref(map);
-+	if (acpi_os_drop_map_ref(map, defer))
-+		map = NULL;
-+
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	if (!refcount)
--		acpi_os_map_cleanup(map);
-+	acpi_os_map_cleanup(map);
-+}
-+
-+/**
-+ * acpi_os_unmap_iomem - Drop a memory mapping reference.
-+ * @virt: Start of the address range to drop a reference to.
-+ * @size: Size of the address range to drop a reference to.
-+ *
-+ * Look up the given virtual address range in the list of existing ACPI memory
-+ * mappings, drop a reference to it and unmap it if there are no more active
-+ * references to it.
-+ *
-+ * During early init (when acpi_permanent_mmap has not been set yet) this
-+ * routine simply calls __acpi_unmap_table() to get the job done.  Since
-+ * __acpi_unmap_table() is an __init function, the __ref annotation is needed
-+ * here.
-+ */
-+void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
-+{
-+	__acpi_os_unmap_iomem(virt, size, false);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
- 
-+/**
-+ * acpi_os_unmap_memory - Drop a memory mapping reference.
-+ * @virt: Start of the address range to drop a reference to.
-+ * @size: Size of the address range to drop a reference to.
-+ *
-+ * Look up the given virtual address range in the list of existing ACPI memory
-+ * mappings, drop a reference to it and if there are no more active references
-+ * to it, put it in the list of unused memory mappings.
-+ *
-+ * During early init (when acpi_permanent_mmap has not been set yet) this
-+ * routine behaves like acpi_os_unmap_iomem().
-+ */
- void __ref acpi_os_unmap_memory(void *virt, acpi_size size)
- {
--	return acpi_os_unmap_iomem((void __iomem *)virt, size);
-+	__acpi_os_unmap_iomem((void __iomem *)virt, size, true);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_memory);
- 
-+/**
-+ * acpi_os_release_unused_mappings - Release unused ACPI memory mappings.
-+ */
-+void acpi_os_release_unused_mappings(void)
-+{
-+	struct list_head list;
-+
-+	INIT_LIST_HEAD(&list);
-+
-+	/*
-+	 * First avoid looking at mappings that may be added to the "unused"
-+	 * list while the synchronize_rcu() below is running.
-+	 */
-+	mutex_lock(&acpi_ioremap_lock);
-+
-+	list_splice_init(&unused_mappings, &list);
-+
-+	mutex_unlock(&acpi_ioremap_lock);
-+
-+	if (list_empty(&list))
-+		return;
-+
-+	/*
-+	 * Wait for the possible users of the mappings in the "unused" list to
-+	 * stop using them.
-+	 */
-+	synchronize_rcu();
-+
-+	/* Release the unused mappings in the list. */
-+	do {
-+		struct acpi_ioremap *map;
-+
-+		map = list_entry(list.next, struct acpi_ioremap, track.gc);
-+		list_del(&map->track.gc);
-+		__acpi_os_map_cleanup(map);
-+	} while (!list_empty(&list));
-+}
-+
- int acpi_os_map_generic_address(struct acpi_generic_address *gas)
- {
- 	u64 addr;
-@@ -461,7 +535,6 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
--	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -472,16 +545,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
- 		return;
- 
- 	mutex_lock(&acpi_ioremap_lock);
-+
- 	map = acpi_map_lookup(addr, gas->bit_width / 8);
- 	if (!map) {
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	refcount = acpi_os_drop_map_ref(map);
-+	if (acpi_os_drop_map_ref(map, false))
-+		map = NULL;
-+
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	if (!refcount)
--		acpi_os_map_cleanup(map);
-+	acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
-@@ -1566,11 +1641,17 @@ static acpi_status acpi_deactivate_mem_region(acpi_handle handle, u32 level,
- acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
- 				u32 level)
- {
-+	acpi_status ret;
-+
- 	if (!(res->flags & IORESOURCE_MEM))
- 		return AE_TYPE;
- 
--	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
-+	ret = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
- 				   acpi_deactivate_mem_region, NULL, res, NULL);
-+
-+	acpi_os_release_unused_mappings();
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(acpi_release_memory);
- 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 0e905c3d1645..939484a860a1 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -816,6 +816,8 @@ int __init acpi_table_init(void)
- 		return -EINVAL;
- 	acpi_table_initrd_scan();
- 
-+	acpi_os_release_unused_mappings();
-+
- 	check_multiple_madt();
- 	return 0;
- }
-diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
-index 987e2af7c335..784e294dc74c 100644
---- a/include/acpi/platform/aclinux.h
-+++ b/include/acpi/platform/aclinux.h
-@@ -133,6 +133,7 @@
- #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_delete_raw_lock
- #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_acquire_raw_lock
- #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_release_raw_lock
-+#define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_release_unused_mappings
- 
- /*
-  * OSL interfaces used by debugger/disassembler
-diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
-index 04f88f2de781..ad6b905358c5 100644
---- a/include/acpi/platform/aclinuxex.h
-+++ b/include/acpi/platform/aclinuxex.h
-@@ -120,6 +120,8 @@ static inline void acpi_os_delete_raw_lock(acpi_raw_spinlock handle)
- 	ACPI_FREE(handle);
- }
- 
-+void acpi_os_release_unused_mappings(void);
-+
- static inline u8 acpi_os_readable(void *pointer, acpi_size length)
- {
- 	return TRUE;
--- 
-2.26.2
+> +
+> +static unsigned long x1000_otg_phy_recalc_rate(struct clk_hw *hw,
+> +						unsigned long parent_rate)
+> +{
+> +	u32 usbpcr1;
+> +	unsigned refclk_div;
+> +
+> +	usbpcr1 =3D readl(cgu->base + CGU_REG_USBPCR1);
+> +	refclk_div =3D usbpcr1 & USBPCR1_REFCLKDIV_MASK;
+> +
+> +	switch (refclk_div) {
+> +	case USBPCR1_REFCLKDIV_12:
+> +		return 12000000;
+> +
+> +	case USBPCR1_REFCLKDIV_24:
+> +		return 24000000;
+> +
+> +	case USBPCR1_REFCLKDIV_48:
+> +		return 48000000;
+> +	}
 
+On your setup, what frequency is configured for the "otg" clock? Is it=20
+48 MHz?
 
+I believe CLKCORE is the OTG core's clock (aka "otg"), and I'm pretty=20
+sure that these fields only represent CLKCORE/4, CLKCORE/2, CLKCORE/1,=20
+but the doc expects CLKCORE=3D=3D48MHz.
+
+In that case the "otg_phy" should be parented to "otg", and the rate=20
+should be computed according to the parent rate and the divider=20
+configured.
+
+> +
+> +	BUG();
+
+Don't use BUG() - it pisses off Linus :)
+And it's reserved for bugs that will take the whole system down, I=20
+think. Better use WARN().
+
+Cheers,
+-Paul
+
+> +	return parent_rate;
+> +}
+> +
+> +static long x1000_otg_phy_round_rate(struct clk_hw *hw, unsigned=20
+> long req_rate,
+> +				      unsigned long *parent_rate)
+> +{
+> +	if (req_rate < 18000000)
+> +		return 12000000;
+> +
+> +	if (req_rate < 36000000)
+> +		return 24000000;
+> +
+> +	return 48000000;
+> +}
+> +
+> +static int x1000_otg_phy_set_rate(struct clk_hw *hw, unsigned long=20
+> req_rate,
+> +				   unsigned long parent_rate)
+> +{
+> +	unsigned long flags;
+> +	u32 usbpcr1, div_bits;
+> +
+> +	switch (req_rate) {
+> +	case 12000000:
+> +		div_bits =3D USBPCR1_REFCLKDIV_12;
+> +		break;
+> +
+> +	case 24000000:
+> +		div_bits =3D USBPCR1_REFCLKDIV_24;
+> +		break;
+> +
+> +	case 48000000:
+> +		div_bits =3D USBPCR1_REFCLKDIV_48;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	spin_lock_irqsave(&cgu->lock, flags);
+> +
+> +	usbpcr1 =3D readl(cgu->base + CGU_REG_USBPCR1);
+> +	usbpcr1 &=3D ~USBPCR1_REFCLKDIV_MASK;
+> +	usbpcr1 |=3D div_bits;
+> +	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
+> +
+> +	spin_unlock_irqrestore(&cgu->lock, flags);
+> +	return 0;
+> +}
+> +
+>  static int x1000_usb_phy_enable(struct clk_hw *hw)
+>  {
+>  	void __iomem *reg_opcr		=3D cgu->base + CGU_REG_OPCR;
+> @@ -80,6 +186,13 @@ static int x1000_usb_phy_is_enabled(struct clk_hw=20
+> *hw)
+>  }
+>=20
+>  static const struct clk_ops x1000_otg_phy_ops =3D {
+> +	.get_parent =3D x1000_otg_phy_get_parent,
+> +	.set_parent =3D x1000_otg_phy_set_parent,
+> +
+> +	.recalc_rate =3D x1000_otg_phy_recalc_rate,
+> +	.round_rate =3D x1000_otg_phy_round_rate,
+> +	.set_rate =3D x1000_otg_phy_set_rate,
+> +
+>  	.enable		=3D x1000_usb_phy_enable,
+>  	.disable	=3D x1000_usb_phy_disable,
+>  	.is_enabled	=3D x1000_usb_phy_is_enabled,
+> --
+> 2.11.0
+>=20
 
 
