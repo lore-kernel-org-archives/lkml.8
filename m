@@ -2,143 +2,224 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2177C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8BA020E65
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C7220E65
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593181081;
+	bh=QPTU4Y1vwrRGgF5153j76jr6ryZ826LAZeuZlTjk2jI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0y8fvE7N7Xig/fD4N9RvrsCCdxDYGyq5WJhYSdvYPujEpYKaglOhQbiTIxU41yH9z
+	 UL07M/KpVKAi82xUq8+e1kCj0zmGDbnuZRKmI8VE5wf3PausJPf54lH4BwlxVboxp4
+	 UUyL4NCfjkmwKuWT/+GttWEvRXZCmx/jzssTwTOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgFZORC (ORCPT
+        id S1729081AbgFZOSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:17:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36628 "EHLO mx2.suse.de"
+        Fri, 26 Jun 2020 10:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgFZORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:17:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E9DD5AAE8;
-        Fri, 26 Jun 2020 14:16:59 +0000 (UTC)
-Received: from localhost (webern.olymp [local])
-        by webern.olymp (OpenSMTPD) with ESMTPA id 986dd79c;
-        Fri, 26 Jun 2020 15:16:58 +0100 (WEST)
-Date:   Fri, 26 Jun 2020 15:16:58 +0100
-From:   Luis Henriques <lhenriques@suse.de>
-To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Lyude <lyude@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: Warning triggered in drm_dp_delayed_destroy_work workqueue
-Message-ID: <20200626141658.GA23513@suse.de>
-References: <20200625102221.GA66817@suse.de>
- <CAKMK7uECFfCTZc2wihY4ztZ0WiKR6foUEv2ScbJ79bqt6YQELQ@mail.gmail.com>
- <20200626140600.GA6112@intel.com>
+        id S1728489AbgFZOSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:18:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FDA208C9;
+        Fri, 26 Jun 2020 14:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593181079;
+        bh=QPTU4Y1vwrRGgF5153j76jr6ryZ826LAZeuZlTjk2jI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rHGnECLokQmtsfewmSKPFDJQO9bIyzoLW5WygALzMXPHvLNr9M+yRmebHA9/vhCYV
+         OLgR6oEpQiKXT/ffIWresFZmoeLzxR1UJYdsRuCbopr0kDzFbWBjfhpWi6+/zWtSYS
+         QCEOHsJOb2FTQ3bmmNjXDFVJxV1/fLMaw64eBQ/s=
+Date:   Fri, 26 Jun 2020 16:17:54 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com
+Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted
+ devices
+Message-ID: <20200626141754.GB4141629@kroah.com>
+References: <20200626002710.110200-1-rajatja@google.com>
+ <20200626002710.110200-2-rajatja@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200626140600.GA6112@intel.com>
+In-Reply-To: <20200626002710.110200-2-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:06:00PM +0300, Ville Syrjälä wrote:
-> On Fri, Jun 26, 2020 at 03:40:20PM +0200, Daniel Vetter wrote:
-> > Adding Lyude, she's been revamping all the lifetime refcouting in the
-> > dp code last few kernel releases. At a glance I don't even have an
-> > idea what's going wrong here ...
+On Thu, Jun 25, 2020 at 05:27:10PM -0700, Rajat Jain wrote:
+> Introduce a PCI parameter that disables the automatic attachment of
+> untrusted devices to their drivers.
 > 
-> Already fixed by Imre I believe.
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> Context:
 > 
-> 7d11507605a7 ("drm/dp_mst: Fix the DDC I2C device unregistration of an MST port")
+>   I set out to implement the approach outlined in
+>     https://lkml.org/lkml/2020/6/9/1331
+>     https://lkml.org/lkml/2020/6/15/1453
 > 
+>   But to my surprise, I found that the new hotplugged PCI devices
+>   were getting automatically attached to drivers even though
+>   /sys/bus/pci/drivers_autoprobe was set to 0.
+> 
+>   I realized that the device core's "drivers_autoprobe":
+> 
+>   * only disables the *initial* probe of the device (i.e. from
+>     device_add()). If a subsystem calls device_attach() explicitly
+>     for its devices like PCI subsystem does, the drivers_autoprobe
+>     setting does not matter. The core will attach device to the driver.
+>     This looks like correct semantic behavior to me because PCI is
+>     explicitly calling device_attach(), which is a way to explicitly
+>     ask the core to find and attach a driver for a device.
+> 
+>   * "drivers_autoprobe" cannot be controlled at boot time (to restrict
+>     any drivers before userspace comes up).
+> 
+>   The options I considered were:
+> 
+>   1) Change device_attach() so that it takes into consideration the
+>      drivers_autoprobe property. Not sure if this is semantically correct
+>      thing to do though. If I do this, then the only way a driver can
+>      be attached to the drivers would be via userspace
+>      (/sys/bus/pci/drivers/bind) (Good for our use case though!).
 
-Ah!  It does seems to be the same issue indeed!  Thanks a lot for pointing
-me at this commit.  Hopefully this fix can be included in 5.8.  Not that
-I'm seeing this WARNING frequently, but frequent enough to annoy me :-)
+This is the correct thing to do here, haven't I been asking you do move
+this logic into the driver core so that all busses can use it?
 
-Cheers,
---
-Luis
+>   2) Make the drivers_autoprobe property available to PCI to use
+>      (currently it is private to device core). The PCI could use this
+>      to determine whether or not to call device_attach(). This still
+>      leaves the other problem (of not being able to set
+>      drivers_autoprobe via command line open).
 
-> > -Daniel
-> > 
-> > On Thu, Jun 25, 2020 at 12:22 PM Luis Henriques <lhenriques@suse.de> wrote:
-> > >
-> > > Hi!
-> > >
-> > > I've been seeing this warning occasionally, not sure if it has been
-> > > reported yet.  It's not a regression as I remember seeing it in, at least,
-> > > 5.7.
-> > >
-> > > Anyway, here it is:
-> > >
-> > > ------------[ cut here ]------------
-> > > sysfs group 'power' not found for kobject 'i2c-7'
-> > > WARNING: CPU: 1 PID: 17996 at fs/sysfs/group.c:279 sysfs_remove_group+0x74/0x80
-> > > Modules linked in: ccm(E) dell_rbtn(E) iwlmvm(E) mei_wdt(E) mac80211(E) libarc4(E) uvcvideo(E) dell_laptop(E) videobuf2_vmalloc(E) intel_rapl_>
-> > >  soundcore(E) intel_soc_dts_iosf(E) rng_core(E) battery(E) acpi_pad(E) sparse_keymap(E) acpi_thermal_rel(E) intel_pch_thermal(E) int3402_therm>
-> > >  sysfillrect(E) intel_lpss(E) sysimgblt(E) fb_sys_fops(E) idma64(E) scsi_mod(E) virt_dma(E) mfd_core(E) drm(E) fan(E) thermal(E) i2c_hid(E) hi>
-> > > CPU: 1 PID: 17996 Comm: kworker/1:1 Tainted: G            E     5.8.0-rc2+ #36
-> > > Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
-> > > Workqueue: events drm_dp_delayed_destroy_work [drm_kms_helper]
-> > > RIP: 0010:sysfs_remove_group+0x74/0x80
-> > > Code: ff 5b 48 89 ef 5d 41 5c e9 79 bc ff ff 48 89 ef e8 01 b8 ff ff eb cc 49 8b 14 24 48 8b 33 48 c7 c7 90 ac 8b 93 e8 de b1 d4 ff <0f> 0b 5b>
-> > > RSP: 0000:ffffb12d40c13c38 EFLAGS: 00010282
-> > > RAX: 0000000000000000 RBX: ffffffff936e6a60 RCX: 0000000000000027
-> > > RDX: 0000000000000027 RSI: 0000000000000086 RDI: ffff8e37de097b68
-> > > RBP: 0000000000000000 R08: ffff8e37de097b60 R09: ffffffff93fb4624
-> > > R10: 0000000000000904 R11: 000000000001002c R12: ffff8e37d3081c18
-> > > R13: ffff8e375f1450a8 R14: 0000000000000000 R15: ffff8e375f145410
-> > > FS:  0000000000000000(0000) GS:ffff8e37de080000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000000000000 CR3: 00000004ab20a001 CR4: 00000000003606e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >  device_del+0x97/0x3f0
-> > >  cdev_device_del+0x15/0x30
-> > >  put_i2c_dev+0x7b/0x90 [i2c_dev]
-> > >  i2cdev_detach_adapter+0x33/0x60 [i2c_dev]
-> > >  notifier_call_chain+0x47/0x70
-> > >  blocking_notifier_call_chain+0x3d/0x60
-> > >  device_del+0x8f/0x3f0
-> > >  device_unregister+0x16/0x60
-> > >  i2c_del_adapter+0x247/0x300
-> > >  drm_dp_port_set_pdt+0x90/0x2c0 [drm_kms_helper]
-> > >  drm_dp_delayed_destroy_work+0x2be/0x340 [drm_kms_helper]
-> > >  process_one_work+0x1ae/0x370
-> > >  worker_thread+0x50/0x3a0
-> > >  ? process_one_work+0x370/0x370
-> > >  kthread+0x11b/0x140
-> > >  ? kthread_associate_blkcg+0x90/0x90
-> > >  ret_from_fork+0x22/0x30
-> > > ---[ end trace 16486ad3c2627482 ]---
-> > > ------------[ cut here ]------------
-> > >
-> > > Cheers,
-> > > --
-> > > Luis
-> > 
-> > 
-> > 
-> > -- 
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Ick, command lines are horrible, don't do that if at all possible.  On
+some systems they are not able to be changed which can be good or bad...
+
+>   3) I found the pci_dev->match_driver, which seemed similar to what I
+>      am trying to do, but can't be controlled from userspace. I considered
+>      populating that field based on drivers_autoprobe (still need (2)).
+>      But the problem is that there is the AMD IOMMU driver which is setting
+>      this independently, so setting the match_driver based on
+>      drivers_autoprobe may not be a good idea. May be we can populate it
+>      for untrusted devicesi, based on the parameter that I'm introducing?
 > 
+>   4) This patch was my option 4 that helps fix both the problems for me.
+
+I suggest putting some of the above text in the changelog, as it has a
+lot of good context, while your existing changelog is pretty sparse and
+does not explain anything...
+
+
+> 
+>  drivers/pci/bus.c | 11 ++++++++---
+>  drivers/pci/pci.c |  9 +++++++++
+>  drivers/pci/pci.h |  1 +
+>  3 files changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 3cef835b375fd..336aeeb4c4ebf 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
+>  	pci_bridge_d3_update(dev);
+>  
+>  	dev->match_driver = true;
+> -	retval = device_attach(&dev->dev);
+> -	if (retval < 0 && retval != -EPROBE_DEFER)
+> -		pci_warn(dev, "device attach failed (%d)\n", retval);
+> +
+> +	if (dev->untrusted && pci_dont_attach_untrusted_devs) {
+> +		pci_info(dev, "not attaching untrusted device\n");
+> +	} else {
+> +		retval = device_attach(&dev->dev);
+> +		if (retval < 0 && retval != -EPROBE_DEFER)
+> +			pci_warn(dev, "device attach failed (%d)\n", retval);
+> +	}
+>  
+>  	pci_dev_assign_added(dev, true);
+>  }
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce096272f52b1..dec1f9ef27d71 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
+>  /* If set, the PCI config space of each device is printed during boot. */
+>  bool pci_early_dump;
+>  
+> +/*
+> + * If set, the devices with "untrusted" flag shall not be attached automatically
+> + * Userspace will need to attach them manually:
+> + * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
+> + */
+> +bool pci_dont_attach_untrusted_devs;
+> +
+>  bool pci_ats_disabled(void)
+>  {
+>  	return pcie_ats_disabled;
+> @@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
+>  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+>  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+>  				disable_acs_redir_param = str + 18;
+> +			} else if (!strcmp(str, "dont_attach_untrusted_devs")) {
+> +				pci_dont_attach_untrusted_devs = true;
+>  			} else {
+>  				pr_err("PCI: Unknown option `%s'\n", str);
+>  			}
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 6d3f758671064..30ffad047d926 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -13,6 +13,7 @@
+>  
+>  extern const unsigned char pcie_link_speed[];
+>  extern bool pci_early_dump;
+> +extern bool pci_dont_attach_untrusted_devs;
+>  
+>  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
 > -- 
-> Ville Syrjälä
-> Intel
+> 2.27.0.212.ge8ba1cc988-goog
+> 
 
+What happened to the split of "trust" and "internal/external" logic that
+we discussed before?  This seems to ignore all of that and go straight
+to some form of "we know what we trust, so all is fine!".
+
+It's not obvious what this is really doing here at all, sorry...
+
+greg k-h
