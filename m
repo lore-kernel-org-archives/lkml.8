@@ -3,224 +3,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E797C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 447882076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F7120787
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b3qbQolJ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="M1xACxGu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qaJFgFOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgFZXsA (ORCPT
+        id S1726432AbgFZX5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:48:00 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57454 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726256AbgFZXr7 (ORCPT
+        Fri, 26 Jun 2020 19:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgFZX5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:47:59 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05QNgvoI012236;
-        Fri, 26 Jun 2020 16:47:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=XnuvNpQDXBjxDajbDqhYtKxaAEzGgjnHEtaxgLty0+I=;
- b=b3qbQolJ/HNblUKM2fDBgv08z94YfnaK4c1YC1jZz+CpGw4eZEScvI77St7T1lvRc1GQ
- J+0w/XyQuFcwShExAutOQZAHFMR/XDWOdtes/xHPG5OMDAw7CT756EyOjC8KE4Q8SCX6
- p1PXF/pq48O+yTmvuU3lGLK3LMBca2mwmM8= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 31ux1gr3ua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 26 Jun 2020 16:47:40 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 26 Jun 2020 16:47:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VtXtxgrho96v3xnOd0DHvGDdAWHeDBT/uLT8beOtjWUUcAW/1qtz1E0cVEaC+2A625XAyn0In1KENN17PEpcOd3M8Aw4Fg6frsnXSpGd+jROO7PU/SJvG/oNRWK79anr5cjs1A4VNAmJeqWGoMJF7PbQzS40VPP9NTLon8Cfa9KkKnGTe0iAN0Rgt72tfmRSBGIruKo/khmTn6VmcLnh7jQ7VPcm80cuOfqpnVVl+iP1HvCMCwVLRubrHQJsa25yNN0POHfqHrbX36i4ZvR45aUWbL6r2YmZBnaF3xQIjg3cJQY5Kb2p0mhapwlh4pphDoNQL6y4lILQ1F8WUK0YPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XnuvNpQDXBjxDajbDqhYtKxaAEzGgjnHEtaxgLty0+I=;
- b=ZIK3Vagb7jDkivmNHdtyH04f4CatHrQKm2gKnJw8ft2kh0pwQLhlMz2sOneZ7+BTtfLoLaIvRXbOfmLyJ4uYlPFWOA2P+VqAHyWm7NF66VPAzq4kCnSTuov0aMTYFfy6Pb+wx9h1g6spdNmG10ek6Y4weQtVgjqW5Tcy6AEa1L2b9vN3OCdhxHkZENZkT9lY5HXUvenzSJjcPbDMA3WfDF0LjofDPrp4NsJnG+OEmxJoGNMnOUs6Yk9NhONH1UZkHTQ4hRnzRtPrrFIGSXjqqv+w6YqDhpZN7Dnj56/ULcCZVgApD5qi50gqOuXkdv0p1ljwGFToxTuxV855pC5ZHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XnuvNpQDXBjxDajbDqhYtKxaAEzGgjnHEtaxgLty0+I=;
- b=M1xACxGusJvgxfoggPtWK1CMAV8LXBpTol2fMWU2Wgge+tXKgGjgiZMVBp0+W+avN61uubbbipnG2am1fEgVLNEGTcsw8w2Jx4tBXPEhkzMoshV+OZ/iOU59R2hAv7t7owcBD0nuJsSDPueBwlpSO0LxsT+o36g9pxwtoXkWJOs=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB3304.namprd15.prod.outlook.com (2603:10b6:a03:10a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Fri, 26 Jun
- 2020 23:47:37 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3109.027; Fri, 26 Jun 2020
- 23:47:37 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Kernel Team" <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        "KP Singh" <kpsingh@chromium.org>
-Subject: Re: [PATCH v2 bpf-next 2/4] bpf: introduce helper bpf_get_task_stak()
-Thread-Topic: [PATCH v2 bpf-next 2/4] bpf: introduce helper
- bpf_get_task_stak()
-Thread-Index: AQHWS06r1sTuO7iWZUmEIP/wOjIJvqjrVxKAgAApV4CAAAGJAIAAD8iA
-Date:   Fri, 26 Jun 2020 23:47:37 +0000
-Message-ID: <AD7AE0B3-94F9-4430-990C-85B9CF431EC7@fb.com>
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-3-songliubraving@fb.com>
- <CAEf4BzZ6-s-vqp+bLiCAVgS2kmp09a1WdaSvaL_jJySx7s7inA@mail.gmail.com>
- <C3B6DD3E-1B69-4D0C-8A55-4EB81C21C619@fb.com>
- <CAEf4BzaC1Dqn3PXBJmczPRaUmjKc7pcg6_mjyKymBek-sDKv7Q@mail.gmail.com>
-In-Reply-To: <CAEf4BzaC1Dqn3PXBJmczPRaUmjKc7pcg6_mjyKymBek-sDKv7Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:1a00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31502bc7-72ac-4db0-1e13-08d81a2b4ea1
-x-ms-traffictypediagnostic: BYAPR15MB3304:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB330452D761DAB37EA30DB7C2B3930@BYAPR15MB3304.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0446F0FCE1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CBeEIfNU4xeFVLj95EzLGX8wvnp352dg8ZFz4nZVM7IiH/pAzxcIvW1kGroinLVKy60tVVg+dWGuXxbHJX6yg0Q8Sj0rws1b/V/7yPIWdogB3UI04mmvBBb/18P67gs8OfsZmr+/CHy5PDOmYSZaI7aQD16Z/wm6+fFpOQIMIaXoYg/x9n3pX+cKbRICN7Tp/IhO7tF1Ibyiywxl3/S22+t53c5LGjej8CQfMJ2EvmbUTfub5RixynY3aGNZzak2mK5RjK+Mj/P9IZYRDXngMzyLMt4BTNFS4MGVWXlhs5vQiD0Ebi7HfMYsE5gfuvQ+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(396003)(376002)(346002)(136003)(53546011)(36756003)(6506007)(66446008)(66556008)(66476007)(6916009)(64756008)(76116006)(86362001)(8676002)(2906002)(5660300002)(83380400001)(4326008)(66946007)(186003)(6486002)(8936002)(54906003)(316002)(2616005)(6512007)(71200400001)(33656002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: DyOUVIoYPLMCDvvhIi80gAivjAg6i9zij2DfnvKyjYxKLXy/Yyy8J0/tH+hIy8QyAg5wtgv298IDhUt9vz4h6ofiSLsOgFgXwS9tX7PgoLIUkfBab3qWnb8xQKSz+0hLKlrfdWI2fkynl7eh5/OsS0nKMdf8LnrmNARsiJ0Dt2z+G4odVQORJIxHwDnct6V0wULixoVBGidxD+jhvZ4FjgOWqAJp0dkbv63poGDd9q3TEi4EDApPs3mtVcMOnxmK32CY98thKBxrydF4DuQuf5tN/W66bwdeymorphYjNl78sADkpXT/3tyQD4ehotP3ee+2GT7DrGJRRUxeEMirPAdlkTnNteVwdxkhsn06PlS1QLwGC1X5mwZXFJyNp4OZ9Dz+KVNggZfRp/iJhYyWgxE7gXTp9bYfMyYyTn3s0XpLeUvT1Pe9z3yEGFl9PUDUUjkOdNJ4rNO7Doe2GHrU9ZrcphJyLWU77F53gWbG7xh7Z9gk4EYApLO8FwBjvhLdKyd/r1WP+wYZNfM2MOvNoQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <49BB2D9DD69C93498B2FD28B00AC4E14@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jun 2020 19:57:35 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14842C03E979;
+        Fri, 26 Jun 2020 16:57:35 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id s14so4860393plq.6;
+        Fri, 26 Jun 2020 16:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rsEV3VWlPvkhUXAUMqPfLhxZXBvMiVayXQJsZCVog6Q=;
+        b=qaJFgFOqAcU29/5kD0f06Npxd2Dlxs2CofOxWIM1ri/KxJeD3CMMJ59rQmHzFucJ8B
+         nh+vDWWb+BZtfjTYdIbBpJMUOu030FU6Y+BhUOavRYl3MX0jA7NtmJIIxBGfckqOL/pZ
+         kGNCyhm8AjNr+poSF74dgm1gYnHVvWwFl6PRIPz/nC9ezwCvaDSGHLApTFGq4E3djAey
+         yUqEr0GP9DqRyggZnLAydyoons0pEOwnqNWJ18syoG1G3wnz8VxgY5IZ6Vtn3vNhFbSW
+         Uv2UMMCUu0B/IhXD3Ex/l0STcGim+cHLqzPyHuLLt/r3fWRgJ4wjhZFK77Xhna4/Ftor
+         QMVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rsEV3VWlPvkhUXAUMqPfLhxZXBvMiVayXQJsZCVog6Q=;
+        b=X1p8S+hgHTmk6FTKnopDzLegYSjIRabpXS1qzKFnrINTs0c3DYoEw99iR8rg0ox1jJ
+         itEWrypZufcN4JLa8+GR/H5eWL0G8KD9Clpd9a3bc8MWJ8ce3L04bOHJ+B12mdBUn2ye
+         nFrnwUGL6MlfwUo3zVvoEtoSGbtNfescsyuWF8F393U1EeIUw+8kykMwOfVGLllkqt+d
+         QrubsaCW+j2/qCGvq090BtNB8xR96KcY/ZOS1WYx3uHvJsKJCpFpMwQe0HxdtnPSZejB
+         VopmY+4wE+vpo22LqB5lIAak0NVcRdH3mItvlV/xxTLD1idbC+cmo0hqpwSOU4IvlJF5
+         HaYg==
+X-Gm-Message-State: AOAM532o7Jp7rhXEKl23hfUyy1VVuHxYajoye6m59tKk2YN1ZHZezjfl
+        eVmIDk3h/jnj//6NEVC85Yg=
+X-Google-Smtp-Source: ABdhPJzVai7R7S/T4iw8i1jkT9aJDWWEaEIMVs2EARAOFCaoDxYnib5o0dCMspzPd8YqYik5vgix9g==
+X-Received: by 2002:a17:90b:50d:: with SMTP id r13mr5872471pjz.94.1593215854419;
+        Fri, 26 Jun 2020 16:57:34 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id t5sm5081758pgl.38.2020.06.26.16.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 16:57:33 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Sat, 27 Jun 2020 07:57:25 +0800
+To:     Joe Perches <joe@perches.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
+Message-ID: <20200626235725.2rcpisito2253jhm@Rk>
+References: <20200625215755.70329-1-coiby.xu@gmail.com>
+ <20200625215755.70329-3-coiby.xu@gmail.com>
+ <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31502bc7-72ac-4db0-1e13-08d81a2b4ea1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 23:47:37.6783
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /h4plxw4k4TgHeS/ieimYLp3X2J3g8k8ct6Q/seE5CipAz/TKwBQSVtRwQQtHOEAg8X0GOHQ0uabcNBpKSCX2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3304
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 cotscore=-2147483648 phishscore=0 spamscore=0
- mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260168
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 03:13:14PM -0700, Joe Perches wrote:
+>On Fri, 2020-06-26 at 05:57 +0800, Coiby Xu wrote:
+>> Remove unnecessary elses after return or break.
+>
+>unrelated trivia:
+>
+>> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+>[]
+>> @@ -1391,12 +1391,11 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
+>>  			pr_err("%s: Failed read of mac index register\n",
+>>  			       __func__);
+>>  			return;
+>> -		} else {
+>> -			if (value[0])
+>> -				pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
+>> -				       qdev->ndev->name, i, value[1], value[0],
+>> -				       value[2]);
+>
+>looks like all of these could use netdev_err
+>
+>				netdev_err(qdev, "etc...",
+>					   i, value[1], value[0], value[2]);
+>
+>etc...
 
+Should we also replace all pr_errs with netdev_err in
+ql_dump_* functions? I'm not sure how we will use ql_dump_*. For example,
+ql_dump_regs is not referred by any kernel source, so I guess it's for
+the sole purpose of debugging the driver by the developer. But one
+pr_err in ql_dump_routing_entries which is called by dl_dump_regs doesn't
+prints out the device name whereas the other does,
 
-> On Jun 26, 2020, at 3:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> =
-wrote:
->=20
-> On Fri, Jun 26, 2020 at 3:45 PM Song Liu <songliubraving@fb.com> wrote:
->>=20
->>=20
->>=20
->>> On Jun 26, 2020, at 1:17 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com=
-> wrote:
->>>=20
->>> On Thu, Jun 25, 2020 at 5:14 PM Song Liu <songliubraving@fb.com> wrote:
->>>>=20
->>>> Introduce helper bpf_get_task_stack(), which dumps stack trace of give=
-n
->>>> task. This is different to bpf_get_stack(), which gets stack track of
->>>> current task. One potential use case of bpf_get_task_stack() is to cal=
-l
->>>> it from bpf_iter__task and dump all /proc/<pid>/stack to a seq_file.
->>>>=20
->>>> bpf_get_task_stack() uses stack_trace_save_tsk() instead of
->>>> get_perf_callchain() for kernel stack. The benefit of this choice is t=
-hat
->>>> stack_trace_save_tsk() doesn't require changes in arch/. The downside =
-of
->>>> using stack_trace_save_tsk() is that stack_trace_save_tsk() dumps the
->>>> stack trace to unsigned long array. For 32-bit systems, we need to
->>>> translate it to u64 array.
->>>>=20
->>>> Signed-off-by: Song Liu <songliubraving@fb.com>
->>>> ---
->>>=20
->>> Looks great, I just think that there are cases where user doesn't
->>> necessarily has valid task_struct pointer, just pid, so would be nice
->>> to not artificially restrict such cases by having extra helper.
->>>=20
->>> Acked-by: Andrii Nakryiko <andriin@fb.com>
->>=20
->> Thanks!
->>=20
->>>=20
->>>> include/linux/bpf.h            |  1 +
->>>> include/uapi/linux/bpf.h       | 35 ++++++++++++++-
->>>> kernel/bpf/stackmap.c          | 79 ++++++++++++++++++++++++++++++++--
->>>> kernel/trace/bpf_trace.c       |  2 +
->>>> scripts/bpf_helpers_doc.py     |  2 +
->>>> tools/include/uapi/linux/bpf.h | 35 ++++++++++++++-
->>>> 6 files changed, 149 insertions(+), 5 deletions(-)
->>>>=20
->>>=20
->>> [...]
->>>=20
->>>> +       /* stack_trace_save_tsk() works on unsigned long array, while
->>>> +        * perf_callchain_entry uses u64 array. For 32-bit systems, it=
- is
->>>> +        * necessary to fix this mismatch.
->>>> +        */
->>>> +       if (__BITS_PER_LONG !=3D 64) {
->>>> +               unsigned long *from =3D (unsigned long *) entry->ip;
->>>> +               u64 *to =3D entry->ip;
->>>> +               int i;
->>>> +
->>>> +               /* copy data from the end to avoid using extra buffer =
-*/
->>>> +               for (i =3D entry->nr - 1; i >=3D (int)init_nr; i--)
->>>> +                       to[i] =3D (u64)(from[i]);
->>>=20
->>> doing this forward would be just fine as well, no? First iteration
->>> will cast and overwrite low 32-bits, all the subsequent iterations
->>> won't even overlap.
->>=20
->> I think first iteration will write zeros to higher 32 bits, no?
->=20
-> Oh, wait, I completely misread what this is doing. It up-converts from
-> 32-bit to 64-bit, sorry. Yeah, ignore me on this :)
->=20
-> But then I have another question. How do you know that entry->ip has
-> enough space to keep the same number of 2x bigger entries?
+> void ql_dump_routing_entries(struct ql_adapter *qdev)
+> {
+> 	int i;
+> 	u32 value;
+>
+> 	i = ql_sem_spinlock(qdev, SEM_RT_IDX_MASK);
+> 	if (i)
+> 		return;
+> 	for (i = 0; i < 16; i++) {
+> 		value = 0;
+> 		if (ql_get_routing_reg(qdev, i, &value)) {
+> 			pr_err("%s: Failed read of routing index register\n",
+> 			       __func__);
+> 			break;
+> 		}
+> 		if (value)
+> 			pr_err("%s: Routing Mask %d = 0x%.08x\n",
+> 			       qdev->ndev->name, i, value);
+> 	}
 
-The buffer is sized for sysctl_perf_event_max_stack u64 numbers.=20
-stack_trace_save_tsk() will put at most stack_trace_save_tsk unsigned=20
-long in it (init_nr =3D=3D 0). So the buffer is big enough.=20
-
-Thanks,
-Song=
+--
+Best regards,
+Coiby
