@@ -2,138 +2,173 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB9CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1699920656
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D4F20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfSeHT4L"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="d+RPOD3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgFZNtN (ORCPT
+        id S1728856AbgFZNvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
+        Fri, 26 Jun 2020 09:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgFZNtN (ORCPT
+        with ESMTP id S1725864AbgFZNvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:49:13 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D229C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:49:13 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id w10so4622335oih.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:49:13 -0700 (PDT)
+        Fri, 26 Jun 2020 09:51:53 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB88FC03E979;
+        Fri, 26 Jun 2020 06:51:52 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so10380910ljg.13;
+        Fri, 26 Jun 2020 06:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=swCARVHhCrCpWi0m0hXoSR+kJlH+uURNMzuGlvCBkOU=;
-        b=dfSeHT4LBeVITNnTx7D2FIhzccfqT8ZY0kjISKTFmo8i0QMpy+0QINGm4fZzvNjRaG
-         RAM5D+meCwswbwaqJHjxlP2XKWGRD/7tGF/riEou99QNj9wSm8tPlHldiKc3WcdcXVf/
-         uZZNKm5GNjQ76zgF4tpPKcZNtzyp/LMotaZXy8WGZJUZV4VN79Xi8OHguT7b8QI6Sp+L
-         AJaFpw7lfdSQ60w+YU5aSbw4nE8HuBoeLI5MiNp/kl8H04UQprjkN/tSwkdVSoaiSjMd
-         Oob+rn/jrpmWeB1VkAbF/Z/UdF9ADMIxvC6QY6ja5VxouoM1p39HvVn/ja1AfzdJPdzA
-         wAIA==
+        bh=46r649Uez0rkaurVXfiiV2hDDKBiLO1oIqGfEBxbuiE=;
+        b=d+RPOD3LHQ7r6y0UgVav6ml+8pzYPHpwaOSlccfAPLt01I+TC9LCvjYahGn3RthkGp
+         i6AqG9q0n1LBZ72ZJH+3RQBoZAafeJWLOrDvuF+/IHdtIzMQXAkOJM61x4An3UjeHXD3
+         LfVvO+Y9vEo/sdHfPiJ9p2/Gg1pW86C5ii7dAMvxZVrrFUEjG2ro9hVtEt0yiht+Nyne
+         sOYItzi4R7euHw12kDqR5yL+TQjTTDRHApUSCFCtN3s1XvY2cIfCcY0pGw9DcCYPZ8rK
+         B6c0l0UEhnvzlG7hQttxDoeag+q6/3y4HJXewqh/6yig8Oqd/fou6CNptI4Li/a70lbW
+         +r9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=swCARVHhCrCpWi0m0hXoSR+kJlH+uURNMzuGlvCBkOU=;
-        b=Xmy25wSU1ePPyqZPKwg+4HdslSf9WSd9zoLkOl0EDGgvfdmCO8198PTL5txy/LbYDO
-         0Ot1/H2cY/S65757hdr2CdFeASh7vgZeKy6875SoAJTc29AXs5ipOrpa5XWrYjVgBzfY
-         PkODVNHxhBRPLBVHF/a3/KOsc3J7L8P7ZRSaLQDwAnZTu7PHbLY8Nel7Td/E0lnueTtW
-         gnzWtFoXpjhdxspyHTBRAV2cRoi90vyryWP4VAxvpa1kCO3dC379BgJl5Owhddzdu9Km
-         AEs05sYFQBhZbOOdizA+TCFaR2RSHygvfWd7SKYSlRdyB49Z3qXOPR27Xt9LMjBNH0sH
-         DcoA==
-X-Gm-Message-State: AOAM533LWRjpoUmA2f4p3kx55RJouosj9GM9vPhpQsuW3V6xTrqwlap4
-        ESGW/11Rc795uPuYvy5QcTj5bDzn33IKELgsi8zSt62O
-X-Google-Smtp-Source: ABdhPJzY/W56YJtQNo4xsfub7t1wxI596I4LQtUIoNNzG1P13Ufznlx82dqov2Xax65cVODriuNarLky01bLd0OI3Ys=
-X-Received: by 2002:aca:1a01:: with SMTP id a1mr2552687oia.102.1593179352641;
- Fri, 26 Jun 2020 06:49:12 -0700 (PDT)
+        bh=46r649Uez0rkaurVXfiiV2hDDKBiLO1oIqGfEBxbuiE=;
+        b=GMd43tW+YOLkmYro8KEJoWsq62oO1EmMdCtOfInji1hqQX/fJot0WPzTz0SR6Qq2pl
+         pzk5FWCsvHnEDJpHyEkmy45E0Czl+LXlwuUHj0g+3tG2gkQKpi3aPIKTYXvI2lnKF/no
+         tamTMcHD9KAjfsPFVGbDnpbiL1JFkFYYs4Cue5GQ3g+ZUfhAgRNmneRBmmDIJUhfdQjE
+         gSuq4IU2OgWgiv2u6660Q/Do/be1PGRME/8Qqm60CV2PYX5Y4ZmUTQiihMtcsWMC+X5w
+         VokKltmWLTZO5IjOSFXUzMk+b42FSRrKBoXt3po65U7kZJQOnkxfGBTOtUr0569Zuhcc
+         LvkQ==
+X-Gm-Message-State: AOAM530jyE4P5nO3Au9Fpj4cLHTeOCY+ba44V1F8MbcJ1ogtFpX24v/X
+        3IE/As1BTEfN0mJmF9P2BptqIdT/G/1xAY1FPA==
+X-Google-Smtp-Source: ABdhPJyGdBesnUK+NuePNwSJyh+NmZYV6mYDBOcR8dt6U4ZGDC40q01ZvVp2zuKNWne3KBw85iKKP/GU123+2cEwEC4=
+X-Received: by 2002:a2e:b176:: with SMTP id a22mr1429963ljm.291.1593179511327;
+ Fri, 26 Jun 2020 06:51:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624115539.GA8680@ogabbay-VM>
-In-Reply-To: <20200624115539.GA8680@ogabbay-VM>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 26 Jun 2020 16:48:45 +0300
-Message-ID: <CAFCwf12oLixsX_Nz0RsXh_orD5iW4uyXMwuWDxQjfkDJgLQ3yw@mail.gmail.com>
-Subject: Re: [git pull] habanalabs fixes pull request for kernel 5.8-rc2
+References: <1592410366125160@kroah.com> <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+ <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org> <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+ <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
+ <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com> <20200626133959.GA4024297@kroah.com>
+In-Reply-To: <20200626133959.GA4024297@kroah.com>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Fri, 26 Jun 2020 15:51:24 +0200
+Message-ID: <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
+Subject: Re: ath9k broken [was: Linux 5.7.3]
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-Pinging you about this pull request to merge for -rc3
-Thanks,
-Oded
+Am Fr., 26. Juni 2020 um 15:40 Uhr schrieb Greg Kroah-Hartman
+<gregkh@linuxfoundation.org>:
+>
+> On Fri, Jun 26, 2020 at 01:48:59PM +0200, Gabriel C wrote:
+> > Am Do., 25. Juni 2020 um 12:52 Uhr schrieb Gabriel C
+> > <nix.or.die@googlemail.com>:
+> > >
+> > > Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
+> > > <nix.or.die@googlemail.com>:
+> > > >
+> > > > Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
+> > > > >
+> > > > > On 25. 06. 20, 0:05, Gabriel C wrote:
+> > > > > > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+> > > > > > <gregkh@linuxfoundation.org>:
+> > > > > >>
+> > > > > >> I'm announcing the release of the 5.7.3 kernel.
+> > > > > >>
+> > > > > >
+> > > > > > Hello Greg,
+> > > > > >
+> > > > > >> Qiujun Huang (5):
+> > > > > >>       ath9k: Fix use-after-free Read in htc_connect_service
+> > > > > >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+> > > > > >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+> > > > > >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+> > > > > >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> > > > > >>
+> > > > > >
+> > > > > > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
+> > > > > > while working fine on <5.7.3.
+> > > > > >
+> > > > > > I don't have myself such HW, and the reported doesn't have any experience
+> > > > > > in bisecting the kernel, so we build kernels, each with one of the
+> > > > > > above commits reverted,
+> > > > > > to find the bad commit.
+> > > > > >
+> > > > > > The winner is:
+> > > > > >
+> > > > > > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+> > > > > > Author: Qiujun Huang <hqjagain@gmail.com>
+> > > > > > Date:   Sat Apr 4 12:18:38 2020 +0800
+> > > > > >
+> > > > > >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> > > > > >
+> > > > > >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+> > > > > > ...
+> > > > > >
+> > > > > > Reverting this one fixed his problem.
+> > > > >
+> > > > > Obvious question: is 5.8-rc1 (containing the commit) broken too?
+> > > >
+> > > > Yes, it does, just checked.
+> > > >
+> > > > git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
+> > > > v5.8-rc1
+> > > > v5.8-rc2
+> > > >
+> > >
+> > > Sorry, I read the wrong, I just woke up.
+> > >
+> > > We didn't test 5.8-rc{1,2} yet but we will today and let you know.
+> > >
+> >
+> > We tested 5.8-rc2 and it is broken too.
+> >
+> > The exact HW name is:
+> >
+> > TP-link tl-wn722n (Atheros AR9271 chip)
+>
+> Great!
+>
+> Can you work with the developers to fix this in Linus's tree first?
 
-On Wed, Jun 24, 2020 at 1:49 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
+I'm the man in the middle, but sure we will try patches or any suggestions
+from developers to identify and fix the problem.
+
 >
-> Hello Greg,
+> I bet they want to see the output of 'lsusb -v' for this device to see
+> if the endpoint calculations are correct...
 >
-> This pull request contains important bug fixes for the GAUDI code that was
-> just merged. Details are in the tag message below.
+
+Working on it. As soon the reporter gives me the output, I will post it here.
+I've told him to run it on a broken and one working kernel.
+
+> thanks,
 >
-> Thanks,
-> Oded
->
-> The following changes since commit 8c289ea064165237891a7b4be77b74d5cba8fa99:
->
->   mei: me: add tiger lake point device ids for H platforms. (2020-06-23 07:55:47 +0200)
->
-> are available in the Git repository at:
->
->   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2020-06-24
->
-> for you to fetch changes up to ce04326edd59d7902d7ef3a9d853864096e0cd1a:
->
->   habanalabs: increase h/w timer when checking idle (2020-06-24 12:35:23 +0300)
->
-> ----------------------------------------------------------------
-> This tag contains the following fixes for kernel 5.8-rc2:
->
-> - close security hole in GAUDI command buffer parsing by blocking an
->   instruction that might allow user to run command buffer that wasn't
->   parsed on a secured engine.
->
-> - Fix bug in GAUDI MMU cache invalidation code.
->
-> - Rename a function to resolve conflict with a static inline function in
->   arch/m68k/include/asm/mcfmmu.h
->
-> - Increase watchdog timeout of GAUDI QMAN arbitration H/W to prevent false
->   reports on timeouts
->
-> - Fix bug of dereferencing NULL pointer when an error occurs during command
->   submission
->
-> - Increase H/W timer for checking if PDMA engine is IDLE in GAUDI.
->
-> ----------------------------------------------------------------
-> Oded Gabbay (3):
->       habanalabs: block scalar load_and_exe on external queue
->       habanalabs: rename mmu_write() to mmu_asid_va_write()
->       habanalabs: increase GAUDI QMAN ARB WDT timeout
->
-> Ofir Bitton (1):
->       habanalabs: Correct handling when failing to enqueue CB
->
-> Omer Shpigelman (2):
->       habanalabs: use PI in MMU cache invalidation
->       habanalabs: increase h/w timer when checking idle
->
->  drivers/misc/habanalabs/command_submission.c       | 13 ++++++++
->  drivers/misc/habanalabs/debugfs.c                  |  4 +--
->  drivers/misc/habanalabs/gaudi/gaudi.c              | 37 ++++++++++++++++++++--
->  drivers/misc/habanalabs/gaudi/gaudiP.h             |  3 ++
->  .../misc/habanalabs/include/gaudi/gaudi_packets.h  |  3 ++
->  5 files changed, 56 insertions(+), 4 deletions(-)
+> greg k-h
+
+Best Regards,
+
+Gabriel C
