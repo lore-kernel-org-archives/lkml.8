@@ -2,281 +2,402 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0077207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFF12053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3jSm/c7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pDg5Peng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgFZSyS (ORCPT
+        id S1725922AbgFZSz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgFZSyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:54:13 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0569C03E97B
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q19so11424012lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
-        b=Q3jSm/c7nM2RMkN/kkJWHeLwAsdboqUxRzth/uSa6NXSM8oXMtiMhj9f8WBol97E5l
-         ky6f/QaC4KZ4YCnTQZ3BF5dIXjlSPV4QoV2wqdt2Mxc0dLVha+jmh1N//dKeYUM0kj/p
-         Cdd4nWsofe4nR1h6Arv8qYj2pSAqwLLlXKo4g4QCtxbm6LC94tNL9HBuchzz8CHS2BAX
-         yl2h1pg/AJIJGgSiC33mfu7Wo9ZAOmNg5sJcT1GNiIaf52Hd/o1vV9XDmSUrR47ulwLj
-         ref9AD+MOaS2oD3rCYWv+1d1sjD/0C8RZj9PYTuYlbI4YRzLWzNCmbCgcQYmWu2Ufvyd
-         PAzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
-        b=NvGGhH5PNAYpC41LcuImlUr3n9jKM/fnVH0paJ/pbxKPNN55sgauWpY8E5lJBRNswA
-         px0cczAU8m8AfgS6C6PqskCon9V5VvDkAPixmBT48w6kdACyElooZkPZyjwAHQWXkbnz
-         zIddY2KxLCQpXr0OCpwAIxVr8JiqAclpmxVsiDLE8B6+MBliifTJHtVTMPdjg8K43klO
-         ykmQyGStIeMUx/ZnDhVrQpPpxvg5HW1ANb43rfWaM1BPkicPq6mgw2m2XF3vpM200XwX
-         SsRRWbH4f0DhQH+V1IETsYSiVX+6OhmGntbZ+LOaOmO5gHtVtjmqCBRCbnOWrc0Iu5Cp
-         eKLQ==
-X-Gm-Message-State: AOAM531DszH5I1G59tti/n7zjDw+vpHp0JHhw8m38CBsj1fHQFTM8wD3
-        LXEAwCJym4VOecBQoqX7GAixeteWk4dFrVHl3WJ5Uw==
-X-Google-Smtp-Source: ABdhPJwEBU78ak0v0VpTknwA5BsMJ5bdkxuMQYVuGSToCCXcbvo/1MlMlImhsgRKT5ooJzz29cDDIywFsWJMzVIeB2E=
-X-Received: by 2002:a2e:858e:: with SMTP id b14mr2218327lji.301.1593197651010;
- Fri, 26 Jun 2020 11:54:11 -0700 (PDT)
+        Fri, 26 Jun 2020 14:55:26 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43265 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgFZSzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:55:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593197723; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=ItzmuB8XZeJAsfCmDo+jIoy4XOK2HIs1bxDv/bUZfXs=; b=pDg5PengTTWuK6gJJykIZ1IEn4vunsqiKLN6bamWd2aFKvIyBASAZO5yd0dOkFuSajxuT7GW
+ GAU0Zqr8eu021JUDywYiXvVLcJsBRQtPJPuMChjxlXdCifQYTOf0vf15tZF8WIIiDU2E09/t
+ PWa+QznrSOiq+BlLP0ICTWlAt04=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5ef6449bc76a4e7a2a79f983 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:55:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 94873C433CB; Fri, 26 Jun 2020 18:55:22 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7C61C433CA;
+        Fri, 26 Jun 2020 18:55:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7C61C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     heikki.krogerus@linux.intel.com, agross@kernel.org,
+        mark.rutland@arm.com, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, broonie@kernel.org,
+        lgirdwood@gmail.com, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v4 1/6] usb: typec: Add QCOM PMIC typec detection driver
+Date:   Fri, 26 Jun 2020 11:55:11 -0700
+Message-Id: <20200626185516.18018-2-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200626185516.18018-1-wcheng@codeaurora.org>
+References: <20200626185516.18018-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
-References: <20200626002710.110200-1-rajatja@google.com> <20200626002710.110200-2-rajatja@google.com>
- <20200626141754.GB4141629@kroah.com>
-In-Reply-To: <20200626141754.GB4141629@kroah.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 26 Jun 2020 11:53:34 -0700
-Message-ID: <CACK8Z6GSN5iOaCh-ZMaJSY4SgEhw=bCRDzaiPEBJbNNFhZZX6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The QCOM SPMI typec driver handles the role and orientation detection, and
+notifies client drivers using the USB role switch framework.   It registers
+as a typec port, so orientation can be communicated using the typec switch
+APIs.  The driver also attains a handle to the VBUS output regulator, so it
+can enable/disable the VBUS source when acting as a host/device.
 
-Thanks for taking a look.
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ drivers/usb/typec/Kconfig           |  12 ++
+ drivers/usb/typec/Makefile          |   1 +
+ drivers/usb/typec/qcom-pmic-typec.c | 275 ++++++++++++++++++++++++++++
+ 3 files changed, 288 insertions(+)
+ create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
 
-On Fri, Jun 26, 2020 at 7:18 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jun 25, 2020 at 05:27:10PM -0700, Rajat Jain wrote:
-> > Introduce a PCI parameter that disables the automatic attachment of
-> > untrusted devices to their drivers.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > Context:
-> >
-> >   I set out to implement the approach outlined in
-> >     https://lkml.org/lkml/2020/6/9/1331
-> >     https://lkml.org/lkml/2020/6/15/1453
-> >
-> >   But to my surprise, I found that the new hotplugged PCI devices
-> >   were getting automatically attached to drivers even though
-> >   /sys/bus/pci/drivers_autoprobe was set to 0.
-> >
-> >   I realized that the device core's "drivers_autoprobe":
-> >
-> >   * only disables the *initial* probe of the device (i.e. from
-> >     device_add()). If a subsystem calls device_attach() explicitly
-> >     for its devices like PCI subsystem does, the drivers_autoprobe
-> >     setting does not matter. The core will attach device to the driver.
-> >     This looks like correct semantic behavior to me because PCI is
-> >     explicitly calling device_attach(), which is a way to explicitly
-> >     ask the core to find and attach a driver for a device.
-> >
-> >   * "drivers_autoprobe" cannot be controlled at boot time (to restrict
-> >     any drivers before userspace comes up).
-> >
-> >   The options I considered were:
-> >
-> >   1) Change device_attach() so that it takes into consideration the
-> >      drivers_autoprobe property. Not sure if this is semantically correct
-> >      thing to do though. If I do this, then the only way a driver can
-> >      be attached to the drivers would be via userspace
-> >      (/sys/bus/pci/drivers/bind) (Good for our use case though!).
->
-> This is the correct thing to do here, haven't I been asking you do move
-> this logic into the driver core so that all busses can use it?
+diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+index b4f2aac7ae8a..595c14766e99 100644
+--- a/drivers/usb/typec/Kconfig
++++ b/drivers/usb/typec/Kconfig
+@@ -72,6 +72,18 @@ config TYPEC_TPS6598X
+ 	  If you choose to build this driver as a dynamically linked module, the
+ 	  module will be called tps6598x.ko.
+ 
++config TYPEC_QCOM_PMIC
++	tristate "Qualcomm PMIC USB Type-C driver"
++	depends on ARCH_QCOM
++	help
++	  Driver for supporting role switch over the Qualcomm PMIC.  This will
++	  handle the USB Type-C role and orientation detection reported by the
++	  QCOM PMIC if the PMIC has the capability to handle USB Type-C
++	  detection.
++
++	  It will also enable the VBUS output to connected devices when a
++	  DFP connection is made.
++
+ source "drivers/usb/typec/mux/Kconfig"
+ 
+ source "drivers/usb/typec/altmodes/Kconfig"
+diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+index 7753a5c3cd46..cceffd987643 100644
+--- a/drivers/usb/typec/Makefile
++++ b/drivers/usb/typec/Makefile
+@@ -6,4 +6,5 @@ obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
+ obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+ obj-$(CONFIG_TYPEC_HD3SS3220)	+= hd3ss3220.o
+ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
++obj-$(CONFIG_TYPEC_QCOM_PMIC)	+= qcom-pmic-typec.o
+ obj-$(CONFIG_TYPEC)		+= mux/
+diff --git a/drivers/usb/typec/qcom-pmic-typec.c b/drivers/usb/typec/qcom-pmic-typec.c
+new file mode 100644
+index 000000000000..5ae3af03c638
+--- /dev/null
++++ b/drivers/usb/typec/qcom-pmic-typec.c
+@@ -0,0 +1,275 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/err.h>
++#include <linux/regmap.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/interrupt.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/of_device.h>
++#include <linux/usb/role.h>
++#include <linux/usb/typec_mux.h>
++#include <linux/regulator/consumer.h>
++
++#define TYPEC_MISC_STATUS		0xb
++#define CC_ATTACHED			BIT(0)
++#define CC_ORIENTATION			BIT(1)
++#define SNK_SRC_MODE			BIT(6)
++#define TYPEC_MODE_CFG			0x44
++#define TYPEC_DISABLE_CMD		BIT(0)
++#define EN_SNK_ONLY			BIT(1)
++#define EN_SRC_ONLY			BIT(2)
++#define TYPEC_VCONN_CONTROL		0x46
++#define VCONN_EN_SRC			BIT(0)
++#define VCONN_EN_VAL			BIT(1)
++#define TYPEC_EXIT_STATE_CFG		0x50
++#define SEL_SRC_UPPER_REF		BIT(2)
++#define TYPEC_INTR_EN_CFG_1		0x5e
++#define TYPEC_INTR_EN_CFG_1_MASK	GENMASK(7, 0)
++
++struct qcom_pmic_typec {
++	struct device		*dev;
++	struct fwnode_handle	*fwnode;
++	struct regmap		*regmap;
++	u32			base;
++
++	struct typec_capability *cap;
++	struct typec_port	*port;
++	struct usb_role_switch *role_sw;
++
++	struct regulator	*vbus_reg;
++	bool			vbus_enabled;
++};
++
++static void qcom_pmic_typec_enable_vbus_regulator(struct qcom_pmic_typec
++							*qcom_usb, bool enable)
++{
++	int ret = 0;
++
++	if (enable == qcom_usb->vbus_enabled)
++		return;
++
++	if (!qcom_usb->vbus_reg) {
++		qcom_usb->vbus_reg = devm_regulator_get(qcom_usb->dev,
++							"usb_vbus");
++		if (IS_ERR(qcom_usb->vbus_reg)) {
++			qcom_usb->vbus_reg = NULL;
++			return;
++		}
++	}
++
++	if (enable) {
++		ret = regulator_enable(qcom_usb->vbus_reg);
++		if (ret)
++			return;
++	} else {
++		ret = regulator_disable(qcom_usb->vbus_reg);
++		if (ret)
++			return;
++	}
++	qcom_usb->vbus_enabled = enable;
++}
++
++static void qcom_pmic_typec_check_connection(struct qcom_pmic_typec *qcom_usb)
++{
++	enum typec_orientation orientation;
++	enum usb_role role;
++	unsigned int stat;
++	bool enable_vbus;
++
++	regmap_read(qcom_usb->regmap, qcom_usb->base + TYPEC_MISC_STATUS,
++		    &stat);
++
++	if (stat & CC_ATTACHED) {
++		orientation = ((stat & CC_ORIENTATION) >> 1) ?
++				TYPEC_ORIENTATION_REVERSE :
++				TYPEC_ORIENTATION_NORMAL;
++		typec_set_orientation(qcom_usb->port, orientation);
++
++		role = (stat & SNK_SRC_MODE) ? USB_ROLE_HOST : USB_ROLE_DEVICE;
++		if (role == USB_ROLE_HOST)
++			enable_vbus = true;
++		else
++			enable_vbus = false;
++	} else {
++		role = USB_ROLE_NONE;
++		enable_vbus = false;
++	}
++
++	qcom_pmic_typec_enable_vbus_regulator(qcom_usb, enable_vbus);
++	usb_role_switch_set_role(qcom_usb->role_sw, role);
++}
++
++static irqreturn_t qcom_pmic_typec_interrupt(int irq, void *_qcom_usb)
++{
++	struct qcom_pmic_typec *qcom_usb = _qcom_usb;
++
++	qcom_pmic_typec_check_connection(qcom_usb);
++	return IRQ_HANDLED;
++}
++
++static void qcom_pmic_typec_typec_hw_init(struct qcom_pmic_typec *qcom_usb)
++{
++	u8 mode = 0;
++
++	regmap_update_bits(qcom_usb->regmap,
++			   qcom_usb->base + TYPEC_INTR_EN_CFG_1,
++			   TYPEC_INTR_EN_CFG_1_MASK, 0);
++
++	if (qcom_usb->cap->type != TYPEC_PORT_DRP)
++		mode = (qcom_usb->cap->type == TYPEC_PORT_SNK) ?
++					EN_SNK_ONLY : EN_SRC_ONLY;
++	regmap_update_bits(qcom_usb->regmap, qcom_usb->base + TYPEC_MODE_CFG,
++			   EN_SNK_ONLY | EN_SRC_ONLY, mode);
++
++	regmap_update_bits(qcom_usb->regmap,
++			   qcom_usb->base + TYPEC_VCONN_CONTROL,
++			   VCONN_EN_SRC | VCONN_EN_VAL, VCONN_EN_SRC);
++	regmap_update_bits(qcom_usb->regmap,
++			   qcom_usb->base + TYPEC_EXIT_STATE_CFG,
++			   SEL_SRC_UPPER_REF, SEL_SRC_UPPER_REF);
++}
++
++static int qcom_pmic_typec_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct qcom_pmic_typec *qcom_usb;
++	struct typec_capability *cap;
++	const char *buf;
++	int ret, irq, role;
++	u32 reg;
++
++	ret = of_property_read_u32(dev->of_node, "reg", &reg);
++	if (ret < 0) {
++		dev_err(dev, "missing base address");
++		return ret;
++	}
++
++	qcom_usb = devm_kzalloc(dev, sizeof(*qcom_usb), GFP_KERNEL);
++	if (!qcom_usb)
++		return -ENOMEM;
++
++	qcom_usb->dev = dev;
++	qcom_usb->base = reg;
++
++	qcom_usb->regmap = dev_get_regmap(dev->parent, NULL);
++	if (!qcom_usb->regmap) {
++		dev_err(dev, "Failed to get regmap\n");
++		return -EINVAL;
++	}
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "Failed to get CC irq\n");
++		return -EINVAL;
++	}
++
++	ret = devm_request_threaded_irq(qcom_usb->dev, irq, NULL,
++					qcom_pmic_typec_interrupt, IRQF_ONESHOT,
++					"qcom-pmic-typec", qcom_usb);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not request IRQ\n");
++		return ret;
++	}
++
++	qcom_usb->fwnode = device_get_named_child_node(dev, "connector");
++	if (!qcom_usb->fwnode)
++		return -EINVAL;
++
++	cap = devm_kzalloc(dev, sizeof(*cap), GFP_KERNEL);
++	if (!cap) {
++		ret = -ENOMEM;
++		goto err_put_node;
++	}
++
++	ret = fwnode_property_read_string(qcom_usb->fwnode, "power-role", &buf);
++	if (!ret) {
++		role = typec_find_port_power_role(buf);
++		if (role < 0)
++			role = TYPEC_PORT_SNK;
++	} else {
++		role = TYPEC_PORT_SNK;
++	}
++	cap->type = role;
++
++	ret = fwnode_property_read_string(qcom_usb->fwnode, "data-role", &buf);
++	if (!ret) {
++		role = typec_find_port_data_role(buf);
++		if (role < 0)
++			role = TYPEC_PORT_UFP;
++	} else {
++		role = TYPEC_PORT_UFP;
++	}
++	cap->data = role;
++
++	cap->prefer_role = TYPEC_NO_PREFERRED_ROLE;
++	cap->fwnode = qcom_usb->fwnode;
++	qcom_usb->port = typec_register_port(dev, cap);
++	if (IS_ERR(qcom_usb->port)) {
++		ret = PTR_ERR(qcom_usb->port);
++		dev_err(dev, "Failed to register type c port %d\n", ret);
++		goto err_put_node;
++	}
++
++	qcom_usb->cap = cap;
++
++	qcom_usb->role_sw = fwnode_usb_role_switch_get(qcom_usb->fwnode);
++	if (IS_ERR(qcom_usb->role_sw)) {
++		if (PTR_ERR(qcom_usb->role_sw) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get role switch\n");
++		ret = PTR_ERR(qcom_usb->role_sw);
++		goto err_typec_port;
++	}
++
++	platform_set_drvdata(pdev, qcom_usb);
++	qcom_pmic_typec_typec_hw_init(qcom_usb);
++	qcom_pmic_typec_check_connection(qcom_usb);
++
++	return 0;
++
++err_typec_port:
++	typec_unregister_port(qcom_usb->port);
++err_put_node:
++	fwnode_handle_put(qcom_usb->fwnode);
++
++	return ret;
++}
++
++static int qcom_pmic_typec_remove(struct platform_device *pdev)
++{
++	struct qcom_pmic_typec *qcom_usb = platform_get_drvdata(pdev);
++
++	usb_role_switch_set_role(qcom_usb->role_sw, USB_ROLE_NONE);
++	qcom_pmic_typec_enable_vbus_regulator(qcom_usb, 0);
++
++	typec_unregister_port(qcom_usb->port);
++	usb_role_switch_put(qcom_usb->role_sw);
++	fwnode_handle_put(qcom_usb->fwnode);
++
++	return 0;
++}
++
++static const struct of_device_id qcom_pmic_typec_table[] = {
++	{ .compatible = "qcom,pm8150b-usb-typec" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, qcom_pmic_typec_table);
++
++static struct platform_driver qcom_pmic_typec = {
++	.driver = {
++		.name = "qcom,pmic-typec",
++		.of_match_table = qcom_pmic_typec_table,
++	},
++	.probe = qcom_pmic_typec_probe,
++	.remove = qcom_pmic_typec_remove,
++};
++
++module_platform_driver(qcom_pmic_typec);
++
++MODULE_DESCRIPTION("QCOM PMIC USB type C driver");
++MODULE_LICENSE("GPL v2");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-(please see below)
-
->
-> >   2) Make the drivers_autoprobe property available to PCI to use
-> >      (currently it is private to device core). The PCI could use this
-> >      to determine whether or not to call device_attach(). This still
-> >      leaves the other problem (of not being able to set
-> >      drivers_autoprobe via command line open).
->
-> Ick, command lines are horrible, don't do that if at all possible.  On
-> some systems they are not able to be changed which can be good or bad...
-
-(please see below)
-
->
-> >   3) I found the pci_dev->match_driver, which seemed similar to what I
-> >      am trying to do, but can't be controlled from userspace. I considered
-> >      populating that field based on drivers_autoprobe (still need (2)).
-> >      But the problem is that there is the AMD IOMMU driver which is setting
-> >      this independently, so setting the match_driver based on
-> >      drivers_autoprobe may not be a good idea. May be we can populate it
-> >      for untrusted devicesi, based on the parameter that I'm introducing?
-> >
-> >   4) This patch was my option 4 that helps fix both the problems for me.
->
-> I suggest putting some of the above text in the changelog, as it has a
-> lot of good context, while your existing changelog is pretty sparse and
-> does not explain anything...
-
-Will do.
-
->
->
-> >
-> >  drivers/pci/bus.c | 11 ++++++++---
-> >  drivers/pci/pci.c |  9 +++++++++
-> >  drivers/pci/pci.h |  1 +
-> >  3 files changed, 18 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > index 3cef835b375fd..336aeeb4c4ebf 100644
-> > --- a/drivers/pci/bus.c
-> > +++ b/drivers/pci/bus.c
-> > @@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >       pci_bridge_d3_update(dev);
-> >
-> >       dev->match_driver = true;
-> > -     retval = device_attach(&dev->dev);
-> > -     if (retval < 0 && retval != -EPROBE_DEFER)
-> > -             pci_warn(dev, "device attach failed (%d)\n", retval);
-> > +
-> > +     if (dev->untrusted && pci_dont_attach_untrusted_devs) {
-> > +             pci_info(dev, "not attaching untrusted device\n");
-> > +     } else {
-> > +             retval = device_attach(&dev->dev);
-> > +             if (retval < 0 && retval != -EPROBE_DEFER)
-> > +                     pci_warn(dev, "device attach failed (%d)\n", retval);
-> > +     }
-> >
-> >       pci_dev_assign_added(dev, true);
-> >  }
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index ce096272f52b1..dec1f9ef27d71 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
-> >  /* If set, the PCI config space of each device is printed during boot. */
-> >  bool pci_early_dump;
-> >
-> > +/*
-> > + * If set, the devices with "untrusted" flag shall not be attached automatically
-> > + * Userspace will need to attach them manually:
-> > + * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
-> > + */
-> > +bool pci_dont_attach_untrusted_devs;
-> > +
-> >  bool pci_ats_disabled(void)
-> >  {
-> >       return pcie_ats_disabled;
-> > @@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
-> >                               pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
-> >                       } else if (!strncmp(str, "disable_acs_redir=", 18)) {
-> >                               disable_acs_redir_param = str + 18;
-> > +                     } else if (!strcmp(str, "dont_attach_untrusted_devs")) {
-> > +                             pci_dont_attach_untrusted_devs = true;
-> >                       } else {
-> >                               pr_err("PCI: Unknown option `%s'\n", str);
-> >                       }
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 6d3f758671064..30ffad047d926 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -13,6 +13,7 @@
-> >
-> >  extern const unsigned char pcie_link_speed[];
-> >  extern bool pci_early_dump;
-> > +extern bool pci_dont_attach_untrusted_devs;
-> >
-> >  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
-> >  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
->
-> What happened to the split of "trust" and "internal/external" logic that
-> we discussed before?
-
-a) I think what was decided was introducing a device core "location"
-property that can be exposed to userspace to help it to decide whether
-or not to attach a driver to a device. Yes, that is still the plan.
-(Mild sidenote: userspace may not need to distinguish between internal
-and external devices if it can assume that no internal PCI devices
-will show up after "echo 0 > /sys/bus/pci/drivers_autoprobe". But
-nevertheless...)
-
-b) Note that even with (a) in place, we still need a parameter that
-can ensure that drivers are not bound to external devices at boot,
-*before* userspace gets a chance to disable "drivers_autoprobe".
-https://lkml.org/lkml/2020/6/15/1453
-Is it OK to add such a parameter in device core?
-
-Thanks,
-
-Rajat
-
-
-
-
-
-> This seems to ignore all of that and go straight
-> to some form of "we know what we trust, so all is fine!".
->
-> It's not obvious what this is really doing here at all, sorry...
->
-> greg k-h
