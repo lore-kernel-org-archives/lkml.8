@@ -2,95 +2,76 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 03:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F5F20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 03:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294C420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgFZD5J (ORCPT
+        id S1728524AbgFZEAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 23:57:09 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34529 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgFZD5I (ORCPT
+        Fri, 26 Jun 2020 00:00:00 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:37992 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgFZEAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 23:57:08 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u17so6569270qtq.1;
-        Thu, 25 Jun 2020 20:57:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kJ7+MitTL2u/SJRdhAtn56mONVO+G9P0+BelTtfOntQ=;
-        b=XrvNW5GEmIteQN5fyPzMHlQNlWJVe3yEKh/9II3S05JuZAoQ3YaJZZAvv9zfk+Cldx
-         3k0LDGkR4k0J1l5wmjjnjer+L2tkTRWkNBKjye2/3P6mYyFFgLG1+WkXP//cJg9wpvPD
-         ykT7AaWw+PWGVcd8UO+0Zi2TMNvmluJwPwH5Po5j0eEF5UQ5xivfdCjMp2J0gy49KFyo
-         6kab7XlawMWW9GQZbIuqfjHX7g3P1sgJ+QVl/RR9fmKmgFRCaC2yDqTsYXeQYId3ntLb
-         Bw6pKhbrpn8qoqad1Z7vzh7JxJJAp6AO1d9rX5KVM/qTUPbeyforVCZ6RjyfPJf+8qA2
-         3Jkw==
-X-Gm-Message-State: AOAM531NUWaBYvv0g6N++zbyQjKEQuvQi+xVDZz6vVVTgPb0TBCkVJfC
-        o4JwrzzP9kOQlYETelkKB/s=
-X-Google-Smtp-Source: ABdhPJzHeWvgQQatmv437XIWqbm5ZKPH0mBAGfUhz/q3ue1X7/V6sFcuCPelEhGM2P8bFw5pMBnCaA==
-X-Received: by 2002:ac8:2914:: with SMTP id y20mr862187qty.30.1593143827688;
-        Thu, 25 Jun 2020 20:57:07 -0700 (PDT)
-Received: from dek-x230.localnet (pool-108-24-134-99.cmdnnj.fios.verizon.net. [108.24.134.99])
-        by smtp.gmail.com with ESMTPSA id x53sm2240861qtj.63.2020.06.25.20.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 20:57:06 -0700 (PDT)
-From:   David Korth <gerbilsoft@gerbilsoft.com>
-To:     David Rheinsberg <david.rheinsberg@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] HID: wiimote: Initialize the controller LEDs with a device ID value
-Date:   Thu, 25 Jun 2020 23:57:05 -0400
-Message-ID: <2516866.vuYhMxLoTh@dek-x230>
-In-Reply-To: <CADyDSO7HKNP8ihsW2-qouG5SYpOJ1LfD2sAbDfRkJ3iSkHvGNg@mail.gmail.com>
-References: <20200622225728.330-1-gerbilsoft@gerbilsoft.com> <2498150.lGaqSPkdTl@dek-x230> <CADyDSO7HKNP8ihsW2-qouG5SYpOJ1LfD2sAbDfRkJ3iSkHvGNg@mail.gmail.com>
+        Fri, 26 Jun 2020 00:00:00 -0400
+Received: from localhost.localdomain ([92.148.198.76])
+        by mwinf5d16 with ME
+        id vfzs220031fPLi403fzsg6; Fri, 26 Jun 2020 05:59:58 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 26 Jun 2020 05:59:58 +0200
+X-ME-IP: 92.148.198.76
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     linux@armlinux.org.uk, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH V2] scsi: powertec: Fix different dev_id between 'request_irq()' and 'free_irq()'
+Date:   Fri, 26 Jun 2020 05:59:48 +0200
+Message-Id: <20200626035948.944148-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <08f63617-03df-71cf-70c4-00f08a9f51d8@wanadoo.fr>
+References: <08f63617-03df-71cf-70c4-00f08a9f51d8@wanadoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, June 25, 2020 3:09:46 AM EDT David Rheinsberg wrote:
-> Hi
-> 
-> On Thu, 25 Jun 2020 at 00:09, David Korth <gerbilsoft@gerbilsoft.com> wrote:
-> > I've been manually setting the player IDs on Wii controllers when running
-> > multiplayer games by writing to the /sys/class/leds/ directory. Having the
-> > hid-wiimote driver do this itself significantly reduces setup time.
-> 
-> What do you mean with "reduces setup time significantly"? Why would it
-> take that long to set the LEDs?
-> 
-> Thanks
-> David
+The dev_id used in 'request_irq()' and 'free_irq()' should match.
+So use 'info' in both cases.
 
-The LED setup in this case is done entirely manually by me writing to the 
-individual files in /sys/class/leds/. This has to be done when the controllers 
-are connected initially, and if a controller has to be reconnected for some 
-reason (e.g. it runs out of batteries). I don't know of any userspace tools 
-that would make this easier to automate, except maybe a shell script, and I'd 
-probably still need to run it manually.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+V2: update free_irq instead of request_irq in order not to obviously break
+    code
+---
+ drivers/scsi/arm/powertec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Both the Sixaxis and Xpad drivers appear to implement something similar, so 
-perhaps a higher-level "player number" mechanism that works with all 
-controllers would be worth looking into. This could in theory be done with a 
-userspace daemon too (or a udev hook).
-
-As it is right now, I still think implementing it in the wiimote driver is the 
-best method to keep it consistent with the rest of the drivers without having 
-to install additional userspace tools.
-
-Thanks
-
+diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
+index 772a13e5fd91..d99ef014528e 100644
+--- a/drivers/scsi/arm/powertec.c
++++ b/drivers/scsi/arm/powertec.c
+@@ -378,7 +378,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_release:
+ 	fas216_release(host);
+-- 
+2.25.1
 
