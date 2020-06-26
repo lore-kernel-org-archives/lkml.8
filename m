@@ -2,123 +2,57 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9013520775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqOwG7jf"
+	by mail.kernel.org (Postfix) with ESMTP id 9CAC9207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgFZHo4 (ORCPT
+        id S1728849AbgFZHr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgFZHo4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:44:56 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2D6C08C5C1;
-        Fri, 26 Jun 2020 00:44:55 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id rk21so8446967ejb.2;
-        Fri, 26 Jun 2020 00:44:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kU/B1sJTuCokA2IOHzhwK6lGdLVmn0o+3nqsLQjCX/w=;
-        b=uqOwG7jfmszvkBS98WHWlb+ErrJ3rplWAe1N+tZ70V6gaxZaIssqgJplr0HsImtDW7
-         MS5sqzqzd3Zvuw1kFVHQH/ZuVjoxvGMhrdsarRePzpj0V1HRWsZmmQaoMFuHswB5t8Ql
-         Y1WoO6E2ReOoLvnNjpH/CEe7yJS/MVMjnywLFKXCHcg5M7ey8FpGBHoNgBlJekFHuCSy
-         V1lUpAE0379jXn2j8iinYJu6oQufioWv97KjuopapfQ3gd1edf28x8yFldi+a7+F3k3I
-         m2AAQS1TMRoFfhxa+0ERvEnLPVPa+q+Afv4rQjSMrlSoMI6zy5BZ3T9FFCpvkfmnIsiJ
-         tt3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kU/B1sJTuCokA2IOHzhwK6lGdLVmn0o+3nqsLQjCX/w=;
-        b=fM0GLK+kOUtZ8Gcrv+hixWRmBK3fAh48QU1ZYU35uC08UIbCIX68ZSez2f4K8HEmLZ
-         DvEHVNVEaS3g0iv1pj1djNAxo3Av7Fhw2TECvybApuDGXQuz8OCZBOR2zoulhzxDdLZ4
-         VgbHWOJyYMoJaZOx+qCPzpyo5LE9xB/7g26eZlqp0HjhQ5DzS/yUf/7Il4ws/gYwaqHb
-         9YDbej3Z/dXE7XglyfzrBwI5rlzUmwAIdixl8Jsqd5VWhmftfvoPqYujbVEXQJ4VaWfa
-         pbr8jJqphg+4KNpgwxHr6VRw9N0vIm0n5O+MKSkn+XyHwGpGPQiKjuGdAChBBa1qAZjy
-         qazA==
-X-Gm-Message-State: AOAM530IaMS8VgUAntFF4O20RRIRxQLRT7/KSssRAlh+OCaKlQ5ShTuM
-        /Yzy08L46lcs9msIPPPw4+E=
-X-Google-Smtp-Source: ABdhPJwgDELHR/pkSZSgsSrSDw8660GOT3i9Uqby79Mu8x0hhTO7jsPXBWxdQfzdQdyjsShYWq3dIw==
-X-Received: by 2002:a17:906:1c05:: with SMTP id k5mr1400352ejg.320.1593157494786;
-        Fri, 26 Jun 2020 00:44:54 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id gs6sm4815776ejb.93.2020.06.26.00.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:44:53 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 09:44:52 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] media: staging: tegra-vde: Runtime PM is always
- available on Tegra
-Message-ID: <20200626074452.GC3109062@ulmo>
-References: <20200624150847.22672-1-digetx@gmail.com>
- <20200624150847.22672-3-digetx@gmail.com>
+        Fri, 26 Jun 2020 03:47:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:50706 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728111AbgFZHr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:47:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9C65868B02; Fri, 26 Jun 2020 09:47:25 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 09:47:25 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: the XSK buffer pool needs be to reverted
+Message-ID: <20200626074725.GA21790@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200624150847.22672-3-digetx@gmail.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Björn,
 
---WplhKdTI2c8ulnbP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+you addition of the xsk_buff_pool.c APIs in commit 2b43470add8c
+("xsk: Introduce AF_XDP buffer allocation API") is unfortunately rather
+broken by making lots of assumptions and poking into dma-direct and
+swiotlb internals that are of no business to outside users and clearly
+marked as such.   I'd be glad to work with your doing something proper
+for pools, but that needs proper APIs and probably live in the dma
+mapping core, but for that you'd actually need to contact the relevant
+maintainers before poking into internals.
 
-On Wed, Jun 24, 2020 at 06:08:45PM +0300, Dmitry Osipenko wrote:
-> Runtime PM is always available on Tegra nowadays since commit 40b2bb1b132a
-> ("ARM: tegra: enforce PM requirement"), hence the case of unavailable RPM
-> doesn't need to be handled.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/staging/media/tegra-vde/vde.c | 16 ----------------
->  1 file changed, 16 deletions(-)
+The commit seems to have a long dove tail of commits depending on it
+despite only being a month old, so maybe you can do the revert for now?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---WplhKdTI2c8ulnbP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl71p3QACgkQ3SOs138+
-s6G0vQ//dpkQN0nsvPYnk0HeH8sLhO6u9BWqfrWsCUM8ZM7Jr+G08Q7YjDLcF72K
-awBVBLgjK0ZkBXmMoT64J57xHfC7O9747zPiPedoCntFPjYTC5cLXVW61LRLrZFD
-aGRLXJ50YQCf5bshtmRfK+PVL2bcXvjV2fJUP+MremfE24OALFW3IkFP13BPhxVs
-d2fYwTly8qqAu6eG4vj5b4wzd0u1d5Zq0qVIxE2kwb26jY+8qtLZz8Fm0d1P1jYV
-FBen5xgv1x2G1KKedLyHakMXh3EjziF5SARiuM3KqpOtf3jQc3niXfxuK2ocLb43
-PvpaMmCpKP9QPPcWPANtLdHb6tIpTKdvzhqSmoKKyZ1mfsr4P9Wou8V0j/csTP5q
-vn4DuAaZp3ub76f84RSBb3aPen6Xtx1tALh0eONWFiuKDzKdbEDKxrO19t5eD3Fx
-zSPijXgN4kxRMyDgiHIbUNMMdoF69fhO9lTB0zgl35AFM8YV3G5MozNtl8pB/ZSk
-21BaDXvsHvPIuI6glZGVvSSDPDRpEz/DAu7MNOeMkOSy5vNz3mOHDhAL1gMVeU4d
-KcRkYSlDnfyHizQIMTXzfsgnTazFFBx8UaKwhsKEP83xJpCeULZehO2vKib9xKJm
-m4ig+UbpWnkync+LRXUGBph3gDX8yvoTaRjotANmfK8upi0VBu0=
-=8Q9h
------END PGP SIGNATURE-----
-
---WplhKdTI2c8ulnbP--
+Note that this is somewhat urgent, as various of the APIs that the code
+is abusing are slated to go away for Linux 5.9, so this addition comes
+at a really bad time.
