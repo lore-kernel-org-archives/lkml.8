@@ -2,157 +2,216 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3006AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3133EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089CB20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muNc1zvP"
+	by mail.kernel.org (Postfix) with ESMTP id 0CF4A20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgFZJGY (ORCPT
+        id S1726381AbgFZJJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgFZJGY (ORCPT
+        Fri, 26 Jun 2020 05:09:26 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37614 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgFZJJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:06:24 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBE7C08C5C1;
-        Fri, 26 Jun 2020 02:06:23 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so8646305ejc.3;
-        Fri, 26 Jun 2020 02:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7k82GdfRQZIx/YywdeTQaGLOZj9qWIQ3HM2GGjeWyUU=;
-        b=muNc1zvPbOcqM0AZGa4ENKGHHvs5qfjHgOqwmOWYFZO6IyGXNbaDyWW5hFIMQxXQhZ
-         RjnHnqug0gx0eOoNveqteLuQCK6bDC1OIzfMko9z+I0Mevu6IqfoNFbPWE7Y7Sq3TMAV
-         6OXYsWsbn5SWFuuqvAlrw1J9MtZox2rxgCFpEwlXB9hzwLOLFIHLgLiUN4rHdsBnKppd
-         SfaoJJL656l5uRFUKbbrXqDLjkMHRiq3o11BzcpEtNcBG12vc4gaiNHIfcf0LGOK5+B5
-         brljkx1ZY8TUHLQHQZc8vb3xmlNW6kzGZHitgbLb8PIJH+S/UQ3FbTUAmd/EZJgKJ/v3
-         uhGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7k82GdfRQZIx/YywdeTQaGLOZj9qWIQ3HM2GGjeWyUU=;
-        b=DhjLeXuKsyRtshxmowmH1q+8Z8OFIPT8i4CqJIPr6JqsyeW66VhW0UcvzJ43nahSMr
-         Fu+dMOVQRfy4uzQ/rXgVuUR2UkNVa91xfZmvCQECsl6XrKAh6wossBkdOjxVNpwB7SAC
-         RoEOMON7d8+vjgeTQM/3QQjRJEvUvAbjqhJfEPQbXwcZD2t14qWVv2KJKSibVzx1Rm8q
-         06YN0W9FzTtemW/eegL/hORAVPrGj94P4xa/FeK/sPFCd4C0IIgKa8L+4IoIMMvzoj7H
-         tt8YcyJKs0Nx2gAadYJRyZzA+6rkm2apZdvnM/Dy73eH/0e9j3e8Es/778ai75ZnfYXf
-         SITg==
-X-Gm-Message-State: AOAM531zov1beIzto09gSaOVDwKHvY9CkG9Jh66a2rGO2f8wIwUg+GW6
-        NwlzSehixluScIneF1Aaf5K+qXIO
-X-Google-Smtp-Source: ABdhPJwL/O8ELz2OXgRCyWiTh5z9d1vYQ0aRl6btpPl1+FavJ/m62CF9RL3vOD1b4KD41Lf3WwdYDw==
-X-Received: by 2002:a17:906:4086:: with SMTP id u6mr1807597ejj.9.1593162382413;
-        Fri, 26 Jun 2020 02:06:22 -0700 (PDT)
-Received: from ?IPv6:2001:a61:253c:8201:b2fb:3ef8:ca:1604? ([2001:a61:253c:8201:b2fb:3ef8:ca:1604])
-        by smtp.gmail.com with ESMTPSA id z15sm18408763eju.18.2020.06.26.02.06.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 02:06:21 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ebiggers@kernel.org
-Subject: Re: [PATCH v2] sync.2: syncfs() now returns errors if writeback fails
-To:     Jeff Layton <jlayton@kernel.org>
-References: <20200625233731.61555-1-jlayton@kernel.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <3e2d6625-72bd-324c-b6d3-4e2a4bc5e369@gmail.com>
-Date:   Fri, 26 Jun 2020 11:06:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 26 Jun 2020 05:09:26 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5271E3C0585;
+        Fri, 26 Jun 2020 11:09:23 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id M8GynATDHF2b; Fri, 26 Jun 2020 11:09:18 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 70A5A3C04C1;
+        Fri, 26 Jun 2020 11:09:18 +0200 (CEST)
+Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 26 Jun
+ 2020 11:09:18 +0200
+Date:   Fri, 26 Jun 2020 11:09:13 +0200
+From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        niklas soderlund <niklas.soderlund@ragnatech.se>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
+ ENUM/GET/SET INPUT
+Message-ID: <20200626090913.GA1348@vmlxhi-110.adit-jv.com>
+References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+ <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
+ <20200625020138.GW5980@pendragon.ideasonboard.com>
+ <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
+ <20200625094724.GE5865@pendragon.ideasonboard.com>
+ <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
+ <20200625102701.GG5865@pendragon.ideasonboard.com>
+ <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <20200625233731.61555-1-jlayton@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.196]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeff,
+Hi Laurent, Hans,
 
-On 6/26/20 1:37 AM, Jeff Layton wrote:
-> A patch has been merged for v5.8 that changes how syncfs() reports
-> errors. Change the sync() manpage accordingly.
+On Thu, Jun 25, 2020 at 12:35:02PM +0200, Hans Verkuil wrote:
+> On 25/06/2020 12:29, Laurent Pinchart wrote:
+> > Hi Ramzi,
+> > 
+> > On Thu, Jun 25, 2020 at 12:18:35PM +0200, Ramzi Ben Meftah wrote:
+> >> On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
+> >>> On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
+> >>>> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
+> >>>>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
+> >>>>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
+> >>>>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>>>>>
+> >>>>>>  +Niklas, +Laurent
+> >>>>>>
+> >>>>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
+> >>>>>
+> >>>>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
+> >>>>> idea either :-) Routing doesn't go through the subdev [gs]_input
+> >>>>> operations in MC-based drivers. It should be configured through link
+> >>>>> setup instead. This patch goes in the wrong direction, sorry Steve.
+> >>>>
+> >>>> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
+> >>>> with Media Controller?
+> >>>
+> >>> No there isn't at the moment. I'm not opposed to adding such a feature,
+> >>> but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
+> >>> subdev pad operation (v4l2_subdev_pad_ops), not a video operation
+> >>> (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
+> >>> as it would retrieve properties of the input corresponding to the pad,
+> >>> not enumerate inputs.
+> >>
+> >> Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
+> >> this need. But, seems this is not expose to user space although many drivers
+> >> do implememt it.
+> >> Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
+> > 
+> > Isn't g_input_status a video operation ? I would propose adding a
+> > g_input_status pad operation, and expose that to userspace. We should
+> > take that as an opportunity to consider designing that new operation
+> > from scratch (possibly naming it differently) and make sure it could
+> > address both analog and digital systems (for instance being able to
+> > report the status of an SDI input).
+
+Sorry, my mistake. But, does it make sens that it belongs to video ops?
+I think it should be part of pad ops, it is used now as alternative to 
+ENUMINPUT and we agreed that it should(if we are going to implement it) be 
+part of pad ops.
+
 > 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-
-Thanks. Patch applied. (I've not yet pushed it, in case any 
-review comments might still come in.)
-
-Cheers,
-
-Michael
-
-> ---
->  man2/sync.2 | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> Yes, I was wondering the same. The status bits are ancient and we might
+> want to improve on it.
 > 
->  v2: update the NOTES verbiage according to Eric's suggestion
-> 
-> diff --git a/man2/sync.2 b/man2/sync.2
-> index 7198f3311b05..61e994c5affc 100644
-> --- a/man2/sync.2
-> +++ b/man2/sync.2
-> @@ -86,11 +86,26 @@ to indicate the error.
->  is always successful.
->  .PP
->  .BR syncfs ()
-> -can fail for at least the following reason:
-> +can fail for at least the following reasons:
->  .TP
->  .B EBADF
->  .I fd
->  is not a valid file descriptor.
-> +.TP
-> +.B EIO
-> +An error occurred during synchronization.
-> +This error may relate to data written to any file on the filesystem, or on
-> +metadata related to the filesytem itself.
-> +.TP
-> +.B ENOSPC
-> +Disk space was exhausted while synchronizing.
-> +.TP
-> +.BR ENOSPC ", " EDQUOT
-> +Data was written to a files on NFS or another filesystem which does not
-> +allocate space at the time of a
-> +.BR write (2)
-> +system call, and some previous write failed due to insufficient
-> +storage space.
->  .SH VERSIONS
->  .BR syncfs ()
->  first appeared in Linux 2.6.39;
-> @@ -121,6 +136,13 @@ or
->  .BR syncfs ()
->  provide the same guarantees as fsync called on every file in
->  the system or filesystem respectively.
-> +.PP
-> +In mainline kernel versions prior to 5.8,
-> +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
-> +.BR syncfs ()
-> +will only fail when passed a bad file descriptor (EBADF). In 5.8
-> +and later kernels, it will also report an error if one or more inodes failed
-> +to be written back since the last syncfs call.
->  .SH BUGS
->  Before version 1.3.20 Linux did not wait for I/O to complete
->  before returning.
-> 
+> Ramzi, what exactly is your use-case? Is this for an HDMI input? Analog
+> video input? Before adding a new ioctl I'd like to know why you think
+> you need it :-)
 
+I need to know if the input signal(analog and digital) is there, before
+starting streaming. I am not aware of other way to check for it.
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> >>>>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+> >>>>>>> ioctls for use via v4l2 subdevice node.
+> >>>>>>>
+> >>>>>>> This commit should probably not be pushed upstream, because the (old)
+> >>>>>>> idea of video inputs conflicts with the newer concept of establishing
+> >>>>>>> media links between src->sink pads.
+> >>>>>>>
+> >>>>>>> However it might make sense for some subdevices to support enum/get/set
+> >>>>>>> inputs. One example would be the analog front end subdevice for the
+> >>>>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+> >>>>>>> can be done without requiring the implementation of media entities that
+> >>>>>>> would define the analog source for which to establish a media link.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>>>>>> ---
+> >>>>>>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+> >>>>>>>  include/media/v4l2-subdev.h           | 11 +++++++++++
+> >>>>>>>  2 files changed, 20 insertions(+)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>> index 6b989fe..73fbfe9 100644
+> >>>>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+> >>>>>>>  			return -ENOTTY;
+> >>>>>>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
+> >>>>>>>
+> >>>>>>> +	case VIDIOC_ENUMINPUT:
+> >>>>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
+> >>>>>>> +
+> >>>>>>> +	case VIDIOC_G_INPUT:
+> >>>>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
+> >>>>>>> +
+> >>>>>>> +	case VIDIOC_S_INPUT:
+> >>>>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
+> >>>>>>> +
+> >>>>>>>  	case VIDIOC_G_CTRL:
+> >>>>>>>  		if (!vfh->ctrl_handler)
+> >>>>>>>  			return -ENOTTY;
+> >>>>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> >>>>>>> index f7fe78a..6e1a9cd 100644
+> >>>>>>> --- a/include/media/v4l2-subdev.h
+> >>>>>>> +++ b/include/media/v4l2-subdev.h
+> >>>>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+> >>>>>>>   * @g_input_status: get input status. Same as the status field in the
+> >>>>>>>   *	&struct &v4l2_input
+> >>>>>>>   *
+> >>>>>>> + * @enuminput: enumerate inputs. Should return the same input status as
+> >>>>>>> + *      @g_input_status if the passed input index is the currently active
+> >>>>>>> + *      input.
+> >>>>>>> + *
+> >>>>>>> + * @g_input: returns the currently active input index.
+> >>>>>>> + *
+> >>>>>>> + * @s_input: set the active input.
+> >>>>>>> + *
+> >>>>>>>   * @s_stream: used to notify the driver that a video stream will start or has
+> >>>>>>>   *	stopped.
+> >>>>>>>   *
+> >>>>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+> >>>>>>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>>>>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>>>>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
+> >>>>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
+> >>>>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
+> >>>>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+> >>>>>>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+> >>>>>>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+> >>>>>>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
+> > 
+> 
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Best Regards,
+Ramzi Ben Meftah.
