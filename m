@@ -2,135 +2,102 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD82204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B43204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgFZP4V (ORCPT
+        id S1730182AbgFZP46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:56:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFZP4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:56:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784D4C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:56:21 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1joqi1-00022L-64; Fri, 26 Jun 2020 17:56:09 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1joqhw-0004b3-Lq; Fri, 26 Jun 2020 17:56:04 +0200
-Date:   Fri, 26 Jun 2020 17:56:04 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v14 3/3] Input: new da7280 haptic driver
-Message-ID: <20200626155604.poqryunm7fyqmgek@pengutronix.de>
-References: <cover.1593017969.git.Roy.Im@diasemi.com>
- <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
- <20200626061853.hyb7dwta6ths2qo2@taurus.defre.kleine-koenig.org>
- <DB8PR10MB33563278561DFC2E50420F1C85930@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+        Fri, 26 Jun 2020 11:56:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24803 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726875AbgFZP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:56:58 -0400
+IronPort-SDR: uZQOJbZQHU7FIEjatT2pAbXG+e0xawdGTY1SLzdpGToUcjg487EUGVs4cM9QXBTmRBrAqz3Mu1
+ g3AvZvTQCkHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="230146587"
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="230146587"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 08:56:57 -0700
+IronPort-SDR: j+HuT071Nr3F3FGpKOZF8ToqB4YfiJFxn9esIc79m4HAcTKwxP/nrGkykJA7rdjQjkHYdehxx2
+ Pe6gTsaglh7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="276400676"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 26 Jun 2020 08:56:57 -0700
+Date:   Fri, 26 Jun 2020 08:56:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200626155657.GC6583@linux.intel.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+ <20200625061544.GC2141@linux.intel.com>
+ <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com>
+ <df859fb0-a665-a82a-0cf1-8db95179cb74@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5pzi4sldrmy6sm6j"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB8PR10MB33563278561DFC2E50420F1C85930@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <df859fb0-a665-a82a-0cf1-8db95179cb74@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 08:44:16PM +0200, Paolo Bonzini wrote:
+> On 25/06/20 18:25, Sean Christopherson wrote:
+> > I get the "what" of the change, and even the "why" to some extent, but I
+> > dislike the idea of supporting/encouraging blind reads/writes to MSRs.
+> > Blind writes are just asking for problems, and suppressing warnings on reads
+> > is almost guaranteed to be suppressing a KVM bug.
+> 
+> Right, that's why this patch does not just suppress warnings: it adds a
+> different return value to detect the case.
+> 
+> > TSC_CTRL aside, if we insist on pointing a gun at our foot at some point,
+> > this should be a dedicated flavor of MSR access, e.g. msr_data.kvm_initiated,
+> > so that it at least requires intentionally loading the gun.
+> 
+> With this patch, __kvm_get_msr does not know about ignore_msrs at all,
+> that seems to be strictly an improvement; do you agree with that?
 
---5pzi4sldrmy6sm6j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not really?  It's solving a problem that doesn't exist in the current code
+base (assuming TSC_CTRL is fixed), and IMO solving it in an ugly fashion.
 
-On Fri, Jun 26, 2020 at 01:17:29PM +0000, Roy Im wrote:
-> > On Fri, June 26, 2020 3:19 PM, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> > from the PWM POV I'm happy now. Just a few minor comments that I notice=
-d while checking the PWM details.
->=20
-> Many thanks for your comments.
->=20
-> >=20
-> > On Thu, Jun 25, 2020 at 01:59:29AM +0900, Roy Im wrote:
-> > > +		val =3D haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
-> > > +			haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
-> >=20
-> > If you write this as:
-> >=20
-> > 	val =3D FIELD_PREP(DA7280_PS_SEQ_ID_MASK, haptics->ps_seq_id) |
-> > 		FIELD_PREP(DA7280_PS_SEQ_LOOP_MASK, haptics->ps_seq_loop);
-> >=20
-> > you get some additional checks for free and can drop all defines for ..=
-=2E_SHIFT .
->=20
-> It is not difficult to update that as you advise, but I think having
-> the shift there explicitly makes it more readable, so most of the
-> drivers from my team have the defines(shift) up to now. I guess this
-> is a kind of subjective thing.=20
-> Do you think it is still necessary? Then I will update as you said.
+I would much prefer that, _if_ we want to support blind KVM-internal MSR
+accesses, we end up with code like:
 
-No, from my side it's not a hard requirement (and after all I'm not the
-one who will take your commit). I personally like it better with
-FIELD_PREP, but I can still sleep if you don't agree :-)
+	if (msr_info->kvm_internal) {
+		return 1;
+	} else if (!ignore_msrs) {
+		vcpu_debug_ratelimited(vcpu, "unhandled wrmsr: 0x%x data 0x%llx\n",
+			    msr, data);
+		return 1;
+	} else {
+		if (report_ignored_msrs)
+			vcpu_unimpl(vcpu,
+				"ignored wrmsr: 0x%x data 0x%llx\n",
+				msr, data);
+		break;
+	}
 
-What I don't like about having both ..._SHIFT and ..._MASK is that there
-is some duplication as ..._SHIFT can be calculated from ..._MASK:
+But I'm still not convinced that there is a legimiate scenario for setting
+kvm_internal=true.
 
-	#define LALA_SHIFT (ffs(LALA_MASK) - 1)
+> What would you think about adding warn_unused_result to __kvm_get_msr?
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5pzi4sldrmy6sm6j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl72GpEACgkQwfwUeK3K
-7An3Fgf+PE90XwKk0lfI4SJm01zg8Vo94+Ws2c/C57cMSLglwYArUOdp75/yOQJe
-9NsLyWB5iQ68ENFFCF9qvvEK27iZG5pBeRuJXSFAdyfEdnCGpSDsDi/VqlhjSKqO
-dMjn1mcOftN8n9Zj4E8UehTsEte3nbfY+3upnRkYQW4Y12NlfJcAPQ8DdWypbJ9W
-8fFMsIdZp8u+HMpSmjS+LGr9g9bBZAn+5+VgD9pfMM2oOTVhMYXYPwl6d7sBW/IV
-WOeHC3vSUQ87G7EXzTV4KVo4RHwxbydEt52Gzt42Jt8iKQxEpG80hEqWx6j0RloH
-8QEaDWWQGHvaGnoHwsnRXOw6TKqZdg==
-=osHN
------END PGP SIGNATURE-----
-
---5pzi4sldrmy6sm6j--
+I guess I wouldn't object to it, but that seems like an orthogonal issue.
