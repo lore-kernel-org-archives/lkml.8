@@ -2,80 +2,125 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B023C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3943F2089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394CC20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="g+CAS8Ul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgFZVzg (ORCPT
+        id S1726007AbgFZV4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:55:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:10636 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgFZVzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:55:36 -0400
-IronPort-SDR: 586JsPjpgi1TswZ7W47rjr3JuQqAPs3uO3H93tKPhD4Cqmm7Ej7VI5MhRv90Qxt8R8ba/kKjTp
- MltzsQP7/dgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210564485"
-X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="210564485"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 14:55:35 -0700
-IronPort-SDR: fgsnVF1nXrG0q/Wx4LNvlysUhpD20At2HOvjj8R/6o//cUyUS/KACF932Y7wYKOFWxBTBa8XjP
- RrI2Meun2XRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="303233178"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga007.jf.intel.com with ESMTP; 26 Jun 2020 14:55:35 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Tony Luck" <tony.luck@intel.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "x86" <x86@kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] x86/split_lock: Enumerate split lock feature on Sapphire Rapids
-Date:   Fri, 26 Jun 2020 14:55:34 -0700
-Message-Id: <1593208534-33721-1-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
+        Fri, 26 Jun 2020 17:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgFZV4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 17:56:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68364C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:56:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so10703797wml.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s24mstSCNQlTFolgjec0iiKMpvfLNvCEazKvZzeEqpA=;
+        b=g+CAS8UlAQOOsv4s7ohlbFkbJmOpPZq5OC7QRzoSqEzhhgE34Acd5sfrAMN8Uu9C3O
+         WjP+DC/W4+0jp5qX9LvxioOw4eodRT/6RRpQpqrwVQ3/k7qf0G9GOfAGstoLym1Coe0G
+         Xph832bBIMuzUv0udF9hevqW5Jxiwdj/IOadY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s24mstSCNQlTFolgjec0iiKMpvfLNvCEazKvZzeEqpA=;
+        b=ZGTvE0fwVM/HXWJllxb+9aAOXEPxDqj9y0V5fA6QYjxCBLEk2LwfhVZcpVTMUdcLM1
+         Z9rCAfvwBoXVExX5UIntLfkngGcW4esgaWD6wfaHV0CwmlwKXdkeCWEc8HoDVfd8lYcU
+         MJD0oyzl3eIuJAspeCKadfrg9VQum/+6rwLAJ+gJGjwK0ZuWBX7OmiW+QDMJNbKZHlzd
+         FioxLr/HRq50DCxvlNuUk3hIVKPJX6uVRiFKLY/UZmiOTGWLsR2RONfxTVW3JTYNlIhW
+         sWRa6uTok1ECXUiRgSWNC3YnnhjiOIPWcJVy2FetMbIBI9pFcsvgv3FmNxTRlSYwtYRj
+         tNEA==
+X-Gm-Message-State: AOAM532BYomoQAfIfe2waafqViW9EU/BTBK4V3oj25Us+BaDUb0+RJaR
+        1ClM769KUznm9fbv40Jg5jKQpPGY6Z40X8hvLa4l
+X-Google-Smtp-Source: ABdhPJxvUiPRna7ukmDfkDR7tOrY35okfuOqyyzB1yZ0cFFCHPw0NEqSkR/UuIDigPHl1bx2wJyIWsX7BstpN+VvZ3U=
+X-Received: by 2002:a1c:9d09:: with SMTP id g9mr5333593wme.31.1593208583105;
+ Fri, 26 Jun 2020 14:56:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
+ <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de>
+In-Reply-To: <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 26 Jun 2020 14:56:11 -0700
+Message-ID: <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Sapphire Rapids processor to CPU list to enumerate split lock
-feature.
+On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+>
+> On 6/26/20 1:45 AM, Atish Patra wrote:
+> > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
+> > a __umoddi3 error while building EFI for 32 bit.
+> >
+> > Use bitwise operations instead of modulo operations to fix the issue.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
+> > index cc89c4d6196f..1de9878ddd3a 100644
+> > --- a/drivers/firmware/efi/libstub/alignedmem.c
+> > +++ b/drivers/firmware/efi/libstub/alignedmem.c
+> > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
+> >       *addr = ALIGN((unsigned long)alloc_addr, align);
+> >
+> >       if (slack > 0) {
+> > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
+> > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
+>
+> Here you rely on the compiler to silently convert the division by
+> EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
+> EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
+>
+> slack = (align >> EFI_PAGE_SHIFT) - 1;
+> ...
+> int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
+>
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/kernel/cpu/intel.c | 1 +
- 1 file changed, 1 insertion(+)
+Sure. I will update it in the next version. Thanks for the suggestion.
+> Best regards
+>
+> Heinrich
+>
+> >
+> >               if (l) {
+> >                       efi_bs_call(free_pages, alloc_addr, slack - l + 1);
+> >
+>
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index c25a67a34bd3..dca069ad6671 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1148,6 +1148,7 @@ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		1),
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		1),
-+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	1),
- 	{}
- };
- 
+
 -- 
-2.19.1
-
+Regards,
+Atish
