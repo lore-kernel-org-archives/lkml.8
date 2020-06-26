@@ -2,98 +2,123 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F3320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7900320720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h4grfjDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbgFZU5B (ORCPT
+        id S1726110AbgFZU5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:57:01 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49579 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZU5B (ORCPT
+        Fri, 26 Jun 2020 16:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZU5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:57:01 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0016520002;
-        Fri, 26 Jun 2020 20:56:58 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 22:56:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 09/10] mfd: atmel-smc: Add missing colon(s) for 'conf'
- arguments
-Message-ID: <20200626205658.GV131826@piout.net>
-References: <20200625064619.2775707-1-lee.jones@linaro.org>
- <20200625064619.2775707-10-lee.jones@linaro.org>
+        Fri, 26 Jun 2020 16:57:17 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB0FC03E979;
+        Fri, 26 Jun 2020 13:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=/j1J3VNoc3X3k3mp9U8TxyNrfgAwisW2njcwJM52V4Q=; b=h4grfjDq/NXOFrzYJ8Q9SYUaVM
+        hpTYkJPtCel8/BPsyPaXQ1uGcjQKq8GagRfM5oJ8kF/noKfuwo9KTWtyTQcnjuaLRmH/gNmknta55
+        imKlS0xVZTeIm1JUf4F4zWPkONPx/1TwCRfQk+Q/JvexALVRJ7j5tG1RQpowHmAoNtL8mgj0n+kdE
+        IhZXaAcFVRdtkA21ALxvzNry1AuLo92nKVzsmS1tFOw57xmhGTd44FQyLxzzJaP86QFGa4hveOCdN
+        1rJR7mvidfJnrpqg0R7l4WLdbbH6Zi+vt/m1Z0R2bfa5jVpT1f6Zel9A1eB+iTlR+LPRXIU+qDsD9
+        7OWn8Ghg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jovP2-0002Ub-TT; Fri, 26 Jun 2020 20:56:57 +0000
+Subject: Re: [PATCH] slab: Fix misplaced __free_one()
+To:     Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org
+Cc:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        mm-commits@vger.kernel.org
+References: <202006261306.0D82A2B@keescook>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1de6b098-a759-dd96-df5d-9a282b2a991b@infradead.org>
+Date:   Fri, 26 Jun 2020 13:56:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625064619.2775707-10-lee.jones@linaro.org>
+In-Reply-To: <202006261306.0D82A2B@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2020 07:46:18+0100, Lee Jones wrote:
-> Kerneldoc valication gets confused if syntax isn't "@.*: ".
+On 6/26/20 1:07 PM, Kees Cook wrote:
+> The implementation of __free_one() was accidentally placed inside a
+> CONFIG_NUMA #ifdef. Move it above.
 > 
-> Adding the missing colons squashes the following W=1 warnings:
-> 
-> drivers/mfd/atmel-smc.c:247: warning: Function parameter or member 'conf' not described in 'atmel_smc_cs_conf_apply'
-> drivers/mfd/atmel-smc.c:268: warning: Function parameter or member 'conf' not described in 'atmel_hsmc_cs_conf_apply'
-> 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link: https://lore.kernel.org/lkml/7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> Cc: <stable@vger.kernel.org>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
 > ---
->  drivers/mfd/atmel-smc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> This a fix for slab-add-naive-detection-of-double-free.patch
+> ---
+>  mm/slab.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/mfd/atmel-smc.c b/drivers/mfd/atmel-smc.c
-> index 17bbe9d1fa740..4aac96d213369 100644
-> --- a/drivers/mfd/atmel-smc.c
-> +++ b/drivers/mfd/atmel-smc.c
-> @@ -237,7 +237,7 @@ EXPORT_SYMBOL_GPL(atmel_smc_cs_conf_set_cycle);
->   * atmel_smc_cs_conf_apply - apply an SMC CS conf
->   * @regmap: the SMC regmap
->   * @cs: the CS id
-> - * @conf the SMC CS conf to apply
-> + * @conf: the SMC CS conf to apply
->   *
->   * Applies an SMC CS configuration.
->   * Only valid on at91sam9/avr32 SoCs.
-> @@ -257,7 +257,7 @@ EXPORT_SYMBOL_GPL(atmel_smc_cs_conf_apply);
->   * @regmap: the HSMC regmap
->   * @cs: the CS id
->   * @layout: the layout of registers
-> - * @conf the SMC CS conf to apply
-> + * @conf: the SMC CS conf to apply
->   *
->   * Applies an SMC CS configuration.
->   * Only valid on post-sama5 SoCs.
-> -- 
-> 2.25.1
+> diff --git a/mm/slab.c b/mm/slab.c
+> index bbff6705ab2b..5ccb151a6e8f 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -588,6 +588,16 @@ static int transfer_objects(struct array_cache *to,
+>  	return nr;
+>  }
+>  
+> +/* &alien->lock must be held by alien callers. */
+> +static __always_inline void __free_one(struct array_cache *ac, void *objp)
+> +{
+> +	/* Avoid trivial double-free. */
+> +	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+> +	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
+> +		return;
+> +	ac->entry[ac->avail++] = objp;
+> +}
+> +
+>  #ifndef CONFIG_NUMA
+>  
+>  #define drain_alien_cache(cachep, alien) do { } while (0)
+> @@ -749,16 +759,6 @@ static void drain_alien_cache(struct kmem_cache *cachep,
+>  	}
+>  }
+>  
+> -/* &alien->lock must be held by alien callers. */
+> -static __always_inline void __free_one(struct array_cache *ac, void *objp)
+> -{
+> -	/* Avoid trivial double-free. */
+> -	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+> -	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
+> -		return;
+> -	ac->entry[ac->avail++] = objp;
+> -}
+> -
+>  static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+>  				int node, int page_node)
+>  {
 > 
+
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+~Randy
