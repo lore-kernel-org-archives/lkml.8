@@ -3,79 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E548C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A67C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194EE20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926A12078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgFZNZo convert rfc822-to-8bit (ORCPT
+        id S1728453AbgFZN1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZNZo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:25:44 -0400
-X-Greylist: delayed 492 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 Jun 2020 06:25:43 PDT
-Received: from unicorn.mansr.com (unicorn.mansr.com [IPv6:2001:8b0:ca0d:8d8e::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1893C03E979;
-        Fri, 26 Jun 2020 06:25:43 -0700 (PDT)
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 7F4E515360; Fri, 26 Jun 2020 14:17:27 +0100 (BST)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: tango: Align L2 cache-controller nodename with dtschema
-References: <20200626080543.3511-1-krzk@kernel.org>
-Date:   Fri, 26 Jun 2020 14:17:27 +0100
-In-Reply-To: <20200626080543.3511-1-krzk@kernel.org> (Krzysztof Kozlowski's
-        message of "Fri, 26 Jun 2020 10:05:43 +0200")
-Message-ID: <yw1x5zbevue0.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Fri, 26 Jun 2020 09:27:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34481 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725925AbgFZN1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:27:12 -0400
+IronPort-SDR: muOj99OIv3E1iveTOt1FOb+gzvkPwVoJVa+E2U7WqPXlMtXe46Ki0CqItzdkJwQM3ROSqPYQJi
+ rJ9L9Cypbk7w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210398005"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="210398005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 06:27:11 -0700
+IronPort-SDR: +bWsPzrFUhxPzvJ8c//x2qMDHqJqSWA1Z+mVXfaepwU60kPECytauFEsnT5qyQrYzUnd5yydjz
+ tAFQcrkdUM9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="480003202"
+Received: from cgheban-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.199])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2020 06:27:08 -0700
+Date:   Fri, 26 Jun 2020 16:27:06 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v7 2/2] tpm: Add support for event log pointer found in
+ TPM2 ACPI table
+Message-ID: <20200626132706.GC7853@linux.intel.com>
+References: <20200625215000.2052086-1-stefanb@linux.vnet.ibm.com>
+ <20200625215000.2052086-3-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625215000.2052086-3-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Krzysztof Kozlowski <krzk@kernel.org> writes:
-
-> Fix dtschema validator warnings like:
->     l2-cache-controller@20100000: $nodename:0:
->         'l2-cache-controller@20100000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Acked-by: Mans Rullgard <mans@mansr.com>
-
+On Thu, Jun 25, 2020 at 05:50:00PM -0400, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
+> 
+> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+> to get the event log from ACPI. If one is found, use it to get the
+> start and length of the log area. This allows non-UEFI systems, such
+> as SeaBIOS, to pass an event log when using a TPM2.
+> 
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 > ---
->  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
-> index 54fd522badfc..d584da314500 100644
-> --- a/arch/arm/boot/dts/tango4-common.dtsi
-> +++ b/arch/arm/boot/dts/tango4-common.dtsi
-> @@ -51,7 +51,7 @@
->  		};
->  	};
->
-> -	l2cc: l2-cache-controller@20100000 {
-> +	l2cc: cache-controller@20100000 {
->  		compatible = "arm,pl310-cache";
->  		reg = <0x20100000 0x1000>;
->  		cache-level = <2>;
-> -- 
-> 2.17.1
->
+>  drivers/char/tpm/eventlog/acpi.c | 62 +++++++++++++++++++++-----------
+>  1 file changed, 41 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
+> index 63ada5e53f13..e2258cfa6cb1 100644
+> --- a/drivers/char/tpm/eventlog/acpi.c
+> +++ b/drivers/char/tpm/eventlog/acpi.c
+> @@ -49,9 +49,9 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+>  	void __iomem *virt;
+>  	u64 len, start;
+>  	struct tpm_bios_log *log;
+> -
+> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> -		return -ENODEV;
+> +	struct acpi_table_tpm2 *tbl;
+> +	struct acpi_tpm2_phy *t2phy;
+> +	int format;
+>  
+>  	log = &chip->log;
+>  
+> @@ -61,23 +61,43 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+>  	if (!chip->acpi_dev_handle)
+>  		return -ENODEV;
+>  
+> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
+> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
+> -				(struct acpi_table_header **)&buff);
+> -
+> -	if (ACPI_FAILURE(status))
+> -		return -ENODEV;
+> -
+> -	switch(buff->platform_class) {
+> -	case BIOS_SERVER:
+> -		len = buff->server.log_max_len;
+> -		start = buff->server.log_start_addr;
+> -		break;
+> -	case BIOS_CLIENT:
+> -	default:
+> -		len = buff->client.log_max_len;
+> -		start = buff->client.log_start_addr;
+> -		break;
+> +	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> +		status = acpi_get_table("TPM2", 1,
+> +					(struct acpi_table_header **)&tbl);
+> +		if (ACPI_FAILURE(status))
+> +			return -ENODEV;
+> +
+> +		if (tbl->header.length <
+> +				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
+> +			return -ENODEV;
+> +
+> +		t2phy = (void *)tbl + sizeof(*tbl);
+> +		len = t2phy->log_area_minimum_length;
+> +
+> +		start = t2phy->log_area_start_address;
+> +		if (!start || !len)
+> +			return -ENODEV;
+> +
+> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
+> +	} else {
+> +		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
+> +		status = acpi_get_table(ACPI_SIG_TCPA, 1,
+> +					(struct acpi_table_header **)&buff);
+> +		if (ACPI_FAILURE(status))
+> +			return -ENODEV;
+> +
+> +		switch (buff->platform_class) {
+> +		case BIOS_SERVER:
+> +			len = buff->server.log_max_len;
+> +			start = buff->server.log_start_addr;
+> +			break;
+> +		case BIOS_CLIENT:
+> +		default:
+> +			len = buff->client.log_max_len;
+> +			start = buff->client.log_start_addr;
+> +			break;
+> +		}
 
--- 
-Måns Rullgård
+Empty line as in the first branch after the conditional statement.
+
+> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+>  	}
+>  	if (!len) {
+>  		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
+> @@ -98,7 +118,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+>  	memcpy_fromio(log->bios_event_log, virt, len);
+>  
+>  	acpi_os_unmap_iomem(virt, len);
+> -	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+> +	return format;
+>  
+>  err:
+>  	kfree(log->bios_event_log);
+> -- 
+> 2.26.2
+> 
+
+/Jarkko
