@@ -2,98 +2,163 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08826C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1F62067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593181421;
-	bh=9CQT8UTYivEQIj1xuOHTlm2nK2ORIGBNyAS2pgMNqps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kr76dS373WSrHY/cnB1F9rs0HNCiqmXnJe0nH6quKT8yXnbFKcGfMUtqNR4mpNkzT
-	 PXqnO3VGJp71sdda5qpgtt0i8IO8eQ6/aA9OLrCr6lA9X9N0vP7J+YYY/vch6LqRF9
-	 nmd5mpahjcFuiQFOsWwdfSZB1n8EhxExVQq52/ck=
+	by mail.kernel.org (Postfix) with ESMTP id 9C32F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbBPv/Zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgFZOXk (ORCPT
+        id S1729067AbgFZO3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:23:40 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43041 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZOXk (ORCPT
+        Fri, 26 Jun 2020 10:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgFZO3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:23:40 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x83so635174oif.10;
-        Fri, 26 Jun 2020 07:23:40 -0700 (PDT)
+        Fri, 26 Jun 2020 10:29:07 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F502C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:29:07 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id z2so7593515qts.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eLVHWQWk1SSSBHBVpMH1pv4y2o7pnoH/LjhqcMoV61E=;
+        b=pbBPv/ZfquVY+1nbrGUTQ97tUGXF1nfs9YSbzSwbUgSCV0B/tnAhXFtkx/Vk+V2ly0
+         2cIuZSca4qM51OHpjluJsW6T/vAsr3I7/U1RQsomAweCk212f+J+WReARHDAJge5Snrw
+         vgtyPTqz+5ExK40S+KMCwAMc4ruBN3ON55/6asBJGjBpfEfojhC6SVCyLcSi20hDWJdo
+         W04DGHZ8Q/0+6VNj0eSZM7tpiPet29vls5CIqD+zTKASy5gM0c7wGRTPpqi+VoG5Aina
+         RDLKvBAJsqvPlh7qeLXvgo8JR0sysqF5jWoeClHfano8r2XtzEps/Tcht8OUnFmSqPig
+         QsNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1s+jOM03Ys0L0H6keRcrjY2jkiJrGLbo1O0phZPezKY=;
-        b=cwzo6RwcSkka6c/FFGq5vsaAVUJHfUAc/YDqnP9Qs4aBV7OcUredvxjBp8Dm1x+OQP
-         fThaUot13uNshuv9nm7ASB6u5yEhEiZeHy1g0G8rsQLeRf50FBa75QLw9lw7q9G35+jZ
-         J/e4CiV73uCH1TiUP7V6fBYaKeq6vHjpl0dRd2o34ItS9FMtDIVD0psXMYfIKl6RfXwL
-         DCvF2xrOLoYMX/5/TpasRahH81wAmNX3XB2+d+9zu1PdNT6Lm8HAiKHn1nJeZorajdBt
-         00PPiURapENMDwEIrPKl2EUl4HAlV6ld1vCHVf1rNxxRnHBYw+MsPhz5ksRyMzDD8NcP
-         zoZQ==
-X-Gm-Message-State: AOAM530TvMn7+qybGa0S6TtBqV7rtOlen96zYLDEesmNkCF218TOqFYd
-        Uh3Zp0mUVUSqEbxxqbq2L3Zla1c+FMWVDKIoGAQ=
-X-Google-Smtp-Source: ABdhPJz6ugoc6qjOUMHZbN/qVoA9N2ilGrzO14m64yxqaMJkzKgFIoX4Uv8A4Vz758e5B/07WM2QMXgtRst2wS7uixA=
-X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2542048oic.68.1593181419856;
- Fri, 26 Jun 2020 07:23:39 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eLVHWQWk1SSSBHBVpMH1pv4y2o7pnoH/LjhqcMoV61E=;
+        b=kZ3G9I3dWkC2I9wAf7u2HVsaz7qJZT+5/WHl0KvMPkz52/BbiLMaRvuH43ia9U+lC2
+         Wqt/WJJENy6CvPD+36Zq6PUwaLPVA6wMeg2XUniJ3fSqO9LpZPD3qzUOzZZgfnJlLHlE
+         VaVSalb555ZwbiDiNEnRHWHJNg1kHuHv/4Xx1E7QfCo44Z04GUHSJBFLKRRjtuphbNBT
+         RtvqzeMshPo2GcnaVmCOJscW2/CrOO7FIHtu6zOHCPmcd25IY1NU1hvtj8RIRKvS5Ymq
+         u0TMszuxC+lGGAmAclngHYHx4ZVF2GI9l5oDfHZXU9MgJp97riKWhF36KDZxL27vsThD
+         7X1A==
+X-Gm-Message-State: AOAM532rf79Hk+W97L5KB8QCPjkzS2LEUWuq2t8i1gRH9FnexWZJR6IQ
+        fb7fPw+4X5t7tC1/ZM3Tid7bc872t2apR38+m6T8sg==
+X-Google-Smtp-Source: ABdhPJx+CuQHQu45R0dHB8cK5wbKlRpVevV5VmxeywBJQbQ86qydwjJXCEbaiEzS/sMMG+9ifC4icG/s9ovLltgSxZ4=
+X-Received: by 2002:ac8:260b:: with SMTP id u11mr3074244qtu.380.1593181745726;
+ Fri, 26 Jun 2020 07:29:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159312907937.1850128.15890323251117466770.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159312907937.1850128.15890323251117466770.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 26 Jun 2020 16:23:29 +0200
-Message-ID: <CAJZ5v0gL66d7fo8nmKFUm6dSBe8bSRymcOfW9YeePUJ9U=3p-g@mail.gmail.com>
-Subject: Re: [PATCH 11/12] PM, libnvdimm: Add syscore_quiesced() callback for
- firmware activation
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200625183941.23093-1-tklauser@distanz.ch> <20200626124056.29708-1-tklauser@distanz.ch>
+In-Reply-To: <20200626124056.29708-1-tklauser@distanz.ch>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 26 Jun 2020 16:28:54 +0200
+Message-ID: <CACT4Y+ZqbsyCQp8NJq9=TFvu92EMysQRyVe6yyarHhR2L2M4RQ@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: Allow building with kcov coverage
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 2:07 AM Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, Jun 26, 2020 at 2:40 PM Tobias Klauser <tklauser@distanz.ch> wrote:
 >
-> The runtime firmware activation capability of Intel NVDIMM devices
-> requires memory transactions to be disabled for 100s of microseconds.
-> This timeout is large enough to cause in-flight DMA to fail and other
-> application detectable timeouts. Arrange for firmware activation to be
-> executed while the system is "quiesced" all suspend operations have
-> completed successfully.
+> Add ARCH_HAS_KCOV and HAVE_GCC_PLUGINS to the riscv Kconfig.
+> Also disable instrumentation of some early boot code and vdso.
 >
-> Note that the placement of syscore_quiesced() before
-> suspend_disable_secondary_cpus() and the "TEST_PLATFORM" early exit in
-> suspend_enter():
+> Boot-tested on QEMU's riscv64 virt machine.
 >
->         if (suspend_test(TEST_PLATFORM))
->                 goto Platform_wake;
->
-> ...is a deliberate tradeoff. suspend_disable_secondary_cpus() causes
-> violence to drivers with many interrupts allocated (server-class network
-> adapters for example). So, allow for triggering firmware-activation
-> without requiring all irq vectors to be routed (oversubscribed) to a
-> single CPU.
+> Cc: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
 
-So while the other patches in the series look good to me, this is kind
-of questionable for reasons described in my reply to the intro
-message.
 
-Cheers!
+Assuming it boots now :)
+
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+
+> ---
+>  arch/riscv/Kconfig              | 2 ++
+>  arch/riscv/boot/Makefile        | 2 ++
+>  arch/riscv/kernel/vdso/Makefile | 1 +
+>  arch/riscv/mm/Makefile          | 2 ++
+>  4 files changed, 7 insertions(+)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 089293e4ad46..a7d7f8184f15 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -19,6 +19,7 @@ config RISCV
+>         select ARCH_HAS_DEBUG_WX
+>         select ARCH_HAS_GCOV_PROFILE_ALL
+>         select ARCH_HAS_GIGANTIC_PAGE
+> +       select ARCH_HAS_KCOV
+>         select ARCH_HAS_MMIOWB
+>         select ARCH_HAS_PTE_SPECIAL
+>         select ARCH_HAS_SET_DIRECT_MAP
+> @@ -57,6 +58,7 @@ config RISCV
+>         select HAVE_DMA_CONTIGUOUS if MMU
+>         select HAVE_EBPF_JIT if MMU
+>         select HAVE_FUTEX_CMPXCHG if FUTEX
+> +       select HAVE_GCC_PLUGINS
+>         select HAVE_GENERIC_VDSO if MMU && 64BIT
+>         select HAVE_PCI
+>         select HAVE_PERF_EVENTS
+> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+> index 3530c59b3ea7..c59fca695f9d 100644
+> --- a/arch/riscv/boot/Makefile
+> +++ b/arch/riscv/boot/Makefile
+> @@ -14,6 +14,8 @@
+>  # Based on the ia64 and arm64 boot/Makefile.
+>  #
+>
+> +KCOV_INSTRUMENT :=3D n
+> +
+>  OBJCOPYFLAGS_Image :=3D-O binary -R .note -R .note.gnu.build-id -R .comm=
+ent -S
+>
+>  targets :=3D Image loader
+> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Mak=
+efile
+> index 29cf052f6541..4b0d3bcc44e5 100644
+> --- a/arch/riscv/kernel/vdso/Makefile
+> +++ b/arch/riscv/kernel/vdso/Makefile
+> @@ -29,6 +29,7 @@ CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Disable gcov profiling for VDSO code
+>  GCOV_PROFILE :=3D n
+> +KCOV_INSTRUMENT :=3D n
+>
+>  # Force dependency
+>  $(obj)/vdso.o: $(obj)/vdso.so
+> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> index 363ef01c30b1..c0185e556ca5 100644
+> --- a/arch/riscv/mm/Makefile
+> +++ b/arch/riscv/mm/Makefile
+> @@ -5,6 +5,8 @@ ifdef CONFIG_FTRACE
+>  CFLAGS_REMOVE_init.o =3D -pg
+>  endif
+>
+> +KCOV_INSTRUMENT_init.o :=3D n
+> +
+>  obj-y +=3D init.o
+>  obj-y +=3D extable.o
+>  obj-$(CONFIG_MMU) +=3D fault.o pageattr.o
+> --
+> 2.27.0
+>
