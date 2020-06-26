@@ -2,167 +2,162 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24043C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1683C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B7D206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAEC206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asziHWfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725824AbgFZTyj (ORCPT
+        id S1725850AbgFZT6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:54:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58724 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725275AbgFZTyi (ORCPT
+        Fri, 26 Jun 2020 15:58:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFZT6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:54:38 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QJV3HW154613;
-        Fri, 26 Jun 2020 15:54:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vvkys7k8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 15:54:31 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05QJXDQv165156;
-        Fri, 26 Jun 2020 15:54:30 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vvkys7jw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 15:54:30 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QJVmxQ013667;
-        Fri, 26 Jun 2020 19:54:28 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjk9bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 19:54:28 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QJr7mj62456072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 19:53:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98804A405B;
-        Fri, 26 Jun 2020 19:54:26 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 38EC1A4054;
-        Fri, 26 Jun 2020 19:54:26 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.60.45])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 26 Jun 2020 19:54:26 +0000 (GMT)
-Date:   Fri, 26 Jun 2020 21:54:24 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 01/26] mm: Do page fault accounting in handle_mm_fault
-Message-ID: <20200626215424.581d6077@thinkpad>
-In-Reply-To: <20200624203412.GB64004@xz-x1>
-References: <20200619160538.8641-1-peterx@redhat.com>
-        <20200619160538.8641-2-peterx@redhat.com>
-        <20200624204903.097a5a58@thinkpad>
-        <20200624203412.GB64004@xz-x1>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 26 Jun 2020 15:58:38 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4D2C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:58:38 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so5364085pjs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=taJpkHjbit6GSnXY6CgYGxPxu2VnJV0zi6VGm2eT+v0=;
+        b=asziHWfJW2e9Ecz+JH75NFuwW/6x7JieQ6YHFu5P5Iq2bqQ59KyA6TdzgrDCbF/IKs
+         Dy2mijdalInD/2D4LbH5E/F8BLW0Xhlu0NbtBZlkg+QT4ccA2sYosDbNEUKTSmoVPkXY
+         n7RWhfkkIaXrwdSH0iCIhOxfSsqIRJpAK3HjLLDpNDpVVWIQCDHBiPKMjLkQlqUdecp0
+         XcaLDgi5eiq21/4Sdb4cHpI5ZM/KNaSsznT/6WUEEhO1z58a14quZYWmDMPbTfM+FyVp
+         h6PskQwCDl57tVUjwtFqpm8PEZ/Rih94zvjKWsgA/MF/cz/08u5Qbah7xV1XFZSCyp42
+         U2Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=taJpkHjbit6GSnXY6CgYGxPxu2VnJV0zi6VGm2eT+v0=;
+        b=uZ4J9skp1hOWuw8Xr7Ys9GJEIuSLNF9L9GVF1zGW/2aZJGPQ6g+GhJgebKm8x7Qva5
+         CQscx/QxhTY96RE9VNMDUX4P4J/krWdXUP4GZljqLTyW1VEqZIKVGZr8PYETj+g9zL8R
+         k3paW406r6krAOOet6YtdMJy3FYtnsuhldsSVFLPhelI5gnh4TtvU9amvPJ5L46jfWx+
+         4koJM6eZJNc4DrJdzA49cLN4QLEpQ3VucqIp12DrGjY9C/j8mV5rXxAB1RcrUrVGCRzF
+         KCNP4WTJqiExPcUTrjDivxQrqzt5qstNPUCyVURB9fVcFc0H+l5HKVFUahNW0eiZ22Ha
+         cZtw==
+X-Gm-Message-State: AOAM5331M7d8vGLbKD1XJHr6P/PGXEHHpkooEyeyEo3nAjnDbZbjDcZ4
+        KSzB0FaLp85t/HJ76wAMPR74ufmPKtioiSqK41avYw==
+X-Google-Smtp-Source: ABdhPJxIdj06GPh3DcqA+tMERbU74tnx7im0OJvT7k028uEQsqKEEqe11t0XIcgt/4kKGEmx7Isi2eVSzVWG19FmBd4=
+X-Received: by 2002:a17:902:7208:: with SMTP id ba8mr3909663plb.179.1593201516722;
+ Fri, 26 Jun 2020 12:58:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_10:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 phishscore=0 cotscore=-2147483648
- spamscore=0 mlxlogscore=999 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260134
+References: <20200626185913.92890-1-masahiroy@kernel.org> <20200626185913.92890-2-masahiroy@kernel.org>
+In-Reply-To: <20200626185913.92890-2-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 26 Jun 2020 12:58:24 -0700
+Message-ID: <CAKwvOdnPN0=32R=35oJ-WmJwwCtJ-NqAFsp57KXW6Cb2NgUDFg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: remove cc-option test of -ffreestanding
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 16:34:12 -0400
-Peter Xu <peterx@redhat.com> wrote:
+On Fri, Jun 26, 2020 at 11:59 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Some Makefiles already pass -ffreestanding unconditionally.
+> For example, arch/arm64/lib/Makefile, arch/x86/purgatory/Makefile.
+> No problem report so far about hard-coding this option. So, we can
+> assume all supported compilers know -ffreestanding.
+>
+> I confirmed GCC 4.8 and Clang manuals document this option.
+>
+> Get rid of cc-option from -ffreestanding.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-> On Wed, Jun 24, 2020 at 08:49:03PM +0200, Gerald Schaefer wrote:
-> > On Fri, 19 Jun 2020 12:05:13 -0400
-> > Peter Xu <peterx@redhat.com> wrote:
-> > 
-> > [...]
-> > 
-> > > @@ -4393,6 +4425,38 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
-> > >  			mem_cgroup_oom_synchronize(false);
-> > >  	}
-> > > 
-> > > +	if (ret & VM_FAULT_RETRY)
-> > > +		return ret;
-> > 
-> > I'm wondering if this also needs a check and exit for VM_FAULT_ERROR.
-> > In arch code (s390 and all others I briefly checked), the accounting
-> > was skipped for VM_FAULT_ERROR case.
-> 
-> Yes. I didn't explicitly add the check because I thought it's still OK to count
-> the error cases, especially after we've discussed about
-> PERF_COUNT_SW_PAGE_FAULTS in v1.  So far, the major reason (iiuc) to have
-> PERF_COUNT_SW_PAGE_FAULTS still in per-arch handlers is to also cover these
-> corner cases like VM_FAULT_ERROR.  So to me it makes sense too to also count
-> them in here.  But I agree it changes the old counting on most archs.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Having PERF_COUNT_SW_PAGE_FAULTS count everything including VM_FAULT_ERROR
-is OK. Just major/minor accounting should be only about successes, IIRC from
-v1 discussion.
+> ---
+>
+>  arch/s390/Makefile                    | 2 +-
+>  arch/x86/Makefile                     | 2 +-
+>  arch/x86/boot/compressed/Makefile     | 2 +-
+>  drivers/firmware/efi/libstub/Makefile | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+> index 8dfa2cf1f05c..ba94b03c8b2f 100644
+> --- a/arch/s390/Makefile
+> +++ b/arch/s390/Makefile
+> @@ -27,7 +27,7 @@ KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
+>  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+>  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+>  KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+> -KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
+> +KBUILD_CFLAGS_DECOMPRESSOR += -ffreestanding
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 89c3cdfba753..edc68538a04e 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -36,7 +36,7 @@ REALMODE_CFLAGS       := $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
+>                    -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
+>                    -mno-mmx -mno-sse
+>
+> -REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
+> +REALMODE_CFLAGS += -ffreestanding
 
-The "new rules" also say
+See also
+commit 032a2c4f65a2 ("x86/build: Use __cc-option for boot code
+compiler options")
+for additional context (to fellow reviewers).
 
-+	 *  - faults that never even got here (because the address
-+	 *    wasn't valid). That includes arch_vma_access_permitted()
-+	 *    failing above.
+>  REALMODE_CFLAGS += -fno-stack-protector
+>  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
+>  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index c88a31569a5e..b7beabecef8a 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -35,7 +35,7 @@ cflags-$(CONFIG_X86_32) := -march=i386
+>  cflags-$(CONFIG_X86_64) := -mcmodel=small
+>  KBUILD_CFLAGS += $(cflags-y)
+>  KBUILD_CFLAGS += -mno-mmx -mno-sse
+> -KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
+> +KBUILD_CFLAGS += -ffreestanding
+>  KBUILD_CFLAGS += -fno-stack-protector
+>  KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index f8418763cd79..296b18fbd7a2 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -28,7 +28,7 @@ cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
+>  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
+>                                    -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
+>                                    -D__NO_FORTIFY \
+> -                                  $(call cc-option,-ffreestanding) \
+> +                                  -ffreestanding \
+>                                    -fno-stack-protector \
+>                                    $(call cc-option,-fno-addrsig) \
+>                                    -D__DISABLE_EXPORTS
+> --
 
-VM_FAULT_ERROR, and also the arch-specific VM_FAULT_BADxxx, qualify
-as "address wasn't valid" I think, so they should not be counted as
-major/minor.
-
-IIRC from v1, and we want to only count success as major/minor, maybe
-the rule could also be made more clear about that, e.g. like
-
-+	 *  - unsuccessful faults (because the address wasn't valid)
-+	 *    do not count. That includes arch_vma_access_permitted()
-+	 *    failing above.
-
-> 
-> Again, I don't have strong opinion either on this, just like the same to
-> PERF_COUNT_SW_PAGE_FAULTS...  But if no one disagree, I will change this to:
-> 
->   if (ret & (VM_FAULT_RETRY | VM_FAULT_ERROR))
->       return ret;
-> 
-> So we try our best to follow the past.
-
-Sounds good to me, and VM_FAULT_BADxxx should never show up here.
-
-> 
-> Btw, note that there will still be some even more special corner cases. E.g.,
-> for ARM64 it's also not accounted for some ARM64 specific fault errors
-> (VM_FAULT_BADMAP, VM_FAULT_BADACCESS).  So even if we don't count
-> VM_FAULT_ERROR, we might still count these for ARM64.  We can try to redefine
-> VM_FAULT_ERROR in ARM64 to cover all the arch-specific errors, however that
-> seems an overkill to me sololy for fault accountings, so hopefully I can ignore
-> that difference.
-
-Hmm, arm64 already does not count the VM_FAULT_BADxxx, but also does not
-call handle_mm_fault() for those, so no change with this patch. arm (and
-also unicore32) do count those, but also not call handle_mm_fault(), so
-there would be the change that they lose accounting, IIUC.
-
-I agree that this probably can be ignored. The code in arm64 also looks
-more recent, so it's probably just a left-over in arm/unicore32 code.
-
-Regards,
-Gerald
+-- 
+Thanks,
+~Nick Desaulniers
