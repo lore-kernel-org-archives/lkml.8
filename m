@@ -2,112 +2,145 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F669C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FBF2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBF32082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UxirFRZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgFZH7E convert rfc822-to-8bit (ORCPT
+        id S1728970AbgFZH7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39580 "EHLO
+        Fri, 26 Jun 2020 03:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728898AbgFZH7A (ORCPT
+        with ESMTP id S1728905AbgFZH7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jun 2020 03:59:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0837FC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:59:00 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jojGD-0004Vx-5t; Fri, 26 Jun 2020 09:58:57 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jojGC-0005Dc-MH; Fri, 26 Jun 2020 09:58:56 +0200
-Message-ID: <5d18057b7bc686eeb470810acd3ab63f9b4bf224.camel@pengutronix.de>
-Subject: Re: [PATCH 3/6] hantro: Rework how encoder and decoder are
- identified
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Fri, 26 Jun 2020 09:58:56 +0200
-In-Reply-To: <20200625163525.5119-4-ezequiel@collabora.com>
-References: <20200625163525.5119-1-ezequiel@collabora.com>
-         <20200625163525.5119-4-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B813C08C5DD;
+        Fri, 26 Jun 2020 00:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=jlXrr1b8urlbr9PamhblsvEHUflz9FDOmmp8LAbhvP8=; b=UxirFRZNdDjg94E5YnByWFdd/0
+        z8FxTK9QkoZYNSEHun8CAiIV47w4wH8USKy/DzdxdgLfKt1jQBbM4GruNsNbjLzKp9ydIhxo+fjtM
+        8hfyKGys3O3kCAa2ka77LkUJWuygzNDq8U/M97br4GPoyoPeZlWfH6xqG/VgyQ9Jx9jPT+5tGIKEh
+        9S8KmGq3MrK5PF51yKeA7mM4gF3QHmX07heJpzhz/g/edyJOacX2XsiIAmsMkDdGJtdmFggpnfoH6
+        avDCdCJ7WFCJm34Zwh0EO8zaoPh3FYCAw445dzUtk3Jm2kw1LVHTSWtYe5yU+zJ0rf6B3nRtq8UN0
+        Rf+z+qGQ==;
+Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jojFx-0006zF-2X; Fri, 26 Jun 2020 07:58:41 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 2/9] proc: add a read_iter method to proc proc_ops
+Date:   Fri, 26 Jun 2020 09:58:29 +0200
+Message-Id: <20200626075836.1998185-3-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
+References: <20200626075836.1998185-1-hch@lst.de>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+This will allow proc files to implement iter read semantics.
 
-On Thu, 2020-06-25 at 13:35 -0300, Ezequiel Garcia wrote:
-> So far we've been using the .buf_finish hook to distinguish
-> decoder from encoder. This is unnecessarily obfuscated.
-> 
-> Moreover, we want to move the buf_finish, so use a cleaner
-> scheme to distinguish the driver decoder/encoder type.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/hantro/hantro.h     | 2 ++
->  drivers/staging/media/hantro/hantro_drv.c | 4 +++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-> index 3005207fc6fb..028b788ad50f 100644
-> --- a/drivers/staging/media/hantro/hantro.h
-> +++ b/drivers/staging/media/hantro/hantro.h
-> @@ -199,6 +199,7 @@ struct hantro_dev {
->   *
->   * @dev:		VPU driver data to which the context belongs.
->   * @fh:			V4L2 file handler.
-> + * @is_encoder:		Decoder or encoder context?
->   *
->   * @sequence_cap:       Sequence counter for capture queue
->   * @sequence_out:       Sequence counter for output queue
-> @@ -223,6 +224,7 @@ struct hantro_dev {
->  struct hantro_ctx {
->  	struct hantro_dev *dev;
->  	struct v4l2_fh fh;
-> +	bool is_encoder;
->  
->  	u32 sequence_cap;
->  	u32 sequence_out;
-> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> index 0db8ad455160..112ed556eb90 100644
-> --- a/drivers/staging/media/hantro/hantro_drv.c
-> +++ b/drivers/staging/media/hantro/hantro_drv.c
-> @@ -197,7 +197,7 @@ static void device_run(void *priv)
->  
->  bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx)
->  {
-> -	return ctx->buf_finish == hantro_enc_buf_finish;
-> +	return ctx->is_encoder;
->  }
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/proc/inode.c         | 28 ++++++++++++++++++++++++++++
+ include/linux/proc_fs.h |  1 +
+ 2 files changed, 29 insertions(+)
 
-Now this function feels a little superfluous. Why not replace
-  hantro_is_encoder_ctx(ctx)
-with
-  ctx->is_encoder
-everywhere?
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index 28d6105e908e4c..fa86619cebc2be 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -297,6 +297,29 @@ static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
+ 	return rv;
+ }
+ 
++static ssize_t pde_read_iter(struct proc_dir_entry *pde, struct kiocb *iocb,
++		struct iov_iter *iter)
++{
++	if (!pde->proc_ops->proc_read_iter)
++		return -EINVAL;
++	return pde->proc_ops->proc_read_iter(iocb, iter);
++}
++
++static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct proc_dir_entry *pde = PDE(file_inode(iocb->ki_filp));
++	ssize_t ret;
++
++	if (pde_is_permanent(pde))
++		return pde_read_iter(pde, iocb, iter);
++
++	if (!use_pde(pde))
++		return -EIO;
++	ret = pde_read_iter(pde, iocb, iter);
++	unuse_pde(pde);
++	return ret;
++}
++
+ static ssize_t pde_read(struct proc_dir_entry *pde, struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ {
+ 	typeof_member(struct proc_ops, proc_read) read;
+@@ -312,6 +335,9 @@ static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count,
+ 	struct proc_dir_entry *pde = PDE(file_inode(file));
+ 	ssize_t rv = -EIO;
+ 
++	if (pde->proc_ops->proc_read_iter)
++		return iter_read(file, buf, count, ppos, proc_reg_read_iter);
++
+ 	if (pde_is_permanent(pde)) {
+ 		return pde_read(pde, file, buf, count, ppos);
+ 	} else if (use_pde(pde)) {
+@@ -569,6 +595,7 @@ static int proc_reg_release(struct inode *inode, struct file *file)
+ static const struct file_operations proc_reg_file_ops = {
+ 	.llseek		= proc_reg_llseek,
+ 	.read		= proc_reg_read,
++	.read_iter	= proc_reg_read_iter,
+ 	.write		= proc_reg_write,
+ 	.poll		= proc_reg_poll,
+ 	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
+@@ -585,6 +612,7 @@ static const struct file_operations proc_reg_file_ops = {
+ static const struct file_operations proc_reg_file_ops_no_compat = {
+ 	.llseek		= proc_reg_llseek,
+ 	.read		= proc_reg_read,
++	.read_iter	= proc_reg_read_iter,
+ 	.write		= proc_reg_write,
+ 	.poll		= proc_reg_poll,
+ 	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index d1eed1b4365172..97b3f5f06db9d8 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -30,6 +30,7 @@ struct proc_ops {
+ 	unsigned int proc_flags;
+ 	int	(*proc_open)(struct inode *, struct file *);
+ 	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
++	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
+ 	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+ 	loff_t	(*proc_lseek)(struct file *, loff_t, int);
+ 	int	(*proc_release)(struct inode *, struct file *);
+-- 
+2.26.2
 
-regards
-Philipp
