@@ -2,186 +2,92 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B23C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53760206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C520206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="voVg1Z74"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="TKKXIlNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgFZKpd (ORCPT
+        id S1728130AbgFZKqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgFZKpd (ORCPT
+        Fri, 26 Jun 2020 06:46:07 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:46774 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728023AbgFZKqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:45:33 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68097C08C5C1;
-        Fri, 26 Jun 2020 03:45:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QevtFY5/fU0gz6JXyEA/JwvKh73ONa/vbnOzBREqNno=; b=voVg1Z74JA9zQSFyYsBqBErK3/
-        eNPaVDvEtjc6B0kKMdbhupAg/k14KecsHOuiMIpQ90cNhZv3AGkFeu4jL58gsVCAON52P8FLlMtt4
-        wgN7sahP4rf4N6CXInQPr9p58er2qRuNmAM4wFXbfr3wNrIdNfxg66VTPkV+pJVN9oPeQKoPEM/3y
-        dXcjqG6caa380q5Qdmz0FIGuoyl9U0z2fpd3gvbdyOKBwYsj8Ma6VVHi0T9NODZbRZSnu8j6VHwKp
-        mLRgZP5Jd6VqDDB7n2Qsg5dPL9UZuel+KB1YovP8Q4j5LOgThA3J6Wfy4AGNEYE6k10oxw4UG1wu4
-        KM7Cmm2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jolqf-0003ff-Oa; Fri, 26 Jun 2020 10:44:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D39C301A32;
-        Fri, 26 Jun 2020 12:44:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4AAE720BEAD9B; Fri, 26 Jun 2020 12:44:42 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 12:44:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org,
-        dsmythies@telus.net, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, jic23@cam.ac.uk,
-        keescook@chromium.org, akpm@linux-foundation.org
-Subject: [PATCH] lib: Extend kstrtobool() to accept "true"/"false"
-Message-ID: <20200626104442.GF117543@hirez.programming.kicks-ass.net>
-References: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
- <20200626084903.GA27151@zn.tnic>
- <20200626102255.GZ4817@hirez.programming.kicks-ass.net>
+        Fri, 26 Jun 2020 06:46:06 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QAcXan005493;
+        Fri, 26 Jun 2020 05:45:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=yuqVxib/OfeKhWvQNRZsWQpeJuc2MCZD82snGcZPbvY=;
+ b=TKKXIlNZhrtCtrvcPLS2cTAD7q+rVFd+GWHM0kAfDLc7UwW4e86BKpn63LAJeT27dbnc
+ k5ZDgpdRHHvfebakcOLVhcfz9xjHzFCzmRAMircnpCg8PKo3eeMoNHSgEtZ0zwGw7Q+9
+ x5E1hQBcEEwa8sCWwCq+wK4q7UXOFnQsXQMHFLIVEKBj9L6SumY2TY3mbcqE0/dJ3mlc
+ 7+2psNNivT7ldMeNIF0H4BY3nOZFwKF5uj7fVPqhtf9btUYY8RKMDhOgfvyBzWi0M8RI
+ oQr4wh+Q8d//Bk30lch0Cw9OPvq7fk+6JUJFZ2WmPcAxSIpwrB+pYf88rMr6v0vxuazs mA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 31uus3c4ah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 26 Jun 2020 05:45:21 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 26 Jun
+ 2020 11:45:19 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 26 Jun 2020 11:45:19 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CAF212C5;
+        Fri, 26 Jun 2020 10:45:19 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 10:45:19 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] ALSA: compress: document the compress audio state
+ machine
+Message-ID: <20200626104519.GD71940@ediswmail.ad.cirrus.com>
+References: <20200625154651.99758-1-vkoul@kernel.org>
+ <20200625154651.99758-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200626102255.GZ4817@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200625154651.99758-2-vkoul@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0 cotscore=-2147483648
+ impostorscore=0 priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006260077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:22:55PM +0200, Peter Zijlstra wrote:
-
-> > This is too lax - it will be enabled for any !0 value. Please accept
-> > only 0 and 1.
+On Thu, Jun 25, 2020 at 09:16:49PM +0530, Vinod Koul wrote:
+> So we had some discussions of the stream states, so I thought it is a
+> good idea to document the state transitions, so add it documentation
 > 
-> kstrtobool() ftw
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-And looking at that, I find it really strange it does not in fact accept
-"true" / "false", so how about this?
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
----
-Subject: lib: Extend kstrtobool() to accept "true"/"false"
-
-Extend the strings recognised by kstrtobool() to cover:
-
-  - 1/0
-  - y/n
-  - yes/no	(new)
-  - t/f		(new)
-  - true/false  (new)
-  - on/off
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- lib/kstrtox.c | 60 ++++++++++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 45 insertions(+), 15 deletions(-)
-
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 1006bf70bf74..b8b950325097 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -325,9 +325,17 @@ EXPORT_SYMBOL(kstrtos8);
-  * @s: input string
-  * @res: result
-  *
-- * This routine returns 0 iff the first character is one of 'Yy1Nn0', or
-- * [oO][NnFf] for "on" and "off". Otherwise it will return -EINVAL.  Value
-- * pointed to by res is updated upon finding a match.
-+ * This return return 0 on success, otherwise it will return -EINVAL.
-+ * It will accept (case invariant):
-+ *
-+ *  - 1/0
-+ *  - y/n
-+ *  - yes/no
-+ *  - t/f
-+ *  - true/false
-+ *  - on/off
-+ *
-+ * and set @*res to either true/false respectively.
-  */
- int kstrtobool(const char *s, bool *res)
- {
-@@ -335,30 +343,52 @@ int kstrtobool(const char *s, bool *res)
- 		return -EINVAL;
- 
- 	switch (s[0]) {
-+	case 't':
-+	case 'T':
-+		if (!s[1] || !strcasecmp(s, "true"))
-+			goto have_true;
-+
-+		break;
-+
- 	case 'y':
- 	case 'Y':
-+		if (!s[1] || !strcasecmp(s, "yes"))
-+			goto have_true;
-+
-+		break;
-+
- 	case '1':
-+have_true:
- 		*res = true;
- 		return 0;
-+
-+	case 'f':
-+	case 'F':
-+		if (!s[1] || !strcasecmp(s, "false"))
-+			goto have_false;
-+
-+		break;
- 	case 'n':
- 	case 'N':
-+		if (!s[1] || !strcasecmp(s, "no"))
-+			goto have_false;
-+
-+		break;
- 	case '0':
-+have_false:
- 		*res = false;
- 		return 0;
-+
- 	case 'o':
- 	case 'O':
--		switch (s[1]) {
--		case 'n':
--		case 'N':
--			*res = true;
--			return 0;
--		case 'f':
--		case 'F':
--			*res = false;
--			return 0;
--		default:
--			break;
--		}
-+		if (!strcasecmp(s, "on"))
-+			goto have_true;
-+
-+		if (!strcasecmp(s, "off"))
-+			goto have_false;
-+
-+		break;
-+
- 	default:
- 		break;
- 	}
+Thanks,
+Charles
