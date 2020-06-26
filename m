@@ -2,168 +2,281 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E62C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278E1207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0077207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rISsUK5h"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3jSm/c7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgFZSyQ (ORCPT
+        id S1725991AbgFZSyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:54:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43265 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgFZSyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:54:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593197653; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=rSs+ouLYYDVpbn6T9dkhsaPEslLkHE3W4vsy8p+seok=; b=rISsUK5h7tDpk7dSzwbjsVLM+Ig3MH8lr7lhR7orxeoeHYUYrrCmugiZHu6TNQi19irFbzCr
- Z/WDMec73X2BRjK1s5WmUeukMvh4gRWhKqgAgjf4XE9Wf3bcjKL9Odo8cQ5poFWKEjbCnB3C
- mKTKmfS3GepJ1H+dYbsK7MCQ3iU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5ef6444c4c9690533a7881ca (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:54:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A111C433CA; Fri, 26 Jun 2020 18:54:04 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3818EC433C8;
-        Fri, 26 Jun 2020 18:54:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3818EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v2 2/2] ath10k: Skip wait for delete response if firmware is down
-Date:   Sat, 27 Jun 2020 00:23:53 +0530
-Message-Id: <1593197633-9014-3-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593197633-9014-1-git-send-email-pillair@codeaurora.org>
-References: <1593197633-9014-1-git-send-email-pillair@codeaurora.org>
+        Fri, 26 Jun 2020 14:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgFZSyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:54:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0569C03E97B
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q19so11424012lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
+        b=Q3jSm/c7nM2RMkN/kkJWHeLwAsdboqUxRzth/uSa6NXSM8oXMtiMhj9f8WBol97E5l
+         ky6f/QaC4KZ4YCnTQZ3BF5dIXjlSPV4QoV2wqdt2Mxc0dLVha+jmh1N//dKeYUM0kj/p
+         Cdd4nWsofe4nR1h6Arv8qYj2pSAqwLLlXKo4g4QCtxbm6LC94tNL9HBuchzz8CHS2BAX
+         yl2h1pg/AJIJGgSiC33mfu7Wo9ZAOmNg5sJcT1GNiIaf52Hd/o1vV9XDmSUrR47ulwLj
+         ref9AD+MOaS2oD3rCYWv+1d1sjD/0C8RZj9PYTuYlbI4YRzLWzNCmbCgcQYmWu2Ufvyd
+         PAzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TyklzFj5dCuXNYg3v7eYVOhPNqVFIXACBXr++QvGvZI=;
+        b=NvGGhH5PNAYpC41LcuImlUr3n9jKM/fnVH0paJ/pbxKPNN55sgauWpY8E5lJBRNswA
+         px0cczAU8m8AfgS6C6PqskCon9V5VvDkAPixmBT48w6kdACyElooZkPZyjwAHQWXkbnz
+         zIddY2KxLCQpXr0OCpwAIxVr8JiqAclpmxVsiDLE8B6+MBliifTJHtVTMPdjg8K43klO
+         ykmQyGStIeMUx/ZnDhVrQpPpxvg5HW1ANb43rfWaM1BPkicPq6mgw2m2XF3vpM200XwX
+         SsRRWbH4f0DhQH+V1IETsYSiVX+6OhmGntbZ+LOaOmO5gHtVtjmqCBRCbnOWrc0Iu5Cp
+         eKLQ==
+X-Gm-Message-State: AOAM531DszH5I1G59tti/n7zjDw+vpHp0JHhw8m38CBsj1fHQFTM8wD3
+        LXEAwCJym4VOecBQoqX7GAixeteWk4dFrVHl3WJ5Uw==
+X-Google-Smtp-Source: ABdhPJwEBU78ak0v0VpTknwA5BsMJ5bdkxuMQYVuGSToCCXcbvo/1MlMlImhsgRKT5ooJzz29cDDIywFsWJMzVIeB2E=
+X-Received: by 2002:a2e:858e:: with SMTP id b14mr2218327lji.301.1593197651010;
+ Fri, 26 Jun 2020 11:54:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200626002710.110200-1-rajatja@google.com> <20200626002710.110200-2-rajatja@google.com>
+ <20200626141754.GB4141629@kroah.com>
+In-Reply-To: <20200626141754.GB4141629@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 26 Jun 2020 11:53:34 -0700
+Message-ID: <CACK8Z6GSN5iOaCh-ZMaJSY4SgEhw=bCRDzaiPEBJbNNFhZZX6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver waits for response from the
-firmware for all the delete cmds, eg: vdev_delete,
-peer delete. If the firmware is down, these wait
-will always timeout and return an error.
+Hello,
 
-Also during subsytems recovery, any attempt to
-send a WMI cmd to the FW will return the -ESHUTDOWN
-status, which when returned to mac80211, can cause
-unnecessary warnings to be printed on to the console,
-as shown below
+Thanks for taking a look.
 
-[ 2559.529565] Call trace:
-[ 2559.532214]  __sta_info_destroy_part2+0x160/0x168 [mac80211]
-[ 2559.538157]  __sta_info_flush+0x124/0x180 [mac80211]
-[ 2559.543402]  ieee80211_set_disassoc+0x130/0x2c0 [mac80211]
-[ 2559.549172]  ieee80211_mgd_deauth+0x238/0x25c [mac80211]
-[ 2559.554764]  ieee80211_deauth+0x24/0x30 [mac80211]
-[ 2559.559860]  cfg80211_mlme_deauth+0x258/0x2b0 [cfg80211]
-[ 2559.565446]  nl80211_deauthenticate+0xe4/0x110 [cfg80211]
-[ 2559.571064]  genl_rcv_msg+0x3a0/0x440
-[ 2559.574888]  netlink_rcv_skb+0xb4/0x11c
-[ 2559.578877]  genl_rcv+0x34/0x48
-[ 2559.582162]  netlink_unicast+0x14c/0x1e4
-[ 2559.586235]  netlink_sendmsg+0x2f0/0x360
-[ 2559.590317]  sock_sendmsg+0x44/0x5c
-[ 2559.593951]  ____sys_sendmsg+0x1c8/0x290
-[ 2559.598029]  ___sys_sendmsg+0xa8/0xfc
-[ 2559.601840]  __sys_sendmsg+0x8c/0xd0
-[ 2559.605572]  __arm64_compat_sys_sendmsg+0x2c/0x38
-[ 2559.610468]  el0_svc_common+0xa8/0x160
-[ 2559.614372]  el0_svc_compat_handler+0x2c/0x38
-[ 2559.618905]  el0_svc_compat+0x8/0x10
+On Fri, Jun 26, 2020 at 7:18 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 05:27:10PM -0700, Rajat Jain wrote:
+> > Introduce a PCI parameter that disables the automatic attachment of
+> > untrusted devices to their drivers.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> > Context:
+> >
+> >   I set out to implement the approach outlined in
+> >     https://lkml.org/lkml/2020/6/9/1331
+> >     https://lkml.org/lkml/2020/6/15/1453
+> >
+> >   But to my surprise, I found that the new hotplugged PCI devices
+> >   were getting automatically attached to drivers even though
+> >   /sys/bus/pci/drivers_autoprobe was set to 0.
+> >
+> >   I realized that the device core's "drivers_autoprobe":
+> >
+> >   * only disables the *initial* probe of the device (i.e. from
+> >     device_add()). If a subsystem calls device_attach() explicitly
+> >     for its devices like PCI subsystem does, the drivers_autoprobe
+> >     setting does not matter. The core will attach device to the driver.
+> >     This looks like correct semantic behavior to me because PCI is
+> >     explicitly calling device_attach(), which is a way to explicitly
+> >     ask the core to find and attach a driver for a device.
+> >
+> >   * "drivers_autoprobe" cannot be controlled at boot time (to restrict
+> >     any drivers before userspace comes up).
+> >
+> >   The options I considered were:
+> >
+> >   1) Change device_attach() so that it takes into consideration the
+> >      drivers_autoprobe property. Not sure if this is semantically correct
+> >      thing to do though. If I do this, then the only way a driver can
+> >      be attached to the drivers would be via userspace
+> >      (/sys/bus/pci/drivers/bind) (Good for our use case though!).
+>
+> This is the correct thing to do here, haven't I been asking you do move
+> this logic into the driver core so that all busses can use it?
 
-Skip the wait for delete response from the
-firmware if the firmware is down. Also return
-success to the mac80211 calls when the peer delete
-cmd fails with return status -ESHUTDOWN.
+(please see below)
 
-Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+>
+> >   2) Make the drivers_autoprobe property available to PCI to use
+> >      (currently it is private to device core). The PCI could use this
+> >      to determine whether or not to call device_attach(). This still
+> >      leaves the other problem (of not being able to set
+> >      drivers_autoprobe via command line open).
+>
+> Ick, command lines are horrible, don't do that if at all possible.  On
+> some systems they are not able to be changed which can be good or bad...
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+(please see below)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index dc7befc..6882fcc 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -701,7 +701,8 @@ static void ath10k_wait_for_peer_delete_done(struct ath10k *ar, u32 vdev_id,
- 	unsigned long time_left;
- 	int ret;
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    !test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		ret = ath10k_wait_for_peer_deleted(ar, vdev_id, addr);
- 		if (ret) {
- 			ath10k_warn(ar, "failed wait for peer deleted");
-@@ -841,7 +842,8 @@ static int ath10k_peer_delete(struct ath10k *ar, u32 vdev_id, const u8 *addr)
- 	if (ret)
- 		return ret;
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    !test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		unsigned long time_left;
- 
- 		time_left = wait_for_completion_timeout
-@@ -5673,7 +5675,8 @@ static void ath10k_remove_interface(struct ieee80211_hw *hw,
- 		ath10k_warn(ar, "failed to delete WMI vdev %i: %d\n",
- 			    arvif->vdev_id, ret);
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    !test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		time_left = wait_for_completion_timeout(&ar->vdev_delete_done,
- 							ATH10K_VDEV_DELETE_TIMEOUT_HZ);
- 		if (time_left == 0) {
-@@ -6110,6 +6113,11 @@ static int ath10k_hw_scan(struct ieee80211_hw *hw,
- 		goto exit;
- 	}
- 
-+	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
-+		ret = -ESHUTDOWN;
-+		goto exit;
-+	}
-+
- 	spin_lock_bh(&ar->data_lock);
- 	switch (ar->scan.state) {
- 	case ATH10K_SCAN_IDLE:
-@@ -6758,7 +6766,9 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
- 		}
- 
- 		ret = ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
--		if (ret)
-+		if (ret == -ESHUTDOWN)
-+			ret = 0;
-+		else if (ret)
- 			ath10k_warn(ar, "failed to delete peer %pM for vdev %d: %i\n",
- 				    sta->addr, arvif->vdev_id, ret);
- 
--- 
-2.7.4
+>
+> >   3) I found the pci_dev->match_driver, which seemed similar to what I
+> >      am trying to do, but can't be controlled from userspace. I considered
+> >      populating that field based on drivers_autoprobe (still need (2)).
+> >      But the problem is that there is the AMD IOMMU driver which is setting
+> >      this independently, so setting the match_driver based on
+> >      drivers_autoprobe may not be a good idea. May be we can populate it
+> >      for untrusted devicesi, based on the parameter that I'm introducing?
+> >
+> >   4) This patch was my option 4 that helps fix both the problems for me.
+>
+> I suggest putting some of the above text in the changelog, as it has a
+> lot of good context, while your existing changelog is pretty sparse and
+> does not explain anything...
 
+Will do.
+
+>
+>
+> >
+> >  drivers/pci/bus.c | 11 ++++++++---
+> >  drivers/pci/pci.c |  9 +++++++++
+> >  drivers/pci/pci.h |  1 +
+> >  3 files changed, 18 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 3cef835b375fd..336aeeb4c4ebf 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >       pci_bridge_d3_update(dev);
+> >
+> >       dev->match_driver = true;
+> > -     retval = device_attach(&dev->dev);
+> > -     if (retval < 0 && retval != -EPROBE_DEFER)
+> > -             pci_warn(dev, "device attach failed (%d)\n", retval);
+> > +
+> > +     if (dev->untrusted && pci_dont_attach_untrusted_devs) {
+> > +             pci_info(dev, "not attaching untrusted device\n");
+> > +     } else {
+> > +             retval = device_attach(&dev->dev);
+> > +             if (retval < 0 && retval != -EPROBE_DEFER)
+> > +                     pci_warn(dev, "device attach failed (%d)\n", retval);
+> > +     }
+> >
+> >       pci_dev_assign_added(dev, true);
+> >  }
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index ce096272f52b1..dec1f9ef27d71 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
+> >  /* If set, the PCI config space of each device is printed during boot. */
+> >  bool pci_early_dump;
+> >
+> > +/*
+> > + * If set, the devices with "untrusted" flag shall not be attached automatically
+> > + * Userspace will need to attach them manually:
+> > + * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
+> > + */
+> > +bool pci_dont_attach_untrusted_devs;
+> > +
+> >  bool pci_ats_disabled(void)
+> >  {
+> >       return pcie_ats_disabled;
+> > @@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
+> >                               pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+> >                       } else if (!strncmp(str, "disable_acs_redir=", 18)) {
+> >                               disable_acs_redir_param = str + 18;
+> > +                     } else if (!strcmp(str, "dont_attach_untrusted_devs")) {
+> > +                             pci_dont_attach_untrusted_devs = true;
+> >                       } else {
+> >                               pr_err("PCI: Unknown option `%s'\n", str);
+> >                       }
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 6d3f758671064..30ffad047d926 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -13,6 +13,7 @@
+> >
+> >  extern const unsigned char pcie_link_speed[];
+> >  extern bool pci_early_dump;
+> > +extern bool pci_dont_attach_untrusted_devs;
+> >
+> >  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+> >  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
+>
+> What happened to the split of "trust" and "internal/external" logic that
+> we discussed before?
+
+a) I think what was decided was introducing a device core "location"
+property that can be exposed to userspace to help it to decide whether
+or not to attach a driver to a device. Yes, that is still the plan.
+(Mild sidenote: userspace may not need to distinguish between internal
+and external devices if it can assume that no internal PCI devices
+will show up after "echo 0 > /sys/bus/pci/drivers_autoprobe". But
+nevertheless...)
+
+b) Note that even with (a) in place, we still need a parameter that
+can ensure that drivers are not bound to external devices at boot,
+*before* userspace gets a chance to disable "drivers_autoprobe".
+https://lkml.org/lkml/2020/6/15/1453
+Is it OK to add such a parameter in device core?
+
+Thanks,
+
+Rajat
+
+
+
+
+
+> This seems to ignore all of that and go straight
+> to some form of "we know what we trust, so all is fine!".
+>
+> It's not obvious what this is really doing here at all, sorry...
+>
+> greg k-h
