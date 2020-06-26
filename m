@@ -2,233 +2,145 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A414A2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3924E2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593177596;
-	bh=328KJWZ25J0ntri4Ri0MAnGHkYIXdOD6Ea3NmEXFkjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C2qUCepqFI5EYlmrXW9++Aa5BEN57e61olYHBmHm+FJFmqJ2Qugwug0RCSjDnGofG
-	 ELe25/XwrUmLbNQgZNSVbLYdQJZBh6NENIHaqkhdUjkBoCj71ukczekOs7aklN0O/9
-	 M93oKCIKUYVv8Cv3xGRMvBpYkJc4rHolCd0dIYeo=
+	s=default; t=1593177699;
+	bh=Yuu27O3cGM+oVV8EJpqBsCHR3fqy5evaivCR9Hq+UPc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=RWPWXOWyslc+rPMcetGmo102ptXYOH3x7JG8ejDnoDLhamb01wNugfqL8yXCyXN2c
+	 SkbuJCL3av0Cjq8kRBtRVBMiZ5mgPeB5cor/DxbriCNu+gx16N4JgH5OVeYJDP+w7/
+	 2ZPkvW03CHfVPe4ojnqxg+oYBjuIHpBQYFucP9Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFZNTz (ORCPT
+        id S1728048AbgFZNVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:19:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43759 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZNTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:19:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j4so7029357wrp.10;
-        Fri, 26 Jun 2020 06:19:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m969CeyZWFMnAeRNTD0HdPXdGGiv/1qoAkylW/aijZg=;
-        b=qUsp1/fddneN60zZXptil7sqk13Zxwu33i9Ag+I+sNDq8CPoswzccz8oM57H4SUqn8
-         uNyDGIPDrl5uzb8CpqsDtA5RSBQG1zbqcVons7xYGkcKZJNe44v55AfpB1f1HP3a93IH
-         uiLvWVCq6dA3J9hXFUIqs4eggDeoG9h6+RqUOdlKIqUNVVIkiiyGkT+k3ipqM2Fl1dC2
-         SU423v/yasnlelaAKSYr7DUzFp9TdYzL34H3//2k7I5C2MX+OOfdP3ngNGGjymp0DM6+
-         R2Zfyt7UFt/V9MPziy9RnJhuG1C4vPAKCC2AlmJ+H6RHCJc4tLjzsPHKBWCYbkiz/5qv
-         YA7g==
-X-Gm-Message-State: AOAM5309MFhciE7MVL8sQXEihyZsfra6BSbZBUg6fNvRgL8cI9ZCeDuo
-        duugC61hbBhm/h/ZzRId4p0=
-X-Google-Smtp-Source: ABdhPJzxNqcr8qiKvnQD2oAQNAdEEW/ojvoE++GrY4Uh/DoEiOW5AZWWvbsv8hyccXJj75QeuG65Mg==
-X-Received: by 2002:a5d:4ecc:: with SMTP id s12mr753744wrv.57.1593177591625;
-        Fri, 26 Jun 2020 06:19:51 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x18sm16794296wmi.35.2020.06.26.06.19.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 06:19:51 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 13:19:49 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andres Beltran <lkmlabelt@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        parri.andrea@gmail.com
-Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200626131949.gg3ndl4s6alvembp@liuwe-devbox-debian-v2>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
- <20200625153723.8428-2-lkmlabelt@gmail.com>
+        Fri, 26 Jun 2020 09:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgFZNVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:21:37 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 654FA2075D;
+        Fri, 26 Jun 2020 13:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593177696;
+        bh=Yuu27O3cGM+oVV8EJpqBsCHR3fqy5evaivCR9Hq+UPc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=e6WKxY4b4Y8FEccwwo5l9eexcUxRYmEcdycBViJHwIOsrow+yvWUS0cC2E1mD46EA
+         OWrfa7o3HQ9/1fAY/moAqhfidwYK71inloiGl/TnCgzUyNJITWo/pzn3+ziebXzBKq
+         6ET4skFrFLpC8t1MikoxCZHlEkYw/nKPpfQiGx00=
+Date:   Fri, 26 Jun 2020 14:21:32 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: [GIT PULL] arm64 fixes for -rc3
+Message-ID: <20200626132131.GA9750@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625153723.8428-2-lkmlabelt@gmail.com>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:37:21AM -0400, Andres Beltran wrote:
-> Currently, VMbus drivers use pointers into guest memory as request IDs
-> for interactions with Hyper-V. To be more robust in the face of errors
-> or malicious behavior from a compromised Hyper-V, avoid exposing
-> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> bad request ID that is then treated as the address of a guest data
-> structure with no validation. Instead, encapsulate these memory
-> addresses and provide small integers as request IDs.
-> 
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> ---
->  drivers/hv/channel.c   | 149 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/hyperv.h |  21 ++++++
->  2 files changed, 170 insertions(+)
-> 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 3ebda7707e46..2ea1bfecbfda 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
->  }
->  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
->  
-> +/**
-> + * request_arr_init - Allocates memory for the requestor array. Each slot
-> + * keeps track of the next available slot in the array. Initially, each
-> + * slot points to the next one (as in a Linked List). The last slot
-> + * does not point to anything, so its value is U64_MAX by default.
-> + * @size The size of the array
-> + */
-> +static u64 *request_arr_init(u32 size)
-> +{
-> +	int i;
-> +	u64 *req_arr;
-> +
-> +	req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
-> +	if (!req_arr)
-> +		return NULL;
-> +
-> +	for (i = 0; i < size - 1; i++)
-> +		req_arr[i] = i + 1;
-> +
-> +	/* Last slot (no more available slots) */
-> +	req_arr[i] = U64_MAX;
-> +
-> +	return req_arr;
-> +}
-> +
-> +/*
-> + * vmbus_alloc_requestor - Initializes @rqstor's fields.
-> + * Slot at index 0 is the first free slot.
-> + * @size: Size of the requestor array
-> + */
-> +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
-> +{
-> +	u64 *rqst_arr;
-> +	unsigned long *bitmap;
-> +
-> +	rqst_arr = request_arr_init(size);
-> +	if (!rqst_arr)
-> +		return -ENOMEM;
-> +
-> +	bitmap = bitmap_zalloc(size, GFP_KERNEL);
-> +	if (!bitmap) {
-> +		kfree(rqst_arr);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rqstor->req_arr = rqst_arr;
-> +	rqstor->req_bitmap = bitmap;
-> +	rqstor->size = size;
-> +	rqstor->next_request_id = 0;
-> +	spin_lock_init(&rqstor->req_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * vmbus_free_requestor - Frees memory allocated for @rqstor
-> + * @rqstor: Pointer to the requestor struct
-> + */
-> +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
-> +{
-> +	kfree(rqstor->req_arr);
-> +	bitmap_free(rqstor->req_bitmap);
-> +}
-> +
->  static int __vmbus_open(struct vmbus_channel *newchannel,
->  		       void *userdata, u32 userdatalen,
->  		       void (*onchannelcallback)(void *context), void *context)
-> @@ -122,6 +186,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
->  	u32 send_pages, recv_pages;
->  	unsigned long flags;
->  	int err;
-> +	int rqstor;
->  
->  	if (userdatalen > MAX_USER_DEFINED_BYTES)
->  		return -EINVAL;
-> @@ -132,6 +197,14 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
->  	if (newchannel->state != CHANNEL_OPEN_STATE)
->  		return -EINVAL;
->  
-> +	/* Create and init requestor */
-> +	if (newchannel->rqstor_size) {
-> +		rqstor = vmbus_alloc_requestor(&newchannel->requestor,
-> +					       newchannel->rqstor_size);
+Hi Linus,
 
-You can simply use err here to store the return value or even get rid of
-rqstor by doing
+Please pull these arm64 fixes for -rc3. The big fix here is to our vDSO
+sigreturn trampoline as, after a painfully long stint of debugging, it
+turned out that fixing some of our CFI directives in the merge window lit up
+a bunch of logic in libgcc which has been shown to SEGV in some cases during
+asynchronous pthread cancellation. It looks like we can fix this by
+extending the directives to restore most of the interrupted register state
+from the sigcontext, but it's risky and hard to test so we opted to remove
+the CFI directives for now and rely on the unwinder fallback path like we
+used to.
 
-   if (vmbus_alloc_requestor(...))
+Cheers,
 
-> +		if (rqstor)
-> +			return -ENOMEM;
-> +	}
-> +
->  	newchannel->state = CHANNEL_OPENING_STATE;
->  	newchannel->onchannel_callback = onchannelcallback;
->  	newchannel->channel_callback_context = context;
-> @@ -228,6 +301,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
->  error_clean_ring:
->  	hv_ringbuffer_cleanup(&newchannel->outbound);
->  	hv_ringbuffer_cleanup(&newchannel->inbound);
-> +	vmbus_free_requestor(&newchannel->requestor);
->  	newchannel->state = CHANNEL_OPEN_STATE;
->  	return err;
->  }
-> @@ -703,6 +777,9 @@ static int vmbus_close_internal(struct vmbus_channel *channel)
->  		channel->ringbuffer_gpadlhandle = 0;
->  	}
->  
-> +	if (!ret)
-> +		vmbus_free_requestor(&channel->requestor);
-> +
->  	return ret;
->  }
->  
-> @@ -937,3 +1014,75 @@ int vmbus_recvpacket_raw(struct vmbus_channel *channel, void *buffer,
->  				  buffer_actual_len, requestid, true);
->  }
->  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
-> +
-> +/*
-> + * vmbus_next_request_id - Returns a new request id. It is also
-> + * the index at which the guest memory address is stored.
-> + * Uses a spin lock to avoid race conditions.
-> + * @rqstor: Pointer to the requestor struct
-> + * @rqst_add: Guest memory address to be stored in the array
-> + */
-> +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
-> +{
-> +	unsigned long flags;
-> +	u64 current_id;
-> +
-> +	spin_lock_irqsave(&rqstor->req_lock, flags);
+Will
 
-Do you really need the irqsave variant here? I.e. is there really a
-chance this code is reachable from an interrupt handler?
+--->8
 
-Wei.
+The following changes since commit 24ebec25fb270100e252b19c288e21bd7d8cc7f7:
+
+  arm64: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints (2020-06-18 11:10:00 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 108447fd0d1a34b0929cd26dc637c917a734ebab:
+
+  arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist (2020-06-25 20:18:57 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc3
+
+- Fix unwinding through vDSO sigreturn trampoline
+
+- Fix build warnings by raising minimum LD version for PAC
+
+- Whitelist some Kryo Cortex-A55 derivatives for Meltdown and SSB
+
+- Fix perf register PC reporting for compat tasks
+
+- Fix 'make clean' warning for arm64 signal selftests
+
+- Fix ftrace when BTI is compiled in
+
+- Avoid building the compat vDSO using GCC plugins
+
+----------------------------------------------------------------
+Alexander Popov (1):
+      arm64: vdso: Don't use gcc plugins for building vgettimeofday.c
+
+Jean-Philippe Brucker (1):
+      arm64: Don't insert a BTI instruction at inner labels
+
+Jiping Ma (1):
+      arm64: perf: Report the PC value in REGS_ABI_32 mode
+
+Mark Brown (2):
+      arm64: Depend on newer binutils when building PAC
+      kselftest: arm64: Remove redundant clean target
+
+Sai Prakash Ranjan (2):
+      arm64: kpti: Add KRYO{3, 4}XX silver CPU cores to kpti safelist
+      arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist
+
+Will Deacon (5):
+      arm64: vdso: Disable dwarf unwinding through the sigreturn trampoline
+      arm64: compat: Allow 32-bit vdso and sigpage to co-exist
+      arm64: compat: Always use sigpage for sigreturn trampoline
+      arm64: compat: Remove 32-bit sigreturn code from the vDSO
+      arm64: vdso: Only pass --no-eh-frame-hdr when linker supports it
+
+ arch/arm64/Kconfig                            |  4 +-
+ arch/arm64/include/asm/linkage.h              |  6 ---
+ arch/arm64/include/asm/mmu.h                  |  3 ++
+ arch/arm64/kernel/Makefile                    |  2 -
+ arch/arm64/kernel/cpu_errata.c                |  2 +
+ arch/arm64/kernel/cpufeature.c                |  2 +
+ arch/arm64/kernel/perf_regs.c                 | 25 +++++++++--
+ arch/arm64/kernel/signal32.c                  | 27 +-----------
+ arch/arm64/kernel/vdso.c                      | 61 ++++++++++++---------------
+ arch/arm64/kernel/vdso/Makefile               |  7 +--
+ arch/arm64/kernel/vdso/sigreturn.S            | 54 +++++++++++++++---------
+ arch/arm64/kernel/vdso32/Makefile             |  1 -
+ arch/arm64/kernel/vdso32/sigreturn.S          | 58 -------------------------
+ arch/arm64/kernel/vdso32/vdso.lds.S           | 12 ------
+ tools/testing/selftests/arm64/signal/Makefile |  4 --
+ 15 files changed, 98 insertions(+), 170 deletions(-)
+ delete mode 100644 arch/arm64/kernel/vdso32/sigreturn.S
