@@ -2,148 +2,178 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F949C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE21C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609292053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2zX8AiNk"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2B2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgFZTDf (ORCPT
+        id S1725831AbgFZTE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:03:35 -0400
-Received: from mail-dm6nam10on2045.outbound.protection.outlook.com ([40.107.93.45]:16705
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725275AbgFZTDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:03:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F873ehxY8IHVrF8eQ9MxSWEJbt6gkhxjCi5AIq/QxeoOFA4O3A2GPMSdY60xBUEmHDpFmQd3sBsiRRx1iDdk2dBIsvboM7bMQhcZkH+FuqbsbMbA3EHd49RWmjl17rbAcYR/z2+Afw2Nv4Pb8e5qaJ1rPIJmvi2QBPDkGWwjojO99rkZxKPxGVRwuEi9bpOPrlSeuGMvNv1wCQOsyXIrFWUYBC5vVIvGJwZ+WKEdFUAErM7K5mSPgLKz3t068x00bKUEwzzItKY1q9GnZUxs1CIqyPdb0X/z+saAWe0wLDnrM0J5d1RCNCx/AWJFs7S+wlzEPh0EGRDAhA4Sm7jOYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmW86HBDORHvRMJrEeQDqr79A3KqDd7+FCszJfPbt0s=;
- b=XaDfH4MQCo3Vqne1ZyEjEl3KNSJpjPqTBt1ehIVDCTIfzyKDUPySSMQV3VBN/wr4V0uuF6+Kgy3O8NWQ9VB1Q/YELZFdzxdniy2II1llWNWKjAzVVK+hJLh8zG5ftziO52xgCj0lg+1H2K1lfsGT6lMl60GMqpxaoOxwCulXr7O9lWyCx/NGoTUt11iUA2MDVSvqPQmFpyYkIR1mC3atx7jihImY/Izv5CBjBKiqJVreC0645lWcImxjVEAXE2GuSGC5OHhQWhM4bjpAo2F/Tzcey1MJLZsxB55OTh1Kz0NfACU+cnQGf/56T/XMxb/169uMP8mafpUoxTC+McBpXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmW86HBDORHvRMJrEeQDqr79A3KqDd7+FCszJfPbt0s=;
- b=2zX8AiNk0CUkcuzOCvAVTus6x4LMhObLF3ZuPJzO4fd1fB4r7AmcLfo6RiruuWkbgKniKeHAeVIgJIKu1UUSsKiO0UzNjoCcJCcW7HYjIJ2Jrn5dSrOLesYTlbhFEqQtpYgF44mUEZShUzoUq4GE6KleroyhEbvrAXwxKZQoVDo=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13)
- by SA0PR12MB4447.namprd12.prod.outlook.com (2603:10b6:806:9b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Fri, 26 Jun
- 2020 19:03:32 +0000
-Received: from SA0PR12MB4400.namprd12.prod.outlook.com
- ([fe80::698e:73e7:484d:e3c9]) by SA0PR12MB4400.namprd12.prod.outlook.com
- ([fe80::698e:73e7:484d:e3c9%4]) with mapi id 15.20.3131.025; Fri, 26 Jun 2020
- 19:03:31 +0000
-Cc:     brijesh.singh@amd.com, Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        John Allen <john.allen@amd.com>
-Subject: Re: [PATCH] crypto: ccp - Update CCP driver maintainer information
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <10d21bb66593de4ab9b07bd4fa053b5cbe2d9278.1593198017.git.thomas.lendacky@amd.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <78c7302d-49da-e911-9dd5-7d065af6f0dc@amd.com>
-Date:   Fri, 26 Jun 2020 14:03:30 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-In-Reply-To: <10d21bb66593de4ab9b07bd4fa053b5cbe2d9278.1593198017.git.thomas.lendacky@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: DM5PR06CA0057.namprd06.prod.outlook.com
- (2603:10b6:3:37::19) To SA0PR12MB4400.namprd12.prod.outlook.com
- (2603:10b6:806:95::13)
+        Fri, 26 Jun 2020 15:04:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725275AbgFZTE4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:04:56 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QJ3LYT042837;
+        Fri, 26 Jun 2020 15:04:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31wjekr456-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 15:04:43 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05QJ3Q82043212;
+        Fri, 26 Jun 2020 15:04:43 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31wjekr442-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 15:04:42 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QJ0iJp013024;
+        Fri, 26 Jun 2020 19:04:40 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 31uus53cgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 19:04:40 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QJ3Ib565339788
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jun 2020 19:03:18 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD17BA405C;
+        Fri, 26 Jun 2020 19:04:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A91AAA4054;
+        Fri, 26 Jun 2020 19:04:34 +0000 (GMT)
+Received: from hbathini.in.ibm.com (unknown [9.102.0.159])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Jun 2020 19:04:34 +0000 (GMT)
+Subject: [PATCH 00/11] ppc64: enable kdump support for kexec_file_load
+ syscall
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Date:   Sat, 27 Jun 2020 00:34:33 +0530
+Message-ID: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (165.204.77.11) by DM5PR06CA0057.namprd06.prod.outlook.com (2603:10b6:3:37::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23 via Frontend Transport; Fri, 26 Jun 2020 19:03:30 +0000
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3b3a1cff-ecc0-4aed-f265-08d81a039e59
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4447:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4447AD35B0B21E0C1B50FEBEE5930@SA0PR12MB4447.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:813;
-X-Forefront-PRVS: 0446F0FCE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tIAR3x4buBdWd9dugJMiAIDcwElnFJ1KwIUJ2TcX0broKH36mAcyGGRIfZt99eAAxplLz5LkjPAlNLzl656igUJ44nTw16iyU0WTtgsdsS+QhenX0+kOY4C/UYKGX9h4XvIEdKmTlK/w47lmbjBPQPi0UhblF0j8EblE01/U+FKZXHChAkdmBRNtRkA7ghcGJq+mJkvTs15Z4R6Evlyv0OkbBBdqoWAewZC9v6hNE/DztrWEpCC4tXwt0w9v4+aLv5meXnpOdi2wpL2RPfpgExmzGaZJaeOQIrk6MAFrRyg9A+l2WhX2gkEKQ3w0RGzMQBf+No/PlZOo7zlHJw2Lc2ssSHvGAoWIWeeOxcuSj9wNkDK6YxHKgKRaG9e9x0Tr
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4400.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(478600001)(31696002)(2906002)(8936002)(8676002)(31686004)(52116002)(54906003)(6512007)(86362001)(66556008)(6506007)(66476007)(53546011)(36756003)(26005)(186003)(16526019)(316002)(4326008)(956004)(2616005)(44832011)(66946007)(5660300002)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: kWNFcuaEigMoJyErig70Af+QnkydfeXOiz5uAd/zJUnMusyNgQyCAXwsfNOHcdRyynjaOFS+x9SUZWGPmSqewtj+9spl6MbSYWdj2j8ZSPk+Wn5Q8KrleUb7h4V2pPfR6ESQgz6lIh2Ooc4Exo2ZlYALsC1aPt0VoVQ/yRp2V9NRqvWcleWOmcD6eKztoi1wS/ODKfyclZPz2tSxj7bI3RrmYWhQK73RoMKPbTCaA5HfQZihAW+VJuwqAHW1FnLkim2uGliyiOA11DWo/Irg0ofW8b2CBrTfYUwcKPwGtacgx8FFLCdr+4HHZgggPj4TarZyl5zHTZeS4I7ou9d3W7DNXPc3v6y1rKG2PtgwtCWUcujT9C+cG3oKoE9W214j5+rUkDrE5mNxOLuUoV9Fu/1ikTKZ/v7xgS3veYFJ5DeA3A6yxOfKeVMK+kK/zxmrnWqElfqT09k22ID4HUoly0jdvl34uD78jW+/c2/IEiU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b3a1cff-ecc0-4aed-f265-08d81a039e59
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4400.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 19:03:31.8596
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zUEh6n7+803JkRn6AcxwVUcHbuzw8qfoUqfFzqXi6eNG2riJx0pDBYJmi18fhRJiIQIb+LhsTW6Z8s2c4VFHag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4447
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_10:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
+ cotscore=-2147483648 mlxscore=0 clxscore=1011 lowpriorityscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006260134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption. There is scope to
+expand purgatory to verify sha digest but tried to keep purgatory
+changes minimal in the interest of this series.
 
-On 6/26/20 2:00 PM, Tom Lendacky wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
->
-> Add John Allen as a new CCP driver maintainer. Additionally, break out
-> the driver SEV support and create a new maintainer entry, with Brijesh
-> Singh and Tom Lendacky as maintainers.
->
-> Cc: John Allen <john.allen@amd.com>
-> Cc: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+The first patch adds a weak arch_kexec_add_buffer function to override
+locate memory hole logic suiting arch needs. There are some special
+regions in ppc64 which should be avoided while loading buffer & there
+are multiple callers to kexec_add_buffer making it too complicated to
+maintain range sanity and using generic lookup at the same time.
+
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
+
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_add_buffer to locate memory
+hole for kdump segments by accounting for the special memory regions,
+referred to as excluded memory ranges, and calls __kexec_add_buffer
+with kbuf->mem set to skip the generic locate memory hole lookup.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The seventh patch adds relocation support for the purgatory. Patch 8
+helps setup the stack for the purgatory. The next patch setups up
+backup region as a segment while loading kdump kernel and teaches
+purgatory to copy it from source to destination.
+
+Patch 10 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The last patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support as all the
+necessary changes are added.
+
+Tested the changes successfully on P8, P9 lpars & an OpenPOWER box.
+
+---
+
+Hari Bathini (11):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: add support to relocate purgatory
+      ppc64/kexec_file: setup the stack for purgatory
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
 
 
-Acked-by: Brijesh Singh <brijesh.singh@amd.com>
+ arch/powerpc/include/asm/crashdump-ppc64.h |   15 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   35 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   18 
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   35 +
+ arch/powerpc/kexec/file_load.c             |   78 +
+ arch/powerpc/kexec/file_load_64.c          | 1461 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  387 +++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |   28 -
+ arch/powerpc/purgatory/purgatory_64.c      |   35 +
+ arch/powerpc/purgatory/trampoline.S        |  117 --
+ arch/powerpc/purgatory/trampoline_64.S     |  153 +++
+ include/linux/kexec.h                      |    5 
+ kernel/kexec_file.c                        |   37 +
+ 18 files changed, 2327 insertions(+), 201 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ create mode 100644 arch/powerpc/purgatory/purgatory_64.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
 
-thanks
-
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 68f21d46614c..8af94aea20fd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -830,11 +830,20 @@ F:	include/uapi/rdma/efa-abi.h
->  
->  AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER
->  M:	Tom Lendacky <thomas.lendacky@amd.com>
-> +M:	John Allen <john.allen@amd.com>
->  L:	linux-crypto@vger.kernel.org
->  S:	Supported
->  F:	drivers/crypto/ccp/
->  F:	include/linux/ccp.h
->  
-> +AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER - SEV SUPPORT
-> +M:	Brijesh Singh <brijeshkumar.singh@amd.com>
-> +M:	Tom Lendacky <thomas.lendacky@amd.com>
-> +L:	linux-crypto@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/crypto/ccp/sev*
-> +F:	include/uapi/linux/psp-sev.h
-> +
->  AMD DISPLAY CORE
->  M:	Harry Wentland <harry.wentland@amd.com>
->  M:	Leo Li <sunpeng.li@amd.com>
