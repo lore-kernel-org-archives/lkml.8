@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A59C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C08C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B061120B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA7520C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bbl3X+rv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jx1fABtD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbgFZWgm (ORCPT
+        id S1726402AbgFZWgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:36:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35933 "EHLO
+        Fri, 26 Jun 2020 18:36:46 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22672 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726227AbgFZWgi (ORCPT
+        by vger.kernel.org with ESMTP id S1726330AbgFZWgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:36:38 -0400
+        Fri, 26 Jun 2020 18:36:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593210997;
+        s=mimecast20190719; t=1593210999;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+T4PahBLwp+qMqIXI+a8sKJL/5YpPnDyt5GJ45wieOk=;
-        b=Bbl3X+rve91/4f1eQdhvyX7GQiB/1WhukmX1T5gjWtnFssT+87pJ/zIVTWH4rnreBhmz/s
-        5s+owkIPdeymoGM/9R6xn7EYobebqlHSQ6aJgaR9kWTaD29Zn0ytUhfAMzZJyyx9nXH4hg
-        gIJhxp1DpMq0gwqt7P5iVmLzdmRk9mA=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-C8l5OkmCOjOGkWUkUe5DTw-1; Fri, 26 Jun 2020 18:36:36 -0400
-X-MC-Unique: C8l5OkmCOjOGkWUkUe5DTw-1
-Received: by mail-qv1-f72.google.com with SMTP id s20so7362280qvw.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:36:36 -0700 (PDT)
+        bh=hHOoOMvKCdAD0ZPNXEYJ7zwb9/Vhd5GoKeFrCVrHadg=;
+        b=Jx1fABtDUpXzqAgcRu5sxlyEU9/mw5tlFOeevU7166+A/SuhPZWFE0woR+BL5JEjTpOY1c
+        UyRcvmyVuftUb14MXKSLP1Hyc1zogKH/bs0rN1yotNIjjnYeqXBwaZ/zWZnagWuX/h1a/L
+        Wuqkgf92LFsQ6IgFrz6qk3go+GP9RwI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-85-jduNkqRwO86YeZ5welTGTg-1; Fri, 26 Jun 2020 18:36:38 -0400
+X-MC-Unique: jduNkqRwO86YeZ5welTGTg-1
+Received: by mail-qk1-f199.google.com with SMTP id t22so7708615qkg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+T4PahBLwp+qMqIXI+a8sKJL/5YpPnDyt5GJ45wieOk=;
-        b=dCPXn/1SZfFYSbRzfZ21DSMh3XzAOG6s1/UUvNxJUNvy+UaFnD8T6P9hlepjJdyt37
-         rVyXScixc4v8ACdY+paHRLL2paZKSF8GlePf3XswlDDayVY41Pw/kEHgzoz8qTaetbE7
-         1V1RM8km8ZoDY2G1Xyp7VG4waQIDy/nFgkjKH/Yt8R4pjosnqzb2n9/NDZ/lGuvr4/2N
-         kQoEDCWNcTS2S5l1giVm+10kmZXdbMOZAabSs9NHO+OCky2JXp5rv1zvUpsLtUR6c1Hx
-         7Ry0YzIJq70aiLbKNiVJ6Jds4ILDVE0cM9llWH9Xu99Ili6K0YAIhk02sr+VadcPr8f8
-         01CQ==
-X-Gm-Message-State: AOAM5310pjtGXMiIUFdGAXeTfnZjKGaeMh5Udv2W1+AjcvYcJvn8jcHX
-        NNIi8emxbTFI5+EYyBh6iAoxdtuBUm7aAT22EbLtAu+xyCPsxFFFUmto0ALr2QwS0OlEgazV3OM
-        5Wwdkbpv28o7x9nqPXiOMrc/c
-X-Received: by 2002:a0c:b5db:: with SMTP id o27mr5409112qvf.205.1593210995312;
-        Fri, 26 Jun 2020 15:36:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzlD82Q8cmc5NmNE8445OCDFJdhANJej0rzVbZKfEZCyzpK7wCQulyA+sPy13MiOQo1jaWdnA==
-X-Received: by 2002:a0c:b5db:: with SMTP id o27mr5409095qvf.205.1593210995113;
-        Fri, 26 Jun 2020 15:36:35 -0700 (PDT)
+        bh=hHOoOMvKCdAD0ZPNXEYJ7zwb9/Vhd5GoKeFrCVrHadg=;
+        b=qLOg2ARZtM/NIxna6i8pG5hS+CfAhKcy+hCP0A0w3OftlABdA9rpj9HU9wKmmsfK9g
+         FEHm0Bi63l4h0PICQwYyV+s/HL45u713AE7H442U9wUz+pqFJ6HVW/uYG4Z2y5WgYNo5
+         omsEJQdmf8/IJ4nZv9zGRCjt4+oG3LpTjozYQZlrA/LhObR9TgCRrm+5VjieJQFl7qG8
+         cG5GVMS6rhMA4noM0oX+MauavHc7+ykccatTRuFFCT5wA9dPpchPWAOal4qw2Nwus+wR
+         19wLmk1Dga12X6OtHOu6zMty4XDO9blSA0m4lBtc6R40UMDY+prpDFA26r+hyllLEK0F
+         ZshA==
+X-Gm-Message-State: AOAM532OmRT2iMDNU+hOXsPm1nNdR0lXoIgvC2TmxU577iVUBComekTt
+        gyiZ0SIgTc5PAZJ336U42qSQNpuDMgny5NuCufBF4976h6zuM/J/pvAJb9by8n+egVJXh6X0rgb
+        sycfJpeYJDTh+qVePg0MbXN4k
+X-Received: by 2002:ad4:57c4:: with SMTP id y4mr5199980qvx.230.1593210997679;
+        Fri, 26 Jun 2020 15:36:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/5lWOLerE4xAFoxX4WH4c6jdmotNqRUcy+IApq6fCmSyWwwC40kou+k60M+HXuwatmhRgOA==
+X-Received: by 2002:ad4:57c4:: with SMTP id y4mr5199965qvx.230.1593210997481;
+        Fri, 26 Jun 2020 15:36:37 -0700 (PDT)
 Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id s71sm9636682qke.0.2020.06.26.15.36.33
+        by smtp.gmail.com with ESMTPSA id c27sm9546702qka.23.2020.06.26.15.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 15:36:34 -0700 (PDT)
+        Fri, 26 Jun 2020 15:36:36 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Peter Xu <peterx@redhat.com>,
@@ -73,9 +73,9 @@ Cc:     Peter Xu <peterx@redhat.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         "David S . Miller" <davem@davemloft.net>,
         sparclinux@vger.kernel.org
-Subject: [PATCH 20/26] mm/sparc32: Use general page fault accounting
-Date:   Fri, 26 Jun 2020 18:36:32 -0400
-Message-Id: <20200626223632.199958-1-peterx@redhat.com>
+Subject: [PATCH 21/26] mm/sparc64: Use general page fault accounting
+Date:   Fri, 26 Jun 2020 18:36:35 -0400
+Message-Id: <20200626223635.200006-1-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200626223130.199227-1-peterx@redhat.com>
 References: <20200626223130.199227-1-peterx@redhat.com>
@@ -94,23 +94,23 @@ CC: David S. Miller <davem@davemloft.net>
 CC: sparclinux@vger.kernel.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/sparc/mm/fault_32.c | 11 +----------
+ arch/sparc/mm/fault_64.c | 11 +----------
  1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/arch/sparc/mm/fault_32.c b/arch/sparc/mm/fault_32.c
-index 61524d284706..542bf034962f 100644
---- a/arch/sparc/mm/fault_32.c
-+++ b/arch/sparc/mm/fault_32.c
-@@ -235,7 +235,7 @@ asmlinkage void do_sparc_fault(struct pt_regs *regs, int text_fault, int write,
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
+diff --git a/arch/sparc/mm/fault_64.c b/arch/sparc/mm/fault_64.c
+index 6b702a0a8155..fe8854d447ed 100644
+--- a/arch/sparc/mm/fault_64.c
++++ b/arch/sparc/mm/fault_64.c
+@@ -423,7 +423,7 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
+ 			goto bad_area;
+ 	}
+ 
 -	fault = handle_mm_fault(vma, address, flags, NULL);
 +	fault = handle_mm_fault(vma, address, flags, regs);
  
  	if (fault_signal_pending(fault, regs))
- 		return;
-@@ -251,15 +251,6 @@ asmlinkage void do_sparc_fault(struct pt_regs *regs, int text_fault, int write,
+ 		goto exit_exception;
+@@ -439,15 +439,6 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
  	}
  
  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
