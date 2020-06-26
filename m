@@ -2,106 +2,188 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ADBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9809C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A5C207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57BE20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgFZQcY (ORCPT
+        id S1727093AbgFZQfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:32:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726252AbgFZQcX (ORCPT
+        Fri, 26 Jun 2020 12:35:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51686 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgFZQfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:32:23 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QGVjY1157814;
-        Fri, 26 Jun 2020 12:32:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31wd7c716b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 12:32:21 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05QGWLs8159717;
-        Fri, 26 Jun 2020 12:32:21 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31wd7c714y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 12:32:21 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QGVrfR026468;
-        Fri, 26 Jun 2020 16:32:19 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjk54q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 16:32:19 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QGWG2S64094598
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 16:32:16 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D106652054;
-        Fri, 26 Jun 2020 16:32:16 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.243])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 7125452052;
-        Fri, 26 Jun 2020 16:32:16 +0000 (GMT)
-Date:   Fri, 26 Jun 2020 18:32:15 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH RFC 2/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
-Message-ID: <20200626163215.GA4268@osiris>
-References: <20200417150151.17239-1-david@redhat.com>
- <20200417150151.17239-3-david@redhat.com>
+        Fri, 26 Jun 2020 12:35:15 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id C09CC2A5D7A
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4FBEE3C08CD; Fri, 26 Jun 2020 18:35:11 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 18:35:11 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
+Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
+Message-ID: <20200626163511.ecblnjw6ckh77kog@earth.universe>
+References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5m6ldzthn5ejezqb"
 Content-Disposition: inline
-In-Reply-To: <20200417150151.17239-3-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_08:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=1 mlxlogscore=957 cotscore=-2147483648 clxscore=1015
- adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006260112
+In-Reply-To: <20200416145123.73039-1-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:01:51PM +0200, David Hildenbrand wrote:
-> Commit 50be63450728 ("s390/mm: Convert bootmem to memblock") mentions
-> 	"The original bootmem allocator is getting replaced by memblock. To
-> 	cover the needs of the s390 kdump implementation the physical
-> 	memory list is used."
-> 
-> zcore was converted to use resources instead of memblocks.
-> memblock_discard() will *not* mess with "physmem", only with "memory" and
-> "reserved" memblocks. So, that data will stay after early boot, to be
-> used in arch/s390/kernel/crash_dump.c to create the ELF header from
-> inside the 2nd (a.k.a. dumping) kernel.
-> 
-> We no longer need ARCH_KEEP_MEMBLOCK.
-> 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
 
-Applied, thanks!
+--5m6ldzthn5ejezqb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Can this be applied please? There were no changes in 5.8 cycle to
+PPD's DT file, so it still applies.
+
+Thanks,
+
+-- Sebastian
+
+On Thu, Apr 16, 2020 at 04:51:23PM +0200, Sebastian Reichel wrote:
+> From: Ian Ray <ian.ray@ge.com>
+>=20
+> Use kernel LED interface for the alarm LEDs.
+>=20
+> Signed-off-by: Ian Ray <ian.ray@ge.com>
+> [Rebased]
+> Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
+> [Rebased]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  arch/arm/boot/dts/imx53-ppd.dts | 49 +++++++++++++++++++++++++++------
+>  1 file changed, 40 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-pp=
+d.dts
+> index 5ff9a179c83c..34ce41600098 100644
+> --- a/arch/arm/boot/dts/imx53-ppd.dts
+> +++ b/arch/arm/boot/dts/imx53-ppd.dts
+> @@ -176,7 +176,7 @@ pwm_bl: backlight {
+>  		power-supply =3D <&reg_3v3_lcd>;
+>  	};
+> =20
+> -	leds {
+> +	leds-brightness {
+>  		compatible =3D "pwm-leds";
+> =20
+>  		alarm-brightness {
+> @@ -185,6 +185,32 @@ alarm-brightness {
+>  		};
+>  	};
+> =20
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_alarmled_pins>;
+> +
+> +		alarm1 {
+> +			label =3D "alarm:red";
+> +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm2 {
+> +			label =3D "alarm:yellow";
+> +			gpios =3D <&gpio7 7 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm3 {
+> +			label =3D "alarm:blue";
+> +			gpios =3D <&gpio7 8 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm4 {
+> +			label =3D "alarm:silenced";
+> +			gpios =3D <&gpio7 13 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+>  	gpio-poweroff {
+>  		compatible =3D "gpio-poweroff";
+>  		gpios =3D <&gpio3 9 GPIO_ACTIVE_HIGH>;
+> @@ -909,18 +935,10 @@ MX53_PAD_NANDF_CS2__GPIO6_15		0x0
+>  			MX53_PAD_NANDF_CS3__GPIO6_16		0x0
+>  			/* POWER_AND_BOOT_STATUS_INDICATOR */
+>  			MX53_PAD_PATA_INTRQ__GPIO7_2		0x1e4
+> -			/* ACTIVATE_ALARM_LIGHT_RED */
+> -			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
+> -			/* ACTIVATE_ALARM_LIGHT_YELLOW */
+> -			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
+> -			/* ACTIVATE_ALARM_LIGHT_CYAN */
+> -			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
+>  			/* RUNNING_ON_BATTERY_INDICATOR_GREEN */
+>  			MX53_PAD_GPIO_16__GPIO7_11		0x0
+>  			/* BATTERY_STATUS_INDICATOR_AMBER */
+>  			MX53_PAD_GPIO_17__GPIO7_12		0x0
+> -			/* AUDIO_ALARMS_SILENCED_INDICATOR */
+> -			MX53_PAD_GPIO_18__GPIO7_13		0x0
+>  		>;
+>  	};
+> =20
+> @@ -1080,4 +1098,17 @@ pinctrl_usb_otg: usbotggrp {
+>  			MX53_PAD_KEY_COL4__USBOH3_USBOTG_OC	0x180
+>  		>;
+>  	};
+> +
+> +	pinctrl_alarmled_pins: qmx6alarmledgrp {
+> +		fsl,pins =3D <
+> +			/* ACTIVATE_ALARM_LIGHT_RED */
+> +			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
+> +			/* ACTIVATE_ALARM_LIGHT_YELLOW */
+> +			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
+> +			/* ACTIVATE_ALARM_LIGHT_CYAN */
+> +			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
+> +			/* AUDIO_ALARMS_SILENCED_INDICATOR */
+> +			MX53_PAD_GPIO_18__GPIO7_13		0x0
+> +		>;
+> +	};
+>  };
+> --=20
+> 2.25.1
+>=20
+
+--5m6ldzthn5ejezqb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl72I6sACgkQ2O7X88g7
++prlww//X/bBvm2laqBr3zVAZ/6mUh8OcKpesdRnIXJoRZ10f7lcj0sLJWxHmHia
+PY0/OeaIuCek6sUgC28KgnUThe4SBsBQCMefODeAwLb0l1vJJF/qCOX7rdN0uKVu
+9zKuIGY5tWM9GllWMEBZfENIVmctqt0egCg+Pi2XLN+En5CpwOOS01rl6tIYXgwk
+a1YaveHdSCMe9WO2UNV/RpxZBGSaiBHeFbBPuOhbJSZJh5CuhhYIlxw0szB1cIln
+OKp3S9wXjx9u5nDxHwxJ8WUSjWWUFdcXxh9i89/gCAMrXj3kYtWWlRvfJAzoJKTU
+4Y8qTdlKLNUuSyLTLctMXpZ9cIIJnxFQoSGuRoCruXZmVV9WdpVBm5yaPgpRchCd
+vfLXjaBVEmUSnWMPEjBTMD9aJlrhbf+i6JiY/tgGWSKBopyKIbyF77DhW7zJPeUe
+WrBvckFQQgtdR8S680Qyo4Yw2R714QAjCi7cb/HRkVe6/3NnO+HAU7t58bBlUAJH
+MwxmK9cqOm+llQKwzRYHzko4vI7Lm2D9Ze14tzcA10McCoAZsQrI8+0H+FhaN/xs
+iASm21gq/5lZXsUw++kWuvhuNThU9BxaaQ3AXK1ZgGgBYVxCVOlinKXjBqLzy9sU
+On28G29Tt9tqlAN4HXXDakc9cWeBf8VD4B9QzLohXI9vH4TR0W0=
+=ga+g
+-----END PGP SIGNATURE-----
+
+--5m6ldzthn5ejezqb--
