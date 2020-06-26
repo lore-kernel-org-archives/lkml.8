@@ -2,206 +2,187 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B32120836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D54C207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:02:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGcHPocr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgFZN6J (ORCPT
+        id S1728920AbgFZOCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgFZN6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:58:08 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB31207E8;
-        Fri, 26 Jun 2020 13:58:03 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 09:58:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200626095801.14cfa8a3@oasis.local.home>
-In-Reply-To: <20200625233552.2c8a0d1e@oasis.local.home>
-References: <20200625094454.732790f7@oasis.local.home>
-        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-        <20200625143525.2f3a2902@oasis.local.home>
-        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
-        <20200625223611.1dbb3b35@oasis.local.home>
-        <20200625233552.2c8a0d1e@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Jun 2020 10:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgFZOCT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:02:19 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104E7C03E979;
+        Fri, 26 Jun 2020 07:02:19 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d194so1627437pga.13;
+        Fri, 26 Jun 2020 07:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OwogBhlZPHbNtl4UbEnjQatoIz2yS67pDWCnaqWKRIo=;
+        b=BGcHPocrGyifAWVabsdMVOkcxskpXV5B9yZcnhk98FM3deI1SWu7Q8IHksgG8v7SMj
+         lLy0z5/oijzicm9xB3C7YV+JGh/UaukIbM2/DggLUs9SSUGdnM+WETe6ByspjfdAJKd5
+         bvXzSQFBCskfSz2wegMMNjAnLVr2jfg8S3k7D1PNrE0Fwh7FthT3b6liUONfCMtMs5rV
+         LEDIadIKgbS3hVRdeJI7pYJxhhSZj/L8ZuIX/7WfUDv0zVrrik8ztRunKEh5EkPkYXY8
+         F8v3ACdPpriHqT2lvbX/qAmNIRzahRRySQfPJmmTVTyc0G+xuQVKT/G5UcB/GOzAEOwn
+         GHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OwogBhlZPHbNtl4UbEnjQatoIz2yS67pDWCnaqWKRIo=;
+        b=V3xRHu/2EEWwyB0JE6T+xtoFEBSt28SUbkmIq9P24RIwG6j8+iUwy3j46//CvO4kkY
+         TSRMJt8ddZBCOlWmvoMKXgw3LYaGYe59QVRcQcpXLBGs/KuPqZJywd0FhTSg0Hgky6nl
+         sYnW3bZwVR9LDLnC5j0ZE4hYgsnxwgCIdTVWVIjUqjMIIUQOkZbKcrtJLLEeWESZfhIy
+         C04ZzktJRU1ImQZ5yDb7SR9tb7Q5Vg0eH1zkZ5bKhvgQ0whQcL7KxwOVcS365ZQ8jbGE
+         8YL0k3Xfo/u34ZIaSLGfB/HaT9NxrvcdEgcZ1M0rbqPJYUz563E6xpqC58LbXvOZbcbB
+         4x8w==
+X-Gm-Message-State: AOAM530vho8guPGXj4wvXG4s3N14Oue6uWHZcIbfGHglT/KWrmulZjMm
+        wdzpge2AOvQ8OBLP1TVmnEA=
+X-Google-Smtp-Source: ABdhPJxm+gdSpsA1ZMBwNkq+3Ba2UrmHDNToD3ktgv1HfMTV1ZEHJ2tByJdW7P2/LxAcqCkbJ8TZSA==
+X-Received: by 2002:aa7:84d9:: with SMTP id x25mr2997557pfn.300.1593180138205;
+        Fri, 26 Jun 2020 07:02:18 -0700 (PDT)
+Received: from sol (220-235-108-194.dyn.iinet.net.au. [220.235.108.194])
+        by smtp.gmail.com with ESMTPSA id a16sm21694142pgj.27.2020.06.26.07.02.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 07:02:16 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 22:02:11 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 13/22] gpio: uapi: define uAPI V2
+Message-ID: <20200626140211.GA29493@sol>
+References: <20200623040107.22270-1-warthog618@gmail.com>
+ <20200623040107.22270-14-warthog618@gmail.com>
+ <CAHp75VcEDnrQk5FeWTZdV3fMnTsLpnmy+hAnL4V3a0Ge0NEe2A@mail.gmail.com>
+ <20200624154057.GA8622@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624154057.GA8622@sol>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 23:35:52 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Jun 24, 2020 at 11:40:57PM +0800, Kent Gibson wrote:
+> On Wed, Jun 24, 2020 at 05:33:26PM +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 23, 2020 at 7:04 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > Add a new version of the uAPI to address existing 32/64bit alignment
+> > 
 
-> I have to think about this more, as I think there's a flaw in this
-> cmpxchg algorithm.
+[ snip ]
+> > 
+> > I'm wondering how many lines (in average) the user usually changes at
+> > once? One? Two?
+> > 
+> > Perhaps we need to be better with this, something like single line /
+> > multiple lines?
+> > 
+> > So, having a struct for single line change being embedded multiple
+> > times would allow to configure atomically several lines with different
+> > requirements.
+> > For example you can turn directions of the two lines for some kind of
+> > half-duplex bit banging protocol.
+> > 
+> > I'm not sure about the rest, but to me it seems reasonable to have
+> > single vs. multiple separation in some of the structures.
+> > 
+> 
 
-Bah, that was all wrong. I need to incorporate the seq counter into the
-time stamp. Luckily I only use 59 bits for a full time stamp (gives me
-18 years of nanoseconds), which gives me 5 bits to pay with, and all I
-need is 4 (2 for top and 2 for bottom). Now I can make the timestamp 60
-bits with 30 bits from the top and 30 from the bottom, and using two
-bits in each of those as a sequence counter.
+I think you are right about this - we should be taking the opportunity
+to remove the homogeneous config restriction, so we can have a mixture
+of lines with different configs in the one request.
+e.g. I've had a request to have lines with different active low settings.
+Your example requires both inputs and outputs.
+And for a recent rotary encoder example I would've liked to be able to
+have edge detection on one line, but return a snapshot with the state
+of several lines in the edge event.
 
-If after reading top and bottom, if the seq bits match, then the two
-match and can be put together as a valid number. Now I have this:
+So what I'm thinking is to replace the config that I had proposed with
+something like this:
 
+struct attrib {
+	/*
+	 * the set of lines from request.offsets that this attrib DOESN'T
+	 * apply to.  A zero value means it applies to all lines.
+     * A set bit means the line request.offsets[bit] does NOT get this
+     * attribute.
+	 */
+	__u64 mask[GPIOLINES_BITMAP_SIZE];
 
-struct rb_time_struct {
-	local_t		cnt;
-	local_t		top;
-	local_t		bottom;
+	/*
+	 * an attribute identifier that dictates the which of the union
+	 * fields is valid and how it is interpreted.
+	 */
+	__u32 id;
+
+	union {
+		__u64 flags; /* similar to v1 handleflags + eventflags */
+		__u32 debounce_period;
+		__u64 values[GPIOLINES_BITMAP_SIZE]; /* for id == output */
+        /* ... */
+
+		/* future config values go here */
+
+		/*
+		 * padding to ensure 32/64-bit alignment of attrib
+		 *
+		 * This must be the largest sized value.
+		 */
+		__u32 padding[3];
+	};
 };
 
-typedef struct rb_time_struct rb_time_t;
-	
-#define RB_TIME_SHIFT	30
-#define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
+/* config is a stack of attribs associated with requested lines. */
+struct config {
+	/* the number of populated attribs */
+	__u32 num_attribs;
 
-static int rb_time_cnt(unsigned long val)
-{
-	return (val >> RB_TIME_SHIFT) & 3;
-}
+	/* for 32/64-bit alignment */
+	__u32 padding;
 
-static u64 rb_time_val(unsigned long top, unsigned long bottom)
-{
-	u64 val;
+	struct attrib attribs[MAX_CONFIG_ATTRIBS];
+};
 
-	val = top & RB_TIME_VAL_MASK;
-	val <<= RB_TIME_SHIFT;
-	val |= bottom & RB_TIME_VAL_MASK;
+The idea is a stack of attributes, each of which can be applied to a
+subset of the requested lines, as determined by the attrib.mask.
+The config for a given attribute on a given line is determined by
+finding the first match while walking down the stack, or falling
+back to the sensible default if no match is found.
 
-	return val;
-}
+To reduce the number of attributes required, a number of boolean or
+boolean-ish fields can be combined into flags, similar to v1.
 
-static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
-{
-	unsigned long top, bottom;
+I'm guessing a handful of attribs would suffice for the vast majority of
+cases, so MAX_CONFIG_ATTRIBS would be in the 5-10 range.
+(Are we concerned about struct sizes?)
 
-	top = local_read(&t->top);
-	bottom = local_read(&t->bottom);
+Adding new config attribs in the future would involve adding a new id
+and a corresponding value in the union.  So we can potentially add as
+many new config attribs as we like - though the user would still be
+limited to MAX_CONFIG_ATTRIBS and may have to trade-off attribs in
+their particular application.
 
-	*cnt = rb_time_cnt(top);
+Does that make any sense?
 
-	if (*cnt != rb_time_cnt(bottom))
-		return false;
-
-	*ret = rb_time_val(top, bottom);
-	return true;
-}
-
-static bool rb_time_read(rb_time_t *t, u64 *ret)
-{
-	unsigned long cnt;
-
-	return __rb_time_read(t, ret, &cnt);
-}
-
-static inline unsigned long rb_time_val_cnt(unsigned long val, unsigned long cnt)
-{
-	return (val & RB_TIME_VAL_MASK) | ((cnt & 3) << RB_TIME_SHIFT);
-}
-
-static inline void rb_time_split(u64 val, unsigned long *top, unsigned long *bottom)
-{
-	*top = (unsigned long)((val >> RB_TIME_SHIFT) & RB_TIME_VAL_MASK);
-	*bottom = (unsigned long)(val & RB_TIME_VAL_MASK);
-}
-
-static void rb_time_val_set(local_t *t, unsigned long val, unsigned long cnt)
-{
-	val = rb_time_val_cnt(val, cnt);
-	local_set(t, val);
-}
-
-static void rb_time_set(rb_time_t *t, u64 val)
-{
-	unsigned long cnt, top, bottom;
-
-	rb_time_split(val, &top, &bottom);
-	do {
-		cnt = local_inc_return(&t->cnt);
-		rb_time_val_set(&t->top, top, cnt);
-		rb_time_val_set(&t->bottom, bottom, cnt);
-	} while (cnt != local_read(&t->cnt));
-}
-
-static bool rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
-{
-	unsigned long ret;
-
-	ret = local_cmpxchg(l, expect, set);
-	return ret == expect;
-}
-
-static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-{
-	unsigned long cnt, top, bottom;
-	unsigned long cnt2, top2, bottom2;
-	u64 val;
-
-	 if (!__rb_time_read(t, &val, &cnt))
-		 return false;
-
-	 if (val != expect)
-		 return false;
-
-	 cnt2 = local_read(&t->cnt);
-	 if (cnt2 != cnt)
-		 return false;
-	 cnt2++;
-
-	 rb_time_split(val, &top, &bottom);
-	 top = rb_time_val_cnt(top, cnt);
-	 bottom = rb_time_val_cnt(bottom, cnt);
-
-	 rb_time_split(set, &top2, &bottom2);
-	 top = rb_time_val_cnt(top2, cnt2);
-	 bottom = rb_time_val_cnt(bottom2, cnt2);
-	 
-	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
-		return false;
-	if (!rb_time_read_cmpxchg(&t->top, top, top2))
-		return false;
-	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-		return false;
-	return true;
-}
-
-Maybe I might implement this for BITS_FOR_LONG == 32.
-
--- Steve
+Cheers,
+Kent.
