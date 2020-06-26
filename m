@@ -2,118 +2,275 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48747C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE402070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fxtYlJ3B"
+	by mail.kernel.org (Postfix) with ESMTP id 1C8552088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgFZBrV (ORCPT
+        id S1727990AbgFZBrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Jun 2020 21:47:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:43302 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727969AbgFZBrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 21:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgFZBrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 21:47:21 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF16C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:47:20 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id x9so7190799ila.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZI2QAbeI3wF4VjzbAFwJj32Q7EvyNWiBzjCp0xpHBhs=;
-        b=fxtYlJ3BSjV7XZtuTFdwqinV6SHT6cwTm9+rCgEISc2G09/DLhxARQYlBy/UK4+DJl
-         4KrM9uLJUfl8oLdjmHBPY3Pa8Leoo1jfNizQje6oIZmcNdos0Vzfj+xpwPom436JEru3
-         2V+5CuUGRrEMuw5bgXzwjxYWqBLKa5rdq10EM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZI2QAbeI3wF4VjzbAFwJj32Q7EvyNWiBzjCp0xpHBhs=;
-        b=iU+rKxkkMg2gU9nIy1MzCC8aH+FIX5pNZF3tSmEZ6DIzr14AoJU+eTfBr1GnBrHgpR
-         h4qGuBcYInPD+D1z6FZ9TGWC6U6xoaumPE43Zg/1zDHEHWfpg3PlVHdE9Nevq0eDxAlr
-         0JUKAWWC9FoGQDtIjAHQXCyf8xEaDw5NDyveDDgezfdu9fJVPmcNuhc9+EFPQb56Z1S/
-         /j3bbIP/JVhqYi+UIywN18byB2BMfjppFjRwBTOdiNcf/ie6KSumFOaImQIM6JWlkFlo
-         rsorU1WmxpsEEkISbf28OcUb2cXeXLeWqLUk9MaKuADRkHcdScXFxjGSO+j9ZPnkAD4g
-         8mSQ==
-X-Gm-Message-State: AOAM533MrPor3kUDnEm6G5s4FaaO14+cyP5aViMIo7qm/MsWYCrDwv3J
-        c51zxRFS4AcSu4i6AXRUlBBAnIHx4RfaAjRU/URqOw==
-X-Google-Smtp-Source: ABdhPJw28e7/Trivi1/ysunIp3gfsfVNHRSV6GM7hynzLAzphh1A9aI+nfopxiE0hEGN1WS4lZ36n1Mx5S7DDNdRbFE=
-X-Received: by 2002:a92:cf42:: with SMTP id c2mr858886ilr.13.1593136040186;
- Thu, 25 Jun 2020 18:47:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com> <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
-In-Reply-To: <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 25 Jun 2020 21:47:08 -0400
-Message-ID: <CAEXW_YSU5=ZUf-4j55av9Q8b+PRiM2DCKydM9Bv__mzL2MWx4g@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/13] Core scheduling v5
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+IronPort-SDR: t2DGvpW5JbB5AjTWfwXEx+xjO+ga+XXzOmX1zMKyEUcS/omNqpSPr6mYWXiY6WaINvV5wRRifC
+ KfP0qPeIpUzg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="145207794"
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="145207794"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 18:47:20 -0700
+IronPort-SDR: QkbeGJYjarT9/nRx/tv4Z/bREXs9OPm8HkllLMmOoVh97LamZ2CdC67cXJWP5+T4+JzesCF75z
+ CqmUaHV5OjiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="385637678"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.172.117]) ([10.249.172.117])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2020 18:47:16 -0700
+Cc:     baolu.lu@linux.intel.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v4 12/12] x86/traps: Fix up invalid PASID
+To:     Fenghua Yu <fenghua.yu@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradeed.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+ <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f8b020a6-827c-cb36-b148-8c6015d5e4df@linux.intel.com>
+Date:   Fri, 26 Jun 2020 09:46:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 4:12 PM Vineeth Remanan Pillai
-<vpillai@digitalocean.com> wrote:
-[...]
-> TODO lists:
->
->  - Interface discussions could not come to a conclusion in v5 and hence would
->    like to restart the discussion and reach a consensus on it.
->    - https://lwn.net/ml/linux-kernel/20200520222642.70679-1-joel@joelfernandes.org
+Hi Fenghua,
 
-Thanks Vineeth, just want to add: I have a revised implementation of
-prctl(2) where you only pass a TID of a task you'd like to share a
-core with (credit to Peter for the idea [1]) so we can make use of
-ptrace_may_access() checks. I am currently finishing writing of
-kselftests for this and post it all once it is ready.
+On 2020/6/26 4:17, Fenghua Yu wrote:
+> A #GP fault is generated when ENQCMD instruction is executed without
+> a valid PASID value programmed in the current thread's PASID MSR. The
+> #GP fault handler will initialize the MSR if a PASID has been allocated
+> for this process.
+> 
+> Decoding the user instruction is ugly and sets a bad architecture
+> precedent. It may not function if the faulting instruction is modified
+> after #GP.
+> 
+> Thomas suggested to provide a reason for the #GP caused by executing ENQCMD
+> without a valid PASID value programmed. #GP error codes are 16 bits and all
+> 16 bits are taken. Refer to SDM Vol 3, Chapter 16.13 for details. The other
+> choice was to reflect the error code in an MSR. ENQCMD can also cause #GP
+> when loading from the source operand, so its not fully comprehending all
+> the reasons. Rather than special case the ENQCMD, in future Intel may
+> choose a different fault mechanism for such cases if recovery is needed on
+> #GP.
+> 
+> The following heuristic is used to avoid decoding the user instructions
+> to determine the precise reason for the #GP fault:
+> 1) If the mm for the process has not been allocated a PASID, this #GP
+>     cannot be fixed.
+> 2) If the PASID MSR is already initialized, then the #GP was for some
+>     other reason
+> 3) Try initializing the PASID MSR and returning. If the #GP was from
+>     an ENQCMD this will fix it. If not, the #GP fault will be repeated
+>     and will hit case "2".
 
-However a question: If using the prctl(2) on a CGroup tagged task, we
-discussed in previous threads [2] to override the CGroup cookie such
-that the task may not share a core with any of the tasks in its CGroup
-anymore and I think Peter and Phil are Ok with.  My question though is
-- would that not be confusing for anyone looking at the CGroup
-filesystem's "tag" and "tasks" files?
+For changes in Intel VT-d driver,
 
-To resolve this, I am proposing to add a new CGroup file
-'tasks.coresched' to the CGroup, and this will only contain tasks that
-were assigned cookies due to their CGroup residency. As soon as one
-prctl(2)'s the task, it will stop showing up in the CGroup's
-"tasks.coresched" file (unless of course it was requesting to
-prctl-share a core with someone in its CGroup itself). Are folks Ok
-with this solution?
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-[1]  https://lore.kernel.org/lkml/20200528170128.GN2483@worktop.programming.kicks-ass.net/
-[2] https://lore.kernel.org/lkml/20200524140046.GA5598@lorien.usersys.redhat.com/
+Best regards,
+baolu
+
+> 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+> v4:
+> - Change PASID type to u32 (Christoph)
+> 
+> v3:
+> - Check and set current->has_valid_pasid in fixup() (PeterZ)
+> - Add fpu__pasid_write() to update the MSR (PeterZ)
+> - Add ioasid_find() sanity check in fixup()
+> 
+> v2:
+> - Update the first paragraph of the commit message (Thomas)
+> - Add reasons why don't decode the user instruction and don't use
+>    #GP error code (Thomas)
+> - Change get_task_mm() to current->mm (Thomas)
+> - Add comments on why IRQ is disabled during PASID fixup (Thomas)
+> - Add comment in fixup() that the function is called when #GP is from
+>    user (so mm is not NULL) (Dave Hansen)
+> 
+>   arch/x86/include/asm/iommu.h |  1 +
+>   arch/x86/kernel/traps.c      | 14 +++++++
+>   drivers/iommu/intel/svm.c    | 78 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 93 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+> index ed41259fe7ac..e9365a5d6f7d 100644
+> --- a/arch/x86/include/asm/iommu.h
+> +++ b/arch/x86/include/asm/iommu.h
+> @@ -27,5 +27,6 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
+>   }
+>   
+>   void __free_pasid(struct mm_struct *mm);
+> +bool __fixup_pasid_exception(void);
+>   
+>   #endif /* _ASM_X86_IOMMU_H */
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index f9727b96961f..2352f3f1f7ed 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -59,6 +59,7 @@
+>   #include <asm/umip.h>
+>   #include <asm/insn.h>
+>   #include <asm/insn-eval.h>
+> +#include <asm/iommu.h>
+>   
+>   #ifdef CONFIG_X86_64
+>   #include <asm/x86_init.h>
+> @@ -514,6 +515,16 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+>   	return GP_CANONICAL;
+>   }
+>   
+> +static bool fixup_pasid_exception(void)
+> +{
+> +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> +		return false;
+> +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
+> +		return false;
+> +
+> +	return __fixup_pasid_exception();
+> +}
+> +
+>   #define GPFSTR "general protection fault"
+>   
+>   DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+> @@ -526,6 +537,9 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+>   
+>   	cond_local_irq_enable(regs);
+>   
+> +	if (user_mode(regs) && fixup_pasid_exception())
+> +		goto exit;
+> +
+>   	if (static_cpu_has(X86_FEATURE_UMIP)) {
+>   		if (user_mode(regs) && fixup_umip_exception(regs))
+>   			goto exit;
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 4c788880b037..4a84c82a4f8c 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -1105,3 +1105,81 @@ void __free_pasid(struct mm_struct *mm)
+>   	 */
+>   	ioasid_free(pasid);
+>   }
+> +
+> +/*
+> + * Write the current task's PASID MSR/state. This is called only when PASID
+> + * is enabled.
+> + */
+> +static void fpu__pasid_write(u32 pasid)
+> +{
+> +	u64 msr_val = pasid | MSR_IA32_PASID_VALID;
+> +
+> +	fpregs_lock();
+> +
+> +	/*
+> +	 * If the MSR is active and owned by the current task's FPU, it can
+> +	 * be directly written.
+> +	 *
+> +	 * Otherwise, write the fpstate.
+> +	 */
+> +	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+> +		wrmsrl(MSR_IA32_PASID, msr_val);
+> +	} else {
+> +		struct ia32_pasid_state *ppasid_state;
+> +
+> +		ppasid_state = get_xsave_addr(&current->thread.fpu.state.xsave,
+> +					      XFEATURE_PASID);
+> +		/*
+> +		 * ppasid_state shouldn't be NULL because XFEATURE_PASID
+> +		 * is enabled.
+> +		 */
+> +		WARN_ON_ONCE(!ppasid_state);
+> +		ppasid_state->pasid = msr_val;
+> +	}
+> +	fpregs_unlock();
+> +}
+> +
+> +/*
+> + * Apply some heuristics to see if the #GP fault was caused by a thread
+> + * that hasn't had the IA32_PASID MSR initialized.  If it looks like that
+> + * is the problem, try initializing the IA32_PASID MSR. If the heuristic
+> + * guesses incorrectly, take one more #GP fault.
+> + */
+> +bool __fixup_pasid_exception(void)
+> +{
+> +	struct intel_svm *svm;
+> +	struct mm_struct *mm;
+> +	u32 pasid;
+> +
+> +	/*
+> +	 * If the current task already has a valid PASID in the MSR,
+> +	 * the #GP must be for some other reason.
+> +	 */
+> +	if (current->has_valid_pasid)
+> +		return false;
+> +
+> +	/*
+> +	 * This function is called only when this #GP was triggered from user
+> +	 * space. So the mm cannot be NULL.
+> +	 */
+> +	mm = current->mm;
+> +	pasid = mm->pasid;
+> +
+> +	/*
+> +	 * If the PASID isn't found, cannot help.
+> +	 *
+> +	 * Don't care if the PASID is bound to the mm here. #PF will handle the
+> +	 * case that the MSR is fixed up by an unbound PASID.
+> +	 */
+> +	svm = ioasid_find(NULL, pasid, NULL);
+> +	if (IS_ERR_OR_NULL(svm))
+> +		return false;
+> +
+> +	/* Fix up the MSR by the PASID in the mm. */
+> +	fpu__pasid_write(pasid);
+> +
+> +	/* Now the current task has a valid PASID in the MSR. */
+> +	current->has_valid_pasid = 1;
+> +
+> +	return true;
+> +}
+> 
