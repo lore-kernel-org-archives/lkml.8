@@ -2,104 +2,98 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C66C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82C602075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3VZfIjA"
+	by mail.kernel.org (Postfix) with ESMTP id 7BAFA206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgFZQHa (ORCPT
+        id S1726830AbgFZQN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgFZQH3 (ORCPT
+        Fri, 26 Jun 2020 12:13:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46672 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725780AbgFZQN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:07:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3B4C03E979;
-        Fri, 26 Jun 2020 09:07:29 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so9872031wml.3;
-        Fri, 26 Jun 2020 09:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vfcHYp46j1WfUOi7vKspQV9Az5E6xO4ZTqEvKRNHDUk=;
-        b=R3VZfIjAkn5iXQOyl+u1QIZmx9QX3OizHYnasCsBlJrOFSV7rmyrKL5nTLV1eq6zT5
-         bS9jSm7r2rRIKHdEpwjgHviWB/oJssa35UAefXT8M5H5UA0GenffEaDxHJyDwsft+Z7J
-         2e6OXeNMz9lVGqGzH3J+6vCZvnbg3l8Mpe+C/jEa3/FnQgBKjZlgcNt8CfbPJHXAbsea
-         DDpHmmqLbxIcBoR0KWs4t1ANo9OsQ1GSCprw5KPHQvmBT8Y2qAPsTSibE7XR7jzbANSv
-         ThxZ7LREBp+M6UhAYyLbTzBDWe6406vuy5rn0x1cRf0+uPS1YGmOLbxva2tzMNNm+D0m
-         OKYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vfcHYp46j1WfUOi7vKspQV9Az5E6xO4ZTqEvKRNHDUk=;
-        b=Vp1V2fnXWc3Vm87YSN3h61dxOuG7QUdTomtOoHUlQhk7+UqsKIPb5sRWULZOOrPA8w
-         EP5t//d1E2lWv+EMTBr9TLro89PBMrCE34IwPQ6fg7GoOMV6pssHFQKX/9KDldmK5tnq
-         kx/Iyn1xVKJtfMxMix4bb/Ly1o+Md0uSMURwhqSDMiGce2PvpvCLlhz56+1fs1kW/44y
-         DyrjQq8VxoFw/tKkH/4ipf3zRwEGT7QDeu/O+pq+VabE59eAMQj3vjvPaIldUWZxWBhp
-         7MsqOi3zS8hQWfETgGAe/wNHLNBoIGnSdJJ6DMhVh+6wT2dl5n9NHpiH0uYxEG9Ev98R
-         G5RQ==
-X-Gm-Message-State: AOAM533fcz+6NwlKjDwERhUEDLpuCEMpLxRmXYNrv4cmOLvXaDEl0eU2
-        fgDMvl91zYCVC08yx1l0j/E=
-X-Google-Smtp-Source: ABdhPJymaDXqJxZFKxMNTeOD1tWgjSvESTTrTOvrJl97iGQfGoq/on/7YR6Gx2ikONzKWidSD0FkEQ==
-X-Received: by 2002:a1c:8094:: with SMTP id b142mr2470132wmd.122.1593187648473;
-        Fri, 26 Jun 2020 09:07:28 -0700 (PDT)
-Received: from [10.230.189.192] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z6sm13600436wmf.33.2020.06.26.09.07.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 09:07:27 -0700 (PDT)
-Subject: Re: [PATCH 6/6] net: phy: mdio: reset MDIO devices even if probe() is
- not implemented
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200626155325.7021-1-brgl@bgdev.pl>
- <20200626155325.7021-7-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <22760f15-656e-2adf-1d22-0a11065361fb@gmail.com>
-Date:   Fri, 26 Jun 2020 09:07:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200626155325.7021-7-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
+        Fri, 26 Jun 2020 12:13:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-209-xCfHYBrVPvC4iNDOenTImw-1; Fri, 26 Jun 2020 17:13:52 +0100
+X-MC-Unique: xCfHYBrVPvC4iNDOenTImw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 26 Jun 2020 17:13:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 26 Jun 2020 17:13:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Xin Long' <lucien.xin@gmail.com>,
+        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
+CC:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "minyard@acm.org" <minyard@acm.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: Strange problem with SCTP+IPv6
+Thread-Topic: Strange problem with SCTP+IPv6
+Thread-Index: AQHWSUW2AOXwYZ/c30aD/cEnXBcaYKjrFNkw
+Date:   Fri, 26 Jun 2020 16:13:51 +0000
+Message-ID: <50b0a6ff186e408bbfe6211221cb3998@AcuMS.aculab.com>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <E5F42909-3AB4-47FE-98B7-DEFB63968696@lurchi.franken.de>
+ <CADvbK_fddQiOJUVJNkJuxkzQ9V-tpk_ATBP4NpZ2rZketHEFcg@mail.gmail.com>
+In-Reply-To: <CADvbK_fddQiOJUVJNkJuxkzQ9V-tpk_ATBP4NpZ2rZketHEFcg@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogWGluIExvbmcNCj4gU2VudDogMjMgSnVuZSAyMDIwIDExOjE0DQo+ID4gPiBJdCBsb29r
+cyBsaWtlIGEgYnVnIHRvIG1lLiBUZXN0aW5nIHdpdGggdGhpcyB0ZXN0IGFwcCBoZXJlLCBJIGNh
+biBzZWUNCj4gPiA+IHRoZSBJTklUX0FDSyBiZWluZyBzZW50IHdpdGggYSBidW5jaCBvZiBpcHY0
+IGFkZHJlc3NlcyBpbiBpdCBhbmQNCj4gPiA+IHRoYXQncyB1bmV4cGVjdGVkIGZvciBhIHY2b25s
+eSBzb2NrZXQuIEFzIGlzLCBpdCdzIHRoZSBzZXJ2ZXIgc2F5aW5nDQo+ID4gPiAiSSdtIGF2YWls
+YWJsZSBhdCB0aGVzZSBvdGhlciBhZGRyZXNzZXMgdG9vLCBidXQgbm90LiINCj4gPiBJIGFncmVl
+Lg0KPiBUaGVuIHdlIG5lZWQgYSBmaXggaW4gc2N0cF9iaW5kX2FkZHJzX3RvX3JhdygpOg0KPiAN
+Cj4gQEAgLTIzOCw2ICsyNDAsOSBAQCB1bmlvbiBzY3RwX3BhcmFtcyBzY3RwX2JpbmRfYWRkcnNf
+dG9fcmF3KGNvbnN0DQo+IHN0cnVjdCBzY3RwX2JpbmRfYWRkciAqYnAsDQo+ICAgICAgICAgYWRk
+cnBhcm1zID0gcmV0dmFsOw0KPiANCj4gICAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KGFkZHIs
+ICZicC0+YWRkcmVzc19saXN0LCBsaXN0KSB7DQo+ICsgICAgICAgICAgICAgICBpZiAoKFBGX0lO
+RVQ2ID09IHNrLT5za19mYW1pbHkpICYmIGluZXRfdjZfaXB2Nm9ubHkoc2spICYmDQo+ICsgICAg
+ICAgICAgICAgICAgICAgKEFGX0lORVQgPT0gYWRkci0+YS5zYS5zYV9mYW1pbHkpKQ0KPiArICAg
+ICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4gICAgICAgICAgICAgICAgIGFmID0gc2N0
+cF9nZXRfYWZfc3BlY2lmaWMoYWRkci0+YS52NC5zaW5fZmFtaWx5KTsNCj4gICAgICAgICAgICAg
+ICAgIGxlbiA9IGFmLT50b19hZGRyX3BhcmFtKCZhZGRyLT5hLCAmcmF3YWRkcik7DQo+ICAgICAg
+ICAgICAgICAgICBtZW1jcHkoYWRkcnBhcm1zLnYsICZyYXdhZGRyLCBsZW4pOw0KDQpUaG91Z2h0
+Lg0KDQpEb2VzIGl0IG1ha2UgYW55IHNlbnNlIHRvIG9mZmVyIGFkZHJlc3NlcyBpbiB0aGUgSU5J
+VF9BQ0sgdGhhdCBkb24ndA0KaGF2ZSByb3V0ZXMgdG8gdGhvc2UgcHJvcG9zZWQgaW4gdGhlIHJl
+Y2VpdmVkIElOSVQ/DQoNCidyb3V0ZXMnIHByb2JhYmx5IGlzbid0IGV4YWN0bHkgdGhlIHJpZ2h0
+IHdvcmQuDQpZb3UgcHJvYmFibHkgb25seSB3YW50IHRoZSBsb2NhbCBhZGRyZXNzIHRoYXQgd2ls
+bCBiZSB1c2VkDQphcyB0aGUgc291cmNlIGFkZHJlc3MgZm9yIHRoZSBwcm9iZXMuDQpPciwgYXQg
+bGVhc3QsIHNvdXJjZXMgYWRkcmVzc2VzIHRoYXQgY291bGQgYmUgdXNlZCBmb3IgdGhlIHByb2Jl
+cy4NCg0KU28gaWYgdGhlIElOSVQgb25seSBjb250YWlucyBJUHY2IGFkZHJlc3NlcyBzaG91bGQg
+dGhlIElOSVRfQUNLDQpldmVyIGNvbnRhaW4gSVB2NCBvbmVzLg0KDQoJRGF2aWQuDQoNCi0NClJl
+Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
+b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
+Cg==
 
-
-On 6/26/2020 8:53 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Similarily to PHY drivers - there's no reason to require probe() to be
-> implemented in order to call mdio_device_reset(). MDIO devices can have
-> resets defined without needing to do anything in probe().
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
