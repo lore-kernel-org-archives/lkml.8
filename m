@@ -2,104 +2,127 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E794C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88FE820B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2572088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F6buymKA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aW00ncwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgFZVo1 (ORCPT
+        id S1725864AbgFZVrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:44:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
+        Fri, 26 Jun 2020 17:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZVo0 (ORCPT
+        with ESMTP id S1725780AbgFZVrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:44:26 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC144C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:44:26 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so10802211wrq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:44:26 -0700 (PDT)
+        Fri, 26 Jun 2020 17:47:10 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86577C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:47:10 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id s18so6269765vsi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q1+9uR2cQTSLPsT8QyUR/Cg47J1BAdwHYi4CR0KpoXQ=;
-        b=F6buymKASof8mmJbga47nan1aFNvRboyUdgZc2LDIhruRDLCx0xDwcGDnyyBHLgdEQ
-         tL8z34BIPXnbhSA/4oerC5duMocRTSkhK9aPmuJ7yGiTAdUb9VBOO6lHWS6FN64ahzHe
-         W2VZhmElm8ncvhvarmZFLuks3+pNBqAhih51FlGypS9QK2AZyPjXMwxQyX1tN/AI2fNU
-         GE1v5T5+sOi9kxPv1j+ttF6DND7wxu0LEIpKVWLCxsnJHfDrlGJWjg4nz8LKN2KKd69M
-         VCrG0mBPfLy/YOaip27jZ5ywmWERVt7hO8ZZZ46QIm0VhxoJmGkyyBlfx9Ku2oMWs4IQ
-         9wgw==
+        bh=BsR9lAG+ZKuy6S8tfE5+62W+cUzuqeg+ojLakVbeNYo=;
+        b=aW00ncwVrcFV+2yTbdUmjoHXoVq4ATu+p9+xi+f1wlmnSA3NL8Ks8YkMfmRkVBWGLZ
+         02PcNswuAkpSMd44gS8TChs3zBAVbgAFB6uEGkbIUu3+G5AAlccy/7OvRLdg8NSfD9N3
+         sC4WFjH+XU40hw38qYpX+hFt0NnxA4nNWRHYI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q1+9uR2cQTSLPsT8QyUR/Cg47J1BAdwHYi4CR0KpoXQ=;
-        b=WXO0nymLxSxjeAGlo2hlF//zRjOec+H+LMMenjWGfmFs0JH9DICtcCz8p8LPo9z9we
-         /cU2Y/VOs3fQH2Nty2Qh8XkTF9dtGYvpTYOCeQaJ3iS/rZTsx57bAZ1tccVID0GogVXx
-         1wrKdVFwigr8xG05KAeiExoMgQDrgY8lOgX8MTzKXOaVUXauJog0wkrYV3xsjobeGpdU
-         gbstS0UNxw+MTnn9qgwhj8SLYgh8k9WIjIs5p1EcgbIC5LWSR2j8HpMvUqf15BEGbxlQ
-         zBgxr6uIIiT35yKbm55WPx4Flk7fvV1z2bs8G7htTTOvz7QMK/O/FXbx1XNYTPFZDY1A
-         tP2w==
-X-Gm-Message-State: AOAM5304G5tyFn/b2t3R8xVr4TeOvcPsQKabs+4hoFx2ZYA28Rb8tybE
-        VrQzVsNoF9hbTvPj+zDNMsbCMZcaApTmASxyCdvrTw==
-X-Google-Smtp-Source: ABdhPJwFH8lMnF/e+eMJEtu1AUtXOMRtZMmfPI17iUqKjbKmM1h3+2EdvBGDRzYfZmEvupkBkmGNTFcHE5LC4mQv6Z8=
-X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr5544449wrt.119.1593207865276;
- Fri, 26 Jun 2020 14:44:25 -0700 (PDT)
+        bh=BsR9lAG+ZKuy6S8tfE5+62W+cUzuqeg+ojLakVbeNYo=;
+        b=Nn4fhemrBTN/hBEAJmPHSn7n9nAxbAUgvkBQMxDVbZ0FEa5Ej6nBreqHJrhR3WFjJc
+         DZQxpOi717voE2Y1IJIr6j0TCXXjc6jVlU5umuhehLtuMBy1DYCOGFO4Ais3twIUFFsy
+         iUCM75JM61O0jZDxqhcixgltL+YldfCxycVQ6JTvgaqQG9XaQVEgTpS0U40ga6Invf22
+         j2fWVdrLo2pbq7oTOPLWV+Dw3PvTYHaN47O9BsJQMw0q7VHVZGnYzwCXlznNfBJGKxWF
+         nj23mIEKBRUW8wEK9KE2FKvwsrQFm/N8XUIiy55OznT+y8LcaNGnJyntFZQJF2fMRCWd
+         mR/g==
+X-Gm-Message-State: AOAM5301KzI8vdUvJ8HRDSxGzrI2gQyEmsFPNmt9Y3w5R46itBNW8HRo
+        NDs9vMMM5XDkU/LKYAWUYWFhqQGU5hk=
+X-Google-Smtp-Source: ABdhPJzBi9K3658jQkLIG708+PlYcDlsxk+7jrtOLRo3VdarJdUsCH6ElXyUNhOVxrEaeYpNMQ4DOg==
+X-Received: by 2002:a67:e9d9:: with SMTP id q25mr4274345vso.53.1593208029435;
+        Fri, 26 Jun 2020 14:47:09 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id k23sm3255869vkn.24.2020.06.26.14.47.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id b13so3506833uav.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
+X-Received: by 2002:ab0:29c1:: with SMTP id i1mr4041837uaq.120.1593208028348;
+ Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626212522.GF818054@tassilo.jf.intel.com>
-In-Reply-To: <20200626212522.GF818054@tassilo.jf.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jun 2020 14:44:14 -0700
-Message-ID: <CAP-5=fVMs4Ok3=gYmzheNTzbBUGGHbCr0cpJSm9TV45aeZb4Ng@mail.gmail.com>
-Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
+References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org> <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 26 Jun 2020 14:46:57 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X+v1TpZQPBZNV_Azt8J=0ZJw+XGJhLbnBxaZJGCCPwVg@mail.gmail.com>
+Message-ID: <CAD=FV=X+v1TpZQPBZNV_Azt8J=0ZJw+XGJhLbnBxaZJGCCPwVg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt: bindings: Add new regulator as optional property
+ for WCN3990
+To:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath10k@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 2:25 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> On Fri, Jun 26, 2020 at 09:47:10PM +0200, Jiri Olsa wrote:
-> > hi,
-> > this patchset is adding the support to reused metric in another
-> > metric. The metric needs to be referenced by 'metric:' prefix.
->
-> Why is the prefix needed?
->
-> Could just look it up without prefix.
+Hi,
 
-The name could be a metric or an event, the logic for each is quite
-different. You could look up an event and when it fails assume it was
-a metric, but I like the simplicity of this approach. Maybe this
-change could be adopted more widely with something like "perf stat -e
-metric:IPC -a -I 1000" rather than the current "perf stat -M IPC -a -I
-1000".
+On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
+>
+> Add an additional regulator supply as an optional
+> property for WCN3990.
+>
+> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-Ian
+Overall though: aren't you missing a whole lot of CCs?  Have you tried
+using get_maintainer?
 
-> -Andi
+
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 65ee68e..b7188d3 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -65,7 +65,8 @@ Optional properties:
+>                                      the length can vary between hw versions.
+>  - <supply-name>-supply: handle to the regulator device tree node
+>                            optional "supply-name" are "vdd-0.8-cx-mx",
+> -                          "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
+> +                          "vdd-1.8-xo", "vdd-1.3-rfa", "vdd-3.3-ch0"
+> +                          and "vdd-3.3-ch1".
+
+nit that could probably be fixed by maintainer when applying: missing
+comma at the end of "vdd-3.3-ch0"
+
+I will also note that this file is in dire need of being converted to
+yaml.  Pretty soon I think people are going to start disallowing
+changes to the bindings that haven't been converted to yaml so you
+probably want to get a jump start on it so future patches aren't
+stalled.
+
+In any case:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
