@@ -2,86 +2,108 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D107C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C194C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B57207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593185387;
-	bh=zXjG44VNS3z0g6/r9OQ45OaHncYIm/HWnlomXgb0td4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dACGaP6IDNThbD0ZLrY5ayUOQgrtQyPgYxsi8Daad8N8fgcJ4ZaPhpmllhrSyyqey
-	 llRpH/fB1CNkwllNAjRMQl8O899A8TFUXC9P/DEkiNj9WIW6SoJybYRomanL2Z2lf5
-	 E6CLI2bNq9CxnebeYKcbTpaUnoYfi1yp0I5Nmbbg=
+	by mail.kernel.org (Postfix) with ESMTP id 59DD22081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsgF+eG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgFZP3q (ORCPT
+        id S1726518AbgFZPbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFZP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:29:45 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE7E7207E8;
-        Fri, 26 Jun 2020 15:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593185384;
-        bh=zXjG44VNS3z0g6/r9OQ45OaHncYIm/HWnlomXgb0td4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jwz6I1HZkH/aTM1g3LDJ+AHjiTXYI38VupkBjQwvQZqebkUAguYylrVaTlYZTiK5w
-         fsaLM+YWeysCXxgUZi73Rr4dPoXgHM5gWtJlUnwbuz7pcogd5/FNQcePXQmmTq00NI
-         d5I3wUED54W/zXIyxPK9d8kyBNRKhl+u1td3TPXg=
-Received: by pali.im (Postfix)
-        id 9A82C890; Fri, 26 Jun 2020 17:29:42 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: Use macro MWIFIEX_MAX_BSS_NUM for specifying limit of interfaces
-Date:   Fri, 26 Jun 2020 17:29:38 +0200
-Message-Id: <20200626152938.12737-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Jun 2020 11:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFZPbY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:31:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B21C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:31:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so9874552wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Z79Xn2ytfLRDJlBOWEMRlNKpTQq7eZRoHYN4S12R0hY=;
+        b=qsgF+eG5zi88+Xt1pcJnX7+8UFAsvZWpIVBpNbGWK+arUYAqgpvet0eg6Nz6Iamofd
+         61kONqQsBjhbukfj/k4BsZASz0CwKVsJ7diQQp5UR4rlnPZEjahQ3hdqLbufRzsdDQNB
+         Y5P4pREKRp5lDnKyC+awNz9txTFXqb+TjOD/v9hXEOLQTa88fKiE+oWMb2LDrPpOoDMF
+         xGPIrWZmSzs63RV8eFTriV27jvuBjo2XIsBmW8Gb+8wYNXf5tRgWdC3niWtp/mYBvmd8
+         9Rg/CU1fzkqsnkiisQsD8dKI8/Q6Aa7tqAKK213r7x+B/iBEoC61W61czbTW9nH7An+d
+         1+og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Z79Xn2ytfLRDJlBOWEMRlNKpTQq7eZRoHYN4S12R0hY=;
+        b=bBVkJjuD35sHHJMPrqVFWE2NbI+PD0WUB6eO7TWXgjTKIe5ud1wE9a5NVvgTwvWGRX
+         X54kjKqN6ANMWJP66+fNiDeyhE2xrSnbW4SEK0X/JqSbVWHuuehRW+/6lY8o1r6dbiK8
+         2RO4vmqWKp7c+I6w1DglYul4amwkfqijm9ZiuC+uJE+SB2m/y4FO63N1JlkEAeGsGqdH
+         3eJJ+EsqacIt81524nMZrqxAirIcWLBAhTrI87Us+83mqNb/KufB+o/X8I+lpfFJaljz
+         Sj8Ih/imzekqvozvCHR6fMfNvCmCwYbrW7xolvyf13IsFVRZ4oHiIKD1kIZwCAmjk4gk
+         wHow==
+X-Gm-Message-State: AOAM533nr2tv6DiKOvR598FshSNm8IobFT7CAWQQTrxmdzT3B6DSMSXB
+        x2bfGDIgKkIPlnhRkZZwDOlQBA==
+X-Google-Smtp-Source: ABdhPJxWxlkMZnJ8t8xwSYOJAkftwwfg7dvAGODCCccNrSs1Wd3xLYOWg3KAZANF/AkGBiHIOO3zEw==
+X-Received: by 2002:adf:8168:: with SMTP id 95mr4443592wrm.104.1593185482649;
+        Fri, 26 Jun 2020 08:31:22 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id c6sm17193641wma.15.2020.06.26.08.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 08:31:21 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 16:31:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@ti.com>,
+        Keerthy <j-keerthy@ti.com>, AnilKumar Ch <anilkumar@ti.com>,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 6/9] regulator: tps65217-regulator: Use the returned
+ value of tps65217_reg_read()
+Message-ID: <20200626153119.GC177734@dell>
+References: <20200626065738.93412-1-lee.jones@linaro.org>
+ <20200626065738.93412-7-lee.jones@linaro.org>
+ <20200626133304.GB5289@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626133304.GB5289@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro is already used in mwifiex driver for specifying upper limit and
-is defined to value 3. So use it also in struct ieee80211_iface_limit.
+On Fri, 26 Jun 2020, Mark Brown wrote:
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On Fri, Jun 26, 2020 at 07:57:35AM +0100, Lee Jones wrote:
+> 
+> > Until now the aforementioned return value has been ignored.
+> 
+> This is only aforementioned in the subject.
+> 
+> >  		/* Store default strobe info */
+> >  		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> 
+> We should really be logging an error there rather than just returning,
+> that way it's a bit more apparent to someone debugging things what went
+> wrong if there is actually a problem.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 4e4f59c17ded..867b5cf385a8 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -27,7 +27,8 @@ module_param(reg_alpha2, charp, 0);
- 
- static const struct ieee80211_iface_limit mwifiex_ap_sta_limits[] = {
- 	{
--		.max = 3, .types = BIT(NL80211_IFTYPE_STATION) |
-+		.max = MWIFIEX_MAX_BSS_NUM,
-+		.types = BIT(NL80211_IFTYPE_STATION) |
- 				   BIT(NL80211_IFTYPE_P2P_GO) |
- 				   BIT(NL80211_IFTYPE_P2P_CLIENT) |
- 				   BIT(NL80211_IFTYPE_AP),
+Would you like me to fix that up subsequently?
+
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
