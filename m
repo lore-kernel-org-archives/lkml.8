@@ -2,102 +2,211 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24B43204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430342075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m8J34OgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgFZP46 (ORCPT
+        id S1730184AbgFZP55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:56:58 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24803 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgFZP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:56:58 -0400
-IronPort-SDR: uZQOJbZQHU7FIEjatT2pAbXG+e0xawdGTY1SLzdpGToUcjg487EUGVs4cM9QXBTmRBrAqz3Mu1
- g3AvZvTQCkHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="230146587"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="230146587"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 08:56:57 -0700
-IronPort-SDR: j+HuT071Nr3F3FGpKOZF8ToqB4YfiJFxn9esIc79m4HAcTKwxP/nrGkykJA7rdjQjkHYdehxx2
- Pe6gTsaglh7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="276400676"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 26 Jun 2020 08:56:57 -0700
-Date:   Fri, 26 Jun 2020 08:56:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200626155657.GC6583@linux.intel.com>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
- <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
- <20200625162540.GC3437@linux.intel.com>
- <df859fb0-a665-a82a-0cf1-8db95179cb74@redhat.com>
+        Fri, 26 Jun 2020 11:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbgFZP54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:57:56 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF71DC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:57:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 22so9295355wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SLVYA+KPlPsy9yYgUjFYIqSkRv4wawTtFWm+qvVkpo4=;
+        b=m8J34OgFfXzLvgc2if7QNbh2n9WDF0es4wCI5PdUUYAIWFt1H+DMIQ8TdH8szFYi3Z
+         OhziB1Ey6NE4hEfulz5iFal5p5A7Sc7x4SAP5aUJbDfLwn7RhY/7b74L1JLOy9xEXkTB
+         HT/ARs/NhMlaXXLdlepTcS1Gr9xCxFnc4KaqGrzKtcw+JFtafDJfyB7nAjQb/sdTQIse
+         wd/v6QR7DlZnmNvj8bTL8Rpiwzjx+JuSGn53xTDo7qJbeUpH9kUdnkq39ODpH8H+B1RS
+         qOj1vVvu/dzbZXcNvxmIT7D5cQgP8LO1E4K+NcP4IscV6XuNXT9oimRBsqC9SxdlHjxG
+         +SLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SLVYA+KPlPsy9yYgUjFYIqSkRv4wawTtFWm+qvVkpo4=;
+        b=GrjynTd1MLvcd0PBe0tyuPFizkOc8HhBITijkKeitJrGNFpCOXw9R1P83L83nXqCc1
+         o13egnqSP88GAb37J3whXBdYtLr8C5SpbvudvkuV6Y3ra9QAsW8Yuh58TOTgjlgpHnMq
+         u5qfIWtCvI/bi9GvGnVGcT9YVFc3F+i1wKRXwzTBH6gXki4RUsiR2YETs5GO9ojtFENS
+         wy8HUO9Qt4Ep5Ce+GEO2oB3ggwrXYaxQVqppJj/1Qt002QwMdAYSC/Myaq6NZEeWLWbg
+         4a4LaLzeLfFmqvo5PfpL97JAeqohXzi5N4s4EqAObikBpEuhQ2i9DwEUvzLoCfKoZN7d
+         hd/A==
+X-Gm-Message-State: AOAM531X8da8UScjTGqK4e2g1nKmSCIB8eLWt0/7cUvCp2B48XnFkbfm
+        xKRMyhS1L12de5HkLSyKIKE4Kg==
+X-Google-Smtp-Source: ABdhPJyN/TqWJB0s+HOEo3+G7pkP5DR7DUqjxT+LOyXk/S8tZH/iVagIQRM3AUWWBY3aR03bTU2d5g==
+X-Received: by 2002:a1c:7e49:: with SMTP id z70mr4013279wmc.24.1593187074525;
+        Fri, 26 Jun 2020 08:57:54 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id f1sm17429843wmj.12.2020.06.26.08.57.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 08:57:53 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 16:57:50 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 3/3] cpufreq: Specify default governor on command line
+Message-ID: <20200626155750.GA540785@google.com>
+References: <cover.1593143118.git.viresh.kumar@linaro.org>
+ <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df859fb0-a665-a82a-0cf1-8db95179cb74@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:44:16PM +0200, Paolo Bonzini wrote:
-> On 25/06/20 18:25, Sean Christopherson wrote:
-> > I get the "what" of the change, and even the "why" to some extent, but I
-> > dislike the idea of supporting/encouraging blind reads/writes to MSRs.
-> > Blind writes are just asking for problems, and suppressing warnings on reads
-> > is almost guaranteed to be suppressing a KVM bug.
-> 
-> Right, that's why this patch does not just suppress warnings: it adds a
-> different return value to detect the case.
-> 
-> > TSC_CTRL aside, if we insist on pointing a gun at our foot at some point,
-> > this should be a dedicated flavor of MSR access, e.g. msr_data.kvm_initiated,
-> > so that it at least requires intentionally loading the gun.
-> 
-> With this patch, __kvm_get_msr does not know about ignore_msrs at all,
-> that seems to be strictly an improvement; do you agree with that?
+On Friday 26 Jun 2020 at 09:21:44 (+0530), Viresh Kumar wrote:
+> index e798a1193bdf..93c6399c1a42 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -50,6 +50,9 @@ static LIST_HEAD(cpufreq_governor_list);
+>  #define for_each_governor(__governor)				\
+>  	list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
+>  
+> +static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
+> +static char default_governor[CPUFREQ_NAME_LEN];
+> +
+>  /**
+>   * The "cpufreq driver" - the arch- or hardware-dependent low
+>   * level driver of CPUFreq support, and its spinlock. This lock
+> @@ -1061,7 +1064,6 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
+>  
+>  static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  {
+> -	struct cpufreq_governor *def_gov = cpufreq_default_governor();
+>  	struct cpufreq_governor *gov = NULL;
+>  	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+>  	bool put_governor = false;
+> @@ -1071,22 +1073,29 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  		/* Update policy governor to the one used before hotplug. */
+>  		gov = get_governor(policy->last_governor);
+>  		if (gov) {
+> -			put_governor = true;
+>  			pr_debug("Restoring governor %s for cpu %d\n",
+> -				 policy->governor->name, policy->cpu);
+> -		} else if (def_gov) {
+> -			gov = def_gov;
+> +				 gov->name, policy->cpu);
+>  		} else {
+> -			return -ENODATA;
+> +			gov = get_governor(default_governor);
+> +		}
+> +
+> +		if (gov) {
+> +			put_governor = true;
+> +		} else {
+> +			gov = cpufreq_default_governor();
+> +			if (!gov)
+> +				return -ENODATA;
+>  		}
 
-Not really?  It's solving a problem that doesn't exist in the current code
-base (assuming TSC_CTRL is fixed), and IMO solving it in an ugly fashion.
+As mentioned on patch 01, doing put_module() below if gov != NULL would
+avoid this dance with put_governor, but this works too, so no strong
+opinion.
 
-I would much prefer that, _if_ we want to support blind KVM-internal MSR
-accesses, we end up with code like:
+> +
+>  	} else {
+> +
+>  		/* Use the default policy if there is no last_policy. */
+>  		if (policy->last_policy) {
+>  			pol = policy->last_policy;
+> -		} else if (def_gov) {
+> -			pol = cpufreq_parse_policy(def_gov->name);
+> +		} else {
+> +			pol = cpufreq_parse_policy(default_governor);
+>  			/*
+> -			 * In case the default governor is neiter "performance"
+> +			 * In case the default governor is neither "performance"
+>  			 * nor "powersave", fall back to the initial policy
+>  			 * value set by the driver.
+>  			 */
+> @@ -2796,13 +2805,22 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
+>  
+>  static int __init cpufreq_core_init(void)
+>  {
+> +	struct cpufreq_governor *gov = cpufreq_default_governor();
+> +	char *name = gov->name;
+> +
+>  	if (cpufreq_disabled())
+>  		return -ENODEV;
+>  
+>  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+>  	BUG_ON(!cpufreq_global_kobject);
+>  
+> +	if (strlen(cpufreq_param_governor))
+> +		name = cpufreq_param_governor;
+> +
+> +	strncpy(default_governor, name, CPUFREQ_NAME_LEN);
 
-	if (msr_info->kvm_internal) {
-		return 1;
-	} else if (!ignore_msrs) {
-		vcpu_debug_ratelimited(vcpu, "unhandled wrmsr: 0x%x data 0x%llx\n",
-			    msr, data);
-		return 1;
-	} else {
-		if (report_ignored_msrs)
-			vcpu_unimpl(vcpu,
-				"ignored wrmsr: 0x%x data 0x%llx\n",
-				msr, data);
-		break;
-	}
+Do we need both cpufreq_param_governor and default_governor?
+Could we move everything to only one of them? Something a little bit
+like that maybe?
 
-But I'm still not convinced that there is a legimiate scenario for setting
-kvm_internal=true.
+---8<---
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 93c6399c1a42..a0e90b567e1e 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -50,7 +50,6 @@ static LIST_HEAD(cpufreq_governor_list);
+ #define for_each_governor(__governor)                          \
+        list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
+ 
+-static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
+ static char default_governor[CPUFREQ_NAME_LEN];
+ 
+ /**
+@@ -2814,13 +2813,11 @@ static int __init cpufreq_core_init(void)
+        cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+        BUG_ON(!cpufreq_global_kobject);
+ 
+-       if (strlen(cpufreq_param_governor))
+-               name = cpufreq_param_governor;
+-
+-       strncpy(default_governor, name, CPUFREQ_NAME_LEN);
++       if (!strlen(default_governor))
++               strncpy(default_governor, name, CPUFREQ_NAME_LEN);
+ 
+        return 0;
+ }
+ module_param(off, int, 0444);
+-module_param_string(default_governor, cpufreq_param_governor, CPUFREQ_NAME_LEN, 0444);
++module_param_string(default_governor, default_governor, CPUFREQ_NAME_LEN, 0444);
+--->8---
 
-> What would you think about adding warn_unused_result to __kvm_get_msr?
+Also, one thing to keep in mind with this version (or the one you
+suggested) is that if the command line parameter is not valid, we will
+not fallback on the builtin default for the ->setpolicy() case. But I
+suppose one might argue this is a reasonable behaviour, so no objection
+from me.
 
-I guess I wouldn't object to it, but that seems like an orthogonal issue.
+Otherwise, apart from these nits, I gave this a go on my setup, with
+builtin and modular governors & drivers, and everything worked exactly
+as expected.
+
+Thanks Viresh for the help!
+Quentin
