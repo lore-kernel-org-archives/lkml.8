@@ -2,150 +2,135 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA690C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D25C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966A220775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593157326;
-	bh=JLErr3mk2ZC8rjZw+2EYDQ0NJcWymxgTIUuhqQkBrls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l8cvlJq7dFe+KARwnGy90UrHin9SOsRKEr9t3OjuoWEhgxe7YSoN5wd7SywbbaIRF
-	 tdShY6WIkB8ZO8zkoHHtghh2mypN839GwTN9hwL8AmGwxy/0lvEpfVOXWa4OZzvvMW
-	 i0vWFL/WBBN16i7rUOEa1tw9mSFnHIlM6I6faNcw=
+	by mail.kernel.org (Postfix) with ESMTP id 48E7920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:42:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JuHGdSRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgFZHmF (ORCPT
+        id S1728847AbgFZHm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:42:05 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36538 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgFZHmE (ORCPT
+        Fri, 26 Jun 2020 03:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbgFZHm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:42:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c21so4623319lfb.3;
-        Fri, 26 Jun 2020 00:42:03 -0700 (PDT)
+        Fri, 26 Jun 2020 03:42:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E33C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:42:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b7so4331383pju.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=OJIUC4k1mJAJPg8NhZJ50NxPEO+zBVx140Q/CxvWNvw=;
+        b=JuHGdSRcBQGE3Lde78F313PsAZcPMsnhx/4TiHSLZEfd0kKmZO8VUORbl2ywLlLNYP
+         SybuYbIXipyAqOoCEFVzfX+cyu1u//qdxZmUFkk1BZIbhZiDVvkT+r3ys2yo80bHbGon
+         SsdxDCae+9fy02JYCpW6exl43BLdPHw76Jn1k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mz/Q5xHbOmwCEIDYAnNtu1WbEvpEmmozdU6zt7tewjs=;
-        b=ansPmfnjjY1i73OVPV6EwXdBi3KQsHqUFi84Flid0QgrqegXAYPLplcG+SI9oaFHFI
-         GwjZL4w+VMtE4dgKiIQu8Ei6WF//mjPGRLD0+cRbr1b3WsFVF0wD46jWhH6k1KMtlUDn
-         qHR8Da3dxtyhrAlvGVfgz/WkbLQfTkfILddMYlkLiQ/07SGmM2wGDqhHRnp+R+OFaNDs
-         k0SIzyHV/znoMyN8fQLZmbfWGt+V3p+DIJ2XpGrK9nMWQ/FsE/Q2R8/ZMFmYMEkYlkRI
-         nMo1mdpRw/JlZEKiOMqxvWErjZmfQX5GHinfDLsILiEiw9ErWu7CjJtuLdtVWW2lo8Tt
-         jYXQ==
-X-Gm-Message-State: AOAM530I/mtRWvM2xfSqaZt+4l7LUOYIjnLzrKeG+xfu0NaHoYv5+3b8
-        9Yn5NUQ9jfeb3NVJ91ge700=
-X-Google-Smtp-Source: ABdhPJx/Mub6cbZBQRh5pmIf6JDa6VYSNKLrybxnpwjY7gIu4zfOWe0CddowQEbi5MIfNPpapsnt/Q==
-X-Received: by 2002:a19:c744:: with SMTP id x65mr1133435lff.133.1593157322338;
-        Fri, 26 Jun 2020 00:42:02 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id f24sm5312749ljk.125.2020.06.26.00.42.01
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=OJIUC4k1mJAJPg8NhZJ50NxPEO+zBVx140Q/CxvWNvw=;
+        b=nRyYRDFDELi5ImQdQn0Mpd7lXcNYLizPjgBnmsX0vGmaKLN1ET6THM4ATbjN1avVMf
+         xubh6MpafhkMthvbyFHalu8H7jyk6DwTFORaFINF6CI0jXqwSqHE0MIx30SUkzqcdYkr
+         6gKhOUfPSnidpZIr6iRkgPt0fLmIft03aOL1FhAKVJG22/m9m3pV5MzqgJ6eOKGnhtQG
+         nQOJoA49A5GNLw1TeDnLFySmPrVPf5koCGNiduNiZpAdEWtw5W0Pjzk4SjLgewMaZtfT
+         oT9EDttuyYezXVABbTrToVjM1uFjhpINk8kUpo4S3aHCOM135nDx2SoaLJp4Qh6Vlpkk
+         q+Gg==
+X-Gm-Message-State: AOAM533uA40NTB0YAkwHelpI0uEhwPmkwnNyv076r+umdhPFH3e6N9tD
+        lyOqS8b+eCtiD4Oewl0IcgnnHA==
+X-Google-Smtp-Source: ABdhPJxJiBdKBJCg9hkKXPvaAZ1SMFSV7dxt8ZkrJwCH6KsPe6VyOeT252b+sGAmU5335uuNU45W2w==
+X-Received: by 2002:a17:90a:1546:: with SMTP id y6mr2153667pja.92.1593157376534;
+        Fri, 26 Jun 2020 00:42:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id jz23sm10479542pjb.2.2020.06.26.00.42.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:42:01 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1joizu-0005Fh-Rj; Fri, 26 Jun 2020 09:42:06 +0200
-Date:   Fri, 26 Jun 2020 09:42:06 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Phu Luu <Phu.Luu@silabs.com>
-Cc:     "johan@kernel.org" <johan@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Brant Merryman <Brant.Merryman@silabs.com>,
-        Richard Hendricks <Richard.Hendricks@silabs.com>,
-        =?utf-8?B?UGjDuiBMxrB1?= An <luuanphu@gmail.com>,
-        "hungnd3@fsoft.com.vn" <hungnd3@fsoft.com.vn>
-Subject: Re: [PATCH v3 2/2] USB: serial: cp210x: Proper RTS control when
- buffers fill
-Message-ID: <20200626074206.GP3334@localhost>
-References: <ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com>
+        Fri, 26 Jun 2020 00:42:56 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200625001039.56174-4-john.stultz@linaro.org>
+References: <20200625001039.56174-1-john.stultz@linaro.org> <20200625001039.56174-4-john.stultz@linaro.org>
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Fri, 26 Jun 2020 00:42:55 -0700
+Message-ID: <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 04:24:20AM +0000, Phu Luu wrote:
-> From: Brant Merryman <brant.merryman@silabs.com>
-> 
-> CP210x hardware disables auto-RTS but leaves auto-CTS when
-> in hardware flow control mode and UART on cp210x hardware
-> is disabled. This allows data to flow out, but new data
-> will not come into the port. When re-opening the port, if
-> auto-CTS is enabled on the cp210x, then auto-RTS must be
-> re-enabled in the driver.
-> 
-> Signed-off-by: Phu Luu <phu.luu@silabs.com>
-> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-
-Please revisit these tags as well.
-
-> ---
-> 06/09/2020: Patch v3 2/2 Modified based on feedback from Johan Hovold <johan@kernel.org>
-> 12/18/2019: Patch v2 Broken into two patches and modified based on feedback from Johan Hovold <johan@kernel.org>
-> 12/09/2019: Initial submission of patch "Proper RTS control when buffers fill"
-> 
->  drivers/usb/serial/cp210x.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-> index bcceb4ad8be0..091441b1c5b9 100644
-> --- a/drivers/usb/serial/cp210x.c
-> +++ b/drivers/usb/serial/cp210x.c
-> @@ -917,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
->  	u32 baud;
->  	u16 bits;
->  	u32 ctl_hs;
-> +	u32 flow_repl;
->  
->  	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
->  
-> @@ -1017,6 +1018,23 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
->  	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
->  	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
->  		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
-> +		/*
-> +		 * When the port is closed, the CP210x hardware disables
-> +		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
-> +		 * in hardware flow control mode. This prevents new data from
-> +		 * being received by the port. When re-opening the port, if
-> +		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
-> +		 * re-enabled in the driver.
-> +		 */
-
-I already asked this of Brant, but could you please be more specific
-about which state the RTS-line end up in when disabling the UART (e.g.
-0x00: statically inactive)?
-
-The reason I ask is that after open() returns, the tty layer would raise
-RTS, which should again allow data to flow in in contrast to what the
-comment and changelog text claims.
-
-We still want to enable auto-RTS of course so the patch is otherwise
-correct.
-
-> +		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
-> +		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
-> +		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
-> +		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
-> +		cp210x_write_reg_block(port,
-> +				CP210X_SET_FLOW,
-> +				&flow_ctl,
-> +				sizeof(flow_ctl));
+Quoting John Stultz (2020-06-24 17:10:37)
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index 6ae9e1f0819d..3fee8b655da1 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -430,4 +432,33 @@ static int qcom_pdc_init(struct device_node *node, s=
+truct device_node *parent)
+>         return ret;
+>  }
+> =20
+> +#ifdef MODULE
+> +static int qcom_pdc_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np =3D pdev->dev.of_node;
+> +       struct device_node *parent =3D of_irq_find_parent(np);
 > +
->  		cflag |= CRTSCTS;
->  	} else {
->  		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
+> +       return qcom_pdc_init(np, parent);
+> +}
+> +
+> +static const struct of_device_id qcom_pdc_match_table[] =3D {
+> +       { .compatible =3D "qcom,pdc" },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+> +
+> +static struct platform_driver qcom_pdc_driver =3D {
+> +       .probe =3D qcom_pdc_probe,
+> +       .driver =3D {
+> +               .name =3D "qcom-pdc",
+> +               .of_match_table =3D qcom_pdc_match_table,
+> +               .suppress_bind_attrs =3D true,
+> +       },
+> +};
+> +module_platform_driver(qcom_pdc_driver);
+> +#else
+>  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
 
-Johan
+Is there any reason to use IRQCHIP_DECLARE if this can work as a
+platform device driver?
+
+> +#endif
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller"=
+);
+> +MODULE_LICENSE("GPL v2");
