@@ -2,74 +2,191 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41227C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB3D20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF11D204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="En3YcPGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgFZUoI (ORCPT
+        id S1725917AbgFZUo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:44:08 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52375 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUoI (ORCPT
+        Fri, 26 Jun 2020 16:44:28 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12904 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgFZUo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:44:08 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id F23A3E0005;
-        Fri, 26 Jun 2020 20:44:02 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     a.zummo@towertech.it, ludovic.desroches@microchip.com,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        nicolas.ferre@microchip.com, robh+dt@kernel.org,
-        jason@lakedaemon.net, maz@kernel.org, tglx@linutronix.de
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] add RTT support for SAM9X60
-Date:   Fri, 26 Jun 2020 22:44:01 +0200
-Message-Id: <159320404890.1517140.1473221944024605941.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 26 Jun 2020 16:44:28 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QKhfYZ018492;
+        Fri, 26 Jun 2020 22:44:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=STMicroelectronics;
+ bh=VAK04oSRk0V+FpML5MYWWrN1uyiNMP52mYEOCgEuyy0=;
+ b=En3YcPGlNbOcgJbE9RC4i56Zv0gjiuCnKBrHFsV7zDF3Fe8wfWhqjtq37N8GkXBJvPiy
+ Vdwy8f2NaqhHE4w6YJUST8+zrMpkW6bvo0E169FZCJXSUzhVdPuRefNYk9XTMr2j/jAU
+ I+41pYb7x/ZVAC+cse1D+bnQs4Fc1XqR4t5f6FJTXCZ+SnWmDvgsUo8tnR7UATGA4nyM
+ UYG+L7ZY1KmSVEd086O5GOb2QrLDRLLeJXitLhtmqtRXoDrEVQBwLKIQt9YLr6qLc40p
+ qlz2Fl48B9BO6Upn2ASgKCR+J4+D1f5iusyEondu385bSvmohJvL/njgQv9PkEPQs+PH hA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31uuv9t2mc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 22:44:14 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B416A10002A;
+        Fri, 26 Jun 2020 22:44:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9C0512067FD;
+        Fri, 26 Jun 2020 22:44:12 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun 2020 22:44:12
+ +0200
+From:   Antonio Borneo <antonio.borneo@st.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Antonio Borneo <antonio.borneo@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] drm/connector: fix minor typos in comments
+Date:   Fri, 26 Jun 2020 22:42:52 +0200
+Message-ID: <20200626204252.44565-1-antonio.borneo@st.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 12:05:33 +0300, Claudiu Beznea wrote:
-> This series adds RTT support for SAM9X60.
-> 
-> Changes in v2:
-> - use "atmel,at91sam9260-rtt" as fallback for compatible
-> - in patch 1 keep only the addition of sam9x60_aic_irq_fixup
-> - get rid of patches 2/5 from v1
-> - squash patches 4/5, 5/5 from v1
-> - change commit title for patch "rtc: at91sam9: add microchip,sam9x60-rtt"
->   from v1 into "dt-bindings: rtc: add microchip,sam9x60-rtt" and
->   place it before device tree patch
-> 
-> [...]
+Some of these comments are part of the Linux GPU Driver Developer's
+Guide.
+Fix some minor typo in the comments and remove a repeated 'the'.
 
-Applied 2 and 3, thanks!
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+---
+ drivers/gpu/drm/drm_connector.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-[2/3] dt-bindings: rtc: add microchip,sam9x60-rtt
-      commit: 73554069ded8fc6fa747423522c4295d5bbf6f52
-[3/3] ARM: dts: sam9x60: add rtt
-      commit: 5f6b33f463468b9595eebfed142756ba13ea2b60
-
-Best regards,
-
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index d877ddc6dc57..cb62fb8e594e 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -38,7 +38,7 @@
+  * DOC: overview
+  *
+  * In DRM connectors are the general abstraction for display sinks, and include
+- * als fixed panels or anything else that can display pixels in some form. As
++ * also fixed panels or anything else that can display pixels in some form. As
+  * opposed to all other KMS objects representing hardware (like CRTC, encoder or
+  * plane abstractions) connectors can be hotplugged and unplugged at runtime.
+  * Hence they are reference-counted using drm_connector_get() and
+@@ -129,7 +129,7 @@ EXPORT_SYMBOL(drm_get_connector_type_name);
+ 
+ /**
+  * drm_connector_get_cmdline_mode - reads the user's cmdline mode
+- * @connector: connector to quwery
++ * @connector: connector to query
+  *
+  * The kernel supports per-connector configuration of its consoles through
+  * use of the video= parameter. This function parses that option and
+@@ -991,7 +991,7 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
+  * 	DP MST sinks), or high-res integrated panels (like dual-link DSI) which
+  * 	are not gen-locked. Note that for tiled panels which are genlocked, like
+  * 	dual-link LVDS or dual-link DSI, the driver should try to not expose the
+- * 	tiling and virtualize both &drm_crtc and &drm_plane if needed. Drivers
++ * 	tiling and virtualise both &drm_crtc and &drm_plane if needed. Drivers
+  * 	should update this value using drm_connector_set_tile_property().
+  * 	Userspace cannot change this property.
+  * link-status:
+@@ -1131,7 +1131,7 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
+  *
+  *	It will even need to do colorspace conversion and get all layers
+  *	to one common colorspace for blending. It can use either GL, Media
+- *	or display engine to get this done based on the capabilties of the
++ *	or display engine to get this done based on the capabilities of the
+  *	associated hardware.
+  *
+  *	Driver expects metadata to be put in &struct hdr_output_metadata
+@@ -1614,7 +1614,7 @@ EXPORT_SYMBOL(drm_mode_create_scaling_mode_property);
+  * variable refresh rate capability for a connector.
+  *
+  * Returns:
+- * Zero on success, negative errono on failure.
++ * Zero on success, negative errno on failure.
+  */
+ int drm_connector_attach_vrr_capable_property(
+ 	struct drm_connector *connector)
+@@ -1759,7 +1759,7 @@ EXPORT_SYMBOL(drm_mode_create_aspect_ratio_property);
+  * HDMI connectors.
+  *
+  * Returns:
+- * Zero on success, negative errono on failure.
++ * Zero on success, negative errno on failure.
+  */
+ int drm_mode_create_hdmi_colorspace_property(struct drm_connector *connector)
+ {
+@@ -1788,7 +1788,7 @@ EXPORT_SYMBOL(drm_mode_create_hdmi_colorspace_property);
+  * DP connectors.
+  *
+  * Returns:
+- * Zero on success, negative errono on failure.
++ * Zero on success, negative errno on failure.
+  */
+ int drm_mode_create_dp_colorspace_property(struct drm_connector *connector)
+ {
+@@ -1840,7 +1840,7 @@ EXPORT_SYMBOL(drm_mode_create_content_type_property);
+  * drm_mode_create_suggested_offset_properties - create suggests offset properties
+  * @dev: DRM device
+  *
+- * Create the the suggested x/y offset property for connectors.
++ * Create the suggested x/y offset property for connectors.
+  */
+ int drm_mode_create_suggested_offset_properties(struct drm_device *dev)
+ {
+@@ -1963,7 +1963,7 @@ int drm_connector_update_edid_property(struct drm_connector *connector,
+ 		size = EDID_LENGTH * (1 + edid->extensions);
+ 
+ 	/* Set the display info, using edid if available, otherwise
+-	 * reseting the values to defaults. This duplicates the work
++	 * resetting the values to defaults. This duplicates the work
+ 	 * done in drm_add_edid_modes, but that function is not
+ 	 * consistently called before this one in all drivers and the
+ 	 * computation is cheap enough that it seems better to
+@@ -2076,7 +2076,7 @@ void drm_connector_set_vrr_capable_property(
+ EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
+ 
+ /**
+- * drm_connector_set_panel_orientation - sets the connecter's panel_orientation
++ * drm_connector_set_panel_orientation - sets the connector's panel_orientation
+  * @connector: connector for which to set the panel-orientation property.
+  * @panel_orientation: drm_panel_orientation value to set
+  *
+@@ -2131,7 +2131,7 @@ EXPORT_SYMBOL(drm_connector_set_panel_orientation);
+ 
+ /**
+  * drm_connector_set_panel_orientation_with_quirk -
+- *	set the connecter's panel_orientation after checking for quirks
++ *	set the connector's panel_orientation after checking for quirks
+  * @connector: connector for which to init the panel-orientation property.
+  * @panel_orientation: drm_panel_orientation value to set
+  * @width: width in pixels of the panel, used for panel quirk detection
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.27.0
+
