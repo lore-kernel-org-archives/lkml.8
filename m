@@ -2,111 +2,118 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6047FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B19420706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KctYodQa"
+	by mail.kernel.org (Postfix) with ESMTP id A0D2A20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593185944;
+	bh=tJdrNVyZTjt+Jl53IUXKMd//e+fCcD81uGNOBdOFq10=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=HDQBVKhciOZPMVu1y9pVuYxHE64jfBWoXSajH/zvKWI2so8KgOo5p3dK6mv4P1nOs
+	 D2C5ApsbQsyscNd1fzcBlQaUJItwjfiuHR9kZ6OultuvFkr2YrvoIIlxVFlkrwL+rR
+	 u41c434RiOkiIvRM1udqnU/cBWXlQlbxdwWpDSs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgFZPi3 (ORCPT
+        id S1729658AbgFZPjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgFZPi2 (ORCPT
+        Fri, 26 Jun 2020 11:39:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37250 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgFZPjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:38:28 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAEBC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:38:28 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so7772243qtg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=o2Ikny20NfFg5ztOT9jAikHgTETSs1qvvd29P7rUpwk=;
-        b=KctYodQaUev1ai4UhpD8v7HeRQ1nE5DkSA/YHk67OSvh1IkDnPE7ajWn/DAeNHOGCF
-         fyzEJcP+tALrgcJ1i87NF9E0p320bHQWVwdwErj8didSW50bdbm6bk9VSLoMsfYQJrOP
-         yQOjSoYsuW7crDXe2CIJfb/V2TEWMfH0Tih4SBB0XeMjjx5pfjC4FFYtCMA5yzUOq2S2
-         b6vSyNV3mg1pziGKybKV/Kyeu25pb6IS5gNGx2rT13Hl2hb3Ng6QSRldjAM8GFjoFr/3
-         CE0dg6Dq+JETFSiYejiDyC+/BfnXGL+bQ1OZWugOTHU9Bk1CWsZ8r0FgWEcB/4ILHG4R
-         KXYQ==
+        Fri, 26 Jun 2020 11:39:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 12so1914072oir.4;
+        Fri, 26 Jun 2020 08:39:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o2Ikny20NfFg5ztOT9jAikHgTETSs1qvvd29P7rUpwk=;
-        b=KjWAd1bqFqGV/bTonBCbnuRj6L/QSibMSiuM9evrJYNFUrin7XrTbFPq6zDdTPSPRC
-         8pp7KOfeRXfYNp59pPsIF/CCEsvokrCDW6XJDyuWKO4d8CLwCUJw7Tx7YPq0AbxtFlqk
-         xyyhfuNOTn2776oWvD02rerCHRpyih5q3spk9m3YcTmwEVT/evJzD2KgWgHDE7Nd1C7U
-         SCYaJdIq9bQ4ZOqAhOatTSw4fsoSyO1pHOiiPueFWllYIFO6LTeTFv5/PGYa+fdm/UNX
-         w1zLHAloNx9/MJ1NIwEjBq9+3PBpmPYXHmv9LbJ0EHRKd2rH3uk30VBG/ojLBuARtSPR
-         LyEw==
-X-Gm-Message-State: AOAM533mFSKDYve6jlQdDE+qhHlIJspc3PIIgiE7TK/NZQ8a+2G+BsTP
-        HZLnRFP5HsvQosw19VCf6So=
-X-Google-Smtp-Source: ABdhPJzqsrT4UOsb4GHqiS3w6FcocsJ90qUR+xiX55JN9a0QBfF1+uiMfkCrKM4mwQvMVWMvzKffsg==
-X-Received: by 2002:ac8:6746:: with SMTP id n6mr3421897qtp.307.1593185907777;
-        Fri, 26 Jun 2020 08:38:27 -0700 (PDT)
-Received: from mooncell.myfiosgateway.com (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
-        by smtp.gmail.com with ESMTPSA id y40sm9719918qtc.29.2020.06.26.08.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 08:38:27 -0700 (PDT)
-From:   Brooke Basile <brookebasile@gmail.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        straube.linux@gmail.com, colin.king@canonical.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Brooke Basile <brookebasile@gmail.com>
-Subject: [PATCH 4/4] staging: rtl8188eu: Replace function name with __func__
-Date:   Fri, 26 Jun 2020 11:36:42 -0400
-Message-Id: <20200626153639.8097-4-brookebasile@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200626153639.8097-3-brookebasile@gmail.com>
-References: <20200626153639.8097-1-brookebasile@gmail.com>
- <20200626153639.8097-2-brookebasile@gmail.com>
- <20200626153639.8097-3-brookebasile@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=uw6SWLZZccFhEMxqcHMfobQGTjxadNTu6Bwdli5yUE4=;
+        b=a3J/nr/ORspM80r6/0HSg/EKaebjX1umBQfwT4Y/u9/MkApqjzhipKdamQ87g009dy
+         U2edAQuibbSBJ6458pjCGa+gQQ3qwal4chVH9Dxs3zdbHzsMBq9uOToeDrbdpJljssPp
+         qTIszKuQVdG5a7Wu5b8+8Z3ffigdTnPlN3irCYxU/ICIl1O2rTQjDXwiT+hEihOm1l2p
+         P5b+nocc3dZfPzmWgg5dzh3gZc0KRazjeir3XmdvPkMJCEc62ouxvHz92bgMwOONc4y4
+         gMBTMlky6GRm3ixXlzPxzXObcKlaQbR/E/U9XMRxdMkoX0apHVHT+1+D+eYrZO3AK7L8
+         gU7Q==
+X-Gm-Message-State: AOAM533m6Z6p9Q6Laa3mC8jz2ELXZK5KQEtjEkxXOPnVYtpT9K6ad30a
+        yEhvoa1TIlxRKkAZJ+xGTdwLzcLKBYScDK0zg4sK4eUO
+X-Google-Smtp-Source: ABdhPJys2qJb9EttkZI5K9Y9m83unxshzaUmbUkamjQUq7/Vx+q6R0OEFjSX99jkll5NGNon3c1lZDFDWbpiFRV3BXc=
+X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2834944oic.68.1593185941879;
+ Fri, 26 Jun 2020 08:39:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 26 Jun 2020 17:38:50 +0200
+Message-ID: <CAJZ5v0gV3VCoJxuSZcngA2H1Nwqz2mHLtJAd2NoQE3ht9FVTHg@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.8-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch warning:
-	WARNING: Prefer using '"%s...", __func__' to using 'rtw_get_bcn_info', this function's name, in a string
+Hi Linus,
 
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_ieee80211.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Please pull from the tag
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-index bf6b2fe9735f..0c43c0dcf95c 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-@@ -986,10 +986,10 @@ void rtw_get_bcn_info(struct wlan_network *pnetwork)
- 		if (bencrypt)
- 			pnetwork->BcnInfo.encryp_protocol = ENCRYP_PROTOCOL_WEP;
- 	}
--	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_get_bcn_info: pnetwork->encryp_protocol is %x\n",
--		 pnetwork->BcnInfo.encryp_protocol));
--	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_get_bcn_info: pnetwork->encryp_protocol is %x\n",
--		 pnetwork->BcnInfo.encryp_protocol));
-+	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("%s: pnetwork->encryp_protocol is %x\n",
-+		 __func__, pnetwork->BcnInfo.encryp_protocol));
-+	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("%s: pnetwork->encryp_protocol is %x\n",
-+		 __func__, pnetwork->BcnInfo.encryp_protocol));
- 	rtw_get_cipher_info(pnetwork);
- 
- 	/* get bwmode and ch_offset */
--- 
-2.27.0
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.8-rc3
 
+with top-most commit 0e3fb2a128d81bc5baee76dddcc8ddbc8ccae95c
+
+ Merge branches 'pm-cpufreq' and 'pm-cpuidle'
+
+on top of commit 48778464bb7d346b47157d21ffde2af6b2d39110
+
+ Linux 5.8-rc2
+
+to receive power management fixes for 5.8-rc3.
+
+These fix a recent regression that broke suspend-to-idle on some
+x86 systems, fix the intel_pstate driver to correctly let the
+platform firmware control CPU performance in some cases and
+add __init annotations to a couple of functions.
+
+Specifics:
+
+ - Make sure that the _TIF_POLLING_NRFLAG is clear before entering
+   the last phase of suspend-to-idle to avoid wakeup issues on some
+   x86 systems (Chen Yu, Rafael Wysocki).
+
+ - Cover one more case in which the intel_pstate driver should let
+   the platform firmware control the CPU frequency and refuse to
+   load (Srinivas Pandruvada).
+
+ - Add __init annotations to 2 functions in the power management
+   core (Christophe JAILLET).
+
+Thanks!
+
+
+---------------
+
+Chen Yu (1):
+      PM: s2idle: Clear _TIF_POLLING_NRFLAG before suspend to idle
+
+Christophe JAILLET (1):
+      PM: sleep: core: mark 2 functions as __init to save some memory
+
+Rafael J. Wysocki (1):
+      cpuidle: Rearrange s2idle-specific idle state entry code
+
+Srinivas Pandruvada (1):
+      cpufreq: intel_pstate: Add one more OOB control bit
+
+---------------
+
+ drivers/base/power/trace.c     |  4 ++--
+ drivers/cpufreq/intel_pstate.c |  7 +++++--
+ drivers/cpuidle/cpuidle.c      |  5 +++--
+ kernel/sched/idle.c            | 15 +++++++++++----
+ 4 files changed, 21 insertions(+), 10 deletions(-)
