@@ -2,102 +2,105 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04B74207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULDz9ecq"
+	by mail.kernel.org (Postfix) with ESMTP id 7D9D2207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593181814;
+	bh=11Zbj1q8Un6cDDwWJU7oHrjJ/dOklYCNzE2mB5kxa0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JysYS83EK/1MBext26y/6AMTMvBxSBriNVERTKKARDdQBU0s+jXqtzt9ud9pPbmft
+	 ygZJ8Bhx28ZIPlktrpnIs0GrqgGdV6dCuRfXxmlnAMzAHpGS3moUbSxZ0dao98NzsA
+	 xQJY9GkMXHreK55evtLZ5642++6nQ6brAyIO179k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgFZOaG (ORCPT
+        id S1729229AbgFZOaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgFZOaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:30:06 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D2EC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:30:06 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k6so4334679pll.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ojUpeeyjrikcFiKOvKiJiQjb5quxXpR7oJHG4WF/cxY=;
-        b=ULDz9ecqldNqAocWoL/RXbGwTJSEmLFkA9OHKq4D9iAFPJ/t3sFLUb/mcUdmVAS8KD
-         l98PKLJ6iVWDvteID3WEIW+BbB736GQWI6DZjgbbhpRSbiCrX5la/5+rwcgE9H2BQqeT
-         RfL9OxEYqbgxKIIBii/2fC5JY9uby4g04Lh3AK+mO++s2rPR5429h2tXw44hA9A25tpi
-         1gJNELLAsuoftYgW6wGpFiE/JSaKeJdXEdYgJpfIwh6N1U91LInCEHmFOhIMkoncJxz2
-         nxd1DrfUpi9H/IkF8qtRwLaeAyE/XFpV4oR9/UexMKRJq8Ct6iOSMGrn07I/iuXbzGcj
-         PzYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ojUpeeyjrikcFiKOvKiJiQjb5quxXpR7oJHG4WF/cxY=;
-        b=IQSMxb4Y+DsXFo5khZYAWcwgszhXFskdWKQgS6ZhgBgGM5wurg4Dx+HiwffTJP5bEa
-         5DxpyAczEvw4hg6NR2sFmDFm5395M9/qdca+MTsvIvS0zsQE8J0r1Fnk7uyOh94zaj2J
-         X8MzY1hLIseQ8ViCNDvry3c2v979kWrYni9cxpsnNUCoB8SNeyqP65EKCUpNJnuijM7R
-         VLxwTah8PNLmnHEeH7ynFMrAVqlgSjkX7YnDDOSkow+wUieaO0WV4r0UYKXdKAqkiptY
-         po8bAWsRFVRlh/A2TPI32HRuFfm7Lf1XnPiJHn+bgBLTFZY4rhzrkmeuuz1Qvc/gspTg
-         oe3w==
-X-Gm-Message-State: AOAM532YsXq9HUb/a4Fs0C3H6X5yaohm/p0pWYR8vWnxS/7G8FEqT6rD
-        Byd6RYhWDYXH9bhDQisucLQ=
-X-Google-Smtp-Source: ABdhPJx4GDvqinaHYX7jR3VfFb1w0pRsl9xGlffKVZR/J59hCVUN2AGyJrhMexYJjZRaqFxCFU6xCA==
-X-Received: by 2002:a17:90b:384c:: with SMTP id nl12mr3920145pjb.108.1593181805569;
-        Fri, 26 Jun 2020 07:30:05 -0700 (PDT)
-Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
-        by smtp.gmail.com with ESMTPSA id k92sm11565361pje.30.2020.06.26.07.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 07:30:04 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id F22F9236023A; Fri, 26 Jun 2020 23:29:59 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, krzk@kernel.org, sbkim73@samsung.com,
-        s.nawrocki@samsung.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] ASoc:samsung: Fix a typo in Kconfig
-Date:   Fri, 26 Jun 2020 23:29:58 +0900
-Message-Id: <20200626142958.253614-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.27.0.139.gc9c318d6bf26
+        Fri, 26 Jun 2020 10:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729051AbgFZOaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:30:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D62207D8;
+        Fri, 26 Jun 2020 14:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593181812;
+        bh=11Zbj1q8Un6cDDwWJU7oHrjJ/dOklYCNzE2mB5kxa0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iyk1uIHmgEr68ixR/JNBAkDCnAg2NdIu6s6hldDaTfhSzgLUusdcAeiQjZHF6EbNE
+         aY8ihCdprLNvwIgJVxj1zEi3aOkleKetnbATUl3ybuucbAfg9UVXwQaPywHYadz3No
+         B8dcOhnItanlRI4Bj3qTmRmtsFUsGAfpMk4TjZ7U=
+Date:   Fri, 26 Jun 2020 15:30:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     ulf.hansson@linaro.org, lgirdwood@gmail.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH/RFC v4 1/4] regulator: core: add prepare and resume_early
+Message-ID: <20200626143009.GD5289@sirena.org.uk>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FFoLq8A0u+X9iRU8"
+Content-Disposition: inline
+In-Reply-To: <1593163942-5087-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Cookie: You can't get there from here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a spelling typo in samsung/Kconfig.
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- sound/soc/samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--FFoLq8A0u+X9iRU8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/samsung/Kconfig b/sound/soc/samsung/Kconfig
-index 8bc66279116d..4b5c3481fe62 100644
---- a/sound/soc/samsung/Kconfig
-+++ b/sound/soc/samsung/Kconfig
-@@ -77,7 +77,7 @@ config SND_SOC_SAMSUNG_S3C24XX_UDA134X
- config SND_SOC_SAMSUNG_SIMTEC
- 	tristate
- 	help
--	  Internal node for common S3C24XX/Simtec suppor
-+	  Internal node for common S3C24XX/Simtec support.
- 
- config SND_SOC_SAMSUNG_SIMTEC_TLV320AIC23
- 	tristate "SoC I2S Audio support for TLV320AIC23 on Simtec boards"
--- 
-2.27.0.139.gc9c318d6bf26
+On Fri, Jun 26, 2020 at 06:32:19PM +0900, Yoshihiro Shimoda wrote:
 
+> The regulator-fixed driver is possible to be off by firmware
+> like PSCI while the system is suspended. If a consumer could get
+> such a condition from regulator_is_enabled(), it's useful by
+> consumers.
+
+> The regulator subsystem already has regulator-state-(standby|mem|disk)
+> sub-nodes and regulator-off-in-suspend property. However,
+> suitable regulator_ops APIs didn't exist.
+
+> So, add new regulator_ops APIs and prepare()/resume_early() in
+> the regulator_pm_ops to set/clear the condition by new APIs before
+> suspend() functions of consumers are called.
+
+I can't follow this explanation at all, I really can't understand what
+these functions are supposed to do or how they are supposed to be used.
+Nothing in the rest of this series is at all enlightening either.  It
+seems there is some need for a consumer to query things about the
+suspend state but there is no obvious connection from that to adding
+these new operations for regulator drivers.
+
+--FFoLq8A0u+X9iRU8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl72BnAACgkQJNaLcl1U
+h9Canwf+Ml6uP806W+OIy+9gkxQSTAXsFGpPbuYZmy0ITum/XRJLTUv2i8tO5DmC
+VjLKc47zbAhabe2/Z9AUMoEA9OjJTFVAARZfn2y+kkd4UDkOjWmdVzNkqxrdACOO
+oS+Le+kkNlwECWz3+QuZoxdCEa8RqhLitayqAzWjl0SH3hARU85r358UOe54XcsY
+xqEoqKQimxcjEaAWODSS5qKP/9LbC3Ni3q7nXiIM4SovatGeiCauMn7NCkJm3FXj
+++olczhykQk6XLvpysFCy477+2C1lviw6Veg15G1DAbjuWxqKZre6ySiDAzHLBjw
+VfGtngaH+pT3PdHHLE6BfYcLgbkN6A==
+=Tx7z
+-----END PGP SIGNATURE-----
+
+--FFoLq8A0u+X9iRU8--
