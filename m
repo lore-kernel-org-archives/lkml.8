@@ -2,129 +2,105 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B45BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3CA206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O1o8GaHM"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFA020720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgFZUH5 (ORCPT
+        id S1726107AbgFZUIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgFZUHz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:07:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A83C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:07:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g67so4503181pgc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=rHOsQnFow9W840xshXf2xfNnPEJVNN56X5OCKvatOzc=;
-        b=O1o8GaHMP5dsVMNrT+KaSdj+Cb9ib0h6L+CH70DoWS18/VdJXbuH3MqWxoarxbltgf
-         9hqSJ7UZ0CHVc+r7XcLBCbzl4RMaKaTYV2GzT8d7aP5yg1A2C4iPLgzgAx6iszB9UWWq
-         7bLvYkt1y57I9p+8bV+wJcxmRsOeoHMBs0tZY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=rHOsQnFow9W840xshXf2xfNnPEJVNN56X5OCKvatOzc=;
-        b=FkecVs4gBIdU/rN46c1eMbem1B8BLdHDRNRfvDo7nUV0qovDpf0AwIxbg7fI/ZDsci
-         tk0mRToSLUGkbQZMbqDDOydRDAG5AqnGG6cWXAaUzSrEA06/CLXuNg0oWDhFm8esom7U
-         B4JZGTGhEU2Pijd8wHvWfg5IGhtgAuNk3zx0CXGa6C9SA6L/S2lr+8kg+zNaj5xYmeVG
-         fEpirst8yVYJ+RKLEZAHQaIMLgBvKzvjMHvXKDOD1jt4WiYN80yi96FlTSv9R32CWXsg
-         O8weCSZAAMoFMSfbSIFOjvJvhnYeB9h2/2RIOzCFQnOe/nqjrCXvrR64mNnGBa4fOqYI
-         5pUw==
-X-Gm-Message-State: AOAM533FPaiwfjvW38Hosrm0sGwD/WQb0nZ7zOJ3NBRWiQl8XcMNZEzw
-        bXLPH5DuxUep6bpRl5N70f8YzA==
-X-Google-Smtp-Source: ABdhPJzhZjWKtrGEMaI8byUSdrVEOM1KRfW4lUX66uoeR6p2vSSKp4YijRN8kDnSI5dkSRP37/P6Cw==
-X-Received: by 2002:aa7:8c03:: with SMTP id c3mr4048300pfd.77.1593202075575;
-        Fri, 26 Jun 2020 13:07:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n1sm12409458pjn.24.2020.06.26.13.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 13:07:54 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 13:07:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     akpm@linux-foundation.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
-        mhocko@suse.cz, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
-Subject: [PATCH] slab: Fix misplaced __free_one()
-Message-ID: <202006261306.0D82A2B@keescook>
+        Fri, 26 Jun 2020 16:08:16 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8814 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgFZUIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:08:16 -0400
+IronPort-SDR: 6CUANNw87mm0T/cC4tTQ5Qu1D4l9JrvWd6EFJO5g+M7FMZIQSGAXfxuAn1IJVJ5t5Wj74Brufz
+ t3Wu3Ez7lh3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="163495099"
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="163495099"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 13:08:15 -0700
+IronPort-SDR: DFxhAN9uAkgMQalhsvNo9cBN/6ui9Dzq1fygm1mPOL8AVTs4uAwUqd36H8Rr7JhvRtvzPtOvP2
+ Uv4rlwNWx0Cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="302432552"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Jun 2020 13:08:15 -0700
+Date:   Fri, 26 Jun 2020 13:08:15 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Thomas Ruf <freelancer@rufusul.de>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Federico Vaga <federico.vaga@cern.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Subject: Re: DMA Engine: Transfer From Userspace
+Message-ID: <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+ <84270660.632865.1593072688966@mailbusiness.ionos.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <84270660.632865.1593072688966@mailbusiness.ionos.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implementation of __free_one() was accidentally placed inside a
-CONFIG_NUMA #ifdef. Move it above.
+On Thu, Jun 25, 2020 at 10:11:28AM +0200, Thomas Ruf wrote:
+> 
+> > On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
+> > 
+> > 
+> > 
+> > 
+> > On 6/21/2020 12:24 AM, Vinod Koul wrote:
+> > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > >>
+> > >>
+> > >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > >>> Hello,
+> > >>>
+> > >>> is there the possibility of using a DMA engine channel from userspace?
+> > >>>
+> > >>> Something like:
+> > >>> - configure DMA using ioctl() (or whatever configuration mechanism)
+> > >>> - read() or write() to trigger the transfer
+> > >>>
+> > >>
+> > >> I may have supposedly promised Vinod to look into possibly providing
+> > >> something like this in the future. But I have not gotten around to do that
+> > >> yet. Currently, no such support.
+> > > 
+> > > And I do still have serious reservations about this topic :) Opening up
+> > > userspace access to DMA does not sound very great from security point of
+> > > view.
+> > 
+> > What about doing it with DMA engine that supports PASID? That way the user can 
+> > really only trash its own address space and kernel is protected.
+> 
+> Sounds interesting! Not sure if this is really needed in that case...
+> I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/lkml/7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This a fix for slab-add-naive-detection-of-double-free.patch
----
- mm/slab.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+FWIW there is a new pin_user_pages_fast()/unpin_user_page() interface now.
 
-diff --git a/mm/slab.c b/mm/slab.c
-index bbff6705ab2b..5ccb151a6e8f 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -588,6 +588,16 @@ static int transfer_objects(struct array_cache *to,
- 	return nr;
- }
- 
-+/* &alien->lock must be held by alien callers. */
-+static __always_inline void __free_one(struct array_cache *ac, void *objp)
-+{
-+	/* Avoid trivial double-free. */
-+	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-+	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
-+		return;
-+	ac->entry[ac->avail++] = objp;
-+}
-+
- #ifndef CONFIG_NUMA
- 
- #define drain_alien_cache(cachep, alien) do { } while (0)
-@@ -749,16 +759,6 @@ static void drain_alien_cache(struct kmem_cache *cachep,
- 	}
- }
- 
--/* &alien->lock must be held by alien callers. */
--static __always_inline void __free_one(struct array_cache *ac, void *objp)
--{
--	/* Avoid trivial double-free. */
--	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
--	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
--		return;
--	ac->entry[ac->avail++] = objp;
--}
--
- static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
- 				int node, int page_node)
- {
--- 
-2.25.1
+Ira
 
-
--- 
-Kees Cook
+> But i will do some checks if my code is really suitable to avoid misusage.
+> 
+> Best regards,
+> Thomas
