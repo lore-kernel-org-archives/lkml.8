@@ -2,141 +2,203 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17684206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC41206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ig2mS95X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RAG4mK+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgFZUBy (ORCPT
+        id S1726314AbgFZUCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:01:54 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46131 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbgFZUBw (ORCPT
+        Fri, 26 Jun 2020 16:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgFZUCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:01:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593201711; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=G/ZEPqm/5rXHkOWn3iaXq4i/1EZgTro5dxLfi/PhxyI=; b=Ig2mS95XNBm/M6tquv8mJWlIL2vSisV5Lp/5WBlA+MmIBDTR4raCw3XWx4UsSxFWDYkbAEgL
- aG+7lJG0rzu1Ae/IlZmt6EqEMTq2SftP3KyVIZEpsYItc4wvNYYA/jO6GY739X+Bb8TBSvKB
- H9hOIGFWhatJMYL07/JT707q+AU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ef653f2ad153efa349aa52e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:00:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DB0FC433B1; Fri, 26 Jun 2020 20:00:49 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD0A1C433CB;
-        Fri, 26 Jun 2020 20:00:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD0A1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/7] iommu/arm-smmu: Pass io-pgtable config to implementation specific function
-Date:   Fri, 26 Jun 2020 14:00:35 -0600
-Message-Id: <20200626200042.13713-2-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+        Fri, 26 Jun 2020 16:02:04 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC01C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so2537536wrs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lbKE8B5Gu+f9N6+tuSxc/2z2J262A6WuLfgwyXskAFg=;
+        b=RAG4mK+VLbFsOfmcM5BVz/lAPGjg31YVjTeeHHlg9D4GqMQQarK3s47Ny3zIan/a6F
+         5gt4H/XK7yf+epxGBBBSNXJQdyGRD7VApQFyQfeK+AuXxp9brwX8PZF/J4lsMrYNeWIM
+         O0yMrYkGgm3a05MH8Yqks7VzgHafqxOTt1PGmzKLcE8DoYCcMgVxjNmRxi5XnCLYspO2
+         WolkCZDzdIF5NyW6BmzN1Vd0+xfsLbt1V9Pg3Hu9A4Wo+qpCP/4QR9UVwvWovEuhoHSl
+         xx4J8iNPdgAX8fWLlqK/CvgCRQBuiJSOxgVoo7sAhQAsAE4d6DK/SRK15sCJylZGvMXs
+         HyJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lbKE8B5Gu+f9N6+tuSxc/2z2J262A6WuLfgwyXskAFg=;
+        b=paPPmBF+AfJHiDiUkY9EXfdpLe7FZN12UtFKMF/x+f2SnKMomK21C+53/2joN0U7dc
+         DL6KbYf8m+V3eRmFNMK4wWnt0nS0isZoqz9isu6O1vDDbSEA4GtMRtSMNLHmr7HkOjVt
+         9mAwZ+pGc9F7ZH951scgZOx8fMylhr0aceU94dDUyW6ERlg+bTjn6YAN/CFy2BH/4uNV
+         MVHCI5fuXLlwvbXMhIBhodm55ywsqCudjKHp0tyiEymdriv9pJ0H3DY7E1kbwSutrnOx
+         5I8GuNaaU8CMpBe0qvNAf6hJx+d2vky34lNFkcC/rK11k465U6SLPcnwL9EGOohKLjKW
+         tCdA==
+X-Gm-Message-State: AOAM533VCy6LUNxSIlpfnFEpbwVsQmQryWLYN+jdqmuw/4QUkdizKbPy
+        XPBZTg6SVr16P150VjsQCQm4Rc5cyFUl2Qh3owzd4853
+X-Google-Smtp-Source: ABdhPJxBXadGeA9O1H6iaEWRMIAnt3FtaerOkfxcnmDo3BXt3h016i12Omzo70KEuPfQvXaYBwdqeL7Z5oC5E1iEsqo=
+X-Received: by 2002:adf:df03:: with SMTP id y3mr5143514wrl.376.1593201723167;
+ Fri, 26 Jun 2020 13:02:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-2-jolsa@kernel.org>
+In-Reply-To: <20200626194720.2915044-2-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 26 Jun 2020 13:01:51 -0700
+Message-ID: <CAP-5=fV-i+fNj1v_6v4gnaZNoT9XSR1AOJr3cau2R0+MjJemkQ@mail.gmail.com>
+Subject: Re: [PATCH 01/10] perf tools: Rename expr__add_id to expr__add_val
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Construct the io-pgtable config before calling the implementation specific
-init_context function and pass it so the implementation specific function
-can get a chance to change it before the io-pgtable is created.
+Firstly, thanks for this work!
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Renaming expr__add_id to expr__add_val so we can use
+> expr__add_id to actually add just id in following changes.
 
- drivers/iommu/arm-smmu-impl.c |  3 ++-
- drivers/iommu/arm-smmu.c      | 11 ++++++-----
- drivers/iommu/arm-smmu.h      |  3 ++-
- 3 files changed, 10 insertions(+), 7 deletions(-)
+Perhaps clear up in the commit message that add id won't add an id and
+a value, just the id. I don't mind long intention revealing function
+names, so expr__add_id_with_val may most fully convey this change.
 
-diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-index c75b9d957b70..a20e426d81ac 100644
---- a/drivers/iommu/arm-smmu-impl.c
-+++ b/drivers/iommu/arm-smmu-impl.c
-@@ -68,7 +68,8 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
- 	return 0;
- }
- 
--static int cavium_init_context(struct arm_smmu_domain *smmu_domain)
-+static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
-+		struct io_pgtable_cfg *pgtbl_cfg)
- {
- 	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
- 					      struct cavium_smmu, smmu);
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 243bc4cb2705..8a3a6c8c887a 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -797,11 +797,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 		cfg->asid = cfg->cbndx;
- 
- 	smmu_domain->smmu = smmu;
--	if (smmu->impl && smmu->impl->init_context) {
--		ret = smmu->impl->init_context(smmu_domain);
--		if (ret)
--			goto out_unlock;
--	}
- 
- 	pgtbl_cfg = (struct io_pgtable_cfg) {
- 		.pgsize_bitmap	= smmu->pgsize_bitmap,
-@@ -812,6 +807,12 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 		.iommu_dev	= smmu->dev,
- 	};
- 
-+	if (smmu->impl && smmu->impl->init_context) {
-+		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
-+		if (ret)
-+			goto out_unlock;
-+	}
-+
- 	if (smmu_domain->non_strict)
- 		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
- 
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index d172c024be61..38b041530a4f 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -383,7 +383,8 @@ struct arm_smmu_impl {
- 			    u64 val);
- 	int (*cfg_probe)(struct arm_smmu_device *smmu);
- 	int (*reset)(struct arm_smmu_device *smmu);
--	int (*init_context)(struct arm_smmu_domain *smmu_domain);
-+	int (*init_context)(struct arm_smmu_domain *smmu_domain,
-+			struct io_pgtable_cfg *cfg);
- 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
- 			 int status);
- 	int (*def_domain_type)(struct device *dev);
--- 
-2.17.1
+Thanks,
+Ian
 
+> there's no functional change.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/tests/expr.c       | 4 ++--
+>  tools/perf/tests/pmu-events.c | 4 ++--
+>  tools/perf/util/expr.c        | 2 +-
+>  tools/perf/util/expr.h        | 2 +-
+>  tools/perf/util/expr.y        | 2 +-
+>  tools/perf/util/stat-shadow.c | 4 ++--
+>  6 files changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index b7e5ef3007fc..82aa32fcab64 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -24,8 +24,8 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>         struct expr_parse_ctx ctx;
+>
+>         expr__ctx_init(&ctx);
+> -       expr__add_id(&ctx, strdup("FOO"), 1);
+> -       expr__add_id(&ctx, strdup("BAR"), 2);
+> +       expr__add_val(&ctx, strdup("FOO"), 1);
+> +       expr__add_val(&ctx, strdup("BAR"), 2);
+>
+>         ret = test(&ctx, "1+1", 2);
+>         ret |= test(&ctx, "FOO+BAR", 3);
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index b66b021476ec..b3b835982cab 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -492,7 +492,7 @@ static int test_parsing(void)
+>                          */
+>                         k = 1;
+>                         hashmap__for_each_entry((&ctx.ids), cur, bkt)
+> -                               expr__add_id(&ctx, strdup(cur->key), k++);
+> +                               expr__add_val(&ctx, strdup(cur->key), k++);
+>
+>                         hashmap__for_each_entry((&ctx.ids), cur, bkt) {
+>                                 if (check_parse_cpu(cur->key, map == cpus_map,
+> @@ -547,7 +547,7 @@ static int metric_parse_fake(const char *str)
+>          */
+>         i = 1;
+>         hashmap__for_each_entry((&ctx.ids), cur, bkt)
+> -               expr__add_id(&ctx, strdup(cur->key), i++);
+> +               expr__add_val(&ctx, strdup(cur->key), i++);
+>
+>         hashmap__for_each_entry((&ctx.ids), cur, bkt) {
+>                 if (check_parse_fake(cur->key)) {
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index e8f777830a23..a02937e5f3ac 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -33,7 +33,7 @@ static bool key_equal(const void *key1, const void *key2,
+>  }
+>
+>  /* Caller must make sure id is allocated */
+> -int expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+> +int expr__add_val(struct expr_parse_ctx *ctx, const char *name, double val)
+>  {
+>         double *val_ptr = NULL, *old_val = NULL;
+>         char *old_key = NULL;
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 8a2c1074f90f..35bdc609cf55 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -22,7 +22,7 @@ struct expr_scanner_ctx {
+>
+>  void expr__ctx_init(struct expr_parse_ctx *ctx);
+>  void expr__ctx_clear(struct expr_parse_ctx *ctx);
+> -int expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+> +int expr__add_val(struct expr_parse_ctx *ctx, const char *id, double val);
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr);
+>  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+>                 const char *expr, int runtime);
+> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> index 5a6e8b43fb08..ff5e5f6e170d 100644
+> --- a/tools/perf/util/expr.y
+> +++ b/tools/perf/util/expr.y
+> @@ -71,7 +71,7 @@ all_other: all_other other
+>
+>  other: ID
+>  {
+> -       expr__add_id(ctx, $1, 0.0);
+> +       expr__add_val(ctx, $1, 0.0);
+>  }
+>  |
+>  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 8fdef47005e6..0a991016f848 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -773,9 +773,9 @@ static int prepare_metric(struct evsel **metric_events,
+>                         *pn = 0;
+>
+>                 if (metric_total)
+> -                       expr__add_id(pctx, n, metric_total);
+> +                       expr__add_val(pctx, n, metric_total);
+>                 else
+> -                       expr__add_id(pctx, n, avg_stats(stats)*scale);
+> +                       expr__add_val(pctx, n, avg_stats(stats)*scale);
+>         }
+>
+>         return i;
+> --
+> 2.25.4
+>
