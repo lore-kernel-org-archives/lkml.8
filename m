@@ -2,465 +2,140 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0FA62053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593198021;
-	bh=Dm6Hnb49e4Y754iyp7I1/9lufuiB8W5G+eEERzsCVjY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=n/qTncyXsxftNU16gSQbSG8kJTILmsHWyK/M+V0IkQ1h+r6jG0/i0xA8Ele8B9oVA
-	 1ttixsEpjaKDuSxnwcjJj/fvpvwasiE2zcRV9ebUSxNshZVZcf7x8T9HJ79GvuagdZ
-	 5W/j/GoFy0jgoWv77ep3rlPVuHPahd2oYQdEG2b0=
+	by mail.kernel.org (Postfix) with ESMTP id 140162053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NncnRHoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgFZTAU (ORCPT
+        id S1725977AbgFZTAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:00:20 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:61997 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFZTAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:00:18 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05QIxVda016565;
-        Sat, 27 Jun 2020 03:59:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05QIxVda016565
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593197972;
-        bh=kZsDPtuZEDwWxqCdBU/Q8QnubxH6Mk9CGEjMZSE/MW8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wU5VqhBssprF3ZXt/Sg+ZSbCaRLVMm/Ys481ZkZDiAQ4CmbuvrbUOcbg8Z5/70N+u
-         r2It9NVaCWaqLbPE5/J4xutrArdscZLPWOtcw366kCqYwf+3J37YYDQHB3SAfHadCL
-         l5F8kEKHjcTzGxSNXkM0qG7MiIxyHz1VkqE57YqzOIR4wBxk1P6adW/Cakw5u3ZIIF
-         nlXmwQ0szTjyi9/RiCkLaBfevdCQkreAYJEVmHY3bfvOOUfRbyj726fqZihbYTlZb/
-         cFL0vM2woVWQNutR/4XkjVZTxWnIWXB/6GTAWGsl6lEosFGu+2nGY2pPfauVwt5ab6
-         WSLSlxCH6HOzw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com, x86@kernel.org,
-        linux-efi@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 1/2] kbuild: remove cc-option test of -fno-stack-protector
-Date:   Sat, 27 Jun 2020 03:59:12 +0900
-Message-Id: <20200626185913.92890-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 26 Jun 2020 15:00:38 -0400
+Received: from mail-dm6nam11on2078.outbound.protection.outlook.com ([40.107.223.78]:34913
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgFZTAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:00:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BOiji3QZx9IaCsBhfez67maP0khl+fql/NlXbAYb2hbqCmGML37UUBK9LqiYfbL9qrb3YpOCLuId0IC40tYITAxkI6ifXeWkW3PJmkYYk2J3J56vtVzF3T19lAlp281zeEqruZg08HKWzAVMvd5MoFiaiFhKIEGjBxhdXGS/r61NxC3WwARDMZh1ILvf2sr4061Bg8CVmPSXLCypFUTKvJ+0UlfLb2IXxHbpwyRC2Vd61YQJpt4p6Yr7qssrYQxxhBTASZ93wzsJ6CdU9Tf/wxAhKAIoRwjWxnBSMApPHJZV2UaIeNX2eS7QSkZTBoMCrY4PxgjV2TluhDl4VMhULQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xZd4qOgqFfPFh886Hz9FIcWDPG7i5kJik6Ww/d5pXL0=;
+ b=mvWhrkM20t+VOOa1Byj8tlTPpfDZG/6Bjr9yL9FVzWd3vL9reXDSv8E3VaGznvHAifaXXnlnQZSYQ0zGW3nwpgGJcA2bZn3gX5txzVtJ8aNc1ETruTaHAFpIEjyahJ3CSvdn97wSGX9kP8DdZCuDMLeI3I9e2jGXw5BFbs88v756uX8tkveNbyRkqDzNhGGUyW1S++PEBMRcFuDSDv6JXrbJOPQhcvbcqDxoUx43WYffFytjCETbDJ7Q+IBoXNkXD6wZ8R61YDmBHAnj2AcJf2WL2ZkmZqDP24utfItdI5e+0SmnLcg/2ySl6PMXjn7pt8fx0BfHN2WwhAThGaiooQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xZd4qOgqFfPFh886Hz9FIcWDPG7i5kJik6Ww/d5pXL0=;
+ b=NncnRHoRYoyTPR40BZCxjuE67HmEpAmjQiN5FzWfwzxtB92BEs2umei3TSVcmaqAFZ+bVnwWiCkjSnrnruPbkVrHjOVUDUDSMJBwsOcoS4sPjPp1BdzYgM/yOC5n43vILynu8P5vraU2ea8grhNZfs6vZah3O+N+h5Ry6zhl48w=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from CY4PR12MB1352.namprd12.prod.outlook.com (2603:10b6:903:3a::13)
+ by CY4PR12MB1302.namprd12.prod.outlook.com (2603:10b6:903:38::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Fri, 26 Jun
+ 2020 19:00:32 +0000
+Received: from CY4PR12MB1352.namprd12.prod.outlook.com
+ ([fe80::135:b45b:bf4c:e3]) by CY4PR12MB1352.namprd12.prod.outlook.com
+ ([fe80::135:b45b:bf4c:e3%10]) with mapi id 15.20.3131.025; Fri, 26 Jun 2020
+ 19:00:32 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>,
+        John Allen <john.allen@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH] crypto: ccp - Update CCP driver maintainer information
+Date:   Fri, 26 Jun 2020 14:00:17 -0500
+Message-Id: <10d21bb66593de4ab9b07bd4fa053b5cbe2d9278.1593198017.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.27.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR11CA0013.namprd11.prod.outlook.com
+ (2603:10b6:5:190::26) To CY4PR12MB1352.namprd12.prod.outlook.com
+ (2603:10b6:903:3a::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from tlendack-t1.amd.com (165.204.77.1) by DM6PR11CA0013.namprd11.prod.outlook.com (2603:10b6:5:190::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend Transport; Fri, 26 Jun 2020 19:00:31 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fc45b24c-730c-40f0-2dbf-08d81a033320
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1302:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1302F3B5BD9DEFCCA02FC8C7EC930@CY4PR12MB1302.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:813;
+X-Forefront-PRVS: 0446F0FCE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FScbUCbkvLC2UO1WgxGN+lX4OfCBK2KjYqfqGMbFxxGmLffPJ/bfVB/aIeQQJw1oc2Nu4RQbXkj3CKsRLpV0pmUFnlvkS1BXLbsIqM+A5ufWLqGR8++8VEw2ExzOTrnTPrpEunaPvQvJZwkcVckBCNNtHwb7qxPgf3afDihR77gcZaPMYtm1v0DtHk/j9RnPseNGmXjD/O14SWIbKYtezOtnglb518+ON0seG7TotrPjkl0wVRVnxX5Yro794+p0eAa9dselYyENcJm9PzWgBt85YxKaT0JsGPzVH+x05NQTsRBjhcv0pUlVwwkGKruhWepzzDa5DqRuPjMGiy/QS+hiWch9Fjzl1Y0POwcEYGnA/lTd5bBI2jDjdcglkokb
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1352.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(2616005)(956004)(5660300002)(66946007)(66556008)(66476007)(8676002)(6666004)(52116002)(7696005)(316002)(4326008)(16526019)(54906003)(36756003)(478600001)(6486002)(186003)(8936002)(2906002)(86362001)(26005)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: rie2l6QE4y2D41zHODhQAzantBecRnR7DoG4ze8m++fc985hNybNiNxS5NO1cRg6JiiNRK2zJafg5kmHpMGP67TjUInnOkklfuJTKNe36pWt4YQpwjrU/3J3RSbjnFwxX5ntbkeOMFcpWXFW7B/MvwIO499tOIQJmFdf9NE0+dXrTWTQMuO4rODI1EoB102a2dyVWklDIKd1zrXpZ5t7gctxmaiUHROmuc/OO1nZj0blfwdJvZeNMF95t+rwbcntjnDFwewOaM9mTpCKCzeeE5R3AolOdYSOfMblNbBUz2W0aaRZUT/aX0f0e4u9nedT/ZOndTZKcPm57xCxEHVQOOH2NHtlVl3F3rEYSL6wMj0zrr9qb3xrO0cMMkbmN3A2FcYyIe1Fqj/SJLRO4s3BziqkKamzi0SiJa+8v2Yr07MtisZfTigAB42dUFNGHpwiyTngT7ksYVaYOqGWMLk/QhPG6x46l8SVI/BGNVB2IQo=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc45b24c-730c-40f0-2dbf-08d81a033320
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR12MB1352.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 19:00:32.0215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rv2xBwT4J03rEz505rbKqYUnxaEADqNBXkb5VZ2ENbdu9Ce4aQLfO5qhIvscf/3LqcxTdQDP7mep46gnH8VgQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1302
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Makefiles already pass -fno-stack-protector unconditionally.
-For example, arch/arm64/kernel/vdso/Makefile, arch/x86/xen/Makefile.
-No problem report so far about hard-coding this option. So, we can
-assume all supported compilers know -fno-stack-protector.
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-GCC 4.8 and Clang support this option (https://godbolt.org/z/_HDGzN)
+Add John Allen as a new CCP driver maintainer. Additionally, break out
+the driver SEV support and create a new maintainer entry, with Brijesh
+Singh and Tom Lendacky as maintainers.
 
-Get rid of cc-option from -fno-stack-protector.
-
-Remove CONFIG_CC_HAS_STACKPROTECTOR_NONE, which should always be 'y'.
-
-Note:
-arch/mips/vdso/Makefile adds -fno-stack-protector twice, first
-unconditionally, and second conditionally. I removed the second one.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: John Allen <john.allen@amd.com>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- Documentation/kbuild/kconfig-language.rst | 4 ++--
- Makefile                                  | 2 +-
- arch/Kconfig                              | 3 ---
- arch/arm/boot/compressed/Makefile         | 3 +--
- arch/mips/vdso/Makefile                   | 3 +--
- arch/powerpc/kernel/Makefile              | 2 +-
- arch/powerpc/platforms/powermac/Makefile  | 2 +-
- arch/sparc/vdso/Makefile                  | 4 ++--
- arch/um/Makefile                          | 3 +--
- arch/x86/Makefile                         | 2 +-
- arch/x86/boot/compressed/Makefile         | 2 +-
- arch/x86/entry/vdso/Makefile              | 4 ++--
- arch/x86/kernel/cpu/Makefile              | 3 +--
- arch/x86/lib/Makefile                     | 2 +-
- arch/x86/mm/Makefile                      | 7 +++----
- arch/x86/power/Makefile                   | 3 +--
- arch/x86/purgatory/Makefile               | 2 +-
- arch/x86/um/vdso/Makefile                 | 2 +-
- arch/x86/xen/Makefile                     | 5 ++---
- drivers/firmware/efi/libstub/Makefile     | 2 +-
- drivers/xen/Makefile                      | 3 +--
- kernel/kcsan/Makefile                     | 3 +--
- lib/Makefile                              | 4 ++--
- mm/kasan/Makefile                         | 2 +-
- 24 files changed, 30 insertions(+), 42 deletions(-)
-
-diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-index a1601ec3317b..2538e7cb08e6 100644
---- a/Documentation/kbuild/kconfig-language.rst
-+++ b/Documentation/kbuild/kconfig-language.rst
-@@ -540,8 +540,8 @@ followed by a test macro::
- If you need to expose a compiler capability to makefiles and/or C source files,
- `CC_HAS_` is the recommended prefix for the config option::
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..8af94aea20fd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -830,11 +830,20 @@ F:	include/uapi/rdma/efa-abi.h
  
--  config CC_HAS_STACKPROTECTOR_NONE
--	def_bool $(cc-option,-fno-stack-protector)
-+  config CC_HAS_ASM_GOTO
-+	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+ AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER
+ M:	Tom Lendacky <thomas.lendacky@amd.com>
++M:	John Allen <john.allen@amd.com>
+ L:	linux-crypto@vger.kernel.org
+ S:	Supported
+ F:	drivers/crypto/ccp/
+ F:	include/linux/ccp.h
  
- Build as module only
- ~~~~~~~~~~~~~~~~~~~~
-diff --git a/Makefile b/Makefile
-index 5496a32dffa6..73948798ce3f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -762,7 +762,7 @@ ifneq ($(CONFIG_FRAME_WARN),0)
- KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
- endif
- 
--stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-+stackp-flags-y                                    := -fno-stack-protector
- stackp-flags-$(CONFIG_STACKPROTECTOR)             := -fstack-protector
- stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
- 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 8cc35dc556c7..1ea61290900a 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -478,9 +478,6 @@ config HAVE_STACKPROTECTOR
- 	  An arch should select this symbol if:
- 	  - it has implemented a stack canary (e.g. __stack_chk_guard)
- 
--config CC_HAS_STACKPROTECTOR_NONE
--	def_bool $(cc-option,-fno-stack-protector)
--
- config STACKPROTECTOR
- 	bool "Stack Protector buffer overflow detection"
- 	depends on HAVE_STACKPROTECTOR
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index 00602a6fba04..cb7a56c6723c 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -84,9 +84,8 @@ endif
- 
- # -fstack-protector-strong triggers protection checks in this code,
- # but it is being used too early to link to meaningful stack_chk logic.
--nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
- $(foreach o, $(libfdt_objs) atags_to_fdt.o, \
--	$(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
-+	$(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt -fno-stack-protector))
- 
- # These were previously generated C files. When you are building the kernel
- # with O=, make sure to remove the stale files in the output tree. Otherwise,
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 2e64c7600eea..57fe83235281 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -35,8 +35,7 @@ cflags-vdso := $(ccflags-vdso) \
- 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
- 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
--	$(call cc-option, -fno-asynchronous-unwind-tables) \
--	$(call cc-option, -fno-stack-protector)
-+	$(call cc-option, -fno-asynchronous-unwind-tables)
- aflags-vdso := $(ccflags-vdso) \
- 	-D__ASSEMBLY__ -Wa,-gdwarf-2
- 
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 244542ae2a91..3a83f2b876a5 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -16,7 +16,7 @@ CFLAGS_prom_init.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
- CFLAGS_btext.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
- CFLAGS_prom.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
- 
--CFLAGS_prom_init.o += $(call cc-option, -fno-stack-protector)
-+CFLAGS_prom_init.o += -fno-stack-protector
- CFLAGS_prom_init.o += -DDISABLE_BRANCH_PROFILING
- CFLAGS_prom_init.o += -ffreestanding
- 
-diff --git a/arch/powerpc/platforms/powermac/Makefile b/arch/powerpc/platforms/powermac/Makefile
-index f4247ade71ca..cf85f0662d0d 100644
---- a/arch/powerpc/platforms/powermac/Makefile
-+++ b/arch/powerpc/platforms/powermac/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS_bootx_init.o  		+= -fPIC
--CFLAGS_bootx_init.o  		+= $(call cc-option, -fno-stack-protector)
-+CFLAGS_bootx_init.o		+= -fno-stack-protector
- 
- KASAN_SANITIZE_bootx_init.o := n
- 
-diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-index 708cb6304c2d..f44355e46f31 100644
---- a/arch/sparc/vdso/Makefile
-+++ b/arch/sparc/vdso/Makefile
-@@ -54,7 +54,7 @@ $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
- # optimize sibling calls.
- #
- CFL := $(PROFILING) -mcmodel=medlow -fPIC -O2 -fasynchronous-unwind-tables -m64 \
--       $(filter -g%,$(KBUILD_CFLAGS)) $(call cc-option, -fno-stack-protector) \
-+       $(filter -g%,$(KBUILD_CFLAGS)) -fno-stack-protector \
-        -fno-omit-frame-pointer -foptimize-sibling-calls \
-        -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
- 
-@@ -93,7 +93,7 @@ KBUILD_CFLAGS_32 := $(filter-out -fno-pic,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(SPARC_REG_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 += -m32 -msoft-float -fpic
--KBUILD_CFLAGS_32 += $(call cc-option, -fno-stack-protector)
-+KBUILD_CFLAGS_32 += -fno-stack-protector
- KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
- KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
- KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index 3f27aa3ec0a6..1cea46ff9bb7 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -121,8 +121,7 @@ LINK-$(CONFIG_LD_SCRIPT_STATIC) += -static
- LINK-$(CONFIG_LD_SCRIPT_DYN) += -Wl,-rpath,/lib $(call cc-option, -no-pie)
- 
- CFLAGS_NO_HARDENING := $(call cc-option, -fno-PIC,) $(call cc-option, -fno-pic,) \
--	$(call cc-option, -fno-stack-protector,) \
--	$(call cc-option, -fno-stack-protector-all,)
-+	-fno-stack-protector $(call cc-option, -fno-stack-protector-all)
- 
- # Options used by linker script
- export LDS_START      := $(START)
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 00e378de8bc0..89c3cdfba753 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -37,7 +37,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
- 		   -mno-mmx -mno-sse
- 
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
--REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
-+REALMODE_CFLAGS += -fno-stack-protector
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
- export REALMODE_CFLAGS
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 7619742f91c9..c88a31569a5e 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -36,7 +36,7 @@ cflags-$(CONFIG_X86_64) := -mcmodel=small
- KBUILD_CFLAGS += $(cflags-y)
- KBUILD_CFLAGS += -mno-mmx -mno-sse
- KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
--KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
-+KBUILD_CFLAGS += -fno-stack-protector
- KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
- KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
- KBUILD_CFLAGS += -Wno-pointer-sign
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 04e65f0698f6..215376d975a2 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -82,7 +82,7 @@ $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
- # optimize sibling calls.
- #
- CFL := $(PROFILING) -mcmodel=small -fPIC -O2 -fasynchronous-unwind-tables -m64 \
--       $(filter -g%,$(KBUILD_CFLAGS)) $(call cc-option, -fno-stack-protector) \
-+       $(filter -g%,$(KBUILD_CFLAGS)) -fno-stack-protector \
-        -fno-omit-frame-pointer -foptimize-sibling-calls \
-        -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
- 
-@@ -151,7 +151,7 @@ KBUILD_CFLAGS_32 := $(filter-out -mfentry,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 += -m32 -msoft-float -mregparm=0 -fpic
--KBUILD_CFLAGS_32 += $(call cc-option, -fno-stack-protector)
-+KBUILD_CFLAGS_32 += -fno-stack-protector
- KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
- KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
- KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index dba6a83bc349..93792b457b81 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -17,8 +17,7 @@ KCOV_INSTRUMENT_perf_event.o := n
- KCSAN_SANITIZE_common.o := n
- 
- # Make sure load_percpu_segment has no stackprotector
--nostackp := $(call cc-option, -fno-stack-protector)
--CFLAGS_common.o		:= $(nostackp)
-+CFLAGS_common.o		:= -fno-stack-protector
- 
- obj-y			:= cacheinfo.o scattered.o topology.o
- obj-y			+= common.o
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 6110bce7237b..d46fff11f06f 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -24,7 +24,7 @@ ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
- endif
- 
--CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
-+CFLAGS_cmdline.o := -fno-stack-protector
- endif
- 
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index f7fd0e868c9c..5864219221ca 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -22,10 +22,9 @@ obj-y				:=  init.o init_$(BITS).o fault.o ioremap.o extable.o mmap.o \
- obj-y				+= pat/
- 
- # Make sure __phys_addr has no stackprotector
--nostackp := $(call cc-option, -fno-stack-protector)
--CFLAGS_physaddr.o		:= $(nostackp)
--CFLAGS_setup_nx.o		:= $(nostackp)
--CFLAGS_mem_encrypt_identity.o	:= $(nostackp)
-+CFLAGS_physaddr.o		:= -fno-stack-protector
-+CFLAGS_setup_nx.o		:= -fno-stack-protector
-+CFLAGS_mem_encrypt_identity.o	:= -fno-stack-protector
- 
- CFLAGS_fault.o := -I $(srctree)/$(src)/../include/asm/trace
- 
-diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
-index 37923d715741..6907b523e856 100644
---- a/arch/x86/power/Makefile
-+++ b/arch/x86/power/Makefile
-@@ -3,8 +3,7 @@ OBJECT_FILES_NON_STANDARD_hibernate_asm_$(BITS).o := y
- 
- # __restore_processor_state() restores %gs after S3 resume and so should not
- # itself be stack-protected
--nostackp := $(call cc-option, -fno-stack-protector)
--CFLAGS_cpu.o	:= $(nostackp)
-+CFLAGS_cpu.o	:= -fno-stack-protector
- 
- obj-$(CONFIG_PM_SLEEP)		+= cpu.o
- obj-$(CONFIG_HIBERNATION)	+= hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 088bd764e0b7..183ac60e5990 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -34,7 +34,7 @@ KCOV_INSTRUMENT := n
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
- PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
--PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
-+PURGATORY_CFLAGS += -fno-stack-protector
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
-diff --git a/arch/x86/um/vdso/Makefile b/arch/x86/um/vdso/Makefile
-index 0caddd6acb22..5943387e3f35 100644
---- a/arch/x86/um/vdso/Makefile
-+++ b/arch/x86/um/vdso/Makefile
-@@ -42,7 +42,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
- # optimize sibling calls.
- #
- CFL := $(PROFILING) -mcmodel=small -fPIC -O2 -fasynchronous-unwind-tables -m64 \
--       $(filter -g%,$(KBUILD_CFLAGS)) $(call cc-option, -fno-stack-protector) \
-+       $(filter -g%,$(KBUILD_CFLAGS)) -fno-stack-protector \
-        -fno-omit-frame-pointer -foptimize-sibling-calls
- 
- $(vobjs): KBUILD_CFLAGS += $(CFL)
-diff --git a/arch/x86/xen/Makefile b/arch/x86/xen/Makefile
-index 084de77a109e..5f1db522d06b 100644
---- a/arch/x86/xen/Makefile
-+++ b/arch/x86/xen/Makefile
-@@ -9,9 +9,8 @@ CFLAGS_REMOVE_irq.o = -pg
- endif
- 
- # Make sure early boot has no stackprotector
--nostackp := $(call cc-option, -fno-stack-protector)
--CFLAGS_enlighten_pv.o		:= $(nostackp)
--CFLAGS_mmu_pv.o			:= $(nostackp)
-+CFLAGS_enlighten_pv.o		:= -fno-stack-protector
-+CFLAGS_mmu_pv.o			:= -fno-stack-protector
- 
- obj-y				+= enlighten.o
- obj-y				+= mmu.o
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 75daaf20374e..f8418763cd79 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -29,7 +29,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
- 				   -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
--				   $(call cc-option,-fno-stack-protector) \
-+				   -fno-stack-protector \
- 				   $(call cc-option,-fno-addrsig) \
- 				   -D__DISABLE_EXPORTS
- 
-diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-index 0d322f3d90cd..c25c9a699b48 100644
---- a/drivers/xen/Makefile
-+++ b/drivers/xen/Makefile
-@@ -5,8 +5,7 @@ obj-y	+= mem-reservation.o
- obj-y	+= events/
- obj-y	+= xenbus/
- 
--nostackp := $(call cc-option, -fno-stack-protector)
--CFLAGS_features.o			:= $(nostackp)
-+CFLAGS_features.o			:= -fno-stack-protector
- 
- dom0-$(CONFIG_ARM64) += arm-device.o
- dom0-$(CONFIG_PCI) += pci.o
-diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-index d4999b38d1be..d111f32bd5fd 100644
---- a/kernel/kcsan/Makefile
-+++ b/kernel/kcsan/Makefile
-@@ -7,8 +7,7 @@ CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
- 
--CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
--	$(call cc-option,-fno-stack-protector,)
-+CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) -fno-stack-protector
- 
- obj-y := core.o debugfs.o report.o
- obj-$(CONFIG_KCSAN_SELFTEST) += test.o
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..0cda70649f1c 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -22,7 +22,7 @@ KCOV_INSTRUMENT_fault-inject.o := n
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KASAN_SANITIZE_string.o := n
- 
--CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
-+CFLAGS_string.o := -fno-stack-protector
- endif
- 
- # Used by KCSAN while enabled, avoid recursion.
-@@ -300,7 +300,7 @@ endif
- UBSAN_SANITIZE_ubsan.o := n
- KASAN_SANITIZE_ubsan.o := n
- KCSAN_SANITIZE_ubsan.o := n
--CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
-+CFLAGS_ubsan.o := -fno-stack-protector $(DISABLE_STACKLEAK_PLUGIN)
- 
- obj-$(CONFIG_SBITMAP) += sbitmap.o
- 
-diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-index d532c2587731..370d970e5ab5 100644
---- a/mm/kasan/Makefile
-+++ b/mm/kasan/Makefile
-@@ -16,7 +16,7 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
- # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
- # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
- CC_FLAGS_KASAN_RUNTIME := $(call cc-option, -fno-conserve-stack)
--CC_FLAGS_KASAN_RUNTIME += $(call cc-option, -fno-stack-protector)
-+CC_FLAGS_KASAN_RUNTIME += -fno-stack-protector
- # Disable branch tracing to avoid recursion.
- CC_FLAGS_KASAN_RUNTIME += -DDISABLE_BRANCH_PROFILING
- 
++AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER - SEV SUPPORT
++M:	Brijesh Singh <brijeshkumar.singh@amd.com>
++M:	Tom Lendacky <thomas.lendacky@amd.com>
++L:	linux-crypto@vger.kernel.org
++S:	Supported
++F:	drivers/crypto/ccp/sev*
++F:	include/uapi/linux/psp-sev.h
++
+ AMD DISPLAY CORE
+ M:	Harry Wentland <harry.wentland@amd.com>
+ M:	Leo Li <sunpeng.li@amd.com>
 -- 
-2.25.1
+2.27.0
 
