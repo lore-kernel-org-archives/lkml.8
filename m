@@ -2,216 +2,136 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3133EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB31BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF4A20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57E020675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+9YB76F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgFZJJ0 (ORCPT
+        id S1726402AbgFZJKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:09:26 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37614 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgFZJJ0 (ORCPT
+        Fri, 26 Jun 2020 05:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgFZJKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:09:26 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5271E3C0585;
-        Fri, 26 Jun 2020 11:09:23 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M8GynATDHF2b; Fri, 26 Jun 2020 11:09:18 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 70A5A3C04C1;
-        Fri, 26 Jun 2020 11:09:18 +0200 (CEST)
-Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 26 Jun
- 2020 11:09:18 +0200
-Date:   Fri, 26 Jun 2020 11:09:13 +0200
-From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200626090913.GA1348@vmlxhi-110.adit-jv.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
- <20200625094724.GE5865@pendragon.ideasonboard.com>
- <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
- <20200625102701.GG5865@pendragon.ideasonboard.com>
- <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
+        Fri, 26 Jun 2020 05:10:05 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DF6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 02:10:05 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id k6so7798396ili.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 02:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E/eCHD5MeGyOQruj1/qugTRXIeBr6V4nhgfDuOP4Euk=;
+        b=o+9YB76F7krnJluMLNWELB+8rA30o+GOlyeCy4l6qx16wReY6Q06BQ0AwNAtKKS+qc
+         P9a/BdPFlH/vdhrQpkWfXQorsAZdvnc0tBalo9ESV/gX4DjetZuSwpA68KjBjezlyT9P
+         psD0EXlI4bSNt9om3gI78DMeqXqi65cKMe0y3SeKV8nDBONSmj3JB0D7EEypUAwyNqez
+         mFutQg2XGC6WtkVaS4iMhqk4YicsH3PPbUjRZt/zJ5qSyOZw4mEJ8fdYyv9J4pmdm3xD
+         nasy564VPalfcXLDH0ftUJcz645Ce1rIaAj10AjUeNNxc8Bb2hbE7fvBiTzP7YHs3Y7I
+         Xlaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E/eCHD5MeGyOQruj1/qugTRXIeBr6V4nhgfDuOP4Euk=;
+        b=WqZOlSKJS33D+OqFFuGJwRxrdvBgm/oYSFnLYIxz1p1CubGyob+yKPpj5XnwD1YO+o
+         mYj6SVZhZQ51iGQVVSEKg8ZDXirYYuKdYHelQ9VrfDjufxGMyzwXFt+Z1i3MPEykcab5
+         YKC5/ZGJOwy6WxWOczshIH9+iGnQxzEIMYiPvrh2tn3xZWV64RijIspwbdoAFGLTu3oP
+         fjH/Zr9hwsMpTycg7rhyfvDC+muos09OtkHGu0R0yvjXS/kb/VqsrMii2t+FSwOWKikG
+         TX6qeJybPFGkz4lU5hwcfxBf1jYKyY7TFrn5OhegXiv4Vy9S4JCyr96Fw4KjgzJmluYn
+         0hDA==
+X-Gm-Message-State: AOAM530ZCMCiKfYiGXtReKuNCv9ezCZDPK8DG35z8riM7wPi66veFvgn
+        kAsxsHYJwjjWMjJjxyzoNuqJw+BCAN5BjMwVMro=
+X-Google-Smtp-Source: ABdhPJwVmrDkI52G+/gipVEhsgJfsB0+JF+HXsKswCwh23NA9KXyCDczaGNwR/DEjPFtA5jeZ+z605ev2K3t/yvHb6w=
+X-Received: by 2002:a92:cecd:: with SMTP id z13mr2107054ilq.76.1593162604839;
+ Fri, 26 Jun 2020 02:10:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.196]
+References: <912a58ac-6f81-ba22-c79e-f2bf902dae2e@wiesinger.com>
+ <CALeDE9N0gbYRKbmoPYF73VNr=Q9UetP+fpYFbhWfVsUZL+GkWA@mail.gmail.com> <8e2040e2-9faa-cd95-c474-eb2fa2c7c6c0@gmail.com>
+In-Reply-To: <8e2040e2-9faa-cd95-c474-eb2fa2c7c6c0@gmail.com>
+From:   Peter Robinson <pbrobinson@gmail.com>
+Date:   Fri, 26 Jun 2020 10:09:53 +0100
+Message-ID: <CALeDE9OwtiG2cBxeyoDdJ6g9EXZBi6MbS+MNUh-JiVod3o-3xw@mail.gmail.com>
+Subject: Re: [fedora-arm] Banana Pi-R1 - kernel 5.6.0 and later broken - b43 DSA
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Gerhard Wiesinger <lists@wiesinger.com>,
+        arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
+        LKML <linux-kernel@vger.kernel.org>, filbar@centrum.cz
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, Hans,
-
-On Thu, Jun 25, 2020 at 12:35:02PM +0200, Hans Verkuil wrote:
-> On 25/06/2020 12:29, Laurent Pinchart wrote:
-> > Hi Ramzi,
-> > 
-> > On Thu, Jun 25, 2020 at 12:18:35PM +0200, Ramzi Ben Meftah wrote:
-> >> On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
-> >>> On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
-> >>>> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
-> >>>>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> >>>>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> >>>>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>>>
-> >>>>>>  +Niklas, +Laurent
-> >>>>>>
-> >>>>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> >>>>>
-> >>>>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> >>>>> idea either :-) Routing doesn't go through the subdev [gs]_input
-> >>>>> operations in MC-based drivers. It should be configured through link
-> >>>>> setup instead. This patch goes in the wrong direction, sorry Steve.
-> >>>>
-> >>>> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
-> >>>> with Media Controller?
-> >>>
-> >>> No there isn't at the moment. I'm not opposed to adding such a feature,
-> >>> but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
-> >>> subdev pad operation (v4l2_subdev_pad_ops), not a video operation
-> >>> (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
-> >>> as it would retrieve properties of the input corresponding to the pad,
-> >>> not enumerate inputs.
+On Fri, Jun 26, 2020 at 5:42 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 6/25/2020 4:23 PM, Peter Robinson wrote:
+> >> I'm having troubles with the Banana Pi-R1 router with newer kernels. No
+> >> config changes, config works well since a lot of lernel updates ...
+> >> Banana Pi-R1 is configured via systemd-networkd and uses the DSA
+> >> (Distributed Switch Architecture) with b53 switch. No visible difference
+> >> in interfaces, vlan config, bridge config, etc. Looks like actual
+> >> configuration in the switch in the hardware is broken.
 > >>
-> >> Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
-> >> this need. But, seems this is not expose to user space although many drivers
-> >> do implememt it.
-> >> Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
-> > 
-> > Isn't g_input_status a video operation ? I would propose adding a
-> > g_input_status pad operation, and expose that to userspace. We should
-> > take that as an opportunity to consider designing that new operation
-> > from scratch (possibly naming it differently) and make sure it could
-> > address both analog and digital systems (for instance being able to
-> > report the status of an SDI input).
+> >> # OK: Last good known version (booting that version is also ok)
+> >> Linux bpi 5.5.18-200.fc31.armv7hl #1 SMP Fri Apr 17 17:25:00 UTC 2020
+> >> armv7l armv7l armv7l GNU/Linux
+> >>
+> >> # NOK: no network
+> >> Linux bpi 5.6.8-200.fc31.armv7hl #1 SMP Wed Apr 29 19:05:06 UTC 2020
+> >> armv7l armv7l armv7l GNU/Linux
+> >>
+> >> # NOK: no network
+> >> Linux bpi 5.6.0-300.fc32.armv7hl #1 SMP Mon Mar 30 16:37:50 UTC 2020
+> >> armv7l armv7l armv7l GNU/Linux
+> >>
+> >> # NOK: no network
+> >> Linux bpi 5.6.19-200.fc31.armv7hl #1 SMP Wed Jun 17 17:10:22 UTC 2020
+> >> armv7l armv7l armv7l GNU/Linux
+> >>
+> >> # NOK: no network
+> >> Linux bpi 5.7.4-200.fc32.armv7hl #1 SMP Fri Jun 19 00:52:22 UTC 2020
+> >> armv7l armv7l armv7l GNU/Linux
+> >>
+> >>
+> >> Saw that there were a lot of changes in the near past in the b53 driver:
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/net/dsa/b53?h=v5.8-rc1+
+> >
+> > So from your notes above it looks like something regressed between the
+> > 5.5.x series and the 5.6.0 release? If so I'm not sure what the
+> > context of the changed in 5.8 are here. If there's more changes to the
+> > driver in 5.8 dev cycle have you tried one of the Fedora rawhide 5.8
+> > rc1 or rc2 kernel builds to see if that resolves it?
+>
+> See my response to Gerhard, there are changes expected to how the
+> network configuration should be done after:
 
-Sorry, my mistake. But, does it make sens that it belongs to video ops?
-I think it should be part of pad ops, it is used now as alternative to 
-ENUMINPUT and we agreed that it should(if we are going to implement it) be 
-part of pad ops.
+It appears your response was off list, and he had follow up questions
+and I don't see a response from you.
 
-> 
-> Yes, I was wondering the same. The status bits are ancient and we might
-> want to improve on it.
-> 
-> Ramzi, what exactly is your use-case? Is this for an HDMI input? Analog
-> video input? Before adding a new ioctl I'd like to know why you think
-> you need it :-)
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8fab459e69abfd04a66d76423d18ba853fced4ab
+>
+> >
+> > Failing that looking for the change in the 5.6 cycle would likely be
+> > the better bet so we can work out what broke it and report it to the
+> > upstream driver maintainer. Have you searched to see if others are
+> > seeing a similar issue or have reported a similar issue upstream?
+> >
+>
+> Gerhard is doing exactly this with his email.
 
-I need to know if the input signal(analog and digital) is there, before
-starting streaming. I am not aware of other way to check for it.
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> >>>>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> >>>>>>> ioctls for use via v4l2 subdevice node.
-> >>>>>>>
-> >>>>>>> This commit should probably not be pushed upstream, because the (old)
-> >>>>>>> idea of video inputs conflicts with the newer concept of establishing
-> >>>>>>> media links between src->sink pads.
-> >>>>>>>
-> >>>>>>> However it might make sense for some subdevices to support enum/get/set
-> >>>>>>> inputs. One example would be the analog front end subdevice for the
-> >>>>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> >>>>>>> can be done without requiring the implementation of media entities that
-> >>>>>>> would define the analog source for which to establish a media link.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>>>> ---
-> >>>>>>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> >>>>>>>  include/media/v4l2-subdev.h           | 11 +++++++++++
-> >>>>>>>  2 files changed, 20 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>>>> index 6b989fe..73fbfe9 100644
-> >>>>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> >>>>>>>  			return -ENOTTY;
-> >>>>>>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> >>>>>>>
-> >>>>>>> +	case VIDIOC_ENUMINPUT:
-> >>>>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> >>>>>>> +
-> >>>>>>> +	case VIDIOC_G_INPUT:
-> >>>>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> >>>>>>> +
-> >>>>>>> +	case VIDIOC_S_INPUT:
-> >>>>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> >>>>>>> +
-> >>>>>>>  	case VIDIOC_G_CTRL:
-> >>>>>>>  		if (!vfh->ctrl_handler)
-> >>>>>>>  			return -ENOTTY;
-> >>>>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> >>>>>>> index f7fe78a..6e1a9cd 100644
-> >>>>>>> --- a/include/media/v4l2-subdev.h
-> >>>>>>> +++ b/include/media/v4l2-subdev.h
-> >>>>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> >>>>>>>   * @g_input_status: get input status. Same as the status field in the
-> >>>>>>>   *	&struct &v4l2_input
-> >>>>>>>   *
-> >>>>>>> + * @enuminput: enumerate inputs. Should return the same input status as
-> >>>>>>> + *      @g_input_status if the passed input index is the currently active
-> >>>>>>> + *      input.
-> >>>>>>> + *
-> >>>>>>> + * @g_input: returns the currently active input index.
-> >>>>>>> + *
-> >>>>>>> + * @s_input: set the active input.
-> >>>>>>> + *
-> >>>>>>>   * @s_stream: used to notify the driver that a video stream will start or has
-> >>>>>>>   *	stopped.
-> >>>>>>>   *
-> >>>>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> >>>>>>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> >>>>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> >>>>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> >>>>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> >>>>>>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> >>>>>>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> >>>>>>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> > 
-> 
-
--- 
-Best Regards,
-Ramzi Ben Meftah.
+No, I asked if he'd searched elsewhere to see if others are having
+problems, like other distros etc.
