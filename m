@@ -2,218 +2,154 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1121C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782DF2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz68M9cZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCBD20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593154338;
+	bh=JH0EwifEFWJK0ZGDKqPuMsUuzx3DE/iNpg21kqYUz64=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=CZVmsfhKFRYvgommwcbruluC31sQWcycbjo+5uLVYeo+XHAJmHMhV6vxyEBZvW4sv
+	 q/FJ4/BnvdngFd1kJgIcS0CMLz9YNkuulbxNgt/erV3GX4SKxRy0GIovMNmDqrFDYd
+	 3rRYi6tnddvI2bvep0Stq1NAANUZk7iYGkbh2134=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgFZGsh (ORCPT
+        id S1728528AbgFZGwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        Fri, 26 Jun 2020 02:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgFZGsh (ORCPT
+        with ESMTP id S1726311AbgFZGwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:48:37 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A571DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:48:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so9164651ljn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:48:36 -0700 (PDT)
+        Fri, 26 Jun 2020 02:52:15 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAAAC08C5C1;
+        Thu, 25 Jun 2020 23:52:15 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so2006880lji.9;
+        Thu, 25 Jun 2020 23:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tAiutF2JVV2jVzi4JN5lKA5pAFxBJvB1zS7W+zLCNGU=;
-        b=Jz68M9cZSFRsa1lfuYI3fBa8wMImUyWpZmFLLZbO40bbGfouXOj3N6vDdnVrcVqqTX
-         Lbi15a+HZlQXw04tJgZx7ZXkGgXgQERKqgR7Z/sv2m7ETVW9mami6HmOgwYPMhOdUecQ
-         wvzjWm6VbFP3Jly0snbok9qhBxmvxgclwE3n0J0kwGzahrDuDGL9ZhVzLJyH8Znv3FDx
-         lqoAb4K+DUnybEjiQ7y3HXXOpNX9vwZL5Ce+k22vvFszcQcxlNO+rRwx5WziQwbbXVhq
-         my1X1ocgZrIQp7b2Leqc5DRVI+4Qf/008okO2tVZ1QGMj84x5Tj6SYrNxSBZ8/fqkyq0
-         thCw==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=nFM3kop9ktvhCUlgVduYIaa6zuTPi9zx4zThaiWVhw4=;
+        b=IHfRxkbi+UPUJ5N40VXH4vaoWL9sjWCW9SvCSr79xo4P5MZjTEDcIJ9sSKXrzp/N2+
+         emFRcVbz+jVBa+awDJlc9nWSXvnKmBaZUWjXIRhx7+S+IDFO6rp4LNqKQFnwFv2oqwdl
+         vOR6dWa6+Gbb8ySKmMpqAHI7llo/PUd25iwNxsyIDqSkMMUF3xf3lzyKjBdBUZh0u8m5
+         xmOoO4hjc0KB1d9K34yehIbMZv8/iaQsjlGhCIwGHEOcfqY0+TATlSyYRCqBhLbLteBV
+         agITCK1Ef0jsGz0K7fEm4+e+EWcLqLnzNP7hQTq30pWfjcMiy5FXuYEsHPH7gvYFQEIA
+         pkUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tAiutF2JVV2jVzi4JN5lKA5pAFxBJvB1zS7W+zLCNGU=;
-        b=t0XxCTeNwp40UEhq8f+koKZIHwYEKa50MnKQh40+xqj/CxU5WQbEl5pjriEV/wFcU+
-         dPiKhOW5IT9kqMKNCAgDh7ZH82Iy2p//nE47fL3IUHCXNknwNcQcuhpsYD7x5MxheToD
-         Kf59+yyoLzAtFv33m/ciQyQuHuTXz8fnu6/iPhor7vfei0u33Ap9sWu51CjcaleypHpf
-         z63w9sZIoAjAuY2niFq6FJczYSnzFJaCyZ/2nrQT1+mVU6vVIY7PCcIN0o7DoyWVPcGN
-         /jUgkxE317C2dafQHBRlszBgRAn0ZwtH+NyN7/RHBoHSMwVYasFlb/TthEqbBwpUnIPl
-         AM3w==
-X-Gm-Message-State: AOAM53055+PkiYOo21k6XLECus3mXj/hU6vjy6G037rZ8bUGwV/Gc8bh
-        Fi2245thGnsDP4BxzwSC1VSQtnHxxwyUDqsLCbU=
-X-Google-Smtp-Source: ABdhPJwywRiIDFcdW8SgEjZ9w6GKNMQWagCVc2TIKPv5IsPXc4jb6x5KjKPF+JpzzRyAUIZFamnEc6LM3RArfv1S/9I=
-X-Received: by 2002:a2e:5d8:: with SMTP id 207mr551883ljf.257.1593154114931;
- Thu, 25 Jun 2020 23:48:34 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=nFM3kop9ktvhCUlgVduYIaa6zuTPi9zx4zThaiWVhw4=;
+        b=mDxQ64yqe9QkZ8rMGU83ZPgj0ORAvVh70KCwtiZWeIdNPeGwfWIlnc1ORDYmdYs4GC
+         scaRbR7yTGwuKo3dg28v5xOO3tedZnDgbwupQCmpnDIAQ3NpCIYJBofP8Zr48y4Xg0gr
+         0fOTCCUKU/RrVC5y+y2tg2Ud9kS3edGLHThNQU7R942XEDKvvFNSLHntRoQ7cwtDiB2k
+         MR5vyE9NXGMai3pp/kjUaUrwiytlPAJklkwcGieUAoCe/f4CGpxYXYo/BUnmXIwU0J00
+         BI7hJ7RLCnKd/ti5ndsQH2hdX8RNZSZ72nlEDS1s2QI4fYS6P41rvbtgdEsdUTPceTrH
+         JkSw==
+X-Gm-Message-State: AOAM5303lZTY7m6EWrXaGOmA8cGDwf8sQAAei4j15+aX7TBKGl+nCUTL
+        Tn3+Jsck8q4Ye+oXudw3C+U=
+X-Google-Smtp-Source: ABdhPJwtp1ZLwujD1qZAwEUI67yGIAEejThjkqWU9ZqERY6mYmJv4ZrW1uPxE64uAOUIjduvvUjWnQ==
+X-Received: by 2002:a2e:9141:: with SMTP id q1mr682251ljg.196.1593154333942;
+        Thu, 25 Jun 2020 23:52:13 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r11sm6559950lfc.29.2020.06.25.23.52.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jun 2020 23:52:13 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Pawel Laszczak <pawell@cadence.com>, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, ben.dooks@codethink.co.uk,
+        colin.king@canonical.com, rogerq@ti.com, peter.chen@nxp.com,
+        weiyongjun1@huawei.com, jpawar@cadence.com, kurahul@cadene.com,
+        sparmar@cadence.com, Pawel Laszczak <pawell@cadence.com>
+Subject: Re: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
+In-Reply-To: <20200626045450.10205-1-pawell@cadence.com>
+References: <20200626045450.10205-1-pawell@cadence.com>
+Date:   Fri, 26 Jun 2020 09:52:08 +0300
+Message-ID: <878sga5nfr.fsf@kernel.org>
 MIME-Version: 1.0
-References: <1593054160-12628-1-git-send-email-jrdr.linux@gmail.com> <9ff52733-6ce0-6bda-8e49-a6908b4ff7dc@suse.com>
-In-Reply-To: <9ff52733-6ce0-6bda-8e49-a6908b4ff7dc@suse.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 26 Jun 2020 12:18:23 +0530
-Message-ID: <CAFqt6zYvU7hFoY_5T2P0C4=G_gZWoQZYCpdcMM6Mn9WQ_rnXaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] xen/privcmd: Corrected error handling path and mark
- pages dirty
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:22 AM J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wr=
-ote:
->
-> On 25.06.20 05:02, Souptick Joarder wrote:
-> > Previously, if lock_pages() end up partially mapping pages, it used
-> > to return -ERRNO due to which unlock_pages() have to go through
-> > each pages[i] till *nr_pages* to validate them. This can be avoided
-> > by passing correct number of partially mapped pages & -ERRNO separately=
-,
-> > while returning from lock_pages() due to error.
-> >
-> > With this fix unlock_pages() doesn't need to validate pages[i] till
-> > *nr_pages* for error scenario and few condition checks can be ignored.
-> >
-> > As discussed, pages need to be marked as dirty before unpinned it in
-> > unlock_pages() which was oversight.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: Paul Durrant <xadimgnik@gmail.com>
-> > ---
-> > Hi,
-> >
-> > I'm compile tested this, but unable to run-time test, so any testing
-> > help is much appriciated.
-> >
-> >   drivers/xen/privcmd.c | 34 +++++++++++++++++++---------------
-> >   1 file changed, 19 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> > index a250d11..0da417c 100644
-> > --- a/drivers/xen/privcmd.c
-> > +++ b/drivers/xen/privcmd.c
-> > @@ -580,43 +580,44 @@ static long privcmd_ioctl_mmap_batch(
-> >
-> >   static int lock_pages(
-> >       struct privcmd_dm_op_buf kbufs[], unsigned int num,
-> > -     struct page *pages[], unsigned int nr_pages)
-> > +     struct page *pages[], unsigned int nr_pages, int *pinned)
->
-> unsigned int *pinned, please.
->
-> >   {
-> >       unsigned int i;
-> > +     int errno =3D 0, page_count =3D 0;
->
-> Please drop the errno variable. It is misnamed (you never assign an
-> errno value to it) and not needed, as you can ...
->
-> >
-> >       for (i =3D 0; i < num; i++) {
-> >               unsigned int requested;
-> > -             int pinned;
-> >
-> > +             *pinned +=3D page_count;
-> >               requested =3D DIV_ROUND_UP(
-> >                       offset_in_page(kbufs[i].uptr) + kbufs[i].size,
-> >                       PAGE_SIZE);
-> >               if (requested > nr_pages)
-> >                       return -ENOSPC;
-> >
-> > -             pinned =3D get_user_pages_fast(
-> > +             page_count =3D get_user_pages_fast(
-> >                       (unsigned long) kbufs[i].uptr,
-> >                       requested, FOLL_WRITE, pages);
-> > -             if (pinned < 0)
-> > -                     return pinned;
-> > +             if (page_count < 0) {
-> > +                     errno =3D page_count;
-> > +                     return errno;
->
-> ... just return page_count her, and ...
->
-> > +             }
-> >
-> > -             nr_pages -=3D pinned;
-> > -             pages +=3D pinned;
-> > +             nr_pages -=3D page_count;
-> > +             pages +=3D page_count;
-> >       }
-> >
-> > -     return 0;
-> > +     return errno;
->
-> ... leave this as it was.
->
-> >   }
-> >
-> >   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
-> >   {
-> >       unsigned int i;
-> >
-> > -     if (!pages)
-> > -             return;
-> > -
-> >       for (i =3D 0; i < nr_pages; i++) {
-> > -             if (pages[i])
-> > -                     put_page(pages[i]);
-> > +             if (!PageDirty(page))
-> > +                     set_page_dirty_lock(page);
->
-> page? Not pages[i]?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I fixed it in compile branch, but missed it in patch creation work
-space at the time of posting.
-I think, this is the compile error Boris was pointing to.
-Sorry about it. I will fix it and post the v2.
 
+Hi,
+
+Pawel Laszczak <pawell@cadence.com> writes:
+> This patch introduce new Cadence USBSS DRD driver to linux kernel.
 >
-> > +             put_page(pages[i]);
-> >       }
-> >   }
-> >
-> > @@ -630,6 +631,7 @@ static long privcmd_ioctl_dm_op(struct file *file, =
-void __user *udata)
-> >       struct xen_dm_op_buf *xbufs =3D NULL;
-> >       unsigned int i;
-> >       long rc;
-> > +     int pinned =3D 0;
-> >
-> >       if (copy_from_user(&kdata, udata, sizeof(kdata)))
-> >               return -EFAULT;
-> > @@ -683,9 +685,11 @@ static long privcmd_ioctl_dm_op(struct file *file,=
- void __user *udata)
-> >               goto out;
-> >       }
-> >
-> > -     rc =3D lock_pages(kbufs, kdata.num, pages, nr_pages);
-> > -     if (rc)
-> > +     rc =3D lock_pages(kbufs, kdata.num, pages, nr_pages, &pinned);
-> > +     if (rc < 0) {
-> > +             nr_pages =3D pinned;
-> >               goto out;
-> > +     }
-> >
-> >       for (i =3D 0; i < kdata.num; i++) {
-> >               set_xen_guest_handle(xbufs[i].h, kbufs[i].uptr);
-> >
+> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+> Host Only (XHCI)configurations.
 >
+> The current driver has been validated with FPGA burned. We have support
+> for PCIe bus, which is used on FPGA prototyping.
 >
-> Juergen
+> The host side of USBSS-DRD controller is compliance with XHCI
+> specification, so it works with standard XHCI Linux driver.
+>
+> The host side of USBSS DRD controller is compliant with XHCI.
+> The architecture for device side is almost the same as for host side,
+> and most of the XHCI specification can be used to understand how
+> this controller operates.
+>
+> This controller and driver support Full Speed, Hight Speed, Supper Speed
+> and Supper Speed Plus USB protocol.
+>
+> The prefix cdnsp used in driver has chosen by analogy to cdn3 driver.
+> The last letter of this acronym means PLUS. The formal name of controller
+> is USBSSP but it's to generic so I've decided to use CDNSP.
+>
+> The patch 1: adds DT binding.
+> The patch 2: adds PCI to platform wrapper used on Cadnece testing
+>              platform. It is FPGA based on platform.
+> The patches 3-5: add the main part of driver and has been intentionally
+>              split into 3 part. In my opinion such division should not
+>              affect understanding and reviewing the driver, and cause that
+>              main patch (4/5) is little smaller. Patch 3 introduces main
+>              header file for driver, 4 is the main part that implements a=
+ll
+>              functionality of driver and 5 introduces tracepoints.
+
+I'm more interested in how is this different from CDNS3. Aren't they SW com=
+patible?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl71mxgACgkQzL64meEa
+mQaiPQ//a7Zb3mi4EERXBszW7rCLKyFOdQYjy83WFHOxrAV/iXqGsx6KARPngoDg
+1u8cCOef0xdHjXt8aP9BhD9n2yvSb0oIMZFcyw/BOPADEUN9OBqCVxWSLDTZ1YuX
+O6n61nGDVkC/WWqwoiE/+yXV1MvEPV1nH/RQlh8aJa5WXe2CglkmKEJJC/Wo83BO
+Q+tsXgN1BCUAGl8TILSlrWjaP9jSQINFuzyU+fqJs6nzI/vnxMSvCk00UEwOQVMa
+HXLftoVdg9q9i4fphnW0hAj80bSG4i6U9r7cH2Ne+0QZzkSv4FFaKs3AutA9il1Z
+tL88XIvUx5fXy7vfBJL+P4HY5IfbP42jVKvMrjA+A2wdI0IRhGAvZKFnuZV2B2Ad
+FswDnFwUXvY8PmWS9/JFKC/Xqharmo6+9ozS9KZpzFMgDJtWA31fRwrSrxFx56Lo
+JhJfzy5awku/qNSQgh48tfyaat28Ubj3PjHe6UDe6PCq4zcrwOfobdCb0CNroWoQ
+gG94c2i4cGbHRKSWhBYGkz11U5TN5KfArKR/oPiCc3O8BPoOj9nru+j559cHr34J
+Gt2ToK0H/ICL+OLyqkuEMu0CERM9JpDzYhytaC+VxJbvYBDV9GzO//nqNnJyLFNm
+gQzfbcNSALJJGNIB7grpjCMeqOYT588o0rF79MitN94HpHYFWuk=
+=ZsUv
+-----END PGP SIGNATURE-----
+--=-=-=--
