@@ -2,91 +2,96 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA222C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5704AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48B1207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593174477;
-	bh=TUFytmxkb72+UFVWQN6IdqKF0CX2CD0Q+ltCz0dnsas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jjbahCXJlhcumvEfVe9KaNjEyY6so0tqmmeFK1OVz9Vjgp1gdUBNM4fjD+t9P8ja7
-	 BavUQfaBlYzYlW2CsoZBLb5uVGP2U/OQ1rhfvFEChfGpxfLxE87DhV/RDf5GVK76sO
-	 6ZTfk2BD+Rf9rhXap/Fq3t98Af2a80PZ+D7T35F8=
+	by mail.kernel.org (Postfix) with ESMTP id 1AF44204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:30:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="b5WY5hmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgFZM14 (ORCPT
+        id S1728440AbgFZMaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:27:56 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54663 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgFZM1z (ORCPT
+        Fri, 26 Jun 2020 08:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgFZMaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:27:55 -0400
-Received: by mail-pj1-f66.google.com with SMTP id u8so4647718pje.4;
-        Fri, 26 Jun 2020 05:27:55 -0700 (PDT)
+        Fri, 26 Jun 2020 08:30:24 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01011C08C5DB
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:30:24 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id dp10so4359789qvb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=S0udzLIXNsb1pKVpquCqjhEjdkaBQJ9k9wIcZym0NIY=;
+        b=b5WY5hmnBkDE3y2XYtD/XNpCJ64rCr6ywqQ0bplXtpcbBuu1NpQ0Trxyg8UIEeb6qP
+         lUYQmRe+baCZRuv8dJ6XPXMBDpzyvPsqfIlGPyC0J7bH+oebIxSOOH/+rHSLPlB3NGlT
+         racuLirYwlt4f5Ryxila0pI30g1Bp6xBsAPqJFqYsKmpM3trQt68IZATbehlz607I+dv
+         IoIfHdROxwuq/JBedny89gA/ttl9oSi3f9BTG92t88Ymt/1dwKgLKoB5jf3GTWYE5g7s
+         S88ARLcPPw0prcPSqlkbkn8s/m9gj383nzG5OyxtU7w7RdgRXU3OoTO8x1VxfoKjoBsD
+         oMVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QYO7rUOe6ZR76wbmsG+rFsvLUmMt19wB0njlIJ04IhI=;
-        b=e8t0Ttj4dqC0O/NA9IxnLZaTvxfJHyQ61J4OuDU7GZsYkinA4nYokfYJj/8IGOqp29
-         PufSdH2VgwSd8Cf47Tl/HF5TFmG3IxlQ1Nnn6zVrKohmc4TaB09Et9AmTQi+P1fWRTNB
-         tAC8ZFo3HaKJ+OARzlMKRIksatNGg6isxsaqIqfUzVBQiww4+s2ImZVp6POSsWDQYtbc
-         PkUI0oBvDM4b0nwznaTGcA6TD6GcVUsSGKFqBIE+6BvAltJEdj9qDVYW+W6CxCin74g1
-         ij4u1HZdz3Tiq9FC1CG3cxHUBJDybpKz27kpFZqQL3WlubMj186tciQeZxTmMEleI5gI
-         7knQ==
-X-Gm-Message-State: AOAM531/alt8u2oiEoy2/+VZjjZictZbH1DNAOGVrBu/DNVfBcbS8C41
-        eaDSpHtADHd+tBfmZ9WOx6kbKjROyrE=
-X-Google-Smtp-Source: ABdhPJzrqHNjjhgRg9sX3AzqBOPU93O7CxkpRVP9q8ile5kLzFIH7E88Z+6STbaoNDQD3aWX6NXBQg==
-X-Received: by 2002:a17:902:c3ca:: with SMTP id j10mr2520952plj.171.1593174474802;
-        Fri, 26 Jun 2020 05:27:54 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o1sm11599230pja.49.2020.06.26.05.27.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 05:27:53 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 9A5EC40B24; Fri, 26 Jun 2020 12:27:52 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 12:27:52 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 8/9] fs: don't allow kernel reads and writes without iter
- ops
-Message-ID: <20200626122752.GN4332@42.do-not-panic.com>
-References: <20200626075836.1998185-1-hch@lst.de>
- <20200626075836.1998185-9-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626075836.1998185-9-hch@lst.de>
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=S0udzLIXNsb1pKVpquCqjhEjdkaBQJ9k9wIcZym0NIY=;
+        b=MF3KYwdkNX7wXjq7+qWnz86ZH6gmpZKQRG6BPExdpPuca3MqBpAFrW31bHOJCAucgH
+         iEH6VofalJjCDCTBr3tvS6RjDKMwIVqqKuFbDcyVeQALTjoHAUWOeBkgloQd+Dy+DQMk
+         D9CLLRt7hV90Cw8D1OBjYbLhDcurEWqLD14LifNcfcDkikyY+IFfsrjVo90I7XSyNm+c
+         4BJNeujhv/FsjncLrKoKXgrjWx2eD2Vyv2TdxX7R4taEhdQLozSlvxEYK3X25iBsNw40
+         Qv7jT2P29F8gd7ocTAG+/TSXtxetmzds4VcF7xrRKa6x1X1dF/nkRHQn7G3WxHymmBfv
+         0usQ==
+X-Gm-Message-State: AOAM532SK+Vw7gHJgkwpWDu5bqm4vX2PgIKjjZuTQVerDkdrb8C9am9P
+        mh4pbbakI6Kp5qV8gHGmvOwN2Q==
+X-Google-Smtp-Source: ABdhPJzluXudaRNW5mQfKaLZBkHXd8Fo5a1PihnTT29QwORZ08On9+BQlkXaNj4UJJUksc7io6PA9w==
+X-Received: by 2002:ad4:5a46:: with SMTP id ej6mr2895574qvb.52.1593174623247;
+        Fri, 26 Jun 2020 05:30:23 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l3sm8723087qtn.69.2020.06.26.05.30.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 05:30:22 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/2] iommu/amd: Don't use atomic64_t for domain->pt_root
+Date:   Fri, 26 Jun 2020 08:30:21 -0400
+Message-Id: <63D91069-6A2E-4C05-8409-76A56D1E0FCA@lca.pw>
+References: <20200626080547.24865-1-joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>
+In-Reply-To: <20200626080547.24865-1-joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 09:58:35AM +0200, Christoph Hellwig wrote:
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index e765c95ff3440d..ae463bcadb6906 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -420,6 +420,18 @@ ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
->  	return ret;
->  }
->  
-> +static void warn_unsupported(struct file *file, const char *op)
-> +{
-> +	char pathname[128], *path;
 
-Why 128? How about kstrdup_quotable_file()?
 
-  Luis
+> On Jun 26, 2020, at 4:05 AM, Joerg Roedel <joro@8bytes.org> wrote:
+>=20
+> a previous discussion pointed out that using atomic64_t for that
+> purpose is a bit of overkill. This patch-set replaces it with unsigned
+> long and introduces some helpers first to make the change more easy.
+
+BTW, from the previous discussion, Linus mentioned,
+=20
+=E2=80=9C
+The thing is, the 64-bit atomic reads/writes are very expensive on
+32-bit x86. If it was just a native pointer, it would be much cheaper
+than an "atomic64_t".
+=E2=80=9C
+
+However, here we have AMD_IOMMU depend on x86_64, so I am wondering if it ma=
+kes any sense to run this code on 32-bit x86 at all?=
