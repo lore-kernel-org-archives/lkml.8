@@ -2,103 +2,93 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3046C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60636C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB5C42070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328AD20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593145776;
-	bh=p9585eEAPpWi8dV6JrEUxvDdogWQKRBDutyAYFiyGjs=;
+	s=default; t=1593146045;
+	bh=svauuLOObuPPRRg/SNwuiGDY0wtaQA/mHRhvgoFOKLE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PWeRbaU1SGcx8YPgUjiHLDsAdimvIXA4d6qzSMa3B0NOneQcIDNNvviK5FjLXOWio
-	 7cc4aJyfPqj6x9YSMGZbxZkaBYUD81FVLoAMwjudmVXWKuLddBrjPLGjgLJ21/iR+V
-	 KqY28zsE7pcbHVndXRHrxCad00nfFVhxrx+q0Uxo=
+	b=fHz2jFv2hUYbb4lgqmwV5wdxNUSTDXxsPDemga97Jb78JZ4OJkrw7w1bqtNYfE1XT
+	 W4uKf1eW5XKtLhVMBtZkOb13WoHf6AL2D65uDfH/xU1nnTQku8034P15ynPwe5DJ2M
+	 MZfmFV4rXiBlGV2rWq2GW8XA+2ovNe12UTsYuYFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgFZE3f (ORCPT
+        id S1726905AbgFZEeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 00:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgFZE3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:29:34 -0400
+        id S1726607AbgFZEeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 00:34:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FDF520706;
-        Fri, 26 Jun 2020 04:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602FC2075D;
+        Fri, 26 Jun 2020 04:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593145774;
-        bh=p9585eEAPpWi8dV6JrEUxvDdogWQKRBDutyAYFiyGjs=;
+        s=default; t=1593146041;
+        bh=svauuLOObuPPRRg/SNwuiGDY0wtaQA/mHRhvgoFOKLE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AUCKy9VcNr+VipBQNpzsuXr5km/afx6y28IO3qabI3Pc0QSEKwcMea4Etv6ef5iWC
-         mMQxAHvWzn8F7jXHlG7ZeWYWyPhbsij2QTvv5lPRw0L3WZzibeS/oy7sJtsV9c/0O+
-         N4GRlrUFd8JAFObuukKm8aaTVnHgErA8SxS10ftQ=
-Date:   Fri, 26 Jun 2020 06:29:30 +0200
+        b=yje6TbSdOU9d3eYg1RxErX/cH/mrH1Xn5Qm/upujSxgmAUUTznxihaMEj6H4Ppzh3
+         iQ64GQMpErQJgW5XFLC5zOql6GAMEf6nvDrEY7MqjAWyQg76d2Nbhmu7U9T4FA1k24
+         h4Da8/XcXwLO98lMmxJcbEs7VmnMr5lf9H/z244Y=
+Date:   Fri, 26 Jun 2020 06:33:58 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fixing ERROR: Macros with complex values must be
- enclosed within parentheses.
-Message-ID: <20200626042930.GA174910@kroah.com>
-References: <20200626021723.len2cts3ffq4wimq@pesu-pes-edu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+Message-ID: <20200626043358.GB175080@kroah.com>
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+ <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626021723.len2cts3ffq4wimq@pesu-pes-edu>
+In-Reply-To: <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:17:23PM -0400, B K Karthik wrote:
-> soc_camera.c:
+On Thu, Jun 25, 2020 at 10:06:03PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> > tag.
 > 
-> fixing ERROR: Macros with complex values must be enclused within parentheses.
-> 
-> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> ---
->  drivers/staging/media/soc_camera/soc_camera.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Is there any? Last time IIRC Greg told me that in the kernel the old
+> and new variants are okay.
 
-Hi,
+They are just fine, leave it alone, the in-kernel LICENSES/ files show
+the valid SPDX tags that the kernel allows at this point in time.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+This is not worth the churn at all, once we get to complete coverage of
+all kernel files, then you can worry about trivial things like this.
 
 thanks,
 
-greg k-h's patch email bot
+greg k-h
