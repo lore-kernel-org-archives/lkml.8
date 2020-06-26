@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4817C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6AB2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7802082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KbcrgPFI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cFpcU+eH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgFZIH7 (ORCPT
+        id S1729515AbgFZIIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
+        Fri, 26 Jun 2020 04:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729471AbgFZIHs (ORCPT
+        with ESMTP id S1729469AbgFZIHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jun 2020 04:07:48 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0168C08C5DD;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A05AC08C5DC;
         Fri, 26 Jun 2020 01:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=mJrdBgQpUS2E8ZU9OhPctyoTZb0a1wZwaSFfhF40f0Q=; b=KbcrgPFIMxf+SRpjbAbJsxZ1pG
-        hHzG8e/6C6K0MueNoopFG5qN8mbxlQJ5QFC55ZeGYWX+fn5qICBRZD2drW2xZ+5IGpyXEwHDbsypJ
-        MWCWrEfg5LKHmXrUWTnGvaWM5bQXmbbZUeQ+XrsHbir0Zzr82mQREU8I1HYjMNyMJyr8iCT6ztaAM
-        gJ0MunMelxk1a/nX6MYI6I/FeLJ1liwvOI64Rek/oK9DyVFbsThSwwL504S8xPSuMNUonwAkxmaNG
-        4lD8AzRL4TJ2M4DFEoNL6wAp9t2A7i12IXzqGwOPaqn+PY/5aO4MSkLAQBXFzlzzsjZHbEUFh1eGA
-        BUhsQ5kw==;
+        bh=vxsAwsLR9Ng86EmjXAj4oPak8ui2caJnN1kRrf8YMkM=; b=cFpcU+eHvnSM2qCuf91vLIb1Fx
+        anoFL9E4Vkd4hPwyWej6Afg1YiVZBWGhJrCPpGFIFVJSz4Q76ngAPy12orssjbJNMIats6RsFgXpb
+        8iYqGq5xKN/Bh3VFiiYO7+VOFqGPFQXVMymKDP53RHfzHWYomigNsZIAlVeV3Pkp+S14UlDdN/VqL
+        dkXjnEH95K1XlDfoSJGUIJ9O5H7NC8nXNyImcRPqndQXLuDuZ1dp82U3W/Nl7RSdBNlDISrgxPFy2
+        wzWHFwQN5Tr4ola8eMjfzQCnEB9ZXIJcBW3yRHC95SnG/2CUpZjtx8YZmPukLOsaa0Rdf/XojpV1k
+        qZ8cwtIw==;
 Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jojOQ-0007tf-Js; Fri, 26 Jun 2020 08:07:26 +0000
+        id 1jojOS-0007tv-TH; Fri, 26 Jun 2020 08:07:29 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
 Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/10] sh: unexport register_trapped_io and match_trapped_io_handler
-Date:   Fri, 26 Jun 2020 10:07:14 +0200
-Message-Id: <20200626080717.1999041-8-hch@lst.de>
+Subject: [PATCH 09/10] sh: don't allow non-coherent DMA for NOMMU
+Date:   Fri, 26 Jun 2020 10:07:16 +0200
+Message-Id: <20200626080717.1999041-10-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200626080717.1999041-1-hch@lst.de>
 References: <20200626080717.1999041-1-hch@lst.de>
@@ -57,33 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both functions are only used by compiled in core code.
+The code handling non-coherent DMA depends on being able to remap code
+as non-cached.  But that can't be done without an MMU, so using this
+option on NOMMU builds is broken.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/sh/kernel/io_trapped.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/sh/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sh/kernel/io_trapped.c b/arch/sh/kernel/io_trapped.c
-index 037aab2708b7ac..004ad0130b1038 100644
---- a/arch/sh/kernel/io_trapped.c
-+++ b/arch/sh/kernel/io_trapped.c
-@@ -102,7 +102,6 @@ int register_trapped_io(struct trapped_io *tiop)
- 	pr_warn("unable to install trapped io filter\n");
- 	return -1;
- }
--EXPORT_SYMBOL_GPL(register_trapped_io);
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index f8027eee08edae..337eb496c45a0a 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -61,6 +61,7 @@ config SUPERH
+ 	select MAY_HAVE_SPARSE_IRQ
+ 	select MODULES_USE_ELF_RELA
+ 	select NEED_SG_DMA_LENGTH
++	select NO_DMA if !MMU && !DMA_COHERENT
+ 	select NO_GENERIC_PCI_IOPORT_MAP if PCI
+ 	select OLD_SIGACTION
+ 	select OLD_SIGSUSPEND
+@@ -135,7 +136,7 @@ config DMA_COHERENT
+ 	bool
  
- void __iomem *match_trapped_io_handler(struct list_head *list,
- 				       unsigned long offset,
-@@ -131,7 +130,6 @@ void __iomem *match_trapped_io_handler(struct list_head *list,
- 	spin_unlock_irqrestore(&trapped_lock, flags);
- 	return NULL;
- }
--EXPORT_SYMBOL_GPL(match_trapped_io_handler);
+ config DMA_NONCOHERENT
+-	def_bool !DMA_COHERENT
++	def_bool !NO_DMA && !DMA_COHERENT
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
  
- static struct trapped_io *lookup_tiop(unsigned long address)
- {
+ config PGTABLE_LEVELS
 -- 
 2.26.2
 
