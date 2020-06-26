@@ -2,120 +2,116 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA441C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A667A206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593168207;
-	bh=u5e+0XViLwBFBmMCmVY3ZWAdoyXGqTm1JYRhGJlcYYk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rNH9/3UD2DcTp6fRHQbSwDXgQN/U+ZanTYtSN/vw089QhdjnE1GrgLJBd4jDQ8X6P
-	 qRiU6MIITfCRLMuXON8A/vkANowDIboNmW1CWHIEydHfJaAjRfhD+V/XM5R4dSOMB6
-	 F53WRaqnjX+To8BAm+NuXcXvlSGGzs4txYu3ot8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 55C35206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgFZKn0 (ORCPT
+        id S1728098AbgFZKpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:43:26 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:43579 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgFZKnZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:43:25 -0400
-Received: by mail-ej1-f68.google.com with SMTP id l12so8859738ejn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 03:43:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fBCNpYHArbaIvTCXoaDbzGjMNkwy0xtfnskWd/C/q3A=;
-        b=sM2tJF/q3uHToD+jVU60OJod6A/yTiDiLhxD4mFJHI1w9iz8lcv09cqlbb57lIDmQD
-         eY1Fc42OMFvKZTGsTuMUCmVdsbzOnvc91tVa3UwCraYZzkvfNUKbOyR271Gq3RW3XJyk
-         9OgHWjrgQKLl0YydiZe66r7Elwblyosdcpe0eCz59inBL7NX/utBzH07YDF7cFpAnB5P
-         HQMcgC+HJtZ/kfVKzPSX3bBMOnqqAfJ1O/fW4HptXQ+gxgOEHEScDsPLB2e3jz1Cktsy
-         H3ieMLbROI7b9zxFX34qq79ChfErp6IRQpUrpFuktQzgWU53nhcUqr/8O/qzb05emR0L
-         0xDQ==
-X-Gm-Message-State: AOAM530JLlwe+qfS/1ogTN0o+EWw0jayQQkgNC/ZA7RRxNgaunZOBlCn
-        azPfrUVPjnXVGrEyzAbABik=
-X-Google-Smtp-Source: ABdhPJyiHsevGDn5YCuwfV4gTq8a/llFmGbZYHpYjbX+BcuWGLpbKjaWLTOx1YR/g62BphtS0UOL8w==
-X-Received: by 2002:a17:906:d79c:: with SMTP id pj28mr1858400ejb.397.1593168203408;
-        Fri, 26 Jun 2020 03:43:23 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id 23sm14333552edw.63.2020.06.26.03.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 03:43:22 -0700 (PDT)
-Subject: Re: [PATCH v0 2/5] Make it possible to enable/disable SRG mouse
- reporting
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1593155911.git.tammo.block@gmail.com>
- <d0951dcf5fb4cf8bfa19940953bce55ad0ee0510.1593155911.git.tammo.block@gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <8e75c573-c66d-f79b-ad09-bbac280a5c91@kernel.org>
-Date:   Fri, 26 Jun 2020 12:43:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 06:45:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61254 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728023AbgFZKpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 06:45:19 -0400
+IronPort-SDR: n0ojoOkY7TbVwJEO9W5XoEADSGnZt9ZaBkEU+5CiIwLu+BAUlNN4bManESOzT4Afd4Kg8LeSXG
+ k+WQrRj0MxCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="230053509"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="230053509"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 03:45:18 -0700
+IronPort-SDR: RA/ZNeU+CVrYx6dmKm5sZlO3kE+98yXe7qJHBl1eLlfxEx/8rO3MHpJhAgh3/CaaPQQN8Tty/Q
+ GjJryRrU6/IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="424040522"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 03:45:13 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jolr7-00G4At-VC; Fri, 26 Jun 2020 13:45:13 +0300
+Date:   Fri, 26 Jun 2020 13:45:13 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+Message-ID: <20200626104513.GQ3703480@smile.fi.intel.com>
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+ <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
+ <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
+ <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
+ <CAHp75VeZj72VDHSm48Diomz4q0+dJ6gjknqHQpfon3PU9Te5-w@mail.gmail.com>
+ <43e55eb146d8e66ba1aaf057b807e6bd6ed16d78.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <d0951dcf5fb4cf8bfa19940953bce55ad0ee0510.1593155911.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43e55eb146d8e66ba1aaf057b807e6bd6ed16d78.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 06. 20, 9:22, Tammo Block wrote:
-> The report protocol stored in vc_report_mouse is not a bitmask, the
-> protocols are mutually exclusive, last one wins. Values are chosen to
-> maximize compatibility.
+On Thu, Jun 25, 2020 at 12:52:21PM -0700, Joe Perches wrote:
+> On Thu, 2020-06-25 at 22:35 +0300, Andy Shevchenko wrote:
+> > On Thu, Jun 25, 2020 at 10:33 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Jun 25, 2020 at 10:29 PM Joe Perches <joe@perches.com> wrote:
+> > > > On Thu, 2020-06-25 at 22:06 +0300, Andy Shevchenko wrote:
+> > > > > On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> > > > > <enric.balletbo@collabora.com> wrote:
+> > > > > > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> > > > > > tag.
+> > > > > 
+> > > > > Is there any? Last time IIRC Greg told me that in the kernel the old
+> > > > > and new variants are okay.
+> > > > 
+> > > > If there wasn't any ambiguity, the older license
+> > > > style wouldn't be deprecated by SPDX.org.
+> > > 
+> > > They are _not_ deprecated according to kernel documentation:
+> > > https://elixir.bootlin.com/linux/latest/source/LICENSES/preferred/GPL-2.0
+> > > 
+> > > So, fix documentation in the kernel then.
+> > 
+> > That said, NAK to the patch as long as in-kernel documentation says it's valid.
 > 
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
-> ---
->  drivers/tty/vt/vt.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+> Maintainers and authors should get to chose whatever
+> license text they prefer with the assent of the licensors.
 > 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 48a8199f7845..d52ac57034e0 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1890,13 +1890,22 @@ static void set_mode(struct vc_data *vc, int on_off)
->  					clr_kbd(vc, decarm);
->  				break;
->  			case 9:
-> -				vc->vc_report_mouse = on_off ? 1 : 0;
-> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTBTNPRESS : 0;
->  				break;
->  			case 25:		/* Cursor on/off */
->  				vc->vc_deccm = on_off;
->  				break;
->  			case 1000:
-> -				vc->vc_report_mouse = on_off ? 2 : 0;
-> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTRELEASE : 0;
-> +				break;
-> +			case 1002:
-> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTDRAG : 0;
-> +				break;
-> +			case 1003:
-> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTANYMOVE : 0;
-> +				break;
-> +			case 1006:
-> +				vc->vc_proto_mouse = on_off ? 1 : 0;
+> A NAK here by you doesn't make much sense to me.
 
-So simply:
-vc->vc_proto_mouse = on_off;
+Yes, it's a private opinion from a PDx86 maintainer.
 
-The others could be "on_off * TIOCL_XXX", but I don't think it would
-improve anything.
-
-thanks,
 -- 
-js
-suse labs
+With Best Regards,
+Andy Shevchenko
+
+
