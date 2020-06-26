@@ -2,138 +2,123 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E96C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 597022084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8922070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="E9IDCNPQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H2TZ2Zav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgFZCRc (ORCPT
+        id S1728114AbgFZCcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 22:17:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
+        Thu, 25 Jun 2020 22:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgFZCRb (ORCPT
+        with ESMTP id S1728105AbgFZCcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 22:17:31 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E093C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 19:17:31 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r18so4274749pgk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 19:17:31 -0700 (PDT)
+        Thu, 25 Jun 2020 22:32:25 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2730DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 19:32:25 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so3696328plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 19:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=C9cKwuo46T4OQrYiN0jf2d+XY2/rTSOAO5/07IXErvU=;
-        b=E9IDCNPQpqP3Bmq1JubBLUBuabW2Gp9yfeXWaGS+Ca3o4tXDoyzU4KFTn9e5GBXiob
-         HTiI7bkgOza+4JTxAFlf2i4AG6AAsWbVulxePySyjzKh1U9Oaw1/khBoxjd1yLp7SiH2
-         wYzmX2dCzYNHF/7+kBx7F4UTgl3Dx81kmsJF8V4PZqvhVCm4SbomesBNboWU/slBlY4E
-         /coqKN+MZbwGG1W+pmAHtiahyNhySVmNL6IL7bAQHBl7Do/HK0ZKgRJfjzm3Y1wIovKs
-         2MDa9nlofzzLGl+jNQIt1sXdfZQ8yipLNuB/xLWEUlu60tg60WYfVRg1T59c63AbSSg1
-         +qvA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sMIkTEY7xPHCqbn5JKjvRxEVOX+Rdd4R46yFsFdge5A=;
+        b=H2TZ2Zavm132TIF8kv/1qMkgUjcXDU9hqjRnSmHgwOjAq7BbOdbWyxlLmnF/CcbuSZ
+         XE4B1hNibOuLzFzrwkaqBgaIK6yEhnbL6Xv9XoGXyOpjO3KA71h82XQUVVMR/80L1/I+
+         X7wY2+/c70DpnE6YMj6U1kekSqKVpAl0+1qoMR3IQ0tQfo5wD5mRiNdpeIyqzLAi6t0V
+         kqrWt/BfTz8yvRfXjI/l0ApUnsM/mAyoiAiCvJ+IV5hJPcMTOl7hQfzKidM/tVR57jwT
+         YWZyWkaoROvm2JByKSqT2sww40xFchead619IWL70+SYCcFBP4iyYE3n8t12qODhxE1t
+         watQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=C9cKwuo46T4OQrYiN0jf2d+XY2/rTSOAO5/07IXErvU=;
-        b=Xkf7R/TQp+LrJ1UCS/qGdwU4XsjQ3LyYGOpQex7DQZimX8FamB/RPqw6WR8LivRaCS
-         pwsZ0O9gRHr0mRstXXyPoeT56cFN2EzxUIO93sRUsIQ5ezTwCV68O8A6lLNanLjq3eOG
-         mI1mvz6ILn7qVeGQqmkDxOgmLhh3Hw9Cv8ub2hY1Y2vNRlTFccJBoi0eAC77k1+IccZX
-         oMTVNguUxld2cgF+Eki8J9EjTJgOr0LIVk0fuX0AtbreXq9Ql07V/mt4X2QIiajZazgI
-         ZyHsHoJWaPOdZFHBnfDiOUWI3dl/9El8QxHD0Nkq3gAskT+iUMnGOxql9R6rWzeYqOXI
-         qpGA==
-X-Gm-Message-State: AOAM532P9YlxQy1a788dETTRYsAoUmbzpf84zKCwy3rOM+FAju2AI7ac
-        d2UdA7E8JjT1RNPQaISEQ4DhfQ==
-X-Google-Smtp-Source: ABdhPJzsojEVWEwDErVET3M62SJCkzIEavMN3mExLU5NPys9mAJyxcRvlnQsml/NFgA9Wp6Rd43sCw==
-X-Received: by 2002:a05:6a00:15c3:: with SMTP id o3mr609027pfu.304.1593137850548;
-        Thu, 25 Jun 2020 19:17:30 -0700 (PDT)
-Received: from localhost ([2406:7400:73:e1a0:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id m7sm21416701pgg.69.2020.06.25.19.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 19:17:29 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 25 Jun 2020 22:17:23 -0400
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fixing ERROR: Macros with complex values must be enclosed
- within parentheses.
-Message-ID: <20200626021723.len2cts3ffq4wimq@pesu-pes-edu>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sMIkTEY7xPHCqbn5JKjvRxEVOX+Rdd4R46yFsFdge5A=;
+        b=Uge63FD3zwAN62IE3p9x7GG5xQjz1IPtyULnEWDyjdVJJgFoOMzMmVDj9M2WMtfPli
+         fJcaFa92rZGtHLcOQJbbhsf4Rqa2n9VbBHcPvtqp5Yd9On0LLIQ817DLhev7F+uDoMgK
+         v2ctE/z58hoTgD9cHx5TH0mDZwV9VjRm94FwRYb4ANifrtEbAZ/mch/dZVkqUA5RU50f
+         G2yf4Go6yaqtYSrF6LwWOtqw7f7SBiFXpetIBV1nFvKw6214rVJXZ7PBtgHp6rfcXbU6
+         moPHoDgSma/fVBB/mc2nPNuHqRhVYWHX4BQtEc2gFdl9wNv6Be7j0sgIecc8YtDMABtZ
+         mcTQ==
+X-Gm-Message-State: AOAM533ljP8obPFelfkxavL6JzfBOgnmYMsscZdFDpUilVcq2a3BSub7
+        hm/9wWxC5ORK2MpkGw8UGKgQrw==
+X-Google-Smtp-Source: ABdhPJzrj+FEH83auCDK23gzg/oJyu7O4OeQbSNw4yaoRmnsjr7tx6t6EiJ7qvLKnaR5ZvdTFvKQlg==
+X-Received: by 2002:a17:902:ab8d:: with SMTP id f13mr674057plr.119.1593138744407;
+        Thu, 25 Jun 2020 19:32:24 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id gq13sm6079747pjb.7.2020.06.25.19.32.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jun 2020 19:32:23 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 08:02:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Wei Wang <wvw@google.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>, dsmythies@telus.net,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: schedutil: force frequency update when limits
+ change
+Message-ID: <20200626023219.wvhzomwzlw24bzrv@vireshk-i7>
+References: <20200625064614.101183-1-wvw@google.com>
+ <20200625102305.gu3xo4ovcqyd35vd@vireshk-i7>
+ <CAGXk5yrA=oXZs9KAaELsO7+ex7xCggEwdWSC_KXrUWQnvKEpWQ@mail.gmail.com>
+ <20200626021428.tnecyy3wt42slvik@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wtu5diuv5qrhk3yt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200626021428.tnecyy3wt42slvik@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26-06-20, 07:44, Viresh Kumar wrote:
+> On 25-06-20, 13:47, Wei Wang wrote:
+> > On Thu, Jun 25, 2020 at 3:23 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > I am sorry but I am not fully sure of what the problem is. Can you
+> > > describe that by giving an example with some random frequency, and
+> > > tell the expected and actual behavior ?
+> > >
+> > The problem is sugov thought next_freq already updated (but actually
+> > skipped by the rate limit thing) and all following updates will be
+> > skipped.
 
---wtu5diuv5qrhk3yt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The rate-limiting thing is specific to android and not present in
+mainline. Even in android I see next_freq getting updated only after
+rate-limiting is verified.
 
-soc_camera.c:
+I think you maybe trying to fix an android only problem in mainline,
+which may not be required at all. And I am not sure if Android has a
+problem as well :)
 
-fixing ERROR: Macros with complex values must be enclused within parenthese=
-s.
+> I am sorry, can you please give a detailed example with existing
+> frequency and limits, then the limits changed to new values, then what
+> exactly happens ?
+> 
+> > Actually this is specifically for Android common kernel 4.19's issue
+> > which has sugov_up_down_rate_limit in sugov_update_next_freq, let's
+> > continue discussion there.
+> 
+> If it is a mainline problem, we will surely get it fixed here. Just
+> that I am not able to understand the problem yet. Sorry about that.
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/media/soc_camera/soc_camera.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/staging/media/soc_camera/soc_camera.c b/drivers/stagin=
-g/media/soc_camera/soc_camera.c
-index 39f513f69b89..f609ecf6691c 100644
---- a/drivers/staging/media/soc_camera/soc_camera.c
-+++ b/drivers/staging/media/soc_camera/soc_camera.c
-@@ -238,8 +238,7 @@ unsigned long soc_camera_apply_board_flags(struct soc_c=
-amera_subdev_desc *ssdd,
- }
- EXPORT_SYMBOL(soc_camera_apply_board_flags);
-=20
--#define pixfmtstr(x) (x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
--	((x) >> 24) & 0xff
-+#define pixfmtstr(x) ((x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, (=
-(x) >> 24) & 0xff)
-=20
- static int soc_camera_try_fmt(struct soc_camera_device *icd,
- 			      struct v4l2_format *f)
---=20
-2.20.1
-
-
---wtu5diuv5qrhk3yt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl71WrMACgkQ471Q5AHe
-Z2rirQv/QQcRtEifvypBhlZr7yuzX+8HlXqUu66cTwep5gDD2GoI/xmoiGSbzQic
-AOIOMWsTQYKGU6VATt4FfVmsrSuXXiFcWwYJwmtlp51oAmph7quEXEiwQgYPjURT
-YLEXzPt4OcK2VTJFm4nveRGzsIhJX3Zh1SqQ2/Jx1mr9mRa3AyBPCrLarx+wmkbf
-LAg3jNHVq778Q69YyEfIpVMw1l39zh/OZnukEJF1JHPXIRIKwxwAluIT9E12uWgv
-KJwYZKtXvCCE+PEA5EZeXGE00N9ZfUO98JfVShwddu4YuN7b978ukqmNZsaz1dY5
-EX2HByFbOMQbXrHe+58QA7Qqw2K/d3RmE+66cq9xCbSctdTerUkzkbM4wEeukBCw
-81PQIHIp0fupT0TGNVgPRZXm8jcpOd7R7pQDYMM5j/R2iCFiR+Bq+zq7ZkZOTBec
-OGD1q1DiOZpr/kBA9Fxp1OHfj9KVaUHI5o7dZk79XErxfkCgghLeEHG8ojsAwytI
-YWOpUkjF
-=N+em
------END PGP SIGNATURE-----
-
---wtu5diuv5qrhk3yt--
+-- 
+viresh
