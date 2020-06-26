@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7700AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FE7207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C254206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgFZQ5j (ORCPT
+        id S1728206AbgFZQ5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:57:39 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52323 "EHLO mga07.intel.com"
+        Fri, 26 Jun 2020 12:57:42 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11154 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgFZQ5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:57:38 -0400
-IronPort-SDR: dLEjxSoknBJq3LDfQffOpy1SLi6ecxUwyzK8cVY+5kJbtZx5a7XrhPyEcUiICMKBcFrIMTezlJ
- N0R4m2dtpSJA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210475028"
+        id S1728095AbgFZQ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 12:57:40 -0400
+IronPort-SDR: S0k3uqtix7DeFZIwaYg+EiR/rccN00r1gZsAmdqX2i+HWlsNg+kwitxGWLdOzSEzPc5+FKbEWQ
+ VgoUXQ7FlIpw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="144490917"
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="210475028"
+   d="scan'208";a="144490917"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 09:57:38 -0700
-IronPort-SDR: yTleitgB/eeg7lwNtM+/TsQhkeo2XuDJmPstqehhDGjX+Q/wSizC+j8wBzYoVcrmTwcTx7ou91
- LjxhHiGpDhRQ==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 09:57:37 -0700
+IronPort-SDR: b6Kqd4b1rtP2W3+kQHKvz3++u3tGPJ0VriMt1eFR5Jp0nVobVv1mP9OJ8s1VCH1vM4q6poyXVS
+ odNnHiMUySeg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="354824857"
+   d="scan'208";a="294252209"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 26 Jun 2020 09:57:37 -0700
+  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2020 09:57:36 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jorfU-0002MF-Ar; Fri, 26 Jun 2020 16:57:36 +0000
-Date:   Sat, 27 Jun 2020 00:56:52 +0800
+        id 1jorfU-0002MC-9r; Fri, 26 Jun 2020 16:57:36 +0000
+Date:   Sat, 27 Jun 2020 00:56:50 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Paul E. McKenney" <paulmck@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 541d83871e0bb0c817cf8f484839c37e7f54389a
-Message-ID: <5ef628d4.zIlqJjtqrFeXUg0N%lkp@intel.com>
+Subject: [rcu:dev.2020.06.25a] BUILD SUCCESS
+ 50483f050f03ddbc8ba7a292c1d123a6a3c1723c
+Message-ID: <5ef628d2.Gv3PcLXIZS0sLm6K%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,12 +54,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 541d83871e0bb0c817cf8f484839c37e7f54389a  scftorture: Implement weighted primitive selection
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.06.25a
+branch HEAD: 50483f050f03ddbc8ba7a292c1d123a6a3c1723c  scftorture: Implement weighted primitive selection
 
 elapsed time: 721m
 
-configs tested: 100
+configs tested: 97
 configs skipped: 5
 
 The following configs have been built successfully.
@@ -82,9 +82,6 @@ arm                       imx_v6_v7_defconfig
 arm                            xcep_defconfig
 arm                      pxa255-idp_defconfig
 arm                          tango4_defconfig
-m68k                       m5475evb_defconfig
-arc                         haps_hs_defconfig
-h8300                               defconfig
 arm                             pxa_defconfig
 arm                         lpc18xx_defconfig
 mips                           ip27_defconfig
