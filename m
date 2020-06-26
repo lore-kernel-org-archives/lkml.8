@@ -2,80 +2,163 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73780C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5594E20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0F1207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rb8Q+1dS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgFZFY6 (ORCPT
+        id S1728007AbgFZF1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 01:24:58 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:44706 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgFZFY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 01:24:57 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 2C8612052E;
-        Fri, 26 Jun 2020 07:24:56 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vl9TWjW4tXJo; Fri, 26 Jun 2020 07:24:55 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 901522006F;
-        Fri, 26 Jun 2020 07:24:55 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Fri, 26 Jun 2020 07:24:55 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Fri, 26 Jun
- 2020 07:24:55 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id B6F8D3180155;
- Fri, 26 Jun 2020 07:24:54 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 07:24:54 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Petr =?utf-8?B?VmFuxJtr?= <pv@excello.cz>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] xfrm: introduce oseq-may-wrap flag
-Message-ID: <20200626052454.GC19286@gauss3.secunet.de>
-References: <20200525154633.GB22403@atlantis>
- <20200530123912.GA7476@arkam>
+        Fri, 26 Jun 2020 01:27:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgFZF1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 01:27:04 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C5CC08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:04 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b25so5383131ljp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jWSmhFAjgCJ/4MERZDdmV3HHdWRMsmmhbC6NHwQFBlg=;
+        b=rb8Q+1dSzwKbczJC5klufjbDjum1q93zdZOH735pHh1ahl0p0Wjlgwz7/o0lxO2jxs
+         Qf2E5FdecXLm4csarrYSzG97tKlHAZAwikBjrkkB8JyAte0JamXRvT3iIZ/QaXOEN8+x
+         ar+vbtnyb4fgUOCQLQtZ5pcMBOIK9XkrfdELE5kUxx42alUIBef2Ny0mFjlNGcqncndB
+         Y5yCF2b6L6Vany4DXOCVDwXSr/8xuxxXOY9RZRJ++3YlmBaBGq3YmB/enn7n9/NSlBU1
+         tBsRWmOpKPWCoabOLlsc4uDNLq5+ESq6j6476gVUQHGaUFF937Q3kgzUzwGQGXVsYfUa
+         azyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jWSmhFAjgCJ/4MERZDdmV3HHdWRMsmmhbC6NHwQFBlg=;
+        b=SSkepc9TGnHPcOE0Sv95v+NIljBQV2CJUX0v8fW2WSuCAM26ZZcmgHbDSN7xqk0wSC
+         bMMaEHUervdmImn27ew8wVirt8Ev7Cv2KnuWcKAp/BAy+Axo3eWgMZDI8qfEIswamgbX
+         7OOPgU5pESsyjenT0PJoB4KpIkfiw2udl3CTRmgaMwFpL2eZfqEkf/SgBoy12T1DLqVN
+         SQv0zLnpCldkNn9VZyE2U4P/halFsmbMAvEoUOsf1JY1PxEvCKKBKl26fPHo9TyhXnv0
+         cOht70TZTtVp3ccVkn5u+AnOLHg4CADAn1gWl99R/7rejXdfv0xopbaqb4Oz6CEk28UG
+         U0og==
+X-Gm-Message-State: AOAM5331sf6wn5f2bnAJHH7NdDcOrOqqG5SCZy2Qec97k/z8C0tOv3a+
+        uA5pooUyF4DFYy3GJfYdtqnLuQgu5ZsXahvnJ2ZEgQ==
+X-Google-Smtp-Source: ABdhPJxkDD58JMKImt/kwvHSRCvi2eSoQBTY2+Uvb1xPAxHBhkNbqSdrTW0Xrq6J8pZ/kHZwkeOyw/4CAJReOUqaXu8=
+X-Received: by 2002:a2e:b04c:: with SMTP id d12mr511914ljl.256.1593149222348;
+ Thu, 25 Jun 2020 22:27:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200530123912.GA7476@arkam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com> <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
+ <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
+In-Reply-To: <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 26 Jun 2020 10:56:50 +0530
+Message-ID: <CAFA6WYPUzSNYjrktSPdzLDsKeO8Tipi6CuSjjN-MgdsvU2KzOA@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 02:39:12PM +0200, Petr Vaněk wrote:
-> RFC 4303 in section 3.3.3 suggests to disable anti-replay for manually
-> distributed ICVs in which case the sender does not need to monitor or
-> reset the counter. However, the sender still increments the counter and
-> when it reaches the maximum value, the counter rolls over back to zero.
-> 
-> This patch introduces new extra_flag XFRM_SA_XFLAG_OSEQ_MAY_WRAP which
-> allows sequence number to cycle in outbound packets if set. This flag is
-> used only in legacy and bmp code, because esn should not be negotiated
-> if anti-replay is disabled (see note in 3.3.3 section).
-> 
-> Signed-off-by: Petr Vaněk <pv@excello.cz>
+On Thu, 25 Jun 2020 at 18:22, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> On Wed, 24 Jun 2020 at 18:44, Jerome Forissier <jerome@forissier.org> wrote:
+> >
+> >
+> >
+> > On 6/24/20 5:21 PM, James Bottomley wrote:
+> > > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> > >> Apologies for delay in my reply as I was busy with some other stuff.
+> > >>
+> > >> On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> > >> <James.Bottomley@hansenpartnership.com> wrote:
+> > > [...]
+> > >>> it's about consistency with what the kernel types mean.  When some
+> > >>> checker detects your using little endian operations on a big endian
+> > >>> structure (like in the prink for instance) they're going to keep
+> > >>> emailing you about it.
+> > >>
+> > >> As mentioned above, using different terminology is meant to cause
+> > >> more confusion than just difference in endianness which is manageable
+> > >> inside TEE.
+> > >>
+> > >> And I think it's safe to say that the kernel implements UUID in big
+> > >> endian format and thus uses %pUb whereas OP-TEE implements UUID in
+> > >> little endian format and thus uses %pUl.
+> > >
+> > > So what I think you're saying is that if we still had uuid_be and
+> > > uuid_le you'd use uuid_le, because that's exactly the structure
+> > > described in the docs.  But because we renamed
+> > >
+> > > uuid_be -> uuid_t
+> > > uuid_le -> guid_t
+> > >
+> > > You can't use guid_t as a kernel type because it has the wrong name?
+> >
+> > Let me try to clear the confusion that I introduce myself I believe :-/
+> > IMO:
+> >
+> > - optee_register_device(const uuid_t *device_uuid) *is* the correct
+> > prototype.
+> > - device_uuid is *guaranteed* to be BE because OP-TEE makes this
+> > guarantee (it converts from its internal LE representation to BE when
+> > enumerating the devices, but it doesn't matter to the kernel).
+> > - Therefore %pUb is the correct format.
+> >
+> > I'm sorry for doubting the BE order initially. I am so used to OP-TEE
+> > using LE internally, that I missed the fact that we have an explicit
+> > conversion...
+> >
+> > Does this sound good?
+> >
+> > Thanks,
+> > --
+> > Jerome
+>
+> I think your description is correct. But I think this problem  would
+> be solved outside of the current patchset.
+> All places should use one single format (LE):
+> -  internal optee representation;
+> -  device enumeration pta;
+> -  this kernel driver which creates sysfs entry and sets
+> uid_copy(&optee_device->id.uuid, device_uuid);
+> -  matching function;
+> -  drivers use UUID_INIT();
+>
+> In that way everything will be consistent. But it will require
+> changing other pieces, not just the kernel. While
+> these patches add functionality to support current device enumeration
+> in optee os.
+> So I think this version is ok to be applied.
 
-Now applied to ipsec-next, thanks a lot!
+I guess here you meant v9 patch-set. If yes then it's fine with me as well.
+
+-Sumit
+
+>
+> Regards,
+> Maxim.
