@@ -2,154 +2,154 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F15FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2645C20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBD820768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsjBhJAg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pi6qOR8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgFZHsW (ORCPT
+        id S1728888AbgFZHxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
+        Fri, 26 Jun 2020 03:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728687AbgFZHsW (ORCPT
+        with ESMTP id S1728827AbgFZHxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:48:22 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC8FC08C5C1;
-        Fri, 26 Jun 2020 00:48:22 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b15so6176690edy.7;
-        Fri, 26 Jun 2020 00:48:21 -0700 (PDT)
+        Fri, 26 Jun 2020 03:53:09 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7936EC08C5C1;
+        Fri, 26 Jun 2020 00:53:09 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id c75so7675270ila.8;
+        Fri, 26 Jun 2020 00:53:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8ZuBpL+DueJSj3ESdnpMvaqVHDILjG0S2PgRb9yfKf0=;
-        b=JsjBhJAgNeURhM0Py1PIcRXRuE04q42TcLg5/ef9+czyB3mSBr9hia7pSc7mm1qjTQ
-         +r6bvyODJNEZgoJfjX6jUyVFjzir1Im8jqNrNIBDa0QAfbT6ghdgd4DDrPH/ekSy48/7
-         V7mKlGZq6KOVRVkAzs+tkDkzWfHc894J2WulMQ4sW21d03SWgaIC74Ri/2C0mOc69k29
-         yteCpAzK0T4J2Vm7uE3/XE62sjl5SJzAp9X3uMyNuH3dQSMK+/TywUcnt0qfkDHuQJqC
-         T+9pUF4ERbpuS660WVdVaSdv7hoa/lvXZPQiewzq2LNtDSHlHIYgAKmvlRoP+XEVhO7W
-         uISw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bny++tBIMk54Yvx2zfPmbf+0Ot1GMKL64TsxDOduJ60=;
+        b=pi6qOR8sPj7wZ3XcK4gDbT3e2yS9IRpuNkEBpAAyS6vV2vySKo5Vm4MZOHf5dN9/n6
+         rZDPHSot2GRbxX/1REKPttlo+Gzk75IZceDEaIfFmYI8QXZB1LQg8qHLSxJxDsLKnxml
+         l0cwdUTYDBeOKmNiN4Q4pARW90E2EoDrX3YkT0CSSeeqdi8A0SGs3Dqcl9ovEFyfi1Yx
+         sZGDoFNouIlleCmILazYchvNRfPX6sKs4K/xW6F/9FmIvA1+S+9jyKRggl7PqLJFkorf
+         Tag+SsZRh2Zu+9n87emt6epFAkp6mqih/EHD8iJ4U29ckOKIHgwgJgpsK2LVXpMVVvS2
+         lXRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8ZuBpL+DueJSj3ESdnpMvaqVHDILjG0S2PgRb9yfKf0=;
-        b=ql4p8tKwP49ALdVMZeMFCbBS/SU3Em8mdvlO1wte2vxk+ZmAFoy9+b3sZSnDgUduFN
-         6FGBndzZ776FXAvLvEioMS+hBjzaCMdaFWUS4myO3S9/La7GPYsPKAi4Pg4cUVuhWCtf
-         kjloayfIF0/Bw9bOELBt4tyoUFxxMPTejHDck5BhCWv75ta6q2iG4SfLPTWodjD8YdaK
-         q214yPDGTRlOR96qB9vMOHy4pxDWOBltbRAgAZFMrh++sl54aw/zxflDvqZVUlqm5cDs
-         RwxMNC3SC3U2RVwlNZKyUTOqwfChk/0OXnj9N67c9rHCGwcHvaNweTF2eJHzVVmkoAGW
-         c+9w==
-X-Gm-Message-State: AOAM533luGpAqxNqOIkArCD2ehNyF2d+NwWYnOO6bbp5hR46S2d6EPn3
-        acpJaY8/4zJW8nCjnROef9M=
-X-Google-Smtp-Source: ABdhPJyTPMnA4ZDNUga7Eq86eb1GfwZHTZUs72CRpch7F3Xlk9TokAP7DIwzvavrBSv1H028kYyzzw==
-X-Received: by 2002:a05:6402:b6c:: with SMTP id cb12mr2125748edb.116.1593157700838;
-        Fri, 26 Jun 2020 00:48:20 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id lx26sm18372419ejb.112.2020.06.26.00.48.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:48:19 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 09:48:18 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: staging: tegra-vde: Power-cycle hardware
- on probe
-Message-ID: <20200626074818.GD3109062@ulmo>
-References: <20200624150847.22672-1-digetx@gmail.com>
- <20200624150847.22672-5-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bny++tBIMk54Yvx2zfPmbf+0Ot1GMKL64TsxDOduJ60=;
+        b=Hhzt0zP5r/Kxye18duo+JQp43ScS7S9zmfVj8CYLv81mF/Oj75InOTqI4fQ5WPSnXl
+         gKQ52UdqiVXlS8NXxGaajuHUdy0iMuDOMOzdG1Jcq/Yl/XzMn4cIBopypU/Yo0m82Ohp
+         UjL5okbooUnjFyurHENxkAKMCaStyDbOl22aUVBnDwd/Ben/d6+UpAD9qpFowwIzVZZA
+         xoCIEyQx2WCelSA3b7+STUeQOOCFVUtl3QNunMHOFD5qWIhq5W4/LQpgmzuB8OrlIWbi
+         ukJS5w3VWlxSJ6yW/HbU4/volUWiNFCKeCwDc1h3jWcqbPS27A7LDU8Ht3xrvFkInUwH
+         CAXA==
+X-Gm-Message-State: AOAM531t/dniUs/GEsQZWVQgy4sTo9EMXwgZhnBrQUkJ3AoPd7fAnEm/
+        s5mKrbAG+mDn4N9iowRq8Y6W5vgI6fjnwAUOybw=
+X-Google-Smtp-Source: ABdhPJxWukgYdKg85VYa/UxfpvGS2QookcbFIPNFv/QZkXY9QvIFnKJ30Qho5lEy3R+IADOlR2rMSdIe2qRRQsQNYrE=
+X-Received: by 2002:a92:5e17:: with SMTP id s23mr1766973ilb.149.1593157988638;
+ Fri, 26 Jun 2020 00:53:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
-Content-Disposition: inline
-In-Reply-To: <20200624150847.22672-5-digetx@gmail.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+References: <20200626002710.110200-1-rajatja@google.com> <20200626002710.110200-2-rajatja@google.com>
+In-Reply-To: <20200626002710.110200-2-rajatja@google.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 26 Jun 2020 17:52:57 +1000
+Message-ID: <CAOSf1CHwj7qD6CdZ+AnY3s1JQXvO0eAG5CgoSHAUBGjtZ6+QfA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---VMt1DrMGOVs3KQwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 24, 2020 at 06:08:47PM +0300, Dmitry Osipenko wrote:
-> VDE partition is left turned ON after bootloader on most devices, hence
-> let's ensure that it's turned OFF in order to lower power leakage while
-> hardware is idling by turning it ON and OFF during of the driver's probe.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Fri, Jun 26, 2020 at 10:27 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> Introduce a PCI parameter that disables the automatic attachment of
+> untrusted devices to their drivers.
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > ---
->  drivers/staging/media/tegra-vde/vde.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/medi=
-a/tegra-vde/vde.c
-> index b64e35b86fb4..3be96c36bf43 100644
-> --- a/drivers/staging/media/tegra-vde/vde.c
-> +++ b/drivers/staging/media/tegra-vde/vde.c
-> @@ -1068,6 +1068,14 @@ static int tegra_vde_probe(struct platform_device =
-*pdev)
->  	pm_runtime_use_autosuspend(dev);
->  	pm_runtime_set_autosuspend_delay(dev, 300);
-> =20
-> +	/*
-> +	 * VDE partition may be left ON after bootloader, hence let's
-> +	 * power-cycle it in order to put hardware into a predictable lower
-> +	 * power state.
-> +	 */
-> +	pm_runtime_get_sync(dev);
-> +	pm_runtime_put(dev);
-> +
->  	return 0;
-> =20
->  err_deinit_iommu:
+> Context:
+>
+>   I set out to implement the approach outlined in
+>     https://lkml.org/lkml/2020/6/9/1331
+>     https://lkml.org/lkml/2020/6/15/1453
+>
+>   But to my surprise, I found that the new hotplugged PCI devices
+>   were getting automatically attached to drivers even though
+>   /sys/bus/pci/drivers_autoprobe was set to 0.
+>
+>   I realized that the device core's "drivers_autoprobe":
+>
+>   * only disables the *initial* probe of the device (i.e. from
+>     device_add()). If a subsystem calls device_attach() explicitly
+>     for its devices like PCI subsystem does, the drivers_autoprobe
+>     setting does not matter. The core will attach device to the driver.
+>     This looks like correct semantic behavior to me because PCI is
+>     explicitly calling device_attach(), which is a way to explicitly
+>     ask the core to find and attach a driver for a device.
 
-Shouldn't this happen automatically? My understanding is that power
-domains are turned on automatically before ->probe() and then unless a
-runtime PM reference is taken during ->probe() it will get turned off
-again after ->probe()?
+Right, but we're doing using device_attach() largely because the
+driver core doesn't provide any mechanism for deferring the initial
+probe. I didn't think there was any deeper reason for it, but while
+looking I noticed that the initial probe can be async and
+device_attach() forces probing to be synchronous. That has the side
+effect of serialising all PCI device probing which might be
+intentional to avoid device renaming due to the change in probe order.
+Userspace is better at dealing with device names changing now days,
+but you might still get some people mad at you for changing it.
 
-Is that not happening? Is auto-suspend perhaps getting in the way
-somehow?
+>   2) Make the drivers_autoprobe property available to PCI to use
+>      (currently it is private to device core). The PCI could use this
+>      to determine whether or not to call device_attach(). This still
+>      leaves the other problem (of not being able to set
+>      drivers_autoprobe via command line open).
+>
+>   3) I found the pci_dev->match_driver, which seemed similar to what I
+>      am trying to do, but can't be controlled from userspace. I considered
+>      populating that field based on drivers_autoprobe (still need (2)).
+>      But the problem is that there is the AMD IOMMU driver which is setting
+>      this independently, so setting the match_driver based on
+>      drivers_autoprobe may not be a good idea.
 
-Thierry
+Huh, that's pretty weird. Even with that hack you should be able
+trigger the bug they're working around by removing the IOMMU device in
+sysfs and doing a rescan. I wouldn't worry much about making
+match_device user controllable since you would need to work pretty
+hard for it to be an issue.
 
---VMt1DrMGOVs3KQwf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl71qEIACgkQ3SOs138+
-s6F2BRAAqITs8YO7f90qNTucc+6aVUaPhcOoeLRSA384Hh4M4RfzKwKV1ivLrL4H
-VkMWU+BB4N5ABiJxNbLnwuvh6O7y9vg1l7ovi/lg4qHTj96GmdZAuXpEFsqG2VWY
-WMUX60Wc3x6vqhJPVnroCRj++WmA74nlzieWnzrR36wF91p7lpisLNjlGY90VrOq
-nSatzzNO2Na9BEQnVzGqxYU7OThPB/MHJOviY5X21SXWCluc40tb0Qz4d8pbDUqB
-aXQ0uMNrf8kgX0YyARa+R+U8op8R9oRTkgRCf1SHwifbb2dlnjIw2sw27ORyfzr8
-h87kcTOlkTZhxehUG7eIHpyIUmgCWpXtBwt+Blww0o28LxW0+yEQHymenMlUNtY6
-18mSdMQGO2k6dwgWa2znsETezLrv1lYX2nT6FxZ6niTzYZRPiA2WJ4YTa79h5yDJ
-KtbvBz9b2kKzMl6R5084U2P8fh7tZH2oTs3W6n3f/NnA5+eGIBeCKu1wLQrh1M9u
-2bTTPOrJOhAQMZiJCq6CJ4Bmr5+X7Cmp5bTkNOiY9lBweTpWcJHAWqgybEHCajEf
-0dTnrWm4BVwGmfYUDNsm8rffkO/avUUvYBC21kZr2ATYWkrYQyheooiYC5qNLJFL
-lJClO+wrkJuTqWiyB0BdOJ90jHnFMolBZOjTN/Ot7BkPCgWo8uE=
-=0TFC
------END PGP SIGNATURE-----
-
---VMt1DrMGOVs3KQwf--
+Oliver
