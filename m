@@ -2,96 +2,121 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E27C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E160C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE49920FC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:09:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SzqF7WY4"
+	by mail.kernel.org (Postfix) with ESMTP id 01FE620C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgFZWJg (ORCPT
+        id S1726000AbgFZWPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgFZWJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:09:36 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AF3C03E979;
-        Fri, 26 Jun 2020 15:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=7ItslY+2tZnH34AnvCzD4Nhf2IFkOH4VABumb9nnzMY=; b=SzqF7WY4VAjL+0alZFowiV+qcm
-        7czxSpcJw4zxoxv7fTg+JJQcdru+suTLjcqhuQrVhYmDSRzl0d5Xif2s9g+AcR69pGGMKDuMGPkWU
-        sAhYnwzzaKbri/0T22CP684gLPZICM63L1qmwF0Iexg26oWJ71f1UQgDqNCFbmar22df+L3NcuflU
-        RZ3giORw/uMQJugFrkRb3y0HGjpAd43ztQLiCiYrVAcIsRP3qlvSahWbmgeiukYOLdvyF3OU5B7o9
-        oAq3FAh3lhSsuNNsJtslo8Z0dDqt0rAJrmT+cCmn6Gqm/id3XV8TfR30U+DkVPQv9mXk+Jhkdw9i0
-        s2DH3uFg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jowX3-0005QC-Gg; Fri, 26 Jun 2020 22:09:15 +0000
-Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/memory-failure.c)
-To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
-        Oscar Salvador <osalvador@suse.de>
-References: <20200626033744.URfGO%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <700cf5c7-6e8c-4c09-5ab6-5f946689b012@infradead.org>
-Date:   Fri, 26 Jun 2020 15:09:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 18:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbgFZWPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 18:15:02 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9BE20663;
+        Fri, 26 Jun 2020 22:14:57 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 18:14:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200626181455.155912d9@oasis.local.home>
+In-Reply-To: <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+        <20200624120408.12c8fa0d@oasis.local.home>
+        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200626033744.URfGO%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
-> 
+On Wed, 24 Jun 2020 20:59:13 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-when CONFIG_MIGRATION is not set/enabled:
+> > >
+> > > Nack.
 
-../mm/memory-failure.c: In function ‘new_page’:
-../mm/memory-failure.c:1692:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
-  return alloc_migration_target(p, (unsigned long)&mtc);
-         ^~~~~~~~~~~~~~~~~~~~~~
-         alloc_migrate_target
-../mm/memory-failure.c:1692:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
-  return alloc_migration_target(p, (unsigned long)&mtc);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I nack your nack ;-)
 
+> > > The message is bogus. It's used in production kernels.
+> > > bpf_trace_printk() calls it.  
+> > 
+> > Interesting. BTW, the same information (trace_printk is for debugging
+> > only) is repeated all over the place, including where bpf_trace_printk
+> > is documented:
+> > https://elixir.bootlin.com/linux/latest/source/include/linux/kernel.h#L757
+> > https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/bpf.h#L706
+> > https://elixir.bootlin.com/linux/latest/source/kernel/trace/trace.c#L3157
+> > 
+> > Steven added that warning (2184db46e425c ("tracing: Print nasty banner
+> > when trace_printk() is in use")), so maybe he can confirm if it's
+> > still relevant.  
+> 
+> The banner is nasty and it's actively causing harm.
 
+And it's doing exactly what it was intended on doing!
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Every few month I have to explain to users that it's absolulte ok to
+> ignore that banner. Nothing bad is happening with the kernel.
+> The kernel is still perfectly safe for production use.
+> It's not a debug kernel.
+> 
+> What bpf_trace_printk() doc is saying that it's not recommended to use
+> this helper for production bpf programs. There are better alternatives.
+> It is absolutely fine to use bpf_trace_printk() to debug production and
+> experimental bpf programs on production servers, android phones and
+> everywhere else.
+
+Now I do have an answer for you that I believe is a great compromise.
+
+There's something you can call (and even call it from a module). It's
+called "trace_array_vprintk()". But has one caveat, and that is, you
+can not write to the main top level trace buffer with it (I have
+patches for the next merge window to enforce that). And that's what
+I've been trying to avoid trace_printk() from doing, as that's what it
+does by default. It writes to /sys/kernel/tracing/trace.
+
+Now what you can do, is have bpf create
+a /sys/kernel/tracing/instances/bpf_trace/ instance, and use
+trace_array_printk(), to print into that, and you will never have to
+see that warning again! It shows up in your own
+tracefs/instances/bpf_trace/trace file!
+
+If you need more details, let me know, and I can give you all you need
+to know to create you very own trace instance (that can enable events,
+kprobe events, uprobe events, function tracing, and soon function graph
+tracing). And the bonus, you get trace_array_vprintk() and no more
+complaining. :-) :-) :-)
+
+-- Steve
