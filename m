@@ -2,109 +2,122 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A581207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC7C206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qUFmpWYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgFZTjO (ORCPT
+        id S1725881AbgFZTjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgFZTjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:39:14 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 26 Jun 2020 15:39:52 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:21834 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgFZTjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:39:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593200391; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=Xbd8tKAuYLuZLCWAKBqCJ3+EPkM4JMZiRco158CFw6w=; b=qUFmpWYvsFnuQk9u8uUvQSQnD9koImKYgweglJtaI1lOXttTROwXMJezS7W5ap2X7UlfEN9G
+ jRBDv/alodE/3nwesK2K9fIwLWTRW74RdHvbo/EWeZPrthVs1SlyWCNPpXDQAEnqPZP9c5Oc
+ amRj0F12VvBARHuXEXn1mzuURok=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
+ 5ef64f07bfb34e631c0f61df (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 19:39:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 44708C433CA; Fri, 26 Jun 2020 19:39:50 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EADC8206C0;
-        Fri, 26 Jun 2020 19:39:11 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 15:39:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200626153910.7b3d7e16@oasis.local.home>
-In-Reply-To: <20200626145819.0d3cae3c@oasis.local.home>
-References: <20200625094454.732790f7@oasis.local.home>
-        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-        <20200625143525.2f3a2902@oasis.local.home>
-        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
-        <20200625223611.1dbb3b35@oasis.local.home>
-        <20200625233552.2c8a0d1e@oasis.local.home>
-        <20200626095801.14cfa8a3@oasis.local.home>
-        <304619857.14491.1593195230002.JavaMail.zimbra@efficios.com>
-        <20200626145819.0d3cae3c@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF088C433C8;
+        Fri, 26 Jun 2020 19:39:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF088C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Fri, 26 Jun 2020 13:39:39 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iommu/arm-smmu: Mark qcom_smmu_client_of_match as
+ possibly unused
+Message-ID: <20200626193938.GA25740@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Will Deacon <will@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200604203905.31964-1-jcrouse@codeaurora.org>
+ <20200608151308.GB8060@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608151308.GB8060@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 14:58:19 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> Second usage:
+On Mon, Jun 08, 2020 at 04:13:08PM +0100, Will Deacon wrote:
+> On Thu, Jun 04, 2020 at 02:39:04PM -0600, Jordan Crouse wrote:
+> > When CONFIG_OF=n of_match_device() gets pre-processed out of existence
+> > leaving qcom-smmu_client_of_match unused. Mark it as possibly unused to
+> > keep the compiler from warning in that case.
+> > 
+> > Fixes: 0e764a01015d ("iommu/arm-smmu: Allow client devices to select direct mapping")
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Acked-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> > 
+> >  drivers/iommu/arm-smmu-qcom.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> > index cf01d0215a39..be4318044f96 100644
+> > --- a/drivers/iommu/arm-smmu-qcom.c
+> > +++ b/drivers/iommu/arm-smmu-qcom.c
+> > @@ -12,7 +12,7 @@ struct qcom_smmu {
+> >  	struct arm_smmu_device smmu;
+> >  };
+> >  
+> > -static const struct of_device_id qcom_smmu_client_of_match[] = {
+> > +static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
+> >  	{ .compatible = "qcom,adreno" },
+> >  	{ .compatible = "qcom,mdp4" },
+> >  	{ .compatible = "qcom,mdss" },
 > 
-> 		/* SLOW PATH - Interrupted between A and C */
-> 		a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
-> 		ts = rb_time_stamp(cpu_buffer->buffer);
-> 		barrier();
->  /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
-> 		    a_ok && after < ts) {
-> 			/* Nothing came after this event between C and E */
-> 			info->delta = ts - after;
-> 			(void)rb_time_cmpxchg(&cpu_buffer->write_stamp, after, info->ts);
-> 			info->ts = ts;
-> 		} else {
-> 			info->delta = 0;
+> Thanks. Joerg -- can you pick this one up, please? I don't have any other
+> SMMU fixes pending at the moment.
+> 
+> Cheers,
+> 
+> Will
 
-Actually, I don't think a_ok can every be false here. An uninterrupted
-event will leave with both before_stamp and write_stamp valid. As an
-uninterrupted event will write to both (and a rb_time_t is only invalid
-from reading an interrupted event).
+Quick ping to pick this up for 5.8 fixes.
 
-To get to this path we have:
+Thanks,
+Jordan
 
-	w = local_read(write_tail);
-
-	<--- Interrupt event (makes write_stamp valid!)
-
-	write = local_add_return(write_tail, length);
-
-	w != write - length;
-
-
-	[..]
-
-	a_ok = rb_time_read(write_stamp);
-
-Must always be valid!
-
--- Steve
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
