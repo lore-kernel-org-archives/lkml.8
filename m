@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4358CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F7B2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9628F2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lhSGIvlF"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="azRibTE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFZA4e (ORCPT
+        id S1726921AbgFZA4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:56:34 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45400 "EHLO vps.xff.cz"
+        Thu, 25 Jun 2020 20:56:44 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45188 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgFZA4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:56:12 -0400
+        id S1726667AbgFZA4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:56:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132969; bh=KzfpMNtW3y5p91+Te+S/UaRtGnueNT8aRYpe1i9+jq4=;
+        t=1593132967; bh=SlEXwD28ceW0ryWeI1DcRtKQ+o2CROCThO4n27xkfJs=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=lhSGIvlFDTMrykauS2HhpKQ0XgBth/QfcgKFOa59t6HB0asHV3Dj+stn6cF16Qm5q
-         80+hDWBCj/8wfu8/H4aH1At4bAd8Shom5hzNQP7o2KjamVoJLZFgTWg+aUajy99feZ
-         4F1OxkRbb21t4gS+3FqSXyn++VP7ZIdqnwfMJMLY=
+        b=azRibTE85Omgyx2gilsCaphOn8gj/YoMM104MUtLqqpqEGOBeQZkuqF9/cr7PFxhr
+         gkNQHen+k4nO99SySFM5I5KJbYZr3YhzucevBiKbyWimik5KxdixC0MPULVn6RXwHi
+         wvUZNB4LaWBiqz8uAn+9bY2yoJxWwzmLiAdPk/JE=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,14 +41,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v5 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-Date:   Fri, 26 Jun 2020 02:56:00 +0200
-Message-Id: <20200626005601.241022-13-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v5 08/13] drm/panel: st7703: Move generic part of init sequence to enable callback
+Date:   Fri, 26 Jun 2020 02:55:56 +0200
+Message-Id: <20200626005601.241022-9-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
@@ -58,110 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+Calling sleep out and display on is a controller specific part
+of the initialization process. Move it out of the panel specific
+initialization function to the enable callback.
 
-PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-display.
-
-Backlight levels curve was optimized by Martijn Braam using a
-lux meter.
-
-Add its device nodes.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Martijn Braam <martijn@brixit.nl>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 33 ++++++++++---------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-index 06a775c41664..3e99a87e9ce5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-@@ -9,3 +9,22 @@ / {
- 	model = "Pine64 PinePhone Braveheart (1.1)";
- 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
- };
-+
-+&backlight {
-+	power-supply = <&reg_ldo_io0>;
-+	/*
-+	 * PWM backlight circuit on this PinePhone revision was changed since
-+	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
-+	 * being off is around 20%. Duty cycle for the lowest brightness level
-+	 * also varries quite a bit between individual boards, so the lowest
-+	 * value here was chosen as a safe default.
-+	 */
-+	brightness-levels = <
-+		774  793  814  842
-+		882  935  1003 1088
-+		1192 1316 1462 1633
-+		1830 2054 2309 2596
-+		2916 3271 3664 4096>;
-+	num-interpolated-steps = <50>;
-+	default-brightness-level = <400>;
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9..85a7aa5efd32 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -16,6 +16,13 @@ aliases {
- 		serial0 = &uart0;
- 	};
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+index d03aab10cfef..cdbf7dfb4dd4 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+@@ -84,8 +84,6 @@ static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+ static int jh057n_init_sequence(struct st7703 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+-	struct device *dev = ctx->dev;
+-	int ret;
  
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+		/* Backlight configuration differs per PinePhone revision. */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -84,6 +91,30 @@ &dai {
- 	status = "okay";
- };
+ 	/*
+ 	 * Init sequence was supplied by the panel vendor. Most of the commands
+@@ -136,20 +134,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
+ 			      0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
+ 			      0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
+ 			      0x11, 0x18);
+-	msleep(20);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		DRM_DEV_ERROR(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	/* Panel is operational 120 msec after reset */
+-	msleep(60);
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret)
+-		return ret;
  
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "xingbangda,xbd599";
-+		reg = <0>;
-+		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
-+		iovcc-supply = <&reg_dldo2>;
-+		vcc-supply = <&reg_ldo_io0>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -188,6 +219,10 @@ &r_pio {
- 	 */
- };
+-	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+ 	return 0;
+ }
  
-+&r_pwm {
-+	status = "okay";
-+};
+@@ -181,6 +166,7 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
+ static int st7703_enable(struct drm_panel *panel)
+ {
+ 	struct st7703 *ctx = panel_to_st7703(panel);
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 	int ret;
+ 
+ 	ret = ctx->desc->init_sequence(ctx);
+@@ -190,6 +176,23 @@ static int st7703_enable(struct drm_panel *panel)
+ 		return ret;
+ 	}
+ 
++	msleep(20);
 +
- &r_rsb {
- 	status = "okay";
++	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
++		return ret;
++	}
++
++	/* Panel is operational 120 msec after reset */
++	msleep(60);
++
++	ret = mipi_dsi_dcs_set_display_on(dsi);
++	if (ret)
++		return ret;
++
++	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Panel init sequence done\n");
++
+ 	return 0;
+ }
  
 -- 
 2.27.0
