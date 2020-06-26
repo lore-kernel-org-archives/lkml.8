@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E14C7206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009BF20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QoyX5QkL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jebeIARZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgFZVKQ (ORCPT
+        id S1726547AbgFZVKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:10:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48694 "EHLO
+        Fri, 26 Jun 2020 17:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgFZVJf (ORCPT
+        with ESMTP id S1726206AbgFZVJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:09:35 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2248DC08C5E1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:34 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id 16so7525027qka.15
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:34 -0700 (PDT)
+        Fri, 26 Jun 2020 17:09:30 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEA3C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:30 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id z187so7442072pgd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hVa5/5YjHA4HA55L6gqApWSV/fHdhhYIjiCaFnqYV3g=;
-        b=QoyX5QkLkeZufbY3DPWqVcx8p1G2Pf6aerfPyt2zQE/ujAwEYOP4MavORdpoC0kiKu
-         EBTjnDggRXo0KQe45lMKlqgesoVoq2M/WZaVEKYilzw17KOXTZudXtu6crQek7qlLud6
-         wgqfeApVUIS2o9DKhJa1hfmORSYPYOqHxCziPwrSa4G+57ASkLll7CukI9nktN3Owv9v
-         NukYDAxu7zl52PVDoi+7jdhfKkThnizMJ68rg/tVzgIVSHiP3aAKWELQxmH03U/bRKpt
-         6Wgu+YeU85Wm8LsbzjbD34Ud+5/9JGpyI65sawIxfi18MEFZnvGjX41U/bIx6IVwD7H1
-         RvYQ==
+        bh=hiFp+uoptqOZ2rqi90LxI+MqGbDbXrg3yHQVzKDmQQ4=;
+        b=jebeIARZ4MbpC/qohszlae0SxIiUjfS+aHdsgRsyl+nDoZ13dCApmFMyUJeVDOsHAY
+         KIcGcHJ+1BS4bpjJljRbXhZa/cLiJQCxIz3INsZbN4Us+V8lP8TK5psKf814t/EGk6wE
+         pXdYgr4IlD1bc5vMRTxWpR8bW/X9rqzObf6oG1rnxRKPcgwcVlXdkP64PXWb7NSXT5a6
+         NEtpZlVx+hSr8lknL1TKy8c7BgSEPoFVGkkI3sTvx7LhXrKgu9GToCMGaLH+nZo8xo8H
+         YHmDwLXC56KXjbSBDnypaQ9i4502TKmtFeLoqT6X6hTKa14dhV4gfc4ThT1/79Jdq8SS
+         8zLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hVa5/5YjHA4HA55L6gqApWSV/fHdhhYIjiCaFnqYV3g=;
-        b=aJ2FTHJEqJ/l3yN1EGFbn9MGKGj8GvZLJI9Mu8iU8czI2WXGPcteojMwb2YrkOGBj5
-         ZS0RQugyrKf99FjrLqtpiUrAYq1AGZW3iXzSR0bugbN6RCO27Xs5iCWREAfw1s04XVD3
-         3FWhYLC20tqAQCeD9CYy3UhOTb0MVR8GNZZACTRnz8W8eFxKqByiiwISBQuMeQd43oX+
-         FCnWHt2SY/tCjx/8pwqNNYrYpacbd8zzjmCsfWx6D+eQl340DWwjhRc/eqzeg5cAgfMd
-         BRHysjJjRZwHOgiEagCfcGmP4Z/Ys09gvAWOwi4t6sS2rfw+edi8UR5NJ9lp9lFB94KT
-         l6sw==
-X-Gm-Message-State: AOAM530QjM3Q4ASRdt7f6wKHkedzVE97aFsYNXti6Og5by88MyLBD5i4
-        29gK3B06dSmbg/zerxIwAapw/SeYNLMA4Jy3sXIzbA==
-X-Google-Smtp-Source: ABdhPJypYrK6iZse6cCSs4YnSv2AzXM6d8Vad2NCnBdBrfM4NUTiqCIXIvHzUdHQAv3Yb81UEf64dXgB2cs8yGqX9AXtcw==
-X-Received: by 2002:a0c:8e8c:: with SMTP id x12mr5032791qvb.55.1593205773222;
- Fri, 26 Jun 2020 14:09:33 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:09:10 -0700
+        bh=hiFp+uoptqOZ2rqi90LxI+MqGbDbXrg3yHQVzKDmQQ4=;
+        b=DnU2gHK61eW7Ba+MGERrMNjya5P85/zX5F3Tt71wtK/3onfwsnDFWfbQ3sF+4lpSTd
+         BRYzc5t5kK3nO1UqhEbsugScS1sJ7XdoH2TaBvMzmWSqyNK+VjU5kxzWcX1coT18Zq6h
+         7hegBqmStuugq/RsjBm7FlQ+OkDFL/55tIhSksI5Ph7YYaCXwxJNOIc3u3UdsDqzNETj
+         qGrKC52LgW1lj6joDRrm0YFtyFWyHHPbHG/XcxVCLfnyG31S8EIlGT12tgtuWpQC5Ism
+         FmZnHAJZ8gZpG2jncULkkseKBM9eJHtSAwGoiHKC5TPwVVgKkCBhI/qJAryRZpEF5BAN
+         fMtg==
+X-Gm-Message-State: AOAM530JaGwSQuU4YzQBRe6G6nQfcT4p+Ru2c3qYUVw+UWX/ZxjmDkhK
+        I+0RXycWjpUcSlR6p1honmxa/I/CI4E6oJPpjSC+Ng==
+X-Google-Smtp-Source: ABdhPJxSwQ68iEnNXkgolra98q2cg2bDfdpdwE62xg8GhSSGsb9iaN0w7iVXuEbw7sVWlA1D/tARVHhauyHs3D3fWH+8JQ==
+X-Received: by 2002:a17:90a:f206:: with SMTP id bs6mr5554851pjb.48.1593205769580;
+ Fri, 26 Jun 2020 14:09:29 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:09:08 -0700
 In-Reply-To: <20200626210917.358969-1-brendanhiggins@google.com>
-Message-Id: <20200626210917.358969-6-brendanhiggins@google.com>
+Message-Id: <20200626210917.358969-4-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20200626210917.358969-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v5 05/12] arch: um: add linker section for KUnit test suites
+Subject: [PATCH v5 03/12] arch: microblaze: add linker section for KUnit test suites
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
@@ -83,32 +83,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker section to UML where KUnit can put references to its test
-suites. This patch is an early step in transitioning to dispatching all
-KUnit tests from a centralized executor rather than having each as its
-own separate late_initcall.
+Add a linker section to microblaze where KUnit can put references to its
+test suites. This patch is an early step in transitioning to dispatching
+all KUnit tests from a centralized executor rather than having each as
+its own separate late_initcall.
 
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
- arch/um/include/asm/common.lds.S | 4 ++++
+ arch/microblaze/kernel/vmlinux.lds.S | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/um/include/asm/common.lds.S b/arch/um/include/asm/common.lds.S
-index eca6c452a41bd..9a9c97f45694c 100644
---- a/arch/um/include/asm/common.lds.S
-+++ b/arch/um/include/asm/common.lds.S
-@@ -52,6 +52,10 @@
- 	CON_INITCALL
-   }
+diff --git a/arch/microblaze/kernel/vmlinux.lds.S b/arch/microblaze/kernel/vmlinux.lds.S
+index df07b3d06cd6b..4fc32f8979a60 100644
+--- a/arch/microblaze/kernel/vmlinux.lds.S
++++ b/arch/microblaze/kernel/vmlinux.lds.S
+@@ -128,6 +128,10 @@ SECTIONS {
  
-+  .kunit_test_suites : {
-+	KUNIT_TEST_SUITES
-+  }
+ 	__init_end = .;
+ 
++	.kunit_test_suites : {
++		KUNIT_TEST_SUITES
++	}
 +
-   .exitcall : {
- 	__exitcall_begin = .;
- 	*(.exitcall.exit)
+ 	.bss ALIGN (PAGE_SIZE) : AT(ADDR(.bss) - LOAD_OFFSET) {
+ 		/* page aligned when MMU used */
+ 		__bss_start = . ;
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
