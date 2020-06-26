@@ -2,169 +2,145 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32BC207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:13:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hCTUZM6O"
+	by mail.kernel.org (Postfix) with ESMTP id E76C32081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgFZBNQ (ORCPT
+        id S1727012AbgFZBOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 21:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgFZBNO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 21:13:14 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D16C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:13:12 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y13so4241625lfe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=awA+aJfmww2/ao85b7H7RA9mG8f4CnoPqX5UUEk/kak=;
-        b=hCTUZM6Ox/OvQ/JlyZz8Suae/jeQnSvAiK8yyi8MhvucZxipYA1+1KVp9Z4H28F5r/
-         oFI7lN/vhXdgyScwRCqTZTX5p9QjEcai4GEW009ru/kVfwEVvZby1d1/rbTsC4JvkgIG
-         AAUWxi2snR0VIT41gDC/cSVmrV1LvEpce5IzQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=awA+aJfmww2/ao85b7H7RA9mG8f4CnoPqX5UUEk/kak=;
-        b=H1XQ9O2CoeQP6/C+Pdz8Lrn+0OXt7RRmzQ9xyooOcJoihavj1DEyk3ico72xibUF7c
-         y76v9Nt+ijjj/EakW85+JHAUBQvzteHj4NkGM5sFESypXgUQftQlhY2EjDe/uJ2ToWiO
-         F/i5zelYPCHlNMYSgA1UzrnrNLfMEoBFnB6j4txWsH7jMcaTwwBD1N6TS43FjGEJeZaV
-         AwT71fNcJ8GWVPFOL8OMntlI/H8P3AE7Ge8dL1z9ZrNZ8cX+4kQfBaDBoJ+YkPJFafWg
-         OF71D0kxHrL8vFufYo2IOgei+GPRgWPR24E6uJjsz5xMXTOx/XJA8H7HezDaV28JAUYg
-         7B+A==
-X-Gm-Message-State: AOAM530McwV5D2Cg7dv2Rv0UnQQhX9caFfBqnDQYUCwQXGtoVm4yrIxp
-        PZDyYDMipmcpo78mO+4BAqowLEVw9Cgd/zvrlhC20w==
-X-Google-Smtp-Source: ABdhPJwZCTMBJV8xuYwi09a06rapO6vlykG3STqzwWAy7jky+t7DKQ1dMepMyJh5nLNleaSot9l2JcmKUk7gcBd9bAg=
-X-Received: by 2002:a05:6512:328d:: with SMTP id p13mr383775lfe.139.1593133990435;
- Thu, 25 Jun 2020 18:13:10 -0700 (PDT)
+        Thu, 25 Jun 2020 21:14:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36657 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726971AbgFZBOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 21:14:23 -0400
+IronPort-SDR: TK1kaDWzE3gvlF7lkTDpReWfU1YkQmty8+AJGyGy3VJvVHSQYFe6um7q1JBaKopl3gcjUhFwXc
+ MCavHLBRibkA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="133555691"
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="133555691"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 18:14:23 -0700
+IronPort-SDR: 55HZYR1RCQG97/JMJ/shb9Vxs8ptbAtPjU7r1uxpVAth+m1W/L1ou9OG0tyKHWXHM+tw1MAJGk
+ u2IrnMiqR5Qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="385632895"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.172.117]) ([10.249.172.117])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2020 18:14:18 -0700
+Cc:     baolu.lu@linux.intel.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v4 02/12] iommu/vt-d: Change flags type to unsigned int in
+ binding mm
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradeed.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+ <1593116242-31507-3-git-send-email-fenghua.yu@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <888dc4b1-663e-3c62-c5dd-34167382aec1@linux.intel.com>
+Date:   Fri, 26 Jun 2020 09:14:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200612164632.25648-1-nsaenzjulienne@suse.de>
- <20200612164632.25648-5-nsaenzjulienne@suse.de> <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
- <d3346d7cb9655eb111b4126d72a08499c6254fef.camel@suse.de> <CAPnjgZ3PwTWBQ2Vi4=Sc7JB699TrSxr=PAJupL_3POhJ00qSsA@mail.gmail.com>
- <954083bf13bd7c24c31c9673269ea0eedb925f43.camel@suse.de>
-In-Reply-To: <954083bf13bd7c24c31c9673269ea0eedb925f43.camel@suse.de>
-From:   Simon Glass <sjg@chromium.org>
-Date:   Thu, 25 Jun 2020 19:12:02 -0600
-Message-ID: <CAPnjgZ3CuidKZpTzBiH_F5WhEO3RzEcmHGMyJN9ynu2eOirkUQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] dm: pci: Assign controller device node to root bridge
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Matthias Brugger <mbrugger@suse.com>,
-        U-Boot Mailing List <u-boot@lists.denx.de>,
-        Bin Meng <bmeng.cn@gmail.com>, Marek Vasut <marex@denx.de>,
-        lk <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593116242-31507-3-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Hi Fenghua,
 
-On Wed, 17 Jun 2020 at 13:15, Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Tue, 2020-06-16 at 17:31 -0600, Simon Glass wrote:
-> > Hi Nicolas,
-> >
-> > On Tue, 16 Jun 2020 at 08:09, Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > On Tue, 2020-06-16 at 07:43 -0600, Simon Glass wrote:
-> > > > Hi Nicolas,
-> > > >
-> > > > On Fri, 12 Jun 2020 at 10:47, Nicolas Saenz Julienne
-> > > > <nsaenzjulienne@suse.de> wrote:
-> > > > > There is no distinction in DT between the PCI controller device and the
-> > > > > root bridge, whereas such distinction exists from dm's perspective. Make
-> > > > > sure the root bridge ofnode is assigned to the controller's platform
-> > > > > device node.
-> > > > >
-> > > > > This permits setups like this to work correctly:
-> > > > >
-> > > > >         pcie {
-> > > > >                 compatible = "...";
-> > > > >                 ...
-> > > > >                 dev {
-> > > > >                         reg = <0 0 0 0 0>;
-> > > > >                         ...
-> > > > >                 };
-> > > > >         };
-> > > > >
-> > > > > Without this the dev node is assigned to the root bridge and the
-> > > > > actual device search starts one level lower than expected.
-> > > > >
-> > > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > > ---
-> > > > >  drivers/pci/pci-uclass.c | 15 ++++++++++++++-
-> > > > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > >
-> > > > Can you update the tests to handle this case please?
-> > >
-> > > I'd be glad to, but I'm not familiar with the test FW in u-booy, coud give
-> > > me
-> > > some pointers on where/how to test this?
-> > >
-> >
-> > Yes it is at test/dm/pci.c and the device tree is test.dts
-> >
-> > 'make qcheck' to run all tests. To run one test, build for sandbox and
-> > then something like
-> >
-> > u-boot -T -c "ut dm pci_swapcase"
-> >
-> > for example.
-> >
-> > You can perhaps use an existing PCI controller in test.dts but feel
-> > free to add one more if you need it for your test. Make sure that you
-> > don't break other tests.
->
-> Thanks for the info.
->
-> Actually adding the tests made me doubleguess myself, and now I'm pretty sure
-> that what I shoudl've done in DT is the following:
->
->         &pcie0 {
->                pci@0 {
->                        #address-cells = <3>;
->                        #size-cells = <2>;
->                        ranges;
->
->                        reg = <0 0 0 0 0>;
->
->                        usb@1,0 {
->                                reg = <0x10000 0 0 0 0>;
->                                resets = <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
->                        };
->                };
->         };
->
->
-> (with "lspci -tv": [0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Controller)
->
-> With this the patch above isn't needed, which is great.
->
-> I'll send this to upstream Linux just to get a confirmation this is correct,
-> although if you have any comments it'll be appreciated.
+On 2020/6/26 4:17, Fenghua Yu wrote:
+> "flags" passed to intel_svm_bind_mm() is a bit mask and should be
+> defined as "unsigned int" instead of "int".
+> 
+> Change its type to "unsigned int".
 
-Yes it looks OK to me. U-Boot allows PCI and USB devices to be
-represented in the device tree.
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Regards,
-Simon
+Best regards,
+baolu
+
+> 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+> v2:
+> - Add this new patch per Thomas' comment.
+> 
+>   drivers/iommu/intel/svm.c   | 7 ++++---
+>   include/linux/intel-iommu.h | 2 +-
+>   2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 778089d198eb..8a0cf2f0dd54 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -427,7 +427,8 @@ int intel_svm_unbind_gpasid(struct device *dev, u32 pasid)
+>   
+>   /* Caller must hold pasid_mutex, mm reference */
+>   static int
+> -intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+> +intel_svm_bind_mm(struct device *dev, unsigned int flags,
+> +		  struct svm_dev_ops *ops,
+>   		  struct mm_struct *mm, struct intel_svm_dev **sd)
+>   {
+>   	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> @@ -954,7 +955,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
+>   {
+>   	struct iommu_sva *sva = ERR_PTR(-EINVAL);
+>   	struct intel_svm_dev *sdev = NULL;
+> -	int flags = 0;
+> +	unsigned int flags = 0;
+>   	int ret;
+>   
+>   	/*
+> @@ -963,7 +964,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
+>   	 * and intel_svm etc.
+>   	 */
+>   	if (drvdata)
+> -		flags = *(int *)drvdata;
+> +		flags = *(unsigned int *)drvdata;
+>   	mutex_lock(&pasid_mutex);
+>   	ret = intel_svm_bind_mm(dev, flags, NULL, mm, &sdev);
+>   	if (ret)
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 314a95870e47..4d20f93a5e2d 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -759,7 +759,7 @@ struct intel_svm {
+>   	struct mm_struct *mm;
+>   
+>   	struct intel_iommu *iommu;
+> -	int flags;
+> +	unsigned int flags;
+>   	u32 pasid;
+>   	int gpasid; /* In case that guest PASID is different from host PASID */
+>   	struct list_head devs;
+> 
