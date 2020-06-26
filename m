@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA79C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB0C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A06B520768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883E420768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="UUTIl4m0";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="qxBRs8T/"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="LCVLDuic";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="yWP863F+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgFZE4l (ORCPT
+        id S1726518AbgFZE4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:56:41 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:46372 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbgFZE4k (ORCPT
+        Fri, 26 Jun 2020 00:56:50 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:12902 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726362AbgFZE4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:56:40 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q4qPJm016256;
-        Thu, 25 Jun 2020 21:56:03 -0700
+        Fri, 26 Jun 2020 00:56:44 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q4mdtp016795;
+        Thu, 25 Jun 2020 21:55:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=31rIn1Vs4yr5Y3F+Rmnz7NGop3ffCVylx+CBCH4SwYY=;
- b=UUTIl4m0Ea346m8lAAnZb1NqjUcGN+qEBCUU/fJnx0V5Qi6G+/8bLn+v8h+ko0jyW37M
- JTYr6LxyIj9ddsVSIX2/sxqbcfpKvAAk0mASGs0cPlREE9ZAqmbkT4jMOXHAchtg96vf
- lya3oJOuwdHVYymuDFEH7DfLGRMtOksR56t1+Lo6tni4+eusM/kmY4WFVSeyDd8B2v3/
- uiTAYAbGv74DllL3FHysTdpGTr9L4VsenFeo4CpQF+wpMIfhhEMEu6XqIynX2nUvM/gk
- 28Y7kZOeUTOFYKaNTzcaUmADLxOUW0DkOE9lQ4MudqVKYT8sZ5RywCXvXlYbbMb+Ia1V ag== 
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 31uur5sh5x-1
+ content-type : content-transfer-encoding; s=proofpoint;
+ bh=0FcNY2mIoUkcAVzLPkjXq6S3TPqIvRSjP/fxnu7+rB8=;
+ b=LCVLDuicoL04RRE3ulItFoEgdMUQtun85xa/ATO7HCbNcD3xM4ZbFlshHzROU3tKj85M
+ dA1pP0Id7cPMtMZYbY5FEr9fEKqd7WhDYacSCiHmS9pwA/a4AqkH96UuWPSo0m7aaaEl
+ GETQ7+wNyA2cHebOw+FQK4lp+jK8f+3nbjqHdHa+JJR3NLxgWQNoH8f59iMsN/HMcSXs
+ VMUiM2+njvmZfSNqlBEMdpnFbkn+9mQhKgPHchA8LJDhadB8HLVZnPrQydLHCf8BYr5S
+ eX2UB7ER/dbkERB2hMcFLN3tK5dK9yKI9VcORmEmENvVqQnhRi3aOTrRDFqNTTvw6kag gw== 
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 31uuqbhk0j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 21:56:03 -0700
+        Thu, 25 Jun 2020 21:55:58 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mkQvIGleeyjiF5tHk9NewAVyFSqegARtw5plcIpzD8bJ9Zw0pZvR0YEesRxC5A2kj73H/GNFVefSdYpbqkuHpZvfcgZLn7gJsWW7LgNgPUbKBjIOVTXeUGOxmLfMtplbcip9paj+gHaS/tfEFgRlGUmDNPu070IXWAQ7mXcg4FKJhBgfPbM6Oekfc0rD1MvsHap1ZfuOqJhgoFT+9K8E9jiif9rF/9bEOLx1iqL59MGM7PurJ428B1oDTcZjSUfAeZwZw1yqXKY0zZ6GVtloStbAGup0GiJ5q0Kh3ekFw6YIe9zCQpMw5O4+K8R1IXvxBnYlxIX428CFBXol7ubHEQ==
+ b=eRD5mQND/6lCrU5L2lMqvHYLpV4fyMYmFO7sVLE2lZwsJ453QP3cJdRSc9y4QQg0OjR6UX63Y4sgV8sNhHol1oQZTZKamiTqFSS61txzL2mRJWky0vA8YRs5rX+44t3U+STR4FTfFXeQb7CIafTd+PjIBSOmeRQSPxQQPtY2JcvfVnuu+w0RWRFBqAwHAgVwHeHFNIJ5+F2xSXYy1uMIsPy9F/TBj3C4JOVS9PUmgoy9dngpp+n8PuzUCHslCu+OaU4geli6pAzIMO+MleqthozI32mlBJ4g57COf8CzJ5fw0K1hTyWtQQXTTASinkxGh1JPOMjxtUOpU3GA2pjj+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=31rIn1Vs4yr5Y3F+Rmnz7NGop3ffCVylx+CBCH4SwYY=;
- b=iDdZvCMUkEh1C673SBfjoJ68AXXQK4h/609I5IUmx11CW0uLxODGDi+lYYa8cn56XHBMEJRyRotDGv9n9B5GVwvcNWosLVm8KD5MoBJ1+65q8Ymdi8c7Sfgm6F3Zmom2u+8nGzqdjsnjF2XQasKBpMi7Rn7I6CAYMMA626ZvBMXXkOEWEOXU3XaWYNQx5E5qD1lu8Hmb4jVo1uQBc2aFUNFDX6Y/d6G4V53NNcF2ZKVhmzNQFdqif2nmPoSIHh8/yyAwByxljcWZzs6lwpQ+h0H0M4GRVNVCH5QoN2xqDsirN4NtgbKDp4UwmlcVD6DvpEBQgZooSzOcD26Mji9Y4Q==
+ bh=0FcNY2mIoUkcAVzLPkjXq6S3TPqIvRSjP/fxnu7+rB8=;
+ b=Pxan0l+8OkWvi3OsdOeC2q3myR5WKE/kCY74mj2m58cXjMmVkCnRN0imUbcG0nWw+NfW+5+vCK9PRM06rhEVT5amUnKGRBYme5cXs1ZfzypykfcUTzn1G1XtRVrF47rNJFcxWO1qTHfLVZLFmAPyFVGHbVqtFS1hp98xlJHXlgIakP+Upu9xgZM/q3BCJej0HlZSR/dfsNrVMHqZTQHkwbxXs4DG5JOzjFaVe3ZyfQ5+3Pi0/Oc1mjoDT027rQCKkKGorUNmsEyf7rqw5Tuj3PPXlD6UuL+FsdztF3Lv3+tDvE10+SQaa9lUBFXz+uJ/nVtP7rwmqyLJ0/XWpWQwpA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  64.207.220.244) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
@@ -54,17 +54,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=31rIn1Vs4yr5Y3F+Rmnz7NGop3ffCVylx+CBCH4SwYY=;
- b=qxBRs8T/IlRi++VZZTDXLicCW02D9XFkDKUDb6g+6nKDh1nQpgBfyr/bVP35LF3n4ZwiplC2y9g6WqNEclEo1cFb5FA03McWz+8QSmQi5JuIBKlLMWvK+8W/npFmNvW34GRiX/RJ8g6BRU3vpE6hyW5TEJaUpUsPLTiPRGQbuVI=
-Received: from DM5PR10CA0014.namprd10.prod.outlook.com (2603:10b6:4:2::24) by
- SN1PR07MB4125.namprd07.prod.outlook.com (2603:10b6:802:30::15) with Microsoft
+ bh=0FcNY2mIoUkcAVzLPkjXq6S3TPqIvRSjP/fxnu7+rB8=;
+ b=yWP863F+AwfwynEMCmM8owuV0ikb/ZfoL8GCxBsLtGG89ZHqwx3sXPlu7Hu4BcDxB4tddznHngV0ndLVUc2cyZjb2THJsnWyewjqjG7JIRQk0n95OQbk9LY69ZYsxmmVio+EsHXjjQyVyFqR1FK/UAe5zpiNYquh9coyEPR0fkc=
+Received: from DM6PR13CA0017.namprd13.prod.outlook.com (2603:10b6:5:bc::30) by
+ DM6PR07MB6361.namprd07.prod.outlook.com (2603:10b6:5:178::11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.21; Fri, 26 Jun 2020 04:55:58 +0000
-Received: from DM6NAM12FT004.eop-nam12.prod.protection.outlook.com
- (2603:10b6:4:2:cafe::74) by DM5PR10CA0014.outlook.office365.com
- (2603:10b6:4:2::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend
- Transport; Fri, 26 Jun 2020 04:55:58 +0000
+ 15.20.3109.22; Fri, 26 Jun 2020 04:55:55 +0000
+Received: from DM6NAM12FT014.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:bc:cafe::53) by DM6PR13CA0017.outlook.office365.com
+ (2603:10b6:5:bc::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.12 via Frontend
+ Transport; Fri, 26 Jun 2020 04:55:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
  smtp.mailfrom=cadence.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=pass action=none
@@ -73,13 +73,13 @@ Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
  64.207.220.244 as permitted sender) receiver=protection.outlook.com;
  client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
 Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- DM6NAM12FT004.mail.protection.outlook.com (10.13.178.154) with Microsoft SMTP
+ DM6NAM12FT014.mail.protection.outlook.com (10.13.178.128) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.13 via Frontend Transport; Fri, 26 Jun 2020 04:55:56 +0000
+ 15.20.3131.13 via Frontend Transport; Fri, 26 Jun 2020 04:55:55 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 05Q4tnkE202776
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 05Q4tnkC202776
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 21:55:55 -0700
+        Thu, 25 Jun 2020 21:55:53 -0700
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
@@ -88,11 +88,11 @@ Received: from vleu-orange.cadence.com (10.160.88.83) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
  15.0.1367.3 via Frontend Transport; Fri, 26 Jun 2020 06:55:50 +0200
 Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 05Q4toBm010946;
-        Fri, 26 Jun 2020 06:55:50 +0200
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 05Q4tnt5010936;
+        Fri, 26 Jun 2020 06:55:49 +0200
 Received: (from pawell@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 05Q4toxT010945;
-        Fri, 26 Jun 2020 06:55:50 +0200
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 05Q4tnUG010935;
+        Fri, 26 Jun 2020 06:55:49 +0200
 From:   Pawel Laszczak <pawell@cadence.com>
 To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -102,2298 +102,1511 @@ CC:     <dan.carpenter@oracle.com>, <ben.dooks@codethink.co.uk>,
         <weiyongjun1@huawei.com>, <jpawar@cadence.com>,
         <kurahul@cadene.com>, <sparmar@cadence.com>,
         Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH RFC 5/5] usb: cdnsp: Add tracepoints for CDNSP driver
-Date:   Fri, 26 Jun 2020 06:54:50 +0200
-Message-ID: <20200626045450.10205-6-pawell@cadence.com>
+Subject: [PATCH RFC 3/5] usb: cdnsp: Device side header file for CDNSP driver
+Date:   Fri, 26 Jun 2020 06:54:48 +0200
+Message-ID: <20200626045450.10205-4-pawell@cadence.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20200626045450.10205-1-pawell@cadence.com>
 References: <20200626045450.10205-1-pawell@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(346002)(136003)(36092001)(46966005)(336012)(86362001)(36756003)(54906003)(30864003)(5660300002)(426003)(107886003)(47076004)(4326008)(478600001)(81166007)(110136005)(82740400003)(36906005)(316002)(70206006)(8676002)(70586007)(42186006)(82310400002)(356005)(2906002)(83380400001)(7416002)(186003)(2616005)(8936002)(26005)(1076003)(559001)(579004)(309714004);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:unused.mynethost.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(36092001)(46966005)(2616005)(83380400001)(426003)(30864003)(186003)(70586007)(86362001)(1076003)(5660300002)(82740400003)(47076004)(356005)(26005)(110136005)(70206006)(42186006)(478600001)(2906002)(82310400002)(81166007)(336012)(4326008)(54906003)(8936002)(107886003)(7416002)(36906005)(8676002)(36756003)(316002)(579004)(559001)(473944003)(414714003);DIR:OUT;SFP:1101;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ec3033c4-c300-4cd3-f92b-08d8198d3671
-X-MS-TrafficTypeDiagnostic: SN1PR07MB4125:
-X-Microsoft-Antispam-PRVS: <SN1PR07MB4125495580BF9A2344679AB2DD930@SN1PR07MB4125.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:192;
+X-MS-Office365-Filtering-Correlation-Id: ad90c3fb-9f2a-4386-6998-08d8198d3582
+X-MS-TrafficTypeDiagnostic: DM6PR07MB6361:
+X-Microsoft-Antispam-PRVS: <DM6PR07MB6361AB0185A9594EC3083E9BDD930@DM6PR07MB6361.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-Forefront-PRVS: 0446F0FCE1
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vFUK+e6cd1Fvkirk1uPzXfvEGfoqpBkI+aSFBsqF1bL65AJ3My69eQOgn+aTY2PmTOAGeiLwcnojpbU+JMBo2Vg+gE6ehsTKJsBzt2RMYSIlL4WVQGLG4RH3846ur4rFMR0q5RgzmtOXcaSjcEMNdiD4BNQMijHrxxLXD1inswYu9cRMQySMAnLjGmJzAdU1v4FIJXMhKkFxgUndWRsVRr2ECkpQoR0ZKmDxWJyx+1y8m0BFsIjKWTbRH6w6F0YUSSXuVmKUH6iQU0eIzyncl2aZxW4jS93rm2UBWb9fQSw8g1gSIhCifPm/ySsz2fafDjq8LJk9/hH0PfFm1aaj5AZwVzFrIlI5JQx/3az6DHKShcNrcTIpZ6it8TqHw8yP58KN0nps4B8TSCJe7eA+7PLC7ph5b7JzkaKPf45WXj3kklX7xCMfUvw3AGaNAi+anttdgBWHgDTYf/oAmMMF4A==
+X-Microsoft-Antispam-Message-Info: fL5prZht6P0GUS4mVUIO5b8F8M0r5zS1qXqb/Tu4V0tBdUXOrt/VwqGYVun+kqm4upGkqhnSXheKRZIPWIhl3u9iaaDigb/cCKu3YNPxL5DwsFelxbc6i79qt5XLElaZrmCxE/F0cfSkgIQTlHOzhV4ykXcQJEhsppG0MLrwH+GPjDetR0q72Aj0HXBwgX3wQWZvkIkZblzH9MMvqYTcBcLLQaFJmaemEuDcvhseAlV7tkvOwXxNOXIgHV9b6q0Ky5T6GeOwo/A1TUUwOVAZDLIYrDknXSHBfdjASbLWowYrLf+bipC7dH3qcMaBrKau1Do9ld2D2kgG8oEVhSYcvcy7uaCQuvtSbTC2u2+LdhL8CXAktmNAOtm8tMDqzLHfi61STWrMYH3CGGn5FEKhh3tK6mQZH00cRYJailioZZ8TnPvLLh2kuRb/7r+98D6I/BfgKiI6NehHRebMFRu/nhule4/Wnxpdewnj6VWrwjs=
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 04:55:56.6347
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 04:55:55.0638
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec3033c4-c300-4cd3-f92b-08d8198d3671
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad90c3fb-9f2a-4386-6998-08d8198d3582
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT004.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR07MB4125
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6361
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-26_01:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 mlxscore=0
- adultscore=0 suspectscore=2 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260034
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 impostorscore=0
+ phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=2
+ priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006260034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch adds the series of tracepoints that can  be used for
-debugging issues detected in driver.
+Patch defines macros, registers and structures used by
+Device side driver.
+
+Because the size of main patch is very big, I’ve decided to create
+separate patch for gadget.h. It should simplify reviewing the code.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/cdnsp/Makefile |   5 +
- drivers/usb/cdnsp/debug.h  | 583 ++++++++++++++++++++++++++
- drivers/usb/cdnsp/ep0.c    |  24 +-
- drivers/usb/cdnsp/gadget.c |  61 ++-
- drivers/usb/cdnsp/gadget.h |   2 +
- drivers/usb/cdnsp/mem.c    |  15 +-
- drivers/usb/cdnsp/ring.c   |  75 +++-
- drivers/usb/cdnsp/trace.c  |  12 +
- drivers/usb/cdnsp/trace.h  | 839 +++++++++++++++++++++++++++++++++++++
- 9 files changed, 1604 insertions(+), 12 deletions(-)
- create mode 100644 drivers/usb/cdnsp/debug.h
- create mode 100644 drivers/usb/cdnsp/trace.c
- create mode 100644 drivers/usb/cdnsp/trace.h
+ drivers/usb/cdnsp/gadget.h | 1446 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1446 insertions(+)
+ create mode 100644 drivers/usb/cdnsp/gadget.h
 
-diff --git a/drivers/usb/cdnsp/Makefile b/drivers/usb/cdnsp/Makefile
-index 386b6a7b8b4e..067005c5ac32 100644
---- a/drivers/usb/cdnsp/Makefile
-+++ b/drivers/usb/cdnsp/Makefile
-@@ -1,9 +1,14 @@
- # SPDX-License-Identifier: GPL-2.0
-+# define_trace.h needs to know how to find our header
-+CFLAGS_trace.o				:= -I$(src)
- 
- cdnsp-y					:= core.o drd.o
- 
- obj-$(CONFIG_USB_CDNSP) 		+= cdnsp.o
- cdnsp-$(CONFIG_USB_CDNSP_GADGET)	+= ring.o gadget.o mem.o ep0.o
-+ifneq ($(CONFIG_USB_CDNSP_GADGET),)
-+cdnsp-$(CONFIG_TRACING)			+= trace.o
-+endif
- 
- cdnsp-$(CONFIG_USB_CDNSP_HOST)		+= host.o
- 
-diff --git a/drivers/usb/cdnsp/debug.h b/drivers/usb/cdnsp/debug.h
-new file mode 100644
-index 000000000000..d6345d4d2911
---- /dev/null
-+++ b/drivers/usb/cdnsp/debug.h
-@@ -0,0 +1,583 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Cadence CDNSP DRD Driver.
-+ *
-+ * Copyright (C) 2020 Cadence.
-+ *
-+ * Author: Pawel Laszczak <pawell@cadence.com>
-+ *
-+ */
-+#ifndef __LINUX_CDNSP_DEBUG
-+#define __LINUX_CDNSP_DEBUG
-+
-+static inline const char *cdnsp_trb_comp_code_string(u8 status)
-+{
-+	switch (status) {
-+	case COMP_INVALID:
-+		return "Invalid";
-+	case COMP_SUCCESS:
-+		return "Success";
-+	case COMP_DATA_BUFFER_ERROR:
-+		return "Data Buffer Error";
-+	case COMP_BABBLE_DETECTED_ERROR:
-+		return "Babble Detected";
-+	case COMP_TRB_ERROR:
-+		return "TRB Error";
-+	case COMP_RESOURCE_ERROR:
-+		return "Resource Error";
-+	case COMP_NO_SLOTS_AVAILABLE_ERROR:
-+		return "No Slots Available Error";
-+	case COMP_INVALID_STREAM_TYPE_ERROR:
-+		return "Invalid Stream Type Error";
-+	case COMP_SLOT_NOT_ENABLED_ERROR:
-+		return "Slot Not Enabled Error";
-+	case COMP_ENDPOINT_NOT_ENABLED_ERROR:
-+		return "Endpoint Not Enabled Error";
-+	case COMP_SHORT_PACKET:
-+		return "Short Packet";
-+	case COMP_RING_UNDERRUN:
-+		return "Ring Underrun";
-+	case COMP_RING_OVERRUN:
-+		return "Ring Overrun";
-+	case COMP_VF_EVENT_RING_FULL_ERROR:
-+		return "VF Event Ring Full Error";
-+	case COMP_PARAMETER_ERROR:
-+		return "Parameter Error";
-+	case COMP_CONTEXT_STATE_ERROR:
-+		return "Context State Error";
-+	case COMP_EVENT_RING_FULL_ERROR:
-+		return "Event Ring Full Error";
-+	case COMP_INCOMPATIBLE_DEVICE_ERROR:
-+		return "Incompatible Device Error";
-+	case COMP_MISSED_SERVICE_ERROR:
-+		return "Missed Service Error";
-+	case COMP_COMMAND_RING_STOPPED:
-+		return "Command Ring Stopped";
-+	case COMP_COMMAND_ABORTED:
-+		return "Command Aborted";
-+	case COMP_STOPPED:
-+		return "Stopped";
-+	case COMP_STOPPED_LENGTH_INVALID:
-+		return "Stopped - Length Invalid";
-+	case COMP_STOPPED_SHORT_PACKET:
-+		return "Stopped - Short Packet";
-+	case COMP_MAX_EXIT_LATENCY_TOO_LARGE_ERROR:
-+		return "Max Exit Latency Too Large Error";
-+	case COMP_ISOCH_BUFFER_OVERRUN:
-+		return "Isoch Buffer Overrun";
-+	case COMP_EVENT_LOST_ERROR:
-+		return "Event Lost Error";
-+	case COMP_UNDEFINED_ERROR:
-+		return "Undefined Error";
-+	case COMP_INVALID_STREAM_ID_ERROR:
-+		return "Invalid Stream ID Error";
-+	default:
-+		return "Unknown!!";
-+	}
-+}
-+
-+static inline const char *cdnsp_trb_type_string(u8 type)
-+{
-+	switch (type) {
-+	case TRB_NORMAL:
-+		return "Normal";
-+	case TRB_SETUP:
-+		return "Setup Stage";
-+	case TRB_DATA:
-+		return "Data Stage";
-+	case TRB_STATUS:
-+		return "Status Stage";
-+	case TRB_ISOC:
-+		return "Isoch";
-+	case TRB_LINK:
-+		return "Link";
-+	case TRB_EVENT_DATA:
-+		return "Event Data";
-+	case TRB_TR_NOOP:
-+		return "No-Op";
-+	case TRB_ENABLE_SLOT:
-+		return "Enable Slot Command";
-+	case TRB_DISABLE_SLOT:
-+		return "Disable Slot Command";
-+	case TRB_ADDR_DEV:
-+		return "Address Device Command";
-+	case TRB_CONFIG_EP:
-+		return "Configure Endpoint Command";
-+	case TRB_EVAL_CONTEXT:
-+		return "Evaluate Context Command";
-+	case TRB_RESET_EP:
-+		return "Reset Endpoint Command";
-+	case TRB_STOP_RING:
-+		return "Stop Ring Command";
-+	case TRB_SET_DEQ:
-+		return "Set TR Dequeue Pointer Command";
-+	case TRB_RESET_DEV:
-+		return "Reset Device Command";
-+	case TRB_FORCE_HEADER:
-+		return "Force Header Command";
-+	case TRB_CMD_NOOP:
-+		return "No-Op Command";
-+	case TRB_TRANSFER:
-+		return "Transfer Event";
-+	case TRB_COMPLETION:
-+		return "Command Completion Event";
-+	case TRB_PORT_STATUS:
-+		return "Port Status Change Event";
-+	case TRB_HC_EVENT:
-+		return "Device Controller Event";
-+	case TRB_MFINDEX_WRAP:
-+		return "MFINDEX Wrap Event";
-+	case TRB_ENDPOINT_NRDY:
-+		return "Endpoint Not ready";
-+	case TRB_HALT_ENDPOINT:
-+		return "Halt Endpoint";
-+	case TRB_FLUSH_ENDPOINT:
-+		return "FLush Endpoint";
-+	default:
-+		return "UNKNOWN";
-+	}
-+}
-+
-+static inline const char *cdnsp_ring_type_string(enum cdnsp_ring_type type)
-+{
-+	switch (type) {
-+	case TYPE_CTRL:
-+		return "CTRL";
-+	case TYPE_ISOC:
-+		return "ISOC";
-+	case TYPE_BULK:
-+		return "BULK";
-+	case TYPE_INTR:
-+		return "INTR";
-+	case TYPE_STREAM:
-+		return "STREAM";
-+	case TYPE_COMMAND:
-+		return "CMD";
-+	case TYPE_EVENT:
-+		return "EVENT";
-+	}
-+
-+	return "UNKNOWN";
-+}
-+
-+static inline char *cdnsp_slot_state_string(u32 state)
-+{
-+	switch (state) {
-+	case SLOT_STATE_ENABLED:
-+		return "enabled/disabled";
-+	case SLOT_STATE_DEFAULT:
-+		return "default";
-+	case SLOT_STATE_ADDRESSED:
-+		return "addressed";
-+	case SLOT_STATE_CONFIGURED:
-+		return "configured";
-+	default:
-+		return "reserved";
-+	}
-+}
-+
-+static inline const char *cdnsp_decode_trb(char *str, size_t size, u32 field0,
-+					   u32 field1, u32 field2, u32 field3)
-+{
-+	int ep_id = TRB_TO_EP_INDEX(field3) - 1;
-+	int type = TRB_FIELD_TO_TYPE(field3);
-+	unsigned int ep_num;
-+	int ret = 0;
-+	u32 temp;
-+
-+	ep_num = DIV_ROUND_UP(ep_id, 2);
-+
-+	switch (type) {
-+	case TRB_LINK:
-+		ret += snprintf(str, size,
-+				"LINK %08x%08x intr %ld type '%s' flags %c:%c:%c:%c",
-+				field1, field0, GET_INTR_TARGET(field2),
-+				cdnsp_trb_type_string(type),
-+				field3 & TRB_IOC ? 'I' : 'i',
-+				field3 & TRB_CHAIN ? 'C' : 'c',
-+				field3 & TRB_TC ? 'T' : 't',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_TRANSFER:
-+	case TRB_COMPLETION:
-+	case TRB_PORT_STATUS:
-+	case TRB_HC_EVENT:
-+		ret += snprintf(str, size,
-+				"ep%d%s(%d) type '%s' TRB %08x%08x status '%s'"
-+				" len %ld slot %ld flags %c:%c",
-+				ep_num, ep_id % 2 ? "out" : "in",
-+				TRB_TO_EP_INDEX(field3),
-+				cdnsp_trb_type_string(type), field1, field0,
-+				cdnsp_trb_comp_code_string(GET_COMP_CODE(field2)),
-+				EVENT_TRB_LEN(field2), TRB_TO_SLOT_ID(field3),
-+				field3 & EVENT_DATA ? 'E' : 'e',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_MFINDEX_WRAP:
-+		ret += snprintf(str, size, "%s: flags %c",
-+				cdnsp_trb_type_string(type),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_SETUP:
-+		ret += snprintf(str, size,
-+				"type '%s' bRequestType %02x bRequest %02x "
-+				"wValue %02x%02x wIndex %02x%02x wLength %d "
-+				"length %ld TD size %ld intr %ld Setup ID %ld "
-+				"flags %c:%c:%c",
-+				cdnsp_trb_type_string(type),
-+				field0 & 0xff,
-+				(field0 & 0xff00) >> 8,
-+				(field0 & 0xff000000) >> 24,
-+				(field0 & 0xff0000) >> 16,
-+				(field1 & 0xff00) >> 8,
-+				field1 & 0xff,
-+				(field1 & 0xff000000) >> 16 |
-+				(field1 & 0xff0000) >> 16,
-+				TRB_LEN(field2), GET_TD_SIZE(field2),
-+				GET_INTR_TARGET(field2),
-+				TRB_SETUPID_TO_TYPE(field3),
-+				field3 & TRB_IDT ? 'D' : 'd',
-+				field3 & TRB_IOC ? 'I' : 'i',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_DATA:
-+		ret += snprintf(str, size,
-+				"type '%s' Buffer %08x%08x length %ld TD size %ld "
-+				"intr %ld flags %c:%c:%c:%c:%c:%c:%c",
-+				cdnsp_trb_type_string(type),
-+				field1, field0, TRB_LEN(field2),
-+				GET_TD_SIZE(field2),
-+				GET_INTR_TARGET(field2),
-+				field3 & TRB_IDT ? 'D' : 'i',
-+				field3 & TRB_IOC ? 'I' : 'i',
-+				field3 & TRB_CHAIN ? 'C' : 'c',
-+				field3 & TRB_NO_SNOOP ? 'S' : 's',
-+				field3 & TRB_ISP ? 'I' : 'i',
-+				field3 & TRB_ENT ? 'E' : 'e',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_STATUS:
-+		ret += snprintf(str, size,
-+				"Buffer %08x%08x length %ld TD size %ld intr"
-+				"%ld type '%s' flags %c:%c:%c:%c",
-+				field1, field0, TRB_LEN(field2),
-+				GET_TD_SIZE(field2),
-+				GET_INTR_TARGET(field2),
-+				cdnsp_trb_type_string(type),
-+				field3 & TRB_IOC ? 'I' : 'i',
-+				field3 & TRB_CHAIN ? 'C' : 'c',
-+				field3 & TRB_ENT ? 'E' : 'e',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_NORMAL:
-+	case TRB_ISOC:
-+	case TRB_EVENT_DATA:
-+	case TRB_TR_NOOP:
-+		ret += snprintf(str, size,
-+				"type '%s' Buffer %08x%08x length %ld "
-+				"TD size %ld intr %ld "
-+				"flags %c:%c:%c:%c:%c:%c:%c:%c:%c",
-+				cdnsp_trb_type_string(type),
-+				field1, field0, TRB_LEN(field2),
-+				GET_TD_SIZE(field2),
-+				GET_INTR_TARGET(field2),
-+				field3 & TRB_BEI ? 'B' : 'b',
-+				field3 & TRB_IDT ? 'T' : 't',
-+				field3 & TRB_IOC ? 'I' : 'i',
-+				field3 & TRB_CHAIN ? 'C' : 'c',
-+				field3 & TRB_NO_SNOOP ? 'S' : 's',
-+				field3 & TRB_ISP ? 'I' : 'i',
-+				field3 & TRB_ENT ? 'E' : 'e',
-+				field3 & TRB_CYCLE ? 'C' : 'c',
-+				!(field3 & TRB_EVENT_INVALIDATE) ? 'V' : 'v');
-+		break;
-+	case TRB_CMD_NOOP:
-+	case TRB_ENABLE_SLOT:
-+		ret += snprintf(str, size, "%s: flags %c",
-+				cdnsp_trb_type_string(type),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_DISABLE_SLOT:
-+		ret += snprintf(str, size, "%s: slot %ld flags %c",
-+				cdnsp_trb_type_string(type),
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_ADDR_DEV:
-+		ret += snprintf(str, size,
-+				"%s: ctx %08x%08x slot %ld flags %c:%c",
-+				cdnsp_trb_type_string(type), field1, field0,
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_BSR ? 'B' : 'b',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_CONFIG_EP:
-+		ret += snprintf(str, size,
-+				"%s: ctx %08x%08x slot %ld flags %c:%c",
-+				cdnsp_trb_type_string(type), field1, field0,
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_DC ? 'D' : 'd',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_EVAL_CONTEXT:
-+		ret += snprintf(str, size,
-+				"%s: ctx %08x%08x slot %ld flags %c",
-+				cdnsp_trb_type_string(type), field1, field0,
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_RESET_EP:
-+	case TRB_HALT_ENDPOINT:
-+	case TRB_FLUSH_ENDPOINT:
-+		ret += snprintf(str, size,
-+				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c",
-+				cdnsp_trb_type_string(type),
-+				ep_num, ep_id % 2 ? "out" : "in",
-+				TRB_TO_EP_INDEX(field3), field1, field0,
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_STOP_RING:
-+		ret += snprintf(str, size,
-+				"%s: ep%d%s(%d) slot %ld sp %d flags %c",
-+				cdnsp_trb_type_string(type),
-+				ep_num, ep_id % 2 ? "out" : "in",
-+				TRB_TO_EP_INDEX(field3),
-+				TRB_TO_SLOT_ID(field3),
-+				TRB_TO_SUSPEND_PORT(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_SET_DEQ:
-+		ret += snprintf(str, size,
-+				"%s: ep%d%s(%d) deq %08x%08x stream %ld slot %ld  flags %c",
-+				cdnsp_trb_type_string(type),
-+				ep_num, ep_id % 2 ? "out" : "in",
-+				TRB_TO_EP_INDEX(field3), field1, field0,
-+				TRB_TO_STREAM_ID(field2),
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_RESET_DEV:
-+		ret += snprintf(str, size, "%s: slot %ld flags %c",
-+				cdnsp_trb_type_string(type),
-+				TRB_TO_SLOT_ID(field3),
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	case TRB_ENDPOINT_NRDY:
-+		temp  = TRB_TO_HOST_STREAM(field2);
-+
-+		ret += snprintf(str, size,
-+				"%s: ep%d%s(%d) H_SID %x%s%s D_SID %lx flags %c:%c",
-+				cdnsp_trb_type_string(type),
-+				ep_num, ep_id % 2 ? "out" : "in",
-+				TRB_TO_EP_INDEX(field3), temp,
-+				temp == STREAM_PRIME_ACK ? "(PRIME)" : "",
-+				temp == STREAM_REJECTED ? "(REJECTED)" : "",
-+				TRB_TO_DEV_STREAM(field0),
-+				field3 & TRB_STAT ? 'S' : 's',
-+				field3 & TRB_CYCLE ? 'C' : 'c');
-+		break;
-+	default:
-+		ret += snprintf(str, size,
-+				"type '%s' -> raw %08x %08x %08x %08x",
-+				cdnsp_trb_type_string(type),
-+				field0, field1, field2, field3);
-+	}
-+
-+	return str;
-+}
-+
-+static inline const char *cdnsp_decode_slot_context(u32 info, u32 info2,
-+						    u32 int_target, u32 state)
-+{
-+	static char str[1024];
-+	int ret = 0;
-+	u32 speed;
-+	char *s;
-+
-+	speed = info & DEV_SPEED;
-+
-+	switch (speed) {
-+	case SLOT_SPEED_FS:
-+		s = "full-speed";
-+		break;
-+	case SLOT_SPEED_HS:
-+		s = "high-speed";
-+		break;
-+	case SLOT_SPEED_SS:
-+		s = "super-speed";
-+		break;
-+	case SLOT_SPEED_SSP:
-+		s = "super-speed plus";
-+		break;
-+	default:
-+		s = "UNKNOWN speed";
-+	}
-+
-+	ret = sprintf(str, "%s Ctx Entries %ld",
-+		      s, (info & LAST_CTX_MASK) >> 27);
-+
-+	ret += sprintf(str + ret, " [Intr %ld] Addr %ld State %s",
-+		       GET_INTR_TARGET(int_target), state & DEV_ADDR_MASK,
-+		       cdnsp_slot_state_string(GET_SLOT_STATE(state)));
-+
-+	return str;
-+}
-+
-+static inline const char *cdnsp_portsc_link_state_string(u32 portsc)
-+{
-+	switch (portsc & PORT_PLS_MASK) {
-+	case XDEV_U0:
-+		return "U0";
-+	case XDEV_U1:
-+		return "U1";
-+	case XDEV_U2:
-+		return "U2";
-+	case XDEV_U3:
-+		return "U3";
-+	case XDEV_DISABLED:
-+		return "Disabled";
-+	case XDEV_RXDETECT:
-+		return "RxDetect";
-+	case XDEV_INACTIVE:
-+		return "Inactive";
-+	case XDEV_POLLING:
-+		return "Polling";
-+	case XDEV_RECOVERY:
-+		return "Recovery";
-+	case XDEV_HOT_RESET:
-+		return "Hot Reset";
-+	case XDEV_COMP_MODE:
-+		return "Compliance mode";
-+	case XDEV_TEST_MODE:
-+		return "Test mode";
-+	case XDEV_RESUME:
-+		return "Resume";
-+	default:
-+		break;
-+	}
-+
-+	return "Unknown";
-+}
-+
-+static inline const char *cdnsp_decode_portsc(char *str, size_t size,
-+					      u32 portsc)
-+{
-+	int ret;
-+
-+	ret = snprintf(str, size, "%s %s %s Link:%s PortSpeed:%d ",
-+		       portsc & PORT_POWER ? "Powered" : "Powered-off",
-+		       portsc & PORT_CONNECT ? "Connected" : "Not-connected",
-+		       portsc & PORT_PED ? "Enabled" : "Disabled",
-+		       cdnsp_portsc_link_state_string(portsc),
-+		       DEV_PORT_SPEED(portsc));
-+
-+	if (portsc & PORT_RESET)
-+		ret += snprintf(str + ret, size - ret, "In-Reset ");
-+
-+	ret += snprintf(str + ret, size - ret, "Change: ");
-+	if (portsc & PORT_CSC)
-+		ret += snprintf(str + ret, size - ret, "CSC ");
-+	if (portsc & PORT_WRC)
-+		ret += snprintf(str + ret, size - ret, "WRC ");
-+	if (portsc & PORT_RC)
-+		ret += snprintf(str + ret, size - ret, "PRC ");
-+	if (portsc & PORT_PLC)
-+		ret += snprintf(str + ret, size - ret, "PLC ");
-+	if (portsc & PORT_CEC)
-+		ret += snprintf(str + ret, size - ret, "CEC ");
-+	ret += snprintf(str + ret, size - ret, "Wake: ");
-+	if (portsc & PORT_WKCONN_E)
-+		ret += snprintf(str + ret, size - ret, "WCE ");
-+	if (portsc & PORT_WKDISC_E)
-+		ret += snprintf(str + ret, size - ret, "WDE ");
-+
-+	return str;
-+}
-+
-+static inline const char *cdnsp_ep_state_string(u8 state)
-+{
-+	switch (state) {
-+	case EP_STATE_DISABLED:
-+		return "disabled";
-+	case EP_STATE_RUNNING:
-+		return "running";
-+	case EP_STATE_HALTED:
-+		return "halted";
-+	case EP_STATE_STOPPED:
-+		return "stopped";
-+	case EP_STATE_ERROR:
-+		return "error";
-+	default:
-+		return "INVALID";
-+	}
-+}
-+
-+static inline const char *cdnsp_ep_type_string(u8 type)
-+{
-+	switch (type) {
-+	case ISOC_OUT_EP:
-+		return "Isoc OUT";
-+	case BULK_OUT_EP:
-+		return "Bulk OUT";
-+	case INT_OUT_EP:
-+		return "Int OUT";
-+	case CTRL_EP:
-+		return "Ctrl";
-+	case ISOC_IN_EP:
-+		return "Isoc IN";
-+	case BULK_IN_EP:
-+		return "Bulk IN";
-+	case INT_IN_EP:
-+		return "Int IN";
-+	default:
-+		return "INVALID";
-+	}
-+}
-+
-+static inline const char *cdnsp_decode_ep_context(char *str, size_t size,
-+						  u32 info, u32 info2,
-+						  u64 deq, u32 tx_info)
-+{
-+	u8 max_pstr, ep_state, interval, ep_type, burst, cerr, mult;
-+	bool lsa, hid;
-+	u16 maxp, avg;
-+	u32 esit;
-+	int ret;
-+
-+	esit = CTX_TO_MAX_ESIT_PAYLOAD_HI(info) << 16 |
-+	       CTX_TO_MAX_ESIT_PAYLOAD_LO(tx_info);
-+
-+	ep_state = info & EP_STATE_MASK;
-+	max_pstr = CTX_TO_EP_MAXPSTREAMS(info);
-+	interval = CTX_TO_EP_INTERVAL(info);
-+	mult = CTX_TO_EP_MULT(info) + 1;
-+	lsa = !!(info & EP_HAS_LSA);
-+
-+	cerr = (info2 & (3 << 1)) >> 1;
-+	ep_type = CTX_TO_EP_TYPE(info2);
-+	hid = !!(info2 & (1 << 7));
-+	burst = CTX_TO_MAX_BURST(info2);
-+	maxp = MAX_PACKET_DECODED(info2);
-+
-+	avg = EP_AVG_TRB_LENGTH(tx_info);
-+
-+	ret = snprintf(str, size, "State %s mult %d max P. Streams %d %s",
-+		       cdnsp_ep_state_string(ep_state), mult,
-+		       max_pstr, lsa ? "LSA " : "");
-+
-+	ret += snprintf(str + ret, size - ret,
-+			"interval %d us max ESIT payload %d CErr %d ",
-+			(1 << interval) * 125, esit, cerr);
-+
-+	ret += snprintf(str + ret, size - ret,
-+			"Type %s %sburst %d maxp %d deq %016llx ",
-+			cdnsp_ep_type_string(ep_type), hid ? "HID" : "",
-+			burst, maxp, deq);
-+
-+	ret += snprintf(str + ret, size - ret, "avg trb len %d", avg);
-+
-+	return str;
-+}
-+
-+#endif /*__LINUX_CDNSP_DEBUG*/
-diff --git a/drivers/usb/cdnsp/ep0.c b/drivers/usb/cdnsp/ep0.c
-index 407a7ad06ddb..22eb5786ed64 100644
---- a/drivers/usb/cdnsp/ep0.c
-+++ b/drivers/usb/cdnsp/ep0.c
-@@ -13,6 +13,7 @@
- #include <linux/list.h>
- 
- #include "gadget.h"
-+#include "trace.h"
- 
- static void cdnsp_ep0_stall(struct cdnsp_device *pdev)
- {
-@@ -24,11 +25,13 @@ static void cdnsp_ep0_stall(struct cdnsp_device *pdev)
- 	preq = next_request(&pep->pending_list);
- 
- 	if (pdev->three_stage_setup) {
-+		trace_cdnsp_ep0_data_stage("send stall");
- 		ret = cdnsp_halt_endpoint(pdev, pep, true);
- 
- 		if (preq)
- 			cdnsp_gadget_giveback(pep, preq, -ECONNRESET);
- 	} else {
-+		trace_cdnsp_ep0_status_stage("send stall");
- 		pep->ep_state |= EP0_HALTED_STATUS;
- 
- 		if (preq)
-@@ -43,6 +46,8 @@ static int cdnsp_ep0_delegate_req(struct cdnsp_device *pdev,
- {
- 	int ret;
- 
-+	trace_cdnsp_ep0_request("delagete");
-+
- 	spin_unlock(&pdev->lock);
- 	ret = pdev->gadget_driver->setup(&pdev->gadget, ctrl);
- 	spin_lock(&pdev->lock);
-@@ -61,11 +66,15 @@ static int cdnsp_ep0_set_config(struct cdnsp_device *pdev,
- 
- 	switch (state) {
- 	case USB_STATE_ADDRESS:
-+		trace_cdnsp_ep0_set_config("from Address state");
-+
- 		ret = cdnsp_ep0_delegate_req(pdev, ctrl);
- 		if (!cfg && !ret)
- 			usb_gadget_set_state(&pdev->gadget, USB_STATE_ADDRESS);
- 		break;
- 	case USB_STATE_CONFIGURED:
-+		trace_cdnsp_ep0_set_config("from Configured state");
-+
- 		ret = cdnsp_ep0_delegate_req(pdev, ctrl);
- 		if (!cfg && !ret)
- 			usb_gadget_set_state(&pdev->gadget, USB_STATE_ADDRESS);
-@@ -125,6 +134,7 @@ static int cdnsp_ep0_set_address(struct cdnsp_device *pdev,
- 
- int cdnsp_status_stage(struct cdnsp_device *pdev)
- {
-+	trace_cdnsp_ep0_status_stage("preparing");
- 	pdev->ep0_stage = CDNSP_STATUS_STAGE;
- 	pdev->ep0_preq.request.length = 0;
- 
-@@ -207,18 +217,21 @@ static int cdnsp_ep0_handle_feature_device(struct cdnsp_device *pdev,
- 	switch (le16_to_cpu(ctrl->wValue)) {
- 	case USB_DEVICE_REMOTE_WAKEUP:
- 		pdev->remote_wakeup_allowed = !!set;
-+		trace_cdnsp_remote_wakeup_allowed(set);
- 		break;
- 	case USB_DEVICE_U1_ENABLE:
- 		if (state != USB_STATE_CONFIGURED || speed < USB_SPEED_SUPER)
- 			return -EINVAL;
- 
- 		pdev->u1_allowed = !!set;
-+		trace_cdnsp_u1(set);
- 		break;
- 	case USB_DEVICE_U2_ENABLE:
- 		if (state != USB_STATE_CONFIGURED || speed < USB_SPEED_SUPER)
- 			return -EINVAL;
- 
- 		pdev->u2_allowed = !!set;
-+		trace_cdnsp_u2(set);
- 		break;
- 	case USB_DEVICE_LTM_ENABLE:
- 		ret = -EINVAL;
-@@ -411,6 +424,8 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- 	int ret = 0;
- 	__le16 len;
- 
-+	trace_cdnsp_ctrl_req(ctrl);
-+
- 	if (!pdev->gadget_driver)
- 		goto out;
- 
-@@ -421,8 +436,10 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- 	}
- 
- 	/* Restore the ep0 to Stopped/Running state. */
--	if (pdev->eps[0].ep_state & EP_HALTED)
-+	if (pdev->eps[0].ep_state & EP_HALTED) {
-+		trace_cdnsp_ep0_halted("Restore to normal state");
- 		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
-+	}
- 
- 	/*
- 	 * Finishing previous SETUP transfer by removing request from
-@@ -431,6 +448,7 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- 	if (!list_empty(&pdev->eps[0].pending_list)) {
- 		struct cdnsp_request	*req;
- 
-+		trace_cdnsp_ep0_request("Remove previous");
- 		req = next_request(&pdev->eps[0].pending_list);
- 		cdnsp_ep_dequeue(&pdev->eps[0], req);
- 	}
-@@ -452,8 +470,10 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- 	if (!len)
- 		pdev->ep0_stage = CDNSP_STATUS_STAGE;
- 
--	if (ret == USB_GADGET_DELAYED_STATUS)
-+	if (ret == USB_GADGET_DELAYED_STATUS) {
-+		trace_cdnsp_ep0_status_stage("delayed");
- 		return;
-+	}
- out:
- 	if (ret < 0)
- 		cdnsp_ep0_stall(pdev);
-diff --git a/drivers/usb/cdnsp/gadget.c b/drivers/usb/cdnsp/gadget.c
-index 8cba6a22c998..50f3cc514ca0 100644
---- a/drivers/usb/cdnsp/gadget.c
-+++ b/drivers/usb/cdnsp/gadget.c
-@@ -20,6 +20,7 @@
- #include <linux/dmi.h>
- 
- #include "gadget.h"
-+#include "trace.h"
- #include "core.h"
- #include "drd.h"
- 
-@@ -113,7 +114,9 @@ void cdnsp_set_link_state(struct cdnsp_device *pdev,
- 	if (pdev->active_port)
- 		port_num = pdev->active_port->port_num;
- 
-+	trace_cdnsp_handle_port_status(port_num, readl(port_regs));
- 	writel(temp, port_regs);
-+	trace_cdnsp_link_state_changed(port_num, readl(port_regs));
- }
- 
- static void cdnsp_disable_port(struct cdnsp_device *pdev,
-@@ -232,6 +235,8 @@ static int cdnsp_start(struct cdnsp_device *pdev)
- 	temp |= (CMD_R_S | CMD_DEVEN);
- 	writel(temp, &pdev->op_regs->command);
- 
-+	trace_cdnsp_init("Turn on controller");
-+
- 	/*
- 	 * Wait for the STS_HALT Status bit to be 0 to indicate the device is
- 	 * running.
-@@ -342,8 +347,10 @@ int cdnsp_ep_enqueue(struct cdnsp_ep *pep, struct cdnsp_request *preq)
- 	struct usb_request *request;
- 	int ret = 0;
- 
--	if (preq->epnum == 0 && !list_empty(&pep->pending_list))
-+	if (preq->epnum == 0 && !list_empty(&pep->pending_list)) {
-+		trace_cdnsp_request_enqueue_busy(preq);
- 		return -EBUSY;
-+	}
- 
- 	request = &preq->request;
- 	request->actual = 0;
-@@ -358,6 +365,8 @@ int cdnsp_ep_enqueue(struct cdnsp_ep *pep, struct cdnsp_request *preq)
- 
- 	list_add_tail(&preq->list, &pep->pending_list);
- 
-+	trace_cdnsp_request_enqueue(preq);
-+
- 	switch (usb_endpoint_type(pep->endpoint.desc)) {
- 	case USB_ENDPOINT_XFER_CONTROL:
- 		ret = cdnsp_queue_ctrl_tx(pdev, preq);
-@@ -378,6 +387,7 @@ int cdnsp_ep_enqueue(struct cdnsp_ep *pep, struct cdnsp_request *preq)
- 	list_del(&preq->list);
- 
- err:
-+	trace_cdnsp_request_enqueue_error(preq);
- 
- 	return ret;
- }
-@@ -413,6 +423,7 @@ int cdnsp_ep_dequeue(struct cdnsp_ep *pep, struct cdnsp_request *preq)
- 	int ret = 0;
- 
- 	pdev = pep->pdev;
-+	trace_cdnsp_request_dequeue(preq);
- 
- 	if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_RUNNING) {
- 		ret = cdnsp_cmd_stop_ep(pdev, pep);
-@@ -523,11 +534,14 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
- 	cmd_trb = pdev->cmd.command_trb;
- 	pdev->cmd.status = 0;
- 
-+	trace_cdnsp_cmd_wait_for_compl(pdev->cmd_ring, &cmd_trb->generic);
-+
- 	ret = readl_poll_timeout_atomic(&pdev->op_regs->cmd_ring, val,
- 					!CMD_RING_BUSY(val), 1,
- 					CDNSP_CMD_TIMEOUT);
- 	if (ret) {
- 		dev_err(pdev->dev, "ERR: Timeout while waiting for command\n");
-+		trace_cdnsp_cmd_timeout(pdev->cmd_ring, &cmd_trb->generic);
- 		pdev->cdnsp_state = CDNSP_STATE_DYING;
- 		return -ETIMEDOUT;
- 	}
-@@ -570,6 +584,8 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
- 			continue;
- 		}
- 
-+		trace_cdnsp_handle_command(pdev->cmd_ring, &cmd_trb->generic);
-+
- 		pdev->cmd.status = GET_COMP_CODE(le32_to_cpu(event->event_cmd.status));
- 		if (pdev->cmd.status == COMP_SUCCESS)
- 			return 0;
-@@ -586,6 +602,8 @@ int cdnsp_halt_endpoint(struct cdnsp_device *pdev,
- {
- 	int ret = 0;
- 
-+	trace_cdnsp_ep_halt(value ? "Set" : "Clear");
-+
- 	if (value) {
- 		ret = cdnsp_cmd_stop_ep(pdev, pep);
- 		if (ret < 0)
-@@ -606,6 +624,8 @@ int cdnsp_halt_endpoint(struct cdnsp_device *pdev,
- 		cdnsp_queue_reset_ep(pdev, pep->idx);
- 		cdnsp_ring_cmd_db(pdev);
- 		ret = cdnsp_wait_for_cmd_compl(pdev);
-+		trace_cdnsp_handle_cmd_reset_ep(pep->out_ctx);
-+
- 		if (ret)
- 			return ret;
- 
-@@ -662,6 +682,9 @@ static int cdnsp_update_eps_configuration(struct cdnsp_device *pdev,
- 	    (ep_sts != EP_STATE_DISABLED && ctrl_ctx->drop_flags))
- 		ret = cdnsp_configure_endpoint(pdev);
- 
-+	trace_cdnsp_configure_endpoint(cdnsp_get_slot_ctx(&pdev->out_ctx));
-+	trace_cdnsp_handle_cmd_config_ep(pep->out_ctx);
-+
- 	cdnsp_zero_in_ctx(pdev);
- 
- 	return ret;
-@@ -687,6 +710,7 @@ int cdnsp_reset_device(struct cdnsp_device *pdev)
- 	/* If device is not setup, there is no point in resetting it. */
- 	slot_ctx = cdnsp_get_slot_ctx(&pdev->out_ctx);
- 	slot_state = GET_SLOT_STATE(le32_to_cpu(slot_ctx->dev_state));
-+	trace_cdnsp_reset_device(slot_ctx);
- 
- 	if (slot_state <= SLOT_STATE_DEFAULT &&
- 	    pdev->eps[0].ep_state & EP_HALTED) {
-@@ -714,6 +738,8 @@ int cdnsp_reset_device(struct cdnsp_device *pdev)
- 	for (i = 1; i < 31; ++i)
- 		pdev->eps[i].ep_state |= EP_STOPPED;
- 
-+	trace_cdnsp_handle_cmd_reset_dev(slot_ctx);
-+
- 	if (ret)
- 		dev_err(pdev->dev, "Reset device failed with error code %d",
- 			ret);
-@@ -770,6 +796,8 @@ int cdnsp_alloc_streams(struct cdnsp_device *pdev, struct cdnsp_ep *pep)
- 	/* The stream context array size must be a power of two */
- 	num_stream_ctxs = roundup_pow_of_two(num_streams);
- 
-+	trace_cdnsp_stream_number(pep, num_stream_ctxs, num_streams);
-+
- 	ret = cdnsp_alloc_stream_info(pdev, pep, num_stream_ctxs, num_streams);
- 	if (ret)
- 		return ret;
-@@ -795,6 +823,8 @@ int cdnsp_disable_slot(struct cdnsp_device *pdev)
- 	pdev->slot_id = 0;
- 	pdev->active_port = NULL;
- 
-+	trace_cdnsp_handle_cmd_disable_slot(cdnsp_get_slot_ctx(&pdev->out_ctx));
-+
- 	memset(pdev->in_ctx.bytes, 0, 2112);
- 	memset(pdev->out_ctx.bytes, 0, 2112);
- 
-@@ -821,6 +851,8 @@ int cdnsp_enable_slot(struct cdnsp_device *pdev)
- 	if (!ret)
- 		pdev->slot_id = 1;
- 
-+	trace_cdnsp_handle_cmd_enable_slot(cdnsp_get_slot_ctx(&pdev->out_ctx));
-+
- 	return ret;
- }
- 
-@@ -835,8 +867,10 @@ int cdnsp_setup_device(struct cdnsp_device *pdev, enum cdnsp_setup_dev setup)
- 	int dev_state = 0;
- 	int ret = 0;
- 
--	if (!pdev->slot_id)
-+	if (!pdev->slot_id) {
-+		trace_cdnsp_slot_id("incorrect");
- 		return -EINVAL;
-+	}
- 
- 	if (!pdev->active_port->port_num)
- 		return -EINVAL;
-@@ -844,8 +878,10 @@ int cdnsp_setup_device(struct cdnsp_device *pdev, enum cdnsp_setup_dev setup)
- 	slot_ctx = cdnsp_get_slot_ctx(&pdev->out_ctx);
- 	dev_state = GET_SLOT_STATE(le32_to_cpu(slot_ctx->dev_state));
- 
--	if (setup == SETUP_CONTEXT_ONLY && dev_state == SLOT_STATE_DEFAULT)
-+	if (setup == SETUP_CONTEXT_ONLY && dev_state == SLOT_STATE_DEFAULT) {
-+		trace_cdnsp_slot_already_in_default(slot_ctx);
- 		goto out;
-+	}
- 
- 	slot_ctx = cdnsp_get_slot_ctx(&pdev->in_ctx);
- 	ctrl_ctx = cdnsp_get_input_control_ctx(&pdev->in_ctx);
-@@ -861,10 +897,14 @@ int cdnsp_setup_device(struct cdnsp_device *pdev, enum cdnsp_setup_dev setup)
- 	ctrl_ctx->add_flags = cpu_to_le32(SLOT_FLAG | EP0_FLAG);
- 	ctrl_ctx->drop_flags = 0;
- 
-+	trace_cdnsp_setup_device_slot(slot_ctx);
-+
- 	cdnsp_queue_address_device(pdev, pdev->in_ctx.dma, setup);
- 	cdnsp_ring_cmd_db(pdev);
- 	ret = cdnsp_wait_for_cmd_compl(pdev);
- 
-+	trace_cdnsp_handle_cmd_addr_dev(cdnsp_get_slot_ctx(&pdev->out_ctx));
-+
- 	/* Zero the input context control for later use. */
- 	ctrl_ctx->add_flags = 0;
- 	ctrl_ctx->drop_flags = 0;
-@@ -879,6 +919,8 @@ void cdnsp_set_usb2_hardware_lpm(struct cdnsp_device *pdev,
- 	if (pdev->active_port != &pdev->usb2_port || !pdev->gadget.lpm_capable)
- 		return;
- 
-+	trace_cdnsp_lpm(enable);
-+
- 	if (enable)
- 		writel(PORT_BESL(CDNSP_DEFAULT_BESL) | PORT_L1S_NYET | PORT_HLE,
- 		       &pdev->active_port->regs->portpmsc);
-@@ -958,6 +1000,7 @@ static int cdnsp_gadget_ep_enable(struct usb_ep *ep,
- 	pep->ep_state &= ~EP_STOPPED;
- 
- finish:
-+	trace_cdnsp_ep_enable_end(pep, 0);
- 	spin_unlock_irqrestore(&pdev->lock, flags);
- 
- 	return ret;
-@@ -1014,6 +1057,7 @@ static int cdnsp_gadget_ep_disable(struct usb_ep *ep)
- 	pep->ep_state |= EP_STOPPED;
- 
- finish:
-+	trace_cdnsp_ep_disable_end(pep, 0);
- 	spin_unlock_irqrestore(&pdev->lock, flags);
- 
- 	return ret;
-@@ -1032,6 +1076,8 @@ static struct usb_request *cdnsp_gadget_ep_alloc_request(struct usb_ep *ep,
- 	preq->epnum = pep->number;
- 	preq->pep = pep;
- 
-+	trace_cdnsp_alloc_request(preq);
-+
- 	return &preq->request;
- }
- 
-@@ -1040,6 +1086,7 @@ static void cdnsp_gadget_ep_free_request(struct usb_ep *ep,
- {
- 	struct cdnsp_request *preq = to_cdnsp_request(request);
- 
-+	trace_cdnsp_free_request(preq);
- 	kfree(preq);
- }
- 
-@@ -1108,6 +1155,7 @@ static int cdnsp_gadget_ep_set_halt(struct usb_ep *ep, int value)
- 	preq = next_request(&pep->pending_list);
- 	if (value) {
- 		if (preq) {
-+			trace_cdnsp_ep_busy_try_halt_again(pep, 0);
- 			ret = -EAGAIN;
- 			goto done;
- 		}
-@@ -1171,6 +1219,8 @@ void cdnsp_gadget_giveback(struct cdnsp_ep *pep,
- 	usb_gadget_unmap_request_by_dev(pdev->dev, &preq->request,
- 					preq->direction);
- 
-+	trace_cdnsp_request_giveback(preq);
-+
- 	if (preq != &pdev->ep0_preq) {
- 		spin_unlock(&pdev->lock);
- 		usb_gadget_giveback_request(&pep->endpoint, &preq->request);
-@@ -1251,6 +1301,7 @@ static int cdnsp_run(struct cdnsp_device *pdev,
- 	temp = readl(&pdev->ir_set->irq_pending);
- 	writel(IMAN_IE_SET(temp), &pdev->ir_set->irq_pending);
- 
-+	trace_cdnsp_init("Controller ready to work");
- 	return 0;
- err:
- 	cdnsp_halt(pdev);
-@@ -1404,6 +1455,8 @@ static void cdnsp_stop(struct cdnsp_device *pdev)
- 
- 	cdnsp_consume_all_events(pdev);
- 	cdnsp_clear_cmd_ring(pdev);
-+
-+	trace_cdnsp_exit("Controller stopped.");
- }
- 
- /*
-@@ -1471,6 +1524,8 @@ static int cdnsp_gadget_pullup(struct usb_gadget *gadget, int is_on)
- 	struct cdnsp_device *pdev = gadget_to_cdnsp(gadget);
- 	struct cdnsp *cdns = dev_get_drvdata(pdev->dev);
- 
-+	trace_cdnsp_pullup(is_on);
-+
- 	if (!is_on) {
- 		cdnsp_reset_device(pdev);
- 		cdnsp_clear_vbus(cdns);
 diff --git a/drivers/usb/cdnsp/gadget.h b/drivers/usb/cdnsp/gadget.h
-index 298f97be24ad..129a9363b39e 100644
---- a/drivers/usb/cdnsp/gadget.h
+new file mode 100644
+index 000000000000..edc37763a3b7
+--- /dev/null
 +++ b/drivers/usb/cdnsp/gadget.h
-@@ -1581,4 +1581,6 @@ static inline struct cdnsp_request *next_request(struct list_head *list)
- int cdnsp_remove_request(struct cdnsp_device *pdev, struct cdnsp_request *preq,
- 			 struct cdnsp_ep *pep);
- 
-+#include "debug.h"
-+
- #endif /* __LINUX_CDNSP_GADGET_H */
-diff --git a/drivers/usb/cdnsp/mem.c b/drivers/usb/cdnsp/mem.c
-index 4a72c7d833ab..7545eb47d9d5 100644
---- a/drivers/usb/cdnsp/mem.c
-+++ b/drivers/usb/cdnsp/mem.c
-@@ -16,6 +16,7 @@
- #include <linux/usb.h>
- 
- #include "gadget.h"
-+#include "trace.h"
- 
- static void cdnsp_free_stream_info(struct cdnsp_device *pdev,
- 				   struct cdnsp_ep *pep);
-@@ -282,6 +283,8 @@ void cdnsp_ring_free(struct cdnsp_device *pdev, struct cdnsp_ring *ring)
- 	if (!ring)
- 		return;
- 
-+	trace_cdnsp_ring_free(ring);
-+
- 	if (ring->first_seg) {
- 		if (ring->type == TYPE_STREAM)
- 			cdnsp_remove_stream_mapping(ring);
-@@ -407,7 +410,7 @@ static struct cdnsp_ring *cdnsp_ring_alloc(struct cdnsp_device *pdev,
- 			cpu_to_le32(LINK_TOGGLE);
- 
- 	cdnsp_initialize_ring_info(ring);
--
-+	trace_cdnsp_ring_alloc(ring);
- 	return ring;
- fail:
- 	kfree(ring);
-@@ -468,6 +471,7 @@ int cdnsp_ring_expansion(struct cdnsp_device *pdev,
- 	}
- 
- 	cdnsp_link_rings(pdev, ring, first, last, num_segs);
-+	trace_cdnsp_ring_expansion(ring);
- 
- 	return 0;
- }
-@@ -625,6 +629,8 @@ int cdnsp_alloc_stream_info(struct cdnsp_device *pdev,
- 		stream_info->stream_ctx_array[cur_stream].stream_ring =
- 			cpu_to_le64(addr);
- 
-+		trace_cdnsp_set_stream_ring(cur_ring);
-+
- 		ret = cdnsp_update_stream_mapping(cur_ring);
- 		if (ret) {
- 			cdnsp_ring_free(pdev, cur_ring);
-@@ -713,6 +719,7 @@ static int cdnsp_alloc_priv_device(struct cdnsp_device *pdev, gfp_t flags)
- 	pdev->dcbaa->dev_context_ptrs[1] = cpu_to_le64(pdev->out_ctx.dma);
- 	pdev->cmd.in_ctx = &pdev->in_ctx;
- 
-+	trace_cdnsp_alloc_priv_device(pdev);
- 	return 0;
- fail:
- 	dma_pool_free(pdev->device_pool, pdev->out_ctx.bytes,
-@@ -779,6 +786,8 @@ int cdnsp_setup_addressable_priv_dev(struct cdnsp_device *pdev)
- 	ep0_ctx->deq = cpu_to_le64(pdev->eps[0].ring->first_seg->dma |
- 				   pdev->eps[0].ring->cycle_state);
- 
-+	trace_cdnsp_setup_addressable_priv_device(pdev);
-+
- 	return 0;
- }
- 
-@@ -1141,6 +1150,8 @@ static void cdnsp_add_in_port(struct cdnsp_device *pdev,
- 	port_offset = CDNSP_EXT_PORT_OFF(temp);
- 	port_count = CDNSP_EXT_PORT_COUNT(temp);
- 
-+	trace_cdnsp_port_info(addr, port_offset, port_count, port->maj_rev);
-+
- 	port->port_num = port_offset;
- 	port->exist = 1;
- }
-@@ -1191,6 +1202,8 @@ static int cdnsp_setup_port_arrays(struct cdnsp_device *pdev, gfp_t flags)
- 		return -ENODEV;
- 	}
- 
-+	trace_cdnsp_init("Found USB 2.0 ports and  USB 3.0 ports.");
-+
- 	pdev->usb2_port.regs = (struct cdnsp_port_regs *)
- 			       (&pdev->op_regs->port_reg_base + NUM_PORT_REGS *
- 				(pdev->usb2_port.port_num - 1));
-diff --git a/drivers/usb/cdnsp/ring.c b/drivers/usb/cdnsp/ring.c
-index a6baf27ad778..e05bc13f9416 100644
---- a/drivers/usb/cdnsp/ring.c
-+++ b/drivers/usb/cdnsp/ring.c
-@@ -61,6 +61,7 @@
- #include <linux/slab.h>
- #include <linux/irq.h>
- 
-+#include "trace.h"
- #include "gadget.h"
- 
- /*
-@@ -153,7 +154,7 @@ void cdnsp_inc_deq(struct cdnsp_device *pdev, struct cdnsp_ring *ring)
- 	if (ring->type == TYPE_EVENT) {
- 		if (!cdnsp_last_trb_on_seg(ring->deq_seg, ring->dequeue)) {
- 			ring->dequeue++;
--			return;
-+			goto out;
- 		}
- 
- 		if (cdnsp_last_trb_on_ring(ring, ring->deq_seg, ring->dequeue))
-@@ -161,7 +162,7 @@ void cdnsp_inc_deq(struct cdnsp_device *pdev, struct cdnsp_ring *ring)
- 
- 		ring->deq_seg = ring->deq_seg->next;
- 		ring->dequeue = ring->deq_seg->trbs;
--		return;
-+		goto out;
- 	}
- 
- 	/* All other rings have link trbs. */
-@@ -173,6 +174,8 @@ void cdnsp_inc_deq(struct cdnsp_device *pdev, struct cdnsp_ring *ring)
- 		ring->deq_seg = ring->deq_seg->next;
- 		ring->dequeue = ring->deq_seg->trbs;
- 	}
-+out:
-+	trace_cdnsp_inc_deq(ring);
- }
- 
- /*
-@@ -227,6 +230,8 @@ static void cdnsp_inc_enq(struct cdnsp_device *pdev,
- 		ring->enqueue = ring->enq_seg->trbs;
- 		next = ring->enqueue;
- 	}
-+
-+	trace_cdnsp_inc_enq(ring);
- }
- 
- /*
-@@ -255,6 +260,7 @@ static inline int cdnsp_room_on_ring(struct cdnsp_device *pdev,
- /* Ring the doorbell after placing a command on the ring. */
- void cdnsp_ring_cmd_db(struct cdnsp_device *pdev)
- {
-+	trace_cdnsp_cmd_drbl("Ding Dong");
- 	writel(DB_VALUE_CMD, &pdev->dba->cmd_db);
- }
- 
-@@ -290,6 +296,8 @@ static int cdnsp_ring_ep_doorbell(struct cdnsp_device *pdev,
- 	else
- 		db_value = DB_VALUE(pep->idx, stream_id);
- 
-+	trace_cdnsp_tr_drbl(pep, stream_id);
-+
- 	writel(db_value, reg_addr);
- 
- 	return 1;
-@@ -472,6 +480,8 @@ static void cdnsp_find_new_dequeue_state(struct cdnsp_device *pdev,
- 
- 	state->new_deq_seg = new_seg;
- 	state->new_deq_ptr = new_deq;
-+
-+	trace_cdnsp_new_deq_state(state);
- }
- 
- /*
-@@ -532,6 +542,10 @@ struct cdnsp_segment *cdnsp_trb_in_td(struct cdnsp_device *pdev,
- 		/* If the end TRB isn't in this segment, this is set to 0 */
- 		end_trb_dma = cdnsp_trb_virt_to_dma(cur_seg, end_trb);
- 
-+		trace_cdnsp_looking_trb_in_td(suspect_dma, start_dma,
-+					      end_trb_dma, cur_seg->dma,
-+					      end_seg_dma);
-+
- 		if (end_trb_dma > 0) {
- 			/*
- 			 * The end TRB is in this segment, so suspect should
-@@ -582,6 +596,9 @@ void cdnsp_unmap_td_bounce_buffer(struct cdnsp_device *pdev,
- 
- 	preq = td->preq;
- 
-+	trace_cdnsp_bounce_unmap(td->preq, seg->bounce_len, seg->bounce_offs,
-+				 seg->bounce_dma, 0);
-+
- 	if (!preq->direction) {
- 		dma_unmap_single(pdev->dev, seg->bounce_dma,
- 				 ring->bounce_buf_len,  DMA_TO_DEVICE);
-@@ -619,6 +636,9 @@ static int cdnsp_cmd_set_deq(struct cdnsp_device *pdev,
- 	cdnsp_ring_cmd_db(pdev);
- 	ret = cdnsp_wait_for_cmd_compl(pdev);
- 
-+	trace_cdnsp_handle_cmd_set_deq(cdnsp_get_slot_ctx(&pdev->out_ctx));
-+	trace_cdnsp_handle_cmd_set_deq_ep(pep->out_ctx);
-+
- 	/*
- 	 * Update the ring's dequeue segment and dequeue pointer
- 	 * to reflect the new position.
-@@ -670,6 +690,9 @@ int cdnsp_remove_request(struct cdnsp_device *pdev,
- 
- 	memset(&deq_state, 0, sizeof(deq_state));
- 
-+	trace_cdnsp_remove_request(pep->out_ctx);
-+	trace_cdnsp_remove_request_td(preq);
-+
- 	cur_td = &preq->td;
- 	ep_ring = cdnsp_request_to_transfer_ring(pdev, preq);
- 
-@@ -779,6 +802,8 @@ static void cdnsp_handle_port_status(struct cdnsp_device *pdev,
- 	writel(cdnsp_port_state_to_neutral(portsc) |
- 	       (portsc & PORT_CHANGE_BITS), &port_regs->portsc);
- 
-+	trace_cdnsp_handle_port_status(pdev->active_port->port_num, portsc);
-+
- 	pdev->gadget.speed = cdnsp_port_speed(portsc);
- 	link_state = portsc & PORT_PLS_MASK;
- 
-@@ -937,8 +962,10 @@ static int cdnsp_giveback_first_trb(struct cdnsp_device *pdev,
- 		start_trb->field[3] &= cpu_to_le32(~TRB_CYCLE);
- 
- 	if ((pep->ep_state & EP_HAS_STREAMS) &&
--	    !pep->stream_info.first_prime_det)
-+	    !pep->stream_info.first_prime_det) {
-+		trace_cdnsp_wait_for_prime(pep, stream_id);
- 		return 0;
-+	}
- 
- 	return cdnsp_ring_ep_doorbell(pdev, pep, stream_id);
- }
-@@ -1213,8 +1240,10 @@ static int cdnsp_handle_tx_event(struct cdnsp_device *pdev,
- 	if (invalidate || !pdev->gadget.connected)
- 		goto cleanup;
- 
--	if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_DISABLED)
-+	if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_DISABLED) {
-+		trace_cdnsp_ep_disabled(pep->out_ctx);
- 		goto err_out;
-+	}
- 
- 	/* Some transfer events don't always point to a trb*/
- 	if (!ep_ring) {
-@@ -1261,8 +1290,23 @@ static int cdnsp_handle_tx_event(struct cdnsp_device *pdev,
- 		 * list.
- 		 */
- 		if (list_empty(&ep_ring->td_list)) {
--			if (pep->skip)
-+			/*
-+			 * Don't print warnings if it's due to a stopped
-+			 * endpoint generating an extra completion event, or
-+			 * a event for the last TRB of a short TD we already
-+			 * got a short event for.
-+			 * The short TD is already removed from the TD list.
-+			 */
-+			if (!(trb_comp_code == COMP_STOPPED ||
-+			      trb_comp_code == COMP_STOPPED_LENGTH_INVALID ||
-+			      ep_ring->last_td_was_short))
-+				trace_cdnsp_trb_without_td(ep_ring,
-+					(struct cdnsp_generic_trb *)event);
-+
-+			if (pep->skip) {
- 				pep->skip = false;
-+				trace_cdnsp_ep_list_empty_with_skip(pep, 0);
-+			}
- 
- 			goto cleanup;
- 		}
-@@ -1319,6 +1363,9 @@ static int cdnsp_handle_tx_event(struct cdnsp_device *pdev,
- 		ep_trb = &ep_seg->trbs[(ep_trb_dma - ep_seg->dma)
- 				       / sizeof(*ep_trb)];
- 
-+		trace_cdnsp_handle_transfer(ep_ring,
-+					    (struct cdnsp_generic_trb *)ep_trb);
-+
- 		if (cdnsp_trb_is_noop(ep_trb))
- 			goto cleanup;
- 
-@@ -1384,6 +1431,8 @@ int cdnsp_handle_event(struct cdnsp_device *pdev)
- 	if (cycle_bit != pdev->event_ring->cycle_state)
- 		return 0;
- 
-+	trace_cdnsp_handle_event(pdev->event_ring, &event->generic);
-+
- 	/*
- 	 * Barrier between reading the TRB_CYCLE (valid) flag above and any
- 	 * reads of the event's flags/data below.
-@@ -1539,6 +1588,7 @@ static void cdnsp_queue_trb(struct cdnsp_device *pdev, struct cdnsp_ring *ring,
- 	trb->field[2] = cpu_to_le32(field3);
- 	trb->field[3] = cpu_to_le32(field4);
- 
-+	trace_cdnsp_queue_trb(ring, trb);
- 	cdnsp_inc_enq(pdev, ring, more_trbs_coming);
- }
- 
-@@ -1569,6 +1619,8 @@ static int cdnsp_prepare_ring(struct cdnsp_device *pdev,
- 		if (cdnsp_room_on_ring(pdev, ep_ring, num_trbs))
- 			break;
- 
-+		trace_cdnsp_no_room_on_ring("try ring expansion");
-+
- 		num_trbs_needed = num_trbs - ep_ring->num_trbs_free;
- 		if (cdnsp_ring_expansion(pdev, ep_ring, num_trbs_needed,
- 					 mem_flags)) {
-@@ -1732,6 +1784,8 @@ static int cdnsp_align_td(struct cdnsp_device *pdev,
- 	/* Is the last nornal TRB alignable by splitting it. */
- 	if (*trb_buff_len > unalign) {
- 		*trb_buff_len -= unalign;
-+		trace_cdnsp_bounce_align_td_split(preq, *trb_buff_len,
-+						  enqd_len, 0, unalign);
- 		return 0;
- 	}
- 
-@@ -1768,6 +1822,9 @@ static int cdnsp_align_td(struct cdnsp_device *pdev,
- 	seg->bounce_len = new_buff_len;
- 	seg->bounce_offs = enqd_len;
- 
-+	trace_cdnsp_bounce_map(preq, new_buff_len, enqd_len, seg->bounce_dma,
-+			       unalign);
-+
- 	return 1;
- }
- 
-@@ -2010,13 +2067,17 @@ int cdnsp_cmd_stop_ep(struct cdnsp_device *pdev, struct cdnsp_ep *pep)
- 	u32 ep_state = GET_EP_CTX_STATE(pep->out_ctx);
- 	int ret = 0;
- 
--	if (ep_state == EP_STATE_STOPPED || ep_state == EP_STATE_DISABLED)
-+	if (ep_state == EP_STATE_STOPPED || ep_state == EP_STATE_DISABLED) {
-+		trace_cdnsp_ep_stopped_or_disabled(pep->out_ctx);
- 		goto ep_stopped;
-+	}
- 
- 	cdnsp_queue_stop_endpoint(pdev, pep->idx);
- 	cdnsp_ring_cmd_db(pdev);
- 	ret = cdnsp_wait_for_cmd_compl(pdev);
- 
-+	trace_cdnsp_handle_cmd_stop_ep(pep->out_ctx);
-+
- ep_stopped:
- 	pep->ep_state |= EP_STOPPED;
- 	return ret;
-@@ -2030,6 +2091,8 @@ int cdnsp_cmd_flush_ep(struct cdnsp_device *pdev, struct cdnsp_ep *pep)
- 	cdnsp_ring_cmd_db(pdev);
- 	ret = cdnsp_wait_for_cmd_compl(pdev);
- 
-+	trace_cdnsp_handle_cmd_flush_ep(pep->out_ctx);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/usb/cdnsp/trace.c b/drivers/usb/cdnsp/trace.c
-new file mode 100644
-index 000000000000..1f0b102f11a8
---- /dev/null
-+++ b/drivers/usb/cdnsp/trace.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cadence CDNSP DRD Driver.
-+ *
-+ * Copyright (C) 2020 Cadence.
-+ *
-+ * Author: Pawel Laszczak <pawell@cadence.com>
-+ *
-+ */
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-diff --git a/drivers/usb/cdnsp/trace.h b/drivers/usb/cdnsp/trace.h
-new file mode 100644
-index 000000000000..4f6fba944fd5
---- /dev/null
-+++ b/drivers/usb/cdnsp/trace.h
-@@ -0,0 +1,839 @@
+@@ -0,0 +1,1446 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * Cadence CDNSP DRD Driver.
-+ * Trace support header file
 + *
 + * Copyright (C) 2020 Cadence.
 + *
 + * Author: Pawel Laszczak <pawell@cadence.com>
 + *
++ * Code based on Linux XHCI driver.
++ * Origin: Copyright (C) 2008 Intel Corp.
 + */
++#ifndef __LINUX_CDNSP_GADGET_H
++#define __LINUX_CDNSP_GADGET_H
 +
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM cdnsp-dev
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/usb/gadget.h>
++#include <linux/irq.h>
++
++/* Max number slots - only 1 is allowed. */
++#define CDNSP_DEV_MAX_SLOTS	1
++
++#define CDNSP_EP0_SETUP_SIZE	512
++
++/*16 for in and 16 for out. */
++#define CDNSP_ENDPOINTS_NUM	32
++
++/* Best Effort Service Latency. */
++#define CDNSP_DEFAULT_BESL	0
++
++/* Device Controller command default timeout value in us */
++#define CDNSP_CMD_TIMEOUT	(15 * 1000)
++
++/* Up to 16 ms to halt an device controller */
++#define CDNSP_MAX_HALT_USEC	(16 * 1000)
 +
 +/*
-+ * The TRACE_SYSTEM_VAR defaults to TRACE_SYSTEM, but must be a
-+ * legitimate C variable. It is not exported to user space.
++ * Controller register interface.
 + */
-+#undef TRACE_SYSTEM_VAR
-+#define TRACE_SYSTEM_VAR cdnsp_dev
 +
-+#if !defined(__CDNSP_DEV_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define __CDNSP_DEV_TRACE_H
++/**
++ * struct cdnsp_cap_regs - CDNSP Registers.
++ * @hc_capbase:	Length of the capabilities register and controller
++ *              version number
++ * @hcs_params1: HCSPARAMS1 - Structural Parameters 1
++ * @hcs_params2: HCSPARAMS2 - Structural Parameters 2
++ * @hcs_params3: HCSPARAMS3 - Structural Parameters 3
++ * @hcc_params: HCCPARAMS - Capability Parameters
++ * @db_off: DBOFF - Doorbell array offset
++ * @run_regs_off: RTSOFF - Runtime register space offset
++ * @hcc_params2: HCCPARAMS2 Capability Parameters 2,
++ */
++struct cdnsp_cap_regs {
++	__le32 hc_capbase;
++	__le32 hcs_params1;
++	__le32 hcs_params2;
++	__le32 hcs_params3;
++	__le32 hcc_params;
++	__le32 db_off;
++	__le32 run_regs_off;
++	__le32 hcc_params2;
++	/* Reserved up to (CAPLENGTH - 0x1C) */
++};
 +
-+#include <linux/tracepoint.h>
-+#include "gadget.h"
++/* hc_capbase bitmasks. */
++/* bits 7:0 - how long is the Capabilities register. */
++#define HC_LENGTH(p)		(((p) >> 00) & GENMASK(7, 0))
++/* bits 31:16	*/
++#define HC_VERSION(p)		(((p) >> 16) & GENMASK(15, 1))
++
++/* HCSPARAMS1 - hcs_params1 - bitmasks */
++/* bits 0:7, Max Device Endpoints */
++#define HCS_ENDPOINTS_MASK	GENMASK(7, 0)
++#define HCS_ENDPOINTS(p)	(((p) & HCS_ENDPOINTS_MASK) >> 0)
++
++/* HCCPARAMS offset from PCI base address */
++#define HCC_PARAMS_OFFSET	0x10
++
++/* HCCPARAMS - hcc_params - bitmasks */
++/* true: device controller can use 64-bit address pointers. */
++#define HCC_64BIT_ADDR(p)	((p) & BIT(0))
++/* true: device controller uses 64-byte Device Context structures. */
++#define HCC_64BYTE_CONTEXT(p)	((p) & BIT(2))
++/* Max size for Primary Stream Arrays - 2^(n+1), where n is bits 12:15. */
++#define HCC_MAX_PSA(p)		((((p) >> 12) & 0xf) + 1)
++/* Extended Capabilities pointer from PCI base. */
++#define HCC_EXT_CAPS(p)		(((p) & GENMASK(31, 16)) >> 16)
++
++#define CTX_SIZE(_hcc)		(HCC_64BYTE_CONTEXT(_hcc) ? 64 : 32)
++
++/* db_off bitmask - bits 0:1 reserved. */
++#define DBOFF_MASK	GENMASK(31, 2)
++
++/* run_regs_off bitmask - bits 0:4 reserved. */
++#define RTSOFF_MASK	GENMASK(31, 5)
++
++/**
++ * struct cdnsp_op_regs - Device Controller Operational Registers.
++ * @command: USBCMD - Controller command register.
++ * @status: USBSTS - Controller status register.
++ * @page_size: This indicates the page size that the device controller supports.
++ *             If bit n is set, the controller supports a page size of 2^(n+12),
++ *             up to a 128MB page size. 4K is the minimum page size.
++ * @dnctrl: DNCTRL - Device notification control register.
++ * @cmd_ring: CRP - 64-bit Command Ring Pointer.
++ * @dcbaa_ptr: DCBAAP - 64-bit Device Context Base Address Array Pointer.
++ * @config_reg:	CONFIG - Configure Register
++ * @port_reg_base: PORTSCn - base address for Port Status and Control
++ *                 Each port has a Port Status and Control register,
++ *                 followed by a Port Power Management Status and Control
++ *                 register, a Port Link Info register, and a reserved
++ *                 register.
++ */
++struct cdnsp_op_regs {
++	__le32 command;
++	__le32 status;
++	__le32 page_size;
++	__le32 reserved1;
++	__le32 reserved2;
++	__le32 dnctrl;
++	__le64 cmd_ring;
++	/* rsvd: offset 0x20-2F. */
++	__le32 reserved3[4];
++	__le64 dcbaa_ptr;
++	__le32 config_reg;
++	/* rsvd: offset 0x3C-3FF. */
++	__le32 reserved4[241];
++	/* port 1 registers, which serve as a base address for other ports. */
++	__le32 port_reg_base;
++};
++
++/* Number of registers per port. */
++#define NUM_PORT_REGS	4
++
++/**
++ * struct cdnsp_port_regs - Port Registers.
++ * @portsc: PORTSC - Port Status and Control Register.
++ * @portpmsc: PORTPMSC - Port Power Managements Status and Control Register.
++ * @portli: PORTLI - Port Link Info register.
++ */
++struct cdnsp_port_regs {
++	__le32 portsc;
++	__le32 portpmsc;
++	__le32 portli;
++	__le32 reserved;
++};
 +
 +/*
-+ * There is limitation for single buffer size in TRACEPOINT subsystem.
-+ * By default TRACE_BUF_SIZE is 1024, so no all data will be logged.
-+ * To show more data this must be increased. In most cases the default
-+ * value is sufficient.
++ * These bits are Read Only (RO) and should be saved and written to the
++ * registers: 0 (connect status) and  10:13 (port speed).
++ * These bits are also sticky - meaning they're in the AUX well and they aren't
++ * changed by a hot and warm.
 + */
-+#define CDNSP_MSG_MAX 500
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_ep,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id),
-+	TP_STRUCT__entry(
-+		__string(name, pep->name)
-+		__field(unsigned int, state)
-+		__field(u32, stream_id)
-+		__field(u8, enabled)
-+		__field(unsigned int, num_streams)
-+		__field(int, td_count)
-+		__field(u8, first_prime_det)
-+		__field(u8, drbls_count)
-+	),
-+	TP_fast_assign(
-+		__assign_str(name, pep->name);
-+		__entry->state = pep->ep_state;
-+		__entry->stream_id = stream_id;
-+		__entry->enabled = pep->ep_state & EP_HAS_STREAMS;
-+		__entry->num_streams = pep->stream_info.num_streams;
-+		__entry->td_count = pep->stream_info.td_count;
-+		__entry->first_prime_det = pep->stream_info.first_prime_det;
-+		__entry->drbls_count = pep->stream_info.drbls_count;
-+	),
-+	TP_printk("%s: SID: %08x ep state: %x stream: enabled: %d num  %d "
-+		  "tds %d, first prime: %d drbls %d",
-+		  __get_str(name), __entry->state, __entry->stream_id,
-+		  __entry->enabled, __entry->num_streams, __entry->td_count,
-+		  __entry->first_prime_det, __entry->drbls_count)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_tr_drbl,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_wait_for_prime,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_ep_list_empty_with_skip,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_ep_enable_end,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_ep_disable_end,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep, cdnsp_ep_busy_try_halt_again,
-+	TP_PROTO(struct cdnsp_ep *pep, u32 stream_id),
-+	TP_ARGS(pep, stream_id)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_enable_disable,
-+	TP_PROTO(int set),
-+	TP_ARGS(set),
-+	TP_STRUCT__entry(
-+		__field(int, set)
-+	),
-+	TP_fast_assign(
-+		__entry->set = set;
-+	),
-+	TP_printk("%s", __entry->set ? "enabled" : "disabled")
-+);
-+
-+DEFINE_EVENT(cdnsp_log_enable_disable, cdnsp_pullup,
-+	TP_PROTO(int set),
-+	TP_ARGS(set)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_enable_disable, cdnsp_u1,
-+	TP_PROTO(int set),
-+	TP_ARGS(set)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_enable_disable, cdnsp_u2,
-+	TP_PROTO(int set),
-+	TP_ARGS(set)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_enable_disable, cdnsp_lpm,
-+	TP_PROTO(int set),
-+	TP_ARGS(set)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_enable_disable, cdnsp_remote_wakeup_allowed,
-+	TP_PROTO(int set),
-+	TP_ARGS(set)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_simple,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg),
-+	TP_STRUCT__entry(
-+		__string(text, msg)
-+	),
-+	TP_fast_assign(
-+		__assign_str(text, msg)
-+	),
-+	TP_printk("%s", __get_str(text))
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_exit,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_init,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_slot_id,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_cmd_drbl,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_no_room_on_ring,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_status_stage,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_data_stage,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_request,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_set_config,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_halted,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep_halt,
-+	TP_PROTO(char *msg),
-+	TP_ARGS(msg)
-+);
-+
-+TRACE_EVENT(cdnsp_looking_trb_in_td,
-+	TP_PROTO(dma_addr_t suspect, dma_addr_t trb_start, dma_addr_t trb_end,
-+		 dma_addr_t curr_seg, dma_addr_t end_seg),
-+	TP_ARGS(suspect, trb_start, trb_end, curr_seg, end_seg),
-+	TP_STRUCT__entry(
-+		__field(dma_addr_t, suspect)
-+		__field(dma_addr_t, trb_start)
-+		__field(dma_addr_t, trb_end)
-+		__field(dma_addr_t, curr_seg)
-+		__field(dma_addr_t, end_seg)
-+	),
-+	TP_fast_assign(
-+		__entry->suspect = suspect;
-+		__entry->trb_start = trb_start;
-+		__entry->trb_end = trb_end;
-+		__entry->curr_seg = curr_seg;
-+		__entry->end_seg = end_seg;
-+	),
-+	TP_printk("DMA: suspect event: %pad, trb-start: %pad, trb-end %pad, "
-+		  "seg-start %pad, seg-end %pad",
-+		  &__entry->suspect, &__entry->trb_start, &__entry->trb_end,
-+		  &__entry->curr_seg, &__entry->end_seg)
-+);
-+
-+TRACE_EVENT(cdnsp_port_info,
-+	TP_PROTO(__le32 __iomem *addr, u32 offset, u32 count, u32 rev),
-+	TP_ARGS(addr, offset, count, rev),
-+	TP_STRUCT__entry(
-+		__field(__le32 __iomem *, addr)
-+		__field(u32, offset)
-+		__field(u32, count)
-+		__field(u32, rev)
-+	),
-+	TP_fast_assign(
-+		__entry->addr = addr;
-+		__entry->offset = offset;
-+		__entry->count = count;
-+		__entry->rev = rev;
-+	),
-+	TP_printk("Ext Cap %p, port offset = %u, count = %u, rev = 0x%x",
-+		  __entry->addr, __entry->offset, __entry->count, __entry->rev)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_deq_state,
-+	TP_PROTO(struct cdnsp_dequeue_state *state),
-+	TP_ARGS(state),
-+	TP_STRUCT__entry(
-+		__field(int, new_cycle_state)
-+		__field(struct cdnsp_segment *, new_deq_seg)
-+		__field(dma_addr_t, deq_seg_dma)
-+		__field(union cdnsp_trb	*, new_deq_ptr)
-+		__field(dma_addr_t, deq_ptr_dma)
-+	),
-+	TP_fast_assign(
-+		__entry->new_cycle_state = state->new_cycle_state;
-+		__entry->new_deq_seg = state->new_deq_seg;
-+		__entry->deq_seg_dma = state->new_deq_seg->dma;
-+		__entry->new_deq_ptr = state->new_deq_ptr,
-+		__entry->deq_ptr_dma = cdnsp_trb_virt_to_dma(state->new_deq_seg,
-+							     state->new_deq_ptr);
-+	),
-+	TP_printk("New cycle state = 0x%x, New dequeue segment = %p (0x%pad dma), "
-+		  "New dequeue pointer = %p (0x%pad dma)",
-+		  __entry->new_cycle_state, __entry->new_deq_seg,
-+		  &__entry->deq_seg_dma, __entry->new_deq_ptr,
-+		  &__entry->deq_ptr_dma
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_deq_state, cdnsp_new_deq_state,
-+	TP_PROTO(struct cdnsp_dequeue_state *state),
-+	TP_ARGS(state)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_ctrl,
-+	TP_PROTO(struct usb_ctrlrequest *ctrl),
-+	TP_ARGS(ctrl),
-+	TP_STRUCT__entry(
-+		__field(u8, bRequestType)
-+		__field(u8, bRequest)
-+		__field(u16, wValue)
-+		__field(u16, wIndex)
-+		__field(u16, wLength)
-+		__dynamic_array(char, str, CDNSP_MSG_MAX)
-+	),
-+	TP_fast_assign(
-+		__entry->bRequestType = ctrl->bRequestType;
-+		__entry->bRequest = ctrl->bRequest;
-+		__entry->wValue = le16_to_cpu(ctrl->wValue);
-+		__entry->wIndex = le16_to_cpu(ctrl->wIndex);
-+		__entry->wLength = le16_to_cpu(ctrl->wLength);
-+	),
-+	TP_printk("%s", usb_decode_ctrl(__get_str(str), CDNSP_MSG_MAX,
-+					__entry->bRequestType,
-+					__entry->bRequest, __entry->wValue,
-+					__entry->wIndex, __entry->wLength)
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ctrl, cdnsp_ctrl_req,
-+	TP_PROTO(struct usb_ctrlrequest *ctrl),
-+	TP_ARGS(ctrl)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_bounce,
-+	TP_PROTO(struct cdnsp_request *preq, u32 new_buf_len, u32 offset,
-+		 dma_addr_t dma, unsigned int unalign),
-+	TP_ARGS(preq, new_buf_len, offset, dma, unalign),
-+	TP_STRUCT__entry(
-+		__string(name, preq->pep->name)
-+		__field(u32, new_buf_len)
-+		__field(u32, offset)
-+		__field(dma_addr_t, dma)
-+		__field(unsigned int, unalign)
-+	),
-+	TP_fast_assign(
-+		__assign_str(name, preq->pep->name);
-+		__entry->new_buf_len = new_buf_len;
-+		__entry->offset = offset;
-+		__entry->dma = dma;
-+		__entry->unalign = unalign;
-+	),
-+	TP_printk("%s buf len %d, offset %d, dma %pad, unalign %d",
-+		  __get_str(name), __entry->new_buf_len,
-+		  __entry->offset, &__entry->dma, __entry->unalign
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_bounce, cdnsp_bounce_align_td_split,
-+	TP_PROTO(struct cdnsp_request *preq, u32 new_buf_len, u32 offset,
-+		 dma_addr_t dma, unsigned int unalign),
-+	TP_ARGS(preq, new_buf_len, offset, dma, unalign)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_bounce, cdnsp_bounce_map,
-+	TP_PROTO(struct cdnsp_request *preq, u32 new_buf_len, u32 offset,
-+		 dma_addr_t dma, unsigned int unalign),
-+	TP_ARGS(preq, new_buf_len, offset, dma, unalign)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_bounce, cdnsp_bounce_unmap,
-+	TP_PROTO(struct cdnsp_request *preq, u32 new_buf_len, u32 offset,
-+		 dma_addr_t dma, unsigned int unalign),
-+	TP_ARGS(preq, new_buf_len, offset, dma, unalign)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_trb,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb),
-+	TP_STRUCT__entry(
-+		__field(u32, type)
-+		__field(u32, field0)
-+		__field(u32, field1)
-+		__field(u32, field2)
-+		__field(u32, field3)
-+		__field(union cdnsp_trb *, trb)
-+		__field(dma_addr_t, trb_dma)
-+		__dynamic_array(char, str, CDNSP_MSG_MAX)
-+	),
-+	TP_fast_assign(
-+		__entry->type = ring->type;
-+		__entry->field0 = le32_to_cpu(trb->field[0]);
-+		__entry->field1 = le32_to_cpu(trb->field[1]);
-+		__entry->field2 = le32_to_cpu(trb->field[2]);
-+		__entry->field3 = le32_to_cpu(trb->field[3]);
-+		__entry->trb = (union cdnsp_trb *)trb;
-+		__entry->trb_dma = cdnsp_trb_virt_to_dma(ring->deq_seg,
-+							 (union cdnsp_trb *)trb);
-+
-+	),
-+	TP_printk("%s: %s trb: %p(%pad)", cdnsp_ring_type_string(__entry->type),
-+		  cdnsp_decode_trb(__get_str(str), CDNSP_MSG_MAX,
-+				   __entry->field0, __entry->field1,
-+				   __entry->field2, __entry->field3),
-+				   __entry->trb, &__entry->trb_dma
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_handle_event,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_trb_without_td,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_handle_command,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_handle_transfer,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_queue_trb,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_cmd_wait_for_compl,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_cmd_timeout,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_trb, cdnsp_defered_event,
-+	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
-+	TP_ARGS(ring, trb)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_pdev,
-+	TP_PROTO(struct cdnsp_device *pdev),
-+	TP_ARGS(pdev),
-+	TP_STRUCT__entry(
-+		__field(struct cdnsp_device *, pdev)
-+		__field(struct usb_gadget *, gadget)
-+		__field(dma_addr_t, out_ctx)
-+		__field(dma_addr_t, in_ctx)
-+		__field(u8, port_num)
-+	),
-+	TP_fast_assign(
-+		__entry->pdev = pdev;
-+		__entry->gadget = &pdev->gadget;
-+		__entry->in_ctx = pdev->in_ctx.dma;
-+		__entry->out_ctx = pdev->out_ctx.dma;
-+		__entry->port_num = pdev->active_port ?
-+				pdev->active_port->port_num : 0xFF;
-+	),
-+	TP_printk("pdev %p gadget %p ctx %pad | %pad, port %d ",
-+		  __entry->pdev, __entry->gadget, &__entry->in_ctx,
-+		  &__entry->out_ctx, __entry->port_num
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_pdev, cdnsp_alloc_priv_device,
-+	TP_PROTO(struct cdnsp_device *vdev),
-+	TP_ARGS(vdev)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_pdev, cdnsp_free_priv_device,
-+	TP_PROTO(struct cdnsp_device *vdev),
-+	TP_ARGS(vdev)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_pdev, cdnsp_setup_device,
-+	TP_PROTO(struct cdnsp_device *vdev),
-+	TP_ARGS(vdev)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_pdev, cdnsp_setup_addressable_priv_device,
-+	TP_PROTO(struct cdnsp_device *vdev),
-+	TP_ARGS(vdev)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_request,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req),
-+	TP_STRUCT__entry(
-+		__string(name, req->pep->name)
-+		__field(struct usb_request *, request)
-+		__field(struct cdnsp_request *, preq)
-+		__field(void *, buf)
-+		__field(unsigned int, actual)
-+		__field(unsigned int, length)
-+		__field(int, status)
-+		__field(dma_addr_t, dma)
-+		__field(unsigned int, stream_id)
-+		__field(unsigned int, zero)
-+		__field(unsigned int, short_not_ok)
-+		__field(unsigned int, no_interrupt)
-+		__field(struct scatterlist*, sg)
-+		__field(unsigned int, num_sgs)
-+		__field(unsigned int, num_mapped_sgs)
-+
-+	),
-+	TP_fast_assign(
-+		__assign_str(name, req->pep->name);
-+		__entry->request = &req->request;
-+		__entry->preq = req;
-+		__entry->buf = req->request.buf;
-+		__entry->actual = req->request.actual;
-+		__entry->length = req->request.length;
-+		__entry->status = req->request.status;
-+		__entry->dma = req->request.dma;
-+		__entry->stream_id = req->request.stream_id;
-+		__entry->zero = req->request.zero;
-+		__entry->short_not_ok = req->request.short_not_ok;
-+		__entry->no_interrupt = req->request.no_interrupt;
-+		__entry->sg = req->request.sg;
-+		__entry->num_sgs = req->request.num_sgs;
-+		__entry->num_mapped_sgs = req->request.num_mapped_sgs;
-+	),
-+	TP_printk("%s; req U:%p/P:%p, req buf %p, length %u/%u, status %d, "
-+		  "buf dma (%pad), SID %u, %s%s%s, sg %p, num_sg %d,"
-+		  " num_m_sg %d",
-+		  __get_str(name), __entry->request, __entry->preq,
-+		  __entry->buf, __entry->actual, __entry->length,
-+		  __entry->status, &__entry->dma,
-+		  __entry->stream_id, __entry->zero ? "Z" : "z",
-+		  __entry->short_not_ok ? "S" : "s",
-+		  __entry->no_interrupt ? "I" : "i",
-+		  __entry->sg, __entry->num_sgs, __entry->num_mapped_sgs
-+		)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_request_enqueue,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_request_enqueue_busy,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_request_enqueue_error,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_request_dequeue,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_request_giveback,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_alloc_request,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_request, cdnsp_free_request,
-+	TP_PROTO(struct cdnsp_request *req),
-+	TP_ARGS(req)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_ep_ctx,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx),
-+	TP_STRUCT__entry(
-+		__field(u32, info)
-+		__field(u32, info2)
-+		__field(u64, deq)
-+		__field(u32, tx_info)
-+		__dynamic_array(char, str, CDNSP_MSG_MAX)
-+	),
-+	TP_fast_assign(
-+		__entry->info = le32_to_cpu(ctx->ep_info);
-+		__entry->info2 = le32_to_cpu(ctx->ep_info2);
-+		__entry->deq = le64_to_cpu(ctx->deq);
-+		__entry->tx_info = le32_to_cpu(ctx->tx_info);
-+	),
-+	TP_printk("%s", cdnsp_decode_ep_context(__get_str(str), CDNSP_MSG_MAX,
-+						__entry->info, __entry->info2,
-+						__entry->deq, __entry->tx_info)
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_ep_disabled,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_ep_stopped_or_disabled,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_remove_request,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_stop_ep,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_flush_ep,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_set_deq_ep,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_reset_ep,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_config_ep,
-+	TP_PROTO(struct cdnsp_ep_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_slot_ctx,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx),
-+	TP_STRUCT__entry(
-+		__field(u32, info)
-+		__field(u32, info2)
-+		__field(u32, int_target)
-+		__field(u32, state)
-+	),
-+	TP_fast_assign(
-+		__entry->info = le32_to_cpu(ctx->dev_info);
-+		__entry->info2 = le32_to_cpu(ctx->dev_port);
-+		__entry->int_target = le64_to_cpu(ctx->int_target);
-+		__entry->state = le32_to_cpu(ctx->dev_state);
-+	),
-+	TP_printk("%s", cdnsp_decode_slot_context(__entry->info,
-+						  __entry->info2,
-+						  __entry->int_target,
-+						  __entry->state)
-+	)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_slot_already_in_default,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_handle_cmd_enable_slot,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_handle_cmd_disable_slot,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_reset_device,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_setup_device_slot,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_handle_cmd_addr_dev,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_handle_cmd_reset_dev,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_handle_cmd_set_deq,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_slot_ctx, cdnsp_configure_endpoint,
-+	TP_PROTO(struct cdnsp_slot_ctx *ctx),
-+	TP_ARGS(ctx)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_td_info,
-+	TP_PROTO(struct cdnsp_request *preq),
-+	TP_ARGS(preq),
-+	TP_STRUCT__entry(
-+		__string(name, preq->pep->name)
-+		__field(struct usb_request *, request)
-+		__field(struct cdnsp_request *, preq)
-+		__field(union cdnsp_trb *, first_trb)
-+		__field(union cdnsp_trb *, last_trb)
-+		__field(dma_addr_t, trb_dma)
-+	),
-+	TP_fast_assign(
-+		__assign_str(name, preq->pep->name);
-+		__entry->request = &preq->request;
-+		__entry->preq = preq;
-+		__entry->first_trb = preq->td.first_trb;
-+		__entry->last_trb = preq->td.last_trb;
-+		__entry->trb_dma = cdnsp_trb_virt_to_dma(preq->td.start_seg,
-+							 preq->td.first_trb)
-+	),
-+	TP_printk("%s req/preq:  %p/%p, first trb %p[vir]/%pad(dma), last trb %p",
-+		  __get_str(name), __entry->request, __entry->preq,
-+		  __entry->first_trb, &__entry->trb_dma,
-+		  __entry->last_trb
-+		)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_td_info, cdnsp_remove_request_td,
-+	TP_PROTO(struct cdnsp_request *preq),
-+	TP_ARGS(preq)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_ring,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring),
-+	TP_STRUCT__entry(
-+		__field(u32, type)
-+		__field(void *, ring)
-+		__field(dma_addr_t, enq)
-+		__field(dma_addr_t, deq)
-+		__field(dma_addr_t, enq_seg)
-+		__field(dma_addr_t, deq_seg)
-+		__field(unsigned int, num_segs)
-+		__field(unsigned int, stream_id)
-+		__field(unsigned int, cycle_state)
-+		__field(unsigned int, num_trbs_free)
-+		__field(unsigned int, bounce_buf_len)
-+	),
-+	TP_fast_assign(
-+		__entry->ring = ring;
-+		__entry->type = ring->type;
-+		__entry->num_segs = ring->num_segs;
-+		__entry->stream_id = ring->stream_id;
-+		__entry->enq_seg = ring->enq_seg->dma;
-+		__entry->deq_seg = ring->deq_seg->dma;
-+		__entry->cycle_state = ring->cycle_state;
-+		__entry->num_trbs_free = ring->num_trbs_free;
-+		__entry->bounce_buf_len = ring->bounce_buf_len;
-+		__entry->enq = cdnsp_trb_virt_to_dma(ring->enq_seg,
-+						     ring->enqueue);
-+		__entry->deq = cdnsp_trb_virt_to_dma(ring->deq_seg,
-+						     ring->dequeue);
-+	),
-+	TP_printk("%s %p: enq %pad(%pad) deq %pad(%pad) segs %d stream %d"
-+		  "free_trbs %d bounce %d cycle %d",
-+		  cdnsp_ring_type_string(__entry->type), __entry->ring,
-+		  &__entry->enq, &__entry->enq_seg,
-+		  &__entry->deq, &__entry->deq_seg,
-+		  __entry->num_segs,
-+		  __entry->stream_id,
-+		  __entry->num_trbs_free,
-+		  __entry->bounce_buf_len,
-+		  __entry->cycle_state
-+		)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_ring_alloc,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_ring_free,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_set_stream_ring,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_ring_expansion,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_inc_enq,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_ring, cdnsp_inc_deq,
-+	TP_PROTO(struct cdnsp_ring *ring),
-+	TP_ARGS(ring)
-+);
-+
-+DECLARE_EVENT_CLASS(cdnsp_log_portsc,
-+		TP_PROTO(u32 portnum, u32 portsc),
-+		TP_ARGS(portnum, portsc),
-+		TP_STRUCT__entry(
-+				__field(u32, portnum)
-+				__field(u32, portsc)
-+				__dynamic_array(char, str, CDNSP_MSG_MAX)
-+				),
-+		TP_fast_assign(
-+				__entry->portnum = portnum;
-+				__entry->portsc = portsc;
-+				),
-+		TP_printk("port-%d: %s",
-+			  __entry->portnum,
-+			  cdnsp_decode_portsc(__get_str(str), CDNSP_MSG_MAX,
-+					      __entry->portsc)
-+			)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_portsc, cdnsp_handle_port_status,
-+		TP_PROTO(u32 portnum, u32 portsc),
-+		TP_ARGS(portnum, portsc)
-+);
-+
-+DEFINE_EVENT(cdnsp_log_portsc, cdnsp_link_state_changed,
-+		TP_PROTO(u32 portnum, u32 portsc),
-+		TP_ARGS(portnum, portsc)
-+);
-+
-+TRACE_EVENT(cdnsp_stream_number,
-+	TP_PROTO(struct cdnsp_ep *pep, int num_stream_ctxs, int num_streams),
-+	TP_ARGS(pep, num_stream_ctxs, num_streams),
-+	TP_STRUCT__entry(
-+		__string(name, pep->name)
-+		__field(int, num_stream_ctxs)
-+		__field(int, num_streams)
-+	),
-+	TP_fast_assign(
-+		__entry->num_stream_ctxs = num_stream_ctxs;
-+		__entry->num_streams = num_streams;
-+	),
-+	TP_printk("%s Need %u stream ctx entries for %u stream IDs.",
-+		  __get_str(name), __entry->num_stream_ctxs,
-+		  __entry->num_streams)
-+);
-+
-+#endif /* __CDNSP_TRACE_H */
-+
-+/* this part must be outside header guard */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
-+
-+#include <trace/define_trace.h>
++#define CDNSP_PORT_RO	(PORT_CONNECT | DEV_SPEED_MASK)
++
++/*
++ * These bits are RW; writing a 0 clears the bit, writing a 1 sets the bit:
++ * bits 5:8 (link state), 25:26  ("wake on" enable state)
++ */
++#define CDNSP_PORT_RWS	(PORT_PLS_MASK | PORT_WKCONN_E | PORT_WKDISC_E)
++
++/*
++ * These bits are RW; writing a 1 clears the bit, writing a 0 has no effect:
++ * bits 1 (port enable/disable), 17  ( connect changed),
++ * 21 (port reset changed) , 22 (Port Link State Change),
++ */
++#define CDNSP_PORT_RW1CS (PORT_PED | PORT_CSC | PORT_RC | PORT_PLC)
++
++/* USBCMD - USB command - bitmasks. */
++/* Run/Stop, controller execution - do not write unless controller is halted.*/
++#define CMD_R_S		BIT(0)
++/*
++ * Reset device controller - resets internal controller state machine and all
++ * registers (except PCI config regs).
++ */
++#define CMD_RESET	BIT(1)
++/* Event Interrupt Enable - a '1' allows interrupts from the controller. */
++#define CMD_INTE	BIT(2)
++/*
++ * Device System Error Interrupt Enable - get out-of-band signal for
++ * controller errors.
++ */
++#define CMD_DSEIE	BIT(3)
++/* device controller save/restore state. */
++#define CMD_CSS		BIT(8)
++#define CMD_CRS		BIT(9)
++/*
++ * Enable Wrap Event - '1' means device controller generates an event
++ * when MFINDEX wraps.
++ */
++#define CMD_EWE		BIT(10)
++/*bit 13 CEM Enable (CME) */
++#define CMD_DEVEN	BIT(17)
++/* bits 16:31 are reserved (and should be preserved on writes). */
++
++/* Command register values to disable interrupts. */
++#define CDNSP_IRQS	(CMD_INTE | CMD_DSEIE | CMD_EWE)
++
++/* USBSTS - USB status - bitmasks */
++/* controller not running - set to 1 when run/stop bit is cleared. */
++#define STS_HALT	BIT(0)
++/*
++ * serious error, e.g. PCI parity error. The controller will clear
++ * the run/stop bit.
++ */
++#define STS_FATAL	BIT(2)
++/* event interrupt - clear this prior to clearing any IP flags in IR set.*/
++#define STS_EINT	BIT(3)
++/* port change detect */
++#define STS_PCD		BIT(4)
++/* save state status - '1' means device controller is saving state. */
++#define STS_SSS		BIT(8)
++/* restore state status - '1' means controllers is restoring state. */
++#define STS_RSS		BIT(9)
++/* true: save or restore error */
++#define STS_SRE		BIT(10)
++/* true: device Not Ready to accept doorbell or op reg writes after reset. */
++#define STS_CNR		BIT(11)
++/* true: internal Device Controller Error.*/
++#define STS_HCE		BIT(12)
++
++/* CRCR - Command Ring Control Register - cmd_ring bitmasks. */
++/* bit 0 is the command ring cycle state. */
++#define CMD_RING_CS		BIT(0)
++/* stop ring immediately - abort the currently executing command. */
++#define CMD_RING_ABORT		BIT(2)
++/*
++ * Command Ring Busy.
++ * Set when Doorbell register is written with DB for command and cleared when
++ * the controller reached end of CR.
++ */
++#define CMD_RING_BUSY(p)	((p) & BIT(4))
++/* true: command ring is running */
++#define CMD_RING_RUNNING	BIT(3)
++/* Command Ring pointer - bit mask for the lower 32 bits. */
++#define CMD_RING_RSVD_BITS	GENMASK(5, 0)
++
++/* CONFIG - Configure Register - config_reg bitmasks. */
++/* bits 0:7 - maximum number of device slots enabled. */
++#define MAX_DEVS		GENMASK(7, 0)
++/* bit 8: U3 Entry Enabled, assert PLC when controller enters U3. */
++#define CONFIG_U3E		BIT(8)
++
++/* PORTSC - Port Status and Control Register - port_reg_base bitmasks */
++/* true: device connected. */
++#define PORT_CONNECT		BIT(0)
++/* true: port enabled. */
++#define PORT_PED		BIT(1)
++/* true: port reset signaling asserted. */
++#define PORT_RESET		BIT(4)
++/*
++ * Port Link State - bits 5:8
++ * A read gives the current link PM state of the port,
++ * a write with Link State Write Strobe set sets the link state.
++ */
++#define PORT_PLS_MASK		GENMASK(8, 5)
++#define XDEV_U0			(0x0 << 5)
++#define XDEV_U1			(0x1 << 5)
++#define XDEV_U2			(0x2 << 5)
++#define XDEV_U3			(0x3 << 5)
++#define XDEV_DISABLED		(0x4 << 5)
++#define XDEV_RXDETECT		(0x5 << 5)
++#define XDEV_INACTIVE		(0x6 << 5)
++#define XDEV_POLLING		(0x7 << 5)
++#define XDEV_RECOVERY		(0x8 << 5)
++#define XDEV_HOT_RESET		(0x9 << 5)
++#define XDEV_COMP_MODE		(0xa << 5)
++#define XDEV_TEST_MODE		(0xb << 5)
++#define XDEV_RESUME		(0xf << 5)
++/* true: port has power. */
++#define PORT_POWER		BIT(9)
++/*
++ * bits 10:13 indicate device speed:
++ * 0 - undefined speed - port hasn't be initialized by a reset yet
++ * 1 - full speed
++ * 2 - Reserved (Low Speed not supported
++ * 3 - high speed
++ * 4 - super speed
++ * 5 - super speed
++ * 6-15 reserved
++ */
++#define DEV_SPEED_MASK		GENMASK(13, 10)
++#define XDEV_FS			(0x1 << 10)
++#define XDEV_HS			(0x3 << 10)
++#define XDEV_SS			(0x4 << 10)
++#define XDEV_SSP		(0x5 << 10)
++#define DEV_UNDEFSPEED(p)	(((p) & DEV_SPEED_MASK) == (0x0 << 10))
++#define DEV_FULLSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_FS)
++#define DEV_HIGHSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_HS)
++#define DEV_SUPERSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_SS)
++#define DEV_SUPERSPEEDPLUS(p)	(((p) & DEV_SPEED_MASK) == XDEV_SSP)
++#define DEV_SUPERSPEED_ANY(p)	(((p) & DEV_SPEED_MASK) >= XDEV_SS)
++#define DEV_PORT_SPEED(p)	(((p) >> 10) & 0x0f)
++/* Port Link State Write Strobe - set this when changing link state */
++#define PORT_LINK_STROBE	BIT(16)
++/* true: connect status change */
++#define PORT_CSC		BIT(17)
++/* true: warm reset for a USB 3.0 device is done. */
++#define PORT_WRC		BIT(19)
++/* true: reset change - 1 to 0 transition of PORT_RESET */
++#define PORT_RC			BIT(21)
++/*
++ * port link status change - set on some port link state transitions:
++ * Transition			Reason
++ * ----------------------------------------------------------------------------
++ * - U3 to Resume		Wakeup signaling from a device
++ * - Resume to Recovery to U0	USB 3.0 device resume
++ * - Resume to U0		USB 2.0 device resume
++ * - U3 to Recovery to U0	Software resume of USB 3.0 device complete
++ * - U3 to U0			Software resume of USB 2.0 device complete
++ * - U2 to U0			L1 resume of USB 2.1 device complete
++ * - U0 to U0			L1 entry rejection by USB 2.1 device
++ * - U0 to disabled		L1 entry error with USB 2.1 device
++ * - Any state to inactive	Error on USB 3.0 port
++ */
++#define PORT_PLC		BIT(22)
++/* Port configure error change - port failed to configure its link partner. */
++#define PORT_CEC		BIT(23)
++/* Wake on connect (enable). */
++#define PORT_WKCONN_E		BIT(25)
++/* Wake on disconnect (enable). */
++#define PORT_WKDISC_E		BIT(26)
++/* Indicates if Warm Reset is being received. */
++#define PORT_WR			BIT(31)
++
++#define PORT_CHANGE_BITS (PORT_CSC | PORT_WRC | PORT_RC | PORT_PLC | PORT_CEC)
++
++/* PORTPMSCUSB3 - Port Power Management Status and Control - bitmasks. */
++/*  Enables U1 entry. */
++#define PORT_U1_TIMEOUT_MASK	GENMASK(7, 0)
++#define PORT_U1_TIMEOUT(p)	((p) & PORT_U1_TIMEOUT_MASK)
++/* Enables U2 entry .*/
++#define PORT_U2_TIMEOUT_MASK	GENMASK(14, 8)
++#define PORT_U2_TIMEOUT(p)	(((p) << 8) & PORT_U2_TIMEOUT_MASK)
++
++/* PORTPMSCUSB2 - Port Power Management Status and Control - bitmasks. */
++#define PORT_L1S_MASK		GENMASK(2, 0)
++#define PORT_L1S(p)		((p) & GENMASK(2, 0))
++#define PORT_L1S_ACK		PORT_L1S(1)
++#define PORT_L1S_NYET		PORT_L1S(2)
++#define PORT_L1S_STALL		PORT_L1S(3)
++#define PORT_L1S_TIMEOUT	PORT_L1S(4)
++/* Remote Wake Enable. */
++#define PORT_RWE		BIT(3)
++/* Best Effort Service Latency (BESL). */
++#define PORT_BESL(p)		(((p) << 4) & GENMASK(7, 4))
++/* Hardware LPM Enable (HLE). */
++#define PORT_HLE		BIT(16)
++/* Received Best Effort Service Latency (BESL). */
++#define PORT_RRBESL(p)		(((p) & GENMASK(20, 17)) >> 17)
++/* Port Test Control. */
++#define PORT_TEST_MODE_MASK	GENMASK(31, 28)
++#define PORT_TEST_MODE(p)	(((p) << 28) & GENMASK(31, 28))
++
++/**
++ * struct cdnsp_intr_reg - Interrupt Register Set.
++ * @irq_pending: IMAN - Interrupt Management Register. Used to enable
++ *               interrupts and check for pending interrupts.
++ * @irq_control: IMOD - Interrupt Moderation Register.
++ *               Used to throttle interrupts.
++ * @erst_size: Number of segments in the Event Ring Segment Table (ERST).
++ * @erst_base: ERST base address.
++ * @erst_dequeue: Event ring dequeue pointer.
++ *
++ * Each interrupter (defined by a MSI-X vector) has an event ring and an Event
++ * Ring Segment Table (ERST) associated with it. The event ring is comprised of
++ * multiple segments of the same size. The controller places events on the ring
++ * and "updates the Cycle bit in the TRBs to indicate to software the current
++ * position of the Enqueue Pointer." The driver processes those events and
++ * updates the dequeue pointer.
++ */
++struct cdnsp_intr_reg {
++	__le32 irq_pending;
++	__le32 irq_control;
++	__le32 erst_size;
++	__le32 rsvd;
++	__le64 erst_base;
++	__le64 erst_dequeue;
++};
++
++/* IMAN - Interrupt Management Register - irq_pending bitmasks l. */
++#define IMAN_IE			BIT(1)
++#define IMAN_IP			BIT(0)
++/* bits 2:31 need to be preserved */
++#define IMAN_IE_SET(p)		(((p) & IMAN_IE) | 0x2)
++#define IMAN_IE_CLEAR(p)	(((p) & IMAN_IE) & ~(0x2))
++
++/* IMOD - Interrupter Moderation Register - irq_control bitmasks. */
++/*
++ * Minimum interval between interrupts (in 250ns intervals). The interval
++ * between interrupts will be longer if there are no events on the event ring.
++ * Default is 4000 (1 ms).
++ */
++#define IMOD_INTERVAL_MASK	GENMASK(15, 0)
++/* Counter used to count down the time to the next interrupt - HW use only */
++#define IMOD_COUNTER_MASK	GENMASK(31, 16)
++#define IMOD_DEFAULT_INTERVAL	0
++
++/* erst_size bitmasks. */
++/* Preserve bits 16:31 of erst_size. */
++#define ERST_SIZE_MASK		GENMASK(31, 16)
++
++/* erst_dequeue bitmasks. */
++/*
++ * Dequeue ERST Segment Index (DESI) - Segment number (or alias)
++ * where the current dequeue pointer lies. This is an optional HW hint.
++ */
++#define ERST_DESI_MASK		GENMASK(2, 0)
++/* Event Handler Busy (EHB) - is the event ring scheduled to be serviced. */
++#define ERST_EHB		BIT(3)
++#define ERST_PTR_MASK		GENMASK(3, 0)
++
++/**
++ * struct cdnsp_run_regs
++ * @microframe_index: MFINDEX - current microframe number.
++ * @ir_set: Array of Interrupter registers.
++ *
++ * Device Controller Runtime Registers:
++ * "Software should read and write these registers using only Dword (32 bit)
++ * or larger accesses"
++ */
++struct cdnsp_run_regs {
++	__le32 microframe_index;
++	__le32 rsvd[7];
++	struct cdnsp_intr_reg ir_set[128];
++};
++
++/**
++ * USB2.0 Port Peripheral Configuration Registers.
++ * @ext_cap: Header register for Extended Capability.
++ * @port_reg1: Timer Configuration Register.
++ * @port_reg2: Timer Configuration Register.
++ * @port_reg3: Timer Configuration Register.
++ * @port_reg4: Timer Configuration Register.
++ * @port_reg5: Timer Configuration Register.
++ * @port_reg6: Chicken bits for USB20PPP.
++ */
++struct cdnsp_20port_cap {
++	__le32 ext_cap;
++	__le32 port_reg1;
++	__le32 port_reg2;
++	__le32 port_reg3;
++	__le32 port_reg4;
++	__le32 port_reg5;
++	__le32 port_reg6;
++};
++
++/* Extended capability register fields */
++#define EXT_CAPS_ID(p)			(((p) >> 0) & GENMASK(7, 0))
++#define EXT_CAPS_NEXT(p)		(((p) >> 8) & GENMASK(7, 0))
++/* Extended capability IDs - ID 0 reserved */
++#define EXT_CAPS_PROTOCOL		2
++
++/* USB 2.0 Port Peripheral Configuration Extended Capability */
++#define EXT_CAP_CFG_DEV_20PORT_CAP_ID	0xC1
++/*
++ * Setting this bit to '1' enables automatic wakeup from L1 state on transfer
++ * TRB prepared when USBSSP operates in USB2.0 mode.
++ */
++#define PORT_REG6_L1_L0_HW_EN		BIT(1)
++/*
++ * Setting this bit to '1' forces Full Speed when USBSSP operates in USB2.0
++ * mode (disables High Speed).
++ */
++#define PORT_REG6_FORCE_FS		BIT(0)
++
++/**
++ * USB3.x Port Peripheral Configuration Registers.
++ * @ext_cap: Header register for Extended Capability.
++ * @mode_addr: Miscellaneous 3xPORT operation mode configuration register.
++ */
++struct cdnsp_3xport_cap {
++	__le32 ext_cap;
++	__le32 mode_addr;
++};
++
++/* Extended Capability Header for 3XPort Configuration Registers. */
++#define D_XEC_CFG_3XPORT_CAP		0xC0
++#define CFG_3XPORT_SSP_SUPPORT		BIT(31)
++
++/* Revision Extended Capability ID */
++#define RTL_REV_CAP			0xC4
++#define RTL_REV_CAP_RX_BUFF_CMD_SIZE	BITMASK(31, 24)
++#define RTL_REV_CAP_RX_BUFF_SIZE	BITMASK(15, 0)
++#define RTL_REV_CAP_TX_BUFF_CMD_SIZE	BITMASK(31, 24)
++#define RTL_REV_CAP_TX_BUFF_SIZE	BITMASK(15, 0)
++
++#define CDNSP_VER_1 0x00000000
++#define CDNSP_VER_2 0x10000000
++
++#define CDNSP_IF_EP_EXIST(pdev, ep_num, dir) ((pdev)->rev_cap.ep_supported & \
++			  (BIT(ep_num) << (dir ? 0 : 16)))
++
++/**
++ * struct cdnsp_rev_cap - controller capabilities .
++ * @ext_cap: Header for RTL Revision Extended Capability.
++ * @rtl_revision: RTL revision.
++ * @rx_buff_size: Rx buffer sizes.
++ * @tx_buff_size: Tx buffer sizes.
++ * @ep_supported: Supported endpoints.
++ * @ctrl_revision: Controller revision ID.
++ */
++struct cdnsp_rev_cap {
++	__le32 ext_cap;
++	__le32 rtl_revision;
++	__le32 rx_buff_size;
++	__le32 tx_buff_size;
++	__le32 ep_supported;
++	__le32 ctrl_revision;
++};
++
++/* USB2.0 Port Peripheral Configuration Registers. */
++#define D_XEC_PRE_REGS_CAP		0xC8
++#define REG_CHICKEN_BITS_2_OFFSET	0x48
++#define CHICKEN_XDMA_2_TP_CACHE_DIS	BIT(28)
++
++/* XBUF Extended Capability ID. */
++#define XBUF_CAP_ID			0xCB
++#define XBUF_RX_TAG_MASK_0_OFFSET	0x1C
++#define XBUF_RX_TAG_MASK_1_OFFSET	0x24
++#define XBUF_TX_CMD_OFFSET		0x2C
++
++/**
++ * struct cdnsp_doorbell_array.
++ * @cmd_db: Command ring doorbell register.
++ * @ep_db: Endpoint ring doorbell register.
++ *         Bits 0 - 7: Endpoint target.
++ *         Bits 8 - 15: RsvdZ.
++ *         Bits 16 - 31: Stream ID.
++ */
++struct cdnsp_doorbell_array {
++	__le32 cmd_db;
++	__le32 ep_db;
++};
++
++#define DB_VALUE(ep, stream)		((((ep) + 1) & 0xff) | ((stream) << 16))
++#define DB_VALUE_EP0_OUT(ep, stream)	((ep) & 0xff)
++#define DB_VALUE_CMD			0x00000000
++
++/**
++ * struct cdnsp_container_ctx.
++ * @type: Type of context. Used to calculated offsets to contained contexts.
++ * @size: Size of the context data.
++ * @ctx_size: context data structure size - 64 or 32 bits.
++ * @dma: dma address of the bytes.
++ * @bytes: The raw context data given to HW.
++ *
++ * Represents either a Device or Input context. Holds a pointer to the raw
++ * memory used for the context (bytes) and dma address of it (dma).
++ */
++struct cdnsp_container_ctx {
++	unsigned int type;
++#define CDNSP_CTX_TYPE_DEVICE	0x1
++#define CDNSP_CTX_TYPE_INPUT	0x2
++	int size;
++	int ctx_size;
++	dma_addr_t dma;
++	u8 *bytes;
++};
++
++/**
++ * struct cdnsp_slot_ctx
++ * @dev_info: Device speed, and last valid endpoint.
++ * @dev_port: Device port number that is needed to access the USB device.
++ * @int_target: Interrupter target number.
++ * @dev_state: Slot state and device address.
++ *
++ * Slot Context - This assumes the controller uses 32-byte context
++ * structures. If the controller uses 64-byte contexts, there is an additional
++ * 32 bytes reserved at the end of the slot context for controller internal use.
++ */
++struct cdnsp_slot_ctx {
++	__le32 dev_info;
++	__le32 dev_port;
++	__le32 int_target;
++	__le32 dev_state;
++	/* offset 0x10 to 0x1f reserved for controller internal use. */
++	__le32 reserved[4];
++};
++
++/* Bits 20:23 in the Slot Context are the speed for the device. */
++#define SLOT_SPEED_FS		(XDEV_FS << 10)
++#define SLOT_SPEED_HS		(XDEV_HS << 10)
++#define SLOT_SPEED_SS		(XDEV_SS << 10)
++#define SLOT_SPEED_SSP		(XDEV_SSP << 10)
++
++/* dev_info bitmasks. */
++/* Device speed - values defined by PORTSC Device Speed field - 20:23. */
++#define DEV_SPEED		GENMASK(23, 20)
++#define GET_DEV_SPEED(n)	(((n) & DEV_SPEED) >> 20)
++/* Index of the last valid endpoint context in this device context - 27:31. */
++#define LAST_CTX_MASK		GENMASK(31, 27)
++#define LAST_CTX(p)		((p) << 27)
++#define LAST_CTX_TO_EP_NUM(p)	(((p) >> 27) - 1)
++#define SLOT_FLAG		BIT(0)
++#define EP0_FLAG		BIT(1)
++
++/* dev_port bitmasks */
++/* Device port number that is needed to access the USB device. */
++#define DEV_PORT(p)		(((p) & 0xff) << 16)
++
++/* dev_state bitmasks */
++/* USB device address - assigned by the controller. */
++#define DEV_ADDR_MASK		GENMASK(7, 0)
++/* Slot state */
++#define SLOT_STATE		GENMASK(31, 27)
++#define GET_SLOT_STATE(p)	(((p) & (0x1f << 27)) >> 27)
++
++#define SLOT_STATE_DISABLED	0
++#define SLOT_STATE_ENABLED	SLOT_STATE_DISABLED
++#define SLOT_STATE_DEFAULT	1
++#define SLOT_STATE_ADDRESSED	2
++#define SLOT_STATE_CONFIGURED	3
++
++/**
++ * struct cdnsp_ep_ctx.
++ * @ep_info: Endpoint state, streams, mult, and interval information.
++ * @ep_info2: Information on endpoint type, max packet size, max burst size,
++ *            error count, and whether the controller will force an event for
++ *            all transactions.
++ * @deq: 64-bit ring dequeue pointer address. If the endpoint only
++ *       defines one stream, this points to the endpoint transfer ring.
++ *       Otherwise, it points to a stream context array, which has a
++ *       ring pointer for each flow.
++ * @tx_info: Average TRB lengths for the endpoint ring and
++ *	     max payload within an Endpoint Service Interval Time (ESIT).
++ *
++ * Endpoint Context - This assumes the controller uses 32-byte context
++ * structures. If the controller uses 64-byte contexts, there is an additional
++ * 32 bytes reserved at the end of the endpoint context for controller internal
++ * use.
++ */
++struct cdnsp_ep_ctx {
++	__le32 ep_info;
++	__le32 ep_info2;
++	__le64 deq;
++	__le32 tx_info;
++	/* offset 0x14 - 0x1f reserved for controller internal use. */
++	__le32 reserved[3];
++};
++
++/* ep_info bitmasks. */
++/*
++ * Endpoint State - bits 0:2:
++ * 0 - disabled
++ * 1 - running
++ * 2 - halted due to halt condition
++ * 3 - stopped
++ * 4 - TRB error
++ * 5-7 - reserved
++ */
++#define EP_STATE_MASK		GENMASK(3, 0)
++#define EP_STATE_DISABLED	0
++#define EP_STATE_RUNNING	1
++#define EP_STATE_HALTED		2
++#define EP_STATE_STOPPED	3
++#define EP_STATE_ERROR		4
++#define GET_EP_CTX_STATE(ctx)	(le32_to_cpu((ctx)->ep_info) & EP_STATE_MASK)
++
++/* Mult - Max number of burst within an interval, in EP companion desc. */
++#define EP_MULT(p)			(((p) << 8) & GENMASK(9, 8))
++#define CTX_TO_EP_MULT(p)		(((p) & GENMASK(9, 8)) >> 8)
++/* bits 10:14 are Max Primary Streams. */
++/* bit 15 is Linear Stream Array. */
++/* Interval - period between requests to an endpoint - 125u increments. */
++#define EP_INTERVAL(p)			(((p) << 16) & GENMASK(23, 16))
++#define EP_INTERVAL_TO_UFRAMES(p)	(1 << (((p) & GENMASK(23, 16)) >> 16))
++#define CTX_TO_EP_INTERVAL(p)		(((p) & GENMASK(23, 16)) >> 16)
++#define EP_MAXPSTREAMS_MASK		GENMASK(14, 10)
++#define EP_MAXPSTREAMS(p)		(((p) << 10) & EP_MAXPSTREAMS_MASK)
++#define CTX_TO_EP_MAXPSTREAMS(p)	(((p) & EP_MAXPSTREAMS_MASK) >> 10)
++/* Endpoint is set up with a Linear Stream Array (vs. Secondary Stream Array) */
++#define EP_HAS_LSA			BIT(15)
++
++/* ep_info2 bitmasks */
++#define ERROR_COUNT(p)		(((p) & 0x3) << 1)
++#define CTX_TO_EP_TYPE(p)	(((p) >> 3) & 0x7)
++#define EP_TYPE(p)		((p) << 3)
++#define ISOC_OUT_EP		1
++#define BULK_OUT_EP		2
++#define INT_OUT_EP		3
++#define CTRL_EP			4
++#define ISOC_IN_EP		5
++#define BULK_IN_EP		6
++#define INT_IN_EP		7
++/* bit 6 reserved. */
++/* bit 7 is Device Initiate Disable - for disabling stream selection. */
++#define MAX_BURST(p)		(((p) << 8) & GENMASK(15, 8))
++#define CTX_TO_MAX_BURST(p)	(((p) & GENMASK(15, 8)) >> 8)
++#define MAX_PACKET(p)		(((p) << 16) & GENMASK(31, 16))
++#define MAX_PACKET_MASK		GENMASK(31, 16)
++#define MAX_PACKET_DECODED(p)	(((p) & GENMASK(31, 16)) >> 16)
++
++/* tx_info bitmasks. */
++#define EP_AVG_TRB_LENGTH(p)		((p) & GENMASK(15, 0))
++#define EP_MAX_ESIT_PAYLOAD_LO(p)	(((p) << 16) & GENMASK(31, 16))
++#define EP_MAX_ESIT_PAYLOAD_HI(p)	((((p) & GENMASK(23, 16)) >> 16) << 24)
++#define CTX_TO_MAX_ESIT_PAYLOAD_LO(p)	(((p) & GENMASK(31, 16)) >> 16)
++#define CTX_TO_MAX_ESIT_PAYLOAD_HI(p)	(((p) & GENMASK(31, 24)) >> 24)
++
++/* deq bitmasks. */
++#define EP_CTX_CYCLE_MASK		BIT(0)
++#define CTX_DEQ_MASK			(~0xfL)
++
++/**
++ * struct cdnsp_input_control_context
++ * Input control context;
++ *
++ * @drop_context: Set the bit of the endpoint context you want to disable.
++ * @add_context: Set the bit of the endpoint context you want to enable.
++ */
++struct cdnsp_input_control_ctx {
++	__le32 drop_flags;
++	__le32 add_flags;
++	__le32 rsvd2[6];
++};
++
++/**
++ * Represents everything that is needed to issue a command on the command ring.
++ *
++ * @in_ctx: Pointer to input context structure.
++ * @status: Command Completion Code for last command.
++ * @command_trb: Pointer to command TRB.
++ */
++struct cdnsp_command {
++	/* Input context for changing device state. */
++	struct cdnsp_container_ctx *in_ctx;
++	u32 status;
++	union cdnsp_trb *command_trb;
++};
++
++/**
++ * Stream context structure.
++ *
++ * @stream_ring: 64-bit stream ring address, cycle state, and stream type.
++ * @reserved: offset 0x14 - 0x1f reserved for controller internal use.
++ */
++struct cdnsp_stream_ctx {
++	__le64 stream_ring;
++	__le32 reserved[2];
++};
++
++/* Stream Context Types - bits 3:1 of stream ctx deq ptr. */
++#define SCT_FOR_CTX(p)		(((p) << 1) & GENMASK(3, 1))
++/* Secondary stream array type, dequeue pointer is to a transfer ring. */
++#define SCT_SEC_TR		0
++/* Primary stream array type, dequeue pointer is to a transfer ring. */
++#define SCT_PRI_TR		1
++
++/**
++ *  struct cdnsp_stream_info: Representing everything that is needed to
++ *                            supports stream capable endpoints.
++ *  @stream_rings: Array of pointers containing Transfer rings for all
++ *                 supported streams.
++ *  @num_streams: Number of streams, including stream 0.
++ *  @stream_ctx_array: The stream context array may be bigger than the number
++ *                     of streams the driver asked for.
++ *  @num_stream_ctxs: Number of streams.
++ *  @ctx_array_dma: Dma address of Context Stream Array.
++ *  @trb_address_map: For mapping physical TRB addresses to segments in
++ *                    stream rings.
++ *  @td_count: Number of TDs associated with endpoint.
++ *  @first_prime_det: First PRIME packet detected.
++ *  @drbls_count: Number of allowed doorbells.
++ */
++struct cdnsp_stream_info {
++	struct cdnsp_ring **stream_rings;
++	unsigned int num_streams;
++	struct cdnsp_stream_ctx *stream_ctx_array;
++	unsigned int num_stream_ctxs;
++	dma_addr_t ctx_array_dma;
++	struct radix_tree_root trb_address_map;
++	int td_count;
++	u8 first_prime_det;
++#define STREAM_DRBL_FIFO_DEPTH 2
++	u8 drbls_count;
++};
++
++#define STREAM_LOG_STREAMS 4
++#define STREAM_NUM_STREAMS BIT(STREAM_LOG_STREAMS)
++
++#if STREAM_LOG_STREAMS > 16 && STREAM_LOG_STREAMS < 1
++#error "Not suupported stream value"
++#endif
++
++/**
++ * struct cdnsp_ep - extended device side representation of USB endpoint.
++ * @endpoint: usb endpoint
++ * @pending_req_list: List of requests queuing on transfer ring.
++ * @pdev: Device associated with this endpoint.
++ * @number: Endpoint number (1 - 15).
++ * idx: The device context index (DCI).
++ * interval: Interval between packets used for ISOC endpoint.
++ * @name: A human readable name e.g. ep1out.
++ * @direction: Endpoint direction.
++ * @buffering: Number of on-chip buffers related to endpoint.
++ * @buffering_period; Number of on-chip buffers related to periodic endpoint.
++ * @in_ctx: Pointer to input endpoint context structure.
++ * @out_ctx: Pointer to output endpoint context structure.
++ * @ring: Pointer to transfer ring.
++ * @stream_info: Hold stream information.
++ * @ep_state: Current state of endpoint.
++ * skip: Sometimes the controller can not process isochronous endpoint ring
++ *       quickly enough, and it will miss some isoc tds on the ring and
++ *       generate Missed Service Error Event.
++ *       Set skip flag when receive a Missed Service Error Event and
++ *       process the missed tds on the endpoint ring.
++ */
++struct cdnsp_ep {
++	struct usb_ep endpoint;
++	struct list_head pending_list;
++	struct cdnsp_device *pdev;
++	u8 number;
++	u8 idx;
++	u32 interval;
++	char name[20];
++	u8 direction;
++	u8 buffering;
++	u8 buffering_period;
++	struct cdnsp_ep_ctx *in_ctx;
++	struct cdnsp_ep_ctx *out_ctx;
++	struct cdnsp_ring *ring;
++	struct cdnsp_stream_info stream_info;
++	unsigned int ep_state;
++#define EP_ENABLED		BIT(0)
++#define EP_DIS_IN_RROGRESS	BIT(1)
++#define EP_HALTED		BIT(2)
++#define EP_STOPPED		BIT(3)
++#define EP_WEDGE		BIT(4)
++#define EP0_HALTED_STATUS	BIT(5)
++#define EP_HAS_STREAMS		BIT(6)
++
++	bool skip;
++};
++
++/**
++ * struct cdnsp_device_context_array
++ * @dev_context_ptr: Array of 64-bit DMA addresses for device contexts.
++ * @dma: DMA address for device contexts structure.
++ */
++struct cdnsp_device_context_array {
++	__le64 dev_context_ptrs[CDNSP_DEV_MAX_SLOTS + 1];
++	dma_addr_t dma;
++};
++
++/**
++ * struct cdnsp_transfer_event.
++ * @buffer: 64-bit buffer address, or immediate data.
++ * @transfer_len: Data length transferred.
++ * @flags: Field is interpreted differently based on the type of TRB.
++ */
++struct cdnsp_transfer_event {
++	__le64 buffer;
++	__le32 transfer_len;
++	__le32 flags;
++};
++
++/* Invalidate event after disabling endpoint. */
++#define TRB_EVENT_INVALIDATE 8
++
++/* Transfer event TRB length bit mask. */
++/* bits 0:23 */
++#define EVENT_TRB_LEN(p)			((p) & GENMASK(23, 0))
++/* Completion Code - only applicable for some types of TRBs */
++#define COMP_CODE_MASK				(0xff << 24)
++#define GET_COMP_CODE(p)			(((p) & COMP_CODE_MASK) >> 24)
++#define COMP_INVALID				0
++#define COMP_SUCCESS				1
++#define COMP_DATA_BUFFER_ERROR			2
++#define COMP_BABBLE_DETECTED_ERROR		3
++#define COMP_TRB_ERROR				5
++#define COMP_RESOURCE_ERROR			7
++#define COMP_NO_SLOTS_AVAILABLE_ERROR		9
++#define COMP_INVALID_STREAM_TYPE_ERROR		10
++#define COMP_SLOT_NOT_ENABLED_ERROR		11
++#define COMP_ENDPOINT_NOT_ENABLED_ERROR		12
++#define COMP_SHORT_PACKET			13
++#define COMP_RING_UNDERRUN			14
++#define COMP_RING_OVERRUN			15
++#define COMP_VF_EVENT_RING_FULL_ERROR		16
++#define COMP_PARAMETER_ERROR			17
++#define COMP_CONTEXT_STATE_ERROR		19
++#define COMP_EVENT_RING_FULL_ERROR		21
++#define COMP_INCOMPATIBLE_DEVICE_ERROR		22
++#define COMP_MISSED_SERVICE_ERROR		23
++#define COMP_COMMAND_RING_STOPPED		24
++#define COMP_COMMAND_ABORTED			25
++#define COMP_STOPPED				26
++#define COMP_STOPPED_LENGTH_INVALID		27
++#define COMP_STOPPED_SHORT_PACKET		28
++#define COMP_MAX_EXIT_LATENCY_TOO_LARGE_ERROR	29
++#define COMP_ISOCH_BUFFER_OVERRUN		31
++#define COMP_EVENT_LOST_ERROR			32
++#define COMP_UNDEFINED_ERROR			33
++#define COMP_INVALID_STREAM_ID_ERROR		34
++
++/*Transfer Event NRDY bit fields */
++#define TRB_TO_DEV_STREAM(p)			((p) & GENMASK(16, 0))
++#define TRB_TO_HOST_STREAM(p)			((p) & GENMASK(16, 0))
++#define STREAM_PRIME_ACK			0xFFFE
++#define STREAM_REJECTED				0xFFFF
++
++/** Transfer Event bit fields **/
++#define TRB_TO_EP_ID(p)				(((p) & GENMASK(20, 16)) >> 16)
++
++/**
++ * struct cdnsp_link_trb
++ * @segment_ptr: 64-bit segment pointer.
++ * @intr_target: Interrupter target.
++ * @control: Flags.
++ */
++struct cdnsp_link_trb {
++	__le64 segment_ptr;
++	__le32 intr_target;
++	__le32 control;
++};
++
++/* control bitfields */
++#define LINK_TOGGLE	BIT(1)
++
++/**
++ * struct cdnsp_event_cmd - Command completion event TRB.
++ * cmd_trb: Pointer to command TRB, or the value passed by the event data trb
++ * status: Command completion parameters and error code.
++ * flags: Flags.
++ */
++struct cdnsp_event_cmd {
++	__le64 cmd_trb;
++	__le32 status;
++	__le32 flags;
++};
++
++/* flags bitmasks */
++
++/* Address device - disable SetAddress. */
++#define TRB_BSR		BIT(9)
++
++/* Configure Endpoint - Deconfigure. */
++#define TRB_DC		BIT(9)
++
++enum cdnsp_setup_dev {
++	SETUP_CONTEXT_ONLY,
++	SETUP_CONTEXT_ADDRESS,
++};
++
++/* bits 24:31 are the slot ID. */
++#define TRB_TO_SLOT_ID(p)		(((p) & GENMASK(31, 24)) >> 24)
++#define SLOT_ID_FOR_TRB(p)		(((p) << 24) & GENMASK(31, 24))
++
++/* Stop Endpoint TRB - ep_index to endpoint ID for this TRB. */
++#define TRB_TO_EP_INDEX(p)		((((p) & (0x1f << 16)) >> 16))
++
++#define EP_ID_FOR_TRB(p)		((((p) + 1) << 16) & GENMASK(20, 16))
++
++#define SUSPEND_PORT_FOR_TRB(p)		(((p) & 1) << 23)
++#define TRB_TO_SUSPEND_PORT(p)		(((p) & (1 << 23)) >> 23)
++#define LAST_EP_INDEX			30
++
++/* Set TR Dequeue Pointer command TRB fields. */
++#define TRB_TO_STREAM_ID(p)		((((p) & GENMASK(31, 16)) >> 16))
++#define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31, 16))
++#define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
++
++/* Link TRB specific fields. */
++#define TRB_TC				BIT(1)
++
++/* Port Status Change Event TRB fields. */
++/* Port ID - bits 31:24. */
++#define GET_PORT_ID(p)			(((p) & GENMASK(31, 24)) >> 24)
++
++#define EVENT_DATA			BIT(2)
++
++/* Normal TRB fields. */
++/* transfer_len bitmasks - bits 0:16. */
++#define TRB_LEN(p)			((p) & GENMASK(16, 0))
++/* TD Size, packets remaining in this TD, bits 21:17 (5 bits, so max 31). */
++#define TRB_TD_SIZE(p)			(min((p), (u32)31) << 17)
++#define GET_TD_SIZE(p)			(((p) & GENMASK(21, 17)) >> 17)
++/*
++ * Controller uses the TD_SIZE field for TBC if Extended TBC
++ * is enabled (ETE).
++ */
++#define TRB_TD_SIZE_TBC(p)		(min((p), (u32)31) << 17)
++/* Interrupter Target - which MSI-X vector to target the completion event at. */
++#define TRB_INTR_TARGET(p)		(((p) << 22) & GENMASK(31, 22))
++#define GET_INTR_TARGET(p)		(((p) & GENMASK(31, 22)) >> 22)
++/*
++ * Total burst count field, Rsvdz on controller with Extended TBC
++ * enabled (ETE).
++ */
++#define TRB_TBC(p)			(((p) & 0x3) << 7)
++#define TRB_TLBPC(p)			(((p) & 0xf) << 16)
++
++/* Cycle bit - indicates TRB ownership by driver or driver.*/
++#define TRB_CYCLE			BIT(0)
++/*
++ * Force next event data TRB to be evaluated before task switch.
++ * Used to pass OS data back after a TD completes.
++ */
++#define TRB_ENT				BIT(1)
++/* Interrupt on short packet. */
++#define TRB_ISP				BIT(2)
++/* Set PCIe no snoop attribute. */
++#define TRB_NO_SNOOP			BIT(3)
++/* Chain multiple TRBs into a TD. */
++#define TRB_CHAIN			BIT(4)
++/* Interrupt on completion. */
++#define TRB_IOC				BIT(5)
++/* The buffer pointer contains immediate data. */
++#define TRB_IDT				BIT(6)
++/* 0 - NRDY during data stage, 1 - NRDY during status stage (only control). */
++#define TRB_STAT			BIT(7)
++/* Block Event Interrupt. */
++#define TRB_BEI				BIT(9)
++
++/* Control transfer TRB specific fields. */
++#define TRB_DIR_IN			BIT(16)
++
++/* TRB bit mask in Data Stage TRB */
++#define TRB_SETUPID_BITMASK		GENMASK(9, 8)
++#define TRB_SETUPID(p)			((p) << 8)
++#define TRB_SETUPID_TO_TYPE(p)		(((p) & TRB_SETUPID_BITMASK) >> 8)
++
++#define TRB_SETUP_SPEEDID_USB3		0x1
++#define TRB_SETUP_SPEEDID_USB2		0x0
++#define TRB_SETUP_SPEEDID(p)		((p) & (1 << 7))
++
++#define TRB_SETUPSTAT_ACK		0x1
++#define TRB_SETUPSTAT_STALL		0x0
++#define TRB_SETUPSTAT(p)		((p) << 6)
++
++/* Isochronous TRB specific fields */
++#define TRB_SIA				BIT(31)
++#define TRB_FRAME_ID(p)			(((p) << 20) & GENMASK(30, 20))
++
++struct cdnsp_generic_trb {
++	__le32 field[4];
++};
++
++union cdnsp_trb {
++	struct cdnsp_link_trb link;
++	struct cdnsp_transfer_event trans_event;
++	struct cdnsp_event_cmd event_cmd;
++	struct cdnsp_generic_trb generic;
++};
++
++/* TRB bit mask. */
++#define TRB_TYPE_BITMASK	GENMASK(15, 10)
++#define TRB_TYPE(p)		((p) << 10)
++#define TRB_FIELD_TO_TYPE(p)	(((p) & TRB_TYPE_BITMASK) >> 10)
++
++/* TRB type IDs. */
++/* bulk, interrupt, isoc scatter/gather, and control data stage. */
++#define TRB_NORMAL		1
++/* Setup Stage for control transfers. */
++#define TRB_SETUP		2
++/* Data Stage for control transfers. */
++#define TRB_DATA		3
++/* Status Stage for control transfers. */
++#define TRB_STATUS		4
++/* ISOC transfers. */
++#define TRB_ISOC		5
++/* TRB for linking ring segments. */
++#define TRB_LINK		6
++#define TRB_EVENT_DATA		7
++/* Transfer Ring No-op (not for the command ring). */
++#define TRB_TR_NOOP		8
++
++/* Command TRBs */
++/* Enable Slot Command. */
++#define TRB_ENABLE_SLOT		9
++/* Disable Slot Command. */
++#define TRB_DISABLE_SLOT	10
++/* Address Device Command. */
++#define TRB_ADDR_DEV		11
++/* Configure Endpoint Command. */
++#define TRB_CONFIG_EP		12
++/* Evaluate Context Command. */
++#define TRB_EVAL_CONTEXT	13
++/* Reset Endpoint Command. */
++#define TRB_RESET_EP		14
++/* Stop Transfer Ring Command. */
++#define TRB_STOP_RING		15
++/* Set Transfer Ring Dequeue Pointer Command. */
++#define TRB_SET_DEQ		16
++/* Reset Device Command. */
++#define TRB_RESET_DEV		17
++/* Force Event Command (opt). */
++#define TRB_FORCE_EVENT		18
++/* Force Header Command - generate a transaction or link management packet. */
++#define TRB_FORCE_HEADER	22
++/* No-op Command - not for transfer rings. */
++#define TRB_CMD_NOOP		23
++/* TRB IDs 24-31 reserved. */
++
++/* Event TRBS. */
++/* Transfer Event. */
++#define TRB_TRANSFER		32
++/* Command Completion Event. */
++#define TRB_COMPLETION		33
++/* Port Status Change Event. */
++#define TRB_PORT_STATUS		34
++/* Device Controller Event. */
++#define TRB_HC_EVENT		37
++/* MFINDEX Wrap Event - microframe counter wrapped. */
++#define TRB_MFINDEX_WRAP	39
++/* TRB IDs 40-47 reserved. */
++/* Endpoint Not Ready Event. */
++#define TRB_ENDPOINT_NRDY	48
++/* TRB IDs 49-53 reserved. */
++/* Halt Endpoint Command. */
++#define TRB_HALT_ENDPOINT	54
++/* Doorbell Overflow Event. */
++#define TRB_DRB_OVERFLOW	57
++/* Flush Endpoint Command. */
++#define TRB_FLUSH_ENDPOINT	58
++
++#define TRB_TYPE_LINK(x)	(((x) & TRB_TYPE_BITMASK) == TRB_TYPE(TRB_LINK))
++#define TRB_TYPE_LINK_LE32(x)	(((x) & cpu_to_le32(TRB_TYPE_BITMASK)) == \
++					cpu_to_le32(TRB_TYPE(TRB_LINK)))
++#define TRB_TYPE_NOOP_LE32(x)	(((x) & cpu_to_le32(TRB_TYPE_BITMASK)) == \
++					cpu_to_le32(TRB_TYPE(TRB_TR_NOOP)))
++
++/*
++ * TRBS_PER_SEGMENT must be a multiple of 4.
++ * The command ring is 64-byte aligned, so it must also be greater than 16.
++ */
++#define TRBS_PER_SEGMENT		256
++#define TRBS_PER_EVENT_SEGMENT		256
++#define TRBS_PER_EV_DEQ_UPDATE		100
++#define TRB_SEGMENT_SIZE		(TRBS_PER_SEGMENT * 16)
++#define TRB_SEGMENT_SHIFT		(ilog2(TRB_SEGMENT_SIZE))
++/* TRB buffer pointers can't cross 64KB boundaries. */
++#define TRB_MAX_BUFF_SHIFT		16
++#define TRB_MAX_BUFF_SIZE		BIT(TRB_MAX_BUFF_SHIFT)
++/* How much data is left before the 64KB boundary? */
++#define TRB_BUFF_LEN_UP_TO_BOUNDARY(addr) (TRB_MAX_BUFF_SIZE - \
++					((addr) & (TRB_MAX_BUFF_SIZE - 1)))
++
++/**
++ * struct cdnsp_segment - segment related data.
++ * @trbs: Array of Transfer Request Blocks.
++ * @next: Pointer to the next segment.
++ * @dma: DMA address of current segment.
++ * @bounce_dma: Bounce  buffer DMA address .
++ * @bounce_buf: Bounce buffer virtual address.
++ * bounce_offs: Bounce buffer offset.
++ * bounce_len: Bounce buffer length.
++ */
++struct cdnsp_segment {
++	union cdnsp_trb *trbs;
++	struct cdnsp_segment *next;
++	dma_addr_t dma;
++	/* Max packet sized bounce buffer for td-fragmant alignment */
++	dma_addr_t bounce_dma;
++	void *bounce_buf;
++	unsigned int bounce_offs;
++	unsigned int bounce_len;
++};
++
++/**
++ * struct cdnsp_td - Transfer Descriptor object.
++ * @td_list: Used for binding TD with ep_ring->td_list.
++ * @preq: Request associated with this TD
++ * @start_seg: Segment containing the first_trb in TD.
++ * @first_trb: First TRB for this TD.
++ * @last_trb: Last TRB related with TD.
++ * @bounce_seg: Bounce segment for this TD.
++ * @request_length_set: actual_length of the request has already been set.
++ * @drbl - TD has been added to HW scheduler - only for stream capable
++ *         endpoints.
++ */
++struct cdnsp_td {
++	struct list_head td_list;
++	struct cdnsp_request *preq;
++	struct cdnsp_segment *start_seg;
++	union cdnsp_trb *first_trb;
++	union cdnsp_trb *last_trb;
++	struct cdnsp_segment *bounce_seg;
++	bool request_length_set;
++	bool drbl;
++};
++
++/**
++ *  struct cdnsp_dequeue_state - New dequeue pointer for Transfer Ring.
++ * @new_deq_seg: New dequeue segment.
++ * @new_deq_ptr: New dequeue pointer.
++ * @new_cycle_state: New cycle state.
++ * @stream_id: stream id for which new dequeue pointer has been selected.
++ */
++struct cdnsp_dequeue_state {
++	struct cdnsp_segment *new_deq_seg;
++	union cdnsp_trb *new_deq_ptr;
++	int new_cycle_state;
++	unsigned int stream_id;
++};
++
++enum cdnsp_ring_type {
++	TYPE_CTRL = 0,
++	TYPE_ISOC,
++	TYPE_BULK,
++	TYPE_INTR,
++	TYPE_STREAM,
++	TYPE_COMMAND,
++	TYPE_EVENT,
++};
++
++/**
++ * struct cdnsp_ring - information describing transfer, command or event ring.
++ * @first_seg: First segment on transfer ring.
++ * @last_seg: Last segment on transfer ring.
++ * @enqueue: SW enqueue pointer address.
++ * @enq_seg: SW enqueue segment address.
++ * @dequeue: SW dequeue pointer address.
++ * @deq_seg: SW dequeue segment address.
++ * @td_list: transfer descriptor list associated with this ring.
++ * @cycle_state: Current cycle bit. Write the cycle state into the TRB cycle
++ *               field to give ownership of the TRB to the device controller
++ *               (if we are the producer) or to check if we own the TRB
++ *               (if we are the consumer).
++ * @stream_id: Stream id
++ * @stream_active: Stream is active - PRIME packet has been detected.
++ * @stream_rejected: This ring has been rejected by host.
++ * @num_tds: Number of TDs associated with ring.
++ * @num_segs: Number of segments.
++ * @num_trbs_free: Number of free TRBs on the ring.
++ * @bounce_buf_len: Length of bounce buffer.
++ * @type: Ring type - event, transfer, or command ring.
++ * @last_td_was_short - TD is short TD.
++ * @trb_address_map: For mapping physical TRB addresses to segments in
++ *                   stream rings.
++ */
++struct cdnsp_ring {
++	struct cdnsp_segment *first_seg;
++	struct cdnsp_segment *last_seg;
++	union cdnsp_trb	 *enqueue;
++	struct cdnsp_segment *enq_seg;
++	union cdnsp_trb	 *dequeue;
++	struct cdnsp_segment *deq_seg;
++	struct list_head td_list;
++	u32 cycle_state;
++	unsigned int stream_id;
++	unsigned int stream_active;
++	unsigned int stream_rejected;
++	int num_tds;
++	unsigned int num_segs;
++	unsigned int num_trbs_free;
++	unsigned int bounce_buf_len;
++	enum cdnsp_ring_type type;
++	bool last_td_was_short;
++	struct radix_tree_root *trb_address_map;
++};
++
++/**
++ * struct cdnsp_erst_entry - even ring segment table entry object.
++ * @seg_addr: 64-bit event ring segment address.
++ * seg_size: Number of TRBs in segment.;
++ */
++struct cdnsp_erst_entry {
++	__le64 seg_addr;
++	__le32 seg_size;
++	/* Set to zero */
++	__le32 rsvd;
++};
++
++/**
++ * struct cdnsp_erst - even ring segment table for event ring.
++ * @entries: Array of event ring segments
++ * @num_entries: Number of segments in entries array.
++ * @erst_dma_addr: DMA address for entries array.
++ */
++struct cdnsp_erst {
++	struct cdnsp_erst_entry *entries;
++	unsigned int num_entries;
++	dma_addr_t erst_dma_addr;
++};
++
++/**
++ * struct cdnsp_request - extended device side representation of usb_request
++ *                        object .
++ * @td: Transfer descriptor associated with this request.
++ * @request: Generic usb_request object describing single I/O request.
++ * @list: Used to adding request to endpoint pending_list.
++ * @pep: Extended representation of usb_ep object
++ * @epnum: Endpoint number associated with usb request.
++ * @direction: Endpoint direction for usb request.
++ */
++struct cdnsp_request {
++	struct	cdnsp_td td;
++	struct usb_request request;
++	struct list_head list;
++	struct cdnsp_ep	 *pep;
++	u8 epnum;
++	unsigned direction:1;
++};
++
++#define	ERST_NUM_SEGS	1
++
++/* Stages used during enumeration process.*/
++enum cdnsp_ep0_stage {
++	CDNSP_SETUP_STAGE,
++	CDNSP_DATA_STAGE,
++	CDNSP_STATUS_STAGE,
++};
++
++/**
++ * struct cdnsp_port - holds information about detected ports.
++ * @port_num: Port number.
++ * @exist: Indicate if port exist.
++ * maj_rev: Major revision.
++ * min_rev: Minor revision.
++ */
++struct cdnsp_port {
++	struct cdnsp_port_regs __iomem *regs;
++	u8 port_num;
++	u8 exist;
++	u8 maj_rev;
++	u8 min_rev;
++};
++
++#define CDNSP_EXT_PORT_MAJOR(x)		(((x) >> 24) & 0xff)
++#define CDNSP_EXT_PORT_MINOR(x)		(((x) >> 16) & 0xff)
++#define CDNSP_EXT_PORT_OFF(x)		((x) & 0xff)
++#define CDNSP_EXT_PORT_COUNT(x)		(((x) >> 8) & 0xff)
++
++/**
++ * struct cdnsp_device - represent USB device.
++ * @dev: Pointer to device structure associated whit this controller.
++ * @gadget: Device side representation of the peripheral controller.
++ * @gadget_driver: Pointer to the gadget driver.
++ * @irq: IRQ line number used by device side.
++ * @regs:IO device memory.
++ * @cap_regs: Capability registers.
++ * @op_regs: Operational registers.
++ * @run_regs: Runtime registers.
++ * @dba: Device base address register.
++ * @ir_set: Current interrupter register set.
++ * @port20_regs: Port 2.0 Peripheral Configuration Registers.
++ * @port3x_regs: USB3.x Port Peripheral Configuration Registers.
++ * @hcs_params1: Cached register copies of read-only HCSPARAMS1
++ * @hcc_params: Cached register copies of read-only HCCPARAMS1
++ * @rev_cap: Controller capability.
++ * @setup: Temporary buffer for setup packet.
++ * @ep0_preq: Internal allocated request used during enumeration.
++ * @ep0_stage: ep0 stage during enumeration process.
++ * @three_stage_setup: Three state or two state setup.
++ * @ep0_expect_in: Data IN expected for control transfer.
++ * @setup_id: Setup identifier.
++ * @setup_speed - Speed detected for current SETUP packet.
++ * @setup_buf: Buffer for SETUP packet.
++ * @device_address: Current device address.
++ * @lock: Lock used in interrupt thread context.
++ * @hci_version: device controller version.
++ * @dcbaa: Device context base address array.
++ * @cmd_ring: Command ring.
++ * @cmd: Represent all what is needed to issue command on Command Ring.
++ * @event_ring: Event ring.
++ * @erst: Event Ring Segment table
++ * @slot_id: Current Slot ID. Should be 0 or 1.
++ * @out_ctx: Output context.
++ * @in_ctx: Input context.
++ * @eps: array of endpoints object associated with device.
++ * @usb2_hw_lpm_capable: hardware lpm is enabled;
++ * @u1_allowed: Allow device transition to U1 state.
++ * @u2_allowed: Allow device transition to U2 state
++ * @device_pool: DMA pool for allocating input and output context.
++ * @segment_pool: DMA pool for allocating new segments.
++ * @cdnsp_state: Current state of controller.
++ * @link_state: Current link state.
++ * @usb2_port - Port USB 2.0.
++ * @usb3_port - Port USB 3.0.
++ * @active_port - Current selected Port.
++ * @test_mode: selected Test Mode.
++ */
++struct cdnsp_device {
++	struct device *dev;
++	struct usb_gadget gadget;
++	struct usb_gadget_driver *gadget_driver;
++	unsigned int irq;
++	void __iomem *regs;
++
++	/* Registers map */
++	struct cdnsp_cap_regs __iomem *cap_regs;
++	struct cdnsp_op_regs __iomem *op_regs;
++	struct cdnsp_run_regs __iomem *run_regs;
++	struct cdnsp_doorbell_array __iomem *dba;
++	struct	cdnsp_intr_reg __iomem *ir_set;
++	struct cdnsp_20port_cap __iomem *port20_regs;
++	struct cdnsp_3xport_cap __iomem *port3x_regs;
++
++	/* Cached register copies of read-only CDNSP data */
++	__u32 hcs_params1;
++	__u32 hcs_params3;
++	__u32 hcc_params;
++	struct cdnsp_rev_cap rev_cap;
++	/* Lock used in interrupt thread context. */
++	spinlock_t lock;
++	struct usb_ctrlrequest setup;
++	struct cdnsp_request ep0_preq;
++	enum cdnsp_ep0_stage ep0_stage;
++	u8 three_stage_setup;
++	u8 ep0_expect_in;
++	u8 setup_id;
++	u8 setup_speed;
++	void *setup_buf;
++	u8 device_address;
++	int remote_wakeup_allowed;
++	u16 hci_version;
++
++	/* data structures */
++	struct cdnsp_device_context_array *dcbaa;
++	struct cdnsp_ring *cmd_ring;
++	struct cdnsp_command cmd;
++	struct cdnsp_ring *event_ring;
++	struct cdnsp_erst erst;
++	int slot_id;
++
++	/*
++	 * Commands to the hardware are passed an "input context" that
++	 * tells the hardware what to change in its data structures.
++	 * The hardware will return changes in an "output context" that
++	 * software must allocate for the hardware. .
++	 */
++	struct cdnsp_container_ctx out_ctx;
++	struct cdnsp_container_ctx in_ctx;
++	struct cdnsp_ep eps[CDNSP_ENDPOINTS_NUM];
++	u8 usb2_hw_lpm_capable:1;
++	u8 u1_allowed:1;
++	u8 u2_allowed:1;
++
++	/* DMA pools */
++	struct dma_pool *device_pool;
++	struct dma_pool	*segment_pool;
++
++#define CDNSP_STATE_HALTED		BIT(1)
++#define CDNSP_STATE_DYING		BIT(2)
++#define CDNSP_STATE_DISCONNECT_PENDING	BIT(4)
++	unsigned int cdnsp_state;
++	unsigned int link_state;
++
++	struct cdnsp_port usb2_port;
++	struct cdnsp_port usb3_port;
++	struct cdnsp_port *active_port;
++	u16 test_mode;
++};
++
++#endif /* __LINUX_CDNSP_GADGET_H */
 -- 
 2.17.1
 
