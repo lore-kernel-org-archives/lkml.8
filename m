@@ -2,297 +2,208 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81082C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A00E206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5947A206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W11EUkty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgFZPC7 (ORCPT
+        id S1727988AbgFZPDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgFZPC6 (ORCPT
+        Fri, 26 Jun 2020 11:03:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42101 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727943AbgFZPDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:02:58 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74B3C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:02:58 -0700 (PDT)
-Received: from p508752b4.dip0.t-ipconnect.de ([80.135.82.180] helo=vostro)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jopsU-0005A7-V7; Fri, 26 Jun 2020 17:02:55 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless ringbuffer
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
-        <20200618144919.9806-4-john.ogness@linutronix.de>
-        <20200625082838.GF6156@alley>
-Date:   Fri, 26 Jun 2020 17:02:48 +0200
-In-Reply-To: <20200625082838.GF6156@alley> (Petr Mladek's message of "Thu, 25
-        Jun 2020 10:28:38 +0200")
-Message-ID: <87sgeh3m5j.fsf@jogness.linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 26 Jun 2020 11:03:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593183793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kbbm/TbFSROfdFMnHjMyJ/DJL0wHiGp0BTDJLEl5I30=;
+        b=W11EUktyC9CTx+Z2hnXHeIvykCscPl/o3oWMykrE9EHeJ0rXLFduyzRv+a9C82ZxGrQ6sl
+        mOTjutLp490ZJw9jb0+2zNNnyv/uEgF214RjYrwKH4hU1KlrkZK1AUIXwsyvsfmISwpfU5
+        x4eJwmz3zBPtxu/uWilqavTNXSOgTiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-uN93BnBAO7yBqJa4ASKuiA-1; Fri, 26 Jun 2020 11:03:08 -0400
+X-MC-Unique: uN93BnBAO7yBqJa4ASKuiA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2312E8015CB;
+        Fri, 26 Jun 2020 15:03:07 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-117-87.rdu2.redhat.com [10.10.117.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 304AD1944D;
+        Fri, 26 Jun 2020 15:03:04 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 7D36E222D88; Fri, 26 Jun 2020 11:03:03 -0400 (EDT)
+Date:   Fri, 26 Jun 2020 11:03:03 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, virtio-fs@redhat.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] kvm,x86: Exit to user space in case of page fault
+ error
+Message-ID: <20200626150303.GC195150@redhat.com>
+References: <20200625214701.GA180786@redhat.com>
+ <87lfkach6o.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfkach6o.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
->> --- a/kernel/printk/printk.c
->> +++ b/kernel/printk/printk.c
->> @@ -1176,11 +1068,46 @@ static void __init set_percpu_data_ready(void)
->>  	__printk_percpu_data_ready = true;
->>  }
->>  
->> +static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
->> +				     struct printk_record *r)
->> +{
->> +	struct prb_reserved_entry e;
->> +	struct printk_record dest_r;
->> +
->> +	prb_rec_init_wr(&dest_r, r->info->text_len, r->info->dict_len);
->> +
->> +	if (!prb_reserve(&e, rb, &dest_r))
->> +		return 0;
->> +
->> +	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
->> +	if (dest_r.dict_buf) {
->> +		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
->> +		       dest_r.dict_buf_size);
->> +	}
->> +	dest_r.info->facility = r->info->facility;
->> +	dest_r.info->level = r->info->level;
->> +	dest_r.info->flags = r->info->flags;
->> +	dest_r.info->ts_nsec = r->info->ts_nsec;
->> +	dest_r.info->caller_id = r->info->caller_id;
->> +
->> +	prb_commit(&e);
->> +
->> +	return prb_record_text_space(&e);
->> +}
->> +
->> +static char setup_text_buf[CONSOLE_EXT_LOG_MAX] __initdata;
->> +static char setup_dict_buf[CONSOLE_EXT_LOG_MAX] __initdata;
->> +
->>  void __init setup_log_buf(int early)
->>  {
->> +	struct prb_desc *new_descs;
->> +	struct printk_info info;
->> +	struct printk_record r;
->>  	unsigned long flags;
->> +	char *new_dict_buf;
->>  	char *new_log_buf;
->>  	unsigned int free;
->> +	u64 seq;
->>  
->>  	/*
->>  	 * Some archs call setup_log_buf() multiple times - first is very
->> @@ -1201,17 +1128,50 @@ void __init setup_log_buf(int early)
->>  
->>  	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
->>  	if (unlikely(!new_log_buf)) {
->> -		pr_err("log_buf_len: %lu bytes not available\n",
->> +		pr_err("log_buf_len: %lu text bytes not available\n",
->>  			new_log_buf_len);
->>  		return;
->>  	}
->>  
->> +	new_dict_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
->> +	if (unlikely(!new_dict_buf)) {
->> +		/* dictionary failure is allowed */
->> +		pr_err("log_buf_len: %lu dict bytes not available\n",
->> +			new_log_buf_len);
->> +	}
->> +
->> +	new_descs = memblock_alloc((new_log_buf_len >> PRB_AVGBITS) *
->> +				   sizeof(struct prb_desc), LOG_ALIGN);
->> +	if (unlikely(!new_descs)) {
->> +		pr_err("log_buf_len: %lu desc bytes not available\n",
->> +			new_log_buf_len >> PRB_AVGBITS);
->> +		if (new_dict_buf)
->> +			memblock_free(__pa(new_dict_buf), new_log_buf_len);
->> +		memblock_free(__pa(new_log_buf), new_log_buf_len);
->> +		return;
->> +	}
->> +
->> +	prb_rec_init_rd(&r, &info,
->> +			&setup_text_buf[0], sizeof(setup_text_buf),
->> +			&setup_dict_buf[0], sizeof(setup_dict_buf));
->> +
->>  	logbuf_lock_irqsave(flags);
->> +
->> +	prb_init(&printk_rb_dynamic,
->> +		 new_log_buf, bits_per(new_log_buf_len) - 1,
->> +		 new_dict_buf, bits_per(new_log_buf_len) - 1,
->
-> This does not check whether new_dict_buf was really allocated.
+On Fri, Jun 26, 2020 at 11:25:19AM +0200, Vitaly Kuznetsov wrote:
 
-Thank you.
+[..]
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 76817d13c86e..a882a6a9f7a7 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -4078,7 +4078,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
+> >  	if (!async)
+> >  		return false; /* *pfn has correct page already */
+> >  
+> > -	if (!prefault && kvm_can_do_async_pf(vcpu)) {
+> > +	if (!prefault && kvm_can_do_async_pf(vcpu, cr2_or_gpa >> PAGE_SHIFT)) {
+> 
+> gpa_to_gfn(cr2_or_gpa) ?
 
-> I suggest to make it easy and switch to the new buffers only when
-> all three could get allocated.
+Will do.
 
-Agreed.
+[..]
+> > -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+> > +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn)
+> >  {
+> >  	if (unlikely(!lapic_in_kernel(vcpu) ||
+> >  		     kvm_event_needs_reinjection(vcpu) ||
+> > @@ -10504,7 +10506,13 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+> >  	 * If interrupts are off we cannot even use an artificial
+> >  	 * halt state.
+> >  	 */
+> > -	return kvm_arch_interrupt_allowed(vcpu);
+> > +	if (!kvm_arch_interrupt_allowed(vcpu))
+> > +		return false;
+> > +
+> > +	if (vcpu->arch.apf.error_gfn == gfn)
+> > +		return false;
+> > +
+> > +	return true;
+> >  }
+> >  
+> >  bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> 
+> I'm a little bit afraid that a single error_gfn may not give us
+> deterministric behavior. E.g. when we have a lot of faulting processes
+> it may take many iterations to hit 'error_gfn == gfn' because we'll
+> always be overwriting 'error_gfn' with new values and waking up some
+> (random) process.
+> 
+> What if we just temporary disable the whole APF mechanism? That would
+> ensure we're making forward progress. Something like (completely
+> untested):
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index f8998e97457f..945b3d5a2796 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -778,6 +778,7 @@ struct kvm_vcpu_arch {
+>  		unsigned long nested_apf_token;
+>  		bool delivery_as_pf_vmexit;
+>  		bool pageready_pending;
+> +		bool error_pending;
+>  	} apf;
+>  
+>  	/* OSVW MSRs (AMD only) */
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index fdd05c233308..e5f04ae97e91 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4124,8 +4124,18 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+>  	if (try_async_pf(vcpu, prefault, gfn, gpa, &pfn, write, &map_writable))
+>  		return RET_PF_RETRY;
+>  
+> -	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r))
+> +	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r)) {
+> +		/*
+> +		 * In case APF mechanism was previously disabled due to an error
+> +		 * we are ready to re-enable it here as we're about to inject an
+> +		 * error to userspace. There is no guarantee we are handling the
+> +		 * same GFN which failed in APF here but at least we are making
+> +		 * forward progress.
+> +		 */
+> +
+> +		vcpu->arch.apf.error_pending = false;
 
-> Well, I still feel a bit uneasy about these PRB_AVGBITS operations,
-> including new_log_buf_len >> PRB_AVGBITS used above.
->
-> A more safe design would be to add some sanity checks at the beginning
-> of the function. And maybe convert new_log_buf_let to number of bits.
-> Then operate with the number of bits in the rest of the function.  It
-> might be easier to make sure that we are on the safe side.
+I like this idea. It is simple. But I have a concern with it though.
 
-I will clean it up with additional checks and temporary variables.
+- Can it happen that we never retry faulting in error pfn.  Say a process
+  accessed a pfn, we set error_pending, and then process got killed due
+  to pending signal. Now process will not retry error pfn. And
+  error_pending will remain set and we completely disabled APF
+  mechanism till next error happens (if it happens).
 
->>  	log_buf_len = new_log_buf_len;
->>  	log_buf = new_log_buf;
->>  	new_log_buf_len = 0;
->> -	free = __LOG_BUF_LEN - log_next_idx;
->> -	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
->> +
->> +	free = __LOG_BUF_LEN;
->> +	prb_for_each_record(0, &printk_rb_static, seq, &r)
->> +		free -= add_to_rb(&printk_rb_dynamic, &r);
->> +
->> +	prb = &printk_rb_dynamic;
->
-> This might deserve a comment that this is safe (no lost message)
-> because it is called early enough when everything is still running
-> on the boot CPU.
+In another idea, we could think of maintaining another hash of error
+gfns. Similar to "vcpu->arch.apf.gfns[]". Say "vgpu->arch.apf.error_gfns[]"
 
-I will add a comment and an extra check to make sure.
+- When error happens on a gfn, add it to hash. If slot is busy, overwrite
+  it.
 
-Once everything is lockless, new messages could appear (for example, due
-to NMI messages). The simple check should probably change to a loop. But
-let us not worry about that at this point.
+- When kvm_can_do_async_pf(gfn) is called, check if this gfn is present
+  in error_gfn, if yes, clear it and force sync fault.
 
-Below is a new version of the relevant patch snippets against mainline
-just to show you how I plan to make it look for the next version.
+This is more complicated but should take care of your concerns. Also 
+even if process never retries that gfn, we are fine. At max that
+gfn will remain error_gfn array but will not disable APF completely.
 
-John Ogness
+Thanks
+Vivek
 
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ @@
-+#define PRB_AVGBITS 5	/* 32 character average length */
-+
-+#if CONFIG_LOG_BUF_SHIFT <= PRB_AVGBITS
-+#error CONFIG_LOG_BUF_SHIFT value too small.
-+#endif
-+_DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
-+		 PRB_AVGBITS, PRB_AVGBITS, &__log_buf[0]);
-+
-@@ @@
- void __init setup_log_buf(int early)
- {
-+	unsigned int new_descs_count;
-+	struct prb_desc *new_descs;
-+	struct printk_info info;
-+	struct printk_record r;
-+	size_t new_descs_size;
- 	unsigned long flags;
-+	char *new_dict_buf;
- 	char *new_log_buf;
- 	unsigned int free;
-+	u64 seq;
- 
- 	/*
- 	 * Some archs call setup_log_buf() multiple times - first is very
-@@ @@ void __init setup_log_buf(int early)
- 	if (!new_log_buf_len)
- 		return;
- 
-+	new_descs_count = new_log_buf_len >> PRB_AVGBITS;
-+	if (new_descs_count == 0) {
-+		pr_err("new_log_buf_len: %lu too small\n", new_log_buf_len);
-+		return;
-+	}
-+
- 	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
- 	if (unlikely(!new_log_buf)) {
--		pr_err("log_buf_len: %lu bytes not available\n",
--			new_log_buf_len);
-+		pr_err("log_buf_len: %lu text bytes not available\n",
-+		       new_log_buf_len);
-+		return;
-+	}
-+
-+	new_dict_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
-+	if (unlikely(!new_dict_buf)) {
-+		pr_err("log_buf_len: %lu dict bytes not available\n",
-+		       new_log_buf_len);
-+		memblock_free(__pa(new_log_buf), new_log_buf_len);
- 		return;
- 	}
- 
-+	new_descs_size = new_descs_count * sizeof(struct prb_desc);
-+	new_descs = memblock_alloc(new_descs_size, LOG_ALIGN);
-+	if (unlikely(!new_descs)) {
-+		pr_err("log_buf_len: %lu desc bytes not available\n",
-+		       new_descs_size);
-+		memblock_free(__pa(new_dict_buf), new_log_buf_len);
-+		memblock_free(__pa(new_log_buf), new_log_buf_len);
-+		return;
-+	}
-+
-+	prb_rec_init_rd(&r, &info,
-+			&setup_text_buf[0], sizeof(setup_text_buf),
-+			&setup_dict_buf[0], sizeof(setup_dict_buf));
-+
-+	prb_init(&printk_rb_dynamic,
-+		 new_log_buf, order_base_2(new_log_buf_len),
-+		 new_dict_buf, order_base_2(new_log_buf_len),
-+		 new_descs, order_base_2(new_descs_count));
-+
- 	logbuf_lock_irqsave(flags);
-+
- 	log_buf_len = new_log_buf_len;
- 	log_buf = new_log_buf;
- 	new_log_buf_len = 0;
--	free = __LOG_BUF_LEN - log_next_idx;
--	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
-+
-+	free = __LOG_BUF_LEN;
-+	prb_for_each_record(0, &printk_rb_static, seq, &r)
-+		free -= add_to_rb(&printk_rb_dynamic, &r);
-+
-+	/*
-+	 * This is early enough that everything is still running on the
-+	 * boot CPU and interrupts are disabled. So no new messages will
-+	 * appear during this switch.
-+	 */
-+	prb = &printk_rb_dynamic;
-+
- 	logbuf_unlock_irqrestore(flags);
- 
-+	/* Verify no messages were dropped. */
-+	if (seq != prb_next_seq(&printk_rb_static)) {
-+		pr_err("dropped %llu messages\n",
-+		       prb_next_seq(&printk_rb_static) - seq);
-+	}
-+
- 	pr_info("log_buf_len: %u bytes\n", log_buf_len);
- 	pr_info("early log buf free: %u(%u%%)\n",
- 		free, (free * 100) / __LOG_BUF_LEN);
+>  		return r;
+> +	}
+>  
+>  	r = RET_PF_RETRY;
+>  	spin_lock(&vcpu->kvm->mmu_lock);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 00c88c2f34e4..4607cf4d5117 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -10379,7 +10379,9 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+>  	      work->arch.cr3 != vcpu->arch.mmu->get_guest_pgd(vcpu))
+>  		return;
+>  
+> -	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
+> +	r = kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
+> +	if (r < 0)
+> +		vcpu->arch.apf.error_pending = true;
+>  }
+>  
+>  static inline u32 kvm_async_pf_hash_fn(gfn_t gfn)
+> @@ -10499,6 +10501,9 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+>  	if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
+>  		return false;
+>  
+> +	if (unlikely(vcpu->arch.apf.error_pending))
+> +		return false;
+> +
+>  	/*
+>  	 * If interrupts are off we cannot even use an artificial
+>  	 * halt state.
+> 
+> -- 
+> Vitaly
+> 
+
