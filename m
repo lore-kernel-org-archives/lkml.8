@@ -2,219 +2,150 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E99C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E78C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3D520857
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA89E20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WJpS6K3j"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="gjPwtkCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgFZItL (ORCPT
+        id S1726106AbgFZItS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgFZItL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:49:11 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28900C08C5C1;
-        Fri, 26 Jun 2020 01:49:11 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d14000d60c73cccfe0752.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1400:d60:c73c:ccfe:752])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 702AB1EC02CF;
-        Fri, 26 Jun 2020 10:49:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593161349;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DWPH5Ela8MSgGqxoD71LBJ9URCffpI84WcbeA/yuPDc=;
-        b=WJpS6K3jEL/ALZaEr52cr1zLITyiBBoxlqIRnlvxtNkqu/qJbCZlH5FZhWa62wOC2QDyKE
-        XcOb8SD9oZPeF+t4+zkCW3H96nuB3hcdhvPnMQ3QZ4eEQCFV02gI0th5qQ61Vl2h0q059c
-        GOOIqDgOHJ73CxP14/iQ01s5MJywKhw=
-Date:   Fri, 26 Jun 2020 10:49:03 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org,
-        dsmythies@telus.net, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, peterz@infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [UPDATE][PATCH v3 1/2] cpufreq: intel_pstate: Allow
- enable/disable energy efficiency
-Message-ID: <20200626084903.GA27151@zn.tnic>
-References: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
+        Fri, 26 Jun 2020 04:49:18 -0400
+Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:38518
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725841AbgFZItR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:49:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n64idGHCaEQvtQ6siBPzrQ1uPTGNcxCtrfD5kZfheak0uf5WvxhOUHE60y/QS+ylfD1TxvA4I+nNVFlhLWWDFJci92qvEcVxJrm/AVNcAiGVVuBzI+dKhGSoyXcQ72D0KK5/+mVG5KEPFPk2prQwi5Ae962VWBUQhG6K6xiknJGSWimZEwkcuxqCMgkX4rjmPOERFwg778XsEvhny7L3TyC/tgoUXdBfmsd84v/fB/5Qb2OOmNHugMvHHqD54uGxC6Vfm8M7Mtlv4x0fzdrgsDXdJVBfCYzmDkc8mvT8Vj0wv0muVp++IQLy3Y+X7fEz9P+phTFznWVu+vnFn3n5mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XEUBIbJU2uGicWkaQxmQNH39tUrJEparuVoLCvhI3ys=;
+ b=TMHn9rgX3Mv8mt1oVj/oisG0LW/aHYNdgZO52FTEwoB0DXrIotmdLX7bLm6jYHT6XYxjcdDwL1FtVOMzRRQ2ZDU800OmV4qLoh5lbdwSrI6SWFqfovRK8bsYfnni+5JUbZPPyyQmDZhCkTO6o28l6YwI/o0uGl4VJhve4skbhTvFCrpyhp/Yg/PKRbxSw6f3IU//F/OQ19YA/x/NBmQe2GYusTuzI+sPUgqYtJf005g1iLgUARlHr/gKXddjxpKD0NFzxumbiRRlRT5ldIss0n3umuhYLAjiZJ25Ac1bEmHewzG+qP1mQeBRlOKlJM8vq3zMIaCBnMJvBNsAqYXJmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XEUBIbJU2uGicWkaQxmQNH39tUrJEparuVoLCvhI3ys=;
+ b=gjPwtkCAEknVdHOhEVzYwz/hypeRZqFbupRq4i6T2276EImqvinMVTC63rveEDGbm+UooH3bRDrKTDIb66GtJowPB8vx/cVE1JNrre3btktfImHUEo+MFEH1uNwthPgHIb0G3piUdibDj/y+/F3i3bWO5VcdJEx+2yUa4bLHBhw=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:52::13)
+ by AM6PR10MB3078.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:e5::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Fri, 26 Jun
+ 2020 08:49:10 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6d54:9ddd:f235:d379]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6d54:9ddd:f235:d379%5]) with mapi id 15.20.3131.021; Fri, 26 Jun 2020
+ 08:49:10 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [RESEND 09/10] regulator: da9063-regulator: Fix .suspend
+ 'initialized field overwritten' warnings
+Thread-Topic: [RESEND 09/10] regulator: da9063-regulator: Fix .suspend
+ 'initialized field overwritten' warnings
+Thread-Index: AQHWSyVDgRGRokKtEUSeT6UcQptSEKjqluIA
+Date:   Fri, 26 Jun 2020 08:49:10 +0000
+Message-ID: <AM6PR10MB2263AAC42CEE740F885526FA80930@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200625191708.4014533-1-lee.jones@linaro.org>
+ <20200625191708.4014533-10-lee.jones@linaro.org>
+In-Reply-To: <20200625191708.4014533-10-lee.jones@linaro.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.64]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aed3ef35-8ddf-412a-df51-08d819adcb9a
+x-ms-traffictypediagnostic: AM6PR10MB3078:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB307821737C537B6931EEB842A7930@AM6PR10MB3078.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FyiYVgTelaZD6WuYnWtfY7/+oWU+YJGuYM6Z+KIsDPn/da+sWDv11h2hZiRbKmT+XOp9LYsz+cFeybjG0yA+OphA/7b8olCBuFub6KQb4NLmiSx/m9IKPEu5+1IqUjuQpGLkCRPMc5xkeWDt3NkW/Cx//EkbSlsLDDaWKOV0rYgChVZ2d0qd8SnroQMUpMXDU/RZhGX/YW6JLAlmDDaNc8E7FGZ9/NL/l4O7SJIFfqgmC+FTxgiRa1rcThXW7fG1vZjiESZA7QhXTaGieezwPwY0+0yzEqbWXYVlp/AD3uYWXLExxe5nHwai7paqDwz795SaNuDaaMMpNMhzHer4JoC4POKgi9Zc5XTLK5guuCmApTJijbLAFIU3JLeDixxcBB+94NkLd2Vk7LN8GadwMaCTQjtcKnvWzJw9nF+FtzjA0547WxKwQzIih6F/b8E5wx1xPq7Gy8d1C8baEs55ag==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(366004)(346002)(376002)(136003)(186003)(76116006)(55016002)(966005)(478600001)(8936002)(316002)(7696005)(5660300002)(54906003)(71200400001)(86362001)(53546011)(55236004)(66946007)(9686003)(52536014)(110136005)(33656002)(26005)(6506007)(8676002)(15650500001)(64756008)(66446008)(66556008)(66476007)(83380400001)(2906002)(107886003)(4326008)(142923001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: sGwjiBiZ+uhz/0lQh/X2rzHmvSrSlvoQ1n7/RoTlpuwtFkmk5htSgfWQRe9/5RXSlv70fh6JcRRRI9B5kmg/GziKLM93h0SLJRXyKPNwW9DDOfqm1RVSMXO64CTrvLC01tqQZFfGD+Gqbm5/H7SKgUYWOnnEms7wHCpk3pDoDlQJAjtNjfqZLsvV8874FLUTqb4EIcGo1qdJCIVSC8Ji4SMWs0028VRY0krhsQZJ82sTD6Gv6Xf1CuAQ+2W010C2yVqdXt0dl3QFWuLI0gVT80hWYmDD/FwH4t5bu7LVQHyKSSuYGqR8HbOKsjP8Ys6EcCvpfaxK30ISw/NeM6R87R16tIqO4zr6jkRcqvyJalG+0oTq3itKqYfrsn9bBeggX3yWvqnuo42pYN/jePpltdfY6OSwcQ5zqDgOu8xYJ1u7FNZmNntNhn/qpbkCB7WMxtTh3EXHNQrI5hIqKnzVEsXSiVvXMBicYEJT/xnNK5I/5QzzeC1BtmVfc3/ZfsBS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aed3ef35-8ddf-412a-df51-08d819adcb9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 08:49:10.8022
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: szizq3pHnIcMBV+7AmffQQqo+u5D5zsReUNmojpDL7a6lQjxy1Dcgkwa/dDSozMMF8P4AQMgVOBqfezuWQl4bhHf9P00TrzlAjW2oM0Vm7U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB3078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 03:49:31PM -0700, Srinivas Pandruvada wrote:
-> By default intel_pstate driver disables energy efficiency by setting
-> MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
-> This CPU model is also shared by Coffee Lake desktop CPUs. This allows
-> these systems to reach maximum possible frequency. But this adds power
-> penalty, which some customers don't want. They want some way to enable/
-> disable dynamically.
-> 
-> So, add an additional attribute "energy_efficiency_enable" under
-> /sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
-> to read and write bit 19 ("Disable Energy Efficiency Optimization") in
-> the MSR IA32_POWER_CTL.
-
-Yes, this is how functionality behind MSRs should be made available to
-userspace - not poking at naked MSRs. Good.
-
-> This attribute is present in both HWP and non-HWP mode as this has an
-> effect in both modes. Refer to Intel Software Developer's manual for
-> details. The scope of this bit is package wide. Also these systems
-> support only one package. So read/write MSR on the current CPU is
-> enough.
-> 
-> Suggested-by: Len Brown <lenb@kernel.org>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v3 update
-> Moved the MSR bit definition to msr-index.h from intel_pstate.c as Doug
-> wanted. Offline checking with Borislav, for MSR defintion it is
-> fine to move to  msr-index.h even for single user of the definition. But
-> here the MSR definition is already in msr-index.h, but adding the MSR bit
-> definition also.
-
-Yes.
-
-Btw, no need for the "offline checking" - you can do this on the mailing
-list just fine.
-
->  Documentation/admin-guide/pm/intel_pstate.rst |  9 ++++
->  arch/x86/include/asm/msr-index.h              |  1 +
->  drivers/cpufreq/intel_pstate.c                | 47 ++++++++++++++++++-
->  3 files changed, 55 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-> index 39d80bc29ccd..1ca2684a94d7 100644
-> --- a/Documentation/admin-guide/pm/intel_pstate.rst
-> +++ b/Documentation/admin-guide/pm/intel_pstate.rst
-> @@ -431,6 +431,15 @@ argument is passed to the kernel in the command line.
->  	supported in the current configuration, writes to this attribute will
->  	fail with an appropriate error.
->  
-> +``energy_efficiency_enable``
-> +	This attribute is only present on platforms, which has CPUs matching
-
-						which have
-
-> +	Kaby Lake or Coffee Lake desktop CPU model. By default
-> +	"energy_efficiency" is disabled on these CPU models in HWP mode by this
-> +	driver. Enabling energy efficiency may limit maximum operating
-> +	frequency in both HWP and non HWP mode. In non HWP mode, this attribute
-> +	has an effect in turbo range only. But in HWP mode, this attribute also
-> +	has an effect in non turbo range.
-
-Those last two sentences could be simplified - read strange.
-
-> +
->  Interpretation of Policy Attributes
->  -----------------------------------
->  
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index e8370e64a155..fec86ad14f8d 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -254,6 +254,7 @@
->  #define MSR_PEBS_FRONTEND		0x000003f7
->  
->  #define MSR_IA32_POWER_CTL		0x000001fc
-> +#define MSR_IA32_POWER_CTL_BIT_EE	19
-
-Sort that MSR in - I know, the rest is not sorted either but we can
-start somewhere. So pls put it...
-
-#define MSR_LBR_SELECT                  0x000001c8
-#define MSR_LBR_TOS                     0x000001c9
-
-<--- here.
-
-#define MSR_LBR_NHM_FROM                0x00000680
-#define MSR_LBR_NHM_TO                  0x000006c0
-
-
->  #define MSR_IA32_MC0_CTL		0x00000400
->  #define MSR_IA32_MC0_STATUS		0x00000401
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index 8e23a698ce04..daa1d9c12098 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -1218,6 +1218,42 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
->  	return count;
->  }
->  
-> +static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
-> +					     struct kobj_attribute *attr,
-> +					     char *buf)
-> +{
-> +	u64 power_ctl;
-> +	int enable;
-> +
-> +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-> +	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
-
-So you can simplify to:
-
-	enable = !!(power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE));
-
-methinks.
-
-> +	return sprintf(buf, "%d\n", !enable);
-
-If this bit is called
-
-	"Disable Energy Efficiency Optimization"
-
-why do you call your function and sysfs file "enable"? This is making it
-more confusing.
-
-Why don't you call it simply: "energy_efficiency" and have it intuitive:
-
-1 - enabled
-0 - disabled
-
-?
-
-> +static ssize_t store_energy_efficiency_enable(struct kobject *a,
-> +					      struct kobj_attribute *b,
-> +					      const char *buf, size_t count)
-> +{
-> +	u64 power_ctl;
-> +	u32 input;
-> +	int ret;
-> +
-> +	ret = kstrtouint(buf, 10, &input);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&intel_pstate_driver_lock);
-> +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-> +	if (input)
-
-This is too lax - it will be enabled for any !0 value. Please accept
-only 0 and 1.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+T24gMjUgSnVuZSAyMDIwIDIwOjE3LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gTG9va3MgYXMgdGhv
+dWdoIDk5Zjc1Y2U2NjYxOTkgKCJyZWd1bGF0b3I6IGRhOTA2MzogZml4IHN1c3BlbmQiKSBmYWls
+ZWQNCj4gdG8gY2xlYW4tdXAgYWxsIG9mIHRoZSBleGlzdGluZyAuc3VzcGVuZCB2YXJpYWJsZSBp
+bml0aWFsaXNhdGlvbnMuDQo+IFRoaXMgaGFzIGxlZCB0byBzb21lICdpbml0aWxpemVkIGZpZWxk
+IG92ZXJ3cml0dGVuJyBpc3N1ZXMgbm93IHByZXNlbnQNCj4gaW4gVz0xIGJ1aWxkcy4NCg0KWW91
+IHByb2JhYmx5IHdlcmUgbm90IG9uIHRoZSBDQyBidXQgSSBiZWxpZXZlIHRoZSBmb2xsb3dpbmcg
+cGF0Y2ggaGFzIGFscmVhZHkNCnJlc29sdmVkIHRoaXMgaXNzdWUsIGFuZCBoYXMgYmVlbiBwdWxs
+ZWQgYnkgTWFyazoNCg0KIFtQQVRDSF0gcmVndWxhdG9yOiBkYTkwNjM6IGZpeCBMRE85IHN1c3Bl
+bmQgYW5kIHdhcm5pbmcuDQogDQogUmVwbzogaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
+L2xpbnV4L2tlcm5lbC9naXQvYnJvb25pZS9yZWd1bGF0b3IuZ2l0Lw0KIEJyYW5jaDogZm9yLW5l
+eHQNCiBDb21taXQ6IGQ3NDQyYmExM2Q2MmRlOWFmYzRlNTczNDRhNjc2ZjlmNDYyM2RjYWENCg0K
+PiANCj4gVGhpcyBwYXRjaCBzcXVhc2hlcyB0aGUgZm9sbG93aW5nIGJ1aWxkIHdhcm5pbmdzOg0K
+PiANCj4gIEluIGZpbGUgaW5jbHVkZWQgZnJvbSBkcml2ZXJzL3JlZ3VsYXRvci9kYTkwNjMtcmVn
+dWxhdG9yLmM6MTc6DQo+ICBpbmNsdWRlL2xpbnV4L3JlZ21hcC5oOjExMjQ6Mzc6IHdhcm5pbmc6
+IGluaXRpYWxpemVkIGZpZWxkIG92ZXJ3cml0dGVuIFstDQo+IFdvdmVycmlkZS1pbml0XQ0KPiAg
+MTEyNCB8ICNkZWZpbmUgUkVHX0ZJRUxEKF9yZWcsIF9sc2IsIF9tc2IpIHsgfCBeDQo+ICBkcml2
+ZXJzL3JlZ3VsYXRvci9kYTkwNjMtcmVndWxhdG9yLmM6Mjc6Mjogbm90ZTogaW4gZXhwYW5zaW9u
+IG9mIG1hY3JvDQo+IOKAmFJFR19GSUVMROKAmQ0KPiAgMjcgfCBSRUdfRklFTEQoX3JlZywgX19i
+dWlsdGluX2ZmcygoaW50KV9tYXNrKSAtIDEsIHwgXn5+fn5+fn5+DQo+ICBkcml2ZXJzL3JlZ3Vs
+YXRvci9kYTkwNjMtcmVndWxhdG9yLmM6NTE1OjE0OiBub3RlOiBpbiBleHBhbnNpb24gb2YgbWFj
+cm8NCj4g4oCYQkZJRUxE4oCZDQo+ICA1MTUgfCAuc3VzcGVuZCA9IEJGSUVMRChEQTkwNjNfUkVH
+X0xETzlfQ09OVCwgREE5MDYzX1ZMRE85X1NFTCksDQo+ICB8IF5+fn5+fg0KPiAgaW5jbHVkZS9s
+aW51eC9yZWdtYXAuaDoxMTI0OjM3OiBub3RlOiAobmVhciBpbml0aWFsaXphdGlvbiBmb3INCj4g
+4oCYZGE5MDYzX3JlZ3VsYXRvcl9pbmZvWzExXS5zdXNwZW5k4oCZKQ0KPiAgMTEyNCB8ICNkZWZp
+bmUgUkVHX0ZJRUxEKF9yZWcsIF9sc2IsIF9tc2IpIHsgfCBeDQo+ICBkcml2ZXJzL3JlZ3VsYXRv
+ci9kYTkwNjMtcmVndWxhdG9yLmM6Mjc6Mjogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvDQo+
+IOKAmFJFR19GSUVMROKAmQ0KPiAgMjcgfCBSRUdfRklFTEQoX3JlZywgX19idWlsdGluX2Zmcygo
+aW50KV9tYXNrKSAtIDEsIHwgXn5+fn5+fn5+DQo+ICBkcml2ZXJzL3JlZ3VsYXRvci9kYTkwNjMt
+cmVndWxhdG9yLmM6NTE1OjE0OiBub3RlOiBpbiBleHBhbnNpb24gb2YgbWFjcm8NCj4g4oCYQkZJ
+RUxE4oCZDQo+ICA1MTUgfCAuc3VzcGVuZCA9IEJGSUVMRChEQTkwNjNfUkVHX0xETzlfQ09OVCwg
+REE5MDYzX1ZMRE85X1NFTCksDQo+ICB8IF5+fn5+fg0KPiANCj4gQ2M6IEtyeXN0aWFuIEdhcmJh
+Y2lhayA8a3J5c3RpYW4uZ2FyYmFjaWFrQGRpYXNlbWkuY29tPg0KPiBDYzogU3VwcG9ydCBPcGVu
+c291cmNlIDxzdXBwb3J0Lm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6
+IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQo+IC0tLQ0KPiAgZHJpdmVycy9yZWd1
+bGF0b3IvZGE5MDYzLXJlZ3VsYXRvci5jIHwgMSAtDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBkZWxl
+dGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcmVndWxhdG9yL2RhOTA2My1yZWd1
+bGF0b3IuYyBiL2RyaXZlcnMvcmVndWxhdG9yL2RhOTA2My0NCj4gcmVndWxhdG9yLmMNCj4gaW5k
+ZXggZTFkNmM4ZjZkNDBiYi4uZmU2NWI1YWNhZjI4MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9y
+ZWd1bGF0b3IvZGE5MDYzLXJlZ3VsYXRvci5jDQo+ICsrKyBiL2RyaXZlcnMvcmVndWxhdG9yL2Rh
+OTA2My1yZWd1bGF0b3IuYw0KPiBAQCAtNTEyLDcgKzUxMiw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZGE5MDYzX3JlZ3VsYXRvcl9pbmZvDQo+IGRhOTA2M19yZWd1bGF0b3JfaW5mb1tdID0gew0K
+PiAgCX0sDQo+ICAJew0KPiAgCQlEQTkwNjNfTERPKERBOTA2MywgTERPOSwgOTUwLCA1MCwgMzYw
+MCksDQo+IC0JCS5zdXNwZW5kID0gQkZJRUxEKERBOTA2M19SRUdfTERPOV9DT05ULA0KPiBEQTkw
+NjNfVkxETzlfU0VMKSwNCj4gIAl9LA0KPiAgCXsNCj4gIAkJREE5MDYzX0xETyhEQTkwNjMsIExE
+TzExLCA5MDAsIDUwLCAzNjAwKSwNCj4gLS0NCj4gMi4yNS4xDQoNCg==
