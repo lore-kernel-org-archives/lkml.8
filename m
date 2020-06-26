@@ -2,86 +2,54 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F27720E65
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TMYZ5TM8"
+	by mail.kernel.org (Postfix) with ESMTP id 2061620C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgFZLPO (ORCPT
+        id S1728381AbgFZLRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbgFZLPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:15:12 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67792C08C5C1;
-        Fri, 26 Jun 2020 04:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OPLtbx4nSF+ZifTe6YUf/6ZKs4PvGHfV1P1Ne1BmY9I=; b=TMYZ5TM8uqJMUmW9EMBU5X0XlE
-        sUmdCj+Le5O1RirUulvCJzrbBODVkrm5WB3Fi6gddS74hf5+7pDgxsKNeXGmDGnEu8Uf8Ot6TLeci
-        akXaxHdpV7kgkX9h7CtRRKqp/P5O0h52RTuZxSwPT7v3EGZwKop0NY5fv7tde7yLI/49+/1euM6v7
-        5NpixGyi9vvjrq07AnGsrKu8CUaX++A4o/8WlEbsQtr7TrhMyjyfGDFoMPm8cOFokts0iU9Poaauk
-        txHL3rMCuuB1pfOKI5qzsaxY2UJUFHZ+Ia0iCTOuH/wv4YseBtGfGa4Vhi6we2tYnvd4fAASDKWKI
-        8x7yR3mA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jomJ1-0006Uh-4s; Fri, 26 Jun 2020 11:14:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 07704301DFC;
-        Fri, 26 Jun 2020 13:14:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7F78329C9595E; Fri, 26 Jun 2020 13:14:01 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 13:14:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com, jinyuqi@huawei.com,
-        zhangshaokun@hisilicon.com
-Subject: Re: [Patch v4 3/3] net: Restrict receive packets queuing to
- housekeeping CPUs
-Message-ID: <20200626111401.GE4817@hirez.programming.kicks-ass.net>
-References: <20200625223443.2684-1-nitesh@redhat.com>
- <20200625223443.2684-4-nitesh@redhat.com>
+        Fri, 26 Jun 2020 07:17:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42280 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728290AbgFZLRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 07:17:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9D8EFAC7A;
+        Fri, 26 Jun 2020 11:17:13 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 13:17:11 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] x86/mm: Pre-allocate p4d/pud pages for vmalloc area
+Message-ID: <20200626111711.GO14101@suse.de>
+References: <20200626093450.27741-1-joro@8bytes.org>
+ <20200626110731.GC4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625223443.2684-4-nitesh@redhat.com>
+In-Reply-To: <20200626110731.GC4817@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 06:34:43PM -0400, Nitesh Narayan Lal wrote:
-> From: Alex Belits <abelits@marvell.com>
-> 
-> With the existing implementation of store_rps_map(), packets are queued
-> in the receive path on the backlog queues of other CPUs irrespective of
-> whether they are isolated or not. This could add a latency overhead to
-> any RT workload that is running on the same CPU.
-> 
-> Ensure that store_rps_map() only uses available housekeeping CPUs for
-> storing the rps_map.
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+On Fri, Jun 26, 2020 at 01:07:31PM +0200, Peter Zijlstra wrote:
+> Can't we now remove arch_sync_kernel_mappings() from this same file?
 
-Dave, ACK if I route this?
+Only if we panic on allocation failure.
+
+
+	Joerg
