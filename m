@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B114FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D919C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72EC820B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496BD212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CraDAXTs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF6jtPiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgFZWg0 (ORCPT
+        id S1726113AbgFZWg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:36:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39721 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725937AbgFZWgX (ORCPT
+        Fri, 26 Jun 2020 18:36:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725833AbgFZWg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:36:23 -0400
+        Fri, 26 Jun 2020 18:36:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593210981;
+        s=mimecast20190719; t=1593210984;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QEacpwhabx4oqP5P1sDsSQYEJDVmYeAmQf6kbwzkxic=;
-        b=CraDAXTseT6JIbfqvGu2kxok264u2Vs8iotTnsGt8lvyqUWtCRHWA7HiZc9ERy7yKhvHIb
-        ftKGA9IHpq7xNb35/r4CnUd7F3SskOYvmkv3rRHFHKVYa+ykTRbOWPiIg9gsKkYfAwdtJS
-        UHUdfMqJpCZ7OPcL30yqA/7sxq6SZXU=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-PO7r-DB8POqWPPOc2MnHsg-1; Fri, 26 Jun 2020 18:36:20 -0400
-X-MC-Unique: PO7r-DB8POqWPPOc2MnHsg-1
-Received: by mail-qt1-f200.google.com with SMTP id y5so7513201qto.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:36:20 -0700 (PDT)
+        bh=eYfbH2Z9PmFD3YC1EEjF5e5lSljD0oX0ZInZG0GJcWM=;
+        b=dF6jtPizPLR2dwLk1KXThJe53cbscuH3ouIM+FSi2V5U+ohT5eXLuczAm5dNZCRV852ojF
+        waC9GB6pToUojut6eLnQlH+pS4VzlIqX02rLCdP5bPCzDdXV4ZD1ZbTpNDo7aPx2mHPVbI
+        9ZVt7jYhgazxjQ4JRNZcbbzFEAsksko=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-0T_BGueDNHSmlSx2wu-gxw-1; Fri, 26 Jun 2020 18:36:22 -0400
+X-MC-Unique: 0T_BGueDNHSmlSx2wu-gxw-1
+Received: by mail-qt1-f199.google.com with SMTP id s30so7509876qts.18
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:36:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QEacpwhabx4oqP5P1sDsSQYEJDVmYeAmQf6kbwzkxic=;
-        b=etjoj6XCHw41wtYs3HIm3NMC20h6NhgZXX6k+2Ri/oRu5Hm+trYp/pSDvT5k5p9es3
-         tn2RHjE24ttbtWlf4UGENsvBtu76a+P05ufD9nO7eT9UlFNtwWv53/TNCpJKc7tmDQqH
-         lEAbX1i2J6g7kVVi2vuiE6rQPxBxyVBgyliMWc7LtVODaEcfdAEdpwMYFMP4qZyo0PTo
-         FOHmqbUbzotZ6cv5RMIeEd3iXdP76pxYmvRhdIBc5qLU7/FQU0UAy4+LUs1SebKWDOz5
-         V4+iPoryvM/6QuIchx8MfEiraoQtqZ7jKSb034cUxkpXR8XCXsKZIzdjqTCNBTDspXRh
-         Opgg==
-X-Gm-Message-State: AOAM5338i1Wv94VR+pdycIyjePNKZNJISmRdJxvIwc8EDBChqR8SIetU
-        EViVjuV61zK4tobcakgOSDTdWX23YpuyIg2/xtDZE/RgHw91OQLg6xQVmjcB71p++YGHKFjjyIe
-        pUQERewYNMb0K77hx+0yQdnuv
-X-Received: by 2002:a0c:da04:: with SMTP id x4mr5373446qvj.71.1593210979793;
-        Fri, 26 Jun 2020 15:36:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBZJGvl8YZD3UD74l3WAMRy83bIKViLR3O57/9pXVwl73+z2DH1H0MK6MkNpbyIvHsKU6sUg==
-X-Received: by 2002:a0c:da04:: with SMTP id x4mr5373440qvj.71.1593210979588;
-        Fri, 26 Jun 2020 15:36:19 -0700 (PDT)
+        bh=eYfbH2Z9PmFD3YC1EEjF5e5lSljD0oX0ZInZG0GJcWM=;
+        b=PWZFMr3/9AIL2DLb9g/Y5gsTUMzVqs7sp192S3cgtxWW0+eCeU45BHIKfOeRw4V+jL
+         gQOVdL1+ZjzhffdJ4bvUBvn5/Cj8JeMmOUuwUf2mlH6VwYWRFdw/fQXCadaNYh8rQohl
+         ImQc4Pv8F+nVYy8QaBTi2DKimztivBf/mjaGGjKDaPEaVJODlGYrlgJUBUudUZzZMxFa
+         WGOOY9nzoRWCUvjpD9H4yleYWHy3zc2GJZjjbVjj8+PRlQ9ZMLjYctohFGUxDENhgU/r
+         /IAj0PSv9syiXU6ka6LxiyqDcrARSfOe7tGKKrIgNZHtQyepKyxAxii/C7Z9N8sWSIG4
+         dkkw==
+X-Gm-Message-State: AOAM5333McMjHPjYxeNj1q0qK15fq1NbiLxskcb77JpdlxmLWoXkfrfW
+        10zN6j/ePy/pbcFHBr2Hax0cOlDOvKtfAsuqbWKtnRnYSnVOxKFOrqScL3ye5IPSGaPq1k5iVQq
+        Phdm2p0+quaDG9NVoMihUzdPv
+X-Received: by 2002:a05:6214:1543:: with SMTP id t3mr5519094qvw.89.1593210982454;
+        Fri, 26 Jun 2020 15:36:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzl3mgTYzAchfuJraPE8dLa9XFZmdj1PMxdhHvQ42A6yqkEgqYM5QwOpt7P688Ahd9QfaIH2g==
+X-Received: by 2002:a05:6214:1543:: with SMTP id t3mr5519084qvw.89.1593210982236;
+        Fri, 26 Jun 2020 15:36:22 -0700 (PDT)
 Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id x26sm9633604qtr.4.2020.06.26.15.36.18
+        by smtp.gmail.com with ESMTPSA id j24sm7981634qkl.79.2020.06.26.15.36.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 15:36:18 -0700 (PDT)
+        Fri, 26 Jun 2020 15:36:21 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Peter Xu <peterx@redhat.com>,
@@ -71,13 +71,11 @@ Cc:     Peter Xu <peterx@redhat.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
         Will Deacon <will@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        openrisc@lists.librecores.org
-Subject: [PATCH 14/26] mm/openrisc: Use general page fault accounting
-Date:   Fri, 26 Jun 2020 18:36:17 -0400
-Message-Id: <20200626223617.199669-1-peterx@redhat.com>
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
+Subject: [PATCH 15/26] mm/parisc: Use general page fault accounting
+Date:   Fri, 26 Jun 2020 18:36:20 -0400
+Message-Id: <20200626223620.199717-1-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200626223130.199227-1-peterx@redhat.com>
 References: <20200626223130.199227-1-peterx@redhat.com>
@@ -95,39 +93,36 @@ retry happened.
 Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
 perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
 
-CC: Jonas Bonn <jonas@southpole.se>
-CC: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-CC: Stafford Horne <shorne@gmail.com>
-CC: openrisc@lists.librecores.org
-Acked-by: Stafford Horne <shorne@gmail.com>
+CC: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+CC: Helge Deller <deller@gmx.de>
+CC: linux-parisc@vger.kernel.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/openrisc/mm/fault.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/parisc/mm/fault.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/openrisc/mm/fault.c b/arch/openrisc/mm/fault.c
-index 45aedc572361..5255d73ce180 100644
---- a/arch/openrisc/mm/fault.c
-+++ b/arch/openrisc/mm/fault.c
-@@ -15,6 +15,7 @@
- #include <linux/interrupt.h>
+diff --git a/arch/parisc/mm/fault.c b/arch/parisc/mm/fault.c
+index c10908ea8803..65661e22678e 100644
+--- a/arch/parisc/mm/fault.c
++++ b/arch/parisc/mm/fault.c
+@@ -18,6 +18,7 @@
  #include <linux/extable.h>
- #include <linux/sched/signal.h>
+ #include <linux/uaccess.h>
+ #include <linux/hugetlb.h>
 +#include <linux/perf_event.h>
  
- #include <linux/uaccess.h>
- #include <asm/siginfo.h>
-@@ -103,6 +104,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 	if (in_interrupt() || !mm)
- 		goto no_context;
+ #include <asm/traps.h>
  
+@@ -281,6 +282,7 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
+ 	acc_type = parisc_acctyp(code, regs->iir);
+ 	if (acc_type & VM_WRITE)
+ 		flags |= FAULT_FLAG_WRITE;
 +	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
  retry:
  	down_read(&mm->mmap_sem);
- 	vma = find_vma(mm, address);
-@@ -159,7 +162,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 	 * the fault.
+ 	vma = find_vma_prev(mm, address, &prev_vma);
+@@ -302,7 +304,7 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
+ 	 * fault.
  	 */
  
 -	fault = handle_mm_fault(vma, address, flags, NULL);
@@ -135,17 +130,17 @@ index 45aedc572361..5255d73ce180 100644
  
  	if (fault_signal_pending(fault, regs))
  		return;
-@@ -176,10 +179,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
- 
+@@ -323,10 +325,6 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
+ 		BUG();
+ 	}
  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
- 		/*RGD modeled on Cris */
 -		if (fault & VM_FAULT_MAJOR)
--			tsk->maj_flt++;
+-			current->maj_flt++;
 -		else
--			tsk->min_flt++;
+-			current->min_flt++;
  		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
- 
+ 			/*
+ 			 * No need to up_read(&mm->mmap_sem) as we would
 -- 
 2.26.2
 
