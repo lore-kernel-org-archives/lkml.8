@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0932053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D662053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LOMBBhB1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d2MUrMlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgFZSzf (ORCPT
+        id S1726034AbgFZSzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:55:35 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53333 "EHLO
+        Fri, 26 Jun 2020 14:55:39 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16325 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725811AbgFZSzZ (ORCPT
+        by vger.kernel.org with ESMTP id S1725998AbgFZSzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:55:25 -0400
+        Fri, 26 Jun 2020 14:55:36 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593197725; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1593197734; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ZYq7VwGElCZPsQHlqHARvnTk+1Chtr05/Ja89Izo7Gk=; b=LOMBBhB1VEI3u9Y4xzHAc1Efp1Q+5nX3oeac9hN/9EDOEO1frWLvGkrBn91O0zwRQP19ahbi
- qHKfDcc/XSrmeps+krGSKOWTEqYoCKVeVehBw/LijV7Dw6jzNZ9JwYhNtff6WdFf5fEXrDaf
- IETWTEB6J7dRDd6c06351VJutTo=
+ Sender; bh=kXCuA32AqYN/5o8mlvhJtFtJfKRMwUgSpIUrb0rY8FA=; b=d2MUrMlR5/4X176RP5H+Df6A3aMw6thhzDCfFDS1TdW+0EhDEwgNoBNUA7ww9kTpl5iuEOBZ
+ gMjrivqw5TXMphPlEbpylEbRetnUvCYM3/SF+rQGkqDARsfP3crTWv08HSy/StcNz5PxojWC
+ hymZvWYeMyXBLZ0bYIneJ0RckbE=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5ef6449c86de6ccd44e05934 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:55:24
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5ef6449d356bcc26abcdc1a9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:55:25
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7DEFAC433B1; Fri, 26 Jun 2020 18:55:23 +0000 (UTC)
+        id F0093C433CB; Fri, 26 Jun 2020 18:55:24 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A8D44C433A1;
-        Fri, 26 Jun 2020 18:55:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8D44C433A1
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A970AC433AF;
+        Fri, 26 Jun 2020 18:55:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A970AC433AF
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -57,9 +57,9 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         jackp@codeaurora.org, rdunlap@infradead.org,
         Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v4 2/6] dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
-Date:   Fri, 26 Jun 2020 11:55:12 -0700
-Message-Id: <20200626185516.18018-3-wcheng@codeaurora.org>
+Subject: [PATCH v4 4/6] regulator: Add support for QCOM PMIC VBUS booster
+Date:   Fri, 26 Jun 2020 11:55:14 -0700
+Message-Id: <20200626185516.18018-5-wcheng@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200626185516.18018-1-wcheng@codeaurora.org>
 References: <20200626185516.18018-1-wcheng@codeaurora.org>
@@ -70,150 +70,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the dt-binding for enabling USB type C orientation and role
-detection using the PM8150B.  The driver will be responsible for receiving
-the interrupt at a state change on the CC lines, reading the orientation/role,
-and communicating this information to the remote clients, which can include
-a role switch node and a type C switch.
+Some Qualcomm PMICs have the capability to source the VBUS output to
+connected peripherals.  This driver will register a regulator to the
+regulator list to enable or disable this source by an external driver.
 
 Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 ---
- .../bindings/usb/qcom,pmic-typec.yaml         | 126 ++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+ drivers/regulator/Kconfig                   | 10 +++
+ drivers/regulator/Makefile                  |  1 +
+ drivers/regulator/qcom_usb_vbus-regulator.c | 97 +++++++++++++++++++++
+ 3 files changed, 108 insertions(+)
+ create mode 100644 drivers/regulator/qcom_usb_vbus-regulator.c
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 074a2ef55943..273d85a45263 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -797,6 +797,16 @@ config REGULATOR_QCOM_SPMI
+ 	  Qualcomm SPMI PMICs as a module. The module will be named
+ 	  "qcom_spmi-regulator".
+ 
++config REGULATOR_QCOM_USB_VBUS
++	tristate "Qualcomm USB Vbus regulator driver"
++	depends on SPMI || COMPILE_TEST
++	help
++	  If you say yes to this option, support will be included for the
++	  regulator used to enable the VBUS output.
++
++	  Say M here if you want to include support for enabling the VBUS output
++	  as a module. The module will be named "qcom_usb_vbus_regulator".
++
+ config REGULATOR_RC5T583
+ 	tristate "RICOH RC5T583 Power regulators"
+ 	depends on MFD_RC5T583
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index c0d6b96ebd78..cbab28aa7b56 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
++obj-$(CONFIG_REGULATOR_QCOM_USB_VBUS) += qcom_usb_vbus-regulator.o
+ obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+ obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+ obj-$(CONFIG_REGULATOR_PV88060) += pv88060-regulator.o
+diff --git a/drivers/regulator/qcom_usb_vbus-regulator.c b/drivers/regulator/qcom_usb_vbus-regulator.c
 new file mode 100644
-index 000000000000..6714fb2e6b08
+index 000000000000..342d92373598
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++++ b/drivers/regulator/qcom_usb_vbus-regulator.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Qualcomm PMIC VBUS output regulator driver
++//
++// Copyright (c) 2020, The Linux Foundation. All rights reserved.
 +
-+title: Qualcomm PMIC based USB type C Detection Driver
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Wesley Cheng <wcheng@codeaurora.org>
++#define CMD_OTG				0x40
++#define OTG_EN				BIT(0)
++#define OTG_CFG				0x53
++#define OTG_EN_SRC_CFG			BIT(1)
 +
-+description: |
-+  Qualcomm PMIC Type C Detect
++static const struct regulator_ops qcom_usb_vbus_reg_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,pm8150b-usb-typec
++static struct regulator_desc qcom_usb_vbus_rdesc = {
++	.name = "usb_vbus",
++	.ops = &qcom_usb_vbus_reg_ops,
++	.owner = THIS_MODULE,
++	.type = REGULATOR_VOLTAGE,
++};
 +
-+  reg:
-+    maxItems: 1
-+    description: Type C base address
++static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct regulator_dev *rdev;
++	struct regmap *regmap;
++	struct regulator_config config = { };
++	struct regulator_init_data *init_data;
++	int ret;
++	u32 base;
 +
-+  interrupts:
-+    maxItems: 1
-+    description: CC change interrupt from PMIC
++	ret = of_property_read_u32(dev->of_node, "reg", &base);
++	if (ret < 0) {
++		dev_err(dev, "no base address found\n");
++		return ret;
++	}
 +
-+  connector:
-+    description: Connector type for remote endpoints
-+    type: object
-+    $ref: /schemas/connector/usb-connector.yaml#
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (regmap) {
++		dev_err(dev, "Failed to get regmap\n");
++		return -ENOENT;
++	}
 +
-+    properties:
-+      compatible:
-+        enum:
-+          - usb-c-connector
++	init_data = of_get_regulator_init_data(dev, dev->of_node,
++					       &qcom_usb_vbus_rdesc);
++	if (!init_data)
++		return -ENOMEM;
 +
-+      power-role:
-+       enum:
-+         - dual
-+         - source
-+         - sink
++	qcom_usb_vbus_rdesc.enable_reg = base + CMD_OTG;
++	qcom_usb_vbus_rdesc.enable_mask = OTG_EN;
++	config.dev = dev;
++	config.init_data = init_data;
++	config.regmap = regmap;
 +
-+      data-role:
-+        enum:
-+          - dual
-+          - host
-+          - device
++	rdev = devm_regulator_register(dev, &qcom_usb_vbus_rdesc, &config);
++	if (IS_ERR(rdev)) {
++		ret = PTR_ERR(rdev);
++		dev_err(dev, "not able to register vbus reg %d\n", ret);
++		return ret;
++	}
 +
-+      ports:
-+        description: Remote endpoint connections
-+        type: object
++	/* Disable HW logic for VBUS enable */
++	regmap_update_bits(regmap, base + OTG_CFG, OTG_EN_SRC_CFG, 0);
 +
-+        properties:
-+          port@0:
-+            description: Remote endpoints for the High Speed path
-+            type: object
++	return 0;
++}
 +
-+          port@1:
-+            description: Remote endpoints for the Super Speed path
-+            type: object
++static const struct of_device_id qcom_usb_vbus_regulator_match[] = {
++	{ .compatible = "qcom,pm8150b-vbus-reg" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_usb_vbus_regulator_match);
 +
-+            properties:
-+              endpoint@0:
-+                description: Connection to USB type C mux node
-+                type: object
++static struct platform_driver qcom_usb_vbus_regulator_driver = {
++	.driver		= {
++		.name	= "qcom-usb-vbus-regulator",
++		.of_match_table = qcom_usb_vbus_regulator_match,
++	},
++	.probe		= qcom_usb_vbus_regulator_probe,
++};
++module_platform_driver(qcom_usb_vbus_regulator_driver);
 +
-+                properties:
-+                  remote-endpoint:
-+                    maxItems: 1
-+                    description: Node reference to the type C mux
-+
-+              endpoint@1:
-+                description: Connection to role switch node
-+                type: object
-+
-+                properties:
-+                  remote-endpoint:
-+                    maxItems: 1
-+                    description: Node reference to the role switch node
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - connector
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    pm8150b {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        pm8150b_typec: typec@1500 {
-+            compatible = "qcom,pm8150b-usb-typec";
-+            reg = <0x1500>;
-+            interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
-+
-+            connector {
-+                compatible = "usb-c-connector";
-+                power-role = "dual";
-+                data-role = "dual";
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+                    port@0 {
-+                        reg = <0>;
-+                    };
-+                    port@1 {
-+                        reg = <1>;
-+                        usb3_data_ss: endpoint@0 {
-+                            remote-endpoint = <&qmp_ss_mux>;
-+                        };
-+                        usb3_role: endpoint@1 {
-+                            remote-endpoint = <&dwc3_drd_switch>;
-+                        };
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
++MODULE_DESCRIPTION("Qualcomm USB vbus regulator driver");
++MODULE_LICENSE("GPL v2");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
