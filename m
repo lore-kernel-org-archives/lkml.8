@@ -2,185 +2,163 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068FF2088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47835206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Y1gXiaMS";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Rx9ibOEk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9Zydu+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgFZVjG (ORCPT
+        id S1725883AbgFZVkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:39:06 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36144 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725793AbgFZVjF (ORCPT
+        Fri, 26 Jun 2020 17:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFZVkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:39:05 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QLZak8012229;
-        Fri, 26 Jun 2020 14:38:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
- b=Y1gXiaMSK9Qnol8AR/sIWDq3YNuZcDPmvNwyfbcXPH1aOBVTzaaCPuqjUiPcNvYLVDaI
- ZXxJSWSv83Ayt1oOGBnSS8NNWCn3MvBX2Qy7Iapnq19u5cGYPcR90KQa2shGQnu9z2sF
- +xdjDJ1fAUt4Cu4eW7VopTbIAaSGBA3f/ao= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31ux0w7mms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 26 Jun 2020 14:38:45 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 26 Jun 2020 14:38:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XVFcncOIjVXlC6CymZQBh8opClXAwvzuBxVMAdYaXA39p5sRu7X1Rf6xoyyxF0/hfKXcvVl0K0Cb67sDDcxRG0iHuektw/dtFpghPtLHdWP0J7Fx3Y+wKC/TSax4lWw2s4arK7rYqmEg+81bM011X3esXkX0WlmGxX5upDZQcfKD2szlR2695KnTsbIOyQKLgnkkdBW3he9km72WLaH1Gh+3xYc6U9vh0YVNp2Mwu01HkNEBtUVid8/eaRv9DA+14z/DhmcAcgLiUYzXEOe9G9uuzqQlM1O61hJmaQ5dZ5TvtrN904WwfP7qT+sDgjJNf8nLKl9432QRR/9jArro7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
- b=YPaP2RNsbo3Kao6oapdyVeu5vW+ENuymIQq8ScrjZiyyQLi/JnpMm/C3BlxD8Oy+O4BZ+zwvrnjlSI2VIqptgtNCIxFNJNaSWI2kyfekILYkKPhHlrwTP0uBPD8BLiDemUO+wBLz8xReNk/hLnWFGqN8Imuzk8dvkEAAhsEsktrzfFkkZwX0NuCbELvb7+MVV+baUUtTez9bA13Gk480YGHJCxx0MQbD3i87SzdWHjbqwlvT4v4/DSqzfAcjkYrNHUiNBsgsIhuYI8vsu5dqngeRnKNnE7lroM518jL1n1ZBfsD88TuOy/dQn6oDussRahLYvAiKjCkmzIGaYtYNew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
- b=Rx9ibOEknqHYO9dnc5i3mstJVPh+SXXPp1ccjc7kg0GMbADloaXXO81oxw3HBRY3jSCo48ysTRvkNyx+IaXDxzP2OaGqEj9MzEbXsLx2xVfDNA/n6/RjeSr6BDvOqr7JtpqOWzgniviAHb8iB+U9tIn82yDLCXTnyDRwl3CpbsI=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2727.namprd15.prod.outlook.com (2603:10b6:a03:15b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 26 Jun
- 2020 21:38:42 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3109.027; Fri, 26 Jun 2020
- 21:38:42 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     Peter Zijlstra <peterz@infradead.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "john fastabend" <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
-Thread-Topic: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
-Thread-Index: AQHWS06t5H2BZnsAuEuKRuZX7jQ17qjqu3gAgACYV4CAABnmAA==
-Date:   Fri, 26 Jun 2020 21:38:42 +0000
-Message-ID: <ED1F39FC-AE00-4243-8903-9B353DA42C8F@fb.com>
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-2-songliubraving@fb.com>
- <20200626110046.GB4817@hirez.programming.kicks-ass.net>
- <CAEf4BzbgyBWpHdxe8LdHp+48fazS6JLEdaEd09p40s=+cy4Phw@mail.gmail.com>
-In-Reply-To: <CAEf4BzbgyBWpHdxe8LdHp+48fazS6JLEdaEd09p40s=+cy4Phw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:1a00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c47e36f-190f-41a3-b3bf-08d81a194c2b
-x-ms-traffictypediagnostic: BYAPR15MB2727:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2727CD88974DC8BA1802C7C4B3930@BYAPR15MB2727.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0446F0FCE1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rBZysrHZ+HFYtuy9uqI32uQyByMYQ0ICZhl6HDcnIKC1A1mrLQ9I/SzNQyu3D9cTZYZpiPEcJkI0PLZ9+saGoF/vYZ3t5hm0clvtP1TkaWtVN7FgF8Qd1fWHT+uUBePukmy3hW8ZmeIakYU3FfFxWaVTcUnQGeQwXIHRPuQBz4cpAtd5ZoubYqUcmTDe8wTekfuAyUQP/NS4p2Pp+b92egw0r2tjfuRl7u3MIgNCP8pEuxmYOesVUqDmMVzarR7k03Pm1E/lx+uQbPFjdTo9wOMSDe4nOowS2dUY6DREgOAIhBYE1Dj7Bg271zgOap/hKIjjYdqNGpjc00S6hmsVFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(396003)(136003)(366004)(36756003)(86362001)(478600001)(8936002)(6506007)(66946007)(6916009)(71200400001)(6486002)(53546011)(33656002)(76116006)(8676002)(6512007)(66556008)(66476007)(64756008)(4326008)(66446008)(2906002)(2616005)(186003)(5660300002)(316002)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: odreYjE2Ol4NdoQT+BMLzTVD0I4WbWdFKmpEar27amWRDXq76O7SCSQRNOaeJzJAtTwlAllRc/xwZk8zTcwUdWo1TwHrEu5GI33VhCFmz0WjqdeonN/aA8OtNrluBqNFKYAmgrmT6eNOREc1WVvoUoFMmJns/GVyJ4z572gGuXIHdG+cd2vxpdLBP9rzx7yDTdYNCRvC65NIGf46GiprarGHPbJgoD403Y2750rkqfzHR8Ry4HTDnsC+eBB9eXsBU7QXvHx0HN+CupuvDPdrm0KbX9Y4ddKsN5Z8CG3sxFm8gA9tC9qaYiuXdgjjhaAKmxG3SRAvvtq+EvIYNnup+m2CHqjEzwqGO52BgFWk2ui6SWBt9NS2wgxuBv2pYL2GPfYCz1h7+pFGu/KIpd1vPnqRiktY+AICxyG69+aZQTdqpLwReBAZPeek3NltawQ0aqJzPoPq984J02/Wvb2eIx4IOVPeteZtgO1m4HIcCgYWeiNgvAQkOOZ5irymF+1y8SR4Hg6aAAeL4IoB0ErdTQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <61BE7CCF87B2AA47B834F32C6AD6D635@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jun 2020 17:40:31 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2783C03E979;
+        Fri, 26 Jun 2020 14:40:30 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id e15so8010819edr.2;
+        Fri, 26 Jun 2020 14:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4dtaHq7RJqNsgj0DxlS9fhiPuUoM0iQPtx7ZzHAiU4s=;
+        b=u9Zydu+IlMh9/LszZ92CggQlY9OQl1g+evFpM5Es9gv9XLcQcc+9KabLPAuenDbKtx
+         EXSDWShwfIlbTrrA57mrRRMWbHDUrnzb1X45qD79S1Tm2MZHqDuAERzRF/Oko05LY0ed
+         yy0vpHQkgV7P9tPEsYAHbX1VIep+NblU+/b9YtRORhq9nwD+OliGRjs9zS+sYJeg6AD3
+         BTSPgED2cZEaoEQ4O4wnTCpZL1fofxzDNNVHnBwoHG1irycB1yN46eUaUJ+y86fTk2sK
+         osCLm2sFh/gulrBchGzIQkA+akXv4utKMlVQosr/uo3vX3tk/7qmGwJS3RhK389cZbgX
+         5zfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=4dtaHq7RJqNsgj0DxlS9fhiPuUoM0iQPtx7ZzHAiU4s=;
+        b=j3d4KmxtbpxywlGnIsleoZKPvlKbdDFTmLa3U6/JuzFdu9zXgUkWthVBqFXUAkH8Ry
+         LI+dg/kjHIEwcn0BupgJd7oiD8/WPlKFf1aoemC3civ7lKjQZA7anYSoIiy6cmUZF39w
+         Q6QnwL0c7q23tWLdjyc0zrTCBnh01oYOy0BqIgZNxvesP0efmf10j+lkddItmJdC3X4f
+         6tPnYfJ4GQAuLRHsQl+lQwRCIkVYqe7C085SglIJsCBRhuavOgIVXftNIWeUTMaC4bQk
+         duHxc3g1YgcTjtiJreqYZqwKjgsdYvLm+dNYd0QopBthhBj9yS0Vy25Hd6+VIHxTJ3Yw
+         D5Fw==
+X-Gm-Message-State: AOAM530cNlYFixCC6F6/a6iRLEFQY8Vp9ThGf3U9tJqxt2so+6XWHaHn
+        tkxsPMYUe028IibHcsE3/QQ=
+X-Google-Smtp-Source: ABdhPJy++/BzY6fHC4sgfGghocYPBjr++MH93TDtva6eLgfryARtAm541FP5Kvsf3weDh6k7PXqJhg==
+X-Received: by 2002:a05:6402:3113:: with SMTP id dc19mr4552096edb.20.1593207629538;
+        Fri, 26 Jun 2020 14:40:29 -0700 (PDT)
+Received: from dumbo ([2a0b:f4c2::1])
+        by smtp.gmail.com with ESMTPSA id mf24sm918386ejb.58.2020.06.26.14.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:40:28 -0700 (PDT)
+Received: from cavok by dumbo with local (Exim 4.92)
+        (envelope-from <cavok@dumbo>)
+        id 1jow5C-00070x-PD; Fri, 26 Jun 2020 23:40:26 +0200
+Date:   Fri, 26 Jun 2020 23:40:26 +0200
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2] kbuild: buildtar: add arm64 dtbs support
+Message-ID: <20200626214026.GB25753@dumbo>
+Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>, Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <5ef50e52.1c69fb81.b6cbd.bd8e@mx.google.com>
+ <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c47e36f-190f-41a3-b3bf-08d81a194c2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 21:38:42.6592
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g7SQ/EyXtf+0o2hgpaYJMQpL5Y0lw/Ukc90Aw3+9Y5o+T6FMQYrHAd2Ae4O5kIvRDZfvrxDDlzg5fQL/UBQ1Rg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2727
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- bulkscore=0 cotscore=-2147483648 mlxscore=0 suspectscore=0 adultscore=0
- phishscore=0 clxscore=1015 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006260151
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 03:16:58PM +0900, Masahiro Yamada wrote:
+> On Fri, Jun 26, 2020 at 5:51 AM Domenico Andreoli
+> <domenico.andreoli@linux.com> wrote:
+> >
+> > From: Domenico Andreoli <domenico.andreoli@linux.com>
+> >
+> > Make 'make tar-pkg' install dtbs on arm64.
+> >
+> > Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+> >
+> > v2:
+> >  - Destination path includes the kernel version, as expected
+> >
+> > ---
+> >  scripts/package/buildtar |    9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > Index: b/scripts/package/buildtar
+> > ===================================================================
+> > --- a/scripts/package/buildtar
+> > +++ b/scripts/package/buildtar
+> > @@ -125,6 +125,15 @@ case "${ARCH}" in
+> >                 ;;
+> >  esac
+> >
+> > +#
+> > +# Install dtbs
+> > +#
+> > +case "${ARCH}" in
+> 
+> Instead of checking ${ARCH},
+> can you you do
+> 
+>      if grep -q '^CONFIG_OF_EARLY_FLATTREE=y' include/config/auto.conf; then
+> 
+> ?
 
+Done in v3.
 
-> On Jun 26, 2020, at 1:06 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> =
-wrote:
->=20
-> On Fri, Jun 26, 2020 at 5:10 AM Peter Zijlstra <peterz@infradead.org> wro=
-te:
->>=20
->> On Thu, Jun 25, 2020 at 05:13:29PM -0700, Song Liu wrote:
->>> This would be used by bpf stack mapo.
->>=20
->> Would it make sense to sanitize the API a little before exposing it?
->>=20
->> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
->> index 334d48b16c36..016894b0d2c2 100644
->> --- a/kernel/events/callchain.c
->> +++ b/kernel/events/callchain.c
->> @@ -159,8 +159,10 @@ static struct perf_callchain_entry *get_callchain_e=
-ntry(int *rctx)
->>                return NULL;
->>=20
->>        entries =3D rcu_dereference(callchain_cpus_entries);
->> -       if (!entries)
->> +       if (!entries) {
->> +               put_recursion_context(this_cpu_ptr(callchain_recursion),=
- rctx);
->>                return NULL;
->> +       }
->>=20
->>        cpu =3D smp_processor_id();
->>=20
->> @@ -183,12 +185,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
-r, bool kernel, bool user,
->>        int rctx;
->>=20
->>        entry =3D get_callchain_entry(&rctx);
->> -       if (rctx =3D=3D -1)
->> +       if (!entry || rctx =3D=3D -1)
->>                return NULL;
->>=20
->=20
-> isn't rctx =3D=3D -1 check here not necessary anymore? Seems like
-> get_callchain_entry() will always return NULL if rctx =3D=3D -1?
+> 
+> This is what the deb package build does:
+> https://github.com/masahir0y/linux/blob/v5.7/scripts/package/builddeb#L145
+> 
+> 
+> > +       arm64)
+> > +               make ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
+> > +               ;;
+> > +esac
+> > +
+> 
+> 
+> Or, you can use INSTALL_PATH="${tmpdir}/boot"
+> to make it shorter.
 
-Yes, looks like we only need to check entry.=20
+This does not work, INSTALL_DTBS_PATH gets somehow defined along the
+twisted path to buildtar and therefore needs to be explicitly specified
+for the new destination.
 
-Thanks,
-Song
+> --
+> Best Regards
+> Masahiro Yamada
 
+Thank you for the review.
+
+Regards,
+Domenico
+
+-- 
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
