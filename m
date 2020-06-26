@@ -2,46 +2,46 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2457DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EABBE207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C6220DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593180331;
-	bh=e7N2SIIa+nFd98qwutbfTR9JvzeEd0QzoGZgPTGy2XI=;
+	s=default; t=1593180333;
+	bh=DulXIO7OVijQT9iXYkLptfwGhAen/VGK7uaBhVTomuU=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=fMCYkKfPeZa+xmDJr0J9w3voaekQMa51/I19jWxGyrd03hjQeWf6n2W3PaXz6fcLj
-	 yhfK5oVxeDeSbPKC94C8oAwwXVSPeTJ1j0RPlW9rDa1Z+C3DvjqjTD6ZpK45xv0b3s
-	 GmUH3VzZ48pYhdixVsDH28IsiLpQ6kGZc40uwYsQ=
+	b=Ks41evCbwAHeI0/YMzrmqJJfrq/fcToMp+kfUQ9nldQx/9o5EZlu9g2ZCxiH0rBT4
+	 V09lp1FSEKv7RK73eIacMO/k76kAVMf5cA+T4yXJBXUpncHDnhea8ige/7IR8E/qtr
+	 WdYGeQSYnPziPMK3w0EPhgXwAz8m50/VUehrQenU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgFZOFa (ORCPT
+        id S1729119AbgFZOFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 10:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgFZOFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:05:02 -0400
+        id S1728847AbgFZOFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:05:03 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0707E2080C;
-        Fri, 26 Jun 2020 14:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96CD208C9;
+        Fri, 26 Jun 2020 14:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1593180302;
-        bh=e7N2SIIa+nFd98qwutbfTR9JvzeEd0QzoGZgPTGy2XI=;
+        bh=DulXIO7OVijQT9iXYkLptfwGhAen/VGK7uaBhVTomuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBh2l6xOQkHobw2dFEhjLXnONV9J7QTnDllUaUQpQ+LTLTlHCcn8hN1pUtoQ9t9xu
-         RHYYwgPp6Ti2BSvb/5FP1i9hm0SvEnGiORI9E1lpOHRPe5rq6quuYk3zTkGkpKcFtn
-         ujPuJ48Ymm2JDVKXIXqmo8ub+Pj38n6ULwRSi/KI=
+        b=AjGvi2oXfV55cyazhVkwPU1UBg9evShT8u24o43XL4eoMpDWZOqCUmEfIttABsGNP
+         u82gukeor7BIMhb1uYAEAzug3CcMPRUgNCUU8O3K9nIrx+FjmQO4kEZ+f9U3EEs3GX
+         YdklDm9LyRryDlSPK2bmMOFddiTDBbhpKKG625EE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jooyS-00HKwD-3g; Fri, 26 Jun 2020 16:05:00 +0200
+        id 1jooyS-00HKw5-1I; Fri, 26 Jun 2020 16:05:00 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] media: atomisp: properly parse CLK PMIC on newer devices
-Date:   Fri, 26 Jun 2020 16:04:55 +0200
-Message-Id: <a5d8185e00c6248e4076095101b6a1add8954f11.1593180146.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 1/7] media: atomisp: reorganize the code under gmin_subdev_add()
+Date:   Fri, 26 Jun 2020 16:04:53 +0200
+Message-Id: <f6f8cfa8d2c942c51cda5d3c1d0b97c2692a6392.1593180146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1593180146.git.mchehab+huawei@kernel.org>
 References: <cover.1593180146.git.mchehab+huawei@kernel.org>
@@ -63,107 +63,235 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer devices don't place the PMIC CLK line inside an EFI
-var. Instead, those are found at the _PR0 table.
+The gmin_subdev_add() currently doesn't use ACPI device
+power management. In order to prepare for adding support
+for it, let's shift some things, placing the PM-related
+stuff at the end of the probing logic.
 
-Add a parser for it, using info stored via the DSDT table.
+Let's also store the current gs on a temporary var, in
+order to simplify the source code.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../media/atomisp/pci/atomisp_gmin_platform.c | 66 ++++++++++++++++++-
- 1 file changed, 64 insertions(+), 2 deletions(-)
+ .../media/atomisp/pci/atomisp_gmin_platform.c | 146 +++++++++---------
+ 1 file changed, 73 insertions(+), 73 deletions(-)
 
 diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 2903aa52115b..e476cf1f3294 100644
+index 4aebc7cd22d9..74331c4467bd 100644
 --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
 +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -444,6 +444,61 @@ static int gmin_i2c_write(struct device *dev, u16 i2c_addr, u8 reg,
- 	return ret;
- }
- 
-+static int atomisp_get_acpi_power(struct device *dev, acpi_handle handle)
-+{
-+	char name[5];
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer b_name = { sizeof(name), name };
-+	union acpi_object *package, *element;
-+	acpi_handle rhandle;
-+	acpi_status status;
-+	int clock_num = -1;
-+	int i;
-+
-+	status = acpi_evaluate_object(handle, "_PR0", NULL, &buffer);
-+	if (!ACPI_SUCCESS(status))
-+		return -1;
-+
-+	package = buffer.pointer;
-+
-+	if (!buffer.length || !package
-+	    || package->type != ACPI_TYPE_PACKAGE
-+	    || !package->package.count)
-+		goto fail;
-+
-+	for (i = 0; i < package->package.count; i++) {
-+		element = &package->package.elements[i];
-+
-+		if (element->type != ACPI_TYPE_LOCAL_REFERENCE)
-+			continue;
-+
-+		rhandle = element->reference.handle;
-+		if (!rhandle)
-+			goto fail;
-+
-+		acpi_get_name(rhandle, ACPI_SINGLE_NAME, &b_name);
-+
-+		dev_dbg(dev, "Found PM resource '%s'\n", name);
-+		if (strlen(name) == 4 && !strncmp(name, "CLK", 3)) {
-+		        if (name[3] >= '0' && name[3] <= '4')
-+				clock_num = name[3] - '0';
-+#if 0
-+			/*
-+			 * We could abort here, but let's parse all resources,
-+			 * as this is helpful for debugging purposes
-+			 */
-+			if (clock_num >= 0)
-+			    break;
-+#endif
-+		}
-+	}
-+
-+fail:
-+	ACPI_FREE(buffer.pointer);
-+
-+	return clock_num;
-+}
-+
- static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+@@ -447,6 +447,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
  {
  	struct i2c_client *power = NULL, *client = v4l2_get_subdevdata(subdev);
-@@ -451,7 +506,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	struct gmin_subdev *gs;
+ 	struct acpi_device *adev;
++	struct gmin_subdev *gs;
  	acpi_handle handle;
  	struct device *dev;
--	int i, ret, clock_num;
-+	int i, ret, clock_num = -1;
+ 	int i, ret, clock_num;
+@@ -457,16 +458,52 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 	dev = &client->dev;
  
- 	if (!client)
- 		return NULL;
-@@ -570,7 +625,14 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	 * is a power resource already, falling back to the EFI vars detection
- 	 * otherwise.
+ 	handle = ACPI_HANDLE(dev);
+-
+-	// FIXME: may need to release resources allocated by acpi_bus_get_device()
+-	if (!handle || acpi_bus_get_device(handle, &adev)) {
+-		dev_err(dev, "Error could not get ACPI device\n");
+-		return NULL;
+-	}
++	adev = ACPI_COMPANION(&client->dev);
+ 
+ 	dev_info(&client->dev, "%s: ACPI detected it on bus ID=%s, HID=%s\n",
+ 		__func__, acpi_device_bid(adev), acpi_device_hid(adev));
+ 
++	for (i = 0; i < MAX_SUBDEVS && gmin_subdevs[i].subdev; i++)
++		;
++	if (i >= MAX_SUBDEVS)
++		return NULL;
++
++	gs = &gmin_subdevs[i];
++	gs->subdev = subdev;
++
++	/*
++	 * FIXME:
++	 * 	WA:CHT requires XTAL clock as PLL is not stable.
++	 *
++	 * However, such data doesn't seem to be present at the _DSM
++	 * table under the GUID dc2f6c4f-045b-4f1d-97b9-882a6860a4be.
++	 * So, let's change the default according with the ISP version,
++	 * but allowing it to be overridden by BIOS or by DMI match tables.
++	 */
++	if (IS_ISP2401)
++		gs->clock_src = VLV2_CLK_XTAL_25_0MHz;
++	else
++		gs->clock_src = VLV2_CLK_PLL_19P2MHZ;
++
++	gs->clock_src = gmin_get_var_int(dev, false, "ClkSrc",
++					 gs->clock_src);
++
++	gs->csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
++	gs->csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
++
++	gs->gpio0 = gpiod_get_index(dev, NULL, 0, GPIOD_OUT_LOW);
++	if (IS_ERR(gs->gpio0))
++		gs->gpio0 = NULL;
++
++	gs->gpio1 = gpiod_get_index(dev, NULL, 1, GPIOD_OUT_LOW);
++	if (IS_ERR(gs->gpio1))
++		gs->gpio1 = NULL;
++
++	/*
++	 * FIXME: the code below doesn't rely on ACPI device_pm.c code to
++	 * set clocks and do power management.
++	 */
++
+ 	if (!pmic_id) {
+ 		if (gmin_i2c_dev_exists(dev, PMIC_ACPI_TI, &power))
+ 			pmic_id = PMIC_TI;
+@@ -478,13 +515,8 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 			pmic_id = PMIC_REGULATOR;
+ 	}
+ 
+-	for (i = 0; i < MAX_SUBDEVS && gmin_subdevs[i].subdev; i++)
+-		;
+-	if (i >= MAX_SUBDEVS)
+-		return NULL;
+-
+ 	if (power) {
+-		gmin_subdevs[i].pwm_i2c_addr = power->addr;
++		gs->pwm_i2c_addr = power->addr;
+ 		dev_info(dev,
+ 			 "gmin: power management provided via %s (i2c addr 0x%02x)\n",
+ 			 pmic_name[pmic_id], power->addr);
+@@ -493,31 +525,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 			 pmic_name[pmic_id]);
+ 	}
+ 
+-	gmin_subdevs[i].subdev = subdev;
+-
+ 	/*
+-	 * FIXME:
+-	 * 	WA:CHT requires XTAL clock as PLL is not stable.
+-	 *
+-	 * However, such data doesn't seem to be present at the _DSM
+-	 * table under the GUID dc2f6c4f-045b-4f1d-97b9-882a6860a4be.
+-	 * So, let's change the default according with the ISP version,
+-	 * but allowing it to be overridden by BIOS or by DMI match tables.
+-	 */
+-	if (IS_ISP2401)
+-		gmin_subdevs[i].clock_src = VLV2_CLK_XTAL_25_0MHz;
+-	else
+-		gmin_subdevs[i].clock_src = VLV2_CLK_PLL_19P2MHZ;
+-
+-	gmin_subdevs[i].clock_src = gmin_get_var_int(dev, false, "ClkSrc",
+-						     gmin_subdevs[i].clock_src);
+-
+-	gmin_subdevs[i].csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
+-	gmin_subdevs[i].csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
+-
+-	/*
+-	 * FIXME:
+-	 *
+ 	 * According with :
+ 	 *   https://github.com/projectceladon/hardware-intel-kernelflinger/blob/master/doc/fastboot.md
+ 	 *
+@@ -540,9 +548,9 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 	snprintf(gmin_pmc_clk_name, sizeof(gmin_pmc_clk_name),
+ 		 "%s_%d", "pmc_plt_clk", clock_num);
+ 
+-	gmin_subdevs[i].pmc_clk = devm_clk_get(dev, gmin_pmc_clk_name);
+-	if (IS_ERR(gmin_subdevs[i].pmc_clk)) {
+-		ret = PTR_ERR(gmin_subdevs[i].pmc_clk);
++	gs->pmc_clk = devm_clk_get(dev, gmin_pmc_clk_name);
++	if (IS_ERR(gs->pmc_clk)) {
++		ret = PTR_ERR(gs->pmc_clk);
+ 
+ 		dev_err(dev,
+ 			"Failed to get clk from %s : %d\n",
+@@ -563,25 +571,17 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 	 * to disable a clock that has not been enabled,
+ 	 * we need to enable the clock first.
  	 */
--	clock_num = gmin_get_var_int(dev, false, "CamClk", -1);
-+
-+	/* Try first to use ACPI to get the clock resource */
-+	if (acpi_device_power_manageable(adev))
-+		clock_num = atomisp_get_acpi_power(dev, handle);
-+
-+	/* Fall-back use EFI and/or DMI match */
-+	if (clock_num < 0)
-+		clock_num = gmin_get_var_int(dev, false, "CamClk", 0);
+-	ret = clk_prepare_enable(gmin_subdevs[i].pmc_clk);
++	ret = clk_prepare_enable(gs->pmc_clk);
+ 	if (!ret)
+-		clk_disable_unprepare(gmin_subdevs[i].pmc_clk);
+-
+-	gmin_subdevs[i].gpio0 = gpiod_get_index(dev, NULL, 0, GPIOD_OUT_LOW);
+-	if (IS_ERR(gmin_subdevs[i].gpio0))
+-		gmin_subdevs[i].gpio0 = NULL;
+-
+-	gmin_subdevs[i].gpio1 = gpiod_get_index(dev, NULL, 1, GPIOD_OUT_LOW);
+-	if (IS_ERR(gmin_subdevs[i].gpio1))
+-		gmin_subdevs[i].gpio1 = NULL;
++		clk_disable_unprepare(gs->pmc_clk);
  
- 	if (clock_num < 0 || clock_num > MAX_CLK_COUNT) {
- 		dev_err(dev, "Invalid clock number\n");
+ 	switch (pmic_id) {
+ 	case PMIC_REGULATOR:
+-		gmin_subdevs[i].v1p8_reg = regulator_get(dev, "V1P8SX");
+-		gmin_subdevs[i].v2p8_reg = regulator_get(dev, "V2P8SX");
++		gs->v1p8_reg = regulator_get(dev, "V1P8SX");
++		gs->v2p8_reg = regulator_get(dev, "V2P8SX");
+ 
+-		gmin_subdevs[i].v1p2_reg = regulator_get(dev, "V1P2A");
+-		gmin_subdevs[i].v2p8_vcm_reg = regulator_get(dev, "VPROG4B");
++		gs->v1p2_reg = regulator_get(dev, "V1P2A");
++		gs->v2p8_vcm_reg = regulator_get(dev, "VPROG4B");
+ 
+ 		/* Note: ideally we would initialize v[12]p8_on to the
+ 		 * output of regulator_is_enabled(), but sadly that
+@@ -593,32 +593,32 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 		break;
+ 
+ 	case PMIC_AXP:
+-		gmin_subdevs[i].eldo1_1p8v = gmin_get_var_int(dev, false,
+-							      "eldo1_1p8v",
+-							      ELDO1_1P8V);
+-		gmin_subdevs[i].eldo1_sel_reg = gmin_get_var_int(dev, false,
+-								 "eldo1_sel_reg",
+-								 ELDO1_SEL_REG);
+-		gmin_subdevs[i].eldo1_ctrl_shift = gmin_get_var_int(dev, false,
+-								    "eldo1_ctrl_shift",
+-								    ELDO1_CTRL_SHIFT);
+-		gmin_subdevs[i].eldo2_1p8v = gmin_get_var_int(dev, false,
+-							      "eldo2_1p8v",
+-							      ELDO2_1P8V);
+-		gmin_subdevs[i].eldo2_sel_reg = gmin_get_var_int(dev, false,
+-								 "eldo2_sel_reg",
+-								 ELDO2_SEL_REG);
+-		gmin_subdevs[i].eldo2_ctrl_shift = gmin_get_var_int(dev, false,
+-								    "eldo2_ctrl_shift",
+-								    ELDO2_CTRL_SHIFT);
+-		gmin_subdevs[i].pwm_i2c_addr = power->addr;
++		gs->eldo1_1p8v = gmin_get_var_int(dev, false,
++						  "eldo1_1p8v",
++						  ELDO1_1P8V);
++		gs->eldo1_sel_reg = gmin_get_var_int(dev, false,
++						     "eldo1_sel_reg",
++						     ELDO1_SEL_REG);
++		gs->eldo1_ctrl_shift = gmin_get_var_int(dev, false,
++							"eldo1_ctrl_shift",
++							ELDO1_CTRL_SHIFT);
++		gs->eldo2_1p8v = gmin_get_var_int(dev, false,
++						  "eldo2_1p8v",
++						  ELDO2_1P8V);
++		gs->eldo2_sel_reg = gmin_get_var_int(dev, false,
++						     "eldo2_sel_reg",
++						     ELDO2_SEL_REG);
++		gs->eldo2_ctrl_shift = gmin_get_var_int(dev, false,
++							"eldo2_ctrl_shift",
++							ELDO2_CTRL_SHIFT);
++		gs->pwm_i2c_addr = power->addr;
+ 		break;
+ 
+ 	default:
+ 		break;
+ 	}
+ 
+-	return &gmin_subdevs[i];
++	return gs;
+ }
+ 
+ static struct gmin_subdev *find_gmin_subdev(struct v4l2_subdev *subdev)
 -- 
 2.26.2
 
