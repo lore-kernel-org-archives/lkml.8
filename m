@@ -2,132 +2,199 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9087C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A603120706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bE6Qv1iQ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="WsRIRhiC"
+	by mail.kernel.org (Postfix) with ESMTP id 9978020706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593186579;
+	bh=4knNSS/CwU+90oAn5cWqpVGITLx0/+fHD7HbP1ut23Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GsnbYMsCAMwX+bApV9NSNajG+fEn3djRwf1rdXOJHvNPk0aaGmxRWbS7gArRTs9s4
+	 riMotfraD9Lhwb8o6kU267oaEoqaVei1eaXANm8ndCuTKlhycoelCsKckoywrv/M7d
+	 /bUdoeUgvHZqlCs3191Ln9KHrLVoh1d3AQBCDYIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgFZPs4 (ORCPT
+        id S1729718AbgFZPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:48:56 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:54219 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZPsz (ORCPT
+        Fri, 26 Jun 2020 11:49:38 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38860 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgFZPth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593186536; x=1624722536;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=9+17ZLyzuLsKL6v+SH1DWQIbcOVVHXT+miVYO7Gievk=;
-  b=bE6Qv1iQ0Xbn/J6ejPn2pcFpzPy1oS7H7qWZrgJNefP50+vIvv42C+06
-   Jh3hVbyCajfdV14LOmE7pGJgnmiocxmMT7qhTYJCSjr7lYfODznRPQRab
-   GBh7W4GDlk/t8G/MjN+jV1uLrw79RxlLw85EEJ6ZYZhLwGAOORw0kLP1f
-   N5ibYl8vaJxRO/S7hKNXeIoI3vAc7Tq82ha5NFxZ2JB09Wl6ApG7yjlZg
-   vjelOhifirD1OdDAqVDWyUd2Mh8gWHiRTAvgM+VqslqPmGr3bRpYJcoR0
-   K8Rcg58agTFtc0PnrGhTTzGwq9h5tqTN1jTAGs8ZqDb+bmphl8Ik8MWxD
-   g==;
-IronPort-SDR: EvHccpsGnm0iSZWcpDyqGm7T+ToWSra/R9Rn1oNaM0cOJVYbSFoQyzmbUk4MhhztDJrNjOweMP
- EC7FVhM+0oM+EOr4ecVl3hLIFpWYVUYAeO2u4BQRxrDjQ5SjOtTUoeX5syLhjkAaaj1738I74G
- Bs1yvz2IsNhMGR1yeyGWzCt2id0NsawWcSaCAaqXAZ3t87GthozSJZq+IbbzSUZ7WGwt+nJVgX
- DCRrw407NpPsQsqgja661CLgKjl2fhZz47kK9jlVEZaiOFmkEFUVT5NHAlwz7wmovdJbwHy71K
- 2xM=
-X-IronPort-AV: E=Sophos;i="5.75,284,1589212800"; 
-   d="scan'208";a="145334232"
-Received: from mail-bn3nam04lp2057.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.57])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Jun 2020 23:48:55 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=io2ovMN2/t6E5cusKtP2sXszUqutK5OhvXyOeArUMZroeRZHGLcUzuN61rZT0/xsAJAUS21D/Gs/AsrWlDQX14+lzYuyhErB0ULf6SLikBlGiq6+4SPnrlL/g1QbkvHfpMR54RFSngMk7LjV1f4vfqvz0SZAug57vs9CTEJ6xPf68JEl5cuNt328UDj0Qprq5LpJLpPrqUM6Jr+Ff9RXUdn1UGvdY/JLI19ajUP7kGq/Sh/VgyHUgqiEutS1maPIk8r4Fc9x9oHdwj9IjqwpFT6d1NM+RtcRePsnMHUnOFSN06pst4V6ca9SpSs3bjMBL4iwe/u8HdtEvnhsZG3juw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vViMBGHAYVq4tTPmMrDdnxnkAIJMuceD/jhNrPOaDhg=;
- b=V6d+BV8xUKi9+oewgv+bHwq/JrCeD4fRQZwYkqGv5kqY6j3pfwbN9mychIBUiicC1umgcenYfNpmQp4V0SqGNMZBldPPMV/UKQ3A0f1jbfQn073gspb5BghkNwr53AKsLZfGjVsESZe6Mt4r09di0jbtWKmp4r0cEELukMGiiDNPqF984g8a06Lu2h3A4XvpFlrKTA+Z8XMJcEXk3e9GQX2nx2+46laW7oB0MSRAR3YjgiaLyo3Lk75bg6IfIu9anKHQ2K4uk/Z3Yi+YuRREXmvXPk5Cy+MpsSunrOp+3Jz9QOt8bmTfv2jCrBt+P/TlkO1FOBN11OK7tpxRmtNl1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vViMBGHAYVq4tTPmMrDdnxnkAIJMuceD/jhNrPOaDhg=;
- b=WsRIRhiCjbdOMQEIYlBQjsgbKtgcfzVX5RAHTtB0HO88fOBw5i0uwW/8plA5QCF9AQT0um1WvQynYdlA73TkEoYjiAH2uGsDIiNKNNoisyK4kfjoaJbwgY8vP/iDKEAV/24QceWYLJNHwD3JNkXD+a+ze46cOeceTMrkNDC5kYI=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB3966.namprd04.prod.outlook.com
- (2603:10b6:805:48::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Fri, 26 Jun
- 2020 15:48:53 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3131.021; Fri, 26 Jun 2020
- 15:48:53 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] floppy: use block_size
-Thread-Topic: [PATCH 1/7] floppy: use block_size
-Thread-Index: AQHWS5A2R4KH51VBRUONtkChHUIXnw==
-Date:   Fri, 26 Jun 2020 15:48:53 +0000
-Message-ID: <SN4PR0401MB35982FE9416D43ABF2CDBBC79B930@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200626080158.1998621-1-hch@lst.de>
- <20200626080158.1998621-2-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1515:bd01:a471:867c:4e70:8019]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 96fd7b0b-d803-45e7-f399-08d819e86dbe
-x-ms-traffictypediagnostic: SN6PR04MB3966:
-x-microsoft-antispam-prvs: <SN6PR04MB396682B97005474D70ADBF989B930@SN6PR04MB3966.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0446F0FCE1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cB1J4tlcLPQ1Vl4kseI0qRrcwOq4eHZchG67Ah21xvVpFwPffEmhBJ7R0Y6zfrH6d+JOZTAckeKIvUR7xnyFYvk3f6KCztT+wBTFs+xOlWlU+asfP+E/5BpI4RGojmtJeUn9v8zIB4EFZ4s8EtRQ9SIuCMsa6jV3ob3kgIwEYW/EcS3eY+FiUtJpWLuokAxAtxvEJ1dTNXT33N4QCklfOjAP2oh4N2H/ImbNowNdaCYNfNnLeXp9c9yvbG/W0FYqMZN/WMrsojEc1X7ykowHXYA5d7Qh7GdB2gmZHIYRpXSzPwb0/eH9VuVsssM5qvZ1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(52536014)(66946007)(7696005)(64756008)(86362001)(558084003)(66446008)(54906003)(110136005)(66556008)(8676002)(5660300002)(478600001)(83380400001)(9686003)(66476007)(6506007)(53546011)(316002)(8936002)(91956017)(55016002)(76116006)(33656002)(71200400001)(2906002)(186003)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: /J1D/ioIkK7dfriZ+I3pqMuf+DIsWtp+f+qvh3WIqAHrWofWE+vymrtokst6C+5h8RLJbIJHptyOSg05ah/VzBEtkQYBi9r5wtw5YFky+8pG1Ke88M4hOKNczi+FTsjSi7ADkmA2BGHrk36bBNNkMOfXfFVZagkbzfKVU5Gn7UVN+AGzWzzMpfLKIoeZ7owZnPzj23ezKsK6QJK8S9fitP46J8A0y4QHo9NGvN3epJ584hVTv8jpFjiRHseyF7DDm7gLq4sBM503O3uSLgWwklhRK9PIxn0ah2FNHETFAxTWpN64/jEq6zwbRBEbYzAp6lUTi2K5yOgJ3qnkpK54KoZyzjjGSy8EK4RjMDryA9mcUBXWcwN5F+oBaQz9Tq/kkFYaKKZWkXSxlXqhBwFvT7EQJBqKKGXpm8CXGX4RCWnjkVuZ2krWn1nxnWctPnLk50xbG/tgLv+GmBeokvO0f60gOZisD0s+6zuKcVEFcWluo/jGR3U9QEh1Thq0mydigqRPo4x3NMvrmygrtT+owAxLigTkcFz1Vhw+6Ct84WdoO+W6S+Ibquwby2S7K2VO
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jun 2020 11:49:37 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r8so8444931oij.5;
+        Fri, 26 Jun 2020 08:49:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KjUbu0zXqV6UXI5AcJGWUkK1HoxHXhpiqasUK9nCWE0=;
+        b=bfM9Iso7LhnU5jlrjzBFHWtT401AwqKBRJxKP0rTkbqLjKH7Rzx0t3AX9tstF+GKwR
+         LQp4kDunQ8iQ1XIKPdWRBbu4Fa9zD62aLUnqJfA5BdPXtsiJNZ92pVgtrZAIIHJPjtgc
+         w/rh2kmW1U6xCvh/tpkvHyLwCb6452T1riya+PgwZmE5GYV68b2lsrCdca1QMpr1zUzr
+         3NWpfGCsIkJX7Cf0Ll/zKLO4k9rFYSWeUjbO4eVUohrzhBtgnmKfnKnocyAA5CYns3To
+         vq96q/zQJXEJJqM4LqXbTnKgDsL8xs8mkEKVnU+lsDiEMNjgAfuOjewnMJi2f3HY6joZ
+         WVaQ==
+X-Gm-Message-State: AOAM533nKaofuuPJehPc3H4ocIufltSnx8m7hX5ulkTMvz0lLvPONVPc
+        pUmYH385YTIJ8Sg6zgYUzhEGzPHkuJLyBOv5chw=
+X-Google-Smtp-Source: ABdhPJzF29EHzCYbhXZOQiMmBGqCDbEVYzf0yT6LpjaTi+/OOZ29wvayMBJ56u7AiFHEMyA6ntW6JA0ptSQyUflWCxU=
+X-Received: by 2002:aca:4a89:: with SMTP id x131mr3044049oia.103.1593186577071;
+ Fri, 26 Jun 2020 08:49:37 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96fd7b0b-d803-45e7-f399-08d819e86dbe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 15:48:53.6083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mNwIiTGqpulIgPujURvSrHkucZH859oOtw59Q95e1QstoZKAhSrv7r4FQDvU4E0BMRjS9KDDODU+bSWRs8eJcTqa/io/FdU2n4XYYpUCjV4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3966
+References: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
+ <20200626084903.GA27151@zn.tnic> <20200626102255.GZ4817@hirez.programming.kicks-ass.net>
+ <20200626104442.GF117543@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200626104442.GF117543@hirez.programming.kicks-ass.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 26 Jun 2020 17:49:26 +0200
+Message-ID: <CAJZ5v0iDuF1bPud=97qwhp3iy+CCrbGz7ZBSuFgTe4So1Kv+cQ@mail.gmail.com>
+Subject: Re: [PATCH] lib: Extend kstrtobool() to accept "true"/"false"
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <lenb@kernel.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>, jic23@cam.ac.uk,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/2020 10:03, Christoph Hellwig wrote:=0A=
-> -	size =3D bdev->bd_block_size;=0A=
-> -	if (!size)=0A=
-> -		size =3D 1024;=0A=
-> -=0A=
-=0A=
-Why is this correct? block_size() only returns 'bdev->bd_block_size' but I =
-cannot =0A=
-see where it's made sure bd_block_size is not 0. At least no calls to set_b=
-locksize()=0A=
-=0A=
+On Fri, Jun 26, 2020 at 12:45 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jun 26, 2020 at 12:22:55PM +0200, Peter Zijlstra wrote:
+>
+> > > This is too lax - it will be enabled for any !0 value. Please accept
+> > > only 0 and 1.
+> >
+> > kstrtobool() ftw
+>
+> And looking at that, I find it really strange it does not in fact accept
+> "true" / "false", so how about this?
+>
+> ---
+> Subject: lib: Extend kstrtobool() to accept "true"/"false"
+>
+> Extend the strings recognised by kstrtobool() to cover:
+>
+>   - 1/0
+>   - y/n
+>   - yes/no      (new)
+>   - t/f         (new)
+>   - true/false  (new)
+>   - on/off
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+
+> ---
+>  lib/kstrtox.c | 60 ++++++++++++++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 45 insertions(+), 15 deletions(-)
+>
+> diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+> index 1006bf70bf74..b8b950325097 100644
+> --- a/lib/kstrtox.c
+> +++ b/lib/kstrtox.c
+> @@ -325,9 +325,17 @@ EXPORT_SYMBOL(kstrtos8);
+>   * @s: input string
+>   * @res: result
+>   *
+> - * This routine returns 0 iff the first character is one of 'Yy1Nn0', or
+> - * [oO][NnFf] for "on" and "off". Otherwise it will return -EINVAL.  Value
+> - * pointed to by res is updated upon finding a match.
+> + * This return return 0 on success, otherwise it will return -EINVAL.
+> + * It will accept (case invariant):
+> + *
+> + *  - 1/0
+> + *  - y/n
+> + *  - yes/no
+> + *  - t/f
+> + *  - true/false
+> + *  - on/off
+> + *
+> + * and set @*res to either true/false respectively.
+>   */
+>  int kstrtobool(const char *s, bool *res)
+>  {
+> @@ -335,30 +343,52 @@ int kstrtobool(const char *s, bool *res)
+>                 return -EINVAL;
+>
+>         switch (s[0]) {
+> +       case 't':
+> +       case 'T':
+> +               if (!s[1] || !strcasecmp(s, "true"))
+> +                       goto have_true;
+> +
+> +               break;
+> +
+>         case 'y':
+>         case 'Y':
+> +               if (!s[1] || !strcasecmp(s, "yes"))
+> +                       goto have_true;
+> +
+> +               break;
+> +
+>         case '1':
+> +have_true:
+>                 *res = true;
+>                 return 0;
+> +
+> +       case 'f':
+> +       case 'F':
+> +               if (!s[1] || !strcasecmp(s, "false"))
+> +                       goto have_false;
+> +
+> +               break;
+>         case 'n':
+>         case 'N':
+> +               if (!s[1] || !strcasecmp(s, "no"))
+> +                       goto have_false;
+> +
+> +               break;
+>         case '0':
+> +have_false:
+>                 *res = false;
+>                 return 0;
+> +
+>         case 'o':
+>         case 'O':
+> -               switch (s[1]) {
+> -               case 'n':
+> -               case 'N':
+> -                       *res = true;
+> -                       return 0;
+> -               case 'f':
+> -               case 'F':
+> -                       *res = false;
+> -                       return 0;
+> -               default:
+> -                       break;
+> -               }
+> +               if (!strcasecmp(s, "on"))
+> +                       goto have_true;
+> +
+> +               if (!strcasecmp(s, "off"))
+> +                       goto have_false;
+> +
+> +               break;
+> +
+>         default:
+>                 break;
+>         }
