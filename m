@@ -2,103 +2,96 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA059C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD040206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:05:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfLAPtlS"
+	by mail.kernel.org (Postfix) with ESMTP id 9557F206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593173190;
+	bh=ELQM/pPdlP8EfelxNOwq4Bn8SAUl7a5sZviGkPsa/u0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bHBYVxw4nSJkyz+jM2PQxE/iL5Cro++FtT41pHm2P5pCV0LNbwQ0SDx7mwpYqU863
+	 ESiaeKMDPL07+/Y8tSljo9eo+vBnJESR/QAOpUsZSRdryEr6uwOBVdW8tLv1tlsgJv
+	 UVIqyZ9okXQbczmbdg5RAJ3ofYGlY5s8EFohEIcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgFZMFl (ORCPT
+        id S1728957AbgFZMG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgFZMFi (ORCPT
+        Fri, 26 Jun 2020 08:06:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40427 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728080AbgFZMG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:05:38 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D364BC08C5DB;
-        Fri, 26 Jun 2020 05:05:37 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y10so9138753eje.1;
-        Fri, 26 Jun 2020 05:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nR2VtgwF7F9W5HFmQx6MyGh5iwe4EvSvTxPQrcM2OfA=;
-        b=QfLAPtlSom2vjh/UgG3x+Z9xdz8P8W5cPtskt7nvEXO6gtIvbXVuLLkzagDi4PjsFa
-         StIMhc182BACUjaLImZVGhSOkurSTQ98vBP7h4q1W5nlAhyYkIridmDDZG/pkyVc1prf
-         7bpm0EvCuk5ZiZy2j5yJDpNkjsieQ0oUyghQz+PNNopk9kkt1kzUej63Fr8zHmvhuuMt
-         tef0eCnPojyQd7q18LDo8A6+yDLWnXOkxq6nbKBzXn6NRpq3bJOhWd86hRB7zqbZIvBx
-         M/UsF0HLUAGp29/fZNb4BwXADD/Vv1I9QyZ6gzFApQUoYhKs3zHZHS9T+KV4ZUg9rEef
-         IK9A==
+        Fri, 26 Jun 2020 08:06:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e18so4869287pgn.7;
+        Fri, 26 Jun 2020 05:06:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nR2VtgwF7F9W5HFmQx6MyGh5iwe4EvSvTxPQrcM2OfA=;
-        b=uUjexY9dbXHdcOW7o8yekC/zWPvBv0Nm5jFnoloCcnpiXikviYr8fgmCQYB9c8miBZ
-         lPUunSOScdzlIms44CXQsvbib7aGzL/URLEVi74yPe7N49jA/fbnCxh/AHlRO2qBxSuE
-         Dt0UcPT5+JWHXhylq7K1Ab8NRxK5gJIE0vYsAsNV+/YuZESQdRtVEx7BV166gfYjeK9Q
-         b3BNz2FUXVQz33RYVYlBgCk6nJn61RLmpjfNnK6LXYKzeVcOsc1lmIzkjjd2LGEq1D8c
-         vk/DKzyGNTZcoXrmtGosn/Mq+8fkL7S7h7ZYGQcGDSd7Pw06llE+mHdls7vp6whVbvmA
-         T3nQ==
-X-Gm-Message-State: AOAM533mRTIVADveeDzlJgVPyYDQFq2X+floIwfmiFcx3VmJhqzA2Y3r
-        eYEY7AmewNx+bIxte6B6XWc=
-X-Google-Smtp-Source: ABdhPJwZ8M1BQ2yH0DeD+1br27YkhVt9aUJrcA1oAtfzVrHHpr0ijzgJNJUutvTNYuggWpiGff/Gbg==
-X-Received: by 2002:a17:906:7247:: with SMTP id n7mr2244351ejk.105.1593173136604;
-        Fri, 26 Jun 2020 05:05:36 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id l27sm5024153ejk.25.2020.06.26.05.05.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jun 2020 05:05:36 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     peppe.cavallaro@st.com
-Cc:     alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net,
-        kuba@kernel.org, mcoquelin.stm32@gmail.com, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] net: stmmac: add Rockchip as supported platform in STMMAC_PLATFORM help text
-Date:   Fri, 26 Jun 2020 14:05:27 +0200
-Message-Id: <20200626120527.10562-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200626120527.10562-1-jbx6244@gmail.com>
-References: <20200626120527.10562-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rerp7T349z5d/bW667Qe6hL4Bacoz0qeIOMjhkul/co=;
+        b=dzaaOShOAmxU7pqtsQ/HChxP1Sf0asrYtz3jHqzpDLPzVQjij8KNxtGPwI9Bo8MQOQ
+         x2FNGhxgi9SlYQUeukehswkSMM8JRwhaitZ5xrN9xXhITCbQHjwHcgYVQnLRCrIToJc9
+         A4l43ljro0aPdTwuSu9u2AACKO8pFYS5aR3Q3C7MT5A6r+VASkgNzzZh6QXndVOa9wDk
+         LcBgoccbUN+q4RJJJfRPCWZvyv01Vt/08Kse+MN3WZDh0s1gYgb78WYTDchIP38BVk0F
+         XPnGq5eaGt6WvNMzOz6WFu57Ry15gAcxTUzKd8SoaYrn1Ixrc3h3ER1T76Hln+1KHG90
+         zFFg==
+X-Gm-Message-State: AOAM533uCzdCdRbauY0v+ZJxrB8CtsZGDFw4bMrmiggnJTSxLW3qcOC6
+        DYzRol29gUPtyQjnw3yG1zk=
+X-Google-Smtp-Source: ABdhPJz4l8fsxkNBK2YDCOZe0ILtzyxwGvlDSbndekipkn5Rz8sUNYiaYM7n9+8mglpbQeyLydM1fw==
+X-Received: by 2002:a63:4d53:: with SMTP id n19mr2545086pgl.60.1593173187188;
+        Fri, 26 Jun 2020 05:06:27 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id w6sm11058707pjy.15.2020.06.26.05.06.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 05:06:25 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id E368940B24; Fri, 26 Jun 2020 12:06:24 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 12:06:24 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/9] proc: add a read_iter method to proc proc_ops
+Message-ID: <20200626120624.GL4332@42.do-not-panic.com>
+References: <20200626075836.1998185-1-hch@lst.de>
+ <20200626075836.1998185-3-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626075836.1998185-3-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Kconfig menu has an option for DWMAC_ROCKCHIP.
-Then add Rockchip also as supported platform in the help text
-of STMMAC_PLATFORM.
+On Fri, Jun 26, 2020 at 09:58:29AM +0200, Christoph Hellwig wrote:
+> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+> index 28d6105e908e4c..fa86619cebc2be 100644
+> --- a/fs/proc/inode.c
+> +++ b/fs/proc/inode.c
+> @@ -297,6 +297,29 @@ static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
+>  	return rv;
+>  }
+>  
+> +static ssize_t pde_read_iter(struct proc_dir_entry *pde, struct kiocb *iocb,
+> +		struct iov_iter *iter)
+> +{
+> +	if (!pde->proc_ops->proc_read_iter)
+> +		return -EINVAL;
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+When is this true?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 8f7625cc8..8309e05b4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -33,7 +33,7 @@ config STMMAC_PLATFORM
- 	---help---
- 	  This selects the platform specific bus support for the stmmac driver.
- 	  This is the driver used on several SoCs:
--	  STi, Allwinner, Amlogic Meson, Altera SOCFPGA.
-+	  STi, Allwinner, Amlogic Meson, Altera SOCFPGA, Rockchip.
- 
- 	  If you have a controller with this interface, say Y or M here.
- 
--- 
-2.11.0
+> +	return pde->proc_ops->proc_read_iter(iocb, iter);
+> +}
+> +
 
+  Luis
