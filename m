@@ -2,220 +2,79 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0133C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC2A220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="paDQtPIb"
+	by mail.kernel.org (Postfix) with ESMTP id C5054207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593131847;
+	bh=4Srpq0sjZUqnumgWOmwTaPO+rJbsJtZnC+2BgIUwPRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fyg+JZX8H4Ozvsf/tsykBAzLnwL8s5+I0fQokzj3SH9ZFVA59ttpmTKNE5Mbiih9u
+	 UmowUydMolE909FyFMkpkTM87As+JZOm9fGj/CWrzG8vp8aoxLUX/ikcw0i+4bPaVZ
+	 zoQf0cpkn2gbdjppTjyfiu7SMO4bLPxJ5m4uQbKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbgFZA1V (ORCPT
+        id S1726403AbgFZAh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgFZA1U (ORCPT
+        Thu, 25 Jun 2020 20:37:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33845 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgFZAhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:27:20 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E267C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:20 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id l62so5398440pje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=EfF/SDXieMxdBzzRNR3vjXRP9ELsApXSIPoFiYsV8L8=;
-        b=paDQtPIbzZ2WSuFquOtQehWbSHMmSB+a126xQsSFdnJ+LWvXx9zh3xoaXaxtDIWPS1
-         aj+RavY/oV4sdZMGj+JxuTxWLKrxKs/vuctrDwS3ssgObe36pmdICn64FKPmAyRHjxwe
-         XtehEjQ0v87qVFGKmNVDHwVMoI5Pn9GxvrlDvItnji8r2/359JdayOqIPyCmWStKA9+v
-         5bmemCJMXczy9khjne/ZecgDVafiUFo3pgwAosZuPIctUt449NK/rI3VYJ1hM3BWMdSf
-         CUP5JOLmNVSWSZ/xqN/vEyuLzjYjfWCuHZX6swe8v49YWnPDTEIbd5ny/cAj9qxjVpkU
-         YbuQ==
+        Thu, 25 Jun 2020 20:37:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u185so1837561pfu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:37:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=EfF/SDXieMxdBzzRNR3vjXRP9ELsApXSIPoFiYsV8L8=;
-        b=dWStTuv3n1GBtQJqeUFZU6o1VoBYYsp5gXJt2dhq9BbK3mGI6QMc9Zw7yRBYwdPepA
-         afS1bwrEq+Hei7g4HG8DbObXqGSKjQQjeIKAgOW3QffN5pSVTNPyYB75DEQWLr/QxsfX
-         B81GxpurAJT6KB8cKvz09beVvnmCnWHBCyqz7usHDudseUBSYXZ8e+UtlG/iaQODbEPo
-         gpLVn4LRTTDZS5fIE7/6DGNj/fc+iykl0v/LSj98WvzHlFWDPBLbwOXHA1ijKNmfmQ4D
-         hnSz11jd/azPwZCIKKeWabkU5DIFHhIyjuCyyC/J7O8EiftmyLC2Wrx70ww151viPk1O
-         ze4g==
-X-Gm-Message-State: AOAM532axoqIDA9W1nR6DMW2OUP9GqICbI790UPTjqXPoA3T5lTmPHVX
-        +cEMSGAlNMCzM7G8HkRFUEvALl0yeQCv
-X-Google-Smtp-Source: ABdhPJyg+Tx781kWCf0f1ygzfZiFbsIs8XO5OHEWZ3G9zVxZL03LpMQELqZK3FRDzjGcWC5sc5IvuWvWCLEp
-X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr611640pjs.196.1593131239458;
- Thu, 25 Jun 2020 17:27:19 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 17:27:10 -0700
-In-Reply-To: <20200626002710.110200-1-rajatja@google.com>
-Message-Id: <20200626002710.110200-2-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200626002710.110200-1-rajatja@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hy4bKbQAyIT6xPIEHhucZ2hBlDFLteKHmkcc1hLnsOU=;
+        b=dsxs28Ohf0nKmHjGSgDdguDfyq8vzWcxfJvkpyXzLpan2AIQNwD2Rl/mCLCmIPWy02
+         MhsdjaIHHV4J8dHwQAzX6ou6aM1dn8rngvUuh4xmGauFKYYcghkr0TLMOs7t4MLR5CSO
+         MTZujF8BkBVapJC+9WlptBx/FOI+8tGSSu1b+EBFQww/WEIhvE+iac9sZ485hpZNMjAT
+         9yHeT3kqeD8UUNdL/3qMieNo5ybkBUjx7HoEB9ULZ5Q8/RdvkH7MGlDITb61SUcKleAA
+         NmLTzLuDVld66EazF6vslStgaJQIleHFN1eFBnN8ZasPBhgcib0YLy8vJuQOOTSqANuA
+         qeXA==
+X-Gm-Message-State: AOAM5314RwOSRUYFZDXI8Ja73/Yg6sbCb52+pKZ8g6t0I24si1FevH1I
+        9ZMapBFpGCiMwSeRpi6aivU=
+X-Google-Smtp-Source: ABdhPJwbW/Wpb/CEH1pkDAJWNkYhXkyIY0z8C/ygJRWod/Z0Wrh/K+QvD0qZY5nvbqD3UI9BFirzKQ==
+X-Received: by 2002:a63:ab02:: with SMTP id p2mr463454pgf.416.1593131844433;
+        Thu, 25 Jun 2020 17:37:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id n189sm24458611pfn.108.2020.06.25.17.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 17:37:23 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 363B640430; Fri, 26 Jun 2020 00:37:22 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 00:37:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] firmware: improve description of firmware_request_nowarn
+Message-ID: <20200626003722.GI4332@42.do-not-panic.com>
+References: <20200625200221.18219-1-wsa+renesas@sang-engineering.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625200221.18219-1-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a PCI parameter that disables the automatic attachment of
-untrusted devices to their drivers.
+On Thu, Jun 25, 2020 at 10:02:21PM +0200, Wolfram Sang wrote:
+> The doubled 'however' is confusing. Simplify the comment a little and
+> reformat the paragraph.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-Context:
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-  I set out to implement the approach outlined in
-    https://lkml.org/lkml/2020/6/9/1331
-    https://lkml.org/lkml/2020/6/15/1453
-
-  But to my surprise, I found that the new hotplugged PCI devices
-  were getting automatically attached to drivers even though
-  /sys/bus/pci/drivers_autoprobe was set to 0.
-
-  I realized that the device core's "drivers_autoprobe":
-
-  * only disables the *initial* probe of the device (i.e. from
-    device_add()). If a subsystem calls device_attach() explicitly
-    for its devices like PCI subsystem does, the drivers_autoprobe
-    setting does not matter. The core will attach device to the driver.
-    This looks like correct semantic behavior to me because PCI is
-    explicitly calling device_attach(), which is a way to explicitly
-    ask the core to find and attach a driver for a device.
-
-  * "drivers_autoprobe" cannot be controlled at boot time (to restrict
-    any drivers before userspace comes up).
-
-  The options I considered were:
-
-  1) Change device_attach() so that it takes into consideration the
-     drivers_autoprobe property. Not sure if this is semantically correct
-     thing to do though. If I do this, then the only way a driver can
-     be attached to the drivers would be via userspace
-     (/sys/bus/pci/drivers/bind) (Good for our use case though!).
-
-  2) Make the drivers_autoprobe property available to PCI to use
-     (currently it is private to device core). The PCI could use this
-     to determine whether or not to call device_attach(). This still
-     leaves the other problem (of not being able to set
-     drivers_autoprobe via command line open).
-
-  3) I found the pci_dev->match_driver, which seemed similar to what I
-     am trying to do, but can't be controlled from userspace. I considered
-     populating that field based on drivers_autoprobe (still need (2)).
-     But the problem is that there is the AMD IOMMU driver which is setting
-     this independently, so setting the match_driver based on
-     drivers_autoprobe may not be a good idea. May be we can populate it
-     for untrusted devicesi, based on the parameter that I'm introducing?
-
-  4) This patch was my option 4 that helps fix both the problems for me.
-
- drivers/pci/bus.c | 11 ++++++++---
- drivers/pci/pci.c |  9 +++++++++
- drivers/pci/pci.h |  1 +
- 3 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 3cef835b375fd..336aeeb4c4ebf 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	pci_bridge_d3_update(dev);
- 
- 	dev->match_driver = true;
--	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER)
--		pci_warn(dev, "device attach failed (%d)\n", retval);
-+
-+	if (dev->untrusted && pci_dont_attach_untrusted_devs) {
-+		pci_info(dev, "not attaching untrusted device\n");
-+	} else {
-+		retval = device_attach(&dev->dev);
-+		if (retval < 0 && retval != -EPROBE_DEFER)
-+			pci_warn(dev, "device attach failed (%d)\n", retval);
-+	}
- 
- 	pci_dev_assign_added(dev, true);
- }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b1..dec1f9ef27d71 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
- /* If set, the PCI config space of each device is printed during boot. */
- bool pci_early_dump;
- 
-+/*
-+ * If set, the devices with "untrusted" flag shall not be attached automatically
-+ * Userspace will need to attach them manually:
-+ * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
-+ */
-+bool pci_dont_attach_untrusted_devs;
-+
- bool pci_ats_disabled(void)
- {
- 	return pcie_ats_disabled;
-@@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+			} else if (!strcmp(str, "dont_attach_untrusted_devs")) {
-+				pci_dont_attach_untrusted_devs = true;
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f758671064..30ffad047d926 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -13,6 +13,7 @@
- 
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
-+extern bool pci_dont_attach_untrusted_devs;
- 
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
- bool pcie_cap_has_rtctl(const struct pci_dev *dev);
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+  Luis
