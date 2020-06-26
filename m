@@ -2,218 +2,472 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C87C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D765D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9B9207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FPWXKFQs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqoR27vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgFZRLr (ORCPT
+        id S1728329AbgFZRL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:11:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52852 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgFZRLq (ORCPT
+        Fri, 26 Jun 2020 13:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgFZRLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:11:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QHBEAZ099969;
-        Fri, 26 Jun 2020 12:11:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593191474;
-        bh=ux4wGZ9FAMPewCIiFjxwKiWjPcBoQzrGx8Tm3T6HdSc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FPWXKFQsFWefNWyjFpNnCg6GFcS2w6ONHUfxScGAaLZiH1uHyFU5LPQggJYBMiUNb
-         aYdeFyNv7Oh5q83ZCeegGXkmFQPJief1rBfW76/uD11wLWctFgYWYynkZ+Tze28htF
-         3ScskuRr3exh6uXw+3J3hpksHzWB1/1UFq2eG/dA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QHBEOU025758
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 12:11:14 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 12:11:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 12:11:13 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QHB9sn000377;
-        Fri, 26 Jun 2020 12:11:10 -0500
-Subject: Re: [PATCH v6 2/4] driver core: add deferring probe reason to
- devices_deferred property
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20200626100103.18879-1-a.hajda@samsung.com>
- <CGME20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e@eucas1p2.samsung.com>
- <20200626100103.18879-3-a.hajda@samsung.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <5f159e00-44fd-515b-dd8c-4db9845dc9e6@ti.com>
-Date:   Fri, 26 Jun 2020 20:11:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 26 Jun 2020 13:11:54 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0472C03E979;
+        Fri, 26 Jun 2020 10:11:53 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id mb16so10094717ejb.4;
+        Fri, 26 Jun 2020 10:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=26eXBaPn8+CjtQ5/xYI/7W0zfmNG6Rv/dUzuyKJer74=;
+        b=eqoR27vq/5aFYykRjlMO/Wjw8VzfKSQlZUCIY00OcGKSa/OqbuiLI+gDtZBdjhP3jR
+         p4xnK4sR5dUnuAjO2hLv0M+OgGNRULr79q6O7eR4VlqXZudTtPK3jy0g/yA66Llvtxsz
+         oXzxSJ8Nv2z+RqNAqHkMGSJ2VAfNlHlgwTs5khoif2ekIOOsszN2Uh2y9vrurEDaFCsl
+         8NdPh89PcRzz4dRnxUMKR8xpklKWFbBdj+nMZTVjo/ZVZlkfBt4Iz/ewMOU5tXOUZBtM
+         5+kYN/YpWZdmI9L3Ac1FDyJ54WJ/xf1KM/j1CarMiviKsqn4keyQM3AsQ2z0iAoHJKwg
+         vBng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=26eXBaPn8+CjtQ5/xYI/7W0zfmNG6Rv/dUzuyKJer74=;
+        b=So/ghd3aR+E0nCzzlc4EZj81uRsgyBRjnbSlowePfuUFvZy5mQW+EkW4unyq6opI1X
+         fQlePVbj4BLeDA3nKsizbX0N7mNtQ74sv+v/98ziwSOZIS7SC0CgrHyb5ikxI7SUeqEO
+         GmWektc2ceCoHb2mIRrCYq+b9E206hUrowNoVSG1OBSiVthOA3ycE07cGBdop+iUjywb
+         a+jQhwCM2SIQzA59UWRYFH8OJUjNP2KwpRGJgnZ0gn6TG+V/N6u6VBKu4FtsRVLvmC/Y
+         UhXdpF4cCPkQXQV3rmHo+kYKUuRGCrCl7X2lW2DsKLN6KfKJP26tXEn5cpaTeUuOiolw
+         f8rQ==
+X-Gm-Message-State: AOAM53223+NF5iamWBgRbZuBctGKcMNJ4cweMq1nIgmQdvTrEyhCAMmO
+        5leyKx0WQgZji9XIoG/tXZQ=
+X-Google-Smtp-Source: ABdhPJxaA1u/dYKG+/IkKradjhnoaNBiAzELxQpPILdz8HUYR6MNxF1b8GD3/I3+eXhRI8Rn4pyWvw==
+X-Received: by 2002:a17:906:284e:: with SMTP id s14mr2265378ejc.498.1593191512303;
+        Fri, 26 Jun 2020 10:11:52 -0700 (PDT)
+Received: from BV030612LT ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id ay27sm816334edb.81.2020.06.26.10.11.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 10:11:51 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 20:11:48 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
+Message-ID: <20200626171148.GD6611@BV030612LT>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
+ <20200626142941.GE8333@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <20200626100103.18879-3-a.hajda@samsung.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626142941.GE8333@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 26/06/2020 13:01, Andrzej Hajda wrote:
-> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
-> This list does not contain reason why the driver deferred probe, the patch
-> improves it.
-> The natural place to set the reason is probe_err function introduced recently,
-> ie. if probe_err will be called with -EPROBE_DEFER instead of printk the message
-> will be attached to deferred device and printed when user read devices_deferred
-> property.
+On Fri, Jun 26, 2020 at 07:59:41PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
+> > Add pinctrl and gpio driver for Actions Semi S500 SoC.
+> > 
+> > The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
+> > functions using a set of registers shared between gpio and pinctrl.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> >  drivers/pinctrl/actions/Kconfig        |    6 +
+> >  drivers/pinctrl/actions/Makefile       |    1 +
+> >  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
+> >  3 files changed, 1734 insertions(+)
+> >  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
+> > 
+> > diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
+> > index 966f1c2c89d6..a1d16e8280e5 100644
+> > --- a/drivers/pinctrl/actions/Kconfig
+> > +++ b/drivers/pinctrl/actions/Kconfig
+> > @@ -10,6 +10,12 @@ config PINCTRL_OWL
+> >  	help
+> >  	  Say Y here to enable Actions Semi OWL pinctrl driver
+> >  
+> > +config PINCTRL_S500
+> > +	bool "Actions Semi S500 pinctrl driver"
+> > +	depends on PINCTRL_OWL
+> > +	help
+> > +	  Say Y here to enable Actions Semi S500 pinctrl driver
+> > +
+> >  config PINCTRL_S700
+> >  	bool "Actions Semi S700 pinctrl driver"
+> >  	depends on PINCTRL_OWL
+> > diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
+> > index 61aa9107a43a..b9e2c527c9d3 100644
+> > --- a/drivers/pinctrl/actions/Makefile
+> > +++ b/drivers/pinctrl/actions/Makefile
+> > @@ -1,4 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
+> > +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
+> >  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
+> >  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
+> > diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
+> > new file mode 100644
+> > index 000000000000..38e30914af6e
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/actions/pinctrl-s500.c
+> > @@ -0,0 +1,1727 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Actions Semi S500 SoC Pinctrl driver
+> > + *
+> > + * Copyright (c) 2014 Actions Semi Inc.
+> > + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pinctrl/pinconf-generic.h>
+> > +#include <linux/pinctrl/pinctrl.h>
+> > +#include "pinctrl-owl.h"
+> > +
+> > +/* Pinctrl registers offset */
+> > +#define MFCTL0			(0x0040)
+> > +#define MFCTL1			(0x0044)
+> > +#define MFCTL2			(0x0048)
+> > +#define MFCTL3			(0x004C)
+> > +#define PAD_PULLCTL0		(0x0060)
+> > +#define PAD_PULLCTL1		(0x0064)
+> > +#define PAD_PULLCTL2		(0x0068)
+> > +#define PAD_ST0			(0x006C)
+> > +#define PAD_ST1			(0x0070)
+> > +#define PAD_CTL			(0x0074)
+> > +#define PAD_DRV0		(0x0080)
+> > +#define PAD_DRV1		(0x0084)
+> > +#define PAD_DRV2		(0x0088)
+> > +
+> > +#define _GPIOA(offset)		(offset)
+> > +#define _GPIOB(offset)		(32 + (offset))
+> > +#define _GPIOC(offset)		(64 + (offset))
+> > +#define _GPIOD(offset)		(96 + (offset))
+> > +#define _GPIOE(offset)		(128 + (offset))
+> > +
+> > +#define NUM_GPIOS		(_GPIOE(3) + 1)
+> > +#define _PIN(offset)		(NUM_GPIOS + (offset))
+> > +
+> > +#define DNAND_DQS		_GPIOA(12)
+> > +#define DNAND_DQSN		_GPIOA(13)
+> > +#define ETH_TXD0		_GPIOA(14)
+> > +#define ETH_TXD1		_GPIOA(15)
+> > +#define ETH_TXEN		_GPIOA(16)
+> > +#define ETH_RXER		_GPIOA(17)
+> > +#define ETH_CRS_DV		_GPIOA(18)
+> > +#define ETH_RXD1		_GPIOA(19)
+> > +#define ETH_RXD0		_GPIOA(20)
+> > +#define ETH_REF_CLK		_GPIOA(21)
+> > +#define ETH_MDC			_GPIOA(22)
+> > +#define ETH_MDIO		_GPIOA(23)
+> > +#define SIRQ0			_GPIOA(24)
+> > +#define SIRQ1			_GPIOA(25)
+> > +#define SIRQ2			_GPIOA(26)
+> > +#define I2S_D0			_GPIOA(27)
+> > +#define I2S_BCLK0		_GPIOA(28)
+> > +#define I2S_LRCLK0		_GPIOA(29)
+> > +#define I2S_MCLK0		_GPIOA(30)
+> > +#define I2S_D1			_GPIOA(31)
+> > +
+> > +#define I2S_BCLK1		_GPIOB(0)
+> > +#define I2S_LRCLK1		_GPIOB(1)
+> > +#define I2S_MCLK1		_GPIOB(2)
+> > +#define KS_IN0			_GPIOB(3)
+> > +#define KS_IN1			_GPIOB(4)
+> > +#define KS_IN2			_GPIOB(5)
+> > +#define KS_IN3			_GPIOB(6)
+> > +#define KS_OUT0			_GPIOB(7)
+> > +#define KS_OUT1			_GPIOB(8)
+> > +#define KS_OUT2			_GPIOB(9)
+> > +#define LVDS_OEP		_GPIOB(10)
+> > +#define LVDS_OEN		_GPIOB(11)
+> > +#define LVDS_ODP		_GPIOB(12)
+> > +#define LVDS_ODN		_GPIOB(13)
+> > +#define LVDS_OCP		_GPIOB(14)
+> > +#define LVDS_OCN		_GPIOB(15)
+> > +#define LVDS_OBP		_GPIOB(16)
+> > +#define LVDS_OBN		_GPIOB(17)
+> > +#define LVDS_OAP		_GPIOB(18)
+> > +#define LVDS_OAN		_GPIOB(19)
+> > +#define LVDS_EEP		_GPIOB(20)
+> > +#define LVDS_EEN		_GPIOB(21)
+> > +#define LVDS_EDP		_GPIOB(22)
+> > +#define LVDS_EDN		_GPIOB(23)
+> > +#define LVDS_ECP		_GPIOB(24)
+> > +#define LVDS_ECN		_GPIOB(25)
+> > +#define LVDS_EBP		_GPIOB(26)
+> > +#define LVDS_EBN		_GPIOB(27)
+> > +#define LVDS_EAP		_GPIOB(28)
+> > +#define LVDS_EAN		_GPIOB(29)
+> > +#define LCD0_D18		_GPIOB(30)
+> > +#define LCD0_D17		_GPIOB(31)
+> > +
+> > +#define DSI_DP3			_GPIOC(0)
+> > +#define DSI_DN3			_GPIOC(1)
+> > +#define DSI_DP1			_GPIOC(2)
+> > +#define DSI_DN1			_GPIOC(3)
+> > +#define DSI_CP			_GPIOC(4)
+> > +#define DSI_CN			_GPIOC(5)
+> > +#define DSI_DP0			_GPIOC(6)
+> > +#define DSI_DN0			_GPIOC(7)
+> > +#define DSI_DP2			_GPIOC(8)
+> > +#define DSI_DN2			_GPIOC(9)
+> > +#define SD0_D0			_GPIOC(10)
+> > +#define SD0_D1			_GPIOC(11)
+> > +#define SD0_D2			_GPIOC(12)
+> > +#define SD0_D3			_GPIOC(13)
+> > +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
+> > +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
+> > +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
+> > +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
+> > +#define SD0_CMD			_GPIOC(18)
+> > +#define SD0_CLK			_GPIOC(19)
+> > +#define SD1_CMD			_GPIOC(20)
+> > +#define SD1_CLK			_GPIOC(21)
+> > +#define SPI0_SCLK		_GPIOC(22)
+> > +#define SPI0_SS			_GPIOC(23)
+> > +#define SPI0_MISO		_GPIOC(24)
+> > +#define SPI0_MOSI		_GPIOC(25)
+> > +#define UART0_RX		_GPIOC(26)
+> > +#define UART0_TX		_GPIOC(27)
+> > +#define I2C0_SCLK		_GPIOC(28)
+> > +#define I2C0_SDATA		_GPIOC(29)
+> > +#define SENSOR0_PCLK		_GPIOC(31)
+> > +
+> > +#define SENSOR0_CKOUT		_GPIOD(10)
+> > +#define DNAND_ALE		_GPIOD(12)
+> > +#define DNAND_CLE		_GPIOD(13)
+> > +#define DNAND_CEB0		_GPIOD(14)
+> > +#define DNAND_CEB1		_GPIOD(15)
+> > +#define DNAND_CEB2		_GPIOD(16)
+> > +#define DNAND_CEB3		_GPIOD(17)
+> > +#define UART2_RX		_GPIOD(18)
+> > +#define UART2_TX		_GPIOD(19)
+> > +#define UART2_RTSB		_GPIOD(20)
+> > +#define UART2_CTSB		_GPIOD(21)
+> > +#define UART3_RX		_GPIOD(22)
+> > +#define UART3_TX		_GPIOD(23)
+> > +#define UART3_RTSB		_GPIOD(24)
+> > +#define UART3_CTSB		_GPIOD(25)
+> > +#define PCM1_IN			_GPIOD(28)
+> > +#define PCM1_CLK		_GPIOD(29)
+> > +#define PCM1_SYNC		_GPIOD(30)
+> > +#define PCM1_OUT		_GPIOD(31)
+> > +
+> > +#define I2C1_SCLK		_GPIOE(0)
+> > +#define I2C1_SDATA		_GPIOE(1)
+> > +#define I2C2_SCLK		_GPIOE(2)
+> > +#define I2C2_SDATA		_GPIOE(3)
+> > +
+> > +#define CSI_DN0			_PIN(0)
+> > +#define CSI_DP0			_PIN(1)
+> > +#define CSI_DN1			_PIN(2)
+> > +#define CSI_DP1			_PIN(3)
+> > +#define CSI_CN			_PIN(4)
+> > +#define CSI_CP			_PIN(5)
+> > +#define CSI_DN2			_PIN(6)
+> > +#define CSI_DP2			_PIN(7)
+> > +#define CSI_DN3			_PIN(8)
+> > +#define CSI_DP3			_PIN(9)
+> > +
+> > +#define DNAND_D0		_PIN(10)
+> > +#define DNAND_D1		_PIN(11)
+> > +#define DNAND_D2		_PIN(12)
+> > +#define DNAND_D3		_PIN(13)
+> > +#define DNAND_D4		_PIN(14)
+> > +#define DNAND_D5		_PIN(15)
+> > +#define DNAND_D6		_PIN(16)
+> > +#define DNAND_D7		_PIN(17)
+> > +#define DNAND_WRB		_PIN(18)
+> > +#define DNAND_RDB		_PIN(19)
+> > +#define DNAND_RDBN		_PIN(20)
+> > +#define DNAND_RB		_PIN(21)
+> > +
+> > +#define PORB			_PIN(22)
+> > +#define CLKO_25M		_PIN(23)
+> > +#define BSEL			_PIN(24)
+> > +#define PKG0			_PIN(25)
+> > +#define PKG1			_PIN(26)
+> > +#define PKG2			_PIN(27)
+> > +#define PKG3			_PIN(28)
+> > +
+> > +#define _FIRSTPAD		_GPIOA(0)
+> > +#define _LASTPAD		PKG3
+> > +#define NUM_PADS		(_PIN(28) + 1)
+> > +
 > 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->   drivers/base/base.h |  3 +++
->   drivers/base/core.c |  8 ++++++--
->   drivers/base/dd.c   | 23 ++++++++++++++++++++++-
->   3 files changed, 31 insertions(+), 3 deletions(-)
+> [...]
 > 
-> diff --git a/drivers/base/base.h b/drivers/base/base.h
-> index 95c22c0f9036..6954fccab3d7 100644
-> --- a/drivers/base/base.h
-> +++ b/drivers/base/base.h
-> @@ -93,6 +93,7 @@ struct device_private {
->   	struct klist_node knode_class;
->   	struct list_head deferred_probe;
->   	struct device_driver *async_driver;
-> +	char *deferred_probe_reason;
->   	struct device *device;
->   	u8 dead:1;
->   };
-> @@ -134,6 +135,8 @@ extern void device_release_driver_internal(struct device *dev,
->   extern void driver_detach(struct device_driver *drv);
->   extern int driver_probe_device(struct device_driver *drv, struct device *dev);
->   extern void driver_deferred_probe_del(struct device *dev);
-> +extern void device_set_deferred_probe_reson(const struct device *dev,
-> +					    struct va_format *vaf);
->   static inline int driver_match_device(struct device_driver *drv,
->   				      struct device *dev)
->   {
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 3a827c82933f..fee047f03681 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3963,6 +3963,8 @@ define_dev_printk_level(_dev_info, KERN_INFO);
->    * This helper implements common pattern present in probe functions for error
->    * checking: print debug or error message depending if the error value is
->    * -EPROBE_DEFER and propagate error upwards.
-> + * In case of -EPROBE_DEFER it sets also defer probe reason, which can be
-> + * checked later by reading devices_deferred debugfs attribute.
->    * It replaces code sequence:
->    * 	if (err != -EPROBE_DEFER)
->    * 		dev_err(dev, ...);
-> @@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
->   	vaf.fmt = fmt;
->   	vaf.va = &args;
->   
-> -	if (err != -EPROBE_DEFER)
-> +	if (err != -EPROBE_DEFER) {
->   		dev_err(dev, "error %d: %pV", err, &vaf);
-> -	else
-> +	} else {
-> +		device_set_deferred_probe_reson(dev, &vaf);
->   		dev_dbg(dev, "error %d: %pV", err, &vaf);
-> +	}
->   
->   	va_end(args);
->   
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 9a1d940342ac..dd5683b61f74 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -27,6 +27,7 @@
->   #include <linux/async.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/pinctrl/devinfo.h>
-> +#include <linux/slab.h>
->   
->   #include "base.h"
->   #include "power/power.h"
-> @@ -136,6 +137,8 @@ void driver_deferred_probe_del(struct device *dev)
->   	if (!list_empty(&dev->p->deferred_probe)) {
->   		dev_dbg(dev, "Removed from deferred list\n");
->   		list_del_init(&dev->p->deferred_probe);
-> +		kfree(dev->p->deferred_probe_reason);
-> +		dev->p->deferred_probe_reason = NULL;
->   	}
->   	mutex_unlock(&deferred_probe_mutex);
->   }
-> @@ -211,6 +214,23 @@ void device_unblock_probing(void)
->   	driver_deferred_probe_trigger();
->   }
->   
-> +/**
-> + * device_set_deferred_probe_reson() - Set defer probe reason message for device
-> + * @dev: the pointer to the struct device
-> + * @vaf: the pointer to va_format structure with message
-> + */
-> +void device_set_deferred_probe_reson(const struct device *dev, struct va_format *vaf)
-> +{
-> +	const char *drv = dev_driver_string(dev);
-> +
-> +	mutex_lock(&deferred_probe_mutex);
-> +
-> +	kfree(dev->p->deferred_probe_reason);
-> +	dev->p->deferred_probe_reason = kasprintf(GFP_KERNEL, "%s: %pV", drv, vaf);
-> +
-> +	mutex_unlock(&deferred_probe_mutex);
-> +}
-> +
->   /*
->    * deferred_devs_show() - Show the devices in the deferred probe pending list.
->    */
-> @@ -221,7 +241,8 @@ static int deferred_devs_show(struct seq_file *s, void *data)
->   	mutex_lock(&deferred_probe_mutex);
->   
->   	list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
-> -		seq_printf(s, "%s\n", dev_name(curr->device));
-> +		seq_printf(s, "%s\t%s", dev_name(curr->device),
-> +			   curr->device->p->deferred_probe_reason ?: "\n");
->   
->   	mutex_unlock(&deferred_probe_mutex);
->   
+> > +static const struct owl_gpio_port s500_gpio_ports[] = {
+> > +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
+> > +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
+> > +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
+> > +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
+> > +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
 > 
+> Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
+> you get these?
+> 
+> Thanks,
+> Mani
 
-Sry, may be i missing smth, but shouldn't it be optional
-(CONFIG_DEBUG_FS is probably too generic).
+I computed the offsets using the S500 Datasheet, v1.6 (2016-03-07).
 
--- 
-Best regards,
-grygorii
+Below is an excerpt from chapter '30.4 Register List':
+
+-------+--------------
+Offset | Register Name
+-------+--------------
+0x000C | GPIO_BOUTEN
+0x0010 | GPIO_BINEN
+0x0014 | GPIO_BDAT
+...
+0x0204 | INTC_GPIOCTL
+0x0210 | INTC_GPIOB_PD
+0x0214 | INTC_GPIOB_MSK
+...
+0x0238 | INTC_GPIOB_TYPE0
+-------+--------------
+
+Hence, for PORT-B, I got the following values:
+
+OWL_GPIO_PORT(B,
+  0x000C, /* base = GPIO_BOUTEN = 0x000C */
+  32,
+  0x0,    /* GPIO_BOUTEN - base */
+  0x4,    /* GPIO_BINEN - base */
+  0x8,    /* GPIO_BDAT - base */
+  0x1F8,  /* INTC_GPIOCTL - base */
+  0x204,  /* INTC_GPIOB_PD - base */
+  0x208,  /* INTC_GPIOB_MSK - base */
+  0x22C,  /* INTC_GPIOB_TYPE0 - base */
+  1),
+
+Did I miss something?
+
+Thanks,
+Cristi
+
+> 
+> > +};
+> > +
+> > +enum s500_pinconf_pull {
+> > +	OWL_PINCONF_PULL_DOWN,
+> > +	OWL_PINCONF_PULL_UP,
+> > +};
+> > +
+> > +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
+> > +				    unsigned int param, u32 *arg)
+> > +{
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		*arg = OWL_PINCONF_PULL_DOWN;
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		*arg = OWL_PINCONF_PULL_UP;
+> > +		break;
+> > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> > +		*arg = (*arg >= 1 ? 1 : 0);
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
+> > +				    unsigned int param, u32 *arg)
+> > +{
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		*arg = *arg == OWL_PINCONF_PULL_UP;
+> > +		break;
+> > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> > +		*arg = *arg == 1;
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
+> > +	.padinfo = s500_padinfo,
+> > +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
+> > +	.npins = ARRAY_SIZE(s500_pads),
+> > +	.functions = s500_functions,
+> > +	.nfunctions = ARRAY_SIZE(s500_functions),
+> > +	.groups = s500_groups,
+> > +	.ngroups = ARRAY_SIZE(s500_groups),
+> > +	.ngpios = NUM_GPIOS,
+> > +	.ports = s500_gpio_ports,
+> > +	.nports = ARRAY_SIZE(s500_gpio_ports),
+> > +	.padctl_arg2val = s500_pad_pinconf_arg2val,
+> > +	.padctl_val2arg = s500_pad_pinconf_val2arg,
+> > +};
+> > +
+> > +static int s500_pinctrl_probe(struct platform_device *pdev)
+> > +{
+> > +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
+> > +}
+> > +
+> > +static const struct of_device_id s500_pinctrl_of_match[] = {
+> > +	{ .compatible = "actions,s500-pinctrl", },
+> > +	{ }
+> > +};
+> > +
+> > +static struct platform_driver s500_pinctrl_driver = {
+> > +	.driver = {
+> > +		.name = "pinctrl-s500",
+> > +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
+> > +	},
+> > +	.probe = s500_pinctrl_probe,
+> > +};
+> > +
+> > +static int __init s500_pinctrl_init(void)
+> > +{
+> > +	return platform_driver_register(&s500_pinctrl_driver);
+> > +}
+> > +arch_initcall(s500_pinctrl_init);
+> > +
+> > +static void __exit s500_pinctrl_exit(void)
+> > +{
+> > +	platform_driver_unregister(&s500_pinctrl_driver);
+> > +}
+> > +module_exit(s500_pinctrl_exit);
+> > +
+> > +MODULE_AUTHOR("Actions Semi Inc.");
+> > +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
+> > +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.27.0
+> > 
