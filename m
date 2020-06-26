@@ -2,94 +2,260 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2A620768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6E320775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AF3HDkG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgFZOrE (ORCPT
+        id S1729379AbgFZOrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:47:04 -0400
-Received: from 8bytes.org ([81.169.241.247]:50292 "EHLO theia.8bytes.org"
+        Fri, 26 Jun 2020 10:47:18 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:26022 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgFZOrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:47:04 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 5E1352A7; Fri, 26 Jun 2020 16:47:02 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 16:47:01 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.8-rc2
-Message-ID: <20200626144655.GA20234@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729359AbgFZOrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:47:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593182836; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=4TQpm94FFnC9T8iU8dgGUImT9296mkfIJH93h01Kalo=; b=AF3HDkG97/AO9S/E4DTmIZYMwWnF7zOlaDRG6DLnryN76IS3UrHg6E0BuzU6FEQxMtALWSFb
+ mUorQ1IoAb1FG2pYcVwYDdL6mtlIJQSchIKbbXWCb3fGRF2CD9fcbMCJ0ugRLy+o52xRSTGb
+ TIW/CbUmjDPgd5HwSEY9o+VXoqo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ef60a736f2ee827da19dea6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 14:47:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD397C4339C; Fri, 26 Jun 2020 14:47:14 +0000 (UTC)
+Received: from deesin-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: deesin)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0104FC433C8;
+        Fri, 26 Jun 2020 14:47:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0104FC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
+From:   Deepak Kumar Singh <deesin@codeaurora.org>
+To:     bjorn.andersson@linaro.org, clew@codeaurora.org,
+        mathieu.poirier@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Deepak Kumar Singh <deesin@codeaurora.org>
+Subject: [PATCH V6 1/4] rpmsg: core: Add signal API support
+Date:   Fri, 26 Jun 2020 20:16:56 +0530
+Message-Id: <1593182819-30747-2-git-send-email-deesin@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
+References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Some transports like Glink support the state notifications between
+clients using signals similar to serial protocol signals.
+Local glink client drivers can send and receive signals to glink
+clients running on remote processors.
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+Add apis to support sending and receiving of signals by rpmsg clients.
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+Signed-off-by: Deepak Kumar Singh <deesin@codeaurora.org>
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+---
+ drivers/rpmsg/rpmsg_core.c     | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/rpmsg/rpmsg_internal.h |  5 +++++
+ include/linux/rpmsg.h          | 27 +++++++++++++++++++++++++++
+ 3 files changed, 72 insertions(+)
 
-are available in the Git repository at:
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index 91de940..e6eb5a1 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -283,6 +283,42 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ }
+ EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+ 
++/**
++ * rpmsg_get_signals() - get the signals for this endpoint
++ * @ept:	the rpmsg endpoint
++ *
++ * Returns signal bits on success and an appropriate error value on failure.
++ */
++int rpmsg_get_signals(struct rpmsg_endpoint *ept)
++{
++	if (WARN_ON(!ept))
++		return -EINVAL;
++	if (!ept->ops->get_signals)
++		return -ENXIO;
++
++	return ept->ops->get_signals(ept);
++}
++EXPORT_SYMBOL(rpmsg_get_signals);
++
++/**
++ * rpmsg_set_signals() - set the remote signals for this endpoint
++ * @ept:	the rpmsg endpoint
++ * @set:	set mask for signals
++ * @clear:	clear mask for signals
++ *
++ * Returns 0 on success and an appropriate error value on failure.
++ */
++int rpmsg_set_signals(struct rpmsg_endpoint *ept, u32 set, u32 clear)
++{
++	if (WARN_ON(!ept))
++		return -EINVAL;
++	if (!ept->ops->set_signals)
++		return -ENXIO;
++
++	return ept->ops->set_signals(ept, set, clear);
++}
++EXPORT_SYMBOL(rpmsg_set_signals);
++
+ /*
+  * match a rpmsg channel with a channel info struct.
+  * this is used to make sure we're not creating rpmsg devices for channels
+@@ -468,6 +504,10 @@ static int rpmsg_dev_probe(struct device *dev)
+ 
+ 		rpdev->ept = ept;
+ 		rpdev->src = ept->addr;
++
++		if (rpdrv->signals)
++			ept->sig_cb = rpdrv->signals;
++
+ 	}
+ 
+ 	err = rpdrv->probe(rpdev);
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index 3fc83cd..8958d6c 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -2,6 +2,7 @@
+ /*
+  * remote processor messaging bus internals
+  *
++ * Copyright (c) 2018, The Linux Foundation.
+  * Copyright (C) 2011 Texas Instruments, Inc.
+  * Copyright (C) 2011 Google, Inc.
+  *
+@@ -47,6 +48,8 @@ struct rpmsg_device_ops {
+  * @trysendto:		see @rpmsg_trysendto(), optional
+  * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+  * @poll:		see @rpmsg_poll(), optional
++ * @get_signals:	see @rpmsg_get_signals(), optional
++ * @set_signals:	see @rpmsg_set_signals(), optional
+  *
+  * Indirection table for the operations that a rpmsg backend should implement.
+  * In addition to @destroy_ept, the backend must at least implement @send and
+@@ -66,6 +69,8 @@ struct rpmsg_endpoint_ops {
+ 			     void *data, int len);
+ 	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+ 			     poll_table *wait);
++	int (*get_signals)(struct rpmsg_endpoint *ept);
++	int (*set_signals)(struct rpmsg_endpoint *ept, u32 set, u32 clear);
+ };
+ 
+ int rpmsg_register_device(struct rpmsg_device *rpdev);
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d..c4dbb47 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -2,6 +2,7 @@
+ /*
+  * Remote processor messaging
+  *
++ * Copyright (c) 2018 The Linux Foundation.
+  * Copyright (C) 2011 Texas Instruments, Inc.
+  * Copyright (C) 2011 Google, Inc.
+  * All rights reserved.
+@@ -60,6 +61,7 @@ struct rpmsg_device {
+ };
+ 
+ typedef int (*rpmsg_rx_cb_t)(struct rpmsg_device *, void *, int, void *, u32);
++typedef int (*rpmsg_rx_sig_t)(struct rpmsg_device *, void *, u32, u32);
+ 
+ /**
+  * struct rpmsg_endpoint - binds a local rpmsg address to its user
+@@ -67,6 +69,7 @@ typedef int (*rpmsg_rx_cb_t)(struct rpmsg_device *, void *, int, void *, u32);
+  * @refcount: when this drops to zero, the ept is deallocated
+  * @cb: rx callback handler
+  * @cb_lock: must be taken before accessing/changing @cb
++ * @sig_cb: rx serial signal handler
+  * @addr: local rpmsg address
+  * @priv: private data for the driver's use
+  *
+@@ -89,6 +92,7 @@ struct rpmsg_endpoint {
+ 	struct kref refcount;
+ 	rpmsg_rx_cb_t cb;
+ 	struct mutex cb_lock;
++	rpmsg_rx_sig_t sig_cb;
+ 	u32 addr;
+ 	void *priv;
+ 
+@@ -102,6 +106,7 @@ struct rpmsg_endpoint {
+  * @probe: invoked when a matching rpmsg channel (i.e. device) is found
+  * @remove: invoked when the rpmsg channel is removed
+  * @callback: invoked when an inbound message is received on the channel
++ * @signals: invoked when a serial signal change is received on the channel
+  */
+ struct rpmsg_driver {
+ 	struct device_driver drv;
+@@ -109,6 +114,8 @@ struct rpmsg_driver {
+ 	int (*probe)(struct rpmsg_device *dev);
+ 	void (*remove)(struct rpmsg_device *dev);
+ 	int (*callback)(struct rpmsg_device *, void *, int, void *, u32);
++	int (*signals)(struct rpmsg_device *rpdev,
++		       void *priv, u32 old, u32 new);
+ };
+ 
+ #if IS_ENABLED(CONFIG_RPMSG)
+@@ -135,6 +142,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+ 			poll_table *wait);
+ 
++int rpmsg_get_signals(struct rpmsg_endpoint *ept);
++int rpmsg_set_signals(struct rpmsg_endpoint *ept, u32 set, u32 clear);
++
+ #else
+ 
+ static inline int register_rpmsg_device(struct rpmsg_device *dev)
+@@ -242,6 +252,23 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+ 	return 0;
+ }
+ 
++static inline int rpmsg_get_signals(struct rpmsg_endpoint *ept)
++{
++	/* This shouldn't be possible */
++	WARN_ON(1);
++
++	return -ENXIO;
++}
++
++static inline int rpmsg_set_signals(struct rpmsg_endpoint *ept,
++				    u32 set, u32 clear)
++{
++	/* This shouldn't be possible */
++	WARN_ON(1);
++
++	return -ENXIO;
++}
++
+ #endif /* IS_ENABLED(CONFIG_RPMSG) */
+ 
+ /* use a macro to avoid include chaining to get THIS_MODULE */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.8-rc2
-
-for you to fetch changes up to 48f0bcfb7aad2c6eb4c1e66476b58475aa14393e:
-
-  iommu/vt-d: Fix misuse of iommu_domain_identity_map() (2020-06-23 10:08:32 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.8-rc2:
-
-A couple of Intel VT-d fixes:
-
-	- Make Intel SVM code 64bit only. The code uses pgd_t* and the
-	  IOMMU only supports long-mode page-table formats, so its
-	  broken on 32bit anyway.
-
-	- Make sure GFX quirks in for Intel VT-d are not applied to
-	  untrusted devices. Those devices might gain full memory access
-	  otherwise.
-
-	- Identity mapping setup fix.
-
-	- Fix ACS enabling when Intel IOMMU is off and untrusted devices
-	  are detected.
-
-	- Two smaller fixes for coherency and IO page-table setup
-
-----------------------------------------------------------------
-Lu Baolu (5):
-      iommu/vt-d: Make Intel SVM code 64-bit only
-      iommu/vt-d: Set U/S bit in first level page table by default
-      iommu/vt-d: Enable PCI ACS for platform opt in hint
-      iommu/vt-d: Update scalable mode paging structure coherency
-      iommu/vt-d: Fix misuse of iommu_domain_identity_map()
-
-Rajat Jain (1):
-      iommu/vt-d: Don't apply gfx quirks to untrusted devices
-
- drivers/iommu/Kconfig       |  2 +-
- drivers/iommu/intel/dmar.c  |  3 ++-
- drivers/iommu/intel/iommu.c | 59 +++++++++++++++++++++++++++++++++++++++------
- include/linux/intel-iommu.h |  1 +
- 4 files changed, 56 insertions(+), 9 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
