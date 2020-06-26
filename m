@@ -2,198 +2,161 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF860C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75642089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1812089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Sn7IT3LH";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VdFdXoip"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BFqp8IM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgFZWiU (ORCPT
+        id S1726106AbgFZWjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:38:20 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:21608 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725909AbgFZWiT (ORCPT
+        Fri, 26 Jun 2020 18:39:24 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37734 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgFZWjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:38:19 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QMaWTc003324;
-        Fri, 26 Jun 2020 15:38:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=4MxB7Q1uYISQ6Q1XmXDYa03zo9dgcqVTKSQH8eZD8Bo=;
- b=Sn7IT3LHeT6BJGrYcdOusy1oprc4jQ3mEBmQseGJAeqqE419JIrTt5vdBHuSQCXzrWtX
- ZEeEqp0DiK63yGgWMyoVn+CqH/Uf8DrxT+jH3QwRK3j6D8DxdwmntD34TbRF7wIBy7G/
- bH83jep16Dx982LZECJm2pQ6l9JDwS40I5I= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31w3w2nhh8-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 26 Jun 2020 15:38:02 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 26 Jun 2020 15:37:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JQqEGQVVdFemwhiqkd9f/rbsgblKhEr1HrvI2Ej9EY7IBp+fQ3lD2FVycX0IAUSJmYpmhFZFYHa7JiKEBWJOrJaTmBtdQfDD9m0oRDTsJd65CQbkGE4kkxN3rIa6bk9fTnWWLKVd4GJxMHnaudlgj1hEAvModJYveqyY6RofgVj6W52kZKdPfspngruCQeuMYG+3RYnuAztHdMiyZAgtWd04g1YcpOJPawIW89HZwChAfSthD7+tM5DQ6VIbGF8HhiTFuTPqsMF9bepTuxA1+qti2JZEwPvL2NK0vIE2P62MQkbW2wi0LvFQJekvkSLcuxldvdbi4oqqgpucrtJVwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4MxB7Q1uYISQ6Q1XmXDYa03zo9dgcqVTKSQH8eZD8Bo=;
- b=e5TexEFk90G7pyOSCxVgdKKRDdcVkEmMB0j2eoBHteTu1CuOEvBFEgWpekAQDkUtlXxPaUtSAlxlcLaqWhmaR2ugCmBiKHIBMkMbUKBIChwjMAhJLLg2h+FqrmebM9QbSxxrrWawBVf1qpDAIgCHaTBCzSz2e+0UlUFTt5HWt4l00s+GNgv4RkeLjTA0HVmWwB6euRkgpsdRJPi5Stq22GJt8e08S8VfS+KBHhcbhXdKWcYR+QRdKGBlzZng4f3p6KytDM+cF3YmImKdFVjhE/cU2JtM79GZzeX7hFuLI0I4qlHMuBvSN71cv2a2eDVM25Du7OFj4T70X7cpqZUZLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4MxB7Q1uYISQ6Q1XmXDYa03zo9dgcqVTKSQH8eZD8Bo=;
- b=VdFdXoipZx6L4LbiMA9ivIG83k3aQITQF711avjB/0UntbE35Hea6m/CsIsLzwwgzuiXig6frbbCGSaJx3HbLSeCiRQlSReyhlzae9WZhf5y/OSgTt40VIzbYU289Ly6dZFYzhiFGZV1J2fNmJ51dB2ev50kCUCSIcnAjWVc1Hc=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2567.namprd15.prod.outlook.com (2603:10b6:a03:151::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Fri, 26 Jun
- 2020 22:37:39 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3109.027; Fri, 26 Jun 2020
- 22:37:39 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Yonghong Song <yhs@fb.com>
-CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Kernel Team" <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>
-Subject: Re: [PATCH v2 bpf-next 2/4] bpf: introduce helper bpf_get_task_stak()
-Thread-Topic: [PATCH v2 bpf-next 2/4] bpf: introduce helper
- bpf_get_task_stak()
-Thread-Index: AQHWS06r1sTuO7iWZUmEIP/wOjIJvqjrCaUAgAB0hwA=
-Date:   Fri, 26 Jun 2020 22:37:38 +0000
-Message-ID: <81642975-984F-4C87-8847-D7BF51CADB03@fb.com>
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-3-songliubraving@fb.com>
- <572bd252-2748-d776-0e7b-eca5302dba76@fb.com>
-In-Reply-To: <572bd252-2748-d776-0e7b-eca5302dba76@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-x-originating-ip: [2620:10d:c090:400::5:1a00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9bf62662-8366-4fb0-2be3-08d81a21880d
-x-ms-traffictypediagnostic: BYAPR15MB2567:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2567E51D1288319C8D04477BB3930@BYAPR15MB2567.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0446F0FCE1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VNznR2fBYK8kwZi9E8MBSj4j8gvPg6IFmj39kHB0BUkXl6ckzD6n1gbGIaVNy9dI8pTAmY7SdK0RYjjRhvSoHoX2p6Y/Xp0QvLXvuOGDccpZBaLcwomCfE1pH3HsiCb++EGV0LW3WDlJB53HyDYe4aQQvDkqwgsSOfif5lCxL8EBm83hbncASehFooEHAWwNMPCZ1HoglCC9Q9t47CbqLAFXaoXbW3ySdmD8ShRamaxm9cREpltv4PZSBZb7KVWHsvsjHwzRMP8OgHbtA1aBM2SP8H93XDLEQ8QvGgx2LTJL7Tu42Bdfmaf1dJNswNJ+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(396003)(366004)(376002)(39860400002)(5660300002)(86362001)(33656002)(316002)(2616005)(478600001)(8676002)(71200400001)(37006003)(6636002)(6862004)(4326008)(6512007)(2906002)(6486002)(8936002)(36756003)(64756008)(53546011)(54906003)(66946007)(66446008)(66556008)(66476007)(186003)(6506007)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ztVVleqk+95/YZwZ3ftJut/G17gLwQjKC6S1t9yYqdgw+OM4oHDfbtqC3ugS28b1xbnViJRDCumxgdPRS1j8lsR7dsN9VXGWY/Onuoq9FzyXo7YUKaa+E8Ol4ELrEIcnz3UfUQK/DpTCpTDXzBO5Hff3W01fYdU8CIaW21CBHzPaCnaz1I/Wf2i3q6RuCWCZ72yZbOORjtWf137NFkEOr2RcAZL5nezAe5/UQ2kpIjr3puEBzcybRdglOGNEPHTh7V/NuFEg2hve4y8tokPXsSDqr68pPmrhIs5wpT9CX/qL/02yXTExdC4IdxsXWq5zEsPwGh8pyQ7+haC3FrfAidpMvGBJcxoyT3TngAaHXKmikzKbYb/m/ypdGmieIaWKPAzi2KxL8qF40bR7DFoccPW86z3QWCVyX3yxKDH4B2/xOaNOaXz5AF2Kl6Iscoz9JGf/9vZZBUXY1TgKfK8rEMTXWL/mcFBRY3dNYk8lCGW3Ip6jBkNOd5AO/PYbuDYgV840j7CZRb/Rn7miG2Jl/A==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E54397307E7D3548BA011CF1FACE5270@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jun 2020 18:39:24 -0400
+Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 32FA520B4901;
+        Fri, 26 Jun 2020 15:39:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 32FA520B4901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593211163;
+        bh=cGR1MKkg3ILjL6b23Jr/e+SdhIPDTCkXvnYZjuLNPKU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BFqp8IM5dpkqwlVgttiS8n6I2LlTsZSN0pe+B9woQhjqMhjTsQhSjjEdIAr5gwYgu
+         KxCUS8K5FCuXIYphAu01v7rrXmh+Pn6CeuOBZPmSHyY8PRg3hWSAj4MuM4jpIArHuo
+         kW5EPbGPYVYmrn9rs/V/nGxb+V01gXYaZ4A5GK3w=
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org, Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH v2 00/11] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE rule support
+Date:   Fri, 26 Jun 2020 17:38:49 -0500
+Message-Id: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bf62662-8366-4fb0-2be3-08d81a21880d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 22:37:38.9633
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gl/8xVVr87SgtWb2JL3DcIgDcMFHPtHfU+40vSd2Gq/LGVEa+GqzAF9Qqv5HB+o10EuXlqQlRwze3xIEmxUQog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2567
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- priorityscore=1501 spamscore=0 bulkscore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 cotscore=-2147483648 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260159
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series ultimately extends the supported IMA rule conditionals for
+the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
+IMA language conditional support for KEXEC_CMDLINE rules in comparison
+to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
+rules do not support *any* conditionals so you cannot have a sequence of
+rules like this:
 
+ dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+ dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+ dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+ measure func=KEXEC_KERNEL_CHECK
+ measure func=KEXEC_INITRAMFS_CHECK
+ measure func=KEXEC_CMDLINE
 
-> On Jun 26, 2020, at 8:40 AM, Yonghong Song <yhs@fb.com> wrote:
->=20
->=20
->=20
-> On 6/25/20 5:13 PM, Song Liu wrote:
->> Introduce helper bpf_get_task_stack(), which dumps stack trace of given
->> task. This is different to bpf_get_stack(), which gets stack track of
->> current task. One potential use case of bpf_get_task_stack() is to call
->> it from bpf_iter__task and dump all /proc/<pid>/stack to a seq_file.
->> bpf_get_task_stack() uses stack_trace_save_tsk() instead of
->> get_perf_callchain() for kernel stack. The benefit of this choice is tha=
-t
->> stack_trace_save_tsk() doesn't require changes in arch/. The downside of
->> using stack_trace_save_tsk() is that stack_trace_save_tsk() dumps the
->> stack trace to unsigned long array. For 32-bit systems, we need to
->> translate it to u64 array.
->> Signed-off-by: Song Liu <songliubraving@fb.com>
->>=20
-[...]
->> +++ b/include/uapi/linux/bpf.h
->> @@ -3252,6 +3252,38 @@ union bpf_attr {
->>   * 		case of **BPF_CSUM_LEVEL_QUERY**, the current skb->csum_level
->>   * 		is returned or the error code -EACCES in case the skb is not
->>   * 		subject to CHECKSUM_UNNECESSARY.
->> + *
->> + * int bpf_get_task_stack(struct task_struct *task, void *buf, u32 size=
-, u64 flags)
->=20
-> Andrii's recent patch changed the return type to 'long' to align with
-> kernel u64 return type for better llvm code generation.
->=20
-> Please rebase and you will see the new convention.
+Instead, KEXEC_CMDLINE rules can only be measured or not measured and
+there's no additional flexibility in today's implementation of the
+KEXEC_CMDLINE hook function.
 
-Will fix.=20
+With this series, the above sequence of rules becomes valid and any
+calls to kexec_file_load() with a kernel and initramfs inode type of
+foo_t will not be measured (that includes the kernel cmdline buffer)
+while all other objects given to a kexec_file_load() syscall will be
+measured. There's obviously not an inode directly associated with the
+kernel cmdline buffer but this patch series ties the inode based
+decision making for KEXEC_CMDLINE to the kernel's inode. I think this
+will be intuitive to policy authors.
 
->=20
->> + *	Description
->>=20
+While reading IMA code and preparing to make this change, I realized
+that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
+quite special in comparison to longer standing hook functions. These
+buffer based hook functions can only support measure actions and there
+are some restrictions on the conditionals that they support. However,
+the rule parser isn't enforcing any of those restrictions and IMA policy
+authors wouldn't have any immediate way of knowing that the policy that
+they wrote is invalid. For example, the sequence of rules above parses
+successfully in today's kernel but the
+"dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
+ima_match_rules(). The dont_measure rule is *always* considered to be a
+match so, surprisingly, no KEXEC_CMDLINE measurements are made.
 
-[...]
+While making the rule parser more strict, I realized that the parser
+does not correctly free all of the allocated memory associated with an
+ima_rule_entry when going down some error paths. Invalid policy loaded
+by the policy administrator could result in small memory leaks.
 
->>  +static struct perf_callchain_entry *
->> +get_callchain_entry_for_task(struct task_struct *task, u32 init_nr)
->> +{
->> +	struct perf_callchain_entry *entry;
->> +	int rctx;
->> +
->> +	entry =3D get_callchain_entry(&rctx);
->> +
->> +	if (rctx =3D=3D -1)
->> +		return NULL;
->=20
-> Is this needed? Should be below !entry enough?
+I envision patches 1-6 going to stable. The series is ordered in a way
+that has all the fixes up front, followed by cleanups, followed by the
+feature patch. The breakdown of patches looks like so:
 
-It is needed before Peter's suggestion. After applying Peter's patch,=20
-this is no longer needed.=20
+ Memory leak fixes: 1-3
+ Parser strictness fixes: 4-6
+ Code cleanups made possible by the fixes: 7-10
+ Extend KEXEC_CMDLINE rule support: 11
 
-Thanks,
-Song
+Perhaps the most logical ordering for code review is:
 
+ 1, 2, 3, 7, 8, 4, 5, 6, 9, 10, 11
+
+If you'd like me to re-order or split up the series, just let me know.
+Thanks for considering these patches!
+
+* Series-wide v2 changes
+  - Rebased onto next-integrity-testing
+  - Squashed patches 2 and 3 from v1
+    + Updated this cover letter to account for changes to patch index
+      changes
+    + See patch 2 for specific code changes
+
+Tyler
+
+Tyler Hicks (11):
+  ima: Have the LSM free its audit rule
+  ima: Free the entire rule when deleting a list of rules
+  ima: Free the entire rule if it fails to parse
+  ima: Fail rule parsing when buffer hook functions have an invalid
+    action
+  ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an
+    invalid cond
+  ima: Fail rule parsing when the KEY_CHECK hook is combined with an
+    invalid cond
+  ima: Shallow copy the args_p member of ima_rule_entry.lsm elements
+  ima: Use correct type for the args_p member of ima_rule_entry.lsm
+    elements
+  ima: Move validation of the keyrings conditional into
+    ima_validate_rule()
+  ima: Use the common function to detect LSM conditionals in a rule
+  ima: Support additional conditionals in the KEXEC_CMDLINE hook
+    function
+
+ include/linux/ima.h                          |   4 +-
+ kernel/kexec_file.c                          |   2 +-
+ security/integrity/ima/ima.h                 |   7 +-
+ security/integrity/ima/ima_api.c             |   2 +-
+ security/integrity/ima/ima_appraise.c        |   2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   2 +-
+ security/integrity/ima/ima_main.c            |  23 ++-
+ security/integrity/ima/ima_policy.c          | 161 ++++++++++++++-----
+ security/integrity/ima/ima_queue_keys.c      |   2 +-
+ 9 files changed, 148 insertions(+), 57 deletions(-)
+
+-- 
+2.25.1
 
