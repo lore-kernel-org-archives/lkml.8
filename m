@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C93C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE652089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17D120836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgFZSXl (ORCPT
+        id S1726028AbgFZSXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:23:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59781 "EHLO mga07.intel.com"
+        Fri, 26 Jun 2020 14:23:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59760 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgFZSXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:23:38 -0400
-IronPort-SDR: l2Ryb0wgg9GYAIxhx1RyjO5d63R+SHn1Q3CE9yPOYIkvh0KqEg3ZVQa48caOAVb3OZhIuFLmYU
- rajfBV4PkWzw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512895"
+        id S1725952AbgFZSXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:23:39 -0400
+IronPort-SDR: FXO/5fn0kuyu0N9wtRwvvE1Rb/a+GlhCdpYxVtIFQ9LsI+e+3vaRij2Pq3s4fYdTjb42oOdmHj
+ l4So4a/KpZLg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512913"
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="210512895"
+   d="scan'208";a="210512913"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:33 -0700
-IronPort-SDR: YkY3LbzpJtbDlGwkDwZ8rE5yk52ceX62gl2Xlu8oqjJw6jR3AyE1jeRjkwNFfAJN2GTDzM6Z/1
- L8Rt9hOZEzsA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:36 -0700
+IronPort-SDR: OEbTHr/L/MvJaIvKteoWjS+qBzVl583ZlyXGJSYBlm6Ca8gFJ9L45m7rqd1dl7C15TZA7Tfqyc
+ +3Ysoms87ouA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="424153846"
+   d="scan'208";a="424153867"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:23:33 -0700
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:23:36 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -47,9 +47,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, wei.w.wang@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 06/23] perf/x86/intel/lbr: Use dynamic data structure for task_ctx
-Date:   Fri, 26 Jun 2020 11:20:03 -0700
-Message-Id: <1593195620-116988-7-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V2 10/23] perf/x86/intel/lbr: Support LBR_CTL
+Date:   Fri, 26 Jun 2020 11:20:07 -0700
+Message-Id: <1593195620-116988-11-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
 References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
@@ -60,194 +60,132 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The type of task_ctx is hardcoded as struct x86_perf_task_context,
-which doesn't apply for Architecture LBR. For example, Architecture LBR
-doesn't have the TOS MSR. The number of LBR entries is variable. A new
-struct will be introduced for Architecture LBR. Perf has to determine
-the type of task_ctx at run time.
+An IA32_LBR_CTL is introduced for Architecture LBR to enable and config
+LBR registers to replace the previous LBR_SELECT.
 
-The type of task_ctx pointer is changed to 'void *', which will be
-determined at run time.
+All the related members in struct cpu_hw_events and struct x86_pmu
+have to be renamed.
 
-The generic LBR optimization can be shared between Architecture LBR and
-model-specific LBR. Both need to access the structure for the generic
-LBR optimization. A helper task_context_opt() is introduced to retrieve
-the pointer of the structure at run time.
+Some new macros are added to reflect the layout of LBR_CTL.
+
+The mapping from PERF_SAMPLE_BRANCH_* to the corresponding bits in
+LBR_CTL MSR is saved in lbr_ctl_map now, which is not a const value.
+The value relies on the CPUID enumeration.
+
+For the previous model-specific LBR, most of the bits in LBR_SELECT
+operate in the suppressed mode. For the bits in LBR_CTL, the polarity is
+inverted.
+
+For the previous model-specific LBR format 5 (LBR_FORMAT_INFO), if the
+NO_CYCLES and NO_FLAGS type are set, the flag LBR_NO_INFO will be set to
+avoid the unnecessary LBR_INFO MSR read. Although Architecture LBR also
+has a dedicated LBR_INFO MSR, perf doesn't need to check and set the
+flag LBR_NO_INFO. For Architecture LBR, XSAVES instruction will be used
+as the default way to read the LBR MSRs all together. The overhead which
+the flag tries to avoid doesn't exist anymore. Dropping the flag can
+save the extra check for the flag in the lbr_read() later, and make the
+code cleaner.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/lbr.c  | 58 ++++++++++++++++++++------------------------
- arch/x86/events/perf_event.h |  7 +++++-
- 2 files changed, 32 insertions(+), 33 deletions(-)
+ arch/x86/events/intel/lbr.c  | 43 +++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/events/perf_event.h | 15 ++++++++++++---
+ 2 files changed, 55 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index f18eb0d..0cc5ed2d 100644
+index 0cc5ed2d..918f89d 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -351,17 +351,17 @@ void intel_pmu_lbr_restore(void *ctx)
- 	wrmsrl(x86_pmu.lbr_tos, tos);
- }
+@@ -132,6 +132,44 @@ enum {
+ 	 X86_BR_IRQ		|\
+ 	 X86_BR_INT)
  
--static bool lbr_is_reset_in_cstate(struct x86_perf_task_context *task_ctx)
-+static bool lbr_is_reset_in_cstate(void *ctx)
- {
--	return !rdlbr_from(task_ctx->tos);
-+	return !rdlbr_from(((struct x86_perf_task_context *)ctx)->tos);
- }
++/*
++ * Intel LBR_CTL bits
++ *
++ * Hardware branch filter for Arch LBR
++ */
++#define ARCH_LBR_KERNEL_BIT		1  /* capture at ring0 */
++#define ARCH_LBR_USER_BIT		2  /* capture at ring > 0 */
++#define ARCH_LBR_CALL_STACK_BIT		3  /* enable call stack */
++#define ARCH_LBR_JCC_BIT		16 /* capture conditional branches */
++#define ARCH_LBR_REL_JMP_BIT		17 /* capture relative jumps */
++#define ARCH_LBR_IND_JMP_BIT		18 /* capture indirect jumps */
++#define ARCH_LBR_REL_CALL_BIT		19 /* capture relative calls */
++#define ARCH_LBR_IND_CALL_BIT		20 /* capture indirect calls */
++#define ARCH_LBR_RETURN_BIT		21 /* capture near returns */
++#define ARCH_LBR_OTHER_BRANCH_BIT	22 /* capture other branches */
++
++#define ARCH_LBR_KERNEL			(1ULL << ARCH_LBR_KERNEL_BIT)
++#define ARCH_LBR_USER			(1ULL << ARCH_LBR_USER_BIT)
++#define ARCH_LBR_CALL_STACK		(1ULL << ARCH_LBR_CALL_STACK_BIT)
++#define ARCH_LBR_JCC			(1ULL << ARCH_LBR_JCC_BIT)
++#define ARCH_LBR_REL_JMP		(1ULL << ARCH_LBR_REL_JMP_BIT)
++#define ARCH_LBR_IND_JMP		(1ULL << ARCH_LBR_IND_JMP_BIT)
++#define ARCH_LBR_REL_CALL		(1ULL << ARCH_LBR_REL_CALL_BIT)
++#define ARCH_LBR_IND_CALL		(1ULL << ARCH_LBR_IND_CALL_BIT)
++#define ARCH_LBR_RETURN			(1ULL << ARCH_LBR_RETURN_BIT)
++#define ARCH_LBR_OTHER_BRANCH		(1ULL << ARCH_LBR_OTHER_BRANCH_BIT)
++
++#define ARCH_LBR_ANY			 \
++	(ARCH_LBR_JCC			|\
++	 ARCH_LBR_REL_JMP		|\
++	 ARCH_LBR_IND_JMP		|\
++	 ARCH_LBR_REL_CALL		|\
++	 ARCH_LBR_IND_CALL		|\
++	 ARCH_LBR_RETURN		|\
++	 ARCH_LBR_OTHER_BRANCH)
++
++#define ARCH_LBR_CTL_MASK			0x7f000e
++
+ static void intel_pmu_lbr_filter(struct cpu_hw_events *cpuc);
  
--static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
-+static void __intel_pmu_lbr_restore(void *ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ /*
+@@ -797,6 +835,11 @@ static int intel_pmu_setup_hw_lbr_filter(struct perf_event *event)
+ 	reg = &event->hw.branch_reg;
+ 	reg->idx = EXTRA_REG_LBR;
  
--	if (task_ctx->opt.lbr_callstack_users == 0 ||
--	    task_ctx->opt.lbr_stack_state == LBR_NONE) {
-+	if (task_context_opt(ctx)->lbr_callstack_users == 0 ||
-+	    task_context_opt(ctx)->lbr_stack_state == LBR_NONE) {
- 		intel_pmu_lbr_reset();
- 		return;
- 	}
-@@ -371,16 +371,16 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- 	 * - No one else touched them, and
- 	 * - Was not cleared in Cstate
- 	 */
--	if ((task_ctx == cpuc->last_task_ctx) &&
--	    (task_ctx->opt.log_id == cpuc->last_log_id) &&
--	    !lbr_is_reset_in_cstate(task_ctx)) {
--		task_ctx->opt.lbr_stack_state = LBR_NONE;
-+	if ((ctx == cpuc->last_task_ctx) &&
-+	    (task_context_opt(ctx)->log_id == cpuc->last_log_id) &&
-+	    !lbr_is_reset_in_cstate(ctx)) {
-+		task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
- 		return;
- 	}
- 
--	x86_pmu.lbr_restore(task_ctx);
-+	x86_pmu.lbr_restore(ctx);
- 
--	task_ctx->opt.lbr_stack_state = LBR_NONE;
-+	task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
- }
- 
- void intel_pmu_lbr_save(void *ctx)
-@@ -406,27 +406,27 @@ void intel_pmu_lbr_save(void *ctx)
- 	task_ctx->tos = tos;
- }
- 
--static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-+static void __intel_pmu_lbr_save(void *ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (task_ctx->opt.lbr_callstack_users == 0) {
--		task_ctx->opt.lbr_stack_state = LBR_NONE;
-+	if (task_context_opt(ctx)->lbr_callstack_users == 0) {
-+		task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
- 		return;
- 	}
- 
--	x86_pmu.lbr_save(task_ctx);
-+	x86_pmu.lbr_save(ctx);
- 
--	task_ctx->opt.lbr_stack_state = LBR_VALID;
-+	task_context_opt(ctx)->lbr_stack_state = LBR_VALID;
- 
--	cpuc->last_task_ctx = task_ctx;
--	cpuc->last_log_id = ++task_ctx->opt.log_id;
-+	cpuc->last_task_ctx = ctx;
-+	cpuc->last_log_id = ++task_context_opt(ctx)->log_id;
- }
- 
- void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
- 				 struct perf_event_context *next)
- {
--	struct x86_perf_task_context *prev_ctx_data, *next_ctx_data;
-+	void *prev_ctx_data, *next_ctx_data;
- 
- 	swap(prev->task_ctx_data, next->task_ctx_data);
- 
-@@ -442,14 +442,14 @@ void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
- 	if (!prev_ctx_data || !next_ctx_data)
- 		return;
- 
--	swap(prev_ctx_data->opt.lbr_callstack_users,
--	     next_ctx_data->opt.lbr_callstack_users);
-+	swap(task_context_opt(prev_ctx_data)->lbr_callstack_users,
-+	     task_context_opt(next_ctx_data)->lbr_callstack_users);
- }
- 
- void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct x86_perf_task_context *task_ctx;
-+	void *task_ctx;
- 
- 	if (!cpuc->lbr_users)
- 		return;
-@@ -486,17 +486,14 @@ static inline bool branch_user_callstack(unsigned br_sel)
- void intel_pmu_lbr_add(struct perf_event *event)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct x86_perf_task_context *task_ctx;
- 
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
- 	cpuc->br_sel = event->hw.branch_reg.reg;
- 
--	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
--		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->opt.lbr_callstack_users++;
--	}
-+	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data)
-+		task_context_opt(event->ctx->task_ctx_data)->lbr_callstack_users++;
- 
++	if (x86_pmu.arch_lbr) {
++		reg->config = mask;
++		return 0;
++	}
++
  	/*
- 	 * Request pmu::sched_task() callback, which will fire inside the
-@@ -527,16 +524,13 @@ void intel_pmu_lbr_add(struct perf_event *event)
- void intel_pmu_lbr_del(struct perf_event *event)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct x86_perf_task_context *task_ctx;
- 
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
- 	if (branch_user_callstack(cpuc->br_sel) &&
--	    event->ctx->task_ctx_data) {
--		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->opt.lbr_callstack_users--;
--	}
-+	    event->ctx->task_ctx_data)
-+		task_context_opt(event->ctx->task_ctx_data)->lbr_callstack_users--;
- 
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
- 		cpuc->lbr_pebs_users--;
+ 	 * The first 9 bits (LBR_SEL_MASK) in LBR_SELECT operate
+ 	 * in suppress mode. So LBR_SELECT should be set to
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index c8d9ae0..d04818b 100644
+index f333c83..62fba45 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -246,7 +246,7 @@ struct cpu_hw_events {
+@@ -244,7 +244,10 @@ struct cpu_hw_events {
+ 	int				lbr_pebs_users;
+ 	struct perf_branch_stack	lbr_stack;
  	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
- 	struct er_account		*lbr_sel;
+-	struct er_account		*lbr_sel;
++	union {
++		struct er_account		*lbr_sel;
++		struct er_account		*lbr_ctl;
++	};
  	u64				br_sel;
--	struct x86_perf_task_context	*last_task_ctx;
-+	void				*last_task_ctx;
+ 	void				*last_task_ctx;
  	int				last_log_id;
- 
- 	/*
-@@ -797,6 +797,11 @@ static struct perf_pmu_events_ht_attr event_attr_##v = {		\
- struct pmu *x86_get_pmu(void);
- extern struct x86_pmu x86_pmu __read_mostly;
- 
-+static inline struct x86_perf_task_context_opt *task_context_opt(void *ctx)
-+{
-+	return &((struct x86_perf_task_context *)ctx)->opt;
-+}
-+
- static inline bool x86_pmu_has_lbr_callstack(void)
- {
- 	return  x86_pmu.lbr_sel_map &&
+@@ -686,8 +689,14 @@ struct x86_pmu {
+ 	 */
+ 	unsigned long	lbr_tos, lbr_from, lbr_to; /* MSR base regs       */
+ 	int		lbr_nr;			   /* hardware stack size */
+-	u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
+-	const int	*lbr_sel_map;		   /* lbr_select mappings */
++	union {
++		u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
++		u64		lbr_ctl_mask;		   /* LBR_CTL valid bits */
++	};
++	union {
++		const int	*lbr_sel_map;		   /* lbr_select mappings */
++		int		*lbr_ctl_map;		   /* LBR_CTL mappings */
++	};
+ 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
+ 	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
+ 	bool		arch_lbr;		   /* Arch LBR supported */
 -- 
 2.7.4
 
