@@ -2,157 +2,239 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46853C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E17820B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D3D20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Ic5yEQ2e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZHuV3n4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgFZV0r (ORCPT
+        id S1726146AbgFZV30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51426 "EHLO
+        Fri, 26 Jun 2020 17:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgFZV0h (ORCPT
+        with ESMTP id S1726022AbgFZV3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:26:37 -0400
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98512C03E97E
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:26:36 -0700 (PDT)
-Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id D59085C232C;
-        Fri, 26 Jun 2020 23:26:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1593206793;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A65zUMH3kRo7g9Xqx4tNDGuTI+BvaJDa77Hh+iZDqck=;
-        b=Ic5yEQ2enPUfo4HvIyprs+XHDU1WZdV4MFefSLQabPnzrPmo0wm8ycf5k3vmsvSafZFvg3
-        xzt6EDLe8YFMd52Si7Y+CWLwaHyRdyNBGD1kvzIAr1ii2Ig7/gBuh1XSioOkjbyqLykeDr
-        sdFjIB0tC+hwUfikgAKvumPDGnCZLD0=
-From:   Stefan Agner <stefan@agner.ch>
-To:     linux@armlinux.org.uk
-Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
-        yamada.masahiro@socionext.com, ndesaulniers@google.com,
-        manojgupta@google.com, jiancai@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 2/3] ARM: use VFP assembler mnemonics in register load/store macros
-Date:   Fri, 26 Jun 2020 23:26:12 +0200
-Message-Id: <45974323e41daba5311a2285db739f54dc3e470c.1593205699.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1593205699.git.stefan@agner.ch>
-References: <cover.1593205699.git.stefan@agner.ch>
+        Fri, 26 Jun 2020 17:29:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157C7C03E97B
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:29:25 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b7so4792304pju.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/Ga8k3mofod9gwPX4Z/kRgYwjmzbSSQT5mPWQ+iRr00=;
+        b=ZHuV3n4N2UyL/uEYmg3j+3S3u+0QqpFCQhDYVKkZw9LuOjYP1YSNslr8dnNrsBn9Dh
+         We7UamS+FEowQ2lOAMqm20z8L9ypztLNs429NEWOoxO6J0/qlK/WaTSFp6sTA+5zXJXt
+         QK39ZARTjmUwV0eEr/JQyzmixIHGUEqhvzyh0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/Ga8k3mofod9gwPX4Z/kRgYwjmzbSSQT5mPWQ+iRr00=;
+        b=j5qwgFpbDA4md4hNRsY3GTdQLpjPhNQNDcVq2Gcb86M0JANWwTUg5X5Ak3rpI5xDwj
+         uTgDdljJP2a9H0MvH6fZXFF4goy15VInEQU7I94O/8nYGv6XUCTQhlcn2h26A8YJCyGn
+         a5/w6sFxCH2XiNhK9suDIEwwO6NDTzhS8GnwDe9wo0mWqp9Qw0qYYu2NYwHdav972U1o
+         r4IUdgmr1cjDZvJ2ho4oBH3jeK5hNo5kPNzUCM3tCI0Hsmb+vgfY6j7d4bMbbSp+9liU
+         rI5gdSY6drSfFXYrWA0tnyaYgj5v87S1oPDm4w8YY+iTRHXAHp1Ipjlzpm9c61hJaE91
+         UcpA==
+X-Gm-Message-State: AOAM530uO+2Le1Z6GbfPDCjFgCd9EOMuXHnfzOTjMH3ItY7FSfinL2Cx
+        vkMDWjTr2LpPxGr6FV1O0Eji4A==
+X-Google-Smtp-Source: ABdhPJwxwunBg3ErYOqng8+maceCSdLikNLQ8Egfp/C6bLTULFH4Wp7/OynACw0oVHkVmKrSUGo10g==
+X-Received: by 2002:a17:90a:4a6:: with SMTP id g35mr5538400pjg.155.1593206964538;
+        Fri, 26 Jun 2020 14:29:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j19sm5623223pjy.40.2020.06.26.14.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:29:23 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:29:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        arnd@arndb.de, skhan@linuxfoundation.org, alan.maguire@oracle.com,
+        yzaikin@google.com, davidgow@google.com, akpm@linux-foundation.org,
+        rppt@linux.ibm.com, frowand.list@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, monstr@monstr.eu,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        chris@zankel.net, jcmvbkbc@gmail.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, logang@deltatee.com, mcgrof@kernel.org,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org
+Subject: Re: [PATCH v5 07/12] kunit: test: create a single centralized
+ executor for all tests
+Message-ID: <202006261423.0BC9D830@keescook>
+References: <20200626210917.358969-1-brendanhiggins@google.com>
+ <20200626210917.358969-8-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626210917.358969-8-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The integrated assembler of Clang 10 and earlier do not allow to access
-the VFP registers through the coprocessor load/store instructions:
-<instantiation>:4:6: error: invalid operand for instruction
- LDC p11, cr0, [r10],#32*4 @ FLDMIAD r10!, {d0-d15}
-     ^
+On Fri, Jun 26, 2020 at 02:09:12PM -0700, Brendan Higgins wrote:
+> From: Alan Maguire <alan.maguire@oracle.com>
+> 
+> Add a centralized executor to dispatch tests rather than relying on
+> late_initcall to schedule each test suite separately. Centralized
+> execution is for built-in tests only; modules will execute tests when
+> loaded.
+> 
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Co-developed-by: Iurii Zaikin <yzaikin@google.com>
+> Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  include/kunit/test.h | 67 +++++++++++++++++++++++++++++---------------
+>  lib/kunit/Makefile   |  3 +-
+>  lib/kunit/executor.c | 28 ++++++++++++++++++
+>  lib/kunit/test.c     |  2 +-
+>  4 files changed, 76 insertions(+), 24 deletions(-)
+>  create mode 100644 lib/kunit/executor.c
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 47e61e1d53370..f3e86c3953a2b 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -224,7 +224,7 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
+>  unsigned int kunit_test_case_num(struct kunit_suite *suite,
+>  				 struct kunit_case *test_case);
+>  
+> -int __kunit_test_suites_init(struct kunit_suite **suites);
+> +int __kunit_test_suites_init(struct kunit_suite * const * const suites);
+>  
+>  void __kunit_test_suites_exit(struct kunit_suite **suites);
+>  
+> @@ -237,34 +237,57 @@ void __kunit_test_suites_exit(struct kunit_suite **suites);
+>   * Registers @suites_list with the test framework. See &struct kunit_suite for
+>   * more information.
+>   *
+> - * When builtin, KUnit tests are all run as late_initcalls; this means
+> - * that they cannot test anything where tests must run at a different init
+> - * phase. One significant restriction resulting from this is that KUnit
+> - * cannot reliably test anything that is initialize in the late_init phase;
+> - * another is that KUnit is useless to test things that need to be run in
+> - * an earlier init phase.
+> - *
+> - * An alternative is to build the tests as a module.  Because modules
+> - * do not support multiple late_initcall()s, we need to initialize an
+> - * array of suites for a module.
+> - *
+> - * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+> - * late_initcalls.  I have some future work planned to dispatch all KUnit
+> - * tests from the same place, and at the very least to do so after
+> - * everything else is definitely initialized.
+> + * If a test suite is built-in, module_init() gets translated into
+> + * an initcall which we don't want as the idea is that for builtins
+> + * the executor will manage execution.  So ensure we do not define
+> + * module_{init|exit} functions for the builtin case when registering
+> + * suites via kunit_test_suites() below.
+>   */
+> -#define kunit_test_suites(suites_list...)				\
+> -	static struct kunit_suite *suites[] = {suites_list, NULL};	\
+> -	static int kunit_test_suites_init(void)				\
+> +#ifdef MODULE
+> +#define kunit_test_suites_for_module(__suites)				\
+> +	static int __init kunit_test_suites_init(void)			\
+>  	{								\
+> -		return __kunit_test_suites_init(suites);		\
+> +		return __kunit_test_suites_init(__suites);		\
+>  	}								\
+> -	late_initcall(kunit_test_suites_init);				\
+> +	module_init(kunit_test_suites_init);				\
+> +									\
+>  	static void __exit kunit_test_suites_exit(void)			\
+>  	{								\
+> -		return __kunit_test_suites_exit(suites);		\
+> +		return __kunit_test_suites_exit(__suites);		\
+>  	}								\
+>  	module_exit(kunit_test_suites_exit)
+> +#else
+> +#define kunit_test_suites_for_module(__suites)
+> +#endif /* MODULE */
+> +
+> +#define __kunit_test_suites(unique_array, unique_suites, ...)		       \
+> +	static struct kunit_suite *unique_array[] = { __VA_ARGS__, NULL };     \
+> +	kunit_test_suites_for_module(unique_array);			       \
+> +	static struct kunit_suite **unique_suites			       \
+> +	__used __section(.kunit_test_suites) = unique_array
+> +
+> +/**
+> + * kunit_test_suites() - used to register one or more &struct kunit_suite
+> + *			 with KUnit.
+> + *
+> + * @suites: a statically allocated list of &struct kunit_suite.
+> + *
+> + * Registers @suites with the test framework. See &struct kunit_suite for
+> + * more information.
+> + *
+> + * When builtin,  KUnit tests are all run via executor; this is done
+> + * by placing the array of struct kunit_suite * in the .kunit_test_suites
+> + * ELF section.
+> + *
+> + * An alternative is to build the tests as a module.  Because modules do not
+> + * support multiple initcall()s, we need to initialize an array of suites for a
+> + * module.
+> + *
+> + */
+> +#define kunit_test_suites(...)						\
+> +	__kunit_test_suites(__UNIQUE_ID(array),				\
+> +			    __UNIQUE_ID(suites),			\
+> +			    __VA_ARGS__)
+>  
+>  #define kunit_test_suite(suite)	kunit_test_suites(&suite)
+>  
+> diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> index 724b94311ca36..c49f4ffb6273a 100644
+> --- a/lib/kunit/Makefile
+> +++ b/lib/kunit/Makefile
+> @@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
+>  kunit-objs +=				test.o \
+>  					string-stream.o \
+>  					assert.o \
+> -					try-catch.o
+> +					try-catch.o \
+> +					executor.o
+>  
+>  ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
+>  kunit-objs +=				debugfs.o
+> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> new file mode 100644
+> index 0000000000000..7015e7328dce7
+> --- /dev/null
+> +++ b/lib/kunit/executor.c
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <kunit/test.h>
+> +
+> +/*
+> + * These symbols point to the .kunit_test_suites section and are defined in
+> + * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
+> + */
+> +extern struct kunit_suite * const * const __kunit_suites_start[];
+> +extern struct kunit_suite * const * const __kunit_suites_end[];
 
-This has been addressed with Clang 11 [0]. However, to support earlier
-versions of Clang and for better readability use of VFP assembler
-mnemonics still is preferred.
+I would expect these to be in include/asm-generic/sections.h but I guess
+it's not required.
 
-Replace the coprocessor load/store instructions with explicit assembler
-mnemonics to accessing the floating point coprocessor registers. Use
-assembler directives to select the appropriate FPU version.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-This allows to build these macros with GNU assembler as well as with
-Clang's built-in assembler.
-
-[0] https://reviews.llvm.org/D59733
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/905
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-Changes in v3:
-- Reworded commit message, adding hint that Clang 11 won't have this
-  restriction any longer
-
-Changes in v2:
-- Add link in commit message
-
- arch/arm/include/asm/vfpmacros.h | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/include/asm/vfpmacros.h b/arch/arm/include/asm/vfpmacros.h
-index 628c336e8e3b..947ee5395e1f 100644
---- a/arch/arm/include/asm/vfpmacros.h
-+++ b/arch/arm/include/asm/vfpmacros.h
-@@ -19,23 +19,25 @@
- 
- 	@ read all the working registers back into the VFP
- 	.macro	VFPFLDMIA, base, tmp
-+	.fpu	vfpv2
- #if __LINUX_ARM_ARCH__ < 6
--	LDC	p11, cr0, [\base],#33*4		    @ FLDMIAX \base!, {d0-d15}
-+	fldmiax	\base!, {d0-d15}
- #else
--	LDC	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d0-d15}
-+	vldmia	\base!, {d0-d15}
- #endif
- #ifdef CONFIG_VFPv3
-+	.fpu	vfpv3
- #if __LINUX_ARM_ARCH__ <= 6
- 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
- 	ldr	\tmp, [\tmp, #0]
- 	tst	\tmp, #HWCAP_VFPD32
--	ldclne	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
-+	vldmiane \base!, {d16-d31}
- 	addeq	\base, \base, #32*4		    @ step over unused register space
- #else
- 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
- 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
- 	cmp	\tmp, #2			    @ 32 x 64bit registers?
--	ldcleq	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
-+	vldmiaeq \base!, {d16-d31}
- 	addne	\base, \base, #32*4		    @ step over unused register space
- #endif
- #endif
-@@ -44,22 +46,23 @@
- 	@ write all the working registers out of the VFP
- 	.macro	VFPFSTMIA, base, tmp
- #if __LINUX_ARM_ARCH__ < 6
--	STC	p11, cr0, [\base],#33*4		    @ FSTMIAX \base!, {d0-d15}
-+	fstmiax	\base!, {d0-d15}
- #else
--	STC	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d0-d15}
-+	vstmia	\base!, {d0-d15}
- #endif
- #ifdef CONFIG_VFPv3
-+	.fpu	vfpv3
- #if __LINUX_ARM_ARCH__ <= 6
- 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
- 	ldr	\tmp, [\tmp, #0]
- 	tst	\tmp, #HWCAP_VFPD32
--	stclne	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
-+	vstmiane \base!, {d16-d31}
- 	addeq	\base, \base, #32*4		    @ step over unused register space
- #else
- 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
- 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
- 	cmp	\tmp, #2			    @ 32 x 64bit registers?
--	stcleq	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
-+	vstmiaeq \base!, {d16-d31}
- 	addne	\base, \base, #32*4		    @ step over unused register space
- #endif
- #endif
 -- 
-2.27.0
-
+Kees Cook
