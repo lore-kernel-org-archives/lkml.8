@@ -2,124 +2,121 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9734CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A34C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7011D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlD2jkt5"
+	by mail.kernel.org (Postfix) with ESMTP id A01542078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593177808;
+	bh=eLUtMNXs0fYMI6cz6qlvIpFMySMSeTOQYK+CTrq5IHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bHZr1IuRcbVJ0baXVB1v7HiKTh/xkmp3o/zNc/IcZvvi1i8RVz3Gx6k0xJTKFT4HF
+	 Ugu9nDxfZHCmmS4rsm2syUJYALhVvLVy0csDASyWacTLwP+NWAMXelwOt0cciSiTzQ
+	 1PVLS4wLP5P0eEzrhcU7ioxlNodzH4d9Vf2/cfhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgFZNXS (ORCPT
+        id S1728277AbgFZNX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZNXS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:23:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7741C03E979;
-        Fri, 26 Jun 2020 06:23:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y18so5136289lfh.11;
-        Fri, 26 Jun 2020 06:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PM74e3+EpsWuBmUt4WwdQ1M5mcj6bdNzDdF2OfJXJbU=;
-        b=hlD2jkt5VhihxQSWPiApn8iLWjgnzyZ82HMMilY8YqWLg0Rp0tA46wLUhKk5N7EXy9
-         rgo1PcPqVGOymD791BKvsG7IpgOYA6aS8W1g5FJXLON4jdbgHBOuBhmWE3dbr8a7FPwa
-         kToKleRM7s9Oy27qpmQhC3hg/77lHgA0sQ9EPHbReYMPDaq3Jgqky0f+lkJjKwczKdXC
-         YWFIwIP+rkhiKo3s5jn41OhPPilMcLMSJes4MafT+7LW7sIRWxj2NAxPKbT5r4/TSYE4
-         rg+KImjbc8tldNfmaiowmnUocZgeTvqMvk3vculDr/1ix9vsUc30Etc0zLEpxfywAeS3
-         XafQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PM74e3+EpsWuBmUt4WwdQ1M5mcj6bdNzDdF2OfJXJbU=;
-        b=osOHnJQtaToSP3vj3HvDjuBsmmT75JnDy0AISToHBxP+FQ+yau+vnfVAOmEqeqCRNJ
-         F6DAJLCw/QYNuOvPe5t987KAP90tKPtNAnrxoS7rgWEUr28mSzWC448a/gzpUKa3h0lw
-         kFlfo6ywFUWCzkT0kPIXzmvou7xQuXhtquWb04SPLiaRMuI66cNaqxKjLRoAe2XPO8Gz
-         shoxojinO6COJqUoi2rFKq23TvKr6CQk/SLN/bQMazIJ7GQ1QtaY6WfrJ9at/VoDoPsx
-         Ojod61PyIDV7LzbQdkqtne1yVtnagzr6GWnbPHAE62ND1zXhk+08s+RVYDt7IaMe/EQg
-         xDlw==
-X-Gm-Message-State: AOAM530DoLlPpVj/+urw2Y3mjHBQDC5UKpYe4J7pfX8FS9PuDrcWxpQc
-        DFr0FQTj/Maz4xqDl3VHxwAOkXqKjJY=
-X-Google-Smtp-Source: ABdhPJzHpPU2SCmHwo7ktOuCeE7fdiW20wkbAMADVrBVU1XwpDL0ypMwHVUjWBGz/2d+xgsFj6dLEQ==
-X-Received: by 2002:ac2:4158:: with SMTP id c24mr1868233lfi.109.1593177796021;
-        Fri, 26 Jun 2020 06:23:16 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id h189sm6776569lfd.47.2020.06.26.06.23.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 06:23:15 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] Tegra Video Decoder driver power management
- corrections
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200624150847.22672-1-digetx@gmail.com>
- <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
- <23cbaa18-9461-8f72-3d43-aa14cd0c1095@gmail.com>
- <0e14df05-8299-52d6-df8f-0dd476f4109d@gmail.com>
- <e41ff660-6c6c-d603-c767-34e7f4b4a23d@xs4all.nl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3adf74ea-3aba-ad93-977a-8b42ab653ee9@gmail.com>
-Date:   Fri, 26 Jun 2020 16:23:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 26 Jun 2020 09:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgFZNXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:23:25 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E68BC2078D;
+        Fri, 26 Jun 2020 13:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593177805;
+        bh=eLUtMNXs0fYMI6cz6qlvIpFMySMSeTOQYK+CTrq5IHc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ViFJdl33+SQO0HSremYUDH6RB/AlDLXkbLcptQ6dttFIB0MRREVlGkxng12H89P3h
+         Ykk/jY4yd2dA1NXQsM/YnKERkJsvCcxWtK2/4YEjYSs+quabNSiSvWRubAJqBsKbfF
+         LRb+KiIF8A/Fuqx2vr9LCDRaoIXX/T25PwGM/4kA=
+Received: by pali.im (Postfix)
+        id 065AD890; Fri, 26 Jun 2020 15:23:22 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 15:23:22 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 023/206] PCI: aardvark: Dont blindly enable ASPM L0s
+ and dont write to read-only register
+Message-ID: <20200626132322.j5wwyps7rj3c3eeg@pali>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195318.115434987@linuxfoundation.org>
+ <20200626125350.GA29985@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <e41ff660-6c6c-d603-c767-34e7f4b4a23d@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626125350.GA29985@duo.ucw.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.06.2020 09:58, Hans Verkuil пишет:
-> On 26/06/2020 02:17, Dmitry Osipenko wrote:
->> 24.06.2020 18:23, Dmitry Osipenko пишет:
->>> 24.06.2020 18:16, Hans Verkuil пишет:
->>>> On 24/06/2020 17:08, Dmitry Osipenko wrote:
->>>>> Hello,
->>>>>
->>>>> This small series addresses a Runtime PM issue that was discovered during
->>>>> of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
->>>>> failure. Secondly it fixes reboot on some Tegra devices due to bootloader
->>>>> expecting VDE power partition to be ON at the boot time, which wasn't
->>>>> happening in case of a warm re-booting (i.e. by PMC resetting).
->>>>
->>>> Can you rebase this on top of the media_tree master branch? I think a variant
->>>> of patch 1 has already been applied. I found a mail today where you mentioned
->>>> that you preferred your version (it looks like I missed that) so you'll need to
->>>> rework patch 1.
->>>
->>> Hello Hans,
->>>
->>> I'll take a look at what patches has been applied, my bad for sending
->>> the v2 too late. Thank you for the heads up!
->>>
->>
->> I tested the already-applied variant of the patch 1 and it has the same
->> behaviour as my variant, so it's okay.
->>
->> Would you want me to send a v3 without the conflicting patch 1 or you
->> could apply the patches 2-4 from this series?
->>
-> 
-> I'll mark 1/4 as superseded and will apply patches 2-4. No need for you
-> to do anything.
+Hello!
 
-Thank you!
+On Friday 26 June 2020 14:53:50 Pavel Machek wrote:
+> Hi!
+> 
+> > [ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+> > 
+> > Trying to change Link Status register does not have any effect as this
+> > is a read-only register. Trying to overwrite bits for Negotiated Link
+> > Width does not make sense.
+> 
+> I don't quite get it. This says register is read only...
+> 
+> > In future proper change of link width can be done via Lane Count Select
+> > bits in PCIe Control 0 register.
+> > 
+> > Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+> > Control register is wrong. There should be at least some detection if
+> > endpoint supports L0s as isn't mandatory.
+> 
+> ....and this says it is wrong to set the bits as ASPM L0 is not
+> mandatory.
+
+Negotiated Link Width is in read-only 16bit Link Status register.
+
+ASPM Control bits are in read-write 16bit Link Control register.
+
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -321,10 +321,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> >  
+> >  	advk_pcie_wait_for_link(pcie);
+> >  
+> > -	reg = PCIE_CORE_LINK_L0S_ENTRY |
+> > -		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+> > -	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> > -
+> >  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+> >  	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+> >  		PCIE_CORE_CMD_IO_ACCESS_EN |
+> 
+> ...but we only do single write.
+> 
+> So which is it?
+
+That single write was via 32bit memory access which tried to overwrite
+both registers (Link Status and Link Control) at the same time.
+
+> Best regards,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
