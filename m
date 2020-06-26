@@ -2,103 +2,120 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA441C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F592082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A667A206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593168207;
+	bh=u5e+0XViLwBFBmMCmVY3ZWAdoyXGqTm1JYRhGJlcYYk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rNH9/3UD2DcTp6fRHQbSwDXgQN/U+ZanTYtSN/vw089QhdjnE1GrgLJBd4jDQ8X6P
+	 qRiU6MIITfCRLMuXON8A/vkANowDIboNmW1CWHIEydHfJaAjRfhD+V/XM5R4dSOMB6
+	 F53WRaqnjX+To8BAm+NuXcXvlSGGzs4txYu3ot8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgFZKnT convert rfc822-to-8bit (ORCPT
+        id S1728072AbgFZKn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgFZKnT (ORCPT
+        Fri, 26 Jun 2020 06:43:26 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:43579 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgFZKnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:43:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BCB4C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 03:43:19 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jolp7-0005bM-Ek; Fri, 26 Jun 2020 12:43:09 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jolp5-0000zL-9u; Fri, 26 Jun 2020 12:43:07 +0200
-Message-ID: <6ddaf69d4f5ad188864f62dcdbfbbe32acef9820.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/9] reset: Add Raspberry Pi 4 firmware reset
- controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        linux-kernel@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com
-Date:   Fri, 26 Jun 2020 12:43:07 +0200
-In-Reply-To: <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-3-nsaenzjulienne@suse.de>
-         <c1ccb77ef0bc56b96a8ad991f8345d0ffbd76fc2.camel@pengutronix.de>
-         <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 26 Jun 2020 06:43:25 -0400
+Received: by mail-ej1-f68.google.com with SMTP id l12so8859738ejn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 03:43:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fBCNpYHArbaIvTCXoaDbzGjMNkwy0xtfnskWd/C/q3A=;
+        b=sM2tJF/q3uHToD+jVU60OJod6A/yTiDiLhxD4mFJHI1w9iz8lcv09cqlbb57lIDmQD
+         eY1Fc42OMFvKZTGsTuMUCmVdsbzOnvc91tVa3UwCraYZzkvfNUKbOyR271Gq3RW3XJyk
+         9OgHWjrgQKLl0YydiZe66r7Elwblyosdcpe0eCz59inBL7NX/utBzH07YDF7cFpAnB5P
+         HQMcgC+HJtZ/kfVKzPSX3bBMOnqqAfJ1O/fW4HptXQ+gxgOEHEScDsPLB2e3jz1Cktsy
+         H3ieMLbROI7b9zxFX34qq79ChfErp6IRQpUrpFuktQzgWU53nhcUqr/8O/qzb05emR0L
+         0xDQ==
+X-Gm-Message-State: AOAM530JLlwe+qfS/1ogTN0o+EWw0jayQQkgNC/ZA7RRxNgaunZOBlCn
+        azPfrUVPjnXVGrEyzAbABik=
+X-Google-Smtp-Source: ABdhPJyiHsevGDn5YCuwfV4gTq8a/llFmGbZYHpYjbX+BcuWGLpbKjaWLTOx1YR/g62BphtS0UOL8w==
+X-Received: by 2002:a17:906:d79c:: with SMTP id pj28mr1858400ejb.397.1593168203408;
+        Fri, 26 Jun 2020 03:43:23 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id 23sm14333552edw.63.2020.06.26.03.43.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 03:43:22 -0700 (PDT)
+Subject: Re: [PATCH v0 2/5] Make it possible to enable/disable SRG mouse
+ reporting
+To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <cover.1593155911.git.tammo.block@gmail.com>
+ <d0951dcf5fb4cf8bfa19940953bce55ad0ee0510.1593155911.git.tammo.block@gmail.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <8e75c573-c66d-f79b-ad09-bbac280a5c91@kernel.org>
+Date:   Fri, 26 Jun 2020 12:43:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <d0951dcf5fb4cf8bfa19940953bce55ad0ee0510.1593155911.git.tammo.block@gmail.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-17 at 12:44 +0200, Nicolas Saenz Julienne wrote:
-> On Wed, 2020-06-17 at 12:02 +0200, Philipp Zabel wrote:
-> > Hi Nicolas,
-> > 
-> > On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
-> > > Raspberry Pi 4's co-processor controls some of the board's HW
-> > > initialization process, but it's up to Linux to trigger it when
-> > > relevant. Introduce a reset controller capable of interfacing with
-> > > RPi4's co-processor that models these firmware initialization routines as
-> > > reset lines.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > 
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+On 26. 06. 20, 9:22, Tammo Block wrote:
+> The report protocol stored in vc_report_mouse is not a bitmask, the
+> protocols are mutually exclusive, last one wins. Values are chosen to
+> maximize compatibility.
 > 
-> Thanks!
+> Signed-off-by: Tammo Block <tammo.block@gmail.com>
+> ---
+>  drivers/tty/vt/vt.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 > 
-> > If there is a good reason for the single DT specified reset id, I can
-> > pick up patches 1 and 2.
-> 
-> The idea here is to make sure we're reasonably covered against further changes
-> in firmware. If we define constraints too narrow it can be a pain to support
-> new features without breaking backwards compatibility in dt.
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index 48a8199f7845..d52ac57034e0 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -1890,13 +1890,22 @@ static void set_mode(struct vc_data *vc, int on_off)
+>  					clr_kbd(vc, decarm);
+>  				break;
+>  			case 9:
+> -				vc->vc_report_mouse = on_off ? 1 : 0;
+> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTBTNPRESS : 0;
+>  				break;
+>  			case 25:		/* Cursor on/off */
+>  				vc->vc_deccm = on_off;
+>  				break;
+>  			case 1000:
+> -				vc->vc_report_mouse = on_off ? 2 : 0;
+> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTRELEASE : 0;
+> +				break;
+> +			case 1002:
+> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTDRAG : 0;
+> +				break;
+> +			case 1003:
+> +				vc->vc_report_mouse = on_off ? TIOCL_REPORTANYMOVE : 0;
+> +				break;
+> +			case 1006:
+> +				vc->vc_proto_mouse = on_off ? 1 : 0;
 
-Ok.
+So simply:
+vc->vc_proto_mouse = on_off;
 
-> > If you change the dts patch 4 to use a number instead of the reset id
-> > define for now, there wouldn't even be a dependency between these reset
-> > and dts patches.
-> 
-> I was under the impression that having an explicit definition was nice to have.
-> What's troubling about creating the dependency?
+The others could be "on_off * TIOCL_XXX", but I don't think it would
+improve anything.
 
-Just that the last patch has to wait for the reset patches to be merged
-before it can be applied.
-
-regards
-Philipp
+thanks,
+-- 
+js
+suse labs
