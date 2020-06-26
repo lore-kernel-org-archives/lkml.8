@@ -2,130 +2,185 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FBD20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C23D206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgFZGTK (ORCPT
+        id S1728434AbgFZGad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgFZGTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:19:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C096C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:19:10 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1johhR-0001r4-L1; Fri, 26 Jun 2020 08:18:57 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1johhN-00015J-AA; Fri, 26 Jun 2020 08:18:53 +0200
-Date:   Fri, 26 Jun 2020 08:18:53 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v14 3/3] Input: new da7280 haptic driver
-Message-ID: <20200626061853.hyb7dwta6ths2qo2@taurus.defre.kleine-koenig.org>
-References: <cover.1593017969.git.Roy.Im@diasemi.com>
- <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
+        Fri, 26 Jun 2020 02:30:33 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:51990 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727876AbgFZGac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 02:30:32 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1johrw-0004mR-T7; Fri, 26 Jun 2020 16:29:50 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jun 2020 16:29:48 +1000
+Date:   Fri, 26 Jun 2020 16:29:48 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        lkft-triage@lists.linaro.org, linux-crypto@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] crypto: af_alg - Fix regression on empty requests
+Message-ID: <20200626062948.GA25285@gondor.apana.org.au>
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com>
+ <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+ <20200623064056.GA8121@gondor.apana.org.au>
+ <20200623170217.GB150582@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l5lbv7flvyngebwk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200623170217.GB150582@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 10:02:17AM -0700, Eric Biggers wrote:
+>
+> The source code for the two failing AF_ALG tests is here:
+> 
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg05.c
+> 
+> They use read() and write(), not send() and recv().
+> 
+> af_alg02 uses read() to read from a "salsa20" request socket without writing
+> anything to it.  It is expected that this returns 0, i.e. that behaves like
+> encrypting an empty message.
+> 
+> af_alg05 uses write() to write 15 bytes to a "cbc(aes-generic)" request socket,
+> then read() to read 15 bytes.  It is expected that this fails with EINVAL, since
+> the length is not aligned to the AES block size (16 bytes).
 
---l5lbv7flvyngebwk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch should fix the regression:
 
-Hello,
+---8<---
+Some user-space programs rely on crypto requests that have no
+control metadata.  This broke when a check was added to require
+the presence of control metadata with the ctx->init flag.
 
-=66rom the PWM POV I'm happy now. Just a few minor comments that I noticed
-while checking the PWM details.
+This patch fixes the regression by removing the ctx->init flag.
 
-On Thu, Jun 25, 2020 at 01:59:29AM +0900, Roy Im wrote:
-> +		val =3D haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
-> +			haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
+This means that we do not distinguish the case of no metadata
+as opposed to an empty request.  IOW it is always assumed that
+if you call recv(2) before sending metadata that you are working
+with an empty request.
 
-If you write this as:
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-	val =3D FIELD_PREP(DA7280_PS_SEQ_ID_MASK, haptics->ps_seq_id) |
-		FIELD_PREP(DA7280_PS_SEQ_LOOP_MASK, haptics->ps_seq_loop);
-
-you get some additional checks for free and can drop all defines for ..._SH=
-IFT .
-
-> +static u8 da7280_haptic_of_gpi_pol_str(struct device *dev,
-> +				       const char *str)
-> +{
-> +	if (!strcmp(str, "Rising-edge"))
-> +		return 0;
-> +	else if (!strcmp(str, "Falling-edge"))
-> +		return 1;
-> +	else if (!strcmp(str, "Both-edge"))
-> +		return 2;
-> +
-> +	dev_warn(dev, "Invalid string - set to default\n");
-
-Maybe mention "Rising-edge" being the default?
-
-> +	return 0;
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---l5lbv7flvyngebwk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl71k0oACgkQwfwUeK3K
-7AkjFwgAldH3KRBxt3eudCHkipnw7VuyQf7SQOeIBpqehW+F0UEblbR8l96xgv/G
-8wzR4sL28wQuPpDxs7zvvqaN3H6JakX+BIL/9yIAtBh1LCGca01s8peLC9EhuYac
-zFtc97/+fEmhjqjMmeyThz8s+uy3C7mO3rjaQODNsW9ZhD8XmmFuvwyI4//0uF55
-uVEn36SrwI7Osmy16vKWluKpuk+d1b8otenjJq9uLJW6ACSQrCv+YTZzrmVBqTyY
-OCPVLOXtYhSUlQLNkwa95ENVA4h/ZzRG5qs139nfo9H3aqDaz62dJ5iYbdrdri0U
-0B/l+NTYigDURR4k4KErR4u3aQfMVw==
-=zSqA
------END PGP SIGNATURE-----
-
---l5lbv7flvyngebwk--
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 9fcb91ea10c4..2d391117c020 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -635,7 +635,6 @@ void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
+ 
+ 	if (!ctx->used)
+ 		ctx->merge = 0;
+-	ctx->init = ctx->more;
+ }
+ EXPORT_SYMBOL_GPL(af_alg_pull_tsgl);
+ 
+@@ -757,8 +756,7 @@ int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min)
+ 			break;
+ 		timeout = MAX_SCHEDULE_TIMEOUT;
+ 		if (sk_wait_event(sk, &timeout,
+-				  ctx->init && (!ctx->more ||
+-						(min && ctx->used >= min)),
++				  !ctx->more || (min && ctx->used >= min),
+ 				  &wait)) {
+ 			err = 0;
+ 			break;
+@@ -847,7 +845,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 	}
+ 
+ 	lock_sock(sk);
+-	if (ctx->init && (init || !ctx->more)) {
++	if (!ctx->more && ctx->used) {
+ 		err = -EINVAL;
+ 		goto unlock;
+ 	}
+@@ -858,7 +856,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 			memcpy(ctx->iv, con.iv->iv, ivsize);
+ 
+ 		ctx->aead_assoclen = con.aead_assoclen;
+-		ctx->init = true;
+ 	}
+ 
+ 	while (size) {
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index d48d2156e621..749fe42315be 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -106,7 +106,7 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
+ 	size_t usedpages = 0;		/* [in]  RX bufs to be used from user */
+ 	size_t processed = 0;		/* [in]  TX bufs to be consumed */
+ 
+-	if (!ctx->init || ctx->more) {
++	if (ctx->more) {
+ 		err = af_alg_wait_for_data(sk, flags, 0);
+ 		if (err)
+ 			return err;
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index a51ba22fef58..5b6fa5e8c00d 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -61,7 +61,7 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
+ 	int err = 0;
+ 	size_t len = 0;
+ 
+-	if (!ctx->init || (ctx->more && ctx->used < bs)) {
++	if (ctx->more && ctx->used < bs) {
+ 		err = af_alg_wait_for_data(sk, flags, bs);
+ 		if (err)
+ 			return err;
+diff --git a/include/crypto/if_alg.h b/include/crypto/if_alg.h
+index ee6412314f8f..08c087cc89d6 100644
+--- a/include/crypto/if_alg.h
++++ b/include/crypto/if_alg.h
+@@ -135,7 +135,6 @@ struct af_alg_async_req {
+  *			SG?
+  * @enc:		Cryptographic operation to be performed when
+  *			recvmsg is invoked.
+- * @init:		True if metadata has been sent.
+  * @len:		Length of memory allocated for this data structure.
+  */
+ struct af_alg_ctx {
+@@ -152,7 +151,6 @@ struct af_alg_ctx {
+ 	bool more;
+ 	bool merge;
+ 	bool enc;
+-	bool init;
+ 
+ 	unsigned int len;
+ };
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
