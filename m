@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F57C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4362072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44CF2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Nz8/QSqR"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Y+uNakqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgFZAOA (ORCPT
+        id S1726023AbgFZANy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:14:00 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:10192 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726012AbgFZANy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 20:13:54 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q099CO030280
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:53 -0700
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58160 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725863AbgFZANv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:13:51 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q092jI026877
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:49 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=r+we4rEQGEjTppL2F3NCUCIjsxEkkAqKC42zuTBexxU=;
- b=Nz8/QSqR5FwXfi+6cgwizBoqKg37ICgj6keks0i0qmI6lbdI/nI39C++KJi22vdFA/ik
- Yb3y+N2vnxoBCVr9Zc/7p98Ltu9rt+smRsmBA95q4BFu1Ozg/BHduF/ZdRH8TMZLuatc
- qQfqdUhR3XM4/5587WMnTR4ka69luqCCCpw= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31ux0u2u6k-1
+ bh=PB4mymUPZh9olBqG+tmu3FmZh6UViBX5lSwF10QNN6A=;
+ b=Y+uNakqO8dHNIv0pZW0f4P3kZ7qlLNkaUOPOTu35Izx8zZedKHj6zQYrd8KKbE8lgfNP
+ tKb3dbgxDeHm/r9uBQaxzr/T1Ic1FdnekIDv2T4hzqGSNd+ocQrKZLFsWSGG6Ra998Qj
+ 7X/lk8ZH6wI3txTGmPNUriZJMlQ/LcUK4z4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31ux0qawsa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:53 -0700
-Received: from intmgw002.08.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:13:49 -0700
+Received: from intmgw002.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 25 Jun 2020 17:13:51 -0700
+ 15.1.1979.3; Thu, 25 Jun 2020 17:13:48 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id E77D262E4FA9; Thu, 25 Jun 2020 17:13:49 -0700 (PDT)
+        id 5BED762E4FA9; Thu, 25 Jun 2020 17:13:47 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,9 +52,9 @@ CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
         <kernel-team@fb.com>, <john.fastabend@gmail.com>,
         <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2 bpf-next 4/4] selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-Date:   Thu, 25 Jun 2020 17:13:32 -0700
-Message-ID: <20200626001332.1554603-5-songliubraving@fb.com>
+Subject: [PATCH v2 bpf-next 3/4] bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
+Date:   Thu, 25 Jun 2020 17:13:31 -0700
+Message-ID: <20200626001332.1554603-4-songliubraving@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200626001332.1554603-1-songliubraving@fb.com>
 References: <20200626001332.1554603-1-songliubraving@fb.com>
@@ -64,11 +64,11 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0
- cotscore=-2147483648 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- mlxscore=0 bulkscore=0 phishscore=0 suspectscore=8 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 suspectscore=8 phishscore=0 clxscore=1015
+ cotscore=-2147483648 mlxlogscore=999 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006250142
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,126 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new test is similar to other bpf_iter tests.
+This makes it easy to dump stack trace in text.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++++
- .../selftests/bpf/progs/bpf_iter_task_stack.c | 60 +++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
-.c
+ kernel/trace/bpf_trace.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/te=
-sting/selftests/bpf/prog_tests/bpf_iter.c
-index 87c29dde1cf96..baa83328f810d 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-@@ -5,6 +5,7 @@
- #include "bpf_iter_netlink.skel.h"
- #include "bpf_iter_bpf_map.skel.h"
- #include "bpf_iter_task.skel.h"
-+#include "bpf_iter_task_stack.skel.h"
- #include "bpf_iter_task_file.skel.h"
- #include "bpf_iter_test_kern1.skel.h"
- #include "bpf_iter_test_kern2.skel.h"
-@@ -106,6 +107,20 @@ static void test_task(void)
- 	bpf_iter_task__destroy(skel);
- }
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 65fa62723e2f8..1cb90b0868817 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -376,7 +376,7 @@ static void bpf_trace_copy_string(char *buf, void *un=
+safe_ptr, char fmt_ptype,
 =20
-+static void test_task_stack(void)
-+{
-+	struct bpf_iter_task_stack *skel;
+ /*
+  * Only limited trace_printk() conversion specifiers allowed:
+- * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pks %pus %s
++ * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pB %pks %pus %s
+  */
+ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
+ 	   u64, arg2, u64, arg3)
+@@ -420,6 +420,11 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_s=
+ize, u64, arg1,
+ 				goto fmt_str;
+ 			}
+=20
++			if (fmt[i + 1] =3D=3D 'B') {
++				i++;
++				goto fmt_next;
++			}
 +
-+	skel =3D bpf_iter_task_stack__open_and_load();
-+	if (CHECK(!skel, "bpf_iter_task_stack__open_and_load",
-+		  "skeleton open_and_load failed\n"))
-+		return;
-+
-+	do_dummy_read(skel->progs.dump_task_stack);
-+
-+	bpf_iter_task_stack__destroy(skel);
-+}
-+
- static void test_task_file(void)
- {
- 	struct bpf_iter_task_file *skel;
-@@ -392,6 +407,8 @@ void test_bpf_iter(void)
- 		test_bpf_map();
- 	if (test__start_subtest("task"))
- 		test_task();
-+	if (test__start_subtest("task_stack"))
-+		test_task_stack();
- 	if (test__start_subtest("task_file"))
- 		test_task_file();
- 	if (test__start_subtest("anon"))
-diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c b/to=
-ols/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-new file mode 100644
-index 0000000000000..83aca5b1a7965
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2020 Facebook */
-+/* "undefine" structs in vmlinux.h, because we "override" them below */
-+#define bpf_iter_meta bpf_iter_meta___not_used
-+#define bpf_iter__task bpf_iter__task___not_used
-+#include "vmlinux.h"
-+#undef bpf_iter_meta
-+#undef bpf_iter__task
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") =3D "GPL";
-+
-+/* bpf_get_task_stack needs a stackmap to work */
-+struct {
-+	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
-+	__uint(max_entries, 16384);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, sizeof(__u64) * 20);
-+} stackmap SEC(".maps");
-+
-+struct bpf_iter_meta {
-+	struct seq_file *seq;
-+	__u64 session_id;
-+	__u64 seq_num;
-+} __attribute__((preserve_access_index));
-+
-+struct bpf_iter__task {
-+	struct bpf_iter_meta *meta;
-+	struct task_struct *task;
-+} __attribute__((preserve_access_index));
-+
-+#define MAX_STACK_TRACE_DEPTH   64
-+unsigned long entries[MAX_STACK_TRACE_DEPTH];
-+
-+SEC("iter/task")
-+int dump_task_stack(struct bpf_iter__task *ctx)
-+{
-+	struct seq_file *seq =3D ctx->meta->seq;
-+	struct task_struct *task =3D ctx->task;
-+	int i, retlen;
-+
-+	if (task =3D=3D (void *)0)
-+		return 0;
-+
-+	retlen =3D bpf_get_task_stack(task, entries,
-+				    MAX_STACK_TRACE_DEPTH * sizeof(unsigned long), 0);
-+	if (retlen < 0)
-+		return 0;
-+
-+	BPF_SEQ_PRINTF(seq, "pid: %8u num_entries: %8u\n", task->pid,
-+		       retlen / sizeof(unsigned long));
-+	for (i =3D 0; i < MAX_STACK_TRACE_DEPTH / sizeof(unsigned long); i++) {
-+		if (retlen > i * sizeof(unsigned long))
-+			BPF_SEQ_PRINTF(seq, "[<0>] %pB\n", (void *)entries[i]);
-+	}
-+	BPF_SEQ_PRINTF(seq, "\n");
-+
-+	return 0;
-+}
+ 			/* disallow any further format extensions */
+ 			if (fmt[i + 1] !=3D 0 &&
+ 			    !isspace(fmt[i + 1]) &&
+@@ -479,7 +484,7 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_si=
+ze, u64, arg1,
+ #define __BPF_TP_EMIT()	__BPF_ARG3_TP()
+ #define __BPF_TP(...)							\
+ 	__trace_printk(0 /* Fake ip */,					\
+-		       fmt, ##__VA_ARGS__)
++		       fmt, ##__VA_ARGS__)\
+=20
+ #define __BPF_ARG1_TP(...)						\
+ 	((mod[0] =3D=3D 2 || (mod[0] =3D=3D 1 && __BITS_PER_LONG =3D=3D 64))	\
+@@ -636,7 +641,8 @@ BPF_CALL_5(bpf_seq_printf, struct seq_file *, m, char=
+ *, fmt, u32, fmt_size,
+ 		if (fmt[i] =3D=3D 'p') {
+ 			if (fmt[i + 1] =3D=3D 0 ||
+ 			    fmt[i + 1] =3D=3D 'K' ||
+-			    fmt[i + 1] =3D=3D 'x') {
++			    fmt[i + 1] =3D=3D 'x' ||
++			    fmt[i + 1] =3D=3D 'B') {
+ 				/* just kernel pointers */
+ 				params[fmt_cnt] =3D args[fmt_cnt];
+ 				fmt_cnt++;
 --=20
 2.24.1
 
