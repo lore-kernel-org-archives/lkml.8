@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B303C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7778BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813A520836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615C020836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgFZSYw (ORCPT
+        id S1726535AbgFZSZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:24:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59760 "EHLO mga07.intel.com"
+        Fri, 26 Jun 2020 14:25:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59785 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgFZSXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:23:37 -0400
-IronPort-SDR: CBzRRakDNOyYrXNfrnzFXczIc8qUL7TKLaiE2SSJp5DfkwMKNjL8eSfGolf5UR5l04bKPitEgF
- lJs3a5uR3l3g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512890"
+        id S1725907AbgFZSXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:23:33 -0400
+IronPort-SDR: 8vRkOh+QnaH65Ek6VVnpLE5MmdHElPXrUn8co/ZwwhX7CAorx3OCEhfITTpt2RG4M6xCJbk1tR
+ 1IR71S7zGfjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512887"
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="210512890"
+   d="scan'208";a="210512887"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:33 -0700
-IronPort-SDR: xJV4Pa6xELc+Oz0bzQo6Rgl61l+WoednFVbDiPFuBJZiMGgE2yNzwm9/T+h8KtrGdFN5ghYoGr
- kkT13LtGG5hg==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:32 -0700
+IronPort-SDR: f0XsJgTubk+/MvrcpyfD2BlpOsTFd3D5jl7WVrriWaq2u1d6o1WfbX/UY7tGgly4vm53/7UIKs
+ G0tMg5gxGJOA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="424153843"
+   d="scan'208";a="424153840"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
   by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:23:32 -0700
 From:   kan.liang@linux.intel.com
@@ -47,9 +47,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, wei.w.wang@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 05/23] perf/x86/intel/lbr: Factor out a new struct for generic optimization
-Date:   Fri, 26 Jun 2020 11:20:02 -0700
-Message-Id: <1593195620-116988-6-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V2 04/23] perf/x86/intel/lbr: Add the function pointers for LBR save and restore
+Date:   Fri, 26 Jun 2020 11:20:01 -0700
+Message-Id: <1593195620-116988-5-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
 References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
@@ -60,162 +60,179 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-To reduce the overhead of a context switch with LBR enabled, some
-generic optimizations were introduced, e.g. avoiding restore LBR if no
-one else touched them. The generic optimizations can also be used by
-Architecture LBR later. Currently, the fields for the generic
-optimizations are part of structure x86_perf_task_context, which will be
-deprecated by Architecture LBR. A new structure should be introduced
-for the common fields of generic optimization, which can be shared
-between Architecture LBR and model-specific LBR.
+The MSRs of Architectural LBR are different from previous model-specific
+LBR. Perf has to implement different functions to save and restore them.
 
-Both 'valid_lbrs' and 'tos' are also used by the generic optimizations,
-but they are not moved into the new structure, because Architecture LBR
-is stack-like. The 'valid_lbrs' which records the index of the valid LBR
-is not required anymore. The TOS MSR will be removed.
+The function pointers for LBR save and restore are introduced. Perf
+should initialize the corresponding functions at boot time.
 
-LBR registers may be cleared in the deep Cstate. If so, the generic
-optimizations should not be applied. Perf has to unconditionally
-restore the LBR registers. A generic function is required to detect the
-reset due to the deep Cstate. lbr_is_reset_in_cstate() is introduced.
-Currently, for the model-specific LBR, the TOS MSR is used to detect the
-reset. There will be another method introduced for Architecture LBR
-later.
+The generic optimizations, e.g. avoiding restore LBR if no one else
+touched them, still apply for Architectural LBRs. The related codes are
+not moved to model-specific functions.
+
+Current model-specific LBR functions are set as default.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/lbr.c  | 37 ++++++++++++++++++++-----------------
- arch/x86/events/perf_event.h | 10 +++++++---
- 2 files changed, 27 insertions(+), 20 deletions(-)
+ arch/x86/events/intel/core.c |  4 +++
+ arch/x86/events/intel/lbr.c  | 71 +++++++++++++++++++++++++++-----------------
+ arch/x86/events/perf_event.h |  6 ++++
+ 3 files changed, 54 insertions(+), 27 deletions(-)
 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e08a591..117307a 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3954,6 +3954,8 @@ static __initconst const struct x86_pmu core_pmu = {
+ 
+ 	.lbr_reset		= intel_pmu_lbr_reset_64,
+ 	.lbr_read		= intel_pmu_lbr_read_64,
++	.lbr_save		= intel_pmu_lbr_save,
++	.lbr_restore		= intel_pmu_lbr_restore,
+ };
+ 
+ static __initconst const struct x86_pmu intel_pmu = {
+@@ -4002,6 +4004,8 @@ static __initconst const struct x86_pmu intel_pmu = {
+ 
+ 	.lbr_reset		= intel_pmu_lbr_reset_64,
+ 	.lbr_read		= intel_pmu_lbr_read_64,
++	.lbr_save		= intel_pmu_lbr_save,
++	.lbr_restore		= intel_pmu_lbr_restore,
+ };
+ 
+ static __init void intel_clovertown_quirk(void)
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index c0312ea..f18eb0d 100644
+index 42466a0..c0312ea 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -351,33 +351,36 @@ void intel_pmu_lbr_restore(void *ctx)
- 	wrmsrl(x86_pmu.lbr_tos, tos);
+@@ -323,11 +323,37 @@ static inline u64 rdlbr_to(unsigned int idx)
+ 	return val;
  }
  
-+static bool lbr_is_reset_in_cstate(struct x86_perf_task_context *task_ctx)
-+{
-+	return !rdlbr_from(task_ctx->tos);
+-static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
++void intel_pmu_lbr_restore(void *ctx)
+ {
+-	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	struct x86_perf_task_context *task_ctx = ctx;
+ 	int i;
+ 	unsigned lbr_idx, mask;
++	u64 tos = task_ctx->tos;
++
++	mask = x86_pmu.lbr_nr - 1;
++	for (i = 0; i < task_ctx->valid_lbrs; i++) {
++		lbr_idx = (tos - i) & mask;
++		wrlbr_from(lbr_idx, task_ctx->lbr_from[i]);
++		wrlbr_to  (lbr_idx, task_ctx->lbr_to[i]);
++
++		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
++			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
++	}
++
++	for (; i < x86_pmu.lbr_nr; i++) {
++		lbr_idx = (tos - i) & mask;
++		wrlbr_from(lbr_idx, 0);
++		wrlbr_to(lbr_idx, 0);
++		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
++			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, 0);
++	}
++
++	wrmsrl(x86_pmu.lbr_tos, tos);
 +}
 +
- static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	u64 tos;
++static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	u64 tos;
  
--	if (task_ctx->lbr_callstack_users == 0 ||
--	    task_ctx->lbr_stack_state == LBR_NONE) {
-+	if (task_ctx->opt.lbr_callstack_users == 0 ||
-+	    task_ctx->opt.lbr_stack_state == LBR_NONE) {
- 		intel_pmu_lbr_reset();
+ 	if (task_ctx->lbr_callstack_users == 0 ||
+@@ -349,40 +375,18 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
  		return;
  	}
  
--	tos = task_ctx->tos;
- 	/*
- 	 * Does not restore the LBR registers, if
- 	 * - No one else touched them, and
--	 * - Did not enter C6
-+	 * - Was not cleared in Cstate
- 	 */
- 	if ((task_ctx == cpuc->last_task_ctx) &&
--	    (task_ctx->log_id == cpuc->last_log_id) &&
--	    rdlbr_from(tos)) {
--		task_ctx->lbr_stack_state = LBR_NONE;
-+	    (task_ctx->opt.log_id == cpuc->last_log_id) &&
-+	    !lbr_is_reset_in_cstate(task_ctx)) {
-+		task_ctx->opt.lbr_stack_state = LBR_NONE;
- 		return;
- 	}
+-	mask = x86_pmu.lbr_nr - 1;
+-	for (i = 0; i < task_ctx->valid_lbrs; i++) {
+-		lbr_idx = (tos - i) & mask;
+-		wrlbr_from(lbr_idx, task_ctx->lbr_from[i]);
+-		wrlbr_to  (lbr_idx, task_ctx->lbr_to[i]);
+-
+-		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
+-			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
+-	}
+-
+-	for (; i < x86_pmu.lbr_nr; i++) {
+-		lbr_idx = (tos - i) & mask;
+-		wrlbr_from(lbr_idx, 0);
+-		wrlbr_to(lbr_idx, 0);
+-		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
+-			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, 0);
+-	}
++	x86_pmu.lbr_restore(task_ctx);
  
- 	x86_pmu.lbr_restore(task_ctx);
- 
--	task_ctx->lbr_stack_state = LBR_NONE;
-+	task_ctx->opt.lbr_stack_state = LBR_NONE;
+-	wrmsrl(x86_pmu.lbr_tos, tos);
+ 	task_ctx->lbr_stack_state = LBR_NONE;
  }
  
- void intel_pmu_lbr_save(void *ctx)
-@@ -407,17 +410,17 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+-static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
++void intel_pmu_lbr_save(void *ctx)
  {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	struct x86_perf_task_context *task_ctx = ctx;
+ 	unsigned lbr_idx, mask;
+ 	u64 tos, from;
+ 	int i;
  
 -	if (task_ctx->lbr_callstack_users == 0) {
 -		task_ctx->lbr_stack_state = LBR_NONE;
-+	if (task_ctx->opt.lbr_callstack_users == 0) {
-+		task_ctx->opt.lbr_stack_state = LBR_NONE;
- 		return;
+-		return;
+-	}
+-
+ 	mask = x86_pmu.lbr_nr - 1;
+ 	tos = intel_pmu_lbr_tos();
+ 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
+@@ -397,6 +401,19 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
  	}
- 
- 	x86_pmu.lbr_save(task_ctx);
- 
--	task_ctx->lbr_stack_state = LBR_VALID;
-+	task_ctx->opt.lbr_stack_state = LBR_VALID;
+ 	task_ctx->valid_lbrs = i;
+ 	task_ctx->tos = tos;
++}
++
++static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++
++	if (task_ctx->lbr_callstack_users == 0) {
++		task_ctx->lbr_stack_state = LBR_NONE;
++		return;
++	}
++
++	x86_pmu.lbr_save(task_ctx);
++
+ 	task_ctx->lbr_stack_state = LBR_VALID;
  
  	cpuc->last_task_ctx = task_ctx;
--	cpuc->last_log_id = ++task_ctx->log_id;
-+	cpuc->last_log_id = ++task_ctx->opt.log_id;
- }
- 
- void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
-@@ -439,8 +442,8 @@ void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
- 	if (!prev_ctx_data || !next_ctx_data)
- 		return;
- 
--	swap(prev_ctx_data->lbr_callstack_users,
--	     next_ctx_data->lbr_callstack_users);
-+	swap(prev_ctx_data->opt.lbr_callstack_users,
-+	     next_ctx_data->opt.lbr_callstack_users);
- }
- 
- void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
-@@ -492,7 +495,7 @@ void intel_pmu_lbr_add(struct perf_event *event)
- 
- 	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
- 		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->lbr_callstack_users++;
-+		task_ctx->opt.lbr_callstack_users++;
- 	}
- 
- 	/*
-@@ -532,7 +535,7 @@ void intel_pmu_lbr_del(struct perf_event *event)
- 	if (branch_user_callstack(cpuc->br_sel) &&
- 	    event->ctx->task_ctx_data) {
- 		task_ctx = event->ctx->task_ctx_data;
--		task_ctx->lbr_callstack_users--;
-+		task_ctx->opt.lbr_callstack_users--;
- 	}
- 
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 83ff188..c8d9ae0 100644
+index 70a0b5e..83ff188 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -734,15 +734,19 @@ struct x86_pmu {
- 	int (*aux_output_match) (struct perf_event *event);
- };
+@@ -693,6 +693,8 @@ struct x86_pmu {
  
-+struct x86_perf_task_context_opt {
-+	int lbr_callstack_users;
-+	int lbr_stack_state;
-+	int log_id;
-+};
+ 	void		(*lbr_reset)(void);
+ 	void		(*lbr_read)(struct cpu_hw_events *cpuc);
++	void		(*lbr_save)(void *ctx);
++	void		(*lbr_restore)(void *ctx);
+ 
+ 	/*
+ 	 * Intel PT/LBR/BTS are exclusive
+@@ -1086,6 +1088,10 @@ void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc);
+ 
+ void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc);
+ 
++void intel_pmu_lbr_save(void *ctx);
 +
- struct x86_perf_task_context {
- 	u64 lbr_from[MAX_LBR_ENTRIES];
- 	u64 lbr_to[MAX_LBR_ENTRIES];
- 	u64 lbr_info[MAX_LBR_ENTRIES];
- 	int tos;
- 	int valid_lbrs;
--	int lbr_callstack_users;
--	int lbr_stack_state;
--	int log_id;
-+	struct x86_perf_task_context_opt opt;
- };
++void intel_pmu_lbr_restore(void *ctx);
++
+ void intel_pmu_lbr_init_core(void);
  
- #define x86_add_quirk(func_)						\
+ void intel_pmu_lbr_init_nhm(void);
 -- 
 2.7.4
 
