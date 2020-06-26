@@ -2,166 +2,80 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E548C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C7E2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593177874;
-	bh=/EUxyCyPVfvVOBq8FVj7Lzb1Feg675LVd6REFNzxA2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKXtqdCPSIs7rFj87Sm8lnxjH6o8cR0F4gjVqGLDexGe1IetVfDiPqSzD/OiOnhvJ
-	 TENCOpTnoRcVQ1tDsRcaY9N5RtF19qlHkFwTBITqJ0XJmoLJ4N1jaCzYiC5KCJ726e
-	 ujfZBkGvY1W4GG9qI/jidcxNENWm0u1l2rWixOpg=
+	by mail.kernel.org (Postfix) with ESMTP id 194EE20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbgFZNYd (ORCPT
+        id S1728432AbgFZNZo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgFZNYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:24:31 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DAD62075D;
-        Fri, 26 Jun 2020 13:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593177871;
-        bh=/EUxyCyPVfvVOBq8FVj7Lzb1Feg675LVd6REFNzxA2Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUQdPr/BUuMqYXe8r9nhip2IX12AYbzTXzkUAxwJL5FE60nIhfMu2DKFa+LbyIYP7
-         ZdsFqpQ8cHDvUJMUuhBPcG5PUTvVN99Zef36yIJqeMWGkiW5D6DCNvVlxhINT+3nsg
-         HyJ3UXX2scv/Q608VIWJuTgZyM466GVNGOJXy6UE=
-Date:   Fri, 26 Jun 2020 08:29:44 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-Message-ID: <20200626132944.GA26003@embeddedor>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
- <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
- <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+        Fri, 26 Jun 2020 09:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgFZNZo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:25:44 -0400
+X-Greylist: delayed 492 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 Jun 2020 06:25:43 PDT
+Received: from unicorn.mansr.com (unicorn.mansr.com [IPv6:2001:8b0:ca0d:8d8e::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1893C03E979;
+        Fri, 26 Jun 2020 06:25:43 -0700 (PDT)
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 7F4E515360; Fri, 26 Jun 2020 14:17:27 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: tango: Align L2 cache-controller nodename with dtschema
+References: <20200626080543.3511-1-krzk@kernel.org>
+Date:   Fri, 26 Jun 2020 14:17:27 +0100
+In-Reply-To: <20200626080543.3511-1-krzk@kernel.org> (Krzysztof Kozlowski's
+        message of "Fri, 26 Jun 2020 10:05:43 +0200")
+Message-ID: <yw1x5zbevue0.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Krzysztof Kozlowski <krzk@kernel.org> writes:
 
-Please, see my comments below...
+> Fix dtschema validator warnings like:
+>     l2-cache-controller@20100000: $nodename:0:
+>         'l2-cache-controller@20100000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Fri, Jun 26, 2020 at 10:30:37AM +0300, Peter Ujfalusi wrote:
-> 
-> 
-> On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
-> > Hi Vinod,
-> > 
-> > On 6/24/20 00:55, Vinod Koul wrote:
-> >> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
-> >>> Make use of the struct_size() helper instead of an open-coded version
-> >>> in order to avoid any potential type mistakes.
-> >>>
-> >>> This code was detected with the help of Coccinelle and, audited and
-> >>> fixed manually.
-> >>>
-> >>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-> >>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >>> ---
-> >>>  drivers/dma/ti/k3-udma.c | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> >>> index 0d5fb154b8e2..411c54b86ba8 100644
-> >>> --- a/drivers/dma/ti/k3-udma.c
-> >>> +++ b/drivers/dma/ti/k3-udma.c
-> >>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
-> >>>  	u32 ring_id;
-> >>>  	unsigned int i;
-> >>>  
-> >>> -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> >>> +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
-> >>
-> >> struct_size() is a * b + c but here we need, a + b * c.. the trailing
-> >> struct is N times here..
-> >>
-> > 
-> > struct_size() works exactly as expected in this case. :)
-> > Please, see:
-> > 
-> > include/linux/overflow.h:314:
-> > 314 #define struct_size(p, member, count)                                   \
-> > 315         __ab_c_size(count,                                              \
-> > 316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
-> > 317                     sizeof(*(p)))
-> 
-> True, struct_size is for this sort of things.
-> 
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> While looking it up in include/linux/overflow.h I have noticed your
-> commit in linux-next, which adds flex_array_size()
-> 
-> The example in the commit message contradicts with what the helper
+Acked-by: Mans Rullgard <mans@mansr.com>
 
-There is no contradiction here.
+> ---
+>  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
+> index 54fd522badfc..d584da314500 100644
+> --- a/arch/arm/boot/dts/tango4-common.dtsi
+> +++ b/arch/arm/boot/dts/tango4-common.dtsi
+> @@ -51,7 +51,7 @@
+>  		};
+>  	};
+>
+> -	l2cc: l2-cache-controller@20100000 {
+> +	l2cc: cache-controller@20100000 {
+>  		compatible = "arm,pl310-cache";
+>  		reg = <0x20100000 0x1000>;
+>  		cache-level = <2>;
+> -- 
+> 2.17.1
+>
 
-> does imho. To be correct it should have been:
-> 
-> struct something {
-> 	size_t count;
-> 	struct foo items[];
-> };
-> 
-> - struct something *instance;
-> + struct something instance;
-> 
-> - instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
-> + instance.items = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
-> instance->count = count;
-> memcpy(instance->items, src, flex_array_size(instance, items, instance->count));
-> 
-
-This is all wrong. Please, double check how struct_size() works.
-
-Thanks
---
-Gustavo
-
-> >>>  	if (!d)
-> >>>  		return NULL;
-> >>>  
-> >>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
-> >>>  	if (period_len >= SZ_4M)
-> >>>  		return NULL;
-> >>>  
-> >>> -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> >>> +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
-> >>>  	if (!d)
-> >>>  		return NULL;
-> >>>  
-> >>> -- 
-> >>> 2.27.0
-> >>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+-- 
+Måns Rullgård
