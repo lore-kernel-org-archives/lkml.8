@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52987C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1932137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C6B20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RgRGcSMJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YZT1l0CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgFZVLK (ORCPT
+        id S1725867AbgFZVQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        Fri, 26 Jun 2020 17:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgFZVLK (ORCPT
+        with ESMTP id S1725780AbgFZVQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:11:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AB8C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:11:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so9633887wmm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:11:10 -0700 (PDT)
+        Fri, 26 Jun 2020 17:16:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00843C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:16:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s10so10719462wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JheVoZwO8k0jmPVu/g3KXqdNyf9JfGI9W35mhlnDf2o=;
-        b=RgRGcSMJzEnnjiJ+aeyEG+dm/0hDQFXMDTqba3ELjSSenFDq2jLUT1okGHoDbwJCFY
-         c2kPb+Rn3T7qU0oeW/j85BTd2MvYCCDIq3sFBAq0SkGQAktbDYL8HcyzlLuRMD8sGCyi
-         8/5gq+Zj1/2e+oVne5tEb/lBxuiSuPEZfAbQXDToJNl5JEpnzECw8goaOWXSJTrmXEEx
-         r/rvcrLbufVn3daAyjyKrl/O/uNj9EaYAf6+vDCaFOZLll0oaKixNlCUDSM7P7z9TeJl
-         5S4WNFEQu2vBQP9pV/XRVi9gVl+T/nH8Q8Vzwt/tr6kcOfKsZXpCeNDZYk+CFgZL8qfS
-         PYGQ==
+        bh=A7KEnp5jDsjWssrb7n6v7Z1FsPZ5GcqX4Mtfi1TkLNE=;
+        b=YZT1l0CL3FyFYzNWyBTpoBkAuzh6F4rSW3MzGlo58Dtref3IdVKnnpaREbhvYSda0n
+         fztr+UNlWH9ENEtPV00AMeKHrAciqbkA1kiqaXQ0cz+L+UAqUz8i+nOWjlnvIxAZ7+x9
+         WRUxduK9AQXltNu4KhdXNdf6RVqNss+6QD/liLTavLn4q4VIs88aEesLzQX1vMNZxocH
+         NEr7E84dhrRZBk3tstkVc4P6HwEqclc51qFetxRWNpaOlDHSYjaZEkHesEr1azbdT9t3
+         6bZOqimOkFk0tDdYvNiza3B0zkimnjn5PCD1Ex005z6seIt0QYZS0yimvtTNh6ujiGVy
+         EwMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JheVoZwO8k0jmPVu/g3KXqdNyf9JfGI9W35mhlnDf2o=;
-        b=Isl0s0CqUtx4uQSDnu0nqN5aNgocCKrdrUEfOfagcFewgHifeZPyUJhSq3EAgmpERr
-         wtKiEgEn8jsEISkWb6+Cn8b9YCJTq5cOD74qh3rQ112kMPW6kDnWLG/cG6aE09BNSwsc
-         vRJm86dwq7fqKznwDwAKkUEB7R9EZlv/j2MXa6+n3Y68NERnrpk09ZiM8ltjeDsuWvrc
-         J/F8M2F2PoTqGkFggrF3lXZ347I8VugZZOceszst+/IXEN5SSoBhhDc4fpzA0PIfQHzU
-         zR/hdMoUk3mf9lxZXw+TiVs6vx39wD/l46w2k1+2YXJlvBcs5Dsot57oU7DHMV4Pq8/6
-         AFYA==
-X-Gm-Message-State: AOAM5320EUwgHR0Z9AAIyXqyAcVpzw0gucNfayZ9L9BfBeM63bsOCqsY
-        gXqGOJgWx9sAW6FaW1TQvPAf2Oya2GNHdx3TVC4hPA==
-X-Google-Smtp-Source: ABdhPJx+/RcSsWHs5yrxH7FA7fqliEB/cSlY+1TVVHqcZMoTEGw/E1qcLpltzQ6bFBBLbI5ln1h1pAO8Y74IIFmc+Dw=
-X-Received: by 2002:a1c:7e94:: with SMTP id z142mr5275559wmc.124.1593205868736;
- Fri, 26 Jun 2020 14:11:08 -0700 (PDT)
+        bh=A7KEnp5jDsjWssrb7n6v7Z1FsPZ5GcqX4Mtfi1TkLNE=;
+        b=W7dL5OpCj/tDqFc2qNUaScjOB0MbExeksSyfdN82zwrAdV0s7B8DLfJXJ+DqUl3Fd0
+         tpUtbcT3gGQO6wnn1HWdYh69JKWT7Bqm/qhtgtQu7StucbC586OOX29bXV9FRI23cAGg
+         yyJQWYIp1+GbtFYw/CynYCmoqwcqdueKGh18Q/DTmco+7jtyLWaAeRZErNby07fjXQxs
+         JpXZl2Jz+598AAZxOaxqHIhKNZxHfgsARR/VhVjSaWsWFNKluSyAeQ/7Np1Db1e7dJqp
+         qrlBt8SvPhrYPnF5+IqpPIqA/fWm7vB4OB0TK3/PA3SYWujDQLwwCJCapMBHtrmbIhDo
+         GMjw==
+X-Gm-Message-State: AOAM532kcUgVQdiMS5zFFfWFvX8ankWshc0gNtPbRsGtvydq9i9VoxXI
+        rGIlkTZBe7Bd0KvuwW4zDE9ocn0Aedkgh3P//uwM1Q==
+X-Google-Smtp-Source: ABdhPJzv3scLW4Vj8pskh2GKB2JHKrHu1KiBnNbVb0m+fgPKW1Me1E31uxspAxra83OzmL7jARZsNVf3/XtV7P06FeM=
+X-Received: by 2002:adf:e5d0:: with SMTP id a16mr5459637wrn.48.1593206201350;
+ Fri, 26 Jun 2020 14:16:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-8-jolsa@kernel.org>
-In-Reply-To: <20200626194720.2915044-8-jolsa@kernel.org>
+References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-9-jolsa@kernel.org>
+In-Reply-To: <20200626194720.2915044-9-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jun 2020 14:10:57 -0700
-Message-ID: <CAP-5=fUB3cs7Px6NkpBtWaWdR5-qQGAd2hAGjQjyMJt=bDKXOA@mail.gmail.com>
-Subject: Re: [PATCH 07/10] perf tools: Collect other metrics in struct metric_expr
+Date:   Fri, 26 Jun 2020 14:16:30 -0700
+Message-ID: <CAP-5=fVEyyUGU4NPk0wCCYfjkSNw=SBcPy5GWXExFG-Xh0+KFg@mail.gmail.com>
+Subject: Re: [PATCH 08/10] perf tools: Add other metrics to hash data
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
@@ -83,97 +83,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 12:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Add 'other' metrics into struct metric_expr object,
-> so they are accessible when computing the metric.
+> Adding other metrics to the parsing context so they
+> can be resolved during the metric processing.
 >
-> Storing just name and expression itself, so the metric
-> can be resolved and computed.
-
-Nit, other vs something like referenced_metric but otherwise lgtm.
-
-Acked-by: Ian Rogers
-
+> Adding expr__add_other function to store 'other' metrics
+> into parse context.
+>
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/perf/util/metricgroup.c | 27 +++++++++++++++++++++++++++
->  tools/perf/util/metricgroup.h |  6 ++++++
->  2 files changed, 33 insertions(+)
+>  tools/perf/util/expr.c        | 35 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/expr.h        | 13 ++++++++++++-
+>  tools/perf/util/stat-shadow.c | 19 +++++++++++++------
+>  3 files changed, 60 insertions(+), 7 deletions(-)
 >
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index f88fd667cc78..a5d5dcc1b805 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -83,6 +83,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
->         struct metric_expr *expr, *tmp;
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index cd73dae4588c..32f7acac7c19 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -4,6 +4,8 @@
+>  #include <errno.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> +#include "metricgroup.h"
+> +#include "debug.h"
+>  #include "expr.h"
+>  #include "expr-bison.h"
+>  #include "expr-flex.h"
+> @@ -61,6 +63,7 @@ int expr__add_val(struct expr_parse_ctx *ctx, const char *name, double val)
+>         if (!data_ptr)
+>                 return -ENOMEM;
+>         data_ptr->val = val;
+> +       data_ptr->is_other = false;
 >
->         list_for_each_entry_safe(expr, tmp, &me->head, nd) {
-> +               free(expr->metric_other);
->                 free(expr);
+>         ret = hashmap__set(&ctx->ids, name, data_ptr,
+>                            (const void **)&old_key, (void **)&old_data);
+> @@ -69,6 +72,38 @@ int expr__add_val(struct expr_parse_ctx *ctx, const char *name, double val)
+>         return ret;
+>  }
+>
+> +int expr__add_other(struct expr_parse_ctx *ctx, struct metric_other *other)
+> +{
+> +       struct expr_parse_data *data_ptr = NULL, *old_data = NULL;
+> +       char *old_key = NULL;
+> +       char *name;
+> +       int ret;
+> +
+> +       data_ptr = malloc(sizeof(*data_ptr));
+> +       if (!data_ptr)
+> +               return -ENOMEM;
+> +
+> +       name = strdup(other->metric_name);
+> +       if (!name) {
+> +               free(data_ptr);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       data_ptr->other.metric_name = other->metric_name;
+> +       data_ptr->other.metric_expr = other->metric_expr;
+> +       data_ptr->is_other = true;
+> +
+> +       ret = hashmap__set(&ctx->ids, name, data_ptr,
+> +                          (const void **)&old_key, (void **)&old_data);
+> +
+> +       pr_debug2("adding other metric %s: %s\n",
+> +                 other->metric_name, other->metric_expr);
+> +
+> +       free(old_key);
+> +       free(old_data);
+> +       return ret;
+> +}
+> +
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>                  struct expr_parse_data **data)
+>  {
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index fd924bb4e5cd..ed60f9227b43 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -11,12 +11,22 @@
+>  #include "util/hashmap.h"
+>  //#endif
+>
+> +struct metric_other;
+> +
+>  struct expr_parse_ctx {
+>         struct hashmap ids;
+>  };
+>
+>  struct expr_parse_data {
+> -       double  val;
+> +       bool    is_other;
+> +
+> +       union {
+> +               double  val;
+> +               struct {
+> +                       const char *metric_name;
+> +                       const char *metric_expr;
+
+It is probably worth a comment why both the metric_name and the
+metric's expression are required here? The parse and other data for
+the metric won't be here.
+
+Thanks,
+Ian
+
+> +               } other;
+> +       };
+>  };
+>
+>  struct expr_scanner_ctx {
+> @@ -29,6 +39,7 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx);
+>  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id(struct expr_parse_ctx *ctx, const char *name);
+>  int expr__add_val(struct expr_parse_ctx *ctx, const char *id, double val);
+> +int expr__add_other(struct expr_parse_ctx *ctx, struct metric_other *other);
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>                  struct expr_parse_data **data);
+>  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 0a991016f848..434382410170 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -731,13 +731,14 @@ static void print_smi_cost(struct perf_stat_config *config,
+>  }
+>
+>  static int prepare_metric(struct evsel **metric_events,
+> +                         struct metric_other *metric_other,
+>                           struct expr_parse_ctx *pctx,
+>                           int cpu,
+>                           struct runtime_stat *st)
+>  {
+>         double scale;
+>         char *n, *pn;
+> -       int i;
+> +       int i, j;
+>
+>         expr__ctx_init(pctx);
+>         for (i = 0; metric_events[i]; i++) {
+> @@ -778,12 +779,18 @@ static int prepare_metric(struct evsel **metric_events,
+>                         expr__add_val(pctx, n, avg_stats(stats)*scale);
 >         }
 >
-> @@ -243,6 +244,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+> +       for (j = 0; metric_other && metric_other[j].metric_name; j++) {
+> +               if (expr__add_other(pctx, &metric_other[j]))
+> +                       return -ENOMEM;
+> +       }
+> +
+>         return i;
+>  }
 >
->         list_for_each_entry (eg, groups, nd) {
->                 struct evsel **metric_events;
-> +               struct metric_other *other = NULL;
+>  static void generic_metric(struct perf_stat_config *config,
+>                            const char *metric_expr,
+>                            struct evsel **metric_events,
+> +                          struct metric_other *metric_other,
+>                            char *name,
+>                            const char *metric_name,
+>                            const char *metric_unit,
+> @@ -798,7 +805,7 @@ static void generic_metric(struct perf_stat_config *config,
+>         int i;
+>         void *ctxp = out->ctx;
 >
->                 metric_events = calloc(sizeof(void *),
->                                 hashmap__size(&eg->pctx.ids) + 1);
-> @@ -274,6 +276,31 @@ static int metricgroup__setup_events(struct list_head *groups,
->                         free(metric_events);
->                         break;
+> -       i = prepare_metric(metric_events, &pctx, cpu, st);
+> +       i = prepare_metric(metric_events, metric_other, &pctx, cpu, st);
+>         if (i < 0)
+>                 return;
+>
+> @@ -847,7 +854,7 @@ double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_sta
+>         struct expr_parse_ctx pctx;
+>         double ratio;
+>
+> -       if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
+> +       if (prepare_metric(mexp->metric_events, mexp->metric_other, &pctx, cpu, st) < 0)
+>                 return 0.;
+>
+>         if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
+> @@ -1064,8 +1071,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>                 else
+>                         print_metric(config, ctxp, NULL, NULL, name, 0);
+>         } else if (evsel->metric_expr) {
+> -               generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
+> -                               evsel->metric_name, NULL, 1, cpu, out, st);
+> +               generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
+> +                               evsel->name, evsel->metric_name, NULL, 1, cpu, out, st);
+>         } else if (runtime_stat_n(st, STAT_NSECS, 0, cpu) != 0) {
+>                 char unit = 'M';
+>                 char unit_buf[10];
+> @@ -1093,7 +1100,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>                         if (num++ > 0)
+>                                 out->new_line(config, ctxp);
+>                         generic_metric(config, mexp->metric_expr, mexp->metric_events,
+> -                                       evsel->name, mexp->metric_name,
+> +                                       mexp->metric_other, evsel->name, mexp->metric_name,
+>                                         mexp->metric_unit, mexp->runtime, cpu, out, st);
 >                 }
-> +
-> +               /*
-> +                * Collect and store collected 'other' expressions
-> +                * for metric processing.
-> +                */
-> +               if (eg->other_cnt) {
-> +                       struct eother *eo;
-> +
-> +                       other = zalloc(sizeof(struct metric_other) * (eg->other_cnt + 1));
-> +                       if (!other) {
-> +                               ret = -ENOMEM;
-> +                               free(metric_events);
-> +                               free(other);
-> +                               break;
-> +                       }
-> +
-> +                       i = 0;
-> +                       list_for_each_entry(eo, &eg->other, list) {
-> +                               other[i].metric_name = eo->metric_name;
-> +                               other[i].metric_expr = eo->metric_expr;
-> +                               i++;
-> +                       }
-> +               };
-> +
-> +               expr->metric_other = other;
->                 expr->metric_expr = eg->metric_expr;
->                 expr->metric_name = eg->metric_name;
->                 expr->metric_unit = eg->metric_unit;
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-> index 8315bd1a7da4..3a1e320cb2d3 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -18,12 +18,18 @@ struct metric_event {
->         struct list_head head; /* list of metric_expr */
->  };
->
-> +struct metric_other {
-> +       const char *metric_name;
-> +       const char *metric_expr;
-> +};
-> +
->  struct metric_expr {
->         struct list_head nd;
->         const char *metric_expr;
->         const char *metric_name;
->         const char *metric_unit;
->         struct evsel **metric_events;
-> +       struct metric_other *metric_other;
->         int runtime;
->  };
->
+>         }
 > --
 > 2.25.4
 >
