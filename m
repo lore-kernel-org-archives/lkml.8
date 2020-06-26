@@ -2,86 +2,107 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A74DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A24DF2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593205508;
-	bh=bcnEDY2baADluA2OfBYZhXvSSPnVEiJFwVXnomA4i0o=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=vqEL88WlNE/LpVIOxwt+M3FatJnkzpSbF2YyXjhSHMxjB9lHajn1s2YEziLmQydYS
-	 LgkMbP5Rb7cT4cBU317dyI/PAgEkX91vn5eH1U+Bq7iTUG3GVTG5hzH8napOcK/Usu
-	 oNjo3FNS/EytocHMMDu6ziMtKulCFFQm6/BVvytg=
+	by mail.kernel.org (Postfix) with ESMTP id 1FA9720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6zzf4n1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgFZVFH (ORCPT
+        id S1726131AbgFZVFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgFZVFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:05:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B7920720;
-        Fri, 26 Jun 2020 21:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593205506;
-        bh=bcnEDY2baADluA2OfBYZhXvSSPnVEiJFwVXnomA4i0o=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=TdkF652cvhtJnzyzi3Cm98ECt/CSWSN92xiu4XFPBKfoFc+UTfHkwn0sHbgF4ByJ1
-         GLPT13ntMa1Fn6UluhoM7etb4gVWrRPJ5RtHhR4MQv5+45utfFIHDnX+Poi2lXtfw0
-         FJvfY3QNGWoi6kY8r1m2dzjbKK2cU8H+xdChs5AQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2A6E535230EC; Fri, 26 Jun 2020 14:05:06 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:05:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org, luto@kernel.org, kernel-team@fb.com
-Subject: [PATCH tick-sched] Clarify "NOHZ: local_softirq_pending" warning
-Message-ID: <20200626210506.GA27189@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Fri, 26 Jun 2020 17:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgFZVFO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 17:05:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D11DC03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:05:14 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so4949589pfu.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wZoxiP0mTeiu9+lN0In23h0uJGDaqzSh/2yHrJcG0vY=;
+        b=W6zzf4n1FJ+jbypcb/n75nQ9f/qgNuv1aMFledULOSq+3p7GtFYtHvD+jWVHob7zij
+         Oi0GziKAhh9/2WERpXPcNsYysb41CMLrjmgII0ZRcxG0QjymJwmMX5cvNVzyBh/DJ/D+
+         XVZxAvq0ePQdTnXIAJqa7f4ekDTEqtW3W52cU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wZoxiP0mTeiu9+lN0In23h0uJGDaqzSh/2yHrJcG0vY=;
+        b=E23OVMtgn49ok4jr1UE+pbdR4X7amebIIZZY0WQjEfznSoOa8BZpSWPvm7iVT562os
+         64Y5DnCVbbP1+V7JPZYv68Fg3k3shHlCu1KCB6zicUgYeeAL2UWt42v1fLlv3J06Rb13
+         HLkwbH6JwlSkKnnfKTbp+MqhM11tDTxe45YgaxOo+IOuxaX9lH4i33Pi6sCs7WUXuPdw
+         nlZ2mWx29dfNErjhy0yemTXcvka/1t982qHiptsbb9emx9YRWWNOIo+rSHrbZ1KwF7AR
+         kt3Wj1n4wE4gmGrmXsbgU3TlRrDOIwrVFb9mDIKHIX2AGoHQRQVemXbGEUU0ZiByYjKz
+         UUfw==
+X-Gm-Message-State: AOAM530FvS/oTMftDrkqSW+Ff1ttpOf1Y3of3AFYASNNvGneA0hOW0ou
+        LNne5THQwkIxJ6+Spffzf4r3Cg==
+X-Google-Smtp-Source: ABdhPJy3s8sc/ERwXoxJsr+XLKL9bz5tQ5UtuzDRNXOvRBhYMKE4oIsAIGdPPetiSVb8MYDyRT/BAg==
+X-Received: by 2002:aa7:8681:: with SMTP id d1mr4531191pfo.230.1593205513960;
+        Fri, 26 Jun 2020 14:05:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y7sm11572394pgk.93.2020.06.26.14.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:05:13 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:05:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 8/9] fs: don't allow kernel reads and writes without iter
+ ops
+Message-ID: <202006261403.3E1397040F@keescook>
+References: <20200626075836.1998185-1-hch@lst.de>
+ <20200626075836.1998185-9-hch@lst.de>
+ <20200626135147.GB25039@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200626135147.GB25039@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, can_stop_idle_tick() prints "NOHZ: local_softirq_pending HH"
-(where "HH" is the hexadecimal softirq vector number) when one or more
-non-RCU softirq handlers are still enablded when checking to stop the
-scheduler-tick interrupt.  This message is not as enlightening as one
-might hope, so this commit changes it to "NOHZ tick-stop error: Non-RCU
-local softirq work is pending, handler #HH.
+On Fri, Jun 26, 2020 at 02:51:47PM +0100, Matthew Wilcox wrote:
+> On Fri, Jun 26, 2020 at 09:58:35AM +0200, Christoph Hellwig wrote:
+> > +static void warn_unsupported(struct file *file, const char *op)
+> > +{
+> > +	char pathname[128], *path;
+> > +
+> > +	path = file_path(file, pathname, sizeof(pathname));
+> > +	if (IS_ERR(path))
+> > +		path = "(unknown)";
+> > +	pr_warn_ratelimited(
+> > +		"kernel %s not supported for file %s (pid: %d comm: %.20s)\n",
+> > +		op, path, current->pid, current->comm);
+> > +}
+> > +
+> 
+> how about just:
+> 
+> 	pr_warn_ratelimited(
+> 		"kernel %s not supported for file %pD4 (pid: %d comm: %.20s)\n",
+> 			op, file, current->pid, current->comm);
+> 
+> also, is the pid really that interesting?
 
-Reported-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Yes, pid matters, especially when there may be many of something running
+(e.g. rsync).
 
----
-
- tick-sched.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index f0199a4..349a25a 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -927,7 +927,7 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
- 
- 		if (ratelimit < 10 &&
- 		    (local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK)) {
--			pr_warn("NOHZ: local_softirq_pending %02x\n",
-+			pr_warn("NOHZ tick-stop error: Non-RCU local softirq work is pending, handler #%02x\n",
- 				(unsigned int) local_softirq_pending());
- 			ratelimit++;
- 		}
+-- 
+Kees Cook
