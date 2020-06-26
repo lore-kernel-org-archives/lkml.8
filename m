@@ -2,111 +2,94 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883282070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593205055;
-	bh=+RTxPRfj4h0ApyMfS0YTVNY5y8BFT8Bo/A+QGbjSSLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p/p5sbyqm+w+MISgPoT4fsAjG6QTT+uI1JEu9D2DiMnQIJKp3tOFHZnj0sDokBm1y
-	 5YaP1F7kQ4RmsVrIW34nT82OR//1MTeWrUzL8rRBpS1Phyx12RUdwo3UcEQsyaORyH
-	 HurYJPOszbE0r3bVtFwBmXhQBrqA0MxK7nDNRSaU=
+	by mail.kernel.org (Postfix) with ESMTP id 47F8320720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgFZU5b (ORCPT
+        id S1725900AbgFZU6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:57:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32989 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZU5a (ORCPT
+        Fri, 26 Jun 2020 16:58:50 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52951 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZU6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:57:30 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f18so2653267wrs.0;
-        Fri, 26 Jun 2020 13:57:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UEtSMorzUsNwgUS6/uoC1DFelzsLLNjhA0ODxeYGQZk=;
-        b=OZchDIXGo6iu9X5b8iFXhS8rb4s9itnPmLav8LKS6K+d359xFI1TaN+uCZ8xoQ3fc5
-         Xrhullnd59DchWEDJBV2UUpS+Z/r6f4Dje7+caXHhr/XraN3SqIh6/8dzbDbkabaFqL7
-         v4YsyR+4baHNYxzNYo0SFnVcJfuYntG187KBFcswGXBpbD3vI41kJOFDcI2fhhsZFnjz
-         +gbnNdGpOkzNAtiPK8USyvXq3lVTFSNAuzWnHWRqjxoNz4FUXsLZnF21fLgItdn40nsm
-         MzAHRjgbDrUulmhTdseHZ7xKB9cl9bLS6ktN+sX55yZW7Vxm7iVdb/7Hp5sIDjAJueOH
-         mNHg==
-X-Gm-Message-State: AOAM531yYjrp5KxpQQ3scPn7KFIlaXqBvaOhErjOe3QSx0VG8PIu61vH
-        k8ISLaMvRIDTw1SJUtmeOK2sq8ZC
-X-Google-Smtp-Source: ABdhPJyfz6ZN9k8zLdtD9oplahZZwvRGhaQJGtrwjWd/bB5xcjemjyZZRToSI9LENcMOmSKLfSNPJw==
-X-Received: by 2002:a5d:42c8:: with SMTP id t8mr5326836wrr.23.1593205048041;
-        Fri, 26 Jun 2020 13:57:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b184sm12903093wmc.20.2020.06.26.13.57.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 13:57:27 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 20:57:26 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 0/3] Drivers: hv: vmbus: vmbus_requestor data structure
-Message-ID: <20200626205726.nx54ztdtmo3fxbxm@liuwe-devbox-debian-v2>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
- <20200626134227.ka4aghqjpktdupnu@liuwe-devbox-debian-v2>
- <20200626144817.GA1023610@andrea>
+        Fri, 26 Jun 2020 16:58:50 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id ABA74C0003;
+        Fri, 26 Jun 2020 20:58:47 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 22:58:47 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        linux-kernel@vger.kernel.org, mturquette@linaro.org,
+        bbrezillon@kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] clk: at91: remove the checking of parent_name
+Message-ID: <20200626205847.GW131826@piout.net>
+References: <1593079768-9349-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626144817.GA1023610@andrea>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1593079768-9349-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 04:48:17PM +0200, Andrea Parri wrote:
-> On Fri, Jun 26, 2020 at 01:42:27PM +0000, Wei Liu wrote:
-> > On Thu, Jun 25, 2020 at 11:37:20AM -0400, Andres Beltran wrote:
-> > > From: Andres Beltran (Microsoft) <lkmlabelt@gmail.com>
-> > > 
-> > > Currently, VMbus drivers use pointers into guest memory as request IDs
-> > > for interactions with Hyper-V. To be more robust in the face of errors
-> > > or malicious behavior from a compromised Hyper-V, avoid exposing
-> > > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> > > bad request ID that is then treated as the address of a guest data
-> > > structure with no validation. Instead, encapsulate these memory
-> > > addresses and provide small integers as request IDs.
-> > > 
-> > > The first patch creates the definitions for the data structure, provides
-> > > helper methods to generate new IDs and retrieve data, and
-> > > allocates/frees the memory needed for vmbus_requestor.
-> > > 
-> > > The second and third patches make use of vmbus_requestor to send request
-> > > IDs to Hyper-V in storvsc and netvsc respectively.
-> > > 
-> > 
-> > Per my understanding, this new data structure is per-channel, so it
-> > won't introduce contention on the lock in multi-queue scenario. Have you
-> > done any testing to confirm there is no severe performance regression?
+On 25/06/2020 13:09:27+0300, Claudiu Beznea wrote:
+> There is no need to check parent_name variable while assigning it to
+> init.parent_names. parent_name variable is already checked at
+> the beginning of at91_clk_register_sam9x5_peripheral() function.
+> Same thing with init.num_parents: it could only be 1.
 > 
-> I did run some performance tests using our dev pipeline (storage and
-> network workloads).  I did not find regressions w.r.t. baseline.
+> Fixes: 6114067e437eb ("clk: at91: add PMC peripheral clocks")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Thanks, that's good to hear.
-
-Wei.
-
+> ---
+>  drivers/clk/at91/clk-peripheral.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
->   Andrea
+> diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
+> index c2ab4860a2bf..4a0f40738fe3 100644
+> --- a/drivers/clk/at91/clk-peripheral.c
+> +++ b/drivers/clk/at91/clk-peripheral.c
+> @@ -111,8 +111,8 @@ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
+>  
+>  	init.name = name;
+>  	init.ops = &peripheral_ops;
+> -	init.parent_names = (parent_name ? &parent_name : NULL);
+> -	init.num_parents = (parent_name ? 1 : 0);
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+>  	init.flags = 0;
+>  
+>  	periph->id = id;
+> @@ -340,8 +340,8 @@ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
+>  
+>  	init.name = name;
+>  	init.ops = &sam9x5_peripheral_ops;
+> -	init.parent_names = (parent_name ? &parent_name : NULL);
+> -	init.num_parents = (parent_name ? 1 : 0);
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+>  	init.flags = 0;
+>  
+>  	periph->id = id;
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
