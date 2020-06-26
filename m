@@ -2,171 +2,187 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9880EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA11C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE5D20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5E420836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbgFZSXR (ORCPT
+        id S1725866AbgFZSXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:23:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:65496 "EHLO mga18.intel.com"
+        Fri, 26 Jun 2020 14:23:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59760 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgFZSXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:23:16 -0400
-IronPort-SDR: +l1k0ZnWyU3A3oA9/U1S3DNxIvpKw/l6cyqzy3ctQ9TegiI3bjTKHICR9vWFsu1s4j9fJB9LGw
- sUYU1Sk830iQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="132845900"
+        id S1725768AbgFZSX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:23:29 -0400
+IronPort-SDR: QTL+hahqgQfsnssYZyMoFGCYy/BZuPShi/JHbMtYK0BZ8uqoMNxDXtzcsg6xSOCInvrNQp5lHT
+ BRSYE7ZNGg5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512872"
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="132845900"
+   d="scan'208";a="210512872"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:15 -0700
-IronPort-SDR: Lv6t19c9tFPXeeZhaI5jmGdxdmPwX3ADKpVixr4g56M6awIzOBOkukCGbDHGDaOoWqGIweN2dS
- Q09opDwG2W6Q==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:28 -0700
+IronPort-SDR: lBbdVeGeJkEp2nERUHJNUTqjwvWPZfZOjN2EUfGWVQFC4Ci1Sr9z2rMW0DyP9EMMHiHfF33vMF
+ 5jXJ8IrKmFDQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="453444561"
-Received: from patrickl-mobl1.amr.corp.intel.com (HELO [10.255.7.79]) ([10.255.7.79])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:13 -0700
-Subject: Re: [PATCH v4 12/12] x86/traps: Fix up invalid PASID
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradeed.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
-References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
- <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
- <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
- <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <aa3d7b7c-d6aa-06b4-30f7-0e90af50a1f3@intel.com>
-Date:   Fri, 26 Jun 2020 11:23:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="424153793"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:23:28 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com, wei.w.wang@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 00/23] Support Architectural LBR
+Date:   Fri, 26 Jun 2020 11:19:57 -0700
+Message-Id: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/20 11:10 AM, Luck, Tony wrote:
-> On Fri, Jun 26, 2020 at 11:44:50AM +0200, Peter Zijlstra wrote:
->> On Thu, Jun 25, 2020 at 01:17:22PM -0700, Fenghua Yu wrote:
->>
->>> +static bool fixup_pasid_exception(void)
->>> +{
->>> +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
->>> +		return false;
->>> +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
->>> +		return false;
->>
->> elsewhere you had another variation:
->>
->> +       if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
->> +               return;
->> +
->> +       if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
->> +               return;
->>
->> Which is it, and why do we need the CONFIG thing when combined with the
->> enabled thing?
-> 
-> Do we have a standard way of coding for a feature that depends on multiple
-> other features?  For this case the system needs to both suport the ENQCMD
-> instruction, and also have kernel code that programs the IOMMU.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Not really a standard one.
+Changes since V1:
+- Move the union for CPUID enumeration bits to asm/perf_event.h
+- Union the lbr_ctl_map and lbr_sel_map
+- Rename ARCH_LBR_INFO_* to LBR_INFO_*
+- Remove the function pointers of lbr_enable/disable. Architectural
+  LBR and the model-specific LBR share the same functions for
+  lbr_enable/disable now.
+- Factor out common codes for lbr_read, lbr_save and lbr_restore to
+  reduce the duplicate codes.
+- Export copy_fpregs_to_fpstate instead of xfeatures_mask_all
+- Add a padding to guarantee the required alignment
+- Simplify the intel_pmu_arch_lbr_read_xsave()
 
-We could setup_clear_cpu_cap(X86_FEATURE_ENQCMD) during boot if we see
-that CONFIG_INTEL_IOMMU_SVM=n or if we don't have a detected IOMMU.
-That would at least get static value patching which would make some of
-the feature checks very cheap.
+LBR (Last Branch Records) enables recording of software path history
+by logging taken branches and other control flows within architectural
+registers. Intel CPUs have had model-specific LBRs for quite some time
+but this evolves them into an architectural feature now.
 
-That means we can't use ENQCMD at all in the kernel, though.  Is that an
-issue?  Is the CPU feature truly dependent on IOMMU_SVM?
+The main advantages for the users are:
+- Faster context switching due to XSAVES support and faster reset of
+  LBR MSRs via the new DEPTH MSR
+- Faster LBR read for a non-PEBS event due to XSAVES support, which
+  lowers the overhead of the NMI handler. (For a PEBS event, the LBR
+  information is recorded in the PEBS records. There is no impact on
+  the PEBS event.)
+- Linux kernel can support the LBR features without knowing the model
+  number of the current CPU.
+- Clean exposure of LBRs to guests without relying on model-specific
+  features. (An improvement for KVM. Not included in this patch series.)
+- Supports for running with a smaller number of LBRs than the full 32,
+  to lower overhead (currently not exposed, however)
 
-> And/or guidance on when to use each of the very somewhat simlar looking
-> 	boot_cpu_has()
-> 	static_cpu_has()
-> 	IS_ENABLED()
-> 	cpu_feature_enabled(X86_FEATURE_ENQCMD)
-> options?
+The key improvements for the perf kernel in this patch series include,
+- Doesn't require a model check. The capabilities of Architectural LBR
+  can be enumerated by CPUID.
+- Each LBR record or entry is still comprised of three MSRs,
+  IA32_LBR_x_FROM_IP, IA32_LBR_x_TO_IP and IA32_LBR_x_TO_IP, but they
+  become architectural MSRs.
+- Architectural LBR is stack-like now. Entry 0 is always the youngest
+  branch, entry 1 the next youngest... The TOS MSR has been removed.
+- A new IA32_LBR_CTL MSR is introduced to enable and configure LBRs,
+  which replaces the IA32_DEBUGCTL[bit 0] and the LBR_SELECT MSR.
+- The possible LBR depth can be retrieved from CPUID enumeration. The
+  max value is written to the new MSR_ARCH_LBR_DEPTH as the number of
+  LBR entries.
+- Faster LBR MSRs reset via the new DEPTH MSR, which avoids touching
+  potentially nearly a hundred MSRs.
+- XSAVES and XRSTORS are used to read, save/restore LBR related MSRs
+- Faster direct reporting of the branch type with the LBR without needing
+  access to the code
 
-cpu_feature_enabled() is by go-to for checking X86_FEATUREs.  It has
-compile-time checking along with static checking.
+The existing LBR capabilities, such as CPL filtering, Branch filtering,
+Call stack, Mispredict information, cycles information, Branch Type
+information, are still kept for Architectural LBRs.
 
-If you use cpu_feature_enabled(), and we added:
+XSAVES and XRSTORS improvements:
 
-#ifdef CONFIG_INTEL_IOMMU_SVM
-# define DISABLE_ENQCMD         0
-#else
-# define DISABLE_ENQCMD           (1 << (X86_FEATURE_ENQCMD & <bitval>))
-#endif
+In perf with call stack mode, LBR information is used to reconstruct
+a call stack. To get a complete call stack, perf has to save and restore
+all LBR registers during a context switch. However, the number of LBR
+registers is huge. To reduce the overhead, LBR state component is
+introduced with architectural LBR. Perf subsystem will use XSAVES/XRSTORS
+to save/restore LBRs during a context switch.
 
-to arch/x86/include/asm/disabled-features.h, then we could check only
-X86_FEATURE_ENQCMD, and we'd get that IS_ENABLED() check for "free".
+LBR call stack mode is not always enabled. Perf subsystem only needs to
+save/restore an LBR state on demand. To avoid unnecessary save/restore of
+the LBR state at a context switch, a software concept, dynamic supervisor
+state, is introduced, which
+- does not allocate a buffer in each task->fpu;
+- does not save/restore a state component at each context switch;
+- sets the bit corresponding to a dynamic supervisor feature in
+  IA32_XSS at boot time, and avoids setting it at run time;
+- dynamically allocates a specific buffer for a state component
+  on demand, e.g. only allocate a LBR-specific XSAVE buffer when LBR is
+  enabled in perf. (Note: The buffer has to include the LBR state
+  component, legacy region and XSAVE header.)
+- saves/restores a state component on demand, e.g. manually invoke
+  the XSAVES/XRSTORS instruction to save/restore the LBR state
+  to/from the buffer when perf is active and a call stack is required.
+
+The specification of Architectural LBR can be found in the latest Intel
+Architecture Instruction Set Extensions and Future Features Programming
+Reference, 319433-038.
+
+Kan Liang (23):
+  x86/cpufeatures: Add Architectural LBRs feature bit
+  perf/x86/intel/lbr: Add a function pointer for LBR reset
+  perf/x86/intel/lbr: Add a function pointer for LBR read
+  perf/x86/intel/lbr: Add the function pointers for LBR save and restore
+  perf/x86/intel/lbr: Factor out a new struct for generic optimization
+  perf/x86/intel/lbr: Use dynamic data structure for task_ctx
+  x86/msr-index: Add bunch of MSRs for Arch LBR
+  perf/x86: Expose CPUID enumeration bits for arch LBR
+  perf/x86/intel: Check Arch LBR MSRs
+  perf/x86/intel/lbr: Support LBR_CTL
+  perf/x86/intel/lbr: Unify the stored format of LBR information
+  perf/x86/intel/lbr: Factor out rdlbr_all() and wrlbr_all()
+  perf/x86/intel/lbr: Factor out intel_pmu_store_lbr
+  perf/x86/intel/lbr: Support Architectural LBR
+  perf/core: Factor out functions to allocate/free the task_ctx_data
+  perf/core: Use kmem_cache to allocate the PMU specific data
+  perf/x86/intel/lbr: Create kmem_cache for the LBR context data
+  perf/x86: Remove task_ctx_size
+  x86/fpu: Use proper mask to replace full instruction mask
+  x86/fpu/xstate: Support dynamic supervisor feature for LBR
+  x86/fpu/xstate: Add helpers for LBR dynamic supervisor feature
+  perf/x86/intel/lbr: Support XSAVES/XRSTORS for LBR context switch
+  perf/x86/intel/lbr: Support XSAVES for arch LBR read
+
+ arch/x86/events/core.c              |   2 +-
+ arch/x86/events/intel/core.c        |  42 ++-
+ arch/x86/events/intel/ds.c          |   4 +-
+ arch/x86/events/intel/lbr.c         | 656 ++++++++++++++++++++++++++++++------
+ arch/x86/events/perf_event.h        | 117 ++++++-
+ arch/x86/include/asm/cpufeatures.h  |   1 +
+ arch/x86/include/asm/fpu/internal.h |  47 +--
+ arch/x86/include/asm/fpu/types.h    |  27 ++
+ arch/x86/include/asm/fpu/xstate.h   |  36 ++
+ arch/x86/include/asm/msr-index.h    |  16 +
+ arch/x86/include/asm/perf_event.h   |  46 ++-
+ arch/x86/kernel/fpu/core.c          |  39 +++
+ arch/x86/kernel/fpu/xstate.c        |  89 ++++-
+ include/linux/perf_event.h          |   5 +-
+ kernel/events/core.c                |  25 +-
+ 15 files changed, 968 insertions(+), 184 deletions(-)
+
+-- 
+2.7.4
+
