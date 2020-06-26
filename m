@@ -2,185 +2,84 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C0B207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C346B207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgFZRJb (ORCPT
+        id S1728348AbgFZRJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:09:31 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:42456 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgFZRJR (ORCPT
+        Fri, 26 Jun 2020 13:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728308AbgFZRJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:09:17 -0400
-Received: by mail-il1-f198.google.com with SMTP id d3so6885866ilq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:09:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A6/m2RfJ47HtBrFroQmKDP+Z+PxODyp3yWcPO/KmzL0=;
-        b=WyZuAMb1UMR80l+Oru4iAvZHxJ2TFRWhMfEGJpxewczc4aQtJygVebClsmth7FJF/C
-         hnxCr+088DlyWe7wGeg1Hpza86oMLRQwUVf90ZKUGSMFMwMUlACL58mm4Df+yl2OdB1P
-         oEdTXD1pFxhY3onSA5WM+s1PqWO/IbEsNnj3dlt2/H8+y3YCs/RSBH+ejAbE0R22ZS+f
-         eAObtEh+A0B4C0duAMMcwrU3o64WQDSL9wi3m086hx3vIqJFkdxEAXL+P1H4aKn4Sche
-         nwKuc/xwS0YoIN64+Svuq9/9MYnSXDPjZ3LRQE4AGxf0fqPRFz5J7BSVFAPz6EYsGtV2
-         Jpig==
-X-Gm-Message-State: AOAM5303rOTYNts+y+JCqNwsTSuxWOHUezWvAldVyV22ZhBOcpr74bG+
-        adOqLiURIi8b44iWd7pBfMGUibIPV+MUvt78gFylD21POWLJ
-X-Google-Smtp-Source: ABdhPJx9mG4MxrXebe7wN+E0r5osOo4EvXNIYuwXYnNBgqqExyGJx89cHti99Ci2fWVwVK6VgrPJtCaDsdIY7z9S3tRMo1m7HQ/E
+        Fri, 26 Jun 2020 13:09:29 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE20AC03E97A;
+        Fri, 26 Jun 2020 10:09:28 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 1F17B374;
+        Fri, 26 Jun 2020 17:09:28 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 11:09:27 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Joakim =?UTF-8?B?TMO2bm5lZ3Jlbg==?= <joakimlonnegren@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
+ Documentation/driver-api
+Message-ID: <20200626110927.410eae46@lwn.net>
+In-Reply-To: <20200621133512.46311-1-grandmaster@al2klimov.de>
+References: <20200621133512.46311-1-grandmaster@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
-X-Received: by 2002:a92:dac8:: with SMTP id o8mr3949826ilq.152.1593191355585;
- Fri, 26 Jun 2020 10:09:15 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 10:09:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cf1be105a8ffc44c@google.com>
-Subject: possible deadlock in dev_mc_unsync
-From:   syzbot <syzbot+08e3d39f3eb8643216be@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, 21 Jun 2020 15:35:12 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-syzbot found the following crash on:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  .../early-userspace/early_userspace_support.rst      |  4 ++--
+>  Documentation/driver-api/memory-devices/ti-gpmc.rst  |  2 +-
+>  Documentation/driver-api/mmc/mmc-tools.rst           |  2 +-
+>  Documentation/driver-api/nvdimm/nvdimm.rst           | 12 ++++++------
+>  Documentation/driver-api/nvdimm/security.rst         |  2 +-
+>  Documentation/driver-api/rapidio/rapidio.rst         |  4 ++--
+>  Documentation/driver-api/thermal/nouveau_thermal.rst |  2 +-
+>  Documentation/driver-api/usb/writing_usb_driver.rst  |  4 ++--
+>  8 files changed, 16 insertions(+), 16 deletions(-)
 
-HEAD commit:    b835a71e usbnet: smsc95xx: Fix use-after-free after removal
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=16e25419100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=08e3d39f3eb8643216be
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+I've applied this one, thanks.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+08e3d39f3eb8643216be@syzkaller.appspotmail.com
-
-============================================
-WARNING: possible recursive locking detected
-5.8.0-rc1-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor.5/12181 is trying to acquire lock:
-ffff888090564280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
-ffff888090564280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:915 [inline]
-ffff888090564280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:909
-
-but task is already holding lock:
-ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
-ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
-ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:914 [inline]
-ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:909
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&vlan_netdev_addr_lock_key/1);
-  lock(&vlan_netdev_addr_lock_key/1);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-6 locks held by syz-executor.5/12181:
- #0: ffffffff8a809730 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:763
- #1: ffffffff8a8097e8 (genl_mutex){+.+.}-{3:3}, at: genl_lock net/netlink/genetlink.c:33 [inline]
- #1: ffffffff8a8097e8 (genl_mutex){+.+.}-{3:3}, at: genl_rcv_msg+0x76a/0x9e0 net/netlink/genetlink.c:751
- #2: ffffffff8a7d1088 (devlink_mutex){+.+.}-{3:3}, at: devlink_nl_pre_doit+0x27/0x6a0 net/core/devlink.c:401
- #3: ffff88809df48370 (&nsim_dev->port_list_lock){+.+.}-{3:3}, at: nsim_dev_port_del_all drivers/net/netdevsim/dev.c:951 [inline]
- #3: ffff88809df48370 (&nsim_dev->port_list_lock){+.+.}-{3:3}, at: nsim_dev_reload_destroy+0x9e/0x1e0 drivers/net/netdevsim/dev.c:1130
- #4: ffffffff8a7afda8 (rtnl_mutex){+.+.}-{3:3}, at: nsim_destroy+0x2b/0x60 drivers/net/netdevsim/netdev.c:329
- #5: ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
- #5: ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
- #5: ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:914 [inline]
- #5: ffff88805dd76280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:909
-
-stack backtrace:
-CPU: 1 PID: 12181 Comm: syz-executor.5 Not tainted 5.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
- check_deadlock kernel/locking/lockdep.c:2432 [inline]
- validate_chain kernel/locking/lockdep.c:3202 [inline]
- __lock_acquire.cold+0x178/0x3f8 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
- netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
- dev_mc_unsync net/core/dev_addr_lists.c:915 [inline]
- dev_mc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:909
- vlan_dev_stop+0x51/0x350 net/8021q/vlan_dev.c:315
- __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1599
- dev_close_many+0x238/0x650 net/core/dev.c:1624
- vlan_device_event+0x8ef/0x2010 net/8021q/vlan.c:450
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- dev_close_many+0x30b/0x650 net/core/dev.c:1628
- rollback_registered_many+0x3af/0xf60 net/core/dev.c:8945
- unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10113
- unregister_netdevice_many+0x36/0x50 net/core/dev.c:10112
- vlan_device_event+0x1ab5/0x2010 net/8021q/vlan.c:490
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- rollback_registered_many+0x665/0xf60 net/core/dev.c:8968
- rollback_registered net/core/dev.c:9013 [inline]
- unregister_netdevice_queue+0x2dd/0x570 net/core/dev.c:10094
- unregister_netdevice include/linux/netdevice.h:2754 [inline]
- nsim_destroy+0x35/0x60 drivers/net/netdevsim/netdev.c:330
- __nsim_dev_port_del+0x144/0x1e0 drivers/net/netdevsim/dev.c:941
- nsim_dev_port_del_all drivers/net/netdevsim/dev.c:954 [inline]
- nsim_dev_reload_destroy+0xff/0x1e0 drivers/net/netdevsim/dev.c:1130
- nsim_dev_reload_down+0x6e/0xd0 drivers/net/netdevsim/dev.c:711
- devlink_reload+0xc1/0x3a0 net/core/devlink.c:2797
- devlink_nl_cmd_reload+0x386/0x880 net/core/devlink.c:2832
- genl_family_rcv_msg_doit net/netlink/genetlink.c:691 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:736 [inline]
- genl_rcv_msg+0x61d/0x9e0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca59
-Code: Bad RIP value.
-RSP: 002b:00007fbbcff89c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004fdec0 RCX: 000000000045ca59
-RDX: 0000000000000000 RSI: 0000000020000800 RDI: 0000000000000006
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000092d R14: 00000000004cbff2 R15: 00007fbbcff8a6d4
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+jon
