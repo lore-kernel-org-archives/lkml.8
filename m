@@ -2,179 +2,123 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C78C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F19FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270F12078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cWJtzdTY"
+	by mail.kernel.org (Postfix) with ESMTP id 61AE920768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgFZOks (ORCPT
+        id S1729305AbgFZOn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgFZOkr (ORCPT
+        Fri, 26 Jun 2020 10:43:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:46135 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgFZOnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:40:47 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C51C03E979;
-        Fri, 26 Jun 2020 07:40:47 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so5287610lfl.5;
-        Fri, 26 Jun 2020 07:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xh7ygJkmCFosm++mxzgG5yyD/OscriXelXv44rdvluw=;
-        b=cWJtzdTYk02abJmysxbDCRJskrinaAUAFkO8W1g2vyR9TiVnbKqZlcq4MMMJBwkM7K
-         z9ucMwmwgS7vAd7UFJGQ8M42Yf4MhSinMxpYfiEvF9ixBASuqF88xHF9+F3c/HVrbqIq
-         G6zjrkeFykRg/fHsILrEzN00IBqfUpw+9zXNo+ha2RpcSdMU2arD+Iyf5yB1+aC+Tnnj
-         d4/ZYb6tOvBZUr/8vSdBqoNESN6CawEZ+DnBJiHVdLFqfT6LBunt2OSMfdLcwTKRPbYu
-         PZmFYTdOzhDeJeCY+OZqSlBgzKa4aIKUekB9YJPU6jcgVhLrtsrYqJa2ll+O195LP8Eo
-         r9rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xh7ygJkmCFosm++mxzgG5yyD/OscriXelXv44rdvluw=;
-        b=sKH0g4rnzWSSFEOmNSvUBSzZUtNxKlK4MNi17rpZfqBILyKYseCRqONDCcX9mJg0sm
-         nWTOICiq/vVb+wGWQ2mzK6GwQi5wdrfAWC2UB++3++M7qXouOrzwmG7QEqLWEy+4rtiO
-         J6K7g4SqNI35arMliAI2MZsIVDz2WLY4ngZIrJxNh79hy7uNoK41awZQCg2oyCnR0TRM
-         ZZONT9ynGZZ9ICxC/bsKx37Nl2DKrBSZUgDwBt0w3+WyimpFpJHJDOuAb75ksmsKTkJK
-         7wuWvS8jPgzT7DUTB/mVd0Byu5ML3AQlLhF7+SO7A0KW6OV+HnU0Eor7uyBz5mJN5aPm
-         unQg==
-X-Gm-Message-State: AOAM532QVA/Ii1IoBzMuYQ94Qiygj4zzs+IF+OL7ncPNre+D8FxQk1Ll
-        MWJjclwyYj6DVS61h8up2gHp8e+/Axdc2Eb1vQ==
-X-Google-Smtp-Source: ABdhPJyYS+8oZjtM4PQR/C4hZ1n/HWdolh9OR1+vV89uMQ55qvep9ZMWJVjFUm/JlyAW94x6BMqZy3Ner73XBluXNSc=
-X-Received: by 2002:a19:4a4e:: with SMTP id x75mr2042044lfa.70.1593182444933;
- Fri, 26 Jun 2020 07:40:44 -0700 (PDT)
+        Fri, 26 Jun 2020 10:43:55 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N79dk-1imBjZ2qPk-017XgT; Fri, 26 Jun 2020 16:43:53 +0200
+Received: by mail-qt1-f174.google.com with SMTP id d27so7626478qtg.4;
+        Fri, 26 Jun 2020 07:43:53 -0700 (PDT)
+X-Gm-Message-State: AOAM532epSrTpQeBMtaXM/aJMQ7SQsatYJfGBHk6fVBXKtz+rAZisDhu
+        Fs1c1dIkj06PkJlVoffmZw5UTWcQDTeXtFrmv9A=
+X-Google-Smtp-Source: ABdhPJxA6PkdKGh0KA/DT2IS/lBs/pI8NJAJLRQeAyCjLUdwxEkqkF4bSQcq+oTI0Dgokdmj/CNL0WUgqGbPAdWQ6E0=
+X-Received: by 2002:ac8:4ccb:: with SMTP id l11mr3080469qtv.18.1593182632492;
+ Fri, 26 Jun 2020 07:43:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592410366125160@kroah.com> <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
- <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org> <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
- <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
- <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
- <20200626133959.GA4024297@kroah.com> <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
-In-Reply-To: <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Fri, 26 Jun 2020 16:40:18 +0200
-Message-ID: <CAEJqkgg4Ka8oNL7ELoJrR0-Abz3=caLns48KyDC=DQcym6SRvA@mail.gmail.com>
-Subject: Re: ath9k broken [was: Linux 5.7.3]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+References: <20200625202807.b630829d6fa55388148bee7d@linux-foundation.org>
+ <20200626032946._LJ_E6G66%akpm@linux-foundation.org> <CAHk-=wiZrhVUq3N17=GVzMQNQUKi65x=-djTM2A+fz8UdQxgEg@mail.gmail.com>
+ <CADRDgG6SXwngT5gS2EY1Y0xnPdYth-FicQyTnPyqiwpmw52eQg@mail.gmail.com>
+ <CAHp75Ve2x9dEqaHSue5UAftsJw+U3n8K9YEXBy5QFGJHgkQ3DA@mail.gmail.com>
+ <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com> <CAHp75Vfr8sFydbH=G7U+wXoUftT9RnsfSSLi4RXNyR-3sApR3w@mail.gmail.com>
+In-Reply-To: <CAHp75Vfr8sFydbH=G7U+wXoUftT9RnsfSSLi4RXNyR-3sApR3w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 26 Jun 2020 16:43:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2bCyO6xV+tCynjVXpgH-wkQ7=N5pfa8oax9BKWL+a7ig@mail.gmail.com>
+Message-ID: <CAK8P3a2bCyO6xV+tCynjVXpgH-wkQ7=N5pfa8oax9BKWL+a7ig@mail.gmail.com>
+Subject: Re: [patch 10/32] linux/bits.h: fix unsigned less than zero warnings
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kernel test robot <lkp@intel.com>,
+        mm-commits@vger.kernel.org,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:u2Wd2KwN1fnhp5xGG3VB1Ykr9h6Ts6TP5XzvcIHgH+rksEjiydE
+ mUyMpViGJ72gbajSxTjkhwWo8U94VTOkuQvcbAOwxYNKHJ4Hl65WfOKH2P9TQztdY0OYEUu
+ x/eqeTh+9GAiOqWX2Af6FXX0P8SqGBjaK6UzDFJX07NGGTA5c4RUSDY8k/QubJIkF7q9aFc
+ unM0hs+25qcEUT/rKNPmA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yypcDeO9YGI=:yd19hbR+CwrvU9dsjaM1TJ
+ ATHKgOU8aw/ELoxjqeJIGwaK5Wy9jPCG3oj6bAiQg4RFCJ+gClm9bMG9z+jOhdOHZcwAQHcH6
+ nfDzD72SZMcNzAKoSMePvxjoLyvkMdgZfPHvmBCVy3lqg+m0lLhrSak3UVQ6MxPajbyGTnICF
+ d0bVA1qFzdv9xjiPC6g4QBH9OZwRK1qT85oPCAjH4dTmc3726rELAY9ACtIlBmR6ywbaSbizm
+ jIurP3hTIhyFL1HUF30yfE+skVpc0z1yOBV8sLi1AgeQcOhP6jYxb/txgdQrbXGn6WG6mstwV
+ Vmhb0DEL/WOKbqo+gccGrv9sl7sq5wr15VOYEzUdKcBtEbu0xVXc0j4KNUPpBPwpuO1lpE50c
+ EZ4GZaSGsAuB+t8FMHVJ7Br/wAikOYPXisKkTyjEg/y738BnnM0kxqz8VYpylNjJnGODNFIij
+ Ysu37lCErTljBWyKXV6N5YsY1+hEVYfY0NgKwQSv0VN5gjHv84gO1A+R8kswqzrACapjhskvD
+ FtxdmtZgaydpeKByvkt6qidoTV9ne3AGn00mYx8MqrM0wIaBBAs6XWCGteyXwUSnR65EiahrL
+ pjHlXOKjEPrx9HJUA4LqaAL/HbAc/2MNR2wAOLV5eRKJFCzXCs8kEr51USYk5+HdPDVGV1R5f
+ GOXe7fuLI0ymwrmJm5UcqDzv/Q3WdIpzlJVfVW39kt33chLui/+lmQo3Sdh+M1V0AU5jeo2iS
+ DGbuQyMRD93VnMq8+yIsNr82HemqpZM3Y2EqzFJ2hXaT6eaa4bqWTf/8sQaGIVQ3lu0rCLSRZ
+ K7Xv08Cr2byjJ+Hp9B0UAvJ2NB5tNUvsjyeBauYITcFkO8Vh38=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Fr., 26. Juni 2020 um 15:51 Uhr schrieb Gabriel C
-<nix.or.die@googlemail.com>:
+On Fri, Jun 26, 2020 at 4:09 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Am Fr., 26. Juni 2020 um 15:40 Uhr schrieb Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>:
-> >
-> > On Fri, Jun 26, 2020 at 01:48:59PM +0200, Gabriel C wrote:
-> > > Am Do., 25. Juni 2020 um 12:52 Uhr schrieb Gabriel C
-> > > <nix.or.die@googlemail.com>:
-> > > >
-> > > > Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
-> > > > <nix.or.die@googlemail.com>:
-> > > > >
-> > > > > Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
-> > > > > >
-> > > > > > On 25. 06. 20, 0:05, Gabriel C wrote:
-> > > > > > > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
-> > > > > > > <gregkh@linuxfoundation.org>:
-> > > > > > >>
-> > > > > > >> I'm announcing the release of the 5.7.3 kernel.
-> > > > > > >>
-> > > > > > >
-> > > > > > > Hello Greg,
-> > > > > > >
-> > > > > > >> Qiujun Huang (5):
-> > > > > > >>       ath9k: Fix use-after-free Read in htc_connect_service
-> > > > > > >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-> > > > > > >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-> > > > > > >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-> > > > > > >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > > > > > >>
-> > > > > > >
-> > > > > > > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
-> > > > > > > while working fine on <5.7.3.
-> > > > > > >
-> > > > > > > I don't have myself such HW, and the reported doesn't have any experience
-> > > > > > > in bisecting the kernel, so we build kernels, each with one of the
-> > > > > > > above commits reverted,
-> > > > > > > to find the bad commit.
-> > > > > > >
-> > > > > > > The winner is:
-> > > > > > >
-> > > > > > > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
-> > > > > > > Author: Qiujun Huang <hqjagain@gmail.com>
-> > > > > > > Date:   Sat Apr 4 12:18:38 2020 +0800
-> > > > > > >
-> > > > > > >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > > > > > >
-> > > > > > >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
-> > > > > > > ...
-> > > > > > >
-> > > > > > > Reverting this one fixed his problem.
-> > > > > >
-> > > > > > Obvious question: is 5.8-rc1 (containing the commit) broken too?
-> > > > >
-> > > > > Yes, it does, just checked.
-> > > > >
-> > > > > git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
-> > > > > v5.8-rc1
-> > > > > v5.8-rc2
-> > > > >
-> > > >
-> > > > Sorry, I read the wrong, I just woke up.
-> > > >
-> > > > We didn't test 5.8-rc{1,2} yet but we will today and let you know.
-> > > >
+> On Fri, Jun 26, 2020 at 5:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Fri, Jun 26, 2020 at 3:24 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Fri, Jun 26, 2020 at 2:37 PM Rikard Falkeborn
+> > > <rikard.falkeborn@gmail.com> wrote:
+> > > > Den fre 26 juni 2020 08:32Linus Torvalds <torvalds@linux-foundation.org> skrev:
 > > >
-> > > We tested 5.8-rc2 and it is broken too.
+> > > ...
 > > >
-> > > The exact HW name is:
+> > > > I'll just say no and point to this email next time someone complains instead.
 > > >
-> > > TP-link tl-wn722n (Atheros AR9271 chip)
+> > > "No" is not constructive here. People can be annoyed with warning
+> > > messages, but the real issue here are the various CI systems which
+> > > send a lot of spam because of that. As a maintainer I would need to
+> > > drop CI in order to see a good patch. If Linus considers that warning
+> > > useless, then probably you can change your patch to do what he
+> > > proposed.
 > >
-> > Great!
-> >
-> > Can you work with the developers to fix this in Linus's tree first?
+> > How about moving that warning from W=1 to W=2? Generally speaking
+> > I'd expect W=1 warnings to be in a category of "it's generally better to
+> > address this in the code, but we can't turn it on by default because the
+> > output gets too noisy", as opposed to W=2 meaning "this sometimes
+> > finds a real problem, but fixing the warning often makes code worse."
 >
-> I'm the man in the middle, but sure we will try patches or any suggestions
-> from developers to identify and fix the problem.
->
-> >
-> > I bet they want to see the output of 'lsusb -v' for this device to see
-> > if the endpoint calculations are correct...
-> >
->
-> Working on it. As soon the reporter gives me the output, I will post it here.
-> I've told him to run it on a broken and one working kernel.
+> It would work for me if it had been
+> a) documented (I didn't check if it had been already done, though);
+> b) understood by all CIs in the same way (see a) as well :-).
 
-That is from a good kernel with reverted commit
-https://gist.github.com/AngryPenguinPL/07c8e2abd3b103eaf8978a39ad8577d1
+I checked the 'make help' output, which describes them as
 
-That is from the broken kernel without the commit reverted
-https://gist.github.com/AngryPenguinPL/5cdc0dd16ce5e59ff3c32c048e2f5111
+make W=n   [targets] Enable extra build checks, n=1,2,3 where
+   1: warnings which may be relevant and do not occur too often
+   2: warnings which occur quite often but may still be relevant
+   3: more obscure warnings, can most likely be ignored
+   Multiple levels can be combined with W=12 or W=123
 
-This is from 5.7.5 kernel, I don't have yet a 5.8-rc2 package with the
-reverted commit.
+which is less specific than the interpretation I had in mind but
+I think still fits a).
+
+      Arnd
