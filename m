@@ -2,167 +2,190 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8619C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 510152075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:13:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovzR0esJ"
+	by mail.kernel.org (Postfix) with ESMTP id 749AB2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgFZFN3 (ORCPT
+        id S1726974AbgFZFSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 01:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgFZFN3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 01:13:29 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A25C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:13:28 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so4446916lfl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QlzbbRoUsiNgCT+vaniYsWp4jyroliVG1Gc8oOdbYFc=;
-        b=ovzR0esJWDDdDFb0jyp9YafS2plBJiJOi/tQHePW6RnDCVpGvwaXPT2LuDIrUgc3q2
-         19hx1drG3bg59u5lR7vRrAY6Nc3AUcx+SA/aJCuaCCFTu6aQdtWyThAj08WHnhyRw9Wh
-         djgKIGc1yRDJDXqra3ydGeqbRZMcEZFebg+jyQ4oWw0einDd3cg+CJMMY2689VPNftDy
-         KY4yrmpnhxAj1bfFechr6cP9x/fFBTtyBayKVePsUXqf/2OZ4PJ67B1KUbE2mAg7BxfK
-         mB/Qg0/3cqSxnvejiVmmjeA9fcct413ZTfYjwUWRtxtT6icZvCUAo4HVFq7TgeRGMsn9
-         7Cgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QlzbbRoUsiNgCT+vaniYsWp4jyroliVG1Gc8oOdbYFc=;
-        b=sIDE+L2KG+GbRLUkdK4tBTZdU9aseahNsvmgkOW1VGYqRGTKMKSPJflFAoYBWx8HJJ
-         DwHsjMpwUuS2i5VktFdjdOd9Ed14i/7enOXYd5mANtVoWu63V+129EU5INdjk7VqclE6
-         6Nt0V6utn3kWhW7+tTHpdUCMZE5lR6H//ACBrdtAqKkuzNFkUVeMMfb44ixYsKGyQnpL
-         2zmrmyARHH55WE7gcUWoIqbUydjFzCDoBEn32NPgezZRimzY3PIIYKjsL1o72PV3ALxs
-         xsmxppPKFVL8hyDX6jhggXb8Gfj+0l7TqaCsnor5kXtsf9x7EXi/rSrh+eegShyXCpyb
-         gorQ==
-X-Gm-Message-State: AOAM530D682k9bm18uAMxSzvXuEsaxmH86qDzwPtZFpe4mUZ7MObcKHG
-        pt+yYpKiQhBVfXEVTj7StSdmDiCYUOsIP81GBSjeVQ==
-X-Google-Smtp-Source: ABdhPJzS7QYS1nugoTAgxtiZp65oSa+zQBCVvgk1F0KpTPkRj4nd5Gfi/Kfsl7MWSE54t3cG5t/3WfNBT0GZqy1mLws=
-X-Received: by 2002:a19:435b:: with SMTP id m27mr825249lfj.40.1593148407135;
- Thu, 25 Jun 2020 22:13:27 -0700 (PDT)
+        Fri, 26 Jun 2020 01:18:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63574 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgFZFSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 01:18:00 -0400
+IronPort-SDR: PYr7jYPG8qbqXxzH33iNPhLyvGI2JZ6oSnaRg+48S6gh+5UioEw1koci80pFy+Iu5dlDIjAcwH
+ Dl1d0xhp6/GQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="125413814"
+X-IronPort-AV: E=Sophos;i="5.75,282,1589266800"; 
+   d="scan'208";a="125413814"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 22:17:59 -0700
+IronPort-SDR: 5v+pMtnl/Eyh5ZWrKKkQTQHqCWYaQJxjmDGmPkJyx6b9R+UEOBn07q5CJeKhv9z2pV5jUxfc5U
+ T3HJ8FjY+EWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,282,1589266800"; 
+   d="scan'208";a="280050607"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 25 Jun 2020 22:17:58 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jogkO-000213-9e; Fri, 26 Jun 2020 05:17:56 +0000
+Date:   Fri, 26 Jun 2020 13:17:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/test] BUILD SUCCESS
+ 12f2d29942ce0b140b8f03679d9f1d36d552fa70
+Message-ID: <5ef584f1.mLDBgKO1uYWk/Nkl%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
- <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
- <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
- <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
- <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
- <1593012069.28403.11.camel@HansenPartnership.com> <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
- <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
-In-Reply-To: <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 26 Jun 2020 10:43:15 +0530
-Message-ID: <CAFA6WYOiBNQt0ZRyRxfsqW57z+O=aLqi3DTEAfZ7fGjf8UPB3Q@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Jerome Forissier <jerome@forissier.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 at 18:22, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
->
-> On Wed, 24 Jun 2020 at 18:44, Jerome Forissier <jerome@forissier.org> wrote:
-> >
-> >
-> >
-> > On 6/24/20 5:21 PM, James Bottomley wrote:
-> > > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
-> > >> Apologies for delay in my reply as I was busy with some other stuff.
-> > >>
-> > >> On Fri, 19 Jun 2020 at 20:30, James Bottomley
-> > >> <James.Bottomley@hansenpartnership.com> wrote:
-> > > [...]
-> > >>> it's about consistency with what the kernel types mean.  When some
-> > >>> checker detects your using little endian operations on a big endian
-> > >>> structure (like in the prink for instance) they're going to keep
-> > >>> emailing you about it.
-> > >>
-> > >> As mentioned above, using different terminology is meant to cause
-> > >> more confusion than just difference in endianness which is manageable
-> > >> inside TEE.
-> > >>
-> > >> And I think it's safe to say that the kernel implements UUID in big
-> > >> endian format and thus uses %pUb whereas OP-TEE implements UUID in
-> > >> little endian format and thus uses %pUl.
-> > >
-> > > So what I think you're saying is that if we still had uuid_be and
-> > > uuid_le you'd use uuid_le, because that's exactly the structure
-> > > described in the docs.  But because we renamed
-> > >
-> > > uuid_be -> uuid_t
-> > > uuid_le -> guid_t
-> > >
-> > > You can't use guid_t as a kernel type because it has the wrong name?
-> >
-> > Let me try to clear the confusion that I introduce myself I believe :-/
-> > IMO:
-> >
-> > - optee_register_device(const uuid_t *device_uuid) *is* the correct
-> > prototype.
-> > - device_uuid is *guaranteed* to be BE because OP-TEE makes this
-> > guarantee (it converts from its internal LE representation to BE when
-> > enumerating the devices, but it doesn't matter to the kernel).
-> > - Therefore %pUb is the correct format.
-> >
-> > I'm sorry for doubting the BE order initially. I am so used to OP-TEE
-> > using LE internally, that I missed the fact that we have an explicit
-> > conversion...
-> >
-> > Does this sound good?
-> >
-> > Thanks,
-> > --
-> > Jerome
->
-> I think your description is correct. But I think this problem  would
-> be solved outside of the current patchset.
-> All places should use one single format (LE):
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/test
+branch HEAD: 12f2d29942ce0b140b8f03679d9f1d36d552fa70  Merge remote-tracking branch 'linus/master' into HEAD
 
-I guess you missed the point that uuid_t is implemented in BE format
-in the kernel which is compliant as per RFC 4122.
+elapsed time: 723m
 
-> -  internal optee representation;
-> -  device enumeration pta;
-> -  this kernel driver which creates sysfs entry and sets
-> uid_copy(&optee_device->id.uuid, device_uuid);
-> -  matching function;
-> -  drivers use UUID_INIT();
+configs tested: 120
+configs skipped: 5
 
-See carefully the implementation of UUID_INIT() which is in BE format.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--Sumit
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arc                     haps_hs_smp_defconfig
+s390                             allyesconfig
+powerpc                          g5_defconfig
+mips                        jmr3927_defconfig
+sh                           se7751_defconfig
+arm                       imx_v6_v7_defconfig
+arm                            xcep_defconfig
+arm                      pxa255-idp_defconfig
+arm                          tango4_defconfig
+arm                       mainstone_defconfig
+arm                          moxart_defconfig
+m68k                            q40_defconfig
+sh                          sdk7786_defconfig
+s390                              allnoconfig
+arm                            mps2_defconfig
+arm                             pxa_defconfig
+arm                         lpc18xx_defconfig
+mips                           ip27_defconfig
+arm                     eseries_pxa_defconfig
+i386                             alldefconfig
+nds32                             allnoconfig
+sh                           se7724_defconfig
+mips                     loongson1b_defconfig
+parisc                            allnoconfig
+arm                            lart_defconfig
+mips                      loongson3_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200624
+i386                 randconfig-a006-20200624
+i386                 randconfig-a003-20200624
+i386                 randconfig-a001-20200624
+i386                 randconfig-a005-20200624
+i386                 randconfig-a004-20200624
+i386                 randconfig-a013-20200624
+i386                 randconfig-a016-20200624
+i386                 randconfig-a012-20200624
+i386                 randconfig-a014-20200624
+i386                 randconfig-a011-20200624
+i386                 randconfig-a015-20200624
+x86_64               randconfig-a004-20200624
+x86_64               randconfig-a002-20200624
+x86_64               randconfig-a003-20200624
+x86_64               randconfig-a005-20200624
+x86_64               randconfig-a001-20200624
+x86_64               randconfig-a006-20200624
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
->
-> In that way everything will be consistent. But it will require
-> changing other pieces, not just the kernel. While
-> these patches add functionality to support current device enumeration
-> in optee os.
-> So I think this version is ok to be applied.
->
-> Regards,
-> Maxim.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
