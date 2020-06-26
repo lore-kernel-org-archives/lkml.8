@@ -2,103 +2,86 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F43C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B017C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4873207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEDF20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593180305;
+	bh=FLH9RMavJhw1DcFHXpTX510iCkhJadwKN4Oh6++hLu4=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=TDwR9cgqAHD9j0Do2/FfY+FzrlXcluTO7thEqNU3U91QNMI4WdMM1B4jIgHJvhjN0
+	 ORNfRltTb28k17Po/JHZ34aBtvDq8lq3rhtpnJpMd4uo+blK1FH/MeIEUol75HxJ3M
+	 lSrI+AVfXDnTeil3ruekPMaaPiN1/aYdqkFUKfLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgFZOD7 (ORCPT
+        id S1729052AbgFZOFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:03:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:47365 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgFZOD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:03:58 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mxlio-1iuPgb3hHi-00zFiB; Fri, 26 Jun 2020 16:03:56 +0200
-Received: by mail-qk1-f178.google.com with SMTP id r22so8788314qke.13;
-        Fri, 26 Jun 2020 07:03:55 -0700 (PDT)
-X-Gm-Message-State: AOAM533nmrDvFxM8pNae7N4bphHyCUsh2LSrymB8xeoVZbaIHsGvfZSb
-        pDR9KBXzkjLK3mf6ReikW3nzPmw+PVdrJImUo3Q=
-X-Google-Smtp-Source: ABdhPJwvfCG8V0xTspjw/3/nnT9m0PoPb3zOnO5BicQKB9lFdnOYcErQQmTlzwly2D1MQXpIopKu4V5jSrdei+HC0EA=
-X-Received: by 2002:a37:4ed2:: with SMTP id c201mr2854546qkb.138.1593180234661;
- Fri, 26 Jun 2020 07:03:54 -0700 (PDT)
+        Fri, 26 Jun 2020 10:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728091AbgFZOFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:05:02 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E575D2089D;
+        Fri, 26 Jun 2020 14:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593180302;
+        bh=FLH9RMavJhw1DcFHXpTX510iCkhJadwKN4Oh6++hLu4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=w+OvSb5zMqQr3aCdiDSKdjkHP4jYagT3I0AMRbZC+VFiAfUqZgLSw5OuTGFYons1n
+         jfAlL8eQRmlNGl4jfXL+rGP03Qr9+fTdWvb808CVu2C9mjyZnGb2LVmdifLn+HJZzH
+         9dpmRkdrTweApESTfhHLMswesLmJgWqEbhqpp4XQ=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jooyR-00HKw2-WE; Fri, 26 Jun 2020 16:05:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 0/7] Some atomisp fixes and improvements
+Date:   Fri, 26 Jun 2020 16:04:52 +0200
+Message-Id: <cover.1593180146.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200625202807.b630829d6fa55388148bee7d@linux-foundation.org>
- <20200626032946._LJ_E6G66%akpm@linux-foundation.org> <CAHk-=wiZrhVUq3N17=GVzMQNQUKi65x=-djTM2A+fz8UdQxgEg@mail.gmail.com>
- <CADRDgG6SXwngT5gS2EY1Y0xnPdYth-FicQyTnPyqiwpmw52eQg@mail.gmail.com> <CAHp75Ve2x9dEqaHSue5UAftsJw+U3n8K9YEXBy5QFGJHgkQ3DA@mail.gmail.com>
-In-Reply-To: <CAHp75Ve2x9dEqaHSue5UAftsJw+U3n8K9YEXBy5QFGJHgkQ3DA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jun 2020 16:03:38 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-Message-ID: <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-Subject: Re: [patch 10/32] linux/bits.h: fix unsigned less than zero warnings
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>,
-        mm-commits@vger.kernel.org,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3/QvdGkvXOOKAHm1vs/kLgE/g1bjT6dmnbZOIDZA6aLp80yikm9
- VpxUK6FcrK3CfXHBBPtHm/7r+LKZt9J40xSxFTercS1T0qR401XjlEoyQgMGRpacTFW+FYt
- 725kxUl9udNia1NVyHm7aYvFkRDXivgrJjg6gyo4ILTLX8LTygd58QQFDj6EDB6rFP8wK1h
- Fst+uQxFqo9Yac/Hm9xsA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+ksrCpW0zKM=:N8NmHPwFGV9ADQDR3luMXh
- D/xSvXmTGOlglrb0wkz0F8bM5w0ZAy8pgsVAU78J4gR49/1nbFBt2L+arAEvKvzEV88eCydup
- Rp+sUAEl/04BTGJn4n3qUxQokwuc7HJelhliYdqEtAQgYyXx+ExPUWIZ/8bcncoPJ7otqir7t
- mEy00ji4mpG1S84FzTmlG06pFbVF232W0IAKX87wIpYV5qi+oENYzQX42Ntb9ajagXPU1iYxs
- risX4yP2nos5Ax65BXHN23YZozinUTgtpdhzJyzcqWAF/9ZTGyQfBR32qaBlp6q8p8lWevbKd
- BgMASZ+CcZOIJc+rw321OVFPwNvE15lD28qX+ZuIFRcTTCmzvxEDvVp0F+X26HF3FhGhrXGu5
- PPqH16N0ZHF0+rpgfEQGL8iBNb/rzxdgkvp+kDxhfDUcXvy2SNQZRhXiIqE0Yab9Ss30ixFBN
- 3q2iivrKRZeduWN4rBw5yFB9REFK2gkKWdHZRK5Y/aaUGLeM7c97UDcGvwzLpoZUO/56E6lQt
- HGk0AmvFuewchdAg+EX6WVkREJDpYyYZ6bXIKX6/cuDscPw7Uo3jE8pWcE6P515Wv0L9THTpV
- vngiZdsXwf1Ujml61JQzjrHDMS3/q8BPb6k1HVuxHOxTB1akvEMYa4LK6BMLCglIZIOn83rDJ
- c3h3r/141iPUWXMjnyOdvAepLmCK8vhW6C2oyBrMcjgD48uDMdZyaexjeBmjZ1xuptSwyPqL9
- wbSqkcrLV0rFmDDJ1ZI/CHfIFPMWGzCwumq/PISjYfQPeMaPBIOK3c+rHSHtvCXHkZnleUAZb
- TINDblSfchHZOgxmU+kBSgu3RKfygVa2ljRI2JEhPjMXiDe51g=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 3:24 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Jun 26, 2020 at 2:37 PM Rikard Falkeborn
-> <rikard.falkeborn@gmail.com> wrote:
-> > Den fre 26 juni 2020 08:32Linus Torvalds <torvalds@linux-foundation.org> skrev:
->
-> ...
->
-> > I'll just say no and point to this email next time someone complains instead.
->
-> "No" is not constructive here. People can be annoyed with warning
-> messages, but the real issue here are the various CI systems which
-> send a lot of spam because of that. As a maintainer I would need to
-> drop CI in order to see a good patch. If Linus considers that warning
-> useless, then probably you can change your patch to do what he
-> proposed.
+Those patches are meant to improve device detection by the atomisp driver,
+relying on ACPI bios when possible.
 
-How about moving that warning from W=1 to W=2? Generally speaking
-I'd expect W=1 warnings to be in a category of "it's generally better to
-address this in the code, but we can't turn it on by default because the
-output gets too noisy", as opposed to W=2 meaning "this sometimes
-finds a real problem, but fixing the warning often makes code worse."
+It also adds a basis for using ACPI PM, but only if the DSDT tables have
+a description about how to turn on the resources needed by the cameras.
 
-     Arnd
+At least on the device I'm using for tests, this is not the case.
+
+Mauro Carvalho Chehab (7):
+  media: atomisp: reorganize the code under gmin_subdev_add()
+  media: atomisp: Prepare sensor support for ACPI PM
+  media: atomisp: properly parse CLK PMIC on newer devices
+  media: atomisp: fix call to g_frame_interval
+  media: atomisp: print info if gpio0 and gpio2 were detected
+  media: atomisp: split add from find subdev
+  media: atomisp: place all gpio parsing together
+
+ .../staging/media/atomisp/pci/atomisp_cmd.c   |   2 +-
+ .../media/atomisp/pci/atomisp_gmin_platform.c | 393 ++++++++++++------
+ 2 files changed, 267 insertions(+), 128 deletions(-)
+
+-- 
+2.26.2
+
+
