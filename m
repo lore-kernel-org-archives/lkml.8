@@ -2,122 +2,208 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA667C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD1720706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="HUCWqcVj"
+	by mail.kernel.org (Postfix) with ESMTP id 93FD820706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593186194;
+	bh=ZFhUHtGFu5ZIA4z89ukPBSVLkUvs7iACq58UI8CR9kQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NgynZ8TEJf8dcz9QvncmDDJU5R7l9YKos8xlK7TwnAVboRIlDT7prreafWw6SEOWT
+	 KmeiNCc7Wr0THrp6ajE0yde8yREVfg+bxRrMm1fBtOB2Jz++tof8qE99UxSVwdF/bu
+	 RxBTukulFomjKdnq9KDqXGn+Sam+9mhBDuBZl0G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgFZPnD (ORCPT
+        id S1729787AbgFZPnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgFZPnC (ORCPT
+        Fri, 26 Jun 2020 11:43:13 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38051 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgFZPnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:43:02 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B117C03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:43:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so10783663ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=8sG3eMJyOg9orr/8+zbkmc8eQOjbgUIfbSHVDMJ1IF4=;
-        b=HUCWqcVjbUx6weWEQDENSiFokpN6mUJD4S9osoh5Co0e8bpB6jv5F/JapF4s2wtcLd
-         dSmd/FuV1QTsnQWSifHtgFuYJf3dR95nAYTNl9OMQXrUg+mw/r0YkguYclyxXsMw/yCN
-         1Wg9SlRMMBAFPRxSOLSMeeSaN5GmdzJvxYTLd0D92RL18rf6naRWi4z5dZiN3+OsbKUL
-         oiokOLkuu8SA0p9lELJvgQILxLUfujh0Qaow4FymH38LsuaNyH2pBWMR0WE06HzOYb4/
-         2/c2q/n8iwBQq0KClI0GZ3I7M3K6yzybNwX5FRYFMS0jw1bI8oQi/UGRdG10OxGB5whR
-         QuGw==
+        Fri, 26 Jun 2020 11:43:12 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r8so8428062oij.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:43:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=8sG3eMJyOg9orr/8+zbkmc8eQOjbgUIfbSHVDMJ1IF4=;
-        b=VaXWtubPZ195J7PIiUWQGD9VsnbaH7QoVzDpPLd2r5gUZ2KtQ/lBk078ZkJj+nMmJJ
-         LexjwmNy0XDdOSZL/cQ+6Qq5wvd1af7m2/cHUhT4dbNjB0gY41SLY5qi9tC6/dv8JP0F
-         b+pFSX0nA34S5xup1RVOx1IQx24mrB+zf+Ehdtje+SAvFzk/vVs9aJOejKfj2UkeavBl
-         WtCTbZ5bXmjTtRfs0H0KCU+CSzmImalqfCJK0+hCC6Hn+AFzLDaTkAm4LL4UxdqE9ys6
-         wJ0ecpvxCJtbc+CNXbrw7GV2VnMkv2YDLveQzoDjQ4xJFdgf4wARLzgX86zMj2GxAZ2Q
-         XGnw==
-X-Gm-Message-State: AOAM530YCCd/9kPkB5P7gf2ENSSi5DCHzKAuXR+zs3z/ZabxwqHZrpTa
-        9z2jbTMRXTZrq4kTEXWcxXJz7EX/dGPYn3ooh9uhDQ==
-X-Google-Smtp-Source: ABdhPJw/h4f9GIEpyJOz+1JLvx2y2ujVaOQE1ia/wcPgivU8F14uArVoSxx6LnAZLkO1/Va7N/QJ/u6FzQy+f+6hUyw=
-X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr1843523ljj.429.1593186180655;
- Fri, 26 Jun 2020 08:43:00 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ZFS0A0GALa85jcwxFWd7qm3+ETIaduqsmP4v2A7mkd4=;
+        b=npiJijXIoCkCtVOLfqwsf6veI/39XxNkRL+I0Mor532xc2VF4s/pZbE2HbGEGxz0/n
+         pJoTmFId0DvjJKohkd4afklAVqkRZE4+E2Zdstr7y044UqsZQnVMF3dJy73hfk2tvYdc
+         C98IC7lxzn+v1J0YTYn5IucH6LVFFjiJzMD+yGb0b6hvTxlBa/NPYAQJSuSKpsImJBFy
+         0eb6ED8o0UQh7EYOG6BneR2cyJihpKrVdN3JDQkikDe2uBEyFkK7sLUHG0Yb5to5WBqR
+         iKLVTDcHAAiBYs1nWRkb8egrDGPyd9aJJc0SLmozq3lVw0jgIBHS4IRL73bl4GUjchmC
+         QaWw==
+X-Gm-Message-State: AOAM533Mla6ecaQyGhunhRyWqh0Jy4yyuhnPVu+StjU79aQwFIxcys/W
+        iWOdPvoN5hWpBSFcOC8eEWy0TePe9CeazTbFJC2eL+sX
+X-Google-Smtp-Source: ABdhPJypLeDV2LckMOXvyTvsspyQajm/zBr0CubHbVFZYs8R4ojC/YhlMLPDnsf5S9DcOktseIn1onDAM7HB1zN92TM=
+X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2849111oic.68.1593186191326;
+ Fri, 26 Jun 2020 08:43:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
-In-Reply-To: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
-From:   B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC
-         Campus <bkkarthik@pesu.pes.edu>
-Date:   Fri, 26 Jun 2020 11:42:49 -0400
-Message-ID: <CAAhDqq0tSftPxMWGeVy3mp4DGDN3o0uQwTqVbjYUwjqzWpbibQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
- before ',' (ctx:WxW)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
+References: <CGME20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e@eucas1p2.samsung.com>
+ <20200626100103.18879-1-a.hajda@samsung.com> <20200626100103.18879-3-a.hajda@samsung.com>
+In-Reply-To: <20200626100103.18879-3-a.hajda@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 26 Jun 2020 17:43:00 +0200
+Message-ID: <CAJZ5v0g72gY70aKC9DZh=GH6dvGesV5ug0Dc8i0YbX_X1bkCTQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] driver core: add deferring probe reason to
+ devices_deferred property
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oh, I'm sorry but wouldn't it be helpful if we had a file that lists
-all drivers that are scheduled for removal? I personally feel that it
-would help out all kernel newbies.
-I've been trying to complete task10 in the eudyptula challenge, and
-the patches either get thrown out by greg's patch-bot, or the driver
-is scheduled for removal.
-
-Please do think about adding a file that lists all drivers scheduled
-for removal.
-
-I apologize if my message was hurtful or disrespectful in any way.
-
-Thank you for reading this message,
-Karthik
-
-On Fri, Jun 26, 2020 at 10:32 AM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
+On Fri, Jun 26, 2020 at 12:01 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
 >
-> fixing ERROR: space prohibited before that ',' (ctx:WxW)
+> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
+> This list does not contain reason why the driver deferred probe, the patch
+> improves it.
+> The natural place to set the reason is probe_err function introduced recently,
+> ie. if probe_err will be called with -EPROBE_DEFER instead of printk the message
+> will be attached to deferred device and printed when user read devices_deferred
+> property.
 >
-> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+
 > ---
->  drivers/staging/media/usbvision/usbvision-i2c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/base/base.h |  3 +++
+>  drivers/base/core.c |  8 ++++++--
+>  drivers/base/dd.c   | 23 ++++++++++++++++++++++-
+>  3 files changed, 31 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/staging/media/usbvision/usbvision-i2c.c b/drivers/staging/media/usbvision/usbvision-i2c.c
-> index 6e4df3335b1b..010ad03c6ec1 100644
-> --- a/drivers/staging/media/usbvision/usbvision-i2c.c
-> +++ b/drivers/staging/media/usbvision/usbvision-i2c.c
-> @@ -32,7 +32,7 @@ MODULE_PARM_DESC(i2c_debug, "enable debug messages [i2c]");
->  #define PDEBUG(level, fmt, args...) { \
->                 if (i2c_debug & (level)) \
->                         printk(KERN_INFO KBUILD_MODNAME ":[%s:%d] " fmt, \
-> -                               __func__, __LINE__ , ## args); \
-> +                               __func__, __LINE__, ## args); \
+> diff --git a/drivers/base/base.h b/drivers/base/base.h
+> index 95c22c0f9036..6954fccab3d7 100644
+> --- a/drivers/base/base.h
+> +++ b/drivers/base/base.h
+> @@ -93,6 +93,7 @@ struct device_private {
+>         struct klist_node knode_class;
+>         struct list_head deferred_probe;
+>         struct device_driver *async_driver;
+> +       char *deferred_probe_reason;
+>         struct device *device;
+>         u8 dead:1;
+>  };
+> @@ -134,6 +135,8 @@ extern void device_release_driver_internal(struct device *dev,
+>  extern void driver_detach(struct device_driver *drv);
+>  extern int driver_probe_device(struct device_driver *drv, struct device *dev);
+>  extern void driver_deferred_probe_del(struct device *dev);
+> +extern void device_set_deferred_probe_reson(const struct device *dev,
+> +                                           struct va_format *vaf);
+>  static inline int driver_match_device(struct device_driver *drv,
+>                                       struct device *dev)
+>  {
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 3a827c82933f..fee047f03681 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3963,6 +3963,8 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+>   * This helper implements common pattern present in probe functions for error
+>   * checking: print debug or error message depending if the error value is
+>   * -EPROBE_DEFER and propagate error upwards.
+> + * In case of -EPROBE_DEFER it sets also defer probe reason, which can be
+> + * checked later by reading devices_deferred debugfs attribute.
+>   * It replaces code sequence:
+>   *     if (err != -EPROBE_DEFER)
+>   *             dev_err(dev, ...);
+> @@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
+>         vaf.fmt = fmt;
+>         vaf.va = &args;
+>
+> -       if (err != -EPROBE_DEFER)
+> +       if (err != -EPROBE_DEFER) {
+>                 dev_err(dev, "error %d: %pV", err, &vaf);
+> -       else
+> +       } else {
+> +               device_set_deferred_probe_reson(dev, &vaf);
+>                 dev_dbg(dev, "error %d: %pV", err, &vaf);
+> +       }
+>
+>         va_end(args);
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 9a1d940342ac..dd5683b61f74 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/async.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pinctrl/devinfo.h>
+> +#include <linux/slab.h>
+>
+>  #include "base.h"
+>  #include "power/power.h"
+> @@ -136,6 +137,8 @@ void driver_deferred_probe_del(struct device *dev)
+>         if (!list_empty(&dev->p->deferred_probe)) {
+>                 dev_dbg(dev, "Removed from deferred list\n");
+>                 list_del_init(&dev->p->deferred_probe);
+> +               kfree(dev->p->deferred_probe_reason);
+> +               dev->p->deferred_probe_reason = NULL;
 >         }
+>         mutex_unlock(&deferred_probe_mutex);
+>  }
+> @@ -211,6 +214,23 @@ void device_unblock_probing(void)
+>         driver_deferred_probe_trigger();
+>  }
 >
->  static int usbvision_i2c_write(struct usb_usbvision *usbvision, unsigned char addr, char *buf,
+> +/**
+> + * device_set_deferred_probe_reson() - Set defer probe reason message for device
+> + * @dev: the pointer to the struct device
+> + * @vaf: the pointer to va_format structure with message
+> + */
+> +void device_set_deferred_probe_reson(const struct device *dev, struct va_format *vaf)
+> +{
+> +       const char *drv = dev_driver_string(dev);
+> +
+> +       mutex_lock(&deferred_probe_mutex);
+> +
+> +       kfree(dev->p->deferred_probe_reason);
+> +       dev->p->deferred_probe_reason = kasprintf(GFP_KERNEL, "%s: %pV", drv, vaf);
+> +
+> +       mutex_unlock(&deferred_probe_mutex);
+> +}
+> +
+>  /*
+>   * deferred_devs_show() - Show the devices in the deferred probe pending list.
+>   */
+> @@ -221,7 +241,8 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+>         mutex_lock(&deferred_probe_mutex);
+>
+>         list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
+> -               seq_printf(s, "%s\n", dev_name(curr->device));
+> +               seq_printf(s, "%s\t%s", dev_name(curr->device),
+> +                          curr->device->p->deferred_probe_reason ?: "\n");
+>
+>         mutex_unlock(&deferred_probe_mutex);
+>
 > --
-> 2.20.1
+> 2.17.1
 >
-
-
--- 
-B K Karthik
-
-9535399755
-karthik.oncreate.team
