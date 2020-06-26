@@ -2,273 +2,106 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41644C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 104DB20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="C9HB4SED"
+	by mail.kernel.org (Postfix) with ESMTP id 04C432080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgFZNHf (ORCPT
+        id S1727845AbgFZNI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbgFZNHb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:07:31 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D32C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:30 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r18so4929421pgk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NRJmV6QfNACg/W2qGdUyNfNSRYBISUhip+jiANXSZ2U=;
-        b=C9HB4SEDS2B7u1kQDaipaFKfr7hH6OpplX5jWV8b6ZHCBND/tTgHL6PVf6dHc2f6Sd
-         5NwS88iK75iPQfV7AefXxKkZOxPRxLwWEQjCL2ilZmNqOTbRoSkptL8QMnJdDAIVeRD8
-         n8z4n9oY6FvqHnciDAL0ikMjWBqBzo1nvpu+HHTyY1ba1ezjuZpKQ89Q8DkJTmpTwAJK
-         n/UJRXb5+sF3xQ5DZxE6IXuuzbxNRP4C4YmCHtIzLcJXurLDofQ1WpMpCnFf5NsKYKRQ
-         pq1YYaML6SWB/bOkxZa0v0nWkuGFtu0jdeK2Xh01GNjzyWjkExubOZnfEj8hR1uWZtjp
-         X0Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NRJmV6QfNACg/W2qGdUyNfNSRYBISUhip+jiANXSZ2U=;
-        b=EcvQHWrqXkwl4fqy3BVzX2uMWc5JhxUPVeehBry3NNMHRNG3++Ge/pG+uXJ7GOljX5
-         CUl1xzSU94KF34ufxVRRJ8J9e/RUR4loO6aKVGgCTtbPdvOWts77/b8qSZ/MDPxr7TuJ
-         CzItPAijrVpXMp9xc2STeW7dnegJYrpdmFWWPdFk70lPeazKhf99fSXaPDy1k+yrZFB1
-         yrEmN5QzBWDrzeI2YTz5x1ZoupVsRB/yKasiw+ku6vFiRahh9Py6Ciuirg8ZTDUFeYXw
-         iJ5newVakb8tZS7ovjxVq0GFabbJ4O55J7i66EblV33ME61079a7//joAZytwDUsxUGw
-         Yiww==
-X-Gm-Message-State: AOAM533m7bVCOtwAMXw74MBMwu7G7IzGmivxraTcNDCG+IpQOH7GlRk2
-        GEGTgs2ceyJ141oi8UQvmK/9gw==
-X-Google-Smtp-Source: ABdhPJyUy2sNWyz/EYNDLPMgLiILJgLDLkSMLhV1fdEM9RqMwZTH+4yl8tY2R49P7nSH7SwuIr11iQ==
-X-Received: by 2002:a63:5b07:: with SMTP id p7mr2633032pgb.250.1593176849698;
-        Fri, 26 Jun 2020 06:07:29 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id z14sm26023750pfj.64.2020.06.26.06.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 06:07:29 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v7 3/3] media: vimc: Add a control to display info on test image
-Date:   Fri, 26 Jun 2020 18:37:00 +0530
-Message-Id: <20200626130700.2453-4-kgupta@es.iitr.ac.in>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
-References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+        Fri, 26 Jun 2020 09:08:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:59339 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbgFZNI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:08:58 -0400
+IronPort-SDR: Y4L9UHncDkR5Bm2HFvFOFofLcl7a8rz9rGFdGzAIVM/0gKQyZMKXULTSRIP0oTfW3Smpcjhaua
+ ZKAZN/WhvsJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="146805450"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="146805450"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 06:08:57 -0700
+IronPort-SDR: BtcyJEMqxwQVNcf08kNSPR7KJbIxunml+DmDVbRr8F6d37dutN5JWYYJl/V3yC3qcMNRzs50SV
+ Pgf5xanQQICA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="385763113"
+Received: from cgheban-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.199])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2020 06:08:52 -0700
+Date:   Fri, 26 Jun 2020 16:08:51 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org,
+        Kylene Jo Hall <kjhall@us.ibm.com>,
+        "Ferry Toth :" <ferry.toth@elsinga.info>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@osdl.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Message-ID: <20200626130851.GA7853@linux.intel.com>
+References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+ <20200625062150.idm6j3vm2neyt4sh@cantor>
+ <20200625210202.GA20341@linux.intel.com>
+ <20200625211923.2jirvix6zbrbgj6e@cantor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625211923.2jirvix6zbrbgj6e@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a control in VIMC to display information such as the correct order of
-colors for a given test pattern, brightness, hue, saturation, contrast,
-width and height at sensor over test image.
+On Thu, Jun 25, 2020 at 02:19:23PM -0700, Jerry Snitselaar wrote:
+> On Fri Jun 26 20, Jarkko Sakkinen wrote:
+> > On Wed, Jun 24, 2020 at 11:21:50PM -0700, Jerry Snitselaar wrote:
+> > > On Thu Jun 25 20, Jarkko Sakkinen wrote:
+> > > > Acer C720 running Linux v5.3 reports this in klog:
+> > > >
+> > > > tpm_tis: 1.2 TPM (device-id 0xB, rev-id 16)
+> > > > tpm tpm0: tpm_try_transmit: send(): error -5
+> > > > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+> > > > tpm_tis tpm_tis: Could not get TPM timeouts and durations
+> > > > tpm_tis 00:08: 1.2 TPM (device-id 0xB, rev-id 16)
+> > > > tpm tpm0: tpm_try_transmit: send(): error -5
+> > > > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+> > > > tpm_tis 00:08: Could not get TPM timeouts and durations
+> > > > ima: No TPM chip found, activating TPM-bypass!
+> > > > tpm_inf_pnp 00:08: Found TPM with ID IFX0102
+> > > >
+> > > > % git --no-pager grep IFX0102 drivers/char/tpm
+> > > > drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+> > > > drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+> > > >
+> > > > Obviously IFX0102 was added to the HID table for the TCG TIS driver by
+> > > > mistake.
+> > > >
+> > > > Fixes: 93e1b7d42e1e ("[PATCH] tpm: add HID module parameter")
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203877
+> > > > Cc: Kylene Jo Hall <kjhall@us.ibm.com>
+> > > > Reported-by: Ferry Toth: <ferry.toth@elsinga.info>
+> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > 
+> > > Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > 
+> > Bugzilla has an example of similar behavior with v4.15. I'll apply this
+> > asap.
+> > 
+> > /Jarkko
+> > 
+> 
+> Any idea what happened to git.infradead.org? It was offline the other day,
+> and at the moment not all repos from before seem to be there.
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
----
- drivers/media/test-drivers/vimc/Kconfig       |  2 +
- drivers/media/test-drivers/vimc/vimc-common.h |  1 +
- drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
- drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
- 4 files changed, 83 insertions(+)
+Now the kernel tree is back online.
 
-diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-index 4068a67585f9..da4b2ad6e40c 100644
---- a/drivers/media/test-drivers/vimc/Kconfig
-+++ b/drivers/media/test-drivers/vimc/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_VIMC
- 	tristate "Virtual Media Controller Driver (VIMC)"
- 	depends on VIDEO_DEV && VIDEO_V4L2
-+	select FONT_SUPPORT
-+	select FONT_8x16
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select VIDEOBUF2_VMALLOC
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index ae163dec2459..a289434e75ba 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -20,6 +20,7 @@
- #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
- #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
- #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
-+#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
- 
- #define VIMC_FRAME_MAX_WIDTH 4096
- #define VIMC_FRAME_MAX_HEIGHT 2160
-diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
-index 11210aaa2551..4b0ae6f51d76 100644
---- a/drivers/media/test-drivers/vimc/vimc-core.c
-+++ b/drivers/media/test-drivers/vimc/vimc-core.c
-@@ -5,10 +5,12 @@
-  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-  */
- 
-+#include <linux/font.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <media/media-device.h>
-+#include <media/tpg/v4l2-tpg.h>
- #include <media/v4l2-device.h>
- 
- #include "vimc-common.h"
-@@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
- 
- static int vimc_probe(struct platform_device *pdev)
- {
-+	const struct font_desc *font = find_font("VGA8x16");
- 	struct vimc_device *vimc;
- 	int ret;
- 
- 	dev_dbg(&pdev->dev, "probe");
- 
-+	if (!font) {
-+		dev_err(&pdev->dev, "could not find font\n");
-+		return -ENODEV;
-+	}
-+
-+	tpg_set_font(font->data);
-+
- 	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
- 	if (!vimc)
- 		return -ENOMEM;
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index a2f09ac9a360..9e4fb3f4d60d 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -19,6 +19,8 @@ struct vimc_sen_device {
- 	struct v4l2_subdev sd;
- 	struct tpg_data tpg;
- 	u8 *frame;
-+	unsigned int osd_mode;
-+	u64 start_stream_ts;
- 	/* The active format */
- 	struct v4l2_mbus_framefmt mbus_format;
- 	struct v4l2_ctrl_handler hdl;
-@@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- {
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
-+	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
-+	const unsigned int line_height = 16;
-+	u8 *basep[TPG_MAX_PLANES][2];
-+	unsigned int line = 1;
-+	char str[100];
- 
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-+	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
-+	switch (vsen->osd_mode) {
-+	case OSD_SHOW_ALL:
-+		{
-+			const char *order = tpg_g_color_order(&vsen->tpg);
-+
-+			tpg_gen_text(&vsen->tpg, basep,
-+				     line++ * line_height, 16, order);
-+			snprintf(str, sizeof(str),
-+				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
-+				 vsen->tpg.brightness,
-+				 vsen->tpg.contrast,
-+				 vsen->tpg.saturation,
-+				 vsen->tpg.hue);
-+			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
-+				     16, str);
-+			snprintf(str, sizeof(str), "sensor size: %dx%d",
-+				 vsen->mbus_format.width,
-+				 vsen->mbus_format.height);
-+			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
-+				     16, str);
-+		}
-+	case OSD_SHOW_COUNTERS:
-+		{
-+			unsigned int ms;
-+
-+			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
-+			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
-+				 (ms / (60 * 60 * 1000)) % 24,
-+				 (ms / (60 * 1000)) % 60,
-+				 (ms / 1000) % 60,
-+				 ms % 1000);
-+			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
-+				     16, str);
-+			break;
-+		}
-+	case OSD_SHOW_NONE:
-+	default:
-+		break;
-+	}
-+
- 	return vsen->frame;
- }
- 
-@@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		vsen->start_stream_ts = ktime_get_ns();
-+
- 		/* Calculate the frame size */
- 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
- 		frame_size = vsen->mbus_format.width * vpix->bpp *
-@@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_SATURATION:
- 		tpg_s_saturation(&vsen->tpg, ctrl->val);
- 		break;
-+	case VIMC_CID_OSD_TEXT_MODE:
-+		vsen->osd_mode = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
- 	.qmenu = tpg_pattern_strings,
- };
- 
-+static const char * const vimc_ctrl_osd_mode_strings[] = {
-+	"All",
-+	"Counters Only",
-+	"None",
-+	NULL,
-+};
-+
-+static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
-+	.ops = &vimc_sen_ctrl_ops,
-+	.id = VIMC_CID_OSD_TEXT_MODE,
-+	.name = "Show Information",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
-+	.qmenu = vimc_ctrl_osd_mode_strings,
-+};
-+
- static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 					    const char *vcfg_name)
- {
-@@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
-+	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
- 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
--- 
-2.17.1
-
+/Jarkko
