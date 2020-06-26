@@ -2,89 +2,100 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77182070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208142088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:02:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="afknylHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgFZXAg (ORCPT
+        id S1726131AbgFZXCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:00:36 -0400
-Received: from www62.your-server.de ([213.133.104.62]:53520 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgFZXAg (ORCPT
+        Fri, 26 Jun 2020 19:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgFZXCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:00:36 -0400
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1joxKW-0000PS-RM; Sat, 27 Jun 2020 01:00:20 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1joxKW-000HDo-F1; Sat, 27 Jun 2020 01:00:20 +0200
-Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        netdev@vger.kernel.org
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        hch@lst.de, davem@davemloft.net, konrad.wilk@oracle.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, maximmi@mellanox.com,
-        magnus.karlsson@intel.com, jonathan.lemon@gmail.com
-References: <20200626134358.90122-1-bjorn.topel@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net>
-Date:   Sat, 27 Jun 2020 01:00:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 26 Jun 2020 19:02:04 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75FFC03E979;
+        Fri, 26 Jun 2020 16:02:04 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49tspJ3d0bz9sSS;
+        Sat, 27 Jun 2020 09:02:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593212521;
+        bh=ErD3hVx16ib62e9yBwr2mA7G54pnVW1RLR3R14k82q8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=afknylHD6+QhqS/UHqZNl4BVm+UJT0+WXyvezDX3JtXlzZi3q2cVfeUH5LL65Y1JI
+         H098+7xBvnFM2ZwmopGOV/zgVhqIGDq0M4KfAnDmY3AFyT6ZSP6nvovDBS02n2CFNp
+         YidRh089N/l97c2AUrxglTxfcsrEJ4XpL6M7sOugwuIobmal71QI8Wyxfe6WVTFFP8
+         VWq26twIP0LOIrtskoBs+Tr5zaIUzZwDhNbyia77/Uxw6eIyWUwhZw/taSs49NpHYL
+         7iiLGKBA1dWxodsZb/z0DBJk6LHnKuL5of+bO5Vcjd5heQ3F8PJi1cfJki/YV6JuWu
+         9xJLfk/FTetyw==
+Date:   Sat, 27 Jun 2020 09:01:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vasily Averin <vvs@virtuozzo.com>
+Subject: linux-next: Fixes tag needs some work in the nfs-anna tree
+Message-ID: <20200627090159.1ca4bacc@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200626134358.90122-1-bjorn.topel@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25855/Fri Jun 26 15:19:25 2020)
+Content-Type: multipart/signed; boundary="Sig_/shGYtj5aMBh12FUWd6BduR3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/20 3:43 PM, Björn Töpel wrote:
-> From: Björn Töpel <bjorn.topel@intel.com>
-> 
-> When the AF_XDP buffer allocation API was introduced it had an
-> optimization, "cheap_dma". The idea was that when the umem was DMA
-> mapped, the pool also checked whether the mapping required a
-> synchronization (CPU to device, and vice versa). If not, it would be
-> marked as "cheap_dma" and the synchronization would be elided.
-> 
-> In [1] Christoph points out that the optimization above breaks the DMA
-> API abstraction, and should be removed. Further, Christoph points out
-> that optimizations like this should be done within the DMA mapping
-> core, and not elsewhere.
-> 
-> Unfortunately this has implications for the packet rate
-> performance. The AF_XDP rxdrop scenario shows a 9% decrease in packets
-> per second.
-> 
-> [1] https://lore.kernel.org/netdev/20200626074725.GA21790@lst.de/
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Fixes: 2b43470add8c ("xsk: Introduce AF_XDP buffer allocation API")
-> Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+--Sig_/shGYtj5aMBh12FUWd6BduR3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Given there is roughly a ~5 weeks window at max where this removal could
-still be applied in the worst case, could we come up with a fix / proposal
-first that moves this into the DMA mapping core? If there is something that
-can be agreed upon by all parties, then we could avoid re-adding the 9%
-slowdown. :/
+Hi all,
 
-Thanks,
-Daniel
+In commit
+
+  b7ade38165ca ("sunrpc: fixed rollback in rpc_gssd_dummy_populate()")
+
+Fixes tag
+
+  Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to =
+hold open")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/shGYtj5aMBh12FUWd6BduR3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl72fmcACgkQAVBC80lX
+0GyiUwf+J7VmBx3wbzlCdrSYY7dXFd0wyLIpsm1r6ZMhRf8HpWhhgStneVzVTHNE
+oLbmWDkAGXT0eotXYffQJMd6eS130kVrBBBzqgeLII94WjNQPjq6bmEH0joIqWoB
+A6+m1PR7pyHskXGTTwWEi993uSMmI/1QYxkhDEDT1vPblIZVI6WS+0/E1rKGasur
+5eAZISj8xeyVH1lyZOdr4wibYqY2hC4TVpCdvNgtqAP7KjayrJv5hVctsR2eaXud
+lpdHs2KcdVLkV7jfGiiupu8G/stK+0+SSGgtoTA2pCRTL5ObeqLL9+GgvaD7ZeXd
+Crx61+QkcD4peY0orciAtdm0NCqFug==
+=uA1S
+-----END PGP SIGNATURE-----
+
+--Sig_/shGYtj5aMBh12FUWd6BduR3--
