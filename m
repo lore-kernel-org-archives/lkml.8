@@ -1,165 +1,137 @@
-Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 295B020700
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C37206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J5yt0phj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgFYX5N (ORCPT
+        id S1725951AbgFZAFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:57:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10736 "EHLO mga04.intel.com"
+        Thu, 25 Jun 2020 20:05:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56115 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgFYX5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:57:12 -0400
-IronPort-SDR: bqf/d+JKJRAfhAaOKljondbIDX8AOJnrJR6S9TUcaYlmM8rndlCXS7suygcV3Iq7QiXQBVFuE8
- dbdWoE6wt/Pw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="142632980"
-X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="142632980"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:57:12 -0700
-IronPort-SDR: d8AfyzoRHf+gU8v/MF7shFOwAVBU0pc/Tury7ONo+71hx4xQfcvoKD1/MDoAhi3c/ECEC2dGSZ
- fKm8NByBKqTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="264072058"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 16:57:11 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jobjy-0001sj-Ii; Thu, 25 Jun 2020 23:57:10 +0000
-Date:   Fri, 26 Jun 2020 07:56:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- 145a773aef83181d47ebab21bb33c89233aadb1e
-Message-ID: <5ef5399e.SQsQzItlFDgAS2jH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725767AbgFZAFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:05:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49tHG21Khhz9sQt;
+        Fri, 26 Jun 2020 10:05:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593129931;
+        bh=1/NpNWSRYiuRWHY1OaZc1T1Yqf2ZVowm/dB1HXxkKjc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=J5yt0phjrDQhLtXHDFTgmRLJ1RWOhMw2rjH8Ggtn5bNqEx+omYjBKxFKNUzq/Ksp8
+         xZQV4Qu9j+lc4IrmrjVidJv3E+z/RpSLooEDoKKMKdpxJWlKhx04wJoIjXss7Ilfig
+         flA0X7KUabWPehZjAWB49ClBXi65maql1Tlr8BEO5MRNQbCThrj6uaKRe4qCll5XCD
+         DNbC4J2RAhVsB7yxA+dbNrQzdtmGp6KwuBLbGdVpyKpCtNagGBMVdup5JLBkctQsVC
+         +NOZkM5Rht2Wr+3CAhO4yNgSWhUjx6lWma+oOCyiBIM7LI8Aj9GXZaJXTWgC832xdI
+         SbjailGCKR3Nw==
+Date:   Fri, 26 Jun 2020 10:05:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>
+Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
+Message-ID: <20200626100527.4dad8695@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/WG=8.S1mSbgElhtsPHXXGa2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  x86/entry
-branch HEAD: 145a773aef83181d47ebab21bb33c89233aadb1e  x86/entry: Fix #UD vs WARN more
+--Sig_/WG=8.S1mSbgElhtsPHXXGa2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 727m
+Hi all,
 
-configs tested: 94
-configs skipped: 4
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sh                           se7751_defconfig
-arm                       imx_v6_v7_defconfig
-arm                            xcep_defconfig
-arm                      pxa255-idp_defconfig
-arm                          tango4_defconfig
-arm                             pxa_defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                     eseries_pxa_defconfig
-mips                      loongson3_defconfig
-i386                             alldefconfig
-sh                           se7724_defconfig
-mips                     loongson1b_defconfig
-parisc                            allnoconfig
-arm                            lart_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+between commits:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  9c82a63cf370 ("libbpf: Fix CO-RE relocs against .text section")
+  647b502e3d54 ("selftests/bpf: Refactor some net macros to bpf_tracing_net=
+.h")
+
+from the bpf tree and commit:
+
+  84544f5637ff ("selftests/bpf: Move newer bpf_iter_* type redefining to a =
+new header file")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
+index 75ecf956a2df,cec82a419800..000000000000
+--- a/tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
++++ b/tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
+@@@ -11,21 -7,7 +7,7 @@@
+ =20
+  char _license[] SEC("license") =3D "GPL";
+ =20
+- #define sk_rmem_alloc	sk_backlog.rmem_alloc
+- #define sk_refcnt	__sk_common.skc_refcnt
+-=20
+- struct bpf_iter_meta {
+- 	struct seq_file *seq;
+- 	__u64 session_id;
+- 	__u64 seq_num;
+- } __attribute__((preserve_access_index));
+-=20
+- struct bpf_iter__netlink {
+- 	struct bpf_iter_meta *meta;
+- 	struct netlink_sock *sk;
+- } __attribute__((preserve_access_index));
+-=20
+ -static inline struct inode *SOCK_INODE(struct socket *socket)
+ +static __attribute__((noinline)) struct inode *SOCK_INODE(struct socket *=
+socket)
+  {
+  	return &container_of(socket, struct socket_alloc, socket)->vfs_inode;
+  }
+
+--Sig_/WG=8.S1mSbgElhtsPHXXGa2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl71O8cACgkQAVBC80lX
+0GzFHgf9GX71ZbtDGNbranQUQJZc/0K9s1lhhuoezD/QXpocFtHTWi9car8A5AjJ
+nJaRR1B4SkzrRnca/dOsxzhMEGhK9hvkipIR9mxKARGcE5Zd8Pa6ng1pxHasiJSp
+kAAbg3UcCfZ0wwbWskSROHvc7UHHXnIeL20hLy92Dl+9YqaivpElhEnb3UO7KUTi
+mhAa3tss/aW4mXWe+u88S0Capv/No9OCP2kLlvADq2GVidpO74vzBE6lTcHMnVJ+
+BFokVFwIL5k3f1oeu4KQayqnynj8y9kkA+4ZeJ/ELW14oLeH5KT1+RFA54jfK2Ey
+C/5QO/iVPc99U2hgssUA6MzRbCYWog==
+=LMGA
+-----END PGP SIGNATURE-----
+
+--Sig_/WG=8.S1mSbgElhtsPHXXGa2--
