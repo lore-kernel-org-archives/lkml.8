@@ -2,123 +2,111 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7900320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h4grfjDq"
+	by mail.kernel.org (Postfix) with ESMTP id 883282070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593205055;
+	bh=+RTxPRfj4h0ApyMfS0YTVNY5y8BFT8Bo/A+QGbjSSLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p/p5sbyqm+w+MISgPoT4fsAjG6QTT+uI1JEu9D2DiMnQIJKp3tOFHZnj0sDokBm1y
+	 5YaP1F7kQ4RmsVrIW34nT82OR//1MTeWrUzL8rRBpS1Phyx12RUdwo3UcEQsyaORyH
+	 HurYJPOszbE0r3bVtFwBmXhQBrqA0MxK7nDNRSaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgFZU5S (ORCPT
+        id S1726177AbgFZU5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZU5R (ORCPT
+        Fri, 26 Jun 2020 16:57:31 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32989 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZU5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:57:17 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB0FC03E979;
-        Fri, 26 Jun 2020 13:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=/j1J3VNoc3X3k3mp9U8TxyNrfgAwisW2njcwJM52V4Q=; b=h4grfjDq/NXOFrzYJ8Q9SYUaVM
-        hpTYkJPtCel8/BPsyPaXQ1uGcjQKq8GagRfM5oJ8kF/noKfuwo9KTWtyTQcnjuaLRmH/gNmknta55
-        imKlS0xVZTeIm1JUf4F4zWPkONPx/1TwCRfQk+Q/JvexALVRJ7j5tG1RQpowHmAoNtL8mgj0n+kdE
-        IhZXaAcFVRdtkA21ALxvzNry1AuLo92nKVzsmS1tFOw57xmhGTd44FQyLxzzJaP86QFGa4hveOCdN
-        1rJR7mvidfJnrpqg0R7l4WLdbbH6Zi+vt/m1Z0R2bfa5jVpT1f6Zel9A1eB+iTlR+LPRXIU+qDsD9
-        7OWn8Ghg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jovP2-0002Ub-TT; Fri, 26 Jun 2020 20:56:57 +0000
-Subject: Re: [PATCH] slab: Fix misplaced __free_one()
-To:     Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org
-Cc:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-References: <202006261306.0D82A2B@keescook>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1de6b098-a759-dd96-df5d-9a282b2a991b@infradead.org>
-Date:   Fri, 26 Jun 2020 13:56:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 16:57:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f18so2653267wrs.0;
+        Fri, 26 Jun 2020 13:57:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UEtSMorzUsNwgUS6/uoC1DFelzsLLNjhA0ODxeYGQZk=;
+        b=OZchDIXGo6iu9X5b8iFXhS8rb4s9itnPmLav8LKS6K+d359xFI1TaN+uCZ8xoQ3fc5
+         Xrhullnd59DchWEDJBV2UUpS+Z/r6f4Dje7+caXHhr/XraN3SqIh6/8dzbDbkabaFqL7
+         v4YsyR+4baHNYxzNYo0SFnVcJfuYntG187KBFcswGXBpbD3vI41kJOFDcI2fhhsZFnjz
+         +gbnNdGpOkzNAtiPK8USyvXq3lVTFSNAuzWnHWRqjxoNz4FUXsLZnF21fLgItdn40nsm
+         MzAHRjgbDrUulmhTdseHZ7xKB9cl9bLS6ktN+sX55yZW7Vxm7iVdb/7Hp5sIDjAJueOH
+         mNHg==
+X-Gm-Message-State: AOAM531yYjrp5KxpQQ3scPn7KFIlaXqBvaOhErjOe3QSx0VG8PIu61vH
+        k8ISLaMvRIDTw1SJUtmeOK2sq8ZC
+X-Google-Smtp-Source: ABdhPJyfz6ZN9k8zLdtD9oplahZZwvRGhaQJGtrwjWd/bB5xcjemjyZZRToSI9LENcMOmSKLfSNPJw==
+X-Received: by 2002:a5d:42c8:: with SMTP id t8mr5326836wrr.23.1593205048041;
+        Fri, 26 Jun 2020 13:57:28 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b184sm12903093wmc.20.2020.06.26.13.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 13:57:27 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 20:57:26 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 0/3] Drivers: hv: vmbus: vmbus_requestor data structure
+Message-ID: <20200626205726.nx54ztdtmo3fxbxm@liuwe-devbox-debian-v2>
+References: <20200625153723.8428-1-lkmlabelt@gmail.com>
+ <20200626134227.ka4aghqjpktdupnu@liuwe-devbox-debian-v2>
+ <20200626144817.GA1023610@andrea>
 MIME-Version: 1.0
-In-Reply-To: <202006261306.0D82A2B@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626144817.GA1023610@andrea>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/20 1:07 PM, Kees Cook wrote:
-> The implementation of __free_one() was accidentally placed inside a
-> CONFIG_NUMA #ifdef. Move it above.
+On Fri, Jun 26, 2020 at 04:48:17PM +0200, Andrea Parri wrote:
+> On Fri, Jun 26, 2020 at 01:42:27PM +0000, Wei Liu wrote:
+> > On Thu, Jun 25, 2020 at 11:37:20AM -0400, Andres Beltran wrote:
+> > > From: Andres Beltran (Microsoft) <lkmlabelt@gmail.com>
+> > > 
+> > > Currently, VMbus drivers use pointers into guest memory as request IDs
+> > > for interactions with Hyper-V. To be more robust in the face of errors
+> > > or malicious behavior from a compromised Hyper-V, avoid exposing
+> > > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> > > bad request ID that is then treated as the address of a guest data
+> > > structure with no validation. Instead, encapsulate these memory
+> > > addresses and provide small integers as request IDs.
+> > > 
+> > > The first patch creates the definitions for the data structure, provides
+> > > helper methods to generate new IDs and retrieve data, and
+> > > allocates/frees the memory needed for vmbus_requestor.
+> > > 
+> > > The second and third patches make use of vmbus_requestor to send request
+> > > IDs to Hyper-V in storvsc and netvsc respectively.
+> > > 
+> > 
+> > Per my understanding, this new data structure is per-channel, so it
+> > won't introduce contention on the lock in multi-queue scenario. Have you
+> > done any testing to confirm there is no severe performance regression?
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://lore.kernel.org/lkml/7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> I did run some performance tests using our dev pipeline (storage and
+> network workloads).  I did not find regressions w.r.t. baseline.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Thanks, that's good to hear.
 
-Thanks.
+Wei.
 
-> ---
-> This a fix for slab-add-naive-detection-of-double-free.patch
-> ---
->  mm/slab.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/mm/slab.c b/mm/slab.c
-> index bbff6705ab2b..5ccb151a6e8f 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -588,6 +588,16 @@ static int transfer_objects(struct array_cache *to,
->  	return nr;
->  }
->  
-> +/* &alien->lock must be held by alien callers. */
-> +static __always_inline void __free_one(struct array_cache *ac, void *objp)
-> +{
-> +	/* Avoid trivial double-free. */
-> +	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-> +	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
-> +		return;
-> +	ac->entry[ac->avail++] = objp;
-> +}
-> +
->  #ifndef CONFIG_NUMA
->  
->  #define drain_alien_cache(cachep, alien) do { } while (0)
-> @@ -749,16 +759,6 @@ static void drain_alien_cache(struct kmem_cache *cachep,
->  	}
->  }
->  
-> -/* &alien->lock must be held by alien callers. */
-> -static __always_inline void __free_one(struct array_cache *ac, void *objp)
-> -{
-> -	/* Avoid trivial double-free. */
-> -	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-> -	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
-> -		return;
-> -	ac->entry[ac->avail++] = objp;
-> -}
-> -
->  static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
->  				int node, int page_node)
->  {
-> 
-
-
--- 
-~Randy
+>   Andrea
