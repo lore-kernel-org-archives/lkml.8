@@ -2,125 +2,138 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B023C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394CC20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2F52089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="g+CAS8Ul"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kKEbfSWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgFZV4Z (ORCPT
+        id S1726022AbgFZV4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        Fri, 26 Jun 2020 17:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgFZV4Y (ORCPT
+        with ESMTP id S1725816AbgFZV4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:56:24 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68364C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:56:24 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so10703797wml.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s24mstSCNQlTFolgjec0iiKMpvfLNvCEazKvZzeEqpA=;
-        b=g+CAS8UlAQOOsv4s7ohlbFkbJmOpPZq5OC7QRzoSqEzhhgE34Acd5sfrAMN8Uu9C3O
-         WjP+DC/W4+0jp5qX9LvxioOw4eodRT/6RRpQpqrwVQ3/k7qf0G9GOfAGstoLym1Coe0G
-         Xph832bBIMuzUv0udF9hevqW5Jxiwdj/IOadY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s24mstSCNQlTFolgjec0iiKMpvfLNvCEazKvZzeEqpA=;
-        b=ZGTvE0fwVM/HXWJllxb+9aAOXEPxDqj9y0V5fA6QYjxCBLEk2LwfhVZcpVTMUdcLM1
-         Z9rCAfvwBoXVExX5UIntLfkngGcW4esgaWD6wfaHV0CwmlwKXdkeCWEc8HoDVfd8lYcU
-         MJD0oyzl3eIuJAspeCKadfrg9VQum/+6rwLAJ+gJGjwK0ZuWBX7OmiW+QDMJNbKZHlzd
-         FioxLr/HRq50DCxvlNuUk3hIVKPJX6uVRiFKLY/UZmiOTGWLsR2RONfxTVW3JTYNlIhW
-         sWRa6uTok1ECXUiRgSWNC3YnnhjiOIPWcJVy2FetMbIBI9pFcsvgv3FmNxTRlSYwtYRj
-         tNEA==
-X-Gm-Message-State: AOAM532BYomoQAfIfe2waafqViW9EU/BTBK4V3oj25Us+BaDUb0+RJaR
-        1ClM769KUznm9fbv40Jg5jKQpPGY6Z40X8hvLa4l
-X-Google-Smtp-Source: ABdhPJxvUiPRna7ukmDfkDR7tOrY35okfuOqyyzB1yZ0cFFCHPw0NEqSkR/UuIDigPHl1bx2wJyIWsX7BstpN+VvZ3U=
-X-Received: by 2002:a1c:9d09:: with SMTP id g9mr5333593wme.31.1593208583105;
- Fri, 26 Jun 2020 14:56:23 -0700 (PDT)
+        Fri, 26 Jun 2020 17:56:38 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54467C03E979;
+        Fri, 26 Jun 2020 14:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7IHCsdnoUmmfDZldhAWNkEIt+lt8DWXAOajFIarz2tE=; b=kKEbfSWnL3KXAAUyV5RJhsMkFq
+        R168LUlj+Kwcx5NqFvReQe4AX2Yqvt/2oLFrlX6nD9Zezq3YWFwNXbSl3N2TlQIk84oxLkxYuPFiN
+        h5g7fLxL176wH380RcqVwdrXjNXgn9mf8ETlFXyCl3iFQQgwvZDhqOjS8UZGEtDiLwNo=;
+Received: from p200300ccff124000e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff12:4000:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jowK9-00029R-MS; Fri, 26 Jun 2020 23:56:00 +0200
+Received: from [::1] (helo=localhost)
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jowK8-0005Gb-RO; Fri, 26 Jun 2020 23:55:52 +0200
+Date:   Fri, 26 Jun 2020 23:55:52 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix
+ embedded controller RTC
+Message-ID: <20200626235552.7820a999@kemnade.info>
+In-Reply-To: <20200621000220.GB131826@piout.net>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+        <20200620224222.1312520-6-j.neuschaefer@gmx.net>
+        <20200621000220.GB131826@piout.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
- <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de>
-In-Reply-To: <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 26 Jun 2020 14:56:11 -0700
-Message-ID: <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
->
-> On 6/26/20 1:45 AM, Atish Patra wrote:
-> > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
-> > a __umoddi3 error while building EFI for 32 bit.
-> >
-> > Use bitwise operations instead of modulo operations to fix the issue.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+On Sun, 21 Jun 2020 02:02:20 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+
+> Hi,
+>=20
+> On 21/06/2020 00:42:18+0200, Jonathan Neusch=E4fer wrote:
+> > The Netronix EC implements an RTC with the following functionality:
+> >=20
+> > - Calendar-based time keeping with single-second resolution
+> > - Automatic power-on with single-minute resolution
+> > - Alarm at single-second resolution
+> >=20
+> > This binding only supports timekeeping for now.
+> >=20
+> > Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
 > > ---
-> >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
-> > index cc89c4d6196f..1de9878ddd3a 100644
-> > --- a/drivers/firmware/efi/libstub/alignedmem.c
-> > +++ b/drivers/firmware/efi/libstub/alignedmem.c
-> > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-> >       *addr = ALIGN((unsigned long)alloc_addr, align);
-> >
-> >       if (slack > 0) {
-> > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
-> > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
->
-> Here you rely on the compiler to silently convert the division by
-> EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
-> EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
->
-> slack = (align >> EFI_PAGE_SHIFT) - 1;
-> ...
-> int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
->
+> >  .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
+> >  .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxe=
+c-rtc.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml =
+b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> > index 6562c41c5a9a9..f6a32f46f47bb 100644
+> > --- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> > @@ -34,6 +34,9 @@ properties:
+> >    pwm:
+> >      $ref: ../pwm/netronix,ntxec-pwm.yaml
+> >=20
+> > +  rtc:
+> > +    $ref: ../rtc/netronix,ntxec-rtc.yaml
+> > + =20
+>=20
+> Shouldn't the node simply be documented here?
+>=20
+> Also, do you really need a compatible string to be able to proe the
+> driver? What are the chances that you'll get a similar EC without an
+> RTC?
+>=20
+Tolino Shine 2 HD has the mentioned EC but the vendor kernel does not use
+its RTC (not checked whether it is present or functional).
+As a key for grepping in the vendor sources:=20
+gptNtxHwCfg->m_val.bPCB =3D 0x50
 
-Sure. I will update it in the next version. Thanks for the suggestion.
-> Best regards
->
-> Heinrich
->
-> >
-> >               if (l) {
-> >                       efi_bs_call(free_pages, alloc_addr, slack - l + 1);
-> >
->
+Tolino Shine 3  and Kobo Clara HD do not have that EC.
 
-
--- 
-Regards,
-Atish
+Regrads,
+Andreas
