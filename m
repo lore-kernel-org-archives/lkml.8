@@ -2,107 +2,203 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3209DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5AC20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dSKhZ+J1"
+	by mail.kernel.org (Postfix) with ESMTP id DC585206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgFZR0l (ORCPT
+        id S1726532AbgFZReN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:26:41 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9996 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFZR0l (ORCPT
+        Fri, 26 Jun 2020 13:34:13 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63350 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgFZReM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:26:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef62fc40000>; Fri, 26 Jun 2020 10:26:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 26 Jun 2020 10:26:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 10:26:41 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
- 2020 17:26:31 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 26 Jun 2020 17:26:31 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ef62fc60001>; Fri, 26 Jun 2020 10:26:30 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH] nouveau: fix page fault on device private memory
-Date:   Fri, 26 Jun 2020 10:26:26 -0700
-Message-ID: <20200626172626.19207-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Jun 2020 13:34:12 -0400
+Received: from 89-64-83-223.dynamic.chello.pl (89.64.83.223) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 69d62dc03bd9ee5c; Fri, 26 Jun 2020 19:34:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Subject: [RFT][PATCH v3 4/4] ACPI: OSL: Implement acpi_os_map_memory_fast_path()
+Date:   Fri, 26 Jun 2020 19:33:53 +0200
+Message-ID: <14649052.BMOpmyQVCI@kreacher>
+In-Reply-To: <2788992.3K7huLjdjL@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593192388; bh=+jL8198tCi4VPutVCs4yXHE2/yX1fXK0+ZzD5egdp4w=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=dSKhZ+J1Nn3Eb0LX95a8mp/H26NjdofgeBJOetygGbQkKjHzbZyrwmqEC8ErmvCS1
-         eUA99lTXoBFGkmL6xDJtRRF94rW9DzYwnDhvi4TFwLxXXyAzWwALy8yhk4EGhbY3Bb
-         dM9eAML6m8QPXetN/JpnNXJ3EIjbnTy2qTQJLk6Ka8GKBkmNtDgc4SYKdvITcbD4X4
-         27HWfqCOadM0ADG566k+W7W+V9Cn9hKHfOc1FjWdWzTJhJHZ6EnyT9phhQSJ/zhc8c
-         UgmzTQaANl52Mx1odNDsQazX9USnqk2tgx9XzVzMHFfoy9dyAoo6ZojlUjoPAGFykl
-         zbNqgCRLeM0Yw==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If system memory is migrated to device private memory and no GPU MMU
-page table entry exists, the GPU will fault and call hmm_range_fault()
-to get the PFN for the page. Since the .dev_private_owner pointer in
-struct hmm_range is not set, hmm_range_fault returns an error which
-results in the GPU program stopping with a fatal fault.
-Fix this by setting .dev_private_owner appropriately.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Fixes: 08ddddda667b ("mm/hmm: check the device private page owner in hmm_ra=
-nge_fault()")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Add acpi_os_map_memory_fast_path() and set ACPI_USE_FAST_PATH_MAPPING
+to allow acpi_ex_system_memory_space_handler() to avoid unnecessary
+memory mapping and unmapping overhead by retaining all memory
+mappings created by it until the memory opregions associated with
+them go away.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
+ drivers/acpi/osl.c                | 65 +++++++++++++++++++++++--------
+ include/acpi/platform/aclinux.h   |  4 ++
+ include/acpi/platform/aclinuxex.h |  3 ++
+ 3 files changed, 56 insertions(+), 16 deletions(-)
 
-This is based on Linux-5.8.0-rc2 and is for Ben Skeggs nouveau tree.
-It doesn't depend on any of the other nouveau/HMM changes I have
-recently posted.
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 749ae3e32193..b8537ce89ea2 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -306,21 +306,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
+ 		iounmap(vaddr);
+ }
+ 
+-/**
+- * acpi_os_map_iomem - Get a virtual address for a given physical address range.
+- * @phys: Start of the physical address range to map.
+- * @size: Size of the physical address range to map.
+- *
+- * Look up the given physical address range in the list of existing ACPI memory
+- * mappings.  If found, get a reference to it and return a pointer to it (its
+- * virtual address).  If not found, map it, add it to that list and return a
+- * pointer to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_map_table() to get the job done.
+- */
+-void __iomem __ref
+-*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
++static void __iomem __ref *__acpi_os_map_iomem(acpi_physical_address phys,
++					       acpi_size size, bool fast_path)
+ {
+ 	struct acpi_ioremap *map;
+ 	void __iomem *virt;
+@@ -332,8 +319,12 @@ void __iomem __ref
+ 		return NULL;
+ 	}
+ 
+-	if (!acpi_permanent_mmap)
++	if (!acpi_permanent_mmap) {
++		if (WARN_ON(fast_path))
++			return NULL;
++
+ 		return __acpi_map_table((unsigned long)phys, size);
++	}
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
+ 	/* Check if there's a suitable mapping already. */
+@@ -343,6 +334,11 @@ void __iomem __ref
+ 		goto out;
+ 	}
+ 
++	if (fast_path) {
++		mutex_unlock(&acpi_ioremap_lock);
++		return NULL;
++	}
++
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+@@ -370,6 +366,25 @@ void __iomem __ref
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return map->virt + (phys - map->phys);
+ }
++
++/**
++ * acpi_os_map_iomem - Get a virtual address for a given physical address range.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, map it, add it to that list and return a
++ * pointer representing its virtual address.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) call
++ * __acpi_map_table() to obtain the mapping.
++ */
++void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
++				      acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, false);
++}
+ EXPORT_SYMBOL_GPL(acpi_os_map_iomem);
+ 
+ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+@@ -378,6 +393,24 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+ 
++/**
++ * acpi_os_map_memory_fast_path - Fast-path physical-to-virtual address mapping.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, return NULL.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) log a
++ * warning and return NULL.
++ */
++void __ref *acpi_os_map_memory_fast_path(acpi_physical_address phys,
++					acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, true);
++}
++
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+ static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+ {
+diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+index 784e294dc74c..1a5f8037e3d5 100644
+--- a/include/acpi/platform/aclinux.h
++++ b/include/acpi/platform/aclinux.h
+@@ -118,6 +118,10 @@
+ 
+ #define USE_NATIVE_ALLOCATE_ZEROED
+ 
++/* Use fast-path memory mapping to optimize memory opregions handling */
++
++#define ACPI_USE_FAST_PATH_MAPPING
++
+ /*
+  * Overrides for in-kernel ACPICA
+  */
+diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
+index ad6b905358c5..c64b836ba455 100644
+--- a/include/acpi/platform/aclinuxex.h
++++ b/include/acpi/platform/aclinuxex.h
+@@ -141,6 +141,9 @@ static inline void acpi_os_terminate_debugger(void)
+  * OSL interfaces added by Linux
+  */
+ 
++void *acpi_os_map_memory_fast_path(acpi_physical_address where,
++				   acpi_size length);
++
+ #endif				/* __KERNEL__ */
+ 
+ #endif				/* __ACLINUXEX_H__ */
+-- 
+2.26.2
 
- drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index ba9f9359c30e..6586d9d39874 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -562,6 +562,7 @@ static int nouveau_range_fault(struct nouveau_svmm *svm=
-m,
- 		.end =3D notifier->notifier.interval_tree.last + 1,
- 		.pfn_flags_mask =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
- 		.hmm_pfns =3D hmm_pfns,
-+		.dev_private_owner =3D drm->dev,
- 	};
- 	struct mm_struct *mm =3D notifier->notifier.mm;
- 	int ret;
---=20
-2.20.1
+
 
