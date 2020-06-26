@@ -2,32 +2,32 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F45C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4358CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDBE2081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F7B2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Lh366ckh"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lhSGIvlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgFZA4Z (ORCPT
+        id S1726889AbgFZA4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:56:25 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45334 "EHLO vps.xff.cz"
+        Thu, 25 Jun 2020 20:56:34 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45400 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgFZA4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:56:13 -0400
+        id S1726696AbgFZA4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:56:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132968; bh=VhtrW7YF9qj/LeKm7241HeLceC0JDvU6sq3SuogS1+o=;
+        t=1593132969; bh=KzfpMNtW3y5p91+Te+S/UaRtGnueNT8aRYpe1i9+jq4=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=Lh366ckhXCiiKQrpWhzmvZ8EKlg+tv/frOJ5JyrXofx/L4RYkEkSP7/Uoc+4+8Iem
-         MkKITKnvkBP0KXaGx/BZHTqp29IwqpSopY8eUcHT2G1rODz7litJiwqOnfTVYKGegp
-         JdLLqrBudO2PeFfmUvivUmtUuMCUvgB/5tt3EXF0=
+        b=lhSGIvlFDTMrykauS2HhpKQ0XgBth/QfcgKFOa59t6HB0asHV3Dj+stn6cF16Qm5q
+         80+hDWBCj/8wfu8/H4aH1At4bAd8Shom5hzNQP7o2KjamVoJLZFgTWg+aUajy99feZ
+         4F1OxkRbb21t4gS+3FqSXyn++VP7ZIdqnwfMJMLY=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,15 +41,14 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v5 09/13] drm/panel: st7703: Add support for Xingbangda XBD599
-Date:   Fri, 26 Jun 2020 02:55:57 +0200
-Message-Id: <20200626005601.241022-10-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v5 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+Date:   Fri, 26 Jun 2020 02:56:00 +0200
+Message-Id: <20200626005601.241022-13-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
@@ -59,249 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
-PinePhone. Add support for it.
+From: Icenowy Zheng <icenowy@aosc.io>
+
+PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
+display.
+
+Backlight levels curve was optimized by Martijn Braam using a
+lux meter.
+
+Add its device nodes.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Martijn Braam <martijn@brixit.nl>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 199 +++++++++++++++++-
- 1 file changed, 197 insertions(+), 2 deletions(-)
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-index cdbf7dfb4dd4..33611419059a 100644
---- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-+++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-@@ -39,10 +39,11 @@
- #define ST7703_CMD_SETEXTC	 0xB9
- #define ST7703_CMD_SETMIPI	 0xBA
- #define ST7703_CMD_SETVDC	 0xBC
--#define ST7703_CMD_UNKNOWN0	 0xBF
-+#define ST7703_CMD_UNKNOWN_BF	 0xBF
- #define ST7703_CMD_SETSCR	 0xC0
- #define ST7703_CMD_SETPOWER	 0xC1
- #define ST7703_CMD_SETPANEL	 0xCC
-+#define ST7703_CMD_UNKNOWN_C6	 0xC6
- #define ST7703_CMD_SETGAMMA	 0xE0
- #define ST7703_CMD_SETEQ	 0xE3
- #define ST7703_CMD_SETGIP1	 0xE9
-@@ -109,7 +110,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
- 	msleep(20);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+index 06a775c41664..3e99a87e9ce5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+@@ -9,3 +9,22 @@ / {
+ 	model = "Pine64 PinePhone Braveheart (1.1)";
+ 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
+ };
++
++&backlight {
++	power-supply = <&reg_ldo_io0>;
++	/*
++	 * PWM backlight circuit on this PinePhone revision was changed since
++	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
++	 * being off is around 20%. Duty cycle for the lowest brightness level
++	 * also varries quite a bit between individual boards, so the lowest
++	 * value here was chosen as a safe default.
++	 */
++	brightness-levels = <
++		774  793  814  842
++		882  935  1003 1088
++		1192 1316 1462 1633
++		1830 2054 2309 2596
++		2916 3271 3664 4096>;
++	num-interpolated-steps = <50>;
++	default-brightness-level = <400>;
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index cefda145c3c9..85a7aa5efd32 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -16,6 +16,13 @@ aliases {
+ 		serial0 = &uart0;
+ 	};
  
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
--	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN0, 0x02, 0x11, 0x00);
-+	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP1,
- 			      0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
- 			      0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-@@ -163,6 +164,199 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
- 	.init_sequence = jh057n_init_sequence,
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++		/* Backlight configuration differs per PinePhone revision. */
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -84,6 +91,30 @@ &dai {
+ 	status = "okay";
  };
  
-+#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+
-+static int xbd599_init_sequence(struct st7703 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+
-+	/*
-+	 * Init sequence was supplied by the panel vendor.
-+	 */
-+
-+	/* Magic sequence to unlock user commands below. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
-+			  0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
-+			  0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
-+			  0x05, /* IHSRX = x6 (Low High Speed driving ability) */
-+			  0xF9, /* TX_CLK_SEL = fDSICLK/16 */
-+			  0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
-+			  0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
-+			  /* The rest is undocumented in ST7703 datasheet */
-+			  0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
-+			  0x4F, 0x11, 0x00, 0x00, 0x37);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
-+			  0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
-+			  0x22, /* DT = 15ms XDK_ECP = x2 */
-+			  0x20, /* PFM_DC_DIV = /1 */
-+			  0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
-+
-+	/* RGB I/F porch timing */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
-+			  0x10, /* VBP_RGB_GEN */
-+			  0x10, /* VFP_RGB_GEN */
-+			  0x05, /* DE_BP_RGB_GEN */
-+			  0x05, /* DE_FP_RGB_GEN */
-+			  /* The rest is undocumented in ST7703 datasheet */
-+			  0x03, 0xFF,
-+			  0x00, 0x00,
-+			  0x00, 0x00);
-+
-+	/* Source driving settings. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
-+			  0x73, /* N_POPON */
-+			  0x73, /* N_NOPON */
-+			  0x50, /* I_POPON */
-+			  0x50, /* I_NOPON */
-+			  0x00, /* SCR[31,24] */
-+			  0xC0, /* SCR[23,16] */
-+			  0x08, /* SCR[15,8] */
-+			  0x70, /* SCR[7,0] */
-+			  0x00  /* Undocumented */);
-+
-+	/* NVDDD_SEL = -1.8V, VDDD_SEL = out of range (possibly 1.9V?) */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
-+
-+	/*
-+	 * SS_PANEL = 1 (reverse scan), GS_PANEL = 0 (normal scan)
-+	 * REV_PANEL = 1 (normally black panel), BGR_PANEL = 1 (BGR)
-+	 */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
-+
-+	/* Zig-Zag Type C column inversion. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
-+
-+	/* Set display resolution. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP,
-+			  0xF0, /* NL = 240 */
-+			  0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
-+				 * RESO_SEL = 720RGB
-+				 */
-+			  0xF0  /* WHITE_GND_EN = 1 (GND),
-+				 * WHITE_FRAME_SEL = 7 frames,
-+				 * ISC = 0 frames
-+				 */);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
-+			  0x00, /* PNOEQ */
-+			  0x00, /* NNOEQ */
-+			  0x0B, /* PEQGND */
-+			  0x0B, /* NEQGND */
-+			  0x10, /* PEQVCI */
-+			  0x10, /* NEQVCI */
-+			  0x00, /* PEQVCI1 */
-+			  0x00, /* NEQVCI1 */
-+			  0x00, /* reserved */
-+			  0x00, /* reserved */
-+			  0xFF, /* reserved */
-+			  0x00, /* reserved */
-+			  0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
-+			  0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
-+				 * VEDIO_NO_CHECK_EN = 0
-+				 * ESD_WHITE_GND_EN = 0
-+				 * ESD_DET_TIME_SEL = 0 frames
-+				 */);
-+
-+	/* Undocumented command. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_C6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
-+			  0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
-+			  0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
-+			  0x32, /* VRP  */
-+			  0x32, /* VRN */
-+			  0x77, /* reserved */
-+			  0xF1, /* APS = 1 (small),
-+				 * VGL_DET_EN = 1, VGH_DET_EN = 1,
-+				 * VGL_TURBO = 1, VGH_TURBO = 1
-+				 */
-+			  0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
-+			  0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
-+			  0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
-+			  0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
-+			  0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
-+			  0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
-+
-+	/* Reference voltage. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP,
-+			  0x07, /* VREF_SEL = 4.2V */
-+			  0x07  /* NVREF_SEL = 4.2V */);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM,
-+			  0x2C, /* VCOMDC_F = -0.67V */
-+			  0x2C  /* VCOMDC_B = -0.67V */);
-+
-+	/* Undocumented command. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
-+
-+	/* This command is to set forward GIP timing. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
-+			  0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
-+			  0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-+			  0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
-+			  0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
-+			  0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
-+			  0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-+			  0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+
-+	/* This command is to set backward GIP timing. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
-+			  0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
-+			  0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
-+			  0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-+			  0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
-+			  0xA5, 0x00, 0x00, 0x00, 0x00);
-+
-+	/* Adjust the gamma characteristics of the panel. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
-+			  0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
-+			  0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
-+			  0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
-+			  0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
-+			  0x12, 0x18);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode xbd599_mode = {
-+	.hdisplay    = 720,
-+	.hsync_start = 720 + 40,
-+	.hsync_end   = 720 + 40 + 40,
-+	.htotal	     = 720 + 40 + 40 + 40,
-+	.vdisplay    = 1440,
-+	.vsync_start = 1440 + 18,
-+	.vsync_end   = 1440 + 18 + 10,
-+	.vtotal	     = 1440 + 18 + 10 + 17,
-+	.vrefresh    = 60,
-+	.clock	     = 69000,
-+	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	.width_mm    = 68,
-+	.height_mm   = 136,
++&de {
++	status = "okay";
 +};
 +
-+static const struct st7703_panel_desc xbd599_desc = {
-+	.mode = &xbd599_mode,
-+	.lanes = 4,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.init_sequence = xbd599_init_sequence,
++&dphy {
++	status = "okay";
 +};
 +
- static int st7703_enable(struct drm_panel *panel)
- {
- 	struct st7703 *ctx = panel_to_st7703(panel);
-@@ -428,6 +622,7 @@ static int st7703_remove(struct mipi_dsi_device *dsi)
- 
- static const struct of_device_id st7703_of_match[] = {
- 	{ .compatible = "rocktech,jh057n00900", .data = &jh057n00900_panel_desc },
-+	{ .compatible = "xingbangda,xbd599", .data = &xbd599_desc },
- 	{ /* sentinel */ }
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	panel@0 {
++		compatible = "xingbangda,xbd599";
++		reg = <0>;
++		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
++		iovcc-supply = <&reg_dldo2>;
++		vcc-supply = <&reg_ldo_io0>;
++		backlight = <&backlight>;
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
  };
- MODULE_DEVICE_TABLE(of, st7703_of_match);
+@@ -188,6 +219,10 @@ &r_pio {
+ 	 */
+ };
+ 
++&r_pwm {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.27.0
 
