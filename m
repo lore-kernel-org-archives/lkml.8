@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E12C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A31CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9537D2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D97C2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UWsgLVFR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hjeADPj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgFZNFf (ORCPT
+        id S1728065AbgFZNFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
+        Fri, 26 Jun 2020 09:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFZNFb (ORCPT
+        with ESMTP id S1727977AbgFZNFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:05:31 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327F1C08C5DB
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o8so8766743wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:31 -0700 (PDT)
+        Fri, 26 Jun 2020 09:05:35 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D238C08C5DB
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:35 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so9386002wrj.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6du7sHpmroejr9lp9ztEYkWIN/fkcg7/2Uksn80/5h0=;
-        b=UWsgLVFRaDNyhFO1xT+LBUyTFFSmoKYce1w5HR+oyOoZjlI2VIetRXHVv0ch5mYgXC
-         IqCuj/qcmtBNc/qm+riwEb3JXaPnmf3WlzoUZxMse3tMkwOUl2f9F6hAwtFxCgQYlgQu
-         /NBi05hfpZyzwTGRd5e3u6roLKEP5pr0sKjGU60X+9CJKWYbTeI6Y9Q6WHxwrUZTf4M6
-         PHIZTyaDKpc657YDC4rsn3THlGs6o2cnDeiLFGABbZTmcnQeu+a04Dov95pgGhnvLKor
-         ba62ALADZf3j6AMz9l+Xu/vmcMB4Hui9d9pWDj1pw09ld0N6+M+hEN3RpR55JEF+iFnR
-         B4zg==
+        bh=GAj330t/cLz/0OA5LR4Jx3FFMEjm0vNa388Rc6BW4E8=;
+        b=hjeADPj+J8vNOwmitxg9Sq/bkOGvPZqy5wI5dY78aKilYPQ34vfHpdzTNNXwUUda7a
+         TeAh0Vy3PKN3+5oOUCy3GnILWKVTXX9wvt8Qq4rF8ic9I5U4XegFPlEsffv2Yi3lcvi8
+         BdfZNJkUPRKfF5m/DikKLMAd024eQ2QQSLb/Y8B+XcAnnAz7sI6aA9iT7b3kQWFE2aLQ
+         IKEIVVaGH7mRmTnXSqC5d92uZuiVUJrtmwRDZyHMD/fvC4IJDyEFdXf1FGu4vNKPvT+K
+         qBgMz360dqdXTLJNuZzZ+bk/WGh+WGtTly/yXu6npw/+hb+xylgPxq2jL9GqPpBfesdb
+         285w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6du7sHpmroejr9lp9ztEYkWIN/fkcg7/2Uksn80/5h0=;
-        b=KZgXFA68eVDWkZpB2JZZUCB2Qtk3nBiSXK97EemB7XXKCnRDNXFh0dR7DE1pilTaSu
-         Qo29FzlrTjFYjADAQhcrmiFgGwhvI0BkIBY4hVSV4ag3LiUuSPEXgWi1N4sNMMkdSODz
-         hldV/kkKAFTwPdTKocx/kZb+Ys+YMxUENSznTIVKJiCMxNeNW5dCQBYvis3SB/0z4DLe
-         86XkC4k3h2FnjSrIk+k52mv29C17Atmin8kZgt/YO1FhpOIqERW41oD31kBmY2lDviyZ
-         OW2/EW2Q4pEDnLrdbBn5D8hKGjVAMgosYnJaUiQtVI8qZlSpi/Kw//YncKFc6N1A6Ple
-         9SXw==
-X-Gm-Message-State: AOAM531inZXAhwOA/t837vT0REzasYHgkLQFEApeMd/ODDMNX17rGftw
-        WiJ8xu2HfU4QwGhVwR+d4DGclQ==
-X-Google-Smtp-Source: ABdhPJyJ2n62/Y1Rl+W1QOIJetY7OS5+awAyZ6wQTR6lWI70ZzGrBOLFafJyKmyAFcSNekqG1/1E/g==
-X-Received: by 2002:a05:600c:2254:: with SMTP id a20mr3238838wmm.115.1593176729872;
-        Fri, 26 Jun 2020 06:05:29 -0700 (PDT)
+        bh=GAj330t/cLz/0OA5LR4Jx3FFMEjm0vNa388Rc6BW4E8=;
+        b=sUTULA4o4kCJFeeh9d1S2ATsDfSEA88H43I0TCN+/+/DysjeVknnPYY4VETHrf8uyI
+         jgZZwuJ1GmumMvrDDKsg+EtiEanBSenPkm/sLubIV8UvGiNIuXnNMZAFvFca1xRyry3h
+         10/6Ox0e1u5ELqrbU9czl+pYTI/ZEcN7oPrEEknAqo5N67+8Dlo58C0LixEyT447C6h5
+         bjjJGymJ/bHjomif5c6hiNibtlG7/RbUjdNawq4fs7A6oC8gEKdXxQ8ilvlGYjcYfH3b
+         wChOtWWZI48mWHoVm2O+t4TDFXfpT/0Jn7F52YifkzWF0w/ZaolJHnsRw0JDMOITvML+
+         bIbg==
+X-Gm-Message-State: AOAM533/+SlBXbsj8mE/DSFsnO7XVG6gsvzecwtA5twL5Tqz4Amv/EMR
+        KvAFcypGQbLdae/ubed+y1sE/w==
+X-Google-Smtp-Source: ABdhPJz0Z/3IvuQkcNWe4kc7SPhrizHq3K94NdYdMbd/faRkSyqVl19ju6hkKCpPo/dFz1MB0suI5A==
+X-Received: by 2002:adf:9148:: with SMTP id j66mr1872622wrj.311.1593176733769;
+        Fri, 26 Jun 2020 06:05:33 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id u20sm16746904wmc.44.2020.06.26.06.05.28
+        by smtp.gmail.com with ESMTPSA id u20sm16746904wmc.44.2020.06.26.06.05.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 06:05:29 -0700 (PDT)
+        Fri, 26 Jun 2020 06:05:32 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Rodolfo Giometti <giometti@linux.it>,
-        "Eurotech S.p.A" <info@eurotech.it>
-Subject: [PATCH 01/10] misc: c2port: core: Ensure source size does not equal destination size in strncpy()
-Date:   Fri, 26 Jun 2020 14:05:16 +0100
-Message-Id: <20200626130525.389469-2-lee.jones@linaro.org>
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 04/10] misc: lkdtm: bugs: At least try to use popuated variable
+Date:   Fri, 26 Jun 2020 14:05:19 +0100
+Message-Id: <20200626130525.389469-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200626130525.389469-1-lee.jones@linaro.org>
 References: <20200626130525.389469-1-lee.jones@linaro.org>
@@ -79,47 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to ensure there's a place for the NULL terminator.
+The result may not be intereresting, but not using a set variable
+is bad form and causes W=1 kernel builds to complain.
 
 Fixes the following W=1 warning(s):
 
- In file included from include/linux/bitmap.h:9,
- from include/linux/nodemask.h:95,
- from include/linux/mmzone.h:17,
- from include/linux/gfp.h:6,
- from include/linux/umh.h:4,
- from include/linux/kmod.h:9,
- from include/linux/module.h:16,
- from drivers/misc/c2port/core.c:9:
- In function ‘strncpy’,
- inlined from ‘c2port_device_register’ at drivers/misc/c2port/core.c:926:2:
- include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 32 equals destination size [-Wstringop-truncation]
- 297 | #define __underlying_strncpy __builtin_strncpy
- | ^
- include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
- 307 | return __underlying_strncpy(p, q, size);
- | ^~~~~~~~~~~~~~~~~~~~
+ drivers/misc/lkdtm/bugs.c: In function ‘lkdtm_STACK_GUARD_PAGE_LEADING’:
+ drivers/misc/lkdtm/bugs.c:331:25: warning: variable ‘byte’ set but not used [-Wunused-but-set-variable]
+ 331 | volatile unsigned char byte;
+ | ^~~~
+ drivers/misc/lkdtm/bugs.c: In function ‘lkdtm_STACK_GUARD_PAGE_TRAILING’:
+ drivers/misc/lkdtm/bugs.c:345:25: warning: variable ‘byte’ set but not used [-Wunused-but-set-variable]
+ 345 | volatile unsigned char byte;
+ | ^~~~
 
-Cc: Rodolfo Giometti <giometti@linux.it>
-Cc: "Eurotech S.p.A" <info@eurotech.it>
+Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/c2port/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/lkdtm/bugs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/c2port/core.c b/drivers/misc/c2port/core.c
-index 33bba18022892..80d87e8a0bea9 100644
---- a/drivers/misc/c2port/core.c
-+++ b/drivers/misc/c2port/core.c
-@@ -923,7 +923,7 @@ struct c2port_device *c2port_device_register(char *name,
- 	}
- 	dev_set_drvdata(c2dev->dev, c2dev);
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 736675f0a2464..4f94296fc58ad 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -334,7 +334,7 @@ void lkdtm_STACK_GUARD_PAGE_LEADING(void)
  
--	strncpy(c2dev->name, name, C2PORT_NAME_LEN);
-+	strncpy(c2dev->name, name, C2PORT_NAME_LEN - 1);
- 	c2dev->ops = ops;
- 	mutex_init(&c2dev->mutex);
+ 	byte = *ptr;
  
+-	pr_err("FAIL: accessed page before stack!\n");
++	pr_err("FAIL: accessed page before stack! (byte: %x)\n", byte);
+ }
+ 
+ /* Test that VMAP_STACK is actually allocating with a trailing guard page */
+@@ -348,7 +348,7 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+ 
+ 	byte = *ptr;
+ 
+-	pr_err("FAIL: accessed page after stack!\n");
++	pr_err("FAIL: accessed page after stack! (byte: %x)\n", byte);
+ }
+ 
+ void lkdtm_UNSET_SMEP(void)
 -- 
 2.25.1
 
