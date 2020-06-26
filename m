@@ -2,114 +2,233 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC09F207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dkALFZOi"
+	by mail.kernel.org (Postfix) with ESMTP id 2C729207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgFZMVy (ORCPT
+        id S1728440AbgFZMWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:21:54 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13983 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgFZMVx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:21:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef5e8020000>; Fri, 26 Jun 2020 05:20:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 26 Jun 2020 05:21:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 05:21:53 -0700
-Received: from [10.26.73.157] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
- 2020 12:21:51 +0000
-Subject: Re: [PATCH V2] soc/tegra: Add defines for Tegra186+ chip IDs
-To:     Sandipan Patra <spatra@nvidia.com>, <treding@nvidia.com>
-CC:     <bbasu@nvidia.com>, <kyarlagadda@nvidia.com>, <snikam@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1593171922-30632-1-git-send-email-spatra@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <bb9ae015-4fe8-59d4-48fd-6a99a7ae8bc9@nvidia.com>
-Date:   Fri, 26 Jun 2020 13:21:49 +0100
+        Fri, 26 Jun 2020 08:22:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27900 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728256AbgFZMWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 08:22:46 -0400
+IronPort-SDR: /E2UnzCPnldibGEv0Cn1dcKnJb8gseUfN0kMsTZYvAL3XPVBDGs5//RCijy0SxxHyicENW7uA6
+ gGNqWwaDWwvg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="145368538"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="145368538"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 05:22:46 -0700
+IronPort-SDR: F5eHo2m2CFQpkNJaLvMJixEf0mOWgyXmWSFNR0ssn6jmoARey1jsvDfPfsk2m3B9/kk+8TIjqL
+ 8AK8eNcG2bhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="301047902"
+Received: from swallace-mobl2.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.252.52.84])
+  by orsmga007.jf.intel.com with ESMTP; 26 Jun 2020 05:22:42 -0700
+Subject: Re: the XSK buffer pool needs be to reverted
+To:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        bpf <bpf@vger.kernel.org>
+References: <20200626074725.GA21790@lst.de>
+Cc:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Message-ID: <f1512c3e-79eb-ba75-6f38-ca09795973c1@intel.com>
+Date:   Fri, 26 Jun 2020 14:22:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1593171922-30632-1-git-send-email-spatra@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200626074725.GA21790@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593174018; bh=lcR1OuqUE4nBsR2lUB4yD8hOU88qdEHQbzDUa07kZ0I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dkALFZOi+Gi3URC2kHiaKd/E0I/zUk4h1OMbfdTirb0oR4iQalfQncXsG867be7V2
-         ViZkE8oSSlsbExwojcyDacHv0it5i11VMdeLes2xIeCI6RwXoPy32LCA9f9JdgpU01
-         /kKK2qKGa7VIgRuPy4oZEL70T30D4q6gdiTus2BpEpVvh7zA88yCjZ12bXk3Qggxs3
-         z8yoDhXGaQZJXZkkwJrxMrBWh2B2ZbvqRo+0rYYrevcw80w5yX9hIQSdCT7znT4gt4
-         AiqOs0zFLos1l7vrSENe6tlJufu9XeiPde2LI67f/M9Yu1x7EPOh0BGWDlReI10FyQ
-         2TxcDyX2/7AKg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 26/06/2020 12:45, Sandipan Patra wrote:
-> Add the chip IDs for NVIDIA Tegra186, Tegra194 and Tegra234
-> SoC families.
+On 2020-06-26 09:47, Christoph Hellwig wrote:
+> Hi Björn,
 > 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
-> V2:
->   - Precise commit message
+> you addition of the xsk_buff_pool.c APIs in commit 2b43470add8c
+> ("xsk: Introduce AF_XDP buffer allocation API") is unfortunately rather
+> broken by making lots of assumptions and poking into dma-direct and
+> swiotlb internals that are of no business to outside users and clearly
+> marked as such.   I'd be glad to work with your doing something proper
+> for pools, but that needs proper APIs and probably live in the dma
+> mapping core, but for that you'd actually need to contact the relevant
+> maintainers before poking into internals.
+>
+
+Christoph,
+
+Thanks for clarifying that. Let's work on a solution that can reside in
+the dma mapping core.
+
+> The commit seems to have a long dove tail of commits depending on it
+> despite only being a month old, so maybe you can do the revert for now?
+>
+
+Reverting the whole series sounds a bit too much. Let's focus on the
+part that breaks the dma api abstraction. I'm assuming that you're
+referring to the
+
+   static bool xp_check_cheap_dma(struct xsk_buff_pool *pool)
+
+function (and related functions called from that)?
+
+> Note that this is somewhat urgent, as various of the APIs that the code
+> is abusing are slated to go away for Linux 5.9, so this addition comes
+> at a really bad time.
 > 
->  include/soc/tegra/fuse.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/soc/tegra/fuse.h b/include/soc/tegra/fuse.h
-> index 252ea20..4a5236b 100644
-> --- a/include/soc/tegra/fuse.h
-> +++ b/include/soc/tegra/fuse.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
->  /*
-> - * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
-> + * Copyright (c) 2012-2020, NVIDIA CORPORATION.  All rights reserved.
->   */
->  
->  #ifndef __SOC_TEGRA_FUSE_H__
-> @@ -12,6 +12,9 @@
->  #define TEGRA124	0x40
->  #define TEGRA132	0x13
->  #define TEGRA210	0x21
-> +#define TEGRA186	0x18
-> +#define TEGRA194	0x19
-> +#define TEGRA234	0x23
->  
->  #define TEGRA_FUSE_SKU_CALIB_0	0xf0
->  #define TEGRA30_FUSE_SATA_CALIB	0x124
 
+Understood. Wdyt about something in the lines of the diff below? It's
+build tested only, but removes all non-dma API usage ("poking
+internals"). Would that be a way forward, and then as a next step work
+on a solution that would give similar benefits, but something that would
+live in the dma mapping core?
 
-Thanks. Looks good to me.
+diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
+index a4ff226505c9..003b172ce0d2 100644
+--- a/include/net/xsk_buff_pool.h
++++ b/include/net/xsk_buff_pool.h
+@@ -40,7 +40,6 @@ struct xsk_buff_pool {
+  	u32 headroom;
+  	u32 chunk_size;
+  	u32 frame_len;
+-	bool cheap_dma;
+  	bool unaligned;
+  	void *addrs;
+  	struct device *dev;
+@@ -80,9 +79,6 @@ static inline dma_addr_t xp_get_frame_dma(struct 
+xdp_buff_xsk *xskb)
+  void xp_dma_sync_for_cpu_slow(struct xdp_buff_xsk *xskb);
+  static inline void xp_dma_sync_for_cpu(struct xdp_buff_xsk *xskb)
+  {
+-	if (xskb->pool->cheap_dma)
+-		return;
+-
+  	xp_dma_sync_for_cpu_slow(xskb);
+  }
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+@@ -91,9 +87,6 @@ void xp_dma_sync_for_device_slow(struct xsk_buff_pool 
+*pool, dma_addr_t dma,
+  static inline void xp_dma_sync_for_device(struct xsk_buff_pool *pool,
+  					  dma_addr_t dma, size_t size)
+  {
+-	if (pool->cheap_dma)
+-		return;
+-
+  	xp_dma_sync_for_device_slow(pool, dma, size);
+  }
 
-Jon
+diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+index 540ed75e4482..5714f3711381 100644
+--- a/net/xdp/xsk_buff_pool.c
++++ b/net/xdp/xsk_buff_pool.c
+@@ -2,9 +2,6 @@
 
--- 
-nvpublic
+  #include <net/xsk_buff_pool.h>
+  #include <net/xdp_sock.h>
+-#include <linux/dma-direct.h>
+-#include <linux/dma-noncoherent.h>
+-#include <linux/swiotlb.h>
+
+  #include "xsk_queue.h"
+
+@@ -55,7 +52,6 @@ struct xsk_buff_pool *xp_create(struct page **pages, 
+u32 nr_pages, u32 chunks,
+  	pool->free_heads_cnt = chunks;
+  	pool->headroom = headroom;
+  	pool->chunk_size = chunk_size;
+-	pool->cheap_dma = true;
+  	pool->unaligned = unaligned;
+  	pool->frame_len = chunk_size - headroom - XDP_PACKET_HEADROOM;
+  	INIT_LIST_HEAD(&pool->free_list);
+@@ -125,48 +121,6 @@ static void xp_check_dma_contiguity(struct 
+xsk_buff_pool *pool)
+  	}
+  }
+
+-static bool __maybe_unused xp_check_swiotlb_dma(struct xsk_buff_pool *pool)
+-{
+-#if defined(CONFIG_SWIOTLB)
+-	phys_addr_t paddr;
+-	u32 i;
+-
+-	for (i = 0; i < pool->dma_pages_cnt; i++) {
+-		paddr = dma_to_phys(pool->dev, pool->dma_pages[i]);
+-		if (is_swiotlb_buffer(paddr))
+-			return false;
+-	}
+-#endif
+-	return true;
+-}
+-
+-static bool xp_check_cheap_dma(struct xsk_buff_pool *pool)
+-{
+-#if defined(CONFIG_HAS_DMA)
+-	const struct dma_map_ops *ops = get_dma_ops(pool->dev);
+-
+-	if (ops) {
+-		return !ops->sync_single_for_cpu &&
+-			!ops->sync_single_for_device;
+-	}
+-
+-	if (!dma_is_direct(ops))
+-		return false;
+-
+-	if (!xp_check_swiotlb_dma(pool))
+-		return false;
+-
+-	if (!dev_is_dma_coherent(pool->dev)) {
+-#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) ||		\
+-	defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) ||	\
+-	defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE)
+-		return false;
+-#endif
+-	}
+-#endif
+-	return true;
+-}
+-
+  int xp_dma_map(struct xsk_buff_pool *pool, struct device *dev,
+  	       unsigned long attrs, struct page **pages, u32 nr_pages)
+  {
+@@ -195,7 +149,6 @@ int xp_dma_map(struct xsk_buff_pool *pool, struct 
+device *dev,
+  		xp_check_dma_contiguity(pool);
+
+  	pool->dev = dev;
+-	pool->cheap_dma = xp_check_cheap_dma(pool);
+  	return 0;
+  }
+  EXPORT_SYMBOL(xp_dma_map);
+@@ -280,11 +233,9 @@ struct xdp_buff *xp_alloc(struct xsk_buff_pool *pool)
+  	xskb->xdp.data = xskb->xdp.data_hard_start + XDP_PACKET_HEADROOM;
+  	xskb->xdp.data_meta = xskb->xdp.data;
+
+-	if (!pool->cheap_dma) {
+-		dma_sync_single_range_for_device(pool->dev, xskb->dma, 0,
+-						 pool->frame_len,
+-						 DMA_BIDIRECTIONAL);
+-	}
++	dma_sync_single_range_for_device(pool->dev, xskb->dma, 0,
++					 pool->frame_len,
++					 DMA_BIDIRECTIONAL);
+  	return &xskb->xdp;
+  }
+  EXPORT_SYMBOL(xp_alloc);
