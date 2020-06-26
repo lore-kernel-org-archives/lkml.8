@@ -2,209 +2,114 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0D720773
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2379920773
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F7UD2TYb"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="itVozhVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgFZPnh (ORCPT
+        id S1729911AbgFZPoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:43:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48326 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729850AbgFZPng (ORCPT
+        Fri, 26 Jun 2020 11:44:05 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12431 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgFZPoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:43:36 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QFgo7B046621;
-        Fri, 26 Jun 2020 10:42:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593186171;
-        bh=k5QXD9rLVHVE83qsFkalFRHulnjUdzuUDG+p/Omjzzg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F7UD2TYb5XodiKoO+u7kg4dnE+GVqnJ0vJ9Jq5R3bQFKq9AcfuMnszX/NPc6JxEgX
-         GW5XSxD/fiOy9KsVlB0dWSsVUuenHonq6KThWpzLt0LQMotoGxXZDV1DEGDL6fCTg7
-         7D7tX1YSmArCrMmpFeJoZByx271FDhKYaLVbYVJE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QFgoZ7040681
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 10:42:50 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 10:42:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 10:42:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QFgoNQ059554;
-        Fri, 26 Jun 2020 10:42:50 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 4/4] dt-bindings: tas2562: Convert the tas2562 binding to yaml
-Date:   Fri, 26 Jun 2020 10:41:43 -0500
-Message-ID: <20200626154143.20351-4-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200626154143.20351-1-dmurphy@ti.com>
-References: <20200626154143.20351-1-dmurphy@ti.com>
+        Fri, 26 Jun 2020 11:44:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef617950000>; Fri, 26 Jun 2020 08:43:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 26 Jun 2020 08:44:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 08:44:04 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
+ 2020 15:44:03 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 26 Jun 2020 15:44:03 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ef617bf0001>; Fri, 26 Jun 2020 08:44:03 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v4 0/4] Add cpufreq driver for Tegra194
+Date:   Fri, 26 Jun 2020 21:13:52 +0530
+Message-ID: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593186197; bh=UM5Bbd0/GCwYfLhn/DGNjOUA+9lJK2yysJtZ6vuKT3w=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=itVozhVZE0HqUPYrUE3m9zs4S5isSIaSDKgdblwqwDxbYUjQqWeR6Ocizr8a6ENYD
+         eAe5ebcN6juo8UFkShxVOomHAq8+j8AvyJg37XPJYIvwfZxZX2bRtH/pPXs93dfD1+
+         L+PHJ5dO870vMQo5GnDLv+51Sx5UVMfYHrXmC66xGPxcr93hTv24tyEyPNtaF36x2N
+         olV0DzDAA1aLQ8Sl55fiQaRH7K6s/VX7s+5GB2mT29KAWgodPLNcnO37j28sQ0O7tI
+         XPEcoSmZsP37G8ww2zMsBLF+23B6GcmhrT0XVJDFm7cZtX1ESYDfKmq0wm20//s4nP
+         qZol7eI/JzlaA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the TAS2562 text file to yaml format.
+The patch series adds cpufreq driver for Tegra194 SOC.
+Incorporated the feedback on previous version patchset.
+Please consider this patch series for merging in 5.9.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/sound/tas2562.txt     | 37 ---------
- .../devicetree/bindings/sound/tas2562.yaml    | 77 +++++++++++++++++++
- 2 files changed, 77 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
- create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
+v3[3] -> v4
+- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
+- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
+- Remove flush_workqueue from free_resources[Viresh]
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
-deleted file mode 100644
-index dc6d7362ded7..000000000000
---- a/Documentation/devicetree/bindings/sound/tas2562.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--Texas Instruments TAS2562 Smart PA
--
--The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
--efficiently driving high peak power into small loudspeakers.
--Integrated speaker voltage and current sense provides for
--real time monitoring of loudspeaker behavior.
--
--Required properties:
-- - #address-cells  - Should be <1>.
-- - #size-cells     - Should be <0>.
-- - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
-- - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
-- - ti,imon-slot-no:- TDM TX current sense time slot.
-- - ti,vmon-slot-no:- TDM TX voltage sense time slot. This slot must always be
--		     greater then ti,imon-slot-no.
--
--Optional properties:
--- interrupt-parent: phandle to the interrupt controller which provides
--                    the interrupt.
--- interrupts: (GPIO) interrupt to which the chip is connected.
--- shut-down-gpio: GPIO used to control the state of the device.
--
--Examples:
--tas2562@4c {
--        #address-cells = <1>;
--        #size-cells = <0>;
--        compatible = "ti,tas2562";
--        reg = <0x4c>;
--
--        interrupt-parent = <&gpio1>;
--        interrupts = <14>;
--
--	shut-down-gpio = <&gpio1 15 0>;
--        ti,imon-slot-no = <0>;
--        ti,vmon-slot-no = <1>;
--};
--
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
-new file mode 100644
-index 000000000000..1fb467e14d4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+# Copyright (C) 2019 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Texas Instruments TAS2562 Smart PA
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-+  efficiently driving high peak power into small loudspeakers.
-+  Integrated speaker voltage and current sense provides for
-+  real time monitoring of loudspeaker behavior.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tas2562
-+      - ti,tas2563
-+
-+  reg:
-+    maxItems: 1
-+    description: |
-+       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
-+
-+  shut-down-gpio:
-+    description: GPIO used to control the state of the device.
-+    deprecated: true
-+
-+  shutdown-gpio:
-+    description: GPIO used to control the state of the device.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  ti,imon-slot-no:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: TDM TX current sense time slot.
-+
-+  ti,vmon-slot-no:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      TDM TX voltage sense time slot.  This slot must always be greater then
-+      ti,imon-slot-no.
-+
-+  '#sound-dai-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+   #include <dt-bindings/gpio/gpio.h>
-+   i2c0 {
-+     #address-cells = <1>;
-+     #size-cells = <0>;
-+     codec: codec@4c {
-+       compatible = "ti,tas2562";
-+       reg = <0x4c>;
-+       #sound-dai-cells = <1>;
-+       interrupt-parent = <&gpio1>;
-+       interrupts = <14>;
-+       shutdown-gpio = <&gpio1 15 0>;
-+       ti,imon-slot-no = <0>;
-+       ti,vmon-slot-no = <2>;
-+     };
-+   };
-+
-+...
+v2[2] -> v3
+- Set same policy for all cpus in a cluster[Viresh].
+- Add compatible string for CPU Complex under cpus node[Thierry].
+- Add reference to bpmp node under cpus node[Thierry].
+- Bind cpufreq driver to CPU Complex compatible string[Thierry].
+- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
+
+v1[1] -> v2:
+- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+- Rename opp_table to freq_table [Viresh].
+
+Sumit Gupta (4):
+  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
+  arm64: tegra: Add t194 ccplex compatible and bpmp property
+  cpufreq: Add Tegra194 cpufreq driver
+  arm64: defconfig: Enable CONFIG_ARM_TEGRA194_CPUFREQ
+
+ Documentation/devicetree/bindings/arm/cpus.yaml |   9 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
+ arch/arm64/configs/defconfig                    |   1 +
+ drivers/cpufreq/Kconfig.arm                     |   6 +
+ drivers/cpufreq/Makefile                        |   1 +
+ drivers/cpufreq/tegra194-cpufreq.c              | 396 ++++++++++++++++++++++++
+ 6 files changed, 415 insertions(+)
+ create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+
+[1] https://marc.info/?t=157539452300001&r=1&w=2
+[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
+[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
 -- 
-2.26.2
+2.7.4
 
