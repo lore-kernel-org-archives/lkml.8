@@ -2,171 +2,144 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05818C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D75DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8A552075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZRiyyQsH"
+	by mail.kernel.org (Postfix) with ESMTP id 5E88C2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593198866;
+	bh=z2oF+alcajhjxoNUuykiKixvNasruwuFGTQMBcBskD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BL68YsUcY1c7IbjcASy03XBTMXEn6/zacTI8q6Eo8d9rNRtk8mlCYimtapIciZeYf
+	 g60sAdTOfMAYyj40oLPUQ8bEXhszSCo+OxK/mnPIvQYb+qLBytuNhYkvQ+TkLVn7pb
+	 vfkuuiqLjFKHA6k2aazE35hEbbXlMrhb5M1ADhBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbgFZTLa (ORCPT
+        id S1725824AbgFZTOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:11:30 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725803AbgFZTL2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:11:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593198686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oMtqF4vi6DX6dXlsvQVICwp3FFeCPzU9wJWbHt5gbk0=;
-        b=ZRiyyQsHNWvoba3f304v8LytgzlJipbUUwZ12RmpVRQvL1OJurNF6IfxctkmLraz37okoo
-        T3/ypbGMW+Eo98olXudkAHC6bUSwRRZtq+8nWSNwNXOETBDQDnoqT+FDTGYJyeZ6pLAaiT
-        w1uyVOeCBfAQDnSHNuFQlKHnYJbh98E=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-KaH_z9egOh6i1gTgnJfvbA-1; Fri, 26 Jun 2020 15:11:23 -0400
-X-MC-Unique: KaH_z9egOh6i1gTgnJfvbA-1
-Received: by mail-qv1-f72.google.com with SMTP id q5so7012611qvp.23
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:11:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oMtqF4vi6DX6dXlsvQVICwp3FFeCPzU9wJWbHt5gbk0=;
-        b=gP5Row13dc1aNifoCmUp6XumAKaXIjW0noBySQV/GsvlLhFOtAug83TGwTXuLv9pZH
-         RSs8oB379HEzPh3og0ufgPdyubd0STGa7XadWNWWWvAywyCsT80TV7uku+518ja6Cj3D
-         v7G23tF2pEV/mOiQc7EnDFTnYb/z62VkNq5iXwCIKClr1cN/JZqU/JVqnwjG3I9Tqq5k
-         zipo9DfIIm1WP4oDZTNWeHiiqVW1S3i7XDm34dpC+e9hN5nzsCoeDk4SDoE/6WS5j6jP
-         PCG3HpfdyIDDU6T7sVIL8FA235wQunmcyINGyCqa62G//bfSz9aH1uXojuSS/f8harKU
-         sxaw==
-X-Gm-Message-State: AOAM533CYgw9I/CmNe+E0NW/B2PMV8T0LPnnkAaBZkREiHFRC2mTAt1x
-        Twi1w4foZY8iHDV8qwRM1chVXKdsaZh8jS4lRn7fBIS67nswpFmeChj4e7JYcdeui79yapJeFqw
-        59TefULa+5ZEJ0VhAupzuIEyH
-X-Received: by 2002:a0c:e554:: with SMTP id n20mr4623337qvm.14.1593198681675;
-        Fri, 26 Jun 2020 12:11:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzpLVlhU1X6J3CS20kGcMtpRORBsaRk1S+ucab60PTn/peBSUj/R0YxVh2GO7NrepuCA38VxQ==
-X-Received: by 2002:a0c:e554:: with SMTP id n20mr4623305qvm.14.1593198681307;
-        Fri, 26 Jun 2020 12:11:21 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id x197sm8784816qka.74.2020.06.26.12.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 12:11:20 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 15:11:18 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200626191118.GC175520@xz-x1>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
- <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
- <20200625162540.GC3437@linux.intel.com>
- <20200626180732.GB175520@xz-x1>
- <20200626181820.GG6583@linux.intel.com>
+        Fri, 26 Jun 2020 15:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFZTOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:14:24 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 311D3206A1;
+        Fri, 26 Jun 2020 19:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593198863;
+        bh=z2oF+alcajhjxoNUuykiKixvNasruwuFGTQMBcBskD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cvleF0UdnEtliTWMUd/EQkLaX5l7SVtigqGUCDB5YsAXJBr/9xo9IBRtfT1DSQuvA
+         Bu56ZM0JGSAEM9Qw9Pxql4eRma9YpwgfVZexqcN72JvG/RS3HBuqIgMDI2eLlXqiIh
+         /W0oL64GDhIozpKiRgk2+Z8MEBHmyucoUdZcf//M=
+Date:   Fri, 26 Jun 2020 14:14:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     refactormyself@gmail.com, linux-pci@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: pciehp: Fix wrong failure check on
+ pcie_capability_read_*()
+Message-ID: <20200626191421.GA2924609@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626181820.GG6583@linux.intel.com>
+In-Reply-To: <20200620090936.3khh3gj46pnojnrw@wunner.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:18:20AM -0700, Sean Christopherson wrote:
-> On Fri, Jun 26, 2020 at 02:07:32PM -0400, Peter Xu wrote:
-> > On Thu, Jun 25, 2020 at 09:25:40AM -0700, Sean Christopherson wrote:
-> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > index 5eb618dbf211..64322446e590 100644
-> > > --- a/arch/x86/kvm/cpuid.c
-> > > +++ b/arch/x86/kvm/cpuid.c
-> > > @@ -1013,9 +1013,9 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
-> > >                 *ebx = entry->ebx;
-> > >                 *ecx = entry->ecx;
-> > >                 *edx = entry->edx;
-> > > -               if (function == 7 && index == 0) {
-> > > +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) {
-> > >                         u64 data;
-> > > -                       if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
-> > > +                       if (!kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data) &&
-> > >                             (data & TSX_CTRL_CPUID_CLEAR))
-> > >                                 *ebx &= ~(F(RTM) | F(HLE));
-> > >                 }
-> > > 
-> > > 
-> > > On VMX, MSR_IA32_TSX_CTRL will be added to the so called shared MSR array
-> > > regardless of whether or not it is being advertised to userspace (this is
-> > > a bug in its own right).  Using the host_initiated variant means KVM will
-> > > incorrectly bypass VMX's ARCH_CAP_TSX_CTRL_MSR check, i.e. incorrectly
-> > > clear the bits if userspace is being weird and stuffed MSR_IA32_TSX_CTRL
-> > > without advertising it to the guest.
-> > 
-> > Btw, would it be more staightforward to check "vcpu->arch.arch_capabilities &
-> > ARCH_CAP_TSX_CTRL_MSR" rather than "*ebx | (F(RTM) | F(HLE))" even if we want
-> > to have such a fix?
+On Sat, Jun 20, 2020 at 11:09:36AM +0200, Lukas Wunner wrote:
+> On Fri, Jun 19, 2020 at 10:12:19PM +0200, refactormyself@gmail.com wrote:
+> > On failure, pcie_capabiility_read_*() will set the status value,
+> > its last parameter to 0 and not ~0.
+> > This bug fix checks for the proper value.
 > 
-> Not really, That ends up duplicating the check in vmx_get_msr().  From an
-> emulation perspective, this really is a "guest" access to the MSR, in the
-> sense that it the virtual CPU is in the guest domain, i.e. not a god-like
-> entity that gets to break the rules of emulation.
+> If a config space read times out, the PCIe controller fabricates
+> an "all ones" response.  The code is checking for such a timeout,
+> not for an error.  Hence the code is fine.
 
-I can't say I agree that it's a guest behavior.  IMHO kvm plays the role as the
-virtual processor.  If the bit in a cpuid entry depends on another MSR bit,
-then the read of that MSR value is a "processor behavior", which in our case is
-still a host behavior.  It's exactly because we thought it was a guest behavior
-so we got confused when we saw the error message of "ignored rdmsr" the first
-time but see the guest has no reason to do so...  So even if you want to keep
-those error messages, I'd really appreciate if they can show something else so
-we know it's not a guest rdmsr instruction.
+In the typical case, the pci_read_config_word() done by
+pcie_capability_read_word() will not return an error, so if the read
+times out, we should see slot_status == ~0.
 
-To me, the existing tsx code is not a bug at all (IMHO the evil thing is the
-tricky knobs and the fact that it hides deep, and that's why I really want to
-move this series forward), and instead I think it's quite elegant to write
-things like below...
+But if it's possible to set dev->error_state ==
+pci_channel_io_perm_failure, pci_read_config_word() will return an
+error because pci_dev_is_disconnected(), so slot_status would be 0.
 
-  if (!__kvm_read_msr(&data) && (data & XXX))
-    ...
+There are a dozen or so places that set dev->error_state.  It doesn't
+look *likely* that any of them would cause this, but it doesn't
+instill confidence.
 
-It's definitely subjective so I can't argu much... However it's slightly
-similar to rdmsr_safe and friends in that we don't need to remember two flags
-(cap+msr) but only the msr (and I bet I'm not the only one who likes it, just
-see the massive callers of all the "safe" versioned msr friends...).
+It would be a lot nicer if we didn't have to worry about both the 0
+and ~0 cases.  I keep coming back to the idea of removing the "*val
+= 0" code from pcie_capability_read_word() so we wouldn't have that
+special case.
 
-Considering the fact that we still have the unexpected warning message on some
-hosts with upgraded firmwares which potentially breaks some realtime systems,
-do you think below simple and clear patch acceptable to you?
+In any case, this particular patch doesn't seem like quite the right
+fix, so I'll drop it.
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 901cd1fdecd9..052c93997965 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -1005,7 +1005,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
-                *ebx = entry->ebx;
-                *ecx = entry->ecx;
-                *edx = entry->edx;
--               if (function == 7 && index == 0) {
-+               if (function == 7 && index == 0 &&
-+                   vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR) {
-                        u64 data;
-                        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
-                            (data & TSX_CTRL_CPUID_CLEAR))
-
-Then we can further discuss whether and how we'd like to refactor the knobs and
-around.
-
-Thanks,
-
--- 
-Peter Xu
-
+> > Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> > ---
+> >  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> > index 53433b37e181..c1a67054948a 100644
+> > --- a/drivers/pci/hotplug/pciehp_hpc.c
+> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> > @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+> >  
+> >  	do {
+> >  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > -		if (slot_status == (u16) ~0) {
+> > +		if (slot_status == (u16)0) {
+> >  			ctrl_info(ctrl, "%s: no response from device\n",
+> >  				  __func__);
+> >  			return 0;
+> > @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+> >  	pcie_wait_cmd(ctrl);
+> >  
+> >  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+> > -	if (slot_ctrl == (u16) ~0) {
+> > +	if (slot_ctrl == (u16)0) {
+> >  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> >  		goto out;
+> >  	}
+> > @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
+> >  	int ret;
+> >  
+> >  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> > -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)0)
+> >  		return -ENODEV;
+> >  
+> >  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> > @@ -440,7 +440,7 @@ int pciehp_card_present(struct controller *ctrl)
+> >  	int ret;
+> >  
+> >  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
+> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)0)
+> >  		return -ENODEV;
+> >  
+> >  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+> > @@ -592,7 +592,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+> >  
+> >  read_status:
+> >  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+> > -	if (status == (u16) ~0) {
+> > +	if (status == (u16)0) {
+> >  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> >  		if (parent)
+> >  			pm_runtime_put(parent);
+> > -- 
+> > 2.18.2
