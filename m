@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A17C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C132088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3434B206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rO9qfkTS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DJTlCCBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgFZSCD (ORCPT
+        id S1725861AbgFZSCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:02:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47520 "EHLO m43-7.mailgun.net"
+        Fri, 26 Jun 2020 14:02:07 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51308 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgFZSB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:01:57 -0400
+        id S1726506AbgFZSCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:02:03 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593194517; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1593194522; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=15E3EBWgkpqHyG0i3ekmSzkKZMNaIq6VeUHweIaRUYA=; b=rO9qfkTSapRJm2dDQC3xWBRv+bX1Jc6XbNHY8773zGVqpusf9xBqo3VENqu/w24YeOMuuCCD
- 3qlc9gPc2jXPuVuqP5nYURw29129I4MILbyQhjQ9idekA2h14TA8M6s6qMn+VaTPgHHP1G0f
- S4EF6ZKbK7fG4Bso4CADL45F4Ro=
+ bh=3V6V+HkJ2nno4gRDGUehKUmSrGtSiALI3MCiAJYXmzs=; b=DJTlCCBnsCkKJXXVVQM9xLPMj1SVEKGZGjqlGu4Erzy0V243ahmtDvZVeeKt+UA2njypfmn0
+ x1VSOULg5tACmz4lYZtCgzjwEj3ZZjXx+8y2vpHROY46N6J43l2/bia7O4VoKB/xJDuiwPzZ
+ 6Edf4Io5/NjFjN1en+jTR1tRvm0=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5ef63810e144dd5115a0e61a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:01:52
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ef63812f3deea03f3b37f61 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:01:54
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 84ECAC433C6; Fri, 26 Jun 2020 18:01:52 +0000 (UTC)
+        id 922A5C433CA; Fri, 26 Jun 2020 18:01:54 +0000 (UTC)
 Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 55B8CC433C6;
-        Fri, 26 Jun 2020 18:01:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 55B8CC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C634C433C8;
+        Fri, 26 Jun 2020 18:01:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C634C433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
 From:   Rakesh Pillai <pillair@codeaurora.org>
 To:     ath10k@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH 1/2] dt: bindings: Add new regulator as optional property for WCN3990
-Date:   Fri, 26 Jun 2020 23:31:41 +0530
-Message-Id: <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+Subject: [PATCH 2/2] ath10k: Add support for chain1 regulator supply voting
+Date:   Fri, 26 Jun 2020 23:31:42 +0530
+Message-Id: <1593194502-13164-3-git-send-email-pillair@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
 References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
@@ -62,38 +62,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an additional regulator supply as an optional
-property for WCN3990.
+Add support to vote for chain-1 voltage regulator
+in WCN3990.
 
 Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
 
 Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 ---
- Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/snoc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index 65ee68e..b7188d3 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -65,7 +65,8 @@ Optional properties:
- 				     the length can vary between hw versions.
- - <supply-name>-supply: handle to the regulator device tree node
- 			   optional "supply-name" are "vdd-0.8-cx-mx",
--			   "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
-+			   "vdd-1.8-xo", "vdd-1.3-rfa", "vdd-3.3-ch0"
-+			   and "vdd-3.3-ch1".
- - memory-region:
- 	Usage: optional
- 	Value type: <phandle>
-@@ -204,6 +205,7 @@ wifi@18000000 {
- 		vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 		vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+		vdd-3.3-ch1-supply = <&vreg_l26a_3p3>;
- 		memory-region = <&wifi_msa_mem>;
- 		iommus = <&apps_smmu 0x0040 0x1>;
- 		qcom,msa-fixed-perm;
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 645ed5f..407a074 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -45,6 +45,7 @@ static const char * const ath10k_regulators[] = {
+ 	"vdd-1.8-xo",
+ 	"vdd-1.3-rfa",
+ 	"vdd-3.3-ch0",
++	"vdd-3.3-ch1",
+ };
+ 
+ static const char * const ath10k_clocks[] = {
 -- 
 2.7.4
 
