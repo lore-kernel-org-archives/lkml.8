@@ -2,431 +2,136 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3732D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8Mh+0U2"
+	by mail.kernel.org (Postfix) with ESMTP id 7C28D207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593181800;
+	bh=pXfSnelWu0zkpTRqVl3gQ/wQpREKKhl5bONcr16ELVY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GDaVleSEgKaSiA025JIFYNiAl1cyBp7V4xIzo/yVrW3X7Hub6mKUoig4x6ktqnXkF
+	 DlAViczDLHzHtZNpxsJ+sx+1sG93RDX5vf8+leIRivsGLNsXefavMy7Vjay99yAbV0
+	 pwigB7pB6Yfi3veFDQ8DPPRQSogv5kNSqfxPd5oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgFZO3v (ORCPT
+        id S1729201AbgFZO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgFZO3u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:29:50 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79CFC03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d194so1659374pga.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/RLhEgFZqwOiUJR7hIKF84H/JoM0jqaYVnZVyqUR9og=;
-        b=y8Mh+0U22P0/TnRv7ckznedVo83HnXfMs+IKYnrzL8cgYTJ8eHlMikPlhGQ8UG3ZxJ
-         ziByUJ8b4OkJgRvaH5uDNr3Bq62L7F/BBJLK663OWgRD9rUhmxgp7Pa4TiB5irxWIVNE
-         HcsFYSm/m61euntdWZlGusaL7WNBEiHPijyb8h9m+s82KPAS4bvpzYJZ3VL9ygI4X3dl
-         fsWqC7mscuM4DN2QtrBZaa62sec3421spt4AdK4WmtutrhVhTmtzoeHCfigtN/nRUFSK
-         e/WxR/Atg9tkgBD8YTwwV93BNm4cXlnnleUOUlpb7iy7FZGQNbC1YckAoH0byztL7TAY
-         oKyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/RLhEgFZqwOiUJR7hIKF84H/JoM0jqaYVnZVyqUR9og=;
-        b=Ucz23fnpg9bLmAdoPVSBDLruSGk6hmNWnn2NUkuZyTphcGyi34dnNaG5YQDu2MvSMV
-         Os4Qf2/u4Bg18v+it0o271SOSqm1aL7H+7tK+9qDOp7hpqsqLdxbKuI25CflOFQSSAh8
-         793iJZXd1/ReqZuslahj19PXCA1o1dybr3vu5IHhT2LJ+eTWEvsQ+KvAHRCnynzQRgUj
-         IDFvnj+80Q2+TRvWQ/r6gjcmQY1YlxfzMU5l9sMa6FYfXjVobR2T+DSggAf/ZaaviXIc
-         DXbFu/Fjgv/B/OV4QyEaSy44y2j8Jcskl4oTOs0oCNGesAlyLkgNUJWJW36nSeE6vtnR
-         3hDA==
-X-Gm-Message-State: AOAM5325VCpcYe25afA0FUZvZkTdQhfhPP47eHVUtGKWIO12o9olljzW
-        WFzQUcXhctIlgwMJg0kXKw3J
-X-Google-Smtp-Source: ABdhPJw7tkcO9iWA+Yjqs6I7rbP2ZmpL3n4krfSpPGn1iEuD1RvzOke8erQx4umLSENe9v/9Nt/mJQ==
-X-Received: by 2002:a63:e00c:: with SMTP id e12mr2970735pgh.413.1593181790067;
-        Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e11:8623:980f:4d73:2b9:f602])
-        by smtp.gmail.com with ESMTPSA id n189sm26615055pfn.108.2020.06.26.07.29.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 07:29:49 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:59:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
-Message-ID: <20200626142941.GE8333@Mani-XPS-13-9360>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
+        Fri, 26 Jun 2020 10:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729051AbgFZO35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:29:57 -0400
+Received: from hump.s81c.com (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479BB207D8;
+        Fri, 26 Jun 2020 14:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593181797;
+        bh=pXfSnelWu0zkpTRqVl3gQ/wQpREKKhl5bONcr16ELVY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z8tPTVjEM1hiojjWk613mDvO/nGDqSsOXxT1S0e2K8tyPlyBI3ij/jHwr6yWB7t94
+         OT5tQFBwIjnE3D4xOnPcQFwDw9HksWCi5gWV4Ppca4XTDmd2RQv01WYJS4FQfD+cA9
+         BOHPr2SgtFHfs4X7Z9kjiRbxImCXP3KimSSCHPGU=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Michal Hocko <mhocko@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] docs/core-api: memory-allocation: describe reclaim behaviour
+Date:   Fri, 26 Jun 2020 17:29:50 +0300
+Message-Id: <20200626142950.135184-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
-> Add pinctrl and gpio driver for Actions Semi S500 SoC.
-> 
-> The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
-> functions using a set of registers shared between gpio and pinctrl.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> ---
->  drivers/pinctrl/actions/Kconfig        |    6 +
->  drivers/pinctrl/actions/Makefile       |    1 +
->  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
->  3 files changed, 1734 insertions(+)
->  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
-> 
-> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> index 966f1c2c89d6..a1d16e8280e5 100644
-> --- a/drivers/pinctrl/actions/Kconfig
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -10,6 +10,12 @@ config PINCTRL_OWL
->  	help
->  	  Say Y here to enable Actions Semi OWL pinctrl driver
->  
-> +config PINCTRL_S500
-> +	bool "Actions Semi S500 pinctrl driver"
-> +	depends on PINCTRL_OWL
-> +	help
-> +	  Say Y here to enable Actions Semi S500 pinctrl driver
-> +
->  config PINCTRL_S700
->  	bool "Actions Semi S700 pinctrl driver"
->  	depends on PINCTRL_OWL
-> diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
-> index 61aa9107a43a..b9e2c527c9d3 100644
-> --- a/drivers/pinctrl/actions/Makefile
-> +++ b/drivers/pinctrl/actions/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
-> +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
->  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
->  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
-> diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
-> new file mode 100644
-> index 000000000000..38e30914af6e
-> --- /dev/null
-> +++ b/drivers/pinctrl/actions/pinctrl-s500.c
-> @@ -0,0 +1,1727 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Actions Semi S500 SoC Pinctrl driver
-> + *
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include "pinctrl-owl.h"
-> +
-> +/* Pinctrl registers offset */
-> +#define MFCTL0			(0x0040)
-> +#define MFCTL1			(0x0044)
-> +#define MFCTL2			(0x0048)
-> +#define MFCTL3			(0x004C)
-> +#define PAD_PULLCTL0		(0x0060)
-> +#define PAD_PULLCTL1		(0x0064)
-> +#define PAD_PULLCTL2		(0x0068)
-> +#define PAD_ST0			(0x006C)
-> +#define PAD_ST1			(0x0070)
-> +#define PAD_CTL			(0x0074)
-> +#define PAD_DRV0		(0x0080)
-> +#define PAD_DRV1		(0x0084)
-> +#define PAD_DRV2		(0x0088)
-> +
-> +#define _GPIOA(offset)		(offset)
-> +#define _GPIOB(offset)		(32 + (offset))
-> +#define _GPIOC(offset)		(64 + (offset))
-> +#define _GPIOD(offset)		(96 + (offset))
-> +#define _GPIOE(offset)		(128 + (offset))
-> +
-> +#define NUM_GPIOS		(_GPIOE(3) + 1)
-> +#define _PIN(offset)		(NUM_GPIOS + (offset))
-> +
-> +#define DNAND_DQS		_GPIOA(12)
-> +#define DNAND_DQSN		_GPIOA(13)
-> +#define ETH_TXD0		_GPIOA(14)
-> +#define ETH_TXD1		_GPIOA(15)
-> +#define ETH_TXEN		_GPIOA(16)
-> +#define ETH_RXER		_GPIOA(17)
-> +#define ETH_CRS_DV		_GPIOA(18)
-> +#define ETH_RXD1		_GPIOA(19)
-> +#define ETH_RXD0		_GPIOA(20)
-> +#define ETH_REF_CLK		_GPIOA(21)
-> +#define ETH_MDC			_GPIOA(22)
-> +#define ETH_MDIO		_GPIOA(23)
-> +#define SIRQ0			_GPIOA(24)
-> +#define SIRQ1			_GPIOA(25)
-> +#define SIRQ2			_GPIOA(26)
-> +#define I2S_D0			_GPIOA(27)
-> +#define I2S_BCLK0		_GPIOA(28)
-> +#define I2S_LRCLK0		_GPIOA(29)
-> +#define I2S_MCLK0		_GPIOA(30)
-> +#define I2S_D1			_GPIOA(31)
-> +
-> +#define I2S_BCLK1		_GPIOB(0)
-> +#define I2S_LRCLK1		_GPIOB(1)
-> +#define I2S_MCLK1		_GPIOB(2)
-> +#define KS_IN0			_GPIOB(3)
-> +#define KS_IN1			_GPIOB(4)
-> +#define KS_IN2			_GPIOB(5)
-> +#define KS_IN3			_GPIOB(6)
-> +#define KS_OUT0			_GPIOB(7)
-> +#define KS_OUT1			_GPIOB(8)
-> +#define KS_OUT2			_GPIOB(9)
-> +#define LVDS_OEP		_GPIOB(10)
-> +#define LVDS_OEN		_GPIOB(11)
-> +#define LVDS_ODP		_GPIOB(12)
-> +#define LVDS_ODN		_GPIOB(13)
-> +#define LVDS_OCP		_GPIOB(14)
-> +#define LVDS_OCN		_GPIOB(15)
-> +#define LVDS_OBP		_GPIOB(16)
-> +#define LVDS_OBN		_GPIOB(17)
-> +#define LVDS_OAP		_GPIOB(18)
-> +#define LVDS_OAN		_GPIOB(19)
-> +#define LVDS_EEP		_GPIOB(20)
-> +#define LVDS_EEN		_GPIOB(21)
-> +#define LVDS_EDP		_GPIOB(22)
-> +#define LVDS_EDN		_GPIOB(23)
-> +#define LVDS_ECP		_GPIOB(24)
-> +#define LVDS_ECN		_GPIOB(25)
-> +#define LVDS_EBP		_GPIOB(26)
-> +#define LVDS_EBN		_GPIOB(27)
-> +#define LVDS_EAP		_GPIOB(28)
-> +#define LVDS_EAN		_GPIOB(29)
-> +#define LCD0_D18		_GPIOB(30)
-> +#define LCD0_D17		_GPIOB(31)
-> +
-> +#define DSI_DP3			_GPIOC(0)
-> +#define DSI_DN3			_GPIOC(1)
-> +#define DSI_DP1			_GPIOC(2)
-> +#define DSI_DN1			_GPIOC(3)
-> +#define DSI_CP			_GPIOC(4)
-> +#define DSI_CN			_GPIOC(5)
-> +#define DSI_DP0			_GPIOC(6)
-> +#define DSI_DN0			_GPIOC(7)
-> +#define DSI_DP2			_GPIOC(8)
-> +#define DSI_DN2			_GPIOC(9)
-> +#define SD0_D0			_GPIOC(10)
-> +#define SD0_D1			_GPIOC(11)
-> +#define SD0_D2			_GPIOC(12)
-> +#define SD0_D3			_GPIOC(13)
-> +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
-> +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
-> +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
-> +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
-> +#define SD0_CMD			_GPIOC(18)
-> +#define SD0_CLK			_GPIOC(19)
-> +#define SD1_CMD			_GPIOC(20)
-> +#define SD1_CLK			_GPIOC(21)
-> +#define SPI0_SCLK		_GPIOC(22)
-> +#define SPI0_SS			_GPIOC(23)
-> +#define SPI0_MISO		_GPIOC(24)
-> +#define SPI0_MOSI		_GPIOC(25)
-> +#define UART0_RX		_GPIOC(26)
-> +#define UART0_TX		_GPIOC(27)
-> +#define I2C0_SCLK		_GPIOC(28)
-> +#define I2C0_SDATA		_GPIOC(29)
-> +#define SENSOR0_PCLK		_GPIOC(31)
-> +
-> +#define SENSOR0_CKOUT		_GPIOD(10)
-> +#define DNAND_ALE		_GPIOD(12)
-> +#define DNAND_CLE		_GPIOD(13)
-> +#define DNAND_CEB0		_GPIOD(14)
-> +#define DNAND_CEB1		_GPIOD(15)
-> +#define DNAND_CEB2		_GPIOD(16)
-> +#define DNAND_CEB3		_GPIOD(17)
-> +#define UART2_RX		_GPIOD(18)
-> +#define UART2_TX		_GPIOD(19)
-> +#define UART2_RTSB		_GPIOD(20)
-> +#define UART2_CTSB		_GPIOD(21)
-> +#define UART3_RX		_GPIOD(22)
-> +#define UART3_TX		_GPIOD(23)
-> +#define UART3_RTSB		_GPIOD(24)
-> +#define UART3_CTSB		_GPIOD(25)
-> +#define PCM1_IN			_GPIOD(28)
-> +#define PCM1_CLK		_GPIOD(29)
-> +#define PCM1_SYNC		_GPIOD(30)
-> +#define PCM1_OUT		_GPIOD(31)
-> +
-> +#define I2C1_SCLK		_GPIOE(0)
-> +#define I2C1_SDATA		_GPIOE(1)
-> +#define I2C2_SCLK		_GPIOE(2)
-> +#define I2C2_SDATA		_GPIOE(3)
-> +
-> +#define CSI_DN0			_PIN(0)
-> +#define CSI_DP0			_PIN(1)
-> +#define CSI_DN1			_PIN(2)
-> +#define CSI_DP1			_PIN(3)
-> +#define CSI_CN			_PIN(4)
-> +#define CSI_CP			_PIN(5)
-> +#define CSI_DN2			_PIN(6)
-> +#define CSI_DP2			_PIN(7)
-> +#define CSI_DN3			_PIN(8)
-> +#define CSI_DP3			_PIN(9)
-> +
-> +#define DNAND_D0		_PIN(10)
-> +#define DNAND_D1		_PIN(11)
-> +#define DNAND_D2		_PIN(12)
-> +#define DNAND_D3		_PIN(13)
-> +#define DNAND_D4		_PIN(14)
-> +#define DNAND_D5		_PIN(15)
-> +#define DNAND_D6		_PIN(16)
-> +#define DNAND_D7		_PIN(17)
-> +#define DNAND_WRB		_PIN(18)
-> +#define DNAND_RDB		_PIN(19)
-> +#define DNAND_RDBN		_PIN(20)
-> +#define DNAND_RB		_PIN(21)
-> +
-> +#define PORB			_PIN(22)
-> +#define CLKO_25M		_PIN(23)
-> +#define BSEL			_PIN(24)
-> +#define PKG0			_PIN(25)
-> +#define PKG1			_PIN(26)
-> +#define PKG2			_PIN(27)
-> +#define PKG3			_PIN(28)
-> +
-> +#define _FIRSTPAD		_GPIOA(0)
-> +#define _LASTPAD		PKG3
-> +#define NUM_PADS		(_PIN(28) + 1)
-> +
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[...]
+Changelog of commit dcda9b04713c ("mm, tree wide: replace __GFP_REPEAT by
+__GFP_RETRY_MAYFAIL with more useful semantic") has very nice description
+of GFP flags that affect reclaim behaviour of the page allocator.
 
-> +static const struct owl_gpio_port s500_gpio_ports[] = {
-> +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
-> +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
-> +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
-> +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
-> +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
+It would be pity to keep this description buried in the log so let's expose
+it in the Documentation/ as well.
 
-Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
-you get these?
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+Hi,
 
-Thanks,
-Mani
+I've been looking for something completely unrealated and found this
+really nice piece of documentation.
 
-> +};
-> +
-> +enum s500_pinconf_pull {
-> +	OWL_PINCONF_PULL_DOWN,
-> +	OWL_PINCONF_PULL_UP,
-> +};
-> +
-> +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
-> +				    unsigned int param, u32 *arg)
-> +{
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		*arg = OWL_PINCONF_PULL_DOWN;
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*arg = OWL_PINCONF_PULL_UP;
-> +		break;
-> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> +		*arg = (*arg >= 1 ? 1 : 0);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
-> +				    unsigned int param, u32 *arg)
-> +{
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*arg = *arg == OWL_PINCONF_PULL_UP;
-> +		break;
-> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> +		*arg = *arg == 1;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
-> +	.padinfo = s500_padinfo,
-> +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
-> +	.npins = ARRAY_SIZE(s500_pads),
-> +	.functions = s500_functions,
-> +	.nfunctions = ARRAY_SIZE(s500_functions),
-> +	.groups = s500_groups,
-> +	.ngroups = ARRAY_SIZE(s500_groups),
-> +	.ngpios = NUM_GPIOS,
-> +	.ports = s500_gpio_ports,
-> +	.nports = ARRAY_SIZE(s500_gpio_ports),
-> +	.padctl_arg2val = s500_pad_pinconf_arg2val,
-> +	.padctl_val2arg = s500_pad_pinconf_val2arg,
-> +};
-> +
-> +static int s500_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
-> +}
-> +
-> +static const struct of_device_id s500_pinctrl_of_match[] = {
-> +	{ .compatible = "actions,s500-pinctrl", },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver s500_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "pinctrl-s500",
-> +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
-> +	},
-> +	.probe = s500_pinctrl_probe,
-> +};
-> +
-> +static int __init s500_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&s500_pinctrl_driver);
-> +}
-> +arch_initcall(s500_pinctrl_init);
-> +
-> +static void __exit s500_pinctrl_exit(void)
-> +{
-> +	platform_driver_unregister(&s500_pinctrl_driver);
-> +}
-> +module_exit(s500_pinctrl_exit);
-> +
-> +MODULE_AUTHOR("Actions Semi Inc.");
-> +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-> +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.27.0
-> 
+Thanks Michal! ;-)
+
+ Documentation/core-api/memory-allocation.rst | 44 ++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/Documentation/core-api/memory-allocation.rst b/Documentation/core-api/memory-allocation.rst
+index 4aa82ddd01b8..4446a1ac36cc 100644
+--- a/Documentation/core-api/memory-allocation.rst
++++ b/Documentation/core-api/memory-allocation.rst
+@@ -84,6 +84,50 @@ driver for a device with such restrictions, avoid using these flags.
+ And even with hardware with restrictions it is preferable to use
+ `dma_alloc*` APIs.
+ 
++GFP flags and reclaim behavior
++------------------------------
++Memory allocations may trigger direct or background reclaim and it is
++useful to understand how hard the page allocator will try to satisfy that
++or another request.
++
++  * ``GFP_KERNEL & ~__GFP_RECLAIM`` - optimistic allocation without _any_
++    attempt to free memory at all. The most light weight mode which even
++    doesn't kick the background reclaim. Should be used carefully because it
++    might deplete the memory and the next user might hit the more aggressive
++    reclaim.
++
++  * ``GFP_KERNEL & ~__GFP_DIRECT_RECLAIM`` (or ``GFP_NOWAIT``)- optimistic
++    allocation without any attempt to free memory from the current
++    context but can wake kswapd to reclaim memory if the zone is below
++    the low watermark. Can be used from either atomic contexts or when
++    the request is a performance optimization and there is another
++    fallback for a slow path.
++
++  * ``(GFP_KERNEL|__GFP_HIGH) & ~__GFP_DIRECT_RECLAIM`` (aka ``GFP_ATOMIC``) -
++    non sleeping allocation with an expensive fallback so it can access
++    some portion of memory reserves. Usually used from interrupt/bottom-half
++    context with an expensive slow path fallback.
++
++  * ``GFP_KERNEL`` - both background and direct reclaim are allowed and the
++    **default** page allocator behavior is used. That means that not costly
++    allocation requests are basically no-fail but there is no guarantee of
++    that behavior so failures have to be checked properly by callers
++    (e.g. OOM killer victim is allowed to fail currently).
++
++  * ``GFP_KERNEL | __GFP_NORETRY`` - overrides the default allocator behavior
++    and all allocation requests fail early rather than cause disruptive
++    reclaim (one round of reclaim in this implementation). The OOM killer
++    is not invoked.
++
++  * ``GFP_KERNEL | __GFP_RETRY_MAYFAIL`` - overrides the default allocator
++    behavior and all allocation requests try really hard. The request
++    will fail if the reclaim cannot make any progress. The OOM killer
++    won't be triggered.
++
++  * ``GFP_KERNEL | __GFP_NOFAIL`` - overrides the default allocator behavior
++    and all allocation requests will loop endlessly until they succeed.
++    This might be really dangerous especially for larger orders.
++
+ Selecting memory allocator
+ ==========================
+ 
+-- 
+2.25.4
+
