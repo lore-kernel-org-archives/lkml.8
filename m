@@ -2,101 +2,79 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5010A2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593177461;
-	bh=vkelFOVnFjMTXUYQJxXew2YEuFERJumCUSH/x5AGopg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RQZj6dahU0dvkMOPN6BBmJb0Ki34ddrH8nVWUyVMThgYtlVyh2Ni9jYH+iGHbpU5i
-	 jt8TPTZIxIfT0qheSv1/3NcbFxuqSqV3BSIdSAp57+zfF3tDBbOyfGfQBQWnlZicko
-	 mPrrixgvUhZ1gD2zZzkgYx6uDXypKKLf+T8Z0UDU=
+	by mail.kernel.org (Postfix) with ESMTP id 40A8B2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgFZNRj (ORCPT
+        id S1728236AbgFZNSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgFZNRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:17:36 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A51620885;
-        Fri, 26 Jun 2020 13:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593177456;
-        bh=vkelFOVnFjMTXUYQJxXew2YEuFERJumCUSH/x5AGopg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LUziYN2OGQrJzVosp5gAtanwzmPqma2S/TH+TGUwpE7vOHp2EpWgj4D7sggEe8DwC
-         c+rMhnTcJ00hERom1xbJcZGAHHfx1uuBELsIGcWEmmeFONu2lOuXHVL16vUjHe8/q0
-         CA7q7CqJiJigNYTAvsmGy25Jus2nNsiJj2sW4UCU=
-Date:   Fri, 26 Jun 2020 14:17:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 003/206] ASoC: tegra: tegra_wm8903: Support nvidia,
- headset property
-Message-ID: <20200626131733.GA5289@sirena.org.uk>
-References: <20200623195316.864547658@linuxfoundation.org>
- <20200623195317.089299546@linuxfoundation.org>
- <20200625190119.GA5531@duo.ucw.cz>
- <20200625194516.GH5686@sirena.org.uk>
- <20200626124741.GA29721@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-In-Reply-To: <20200626124741.GA29721@duo.ucw.cz>
-X-Cookie: You can't get there from here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 26 Jun 2020 09:18:11 -0400
+Received: from winnie.ispras.ru ([83.149.199.91]:15634 "EHLO smtp.ispras.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgFZNSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:18:11 -0400
+Received: from home.intra.ispras.ru (unknown [10.10.165.12])
+        by smtp.ispras.ru (Postfix) with ESMTP id 6A579201D0;
+        Fri, 26 Jun 2020 16:18:06 +0300 (MSK)
+From:   Evgeny Novikov <novikov@ispras.ru>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, ldv-project@linuxtesting.org
+Subject: [PATCH] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
+Date:   Fri, 26 Jun 2020 16:17:47 +0300
+Message-Id: <20200626131747.18276-1-novikov@ispras.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+gr_ep_init() does not assign the allocated request anywhere if allocation
+of memory for the buffer fails. This is a memory leak fixed by the given
+patch.
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Found by Linux Driver Verification project (linuxtesting.org).
 
-On Fri, Jun 26, 2020 at 02:47:41PM +0200, Pavel Machek wrote:
-> On Thu 2020-06-25 20:45:16, Mark Brown wrote:
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+---
+ drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> > The documentation is an issue (and another thing that probably ought to
-> > block stable backports...) but the lack of usage is totally fine, there
-> > is zero requirement that DTs be upstream - this is a stable ABI.
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 7164ad9800f1..7419889ebe9a 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -1980,9 +1980,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
+ 
+ 	if (num == 0) {
+ 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
++		if (!_req)
++			return -ENOMEM;
++
+ 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
+-		if (!_req || !buf) {
+-			/* possible _req freed by gr_probe via gr_remove */
++		if (!buf) {
++			gr_free_request(&ep->ep, _req);
+ 			return -ENOMEM;
+ 		}
+ 
+-- 
+2.16.4
 
-> I'd expect stable for fixing known bugs, not really for "someone out
-> of tree might be using old kernel with new dts".
-
-I don't think this is suitable for a stable backport, or that we should
-just stop calling this stable, I'm just pointing out that there is never
-any requirement for any DT stuff to have in-tree users.
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl719WwACgkQJNaLcl1U
-h9D9Sgf/dkS1oKv/2PkmFqFG6GqYdmTZqIHLz1Ieq3rw4jIj7z4/5kXVScgkXGUx
-maCKUbhf5k10JlyY9LSmZprRAeIQAKsoHxq712e19BTlESSFzmOj4bOon+TVUBhN
-THP3+Y4VW3aau1/vxRWe9DS2hEu5TkOf1JhrUjMdxtb0nh2TNfVup1JFMHdXpVJw
-rJ7lj1Og7scE0qzB+tzwe2H/F+kz9AMi8CKsRzwLgOUAVSWIuhxeq3ZJsoXbdI9C
-R9qmpxn52UsidiFNqm5DYTtjFy+eoGwNcvx0KPw681i+robnjio2teTrY2/b8mBS
-imW8dBnZ31ggaENJbIXIkCclDYoIqQ==
-=XNAd
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
