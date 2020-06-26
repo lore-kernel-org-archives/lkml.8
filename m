@@ -2,305 +2,97 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A60C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AB42080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kwqJPEeQ"
+	by mail.kernel.org (Postfix) with ESMTP id 77D0B2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593185680;
+	bh=A7IPRyeuP6/3NqZoUgdzauDP9nrPKQlLllURshwLU9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nq1rbMZ5nLlMWqnI5BSvGLjnAOM2mFtxdTuAVYcfjgLeLk4FrHNoOTe+imIMSlKPL
+	 Sxe5eDabe0ntJwike47tWQkMc9qmgiHMAd0GCzmeDAsllXRAfc8ZSle7cIjSMbZ17a
+	 lovlSP4olI2+l6Bi5Q1fPgP1Zh2nWuSHP6yhthkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgFZPeJ (ORCPT
+        id S1729535AbgFZPej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:34:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45830 "EHLO mail.skyhub.de"
+        Fri, 26 Jun 2020 11:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgFZPeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:34:08 -0400
-Received: from zn.tnic (p200300ec2f0d1400bc333d3023e61f63.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1400:bc33:3d30:23e6:1f63])
+        id S1726296AbgFZPei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:34:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4013A1EC0328;
-        Fri, 26 Jun 2020 17:34:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593185646;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lptL648Q3VO1TOdmWl0P3XL1W5sSUcOH5yZa95Laca8=;
-        b=kwqJPEeQDNUT4pbXVCb9g7B2zJpeRooaEb3OZk8w8RzcHsQ4TggDqUoLTHAZMwJoiKZqw1
-        YivkwySYuRDxGU0kqv0G/RIPHuSvSnFkFvsvrcHFcZvBrhvIhWpKt5SzUvWRBX/m7gCgmN
-        rNCA6akWo3iP775uhvZDs4SLuKsMrrY=
-Date:   Fri, 26 Jun 2020 17:34:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200626153400.GE27151@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8302081A;
+        Fri, 26 Jun 2020 15:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593185678;
+        bh=A7IPRyeuP6/3NqZoUgdzauDP9nrPKQlLllURshwLU9M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x5COMCfnlxSQlGkB0wod1F7ljUsvO/oPxCZZG4w6XULJQJCD3Sgwk5Lpn6ycRLY0Q
+         8drJcWwHrbjeYsiS0HTGNYFlFNaPbogNKzkroYm5yudeMfhZG5jyZr7sUFtqksVX7P
+         Tc6/r+EyiowFB3CX0PF4RsBRGHl5jq0scrgQbFOI=
+Date:   Fri, 26 Jun 2020 16:34:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@ti.com>,
+        Keerthy <j-keerthy@ti.com>, AnilKumar Ch <anilkumar@ti.com>,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 6/9] regulator: tps65217-regulator: Use the returned
+ value of tps65217_reg_read()
+Message-ID: <20200626153436.GA6527@sirena.org.uk>
+References: <20200626065738.93412-1-lee.jones@linaro.org>
+ <20200626065738.93412-7-lee.jones@linaro.org>
+ <20200626133304.GB5289@sirena.org.uk>
+ <20200626153119.GC177734@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200626153119.GC177734@dell>
+X-Cookie: Do not disturb.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
 
-...
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This could use some commenting along the lines of:
+On Fri, Jun 26, 2020 at 04:31:19PM +0100, Lee Jones wrote:
+> On Fri, 26 Jun 2020, Mark Brown wrote:
 
-"— If the enclave developer requires measurement of the page as a
-proof for the content, use EEXTEND to add a measurement for 256 bytes of
-the page. Repeat this operation until the entire page is measured."
+> > We should really be logging an error there rather than just returning,
+> > that way it's a bit more apparent to someone debugging things what went
+> > wrong if there is actually a problem.
 
-At least this text from the SDM maps to the 256 bytes below. Otherwise
-it is magic.
+> Would you like me to fix that up subsequently?
 
-> +static int __sgx_encl_extend(struct sgx_encl *encl,
-> +			     struct sgx_epc_page *epc_page)
-> +{
-> +	int ret;
-> +	int i;
-> +
-> +	for (i = 0; i < 16; i++) {
-> +		ret = __eextend(sgx_get_epc_addr(encl->secs.epc_page),
-> +				sgx_get_epc_addr(epc_page) + (i * 0x100));
-> +		if (ret) {
-> +			if (encls_failed(ret))
-> +				ENCLS_WARN(ret, "EEXTEND");
-> +			return -EIO;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long src,
-> +			     unsigned long offset, unsigned long length,
-> +			     struct sgx_secinfo *secinfo, unsigned long flags)
-> +{
-> +	struct sgx_encl_page *encl_page;
-> +	struct sgx_epc_page *epc_page;
-> +	int ret;
-> +
-> +	encl_page = sgx_encl_page_alloc(encl, offset, secinfo->flags);
-> +	if (IS_ERR(encl_page))
-> +		return PTR_ERR(encl_page);
-> +
-> +	epc_page = __sgx_alloc_epc_page();
-> +	if (IS_ERR(epc_page)) {
-> +		kfree(encl_page);
-> +		return PTR_ERR(epc_page);
-> +	}
-> +
-> +	if (atomic_read(&encl->flags) &
-> +	    (SGX_ENCL_INITIALIZED | SGX_ENCL_DEAD)) {
-> +		ret = -EFAULT;
-> +		goto err_out_free;
-> +	}
+That'd be great, yeah!
 
-You can do this first thing when you enter the function so that
-you don't have to allocate needlessly in the error case, when
-SGX_ENCL_INITIALIZED | SGX_ENCL_DEAD is set.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +	mmap_read_lock(current->mm);
-> +	mutex_lock(&encl->lock);
-> +
-> +	/*
-> +	 * Insert prior to EADD in case of OOM.  EADD modifies MRENCLAVE, i.e.
-> +	 * can't be gracefully unwound, while failure on EADD/EXTEND is limited
-> +	 * to userspace errors (or kernel/hardware bugs).
-> +	 */
-> +	ret = radix_tree_insert(&encl->page_tree, PFN_DOWN(encl_page->desc),
-> +				encl_page);
-> +	if (ret)
-> +		goto err_out_unlock;
-> +
-> +	ret = __sgx_encl_add_page(encl, encl_page, epc_page, secinfo,
-> +				  src);
-> +	if (ret)
-> +		goto err_out;
-> +
-> +	/*
-> +	 * Complete the "add" before doing the "extend" so that the "add"
-> +	 * isn't in a half-baked state in the extremely unlikely scenario the
-> +	 * the enclave will be destroyed in response to EEXTEND failure.
-> +	 */
-> +	encl_page->encl = encl;
-> +	encl_page->epc_page = epc_page;
-> +	encl->secs_child_cnt++;
-> +
-> +	if (flags & SGX_PAGE_MEASURE) {
-> +		ret = __sgx_encl_extend(encl, epc_page);
-> +		if (ret)
-> +			goto err_out;
-> +	}
-> +
-> +	mutex_unlock(&encl->lock);
-> +	mmap_read_unlock(current->mm);
-> +	return ret;
-> +
-> +err_out:
-> +	radix_tree_delete(&encl_page->encl->page_tree,
-> +			  PFN_DOWN(encl_page->desc));
-> +
-> +err_out_unlock:
-> +	mutex_unlock(&encl->lock);
-> +	mmap_read_unlock(current->mm);
-> +
-> +err_out_free:
-> +	sgx_free_epc_page(epc_page);
-> +	kfree(encl_page);
-> +
-> +	/*
-> +	 * Destroy enclave on ENCLS failure as this means that EPC has been
-> +	 * invalidated.
-> +	 */
-> +	if (ret == -EIO) {
-> +		mutex_lock(&encl->lock);
-> +		sgx_encl_destroy(encl);
-> +		mutex_unlock(&encl->lock);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * sgx_ioc_enclave_add_pages() - The handler for %SGX_IOC_ENCLAVE_ADD_PAGES
-> + * @encl:       pointer to an enclave instance (via ioctl() file pointer)
-> + * @arg:	a user pointer to a struct sgx_enclave_add_pages instance
-> + *
-> + * Add one or more pages to an uninitialized enclave, and optionally extend the
+-----BEGIN PGP SIGNATURE-----
 
-"uninitialized"?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl72FYsACgkQJNaLcl1U
+h9COyQf/WWxpqAzfIH6e2wHDZWmLZGgLpGOgO1ab3hhxJ08G/iU5hVcUJXUT800m
+KWCkzSxXk1p9v+eCGJ6scUQ850n7/IHdLIgfDDOlyppoxxttet/Zvg7ZXKk4EPUo
+r7Lwt6N8m01b2dFRKz8rzcMRofDc3PY9dvn7ii1yvjcKrbXwi67AUuSdNjaNrIPB
+pPFOX8L8BvscOG8Nu1Zx4G04snrrHL76QquV8H5c2G/mqZo69X1eNneRJk6twdZC
+UwvK5ls/MYaAwDLixW+/ZBbqWb7jAvL75DA9dzN7UTWsp5sPH/jjTnXtuauIIICT
+MK0DiSlRbBlmAoUmH3fnJa8Ih9IFoA==
+=0l8u
+-----END PGP SIGNATURE-----
 
-Where is the test for SGX_ENCL_INITIALIZED and erroring out otherwise?
-
-I.e., what happens if you add pages to an initialized enclave?
-
-> + * measurement with the contents of the page. The address range of pages must
-> + * be contiguous.
-
-Must? Who is enforcing this? I'm trying to find where...
-
-> The SECINFO and measurement mask are applied to all pages.
-> + *
-> + * A SECINFO for a TCS is required to always contain zero permissions because
-> + * CPU silently zeros them. Allowing anything else would cause a mismatch in
-> + * the measurement.
-> + *
-> + * mmap()'s protection bits are capped by the page permissions. For each page
-> + * address, the maximum protection bits are computed with the following
-> + * heuristics:
-> + *
-> + * 1. A regular page: PROT_R, PROT_W and PROT_X match the SECINFO permissions.
-> + * 2. A TCS page: PROT_R | PROT_W.
-> + *
-> + * mmap() is not allowed to surpass the minimum of the maximum protection bits
-> + * within the given address range.
-> + *
-> + * If ENCLS opcode fails, that effectively means that EPC has been invalidated.
-> + * When this happens the enclave is destroyed and -EIO is returned to the
-> + * caller.
-> + *
-> + * Return:
-> + *   0 on success,
-> + *   -EACCES if an executable source page is located in a noexec partition,
-> + *   -EIO if either ENCLS[EADD] or ENCLS[EEXTEND] fails
-> + *   -errno otherwise
-> + */
-> +static long sgx_ioc_enclave_add_pages(struct sgx_encl *encl, void __user *arg)
-> +{
-> +	struct sgx_enclave_add_pages addp;
-> +	struct sgx_secinfo secinfo;
-> +	unsigned long c;
-> +	int ret;
-> +
-> +	if (!(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&addp, arg, sizeof(addp)))
-> +		return -EFAULT;
-> +
-> +	if (!IS_ALIGNED(addp.offset, PAGE_SIZE) ||
-> +	    !IS_ALIGNED(addp.src, PAGE_SIZE))
-> +		return -EINVAL;
-> +
-> +	if (!(access_ok(addp.src, PAGE_SIZE)))
-> +		return -EFAULT;
-> +
-> +	if (addp.length & (PAGE_SIZE - 1))
-> +		return -EINVAL;
-
-How many pages are allowed? Unlimited? I'm hoping some limits are
-checked somewhere...
-
-> +
-> +	if (addp.offset + addp.length - PAGE_SIZE >= encl->size)
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&secinfo, (void __user *)addp.secinfo,
-> +			   sizeof(secinfo)))
-> +		return -EFAULT;
-> +
-> +	if (sgx_validate_secinfo(&secinfo))
-> +		return -EINVAL;
-> +
-> +	for (c = 0 ; c < addp.length; c += PAGE_SIZE) {
-> +		if (signal_pending(current)) {
-> +			ret = -EINTR;
-> +			break;
-> +		}
-> +
-> +		if (need_resched())
-> +			cond_resched();
-> +
-> +		ret = sgx_encl_add_page(encl, addp.src + c, addp.offset + c,
-> +					addp.length - c, &secinfo, addp.flags);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	addp.count = c;
-> +
-> +	if (copy_to_user(arg, &addp, sizeof(addp)))
-> +		return -EFAULT;
-> +
-> +	return ret;
-> +}
-> +
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--Nq2Wo0NMKNjxTN9z--
