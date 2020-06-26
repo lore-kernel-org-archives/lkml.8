@@ -2,115 +2,206 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04148C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A7F207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zMODgyNp"
+	by mail.kernel.org (Postfix) with ESMTP id 5B32120836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgFZNy0 (ORCPT
+        id S1728847AbgFZN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZNyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:54:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2271C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:54:24 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g17so4296792plq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oMbNe3bvovs/HF4L4pFZ6HHy0t3ZDNuS6KDaRE+CO9g=;
-        b=zMODgyNpvqgSvfmhpS5ocDb2fyOJlPjvlHYiUmnneT/02SoUlBtXH/fRmO71OtRiBM
-         pqy6AgmVbJ6SQpw34Jj4lYyRt2iwQZt2pHUDOheXET5vzl+t2fr7mnj+tFOQb1lhVecU
-         19w+vR+D01H/tGFID+w9M+9czHAm9gqoYq2TwCbe1KHwGl38tKc4SCj/NvYXFj5EyqFg
-         WjgR+/oV6yf8v5PWwZ+9Fi1kGu4Xm7eMjCS2rp9FI+oU/tc+a3sdTPr6f0ONHa1Tpyz7
-         Q4e+1mSimc1+mTtGW9UXto5VF4rnRH1eLCUFHIelT7kEFwa06F0fHV5u8tg+uMuVa1H/
-         /lRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oMbNe3bvovs/HF4L4pFZ6HHy0t3ZDNuS6KDaRE+CO9g=;
-        b=kJr/xhnDdHnQhML4LhG/S1g0WupAKuwe9VqDLMVLTJE4AVJQkPDWHsJNQCQZFO0bat
-         e3dSVC26iMChNen2YRMXvCzfUk8FdAPaemiYi10ZS0odNNKO1Yq61Na32RZFYCuF+a0B
-         4WYUl7EWvKc1AFC8Lw5wvt3h1RlFSwxJdmPz6WJ9RZgj+w3Q3UKGHPEbykLjj44BVh5h
-         +9s29XtMkCIgGQ0jWlhzy+y4jWBwaSNYiVjI1yubE7DNawe08GWhXeEwNi++SLdTJPFQ
-         pFtiCbZS4VUOFD8yZZ6no+n0NNY1Skyb0SJRu7RejpXcknf1FmDcb32DZiNVTkI5MM+M
-         yULw==
-X-Gm-Message-State: AOAM531CTIRXgPH/sshf7f04vWZqWb915ZNFr6wsbUBKDNboha4SdgZS
-        SBMIBi2Cr+t0sx+0DX0UxB+L
-X-Google-Smtp-Source: ABdhPJzZ/XQHczKnQ1Sm/1IPTxvXLNgqgj4T9DiHLdtbLRBslZWLgu28jWeNZQ/+aJHxhoCVuljndQ==
-X-Received: by 2002:a17:90a:df8f:: with SMTP id p15mr3866933pjv.164.1593179663995;
-        Fri, 26 Jun 2020 06:54:23 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e11:8623:980f:4d73:2b9:f602])
-        by smtp.gmail.com with ESMTPSA id y27sm3335138pgc.56.2020.06.26.06.54.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 06:54:23 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:24:16 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions
- Semi Owl SoCs
-Message-ID: <20200626135415.GD8333@Mani-XPS-13-9360>
-References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
- <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
+        Fri, 26 Jun 2020 09:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgFZN6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:58:08 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FB31207E8;
+        Fri, 26 Jun 2020 13:58:03 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 09:58:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
+Message-ID: <20200626095801.14cfa8a3@oasis.local.home>
+In-Reply-To: <20200625233552.2c8a0d1e@oasis.local.home>
+References: <20200625094454.732790f7@oasis.local.home>
+        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+        <20200625143525.2f3a2902@oasis.local.home>
+        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
+        <20200625223611.1dbb3b35@oasis.local.home>
+        <20200625233552.2c8a0d1e@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:47:57PM +0300, Cristian Ciocaltea wrote:
-> Add a reset binding entry to match all members of Actions Semi Owl SoCs.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7b5ffd646c6b..e6285c13bab0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
->  F:	drivers/pinctrl/actions/*
->  F:	drivers/soc/actions/
->  F:	include/dt-bindings/power/owl-*
-> +F:	include/dt-bindings/reset/actions,*-reset.h
+On Thu, 25 Jun 2020 23:35:52 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-You can just use, reset/actions,*
+> I have to think about this more, as I think there's a flaw in this
+> cmpxchg algorithm.
 
-Thanks,
-Mani
+Bah, that was all wrong. I need to incorporate the seq counter into the
+time stamp. Luckily I only use 59 bits for a full time stamp (gives me
+18 years of nanoseconds), which gives me 5 bits to pay with, and all I
+need is 4 (2 for top and 2 for bottom). Now I can make the timestamp 60
+bits with 30 bits from the top and 30 from the bottom, and using two
+bits in each of those as a sequence counter.
 
->  F:	include/linux/soc/actions/
->  N:	owl
->  
-> -- 
-> 2.27.0
-> 
+If after reading top and bottom, if the seq bits match, then the two
+match and can be put together as a valid number. Now I have this:
+
+
+struct rb_time_struct {
+	local_t		cnt;
+	local_t		top;
+	local_t		bottom;
+};
+
+typedef struct rb_time_struct rb_time_t;
+	
+#define RB_TIME_SHIFT	30
+#define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
+
+static int rb_time_cnt(unsigned long val)
+{
+	return (val >> RB_TIME_SHIFT) & 3;
+}
+
+static u64 rb_time_val(unsigned long top, unsigned long bottom)
+{
+	u64 val;
+
+	val = top & RB_TIME_VAL_MASK;
+	val <<= RB_TIME_SHIFT;
+	val |= bottom & RB_TIME_VAL_MASK;
+
+	return val;
+}
+
+static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
+{
+	unsigned long top, bottom;
+
+	top = local_read(&t->top);
+	bottom = local_read(&t->bottom);
+
+	*cnt = rb_time_cnt(top);
+
+	if (*cnt != rb_time_cnt(bottom))
+		return false;
+
+	*ret = rb_time_val(top, bottom);
+	return true;
+}
+
+static bool rb_time_read(rb_time_t *t, u64 *ret)
+{
+	unsigned long cnt;
+
+	return __rb_time_read(t, ret, &cnt);
+}
+
+static inline unsigned long rb_time_val_cnt(unsigned long val, unsigned long cnt)
+{
+	return (val & RB_TIME_VAL_MASK) | ((cnt & 3) << RB_TIME_SHIFT);
+}
+
+static inline void rb_time_split(u64 val, unsigned long *top, unsigned long *bottom)
+{
+	*top = (unsigned long)((val >> RB_TIME_SHIFT) & RB_TIME_VAL_MASK);
+	*bottom = (unsigned long)(val & RB_TIME_VAL_MASK);
+}
+
+static void rb_time_val_set(local_t *t, unsigned long val, unsigned long cnt)
+{
+	val = rb_time_val_cnt(val, cnt);
+	local_set(t, val);
+}
+
+static void rb_time_set(rb_time_t *t, u64 val)
+{
+	unsigned long cnt, top, bottom;
+
+	rb_time_split(val, &top, &bottom);
+	do {
+		cnt = local_inc_return(&t->cnt);
+		rb_time_val_set(&t->top, top, cnt);
+		rb_time_val_set(&t->bottom, bottom, cnt);
+	} while (cnt != local_read(&t->cnt));
+}
+
+static bool rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
+{
+	unsigned long ret;
+
+	ret = local_cmpxchg(l, expect, set);
+	return ret == expect;
+}
+
+static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+{
+	unsigned long cnt, top, bottom;
+	unsigned long cnt2, top2, bottom2;
+	u64 val;
+
+	 if (!__rb_time_read(t, &val, &cnt))
+		 return false;
+
+	 if (val != expect)
+		 return false;
+
+	 cnt2 = local_read(&t->cnt);
+	 if (cnt2 != cnt)
+		 return false;
+	 cnt2++;
+
+	 rb_time_split(val, &top, &bottom);
+	 top = rb_time_val_cnt(top, cnt);
+	 bottom = rb_time_val_cnt(bottom, cnt);
+
+	 rb_time_split(set, &top2, &bottom2);
+	 top = rb_time_val_cnt(top2, cnt2);
+	 bottom = rb_time_val_cnt(bottom2, cnt2);
+	 
+	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
+		return false;
+	if (!rb_time_read_cmpxchg(&t->top, top, top2))
+		return false;
+	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
+		return false;
+	return true;
+}
+
+Maybe I might implement this for BITS_FOR_LONG == 32.
+
+-- Steve
