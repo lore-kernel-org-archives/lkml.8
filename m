@@ -2,120 +2,86 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D107C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABAD207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZxTQ/+z"
+	by mail.kernel.org (Postfix) with ESMTP id 45B57207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593185387;
+	bh=zXjG44VNS3z0g6/r9OQ45OaHncYIm/HWnlomXgb0td4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dACGaP6IDNThbD0ZLrY5ayUOQgrtQyPgYxsi8Daad8N8fgcJ4ZaPhpmllhrSyyqey
+	 llRpH/fB1CNkwllNAjRMQl8O899A8TFUXC9P/DEkiNj9WIW6SoJybYRomanL2Z2lf5
+	 E6CLI2bNq9CxnebeYKcbTpaUnoYfi1yp0I5Nmbbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgFZP32 (ORCPT
+        id S1729530AbgFZP3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFZP31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:29:27 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30DC9C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:29:27 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so9882162wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0lhWmz4gkWx6AfXZ8zpsPkE0z4DNkMEgiuxjbAaFYdo=;
-        b=WZxTQ/+zLaRwJGkqQg3SIO+0/JJg7pHH9uxR6UMOEHq+be4kld/3Kq9L0TyY3Jln/4
-         0v3XnTPja08y7R4MBjRa0uvIbJO0dG7F5q2DKw72m4xRLltHtPqFvc/GrhDXPhO7VYxf
-         HU5SMTHvX59+us2s8wjzOB0jtvpkezy5PmDIX1RB/aRv2yLlhPoyaBosXQF8mKLv03gz
-         Va1jZv2EoDAOBfGq80e5pYOaG/lwiDeqiFYIyyWb/C0ZJfL2F35mP3l9ZjCz50/Th6HT
-         JaTvKPeUo7Jfh9epl3o2dPBvkr9FIzd5NfufUevzn7H4VMHSBl2R5W56eEYjHyhfKldq
-         gLbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0lhWmz4gkWx6AfXZ8zpsPkE0z4DNkMEgiuxjbAaFYdo=;
-        b=VU8X6zDzKYoU9bK0iNYWzKzkWIuX3R08KNhrlFMAIFd07jfD6qfPZ5T3qqSTdx/pCX
-         Q2VFSS8w6k/elnVK482E6PW1gM38iu1MvxWE/cjX8WToacDjlr7kVK1ZlmIr8JNvkoxi
-         NUIh//XP5tAK3P1WK2UFzkgn2NtofrcwdM1TjoO5DPvuzNswOOGRD0T8P2w314HVZghf
-         zUBmkyZFYmxBLEiOzrJCWa47Tk6DMbE06PecvniYKtnSzFOIyhYqg8M2lCKK0orpsfCP
-         VW5QXIRZiREijeQdXwz0SCmfZBQFXyyqGyks/N2dfnluJvdfIL9gl5EMaN7xjxKhbU/r
-         U8cg==
-X-Gm-Message-State: AOAM533NLsg5Iks2hVSPWzPIlPSvwU26LqRZFjhZjVC24oF05oad4awJ
-        MoHWodvo/ZSgRMQDwFX9QbzameAaZc4=
-X-Google-Smtp-Source: ABdhPJyv6ie63rzwf5Ocm/+OTK6KofcfmUsxz9QSzons/gsDHIG6xDAofWkqzEfVKmWkVSICB1/TWw==
-X-Received: by 2002:a5d:4fce:: with SMTP id h14mr4322319wrw.199.1593185365761;
-        Fri, 26 Jun 2020 08:29:25 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l14sm21159461wrn.18.2020.06.26.08.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 08:29:25 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 16:29:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH 07/10] misc: mic: vop: vop_main: Remove set but unused
- variable 'ret'
-Message-ID: <20200626152923.GB177734@dell>
-References: <20200626130525.389469-1-lee.jones@linaro.org>
- <20200626130525.389469-8-lee.jones@linaro.org>
- <CAK8P3a38P1PGHkvTDqSQC6sBoDrfipbZzxUaJeV4q4At92g_bw@mail.gmail.com>
+        Fri, 26 Jun 2020 11:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgFZP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:29:45 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7E7207E8;
+        Fri, 26 Jun 2020 15:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593185384;
+        bh=zXjG44VNS3z0g6/r9OQ45OaHncYIm/HWnlomXgb0td4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jwz6I1HZkH/aTM1g3LDJ+AHjiTXYI38VupkBjQwvQZqebkUAguYylrVaTlYZTiK5w
+         fsaLM+YWeysCXxgUZi73Rr4dPoXgHM5gWtJlUnwbuz7pcogd5/FNQcePXQmmTq00NI
+         d5I3wUED54W/zXIyxPK9d8kyBNRKhl+u1td3TPXg=
+Received: by pali.im (Postfix)
+        id 9A82C890; Fri, 26 Jun 2020 17:29:42 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: Use macro MWIFIEX_MAX_BSS_NUM for specifying limit of interfaces
+Date:   Fri, 26 Jun 2020 17:29:38 +0200
+Message-Id: <20200626152938.12737-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a38P1PGHkvTDqSQC6sBoDrfipbZzxUaJeV4q4At92g_bw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020, Arnd Bergmann wrote:
+This macro is already used in mwifiex driver for specifying upper limit and
+is defined to value 3. So use it also in struct ieee80211_iface_limit.
 
-> On Fri, Jun 26, 2020 at 3:05 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > Hasn't been checked since its conception 2 years ago.
-> >
-> > Squashes W=1 warning:
-> >
-> >  drivers/misc/mic/vop/vop_main.c: In function ‘_vop_scan_devices’:
-> >  drivers/misc/mic/vop/vop_main.c:617:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-> >  617 | int ret;
-> >  | ^~~
-> >
-> > Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> > Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> This is a correct change, but I'd take it one step further and make the
-> _vop_remove_device() function return 'void' if you don't mind
-> respinning the patch.
-> 
-> Either way
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks.
-
-Do you mind if I handle your request as a subsequent patch?
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 4e4f59c17ded..867b5cf385a8 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -27,7 +27,8 @@ module_param(reg_alpha2, charp, 0);
+ 
+ static const struct ieee80211_iface_limit mwifiex_ap_sta_limits[] = {
+ 	{
+-		.max = 3, .types = BIT(NL80211_IFTYPE_STATION) |
++		.max = MWIFIEX_MAX_BSS_NUM,
++		.types = BIT(NL80211_IFTYPE_STATION) |
+ 				   BIT(NL80211_IFTYPE_P2P_GO) |
+ 				   BIT(NL80211_IFTYPE_P2P_CLIENT) |
+ 				   BIT(NL80211_IFTYPE_AP),
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
