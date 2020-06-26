@@ -2,124 +2,115 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4186EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC1F20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ek1n0mIj"
+	by mail.kernel.org (Postfix) with ESMTP id 39E7220791
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgFZQZ7 (ORCPT
+        id S1726972AbgFZQ1n convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
+        Fri, 26 Jun 2020 12:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgFZQZ6 (ORCPT
+        with ESMTP id S1726618AbgFZQ1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:25:58 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C104C03E979;
-        Fri, 26 Jun 2020 09:25:58 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id rk21so9966949ejb.2;
-        Fri, 26 Jun 2020 09:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MPO7rvkWKnvxq0BW/sOq27JB7Uw7g3nGxOsI1D2HaaM=;
-        b=ek1n0mIjZqnzR/Lt0U5ndwPl4IvZwOOPBM+PVmwWbgb9FTw8sAc+mDdNz/FUgjLTz6
-         +UJt00/97ldk+Nkg37lLujn9722CSbM/Wp2Sh7qM5JYQKc5bdehvRsVy0kDbMYMJVf0s
-         Yvre+V2tluUbF7+fcFproCrZevtfsONs+P5y3bxvLUArUAe8W1MRHo9hxkY/VhVry4jb
-         9yQ78uBXiiZAXDtRkQITzWtvn1Ci8b2siINtCBDlBvcjLE+TaFE+w6zan/OffgBbhLfg
-         S8ZdNNg43xFMf3H3FfG0uOLz7AOxzhnTLfHg1/MKM9FQ5t4a6IT1QndN3mRasJ0cljdZ
-         pMWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MPO7rvkWKnvxq0BW/sOq27JB7Uw7g3nGxOsI1D2HaaM=;
-        b=KGPZbAh0mKEkGM2nftNucG+dV2/LSFqbvkJujYmTRZE37mb3+3ogaQey7FAuk1rdyD
-         eQ7/aGj3NOzgqfUMzV0jJtKGM/y7//2pfAHRxxGkwBVXwhjuYJtDfprAhhgYfGWzJeK+
-         VX6efS6YXiw4aHRnWOD2n38PrBj8eZp7Sqd+Dja9fEI3P0Xm42QcF333jt04Rme/+/7U
-         RTA+5eJn2A6wrJyvKjPrQUvkxNWkyeLWXZ1Dt0OmVaRjDqxnOJhAs7qFse34Z3OfV6kP
-         yk1HhsCDy7V2M87dK6oKKuUKSStkXk2i0LBTbfO1VkkY4TrmY6YV3VpDFWaUrS/G53xy
-         D0NA==
-X-Gm-Message-State: AOAM533b3qI7hkr/gxjXdLHTDewgQQZmuju1BMMWKl4dwJa3P4EK4Wwf
-        qkDZs26/e0XhH9Q7QyCwJiI=
-X-Google-Smtp-Source: ABdhPJyxqwp+qrJqIXb5iXeRvVG6QmrdYqppmPzFFwLQ815uwVeqbSRGPZdfOpb+lYp2Zi0S10C9Yw==
-X-Received: by 2002:a17:906:840a:: with SMTP id n10mr3152639ejx.453.1593188756720;
-        Fri, 26 Jun 2020 09:25:56 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id w8sm21193158eds.41.2020.06.26.09.25.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 09:25:56 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:25:53 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add pinctrl binding entry for Actions
- Semi S500
-Message-ID: <20200626162553.GC6611@BV030612LT>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <d54d1fe9d8378e7c44d19e7b366b909bf5dbb7dc.1593112402.git.cristian.ciocaltea@gmail.com>
- <EDE29F4D-CB0B-4A24-B7B4-01E2C11179A3@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EDE29F4D-CB0B-4A24-B7B4-01E2C11179A3@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 26 Jun 2020 12:27:42 -0400
+Received: from drew.franken.de (drew.ipv6.franken.de [IPv6:2001:638:a02:a001:20e:cff:fe4a:feaa])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8333FC03E979;
+        Fri, 26 Jun 2020 09:27:42 -0700 (PDT)
+Received: from mb.fritz.box (ip4d15f5fc.dynamic.kabel-deutschland.de [77.21.245.252])
+        (Authenticated sender: lurchi)
+        by mail-n.franken.de (Postfix) with ESMTPSA id 7CF317220B813;
+        Fri, 26 Jun 2020 18:27:36 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Strange problem with SCTP+IPv6
+From:   Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
+In-Reply-To: <50b0a6ff186e408bbfe6211221cb3998@AcuMS.aculab.com>
+Date:   Fri, 26 Jun 2020 18:27:35 +0200
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "minyard@acm.org" <minyard@acm.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <66D9D559-23D6-42B0-9401-62B00C4F748E@lurchi.franken.de>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <E5F42909-3AB4-47FE-98B7-DEFB63968696@lurchi.franken.de>
+ <CADvbK_fddQiOJUVJNkJuxkzQ9V-tpk_ATBP4NpZ2rZketHEFcg@mail.gmail.com>
+ <50b0a6ff186e408bbfe6211221cb3998@AcuMS.aculab.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:57:15PM +0530, Manivannan Sadhasivam wrote:
+> On 26. Jun 2020, at 18:13, David Laight <David.Laight@ACULAB.COM> wrote:
 > 
+> From: Xin Long
+>> Sent: 23 June 2020 11:14
+>>>> It looks like a bug to me. Testing with this test app here, I can see
+>>>> the INIT_ACK being sent with a bunch of ipv4 addresses in it and
+>>>> that's unexpected for a v6only socket. As is, it's the server saying
+>>>> "I'm available at these other addresses too, but not."
+>>> I agree.
+>> Then we need a fix in sctp_bind_addrs_to_raw():
+>> 
+>> @@ -238,6 +240,9 @@ union sctp_params sctp_bind_addrs_to_raw(const
+>> struct sctp_bind_addr *bp,
+>>        addrparms = retval;
+>> 
+>>        list_for_each_entry(addr, &bp->address_list, list) {
+>> +               if ((PF_INET6 == sk->sk_family) && inet_v6_ipv6only(sk) &&
+>> +                   (AF_INET == addr->a.sa.sa_family))
+>> +                       continue;
+>>                af = sctp_get_af_specific(addr->a.v4.sin_family);
+>>                len = af->to_addr_param(&addr->a, &rawaddr);
+>>                memcpy(addrparms.v, &rawaddr, len);
 > 
-> On 26 June 2020 1:46:20 AM IST, Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
-> >Add a pinctrl binding entry for Actions Semi S500.
-> >
-> >Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> >---
-> > MAINTAINERS | 1 +
-> > 1 file changed, 1 insertion(+)
-> >
-> >diff --git a/MAINTAINERS b/MAINTAINERS
-> >index e6285c13bab0..4b9eec04c937 100644
-> >--- a/MAINTAINERS
-> >+++ b/MAINTAINERS
-> >@@ -1519,6 +1519,7 @@
-> >F:	Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
-> > F:	Documentation/devicetree/bindings/dma/owl-dma.txt
-> > F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
-> > F:	Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-> >+F:	Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> Thought.
 > 
-> I think we can use wildcard now.
+> Does it make any sense to offer addresses in the INIT_ACK that don't
+> have routes to those proposed in the received INIT?
 > 
-> pinctrl/actions,*
+> 'routes' probably isn't exactly the right word.
+> You probably only want the local address that will be used
+> as the source address for the probes.
+> Or, at least, sources addresses that could be used for the probes.
 > 
-> Thanks, 
-> Mani
+> So if the INIT only contains IPv6 addresses should the INIT_ACK
+> ever contain IPv4 ones.
+The client (if it not using an IPv6 socket having IPv6 only enabled) could
+add an IPv4 address during the lifetime of the association by using the
+address reconfiguration extension.
 
-Done, thanks!
+What could be done is to not send IPv4 addresses if the INIT contains
+a Supported Address Types parameter indicating IPv6, but not IPv4 support.
+As a client you might want to send this parameter, when the IPv6 socket has
+enabled the IPV6_ONLY socket option.
+Also if the client uses an IPv4 socket, it can indicate in the Supported
+Address Parameter that it only support IPv4, and the server does not need
+to list IPv6 addresses.
 
+Best regards
+Michael
 > 
-> > F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
-> > F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
-> > F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+> 	David.
 > 
-> -- 
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
