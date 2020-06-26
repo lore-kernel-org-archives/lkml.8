@@ -2,165 +2,217 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A67C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926A12078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE7820768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20150623.gappssmtp.com header.i=@mojatatu-com.20150623.gappssmtp.com header.b="Mvvrj24j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgFZN1N (ORCPT
+        id S1728483AbgFZN2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:27:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34481 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgFZN1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:27:12 -0400
-IronPort-SDR: muOj99OIv3E1iveTOt1FOb+gzvkPwVoJVa+E2U7WqPXlMtXe46Ki0CqItzdkJwQM3ROSqPYQJi
- rJ9L9Cypbk7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210398005"
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="210398005"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 06:27:11 -0700
-IronPort-SDR: +bWsPzrFUhxPzvJ8c//x2qMDHqJqSWA1Z+mVXfaepwU60kPECytauFEsnT5qyQrYzUnd5yydjz
- tAFQcrkdUM9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="480003202"
-Received: from cgheban-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.199])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2020 06:27:08 -0700
-Date:   Fri, 26 Jun 2020 16:27:06 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v7 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-Message-ID: <20200626132706.GC7853@linux.intel.com>
-References: <20200625215000.2052086-1-stefanb@linux.vnet.ibm.com>
- <20200625215000.2052086-3-stefanb@linux.vnet.ibm.com>
+        Fri, 26 Jun 2020 09:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgFZN2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:28:12 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20008C03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:28:12 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dm12so4452070qvb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0EXd1vhnNtrSwXMMNlWHuNp7c+1ntiJGP1iRQU299gU=;
+        b=Mvvrj24jfH5QmISu+fVAnHEZ4UZfa5swKApGEbK0SvSLKciMZg8UOQIPPF5lg9BXB+
+         UNg37aMUhRFv/V+RNUYfpGodsz/5CCRzlIddf5u88FlP/OhxPyuQHjfaxhXXrpkAYqZR
+         RPvfxFgOj6PO/MmHalHuO+iF9GbWGT7JTaSZZRRiJAy5xpcC6tN3qj8XhCRSF9YqLPWc
+         P8FBEE5kfbOmLSGPRDNlNC/mEp4qZYcKx/Mv0jCziLbhPQoZgzba6zmt26TTY7OIGzef
+         w9rfIdPwEyk7fseZrlgSeMsahvsn8NaaRjK2antdsxLY01ZS+nS3xH4oSMnO8tV18ILE
+         XGyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0EXd1vhnNtrSwXMMNlWHuNp7c+1ntiJGP1iRQU299gU=;
+        b=I8MKfYU4UYV6hZ351+dfSPWXjs9EADOZyFSnGmix1dlFkSmPxumTKk5UX3jm3Log7E
+         jfkoqXppm4FDbV25R9UIEOWIJOekSt/0z5wk6QcrBxrK8PM8pxpkrjk0zTK2MdWpuw1S
+         Q94+8VrvEBwz8hRi2xts5dgwSd6a3GzYgudJiHt3jlhZ7irOxIWORFP25PM1kQQ37D5Y
+         JSYK1ounV/o+uIjRcb9GSFHkBujFQL37/V2AxjLIaX2NrqaDbHgcns7EqtrTawyLVOq+
+         tCrJAr0+cSAAviGPMxIO6IF5baiIFUqaEOxtnbkZ1/9soMyqg402urwAyG0+GH0OSS0k
+         LmvA==
+X-Gm-Message-State: AOAM531gyLwERJAp91Pexfu5aiCz6ZVq71o6P3ii5HnjYxAqU339mIhg
+        m7BMIfMEIVd8AQcL3JtomrRt7A==
+X-Google-Smtp-Source: ABdhPJwwOoQhWPWx/VE3yv1GabHdfJhr3DZnb0oYKrL1gpTpCsPwqMSuLOa3IL7sbsM4AbM53+K/LQ==
+X-Received: by 2002:a0c:8583:: with SMTP id o3mr446203qva.108.1593178091324;
+        Fri, 26 Jun 2020 06:28:11 -0700 (PDT)
+Received: from [192.168.1.117] (23-233-27-60.cpe.pppoe.ca. [23.233.27.60])
+        by smtp.googlemail.com with ESMTPSA id r76sm7850870qka.30.2020.06.26.06.28.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 06:28:10 -0700 (PDT)
+Subject: Re: [v1,net-next 3/4] net: qos: police action add index for tc flower
+ offloading
+To:     Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "idosch@idosch.org" <idosch@idosch.org>
+Cc:     "jiri@resnulli.us" <jiri@resnulli.us>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        "vlad@buslov.dev" <vlad@buslov.dev>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
+        "vishal@chelsio.com" <vishal@chelsio.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "moshe@mellanox.com" <moshe@mellanox.com>,
+        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
+        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        Edward Cree <ecree@solarflare.com>
+References: <VE1PR04MB6496E5275AD00A8A65095DD192920@VE1PR04MB6496.eurprd04.prod.outlook.com>
+From:   Jamal Hadi Salim <jhs@mojatatu.com>
+Message-ID: <05d6df9a-4e84-0e8d-0c4c-7f04cb18bb6a@mojatatu.com>
+Date:   Fri, 26 Jun 2020 09:28:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625215000.2052086-3-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <VE1PR04MB6496E5275AD00A8A65095DD192920@VE1PR04MB6496.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 05:50:00PM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On 2020-06-24 8:34 p.m., Po Liu wrote:
 > 
-> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-> to get the event log from ACPI. If one is found, use it to get the
-> start and length of the log area. This allows non-UEFI systems, such
-> as SeaBIOS, to pass an event log when using a TPM2.
 > 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->  drivers/char/tpm/eventlog/acpi.c | 62 +++++++++++++++++++++-----------
->  1 file changed, 41 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-> index 63ada5e53f13..e2258cfa6cb1 100644
-> --- a/drivers/char/tpm/eventlog/acpi.c
-> +++ b/drivers/char/tpm/eventlog/acpi.c
-> @@ -49,9 +49,9 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	void __iomem *virt;
->  	u64 len, start;
->  	struct tpm_bios_log *log;
-> -
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> -		return -ENODEV;
-> +	struct acpi_table_tpm2 *tbl;
-> +	struct acpi_tpm2_phy *t2phy;
-> +	int format;
->  
->  	log = &chip->log;
->  
-> @@ -61,23 +61,43 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	if (!chip->acpi_dev_handle)
->  		return -ENODEV;
->  
-> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> -				(struct acpi_table_header **)&buff);
-> -
-> -	if (ACPI_FAILURE(status))
-> -		return -ENODEV;
-> -
-> -	switch(buff->platform_class) {
-> -	case BIOS_SERVER:
-> -		len = buff->server.log_max_len;
-> -		start = buff->server.log_start_addr;
-> -		break;
-> -	case BIOS_CLIENT:
-> -	default:
-> -		len = buff->client.log_max_len;
-> -		start = buff->client.log_start_addr;
-> -		break;
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +		status = acpi_get_table("TPM2", 1,
-> +					(struct acpi_table_header **)&tbl);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +
-> +		if (tbl->header.length <
-> +				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
-> +			return -ENODEV;
-> +
-> +		t2phy = (void *)tbl + sizeof(*tbl);
-> +		len = t2phy->log_area_minimum_length;
-> +
-> +		start = t2phy->log_area_start_address;
-> +		if (!start || !len)
-> +			return -ENODEV;
-> +
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-> +	} else {
-> +		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> +		status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> +					(struct acpi_table_header **)&buff);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +
-> +		switch (buff->platform_class) {
-> +		case BIOS_SERVER:
-> +			len = buff->server.log_max_len;
-> +			start = buff->server.log_start_addr;
-> +			break;
-> +		case BIOS_CLIENT:
-> +		default:
-> +			len = buff->client.log_max_len;
-> +			start = buff->client.log_start_addr;
-> +			break;
-> +		}
+>> -----Original Message-----
 
-Empty line as in the first branch after the conditional statement.
-
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
->  	}
->  	if (!len) {
->  		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-> @@ -98,7 +118,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	memcpy_fromio(log->bios_event_log, virt, len);
->  
->  	acpi_os_unmap_iomem(virt, len);
-> -	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +	return format;
->  
->  err:
->  	kfree(log->bios_event_log);
-> -- 
-> 2.26.2
+>> That is the point i was trying to get to. Basically:
+>> You have a counter table which is referenced by "index"
+>> You also have a meter/policer table which is referenced by "index".
+> 
+> They should be one same group and same meaning.
 > 
 
-/Jarkko
+Didnt follow. You mean the index is the same for both the
+stat and policer?
+
+>>
+>> For policers, they maintain their own stats. So when i say:
+>> tc ... flower ... action police ... index 5 The index referred to is in the
+>> policer table
+>>
+> 
+> Sure. Means police with No. 5 entry.
+> 
+>> But for other actions, example when i say:
+>> tc ... flower ... action drop index 10
+> 
+> Still the question, does gact action drop could bind with index? It doesn't meanful.
+> 
+
+Depends on your hardware. From this discussion i am
+trying to understand where the constraint is for your case.
+Whether it is your h/w or the TSN spec.
+For a sample counting which is flexible see here:
+https://p4.org/p4-spec/docs/PSA.html#sec-counters
+
+That concept is not specific to P4 but rather to
+newer flow-based hardware.
+
+More context:
+The assumption these days is we can have a _lot_ of flows with a lot
+of actions.
+Then you want to be able to collect the stats separately, possibly one
+counter entry for each action of interest.
+Why is this important?f For analytics uses cases,
+when you are retrieving the stats you want to reduce the amount of
+data being retrieved. Typically these stats are polled every X seconds.
+For starters, you dont dump filters (which in your case seems to be
+the only way to get the stats).
+In current tc, you dump the actions. But that could be improved so
+you can just dump the stats. The mapping of stats index to actions
+is known to the entity doing the dump.
+
+Does that make sense?
+
+>> The index is in the counter/stats table.
+>> It is not exactly "10" in hardware, the driver magically hides it from the
+>> user - so it could be hw counter index 1234
+> 
+> Not exactly. Current flower offloading stats means get the chain index for that flow filter. The other actions should bind to that chain index.
+ >
+
+So if i read correctly: You have an index per filter pointing to the
+counter table.
+Is this something _you_ decided to do in software or is it how the
+hardware works? (note i referred to this as "legacy ACL" approach
+earlier. It worked like that in old hardware because the main use
+case was to have one action on a match (drop/accept kind).
+
+>Like IEEE802.1Qci, what I am doing is bind gate action to filter chain(mandatory). And also police action as optional.
+
+I cant seem to find this spec online. Is it freely available?
+Also, if i understand you correctly you are saying according to this
+spec you can only have the following type of policy:
+tc .. filter match-spec-here .. \
+action gate gate-action-attributes \
+action police ...
+
+That "action gate" MUST always be present
+but "action police" is optional?
+
+> There is stream counter table which summary the counters pass gate action entry and police action entry for that chain index(there is a bit different if two chain sharing same action list).
+> One chain counter which tc show stats get counter source:
+> struct psfp_streamfilter_counters {
+>          u64 matching_frames_count;
+>          u64 passing_frames_count;
+>          u64 not_passing_frames_count;
+>          u64 passing_sdu_count;
+>          u64 not_passing_sdu_count;
+>          u64 red_frames_count;
+> };
+>
+
+Assuming psfp is something defined in IEEE802.1Qci and the spec will
+describe these?
+Is the filter  "index" pointing to one of those in some counter table?
+
+
+> When pass to the user space, summarize as:
+>          stats.pkts = counters.matching_frames_count +  counters.not_passing_sdu_count - filter->stats.pkts;
+ >
+>          stats.drops = counters.not_passing_frames_count + counters.not_passing_sdu_count +   counters.red_frames_count - filter->stats.drops;
+>
+
+Thanks for the explanation.
+What is filter->stats?
+The rest of those counters seem related to the gate action.
+How do you account for policing actions?
+
+cheers,
+jamal
+
