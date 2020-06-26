@@ -2,120 +2,104 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C59CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE8E206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaKkyZ9I"
+	by mail.kernel.org (Postfix) with ESMTP id 2573F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593202035;
+	bh=4oOD88XtGZC/uNbNT6wOOaDIgm3VB5umJpU7EFUTnZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oNix2FTpaxxRzL+lYG0CjCGFDHDvJXqDVBemVSRNNvIQuESoX3dPtE06V66M97INW
+	 o6Rsz4RRI+eCoBHXXUj8EiLMgcfBeEC/uXZ2Hkl9kfHDW/xdKYDokgOdrkJt7p0WDk
+	 l++9uZRd09zDwqMeNZaDLMsRuGowDtOE4aLVpiEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgFZUGO (ORCPT
+        id S1726019AbgFZUHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgFZUGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:06:13 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B8AC03E979;
-        Fri, 26 Jun 2020 13:06:13 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z2so8433452qts.5;
-        Fri, 26 Jun 2020 13:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+JSEMagOzupfCAAdnbVKD4lMobhxRLkVJsl3yNBDaoE=;
-        b=kaKkyZ9IJMgGkOwaEX0K6IT1QqedlSZCO6hJb07XRS/xHROlFY30H1u7ELJu0scHva
-         VyG0iWpC0GdS+k0n5SwdKPS7S9K6x35T9hIGf844SJlaro29TWn1IFbzA+tuNvyQZOqv
-         +DNT7gRwC8maXhBhbL8hhkxD35uKprnHh83Vr0wMftkPMNUSSEtEqkFe5iey8vCx0G8f
-         CxAMQX6Z1RTNW7Tz/VG+3UYVFUMaBHIK0bVD1g3ML0xQE2IBkAH+RBkZfmogFblUwiIr
-         gL6TnsymdGDBdjDQEsCPB/Lxy9S5G3iqDbt3DzMXT9jV2Mtt75thU5HbWMqUx5WhdDst
-         oWHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+JSEMagOzupfCAAdnbVKD4lMobhxRLkVJsl3yNBDaoE=;
-        b=TR3m6A28jL56afRBAn/o9yX5tKB+Vr7a0Glh8Z2aexXU3A0C0r47XCX22eK0gdzR7C
-         F6o4z+ok1woFaqXeg1SGPK22k+Ab6nz6lQ07PQQ+IMDjT8EjX9JJGu0kUfafaxjTTLnJ
-         QIQYjB8v8sa7YQ65RJXr0wPDv40HRWxK4xbeq7zF7t6IM4SjJXrsNslKnaxU2sv2ebMw
-         vxx/u2RlkI69NKl0HoFhV6ews7Z4S+X0GJSyt6TynqfdNR8lzS3ltatCcR0QeKjcvbpK
-         A4EcoLl2sWU7GMrLANp3as/TsTD7wFhE6SdOx+DR5LcY3oll4leUxkWjKIQvisIR2FWc
-         15kQ==
-X-Gm-Message-State: AOAM531ZG7kWgb/kMaUKc8YTnf7bzw66YwKJzf6HanSM1DZ6KVFBlqVc
-        NtInz+D+uq18XmJf/HZrLWnL3/Z3mHnbAtRpgwQ=
-X-Google-Smtp-Source: ABdhPJwPd00euphLZR1AATbItCjo8QAECWnT2CNBGYARmZVXEwCzlpL9TrwHvcVzhsTH46lRPy97Huzu8376JtUvyEw=
-X-Received: by 2002:aed:2cc5:: with SMTP id g63mr4513062qtd.59.1593201972949;
- Fri, 26 Jun 2020 13:06:12 -0700 (PDT)
+        Fri, 26 Jun 2020 16:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgFZUHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:07:12 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 058C8206C3;
+        Fri, 26 Jun 2020 20:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593202032;
+        bh=4oOD88XtGZC/uNbNT6wOOaDIgm3VB5umJpU7EFUTnZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=obzLXtBTVJJGSeD0cbiCHxDtXmWB/hH2sZPMR14C2iGv+nabdMnUhC/p+gsX3vzpb
+         DRB7pEDj2buzXO6nXa8YiLcW4x6TMxuNaz7hDeb1bYxuyZ6m4QyyrLWFTEgVH8/cAk
+         1O3qQ4wXoWWBgv7oVCTJoTnL+YCkuF4EttpdzthU=
+Date:   Fri, 26 Jun 2020 16:07:10 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Pavel Machek <pavel@denx.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
+ the dma_transfer callback
+Message-ID: <20200626200710.GK1931@sasha-vm>
+References: <20200619141648.840376470@linuxfoundation.org>
+ <20200619141657.498868116@linuxfoundation.org>
+ <20200619210719.GB12233@amd>
+ <20200622205121.4xuki7guyj6u5yul@mobilestation>
+ <20200626151800.GA22242@maple.netwinder.org>
 MIME-Version: 1.0
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-2-songliubraving@fb.com> <20200626110046.GB4817@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200626110046.GB4817@hirez.programming.kicks-ass.net>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 26 Jun 2020 13:06:01 -0700
-Message-ID: <CAEf4BzbgyBWpHdxe8LdHp+48fazS6JLEdaEd09p40s=+cy4Phw@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200626151800.GA22242@maple.netwinder.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 5:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
+>Hi Serge, Pavel, Greg,
 >
-> On Thu, Jun 25, 2020 at 05:13:29PM -0700, Song Liu wrote:
-> > This would be used by bpf stack mapo.
+>On Mon, Jun 22, 2020 at 11:51:21PM +0300, Serge Semin wrote:
+>>Hello Pavel
+>>
+>>On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
+>>
+>>>Mainline patch simply changes return value, but code is different in
+>>>v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
+>>>that a problem?
+>>
+>>Actually no.) In that old 4.19 context it's even better to return straight away
+>>no matter what value is returned by the dma_transfer() callback.
 >
-> Would it make sense to sanitize the API a little before exposing it?
+>This patch changes the return dma_transfer return value from 0 to 1, 
+>however it was only done in spi-dw-mid.c func mid_spi_dma_transfer().
 >
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 334d48b16c36..016894b0d2c2 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -159,8 +159,10 @@ static struct perf_callchain_entry *get_callchain_entry(int *rctx)
->                 return NULL;
+>There is an identical function in spi-dw-mmio.c that needs the same 
+>treatment, otherwise access to the SPI device becomes erratic and even 
+>causes kernel to hang. Guess how I found this ;-)
 >
->         entries = rcu_dereference(callchain_cpus_entries);
-> -       if (!entries)
-> +       if (!entries) {
-> +               put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
->                 return NULL;
-> +       }
->
->         cpu = smp_processor_id();
->
-> @@ -183,12 +185,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
->         int rctx;
->
->         entry = get_callchain_entry(&rctx);
-> -       if (rctx == -1)
-> +       if (!entry || rctx == -1)
->                 return NULL;
->
+>So the following patch is needed as well, at least in 4.9 and 4.19, I 
+>did not check/test other versions. Mainline does not need this, since 
+>the code seems to have been refactored to avoid the duplication.
 
-isn't rctx == -1 check here not necessary anymore? Seems like
-get_callchain_entry() will always return NULL if rctx == -1?
+Could you add your signed-off-by tag please? :)
 
-> -       if (!entry)
-> -               goto exit_put;
-> -
->         ctx.entry     = entry;
->         ctx.max_stack = max_stack;
->         ctx.nr        = entry->nr = init_nr;
+-- 
+Thanks,
+Sasha
