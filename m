@@ -2,299 +2,146 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B329C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A289207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="gfI90Mmb"
+	by mail.kernel.org (Postfix) with ESMTP id EC5E3207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593175633;
+	bh=ghOcSnKLh1qBcrM/sdPdydWDEu/uuz/OGlZDCEKbh88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F3wk+cbzkH5ztUoKkjHE0gB+fgQQIQ8zJ+jNw3Gk0IlywtZkhnpquYHy5PYZWylzO
+	 lnj3p19IGCVizd/FXRG5pwjx6MDWqDRNLiyC/mdPjTRU9+6UR9iMm9CkYQkbDyuBKv
+	 RLmwO5u5xBd75zswKQdzxwdcXYnp4P4ZvPDeKQdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgFZMqh (ORCPT
+        id S1727054AbgFZMrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFZMqg (ORCPT
+        Fri, 26 Jun 2020 08:47:10 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39630 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFZMrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:46:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2184CC08C5DB
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:46:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id u8so4667076pje.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qp7cxXNnoQLpTzXpdFOv4m150rdWcZ4/YgkjWFZjCkI=;
-        b=gfI90MmbelR+XJ0JnMP7klGkKtzrZvQGQ4Er89vl85IAH0afuMNDjCRDRjKPmm4WCj
-         ly9jFt43ZDfiHmVXOkioLYauy45iF12mMVna+ZPLaslNF+NLoKTUAHDWIZFQPPKcJzfx
-         X0QsJrK3i194+u7f8jXF+GFzjLY0MyGonNglsvS7ivnCKzlIkqtCuWI/wDroOMrV3kwv
-         z+xAOdHJLb8DIUYutd8V4aMFZpMZlBCZiIy/heZ6dkyQKuCRZFVHHOnBi6ZTBcFwq84H
-         1aCchSxt3QUY5ddYNyJEhXprR6iv/3PB4kYOotsM1ks4Q9Q6D5CXmi0rgfVX7UiSNbTN
-         1C6A==
+        Fri, 26 Jun 2020 08:47:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d18so1161370edv.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:47:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qp7cxXNnoQLpTzXpdFOv4m150rdWcZ4/YgkjWFZjCkI=;
-        b=W5/nbpcIMAmgmrtJinAuixTxCKTD4GylUxKhCgbohcfosXvtvBn4Ox/Qr15vjYTDJX
-         dLKYaYubQdId0NheZBFfNinQ7mieUgeiR7sV/R7gEALho88Ge6fRxbyxWEKuo+jZ3ZzJ
-         X/dlH7Dlx+iANoqR6X0MZKpCZlOhNG/BC1zeao863pBq5VqSw3U8T2bx/qJRd57666Eg
-         1ojKb97FjOS0DpxpCOMhOc+dZV0SRmEBt8a/Ef00FmwQriaZbyIchsb7XPLRFBcWs2Vh
-         uA+hA6uWp//rkIgZC9H4GlFFjSjCshCFowOMNgp4brGdotORj6toTq6sNWX8XT8nOv7l
-         qQqA==
-X-Gm-Message-State: AOAM5324kChySyw2vXx84IAtt2rUYWYlbdjOaEfM4Ji8rEs9wa3vdKRr
-        Kx5IHZjwgQ563EBQRatC6C93v+HXqkfv9A==
-X-Google-Smtp-Source: ABdhPJzIbRLlpBSqRNqrORwPDB30Vu3JF61XDQZkQ2dT81CeMikzWmSvZlOLXvC5d8gJh3jzGLE5yA==
-X-Received: by 2002:a17:90b:3d7:: with SMTP id go23mr3310630pjb.157.1593175594561;
-        Fri, 26 Jun 2020 05:46:34 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id w24sm25684475pfn.11.2020.06.26.05.46.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 05:46:33 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Fri, 26 Jun 2020 18:16:26 +0530
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-Subject: Re: [PATCH v6 3/3] media: vimc: Add a control to display info on
- test image
-Message-ID: <20200626124626.GA13722@kaaira-HP-Pavilion-Notebook>
-References: <20200626113618.15280-1-kgupta@es.iitr.ac.in>
- <20200626113618.15280-4-kgupta@es.iitr.ac.in>
- <694350b5-cd61-1e9d-36ee-6028b59a53a6@collabora.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q677LOBSZK3GRaj2PYVKEMW6WT8sZ6D1XkKn5i6DRN8=;
+        b=IQM4HdJXmLAIhcFusoLdXrkJERGMKeO/Od/ysK/lO6IPf+5WuGtdYLrPp3KNXQpOJK
+         LxtGdF+FeJl2sbjIUDsDymZODVNuYtgRNpTV5D3qIz4BF5L5QckDB1wjB0ELmu2Mklgc
+         4e/g0D/DhTzV03w5iWOA5nEfYn6dqAbbPGrmaOME8DRZ0pLLf5DYCnBEH1CsjvSch1CT
+         +f9k1slcEAS5TcHlwuvyLlHbNwCisWAkyHjw6oybAojTywZ8PIkzcuvJ56UYFKBNL7t1
+         lnjlCrC5NQ8tmepjV2kUY/EgKRasC3FU0N3mkajeqdhc1EwmcdZrqg3Jw6NtfT/wuAr6
+         Onbg==
+X-Gm-Message-State: AOAM531MUgpQH50Hi3QbkobaPOd7HAFehjnc//GfLsJNn2MINR3q3sXs
+        rcxXfu8E+hzWM/b6FbN7R/wwlm6E
+X-Google-Smtp-Source: ABdhPJzvRrQp4sNnBeNy5DvIM5p2B4BWpsaztrroQ2rsv/gwu1/HcbrtyIX4R2sLP1GO438dmbsPOA==
+X-Received: by 2002:a50:f047:: with SMTP id u7mr3373855edl.274.1593175628873;
+        Fri, 26 Jun 2020 05:47:08 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id a62sm21499657ede.45.2020.06.26.05.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 05:47:08 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:47:06 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+Message-ID: <20200626124706.GZ1320@dhcp22.suse.cz>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+ <20200619120704.GD12177@dhcp22.suse.cz>
+ <20200622191739.4lekqrmjnzv2vwl2@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <694350b5-cd61-1e9d-36ee-6028b59a53a6@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200622191739.4lekqrmjnzv2vwl2@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 08:59:19AM -0300, Helen Koike wrote:
-> Hi Kaaira,
+On Mon 22-06-20 15:17:39, Daniel Jordan wrote:
+> Hello Michal,
 > 
-> Thanks for the patch,
+> (I've been away and may be slow to respond for a little while)
 > 
-> On 6/26/20 8:36 AM, Kaaira Gupta wrote:
-> > Add a control in VIMC to display information such as the correct order of
-> > colors for a given test pattern, brightness, hue, saturation, contrast,
-> > width and height at sensor, and time since streaming started over test image.
+> On Fri, Jun 19, 2020 at 02:07:04PM +0200, Michal Hocko wrote:
+> > On Tue 09-06-20 18:54:51, Daniel Jordan wrote:
+> > [...]
+> > > @@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
+> > >  		goto done;
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * Use max block size to minimize overhead on bare metal, where
+> > > +	 * alignment for memory hotplug isn't a concern.
 > > 
-> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> > ---
-> >  drivers/media/test-drivers/vimc/Kconfig       |  2 +
-> >  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
-> >  drivers/media/test-drivers/vimc/vimc-core.c   | 10 ++++
-> >  drivers/media/test-drivers/vimc/vimc-sensor.c | 60 +++++++++++++++++++
-> >  4 files changed, 73 insertions(+)
-> > 
-> > diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-> > index 4068a67585f9..da4b2ad6e40c 100644
-> > --- a/drivers/media/test-drivers/vimc/Kconfig
-> > +++ b/drivers/media/test-drivers/vimc/Kconfig
-> > @@ -2,6 +2,8 @@
-> >  config VIDEO_VIMC
-> >  	tristate "Virtual Media Controller Driver (VIMC)"
-> >  	depends on VIDEO_DEV && VIDEO_V4L2
-> > +	select FONT_SUPPORT
-> > +	select FONT_8x16
-> >  	select MEDIA_CONTROLLER
-> >  	select VIDEO_V4L2_SUBDEV_API
-> >  	select VIDEOBUF2_VMALLOC
-> > diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-> > index ae163dec2459..a289434e75ba 100644
-> > --- a/drivers/media/test-drivers/vimc/vimc-common.h
-> > +++ b/drivers/media/test-drivers/vimc/vimc-common.h
-> > @@ -20,6 +20,7 @@
-> >  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
-> >  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
-> >  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
-> > +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
-> >  
-> >  #define VIMC_FRAME_MAX_WIDTH 4096
-> >  #define VIMC_FRAME_MAX_HEIGHT 2160
-> > diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
-> > index 11210aaa2551..8337e1276bba 100644
-> > --- a/drivers/media/test-drivers/vimc/vimc-core.c
-> > +++ b/drivers/media/test-drivers/vimc/vimc-core.c
-> > @@ -5,10 +5,12 @@
-> >   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-> >   */
-> >  
-> > +#include <linux/font.h>
-> >  #include <linux/init.h>
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <media/media-device.h>
-> > +#include <media/tpg/v4l2-tpg.h>
-> >  #include <media/v4l2-device.h>
-> >  
-> >  #include "vimc-common.h"
-> > @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
-> >  
-> >  static int vimc_probe(struct platform_device *pdev)
-> >  {
-> > +	const struct font_desc *font = find_font("VGA8x16");
-> >  	struct vimc_device *vimc;
-> >  	int ret;
-> >  
-> >  	dev_dbg(&pdev->dev, "probe");
-> >  
-> > +	if (!font) {
-> > +		dev_err(&pdev->dev, "vimc: could not find font\n");
+> > This really begs a clarification why this is not a concern. Bare metal
+> > can see physical memory hotadd as well. I just suspect that you do not
+> > consider that to be very common so it is not a big deal?
 > 
-> You don't need the "vimc: " prefix if you are using dev_err(), it already gets the name from pdev->dev
-> 
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	tpg_set_font(font->data);
-> > +
-> >  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
-> >  	if (!vimc)
-> >  		return -ENOMEM;
-> > diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-> > index a2f09ac9a360..ce438cdabb73 100644
-> > --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-> > +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-> > @@ -19,6 +19,8 @@ struct vimc_sen_device {
-> >  	struct v4l2_subdev sd;
-> >  	struct tpg_data tpg;
-> >  	u8 *frame;
-> > +	unsigned int osd_mode;
-> > +	u64 start_stream_ts;
-> >  	/* The active format */
-> >  	struct v4l2_mbus_framefmt mbus_format;
-> >  	struct v4l2_ctrl_handler hdl;
-> > @@ -185,10 +187,46 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
-> >  static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
-> >  				    const void *sink_frame)
-> >  {
-> > +	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1};
-> > +	u8 *basep[TPG_MAX_PLANES][2];
-> > +	char str[100];
-> > +	int line = 1;
-> 
-> unsigned int
-> 
-> > +	const unsigned int line_height = 16;
-> >  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
-> >  						    ved);
-> 
-> I would just re-order the declaration vars to have the longest lines first.
-> 
-> >  
-> >  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-> > +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
-> > +
-> > +	if (vsen->osd_mode <= OSD_SHOW_COUNTERS) {
-> > +		unsigned int ms;
-> > +
-> > +		ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
-> > +		snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
-> > +			 (ms / (60 * 60 * 1000)) % 24,
-> > +			 (ms / (60 * 1000)) % 60,
-> > +			 (ms / 1000) % 60,
-> > +			 ms % 1000);
-> > +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-> > +	}
-> > +
-> > +	if (vsen->osd_mode == OSD_SHOW_ALL) {
-> > +		const char *order = tpg_g_color_order(&vsen->tpg);
-> > +
-> > +		tpg_gen_text(&vsen->tpg, basep,
-> > +			     line++ * line_height, 16, order);
-> > +		snprintf(str, sizeof(str),
-> > +			 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
-> > +			 vsen->tpg.brightness,
-> > +			 vsen->tpg.contrast,
-> > +			 vsen->tpg.saturation,
-> > +			 vsen->tpg.hue);
-> > +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-> > +		snprintf(str, sizeof(str), "sensor size: %dx%d",
-> > +			 vsen->mbus_format.width, vsen->mbus_format.height);
-> > +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-> > +	}
-> 
-> How about the nice case-switch statement proposed by Kieran in the last version?
-
-If I use switch-case, I can then not declare const char * order, which
-gives order of colors, /inside/ the case when it needs to be printed. I
-can declare it outside, with all other initialisations if that is fine
-but that would mean calling the function unnecessarily if its not to be
-printed..which case should I go with?
+> It's not only uncommon, it's also that boot_mem_end on bare metal may not align
+> with any available memory block size.  For instance, this server's boot_mem_end
+> is only 4M aligned and FWIW my desktop's is 2M aligned.  As far as I can tell,
+> the logic that picks the size wasn't intended for bare metal.
 
 > 
-> Thanks,
-> Helen
+> > And I would
+> > tend to agree but still we are just going to wait until first user
+> > stumbles over this.
 > 
-> > +
-> >  	return vsen->frame;
-> >  }
-> >  
-> > @@ -201,6 +239,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
-> >  		const struct vimc_pix_map *vpix;
-> >  		unsigned int frame_size;
-> >  
-> > +		vsen->start_stream_ts = ktime_get_ns();
-> > +
-> >  		/* Calculate the frame size */
-> >  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
-> >  		frame_size = vsen->mbus_format.width * vpix->bpp *
-> > @@ -269,6 +309,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
-> >  	case V4L2_CID_SATURATION:
-> >  		tpg_s_saturation(&vsen->tpg, ctrl->val);
-> >  		break;
-> > +	case VIMC_CID_OSD_TEXT_MODE:
-> > +		vsen->osd_mode = ctrl->val;
-> > +		break;
-> >  	default:
-> >  		return -EINVAL;
-> >  	}
-> > @@ -307,6 +350,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
-> >  	.qmenu = tpg_pattern_strings,
-> >  };
-> >  
-> > +static const char * const vimc_ctrl_osd_mode_strings[] = {
-> > +	"All",
-> > +	"Counters Only",
-> > +	"None",
-> > +	NULL,
-> > +};
-> > +
-> > +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
-> > +	.ops = &vimc_sen_ctrl_ops,
-> > +	.id = VIMC_CID_OSD_TEXT_MODE,
-> > +	.name = "Show Information",
-> > +	.type = V4L2_CTRL_TYPE_MENU,
-> > +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
-> > +	.qmenu = vimc_ctrl_osd_mode_strings,
-> > +};
-> > +
-> >  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
-> >  					    const char *vcfg_name)
-> >  {
-> > @@ -323,6 +382,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
-> >  
-> >  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
-> >  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
-> > +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
-> >  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
-> >  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
-> >  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> This isn't something new with this patch, 2G has been the default on big
+> machines for years.  This is addressing an unintended side effect of
+> 078eb6aa50dc50, which was for qemu, by restoring the original behavior on bare
+> metal to avoid oodles of sysfs files.
+
+I am not really sure the qemu was a target. I suspect it was just easier
+to test in qemu.
+
+[...]
+
+> > I believe that we should think about a future interface rather than
+> > trying to ducktape the blocksize anytime it causes problems. I would be
+> > even tempted to simply add a kernel command line option 
+> > memory_hotplug=disable,legacy,new_shiny
 > > 
+> > for disable it would simply drop all the sysfs crud and speed up boot
+> > for most users who simply do not care about memory hotplug. new_shiny
+> > would ideally provide an interface that would either export logically
+> > hotplugable memory ranges (e.g. DIMMs) or a query/action interface which
+> > accepts physical ranges as input. Having gazillions of sysfs files is
+> > simply unsustainable.
+> 
+> So in this idea, presumably the default would start off being legacy and then
+> later be changed to new_shiny?
+
+Well it really depends. Going with disable as a default would suit most
+users much better because the vast majority simply doesn't use the
+functionality. On the other hand real users would regress unless they
+enable the option. Which is definitely not nice. Another and much less
+intrusive change would be creating sysfs interface on-demand. So until
+somebody actually tries to use the interface it won't exist. I haven't
+tried to explore how complex that would be. I am not really familiar
+with sysfs to be honest. But fundamentally nothing should prevent such a
+solution.
+
+Another option would be to create sysfs interface only if there is a
+hotplugable memory reported by the platform. But I am not sure we have a
+proper interface for that for all arches.
+-- 
+Michal Hocko
+SUSE Labs
