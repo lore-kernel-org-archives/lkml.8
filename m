@@ -2,185 +2,229 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3652DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C23D206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D07D2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uXSuWRwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgFZGad (ORCPT
+        id S1728393AbgFZGhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:30:33 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:51990 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgFZGac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:30:32 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1johrw-0004mR-T7; Fri, 26 Jun 2020 16:29:50 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jun 2020 16:29:48 +1000
-Date:   Fri, 26 Jun 2020 16:29:48 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        LTP List <ltp@lists.linux.it>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        lkft-triage@lists.linaro.org, linux-crypto@vger.kernel.org,
-        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] crypto: af_alg - Fix regression on empty requests
-Message-ID: <20200626062948.GA25285@gondor.apana.org.au>
-References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
- <20200622224920.GA4332@42.do-not-panic.com>
- <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
- <20200623064056.GA8121@gondor.apana.org.au>
- <20200623170217.GB150582@gmail.com>
+        Fri, 26 Jun 2020 02:37:21 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:49375 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbgFZGhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 02:37:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200626063718euoutp02c43966bdbf0ec58829d1ae1c09278a0b~cBJyXPhdo1978019780euoutp024
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:37:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200626063718euoutp02c43966bdbf0ec58829d1ae1c09278a0b~cBJyXPhdo1978019780euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593153438;
+        bh=DnZOg1QeKK+sJhQGxvuZAvm5j0AMbgRSaX4I7sGDGTM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uXSuWRwkZc1FAkdAffl68KGNWoOYnh0gdLbalwLbGP0MY93c5B/JGodeexQF40QI+
+         8qqvJ6Xo4eqsbbIgx89OkSGQvyoi/W4P1NXS4/HIgyjiuP9LaFBNh2cRwr1/EnHjs2
+         zqBSFB+sZLGjIT6aVHJbVl+0qVpZA0KutxvaQBY4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200626063718eucas1p2a84fa9bbca86171bcbd8de1083067ebc~cBJyCn_ix1479414794eucas1p2t;
+        Fri, 26 Jun 2020 06:37:18 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id F4.0D.06318.E9795FE5; Fri, 26
+        Jun 2020 07:37:18 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200626063718eucas1p1748b6bfd48ebf2ed3ef42a2bea39572e~cBJxvLHOk2881428814eucas1p1l;
+        Fri, 26 Jun 2020 06:37:18 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200626063718eusmtrp15400fa0e3ac6e179d02120ef7bc31ee6~cBJxpa0H72146421464eusmtrp1U;
+        Fri, 26 Jun 2020 06:37:18 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-37-5ef5979e13ff
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 10.B8.06314.D9795FE5; Fri, 26
+        Jun 2020 07:37:17 +0100 (BST)
+Received: from localhost (unknown [106.210.248.142]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200626063717eusmtip10454345fafa276d58565a934f8d16afa~cBJxdPiAB2513525135eusmtip1W;
+        Fri, 26 Jun 2020 06:37:17 +0000 (GMT)
+Date:   Fri, 26 Jun 2020 08:37:17 +0200
+From:   "javier.gonz@samsung.com" <javier.gonz@samsung.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "mb@lightnvm.io" <mb@lightnvm.io>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+Subject: Re: [PATCH v2 0/2] zone-append support in io-uring and aio
+Message-ID: <20200626063717.4dhsydpcnezjhj3o@mpHalley.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623170217.GB150582@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CY4PR04MB37511E3B19035012A143D006E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTURiAObsfu7NW11n4lpEwCcrIsiKvpX1H90dB4D9Ba+ZtSk7H1iwT
+        QSy11KazyFrObFiOOcymWInaGjab00VYYoEgWJHWLD8WM221eQ3897wfz3vOezgUJhkj1lOZ
+        2Rc4VbYsS0qG4O2OOfe2uhpv6o6f9nCm1tyOmKaRSpIp87fhTHHpLwHjqjIKmMliN868+ush
+        mVu3ixDT9XEr09nlxJnBjlqSMT3twZn2+fsY883nJJk3f3qJg6vZ5/oRIdtqimYHBzSsdbpa
+        yJa/9yFW22ZG7Ix1I1tqKxew1k8ewSlRckhCOpeVmcuptu8/E5Ixaj6rrN98qefOQ1SIvkWW
+        IREF9G4YvTKJl6EQSkKbEHQ6dGSwIKFnEUz9OMcXZhD0236j/0bJE4uQLzQiaBqeFfDBOIJC
+        c/GijtObwNJQKgwySceD7+NbLMhr6Gh41D1JBAWMthFQMja02BRGH4GBaRceZDF9GO7pvSTP
+        oeC8+2kxL6JT4MVLw6IM9JQQ5vs+CPk7HQXtvHWJw2Cit22JN4DrZgXOC1cCS1jeYXxQgWCh
+        2hTYiAoE+0DbnxUUMDoTjAavgJcPQZv/O8m3rIJhTyjfsgqq22swPi2GayUSHjdBnXcFL0ZA
+        d2EnyTMLQzrd0vtOIHDcMKAqFKlftpp+2cE874XrP4sIfWAsFpjV6Kd43AKPO7bXI8KMwjmN
+        WiHn1LuyuYsxaplCrcmWx5zNUVhR4Ou5/L3eZ6h7Ic2OaApJV4ptutlUCSHLVecp7AgoTLpG
+        fHjAlSoRp8vyLnOqnNMqTRantqMICpeGi3cZx1MktFx2gTvPcUpO9b8qoETrC5Hu5LovcsEJ
+        wwG9LP6mxtbs5zyxBRbj8PjxDy19daVf4ojjUY0NP24rE42ZGBU35MgXpQw/S3q41qv9erXr
+        c6vTfqhVuYd7vS55LjQp78iZyoRqTfH3irX4bkMi0dNScKxCO0hJPjco3b4Jf/4D9+yl5r4Z
+        MmpMkbzT6pxMU0lxdYYsNhpTqWX/AE+ZHjR2AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7pzp3+NM2juM7eYs2obo8Xqu/1s
+        Fl3/trBYtLZ/Y7I4PWERk8W71nMsFkf/v2WzmDKtidFi7y1tiz17T7JYXN41h81ixfYjLBbb
+        fs9ntnj94ySbxfm/x1kd+D12zrrL7rF5hZbH5bOlHps+TWL36L76g9Gjb8sqRo/Pm+Q82g90
+        M3lsevKWKYAzSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1
+        SN8uQS/j7eb5TAXnVStev9vN1sC4RbaLkZNDQsBEom3jGvYuRi4OIYGljBLz13UBORxACWmJ
+        y19UIWqEJf5c62KDqHnOKPHt9xlGkASLgKrEmiXt7CA2m4ClxI9bF5lBbBEBLYll+96xgjQw
+        CxxjlZhyZhJYQljAWeLsp9MsIDavgJPE7Flfoaa+YpR48HsiVEJQ4uTMJ2A2s4CZxLzND5lB
+        LmIGumj5Pw6QMKdArMT+g3NZJzAKzELSMQtJxyyEjgWMzKsYRVJLi3PTc4sN9YoTc4tL89L1
+        kvNzNzECo3PbsZ+bdzBe2hh8iFGAg1GJh/fAxC9xQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUms
+        rEotyo8vKs1JLT7EaAoMgInMUqLJ+cDEkVcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1
+        OzW1ILUIpo+Jg1OqgTFb+JvUQvurfxXk5t3+IbY+RKLX9pVuk3j8ld/dV9yn1U6//SetIi0x
+        vF946a7vh2efi2L5q71NjFnyB4+61OUj0mk2dvNUN9pp/qv7+G3Tx/SSluWGfc82Rt5O09rW
+        327ybvXEczP+dpSVfAr4INeekKisVf5ZouudUVb33uhDuqUT1N6yPFBiKc5INNRiLipOBADx
+        VMTW5AIAAA==
+X-CMS-MailID: 20200626063718eucas1p1748b6bfd48ebf2ed3ef42a2bea39572e
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----S-rmtJXel8VGy5BRhJETGRpDn59uh3J63auyVoMdzEU6LuX2=_11cc87_"
+X-RootMTR: 20200625171829epcas5p268486a0780571edb4999fc7b3caab602
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200625171829epcas5p268486a0780571edb4999fc7b3caab602
+References: <CGME20200625171829epcas5p268486a0780571edb4999fc7b3caab602@epcas5p2.samsung.com>
+        <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
+        <CY4PR04MB37511E3B19035012A143D006E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:02:17AM -0700, Eric Biggers wrote:
+------S-rmtJXel8VGy5BRhJETGRpDn59uh3J63auyVoMdzEU6LuX2=_11cc87_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 26.06.2020 03:11, Damien Le Moal wrote:
+>On 2020/06/26 2:18, Kanchan Joshi wrote:
+>> [Revised as per feedback from Damien, Pavel, Jens, Christoph, Matias, Wilcox]
+>>
+>> This patchset enables zone-append using io-uring/linux-aio, on block IO path.
+>> Purpose is to provide zone-append consumption ability to applications which are
+>> using zoned-block-device directly.
+>>
+>> The application may specify RWF_ZONE_APPEND flag with write when it wants to
+>> send zone-append. RWF_* flags work with a certain subset of APIs e.g. uring,
+>> aio, and pwritev2. An error is reported if zone-append is requested using
+>> pwritev2. It is not in the scope of this patchset to support pwritev2 or any
+>> other sync write API for reasons described later.
+>>
+>> Zone-append completion result --->
+>> With zone-append, where write took place can only be known after completion.
+>> So apart from usual return value of write, additional mean is needed to obtain
+>> the actual written location.
+>>
+>> In aio, this is returned to application using res2 field of io_event -
+>>
+>> struct io_event {
+>>         __u64           data;           /* the data field from the iocb */
+>>         __u64           obj;            /* what iocb this event came from */
+>>         __s64           res;            /* result code for this event */
+>>         __s64           res2;           /* secondary result */
+>> };
+>>
+>> In io-uring, cqe->flags is repurposed for zone-append result.
+>>
+>> struct io_uring_cqe {
+>>         __u64   user_data;      /* sqe->data submission passed back */
+>>         __s32   res;            /* result code for this event */
+>>         __u32   flags;
+>> };
+>>
+>> Since 32 bit flags is not sufficient, we choose to return zone-relative offset
+>> in sector/512b units. This can cover zone-size represented by chunk_sectors.
+>> Applications will have the trouble to combine this with zone start to know
+>> disk-relative offset. But if more bits are obtained by pulling from res field
+>> that too would compel application to interpret res field differently, and it
+>> seems more painstaking than the former option.
+>> To keep uniformity, even with aio, zone-relative offset is returned.
 >
-> The source code for the two failing AF_ALG tests is here:
-> 
-> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
-> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg05.c
-> 
-> They use read() and write(), not send() and recv().
-> 
-> af_alg02 uses read() to read from a "salsa20" request socket without writing
-> anything to it.  It is expected that this returns 0, i.e. that behaves like
-> encrypting an empty message.
-> 
-> af_alg05 uses write() to write 15 bytes to a "cbc(aes-generic)" request socket,
-> then read() to read 15 bytes.  It is expected that this fails with EINVAL, since
-> the length is not aligned to the AES block size (16 bytes).
+>I am really not a fan of this, to say the least. The input is byte offset, the
+>output is 512B relative sector count... Arg... We really cannot do better than
+>that ?
+>
+>At the very least, byte relative offset ? The main reason is that this is
+>_somewhat_ acceptable for raw block device accesses since the "sector"
+>abstraction has a clear meaning, but once we add iomap/zonefs async zone append
+>support, we really will want to have byte unit as the interface is regular
+>files, not block device file. We could argue that 512B sector unit is still
+>around even for files (e.g. block counts in file stat). Bu the different unit
+>for input and output of one operation is really ugly. This is not nice for the user.
+>
 
-This patch should fix the regression:
+You can refer to the discussion with Jens, Pavel and Alex on the uring
+interface. With the bits we have and considering the maximun zone size
+supported, there is no space for a byte relative offset. We can take
+some bits from cqe->res, but we were afraid this is not very
+future-proof. Do you have a better idea?
 
----8<---
-Some user-space programs rely on crypto requests that have no
-control metadata.  This broke when a check was added to require
-the presence of control metadata with the ctx->init flag.
 
-This patch fixes the regression by removing the ctx->init flag.
+>>
+>> Append using io_uring fixed-buffer --->
+>> This is flagged as not-supported at the moment. Reason being, for fixed-buffer
+>> io-uring sends iov_iter of bvec type. But current append-infra in block-layer
+>> does not support such iov_iter.
+>>
+>> Block IO vs File IO --->
+>> For now, the user zone-append interface is supported only for zoned-block-device.
+>> Regular files/block-devices are not supported. Regular file-system (e.g. F2FS)
+>> will not need this anyway, because zone peculiarities are abstracted within FS.
+>> At this point, ZoneFS also likes to use append implicitly rather than explicitly.
+>> But if/when ZoneFS starts supporting explicit/on-demand zone-append, the check
+>> allowing-only-block-device should be changed.
+>
+>Sure, but I think the interface is still a problem. I am not super happy about
+>the 512B sector unit. Zonefs will be the only file system that will be impacted
+>since other normal POSIX file system will not have zone append interface for
+>users. So this is a limited problem. Still, even for raw block device files
+>accesses, POSIX system calls use Byte unit everywhere. Let's try to use that.
+>
+>For aio, it is easy since res2 is unsigned long long. For io_uring, as discussed
+>already, we can still 8 bits from the cqe res. All  you need is to add a small
+>helper function in userspace iouring.h to simplify the work of the application
+>to get that result.
 
-This means that we do not distinguish the case of no metadata
-as opposed to an empty request.  IOW it is always assumed that
-if you call recv(2) before sending metadata that you are working
-with an empty request.
+Ok. See above. We can do this.
 
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Jens: Do you see this as a problem in the future?
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 9fcb91ea10c4..2d391117c020 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -635,7 +635,6 @@ void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
- 
- 	if (!ctx->used)
- 		ctx->merge = 0;
--	ctx->init = ctx->more;
- }
- EXPORT_SYMBOL_GPL(af_alg_pull_tsgl);
- 
-@@ -757,8 +756,7 @@ int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min)
- 			break;
- 		timeout = MAX_SCHEDULE_TIMEOUT;
- 		if (sk_wait_event(sk, &timeout,
--				  ctx->init && (!ctx->more ||
--						(min && ctx->used >= min)),
-+				  !ctx->more || (min && ctx->used >= min),
- 				  &wait)) {
- 			err = 0;
- 			break;
-@@ -847,7 +845,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 	}
- 
- 	lock_sock(sk);
--	if (ctx->init && (init || !ctx->more)) {
-+	if (!ctx->more && ctx->used) {
- 		err = -EINVAL;
- 		goto unlock;
- 	}
-@@ -858,7 +856,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 			memcpy(ctx->iv, con.iv->iv, ivsize);
- 
- 		ctx->aead_assoclen = con.aead_assoclen;
--		ctx->init = true;
- 	}
- 
- 	while (size) {
-diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
-index d48d2156e621..749fe42315be 100644
---- a/crypto/algif_aead.c
-+++ b/crypto/algif_aead.c
-@@ -106,7 +106,7 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
- 	size_t usedpages = 0;		/* [in]  RX bufs to be used from user */
- 	size_t processed = 0;		/* [in]  TX bufs to be consumed */
- 
--	if (!ctx->init || ctx->more) {
-+	if (ctx->more) {
- 		err = af_alg_wait_for_data(sk, flags, 0);
- 		if (err)
- 			return err;
-diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
-index a51ba22fef58..5b6fa5e8c00d 100644
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -61,7 +61,7 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
- 	int err = 0;
- 	size_t len = 0;
- 
--	if (!ctx->init || (ctx->more && ctx->used < bs)) {
-+	if (ctx->more && ctx->used < bs) {
- 		err = af_alg_wait_for_data(sk, flags, bs);
- 		if (err)
- 			return err;
-diff --git a/include/crypto/if_alg.h b/include/crypto/if_alg.h
-index ee6412314f8f..08c087cc89d6 100644
---- a/include/crypto/if_alg.h
-+++ b/include/crypto/if_alg.h
-@@ -135,7 +135,6 @@ struct af_alg_async_req {
-  *			SG?
-  * @enc:		Cryptographic operation to be performed when
-  *			recvmsg is invoked.
-- * @init:		True if metadata has been sent.
-  * @len:		Length of memory allocated for this data structure.
-  */
- struct af_alg_ctx {
-@@ -152,7 +151,6 @@ struct af_alg_ctx {
- 	bool more;
- 	bool merge;
- 	bool enc;
--	bool init;
- 
- 	unsigned int len;
- };
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+[...]
+
+Javier
+
+------S-rmtJXel8VGy5BRhJETGRpDn59uh3J63auyVoMdzEU6LuX2=_11cc87_
+Content-Type: text/plain; charset="utf-8"
+
+
+------S-rmtJXel8VGy5BRhJETGRpDn59uh3J63auyVoMdzEU6LuX2=_11cc87_--
