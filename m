@@ -2,121 +2,150 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2CE2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FC92053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L758zaU6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WNYit8mG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgFZP67 (ORCPT
+        id S1725958AbgFZQBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:58:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
+        Fri, 26 Jun 2020 12:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFZP67 (ORCPT
+        with ESMTP id S1725807AbgFZQBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:58:59 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A33C03E979;
-        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id dg28so7318735edb.3;
-        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
-        b=L758zaU6Q5soAykwZ2Cj4fZCxEiq0bK5AbIT76HtieRMWdp0AKiaw2I0bPdddlx3JP
-         uQf+XHrpnMqigdETNytKi8CDGYjZFLa0zC2gijvdyXgO1LLhgW9J9X1Eh12kBtIyTSQM
-         8Ib2PegUFK28yRiGYXIfPy1cM7F1oT1g06o/jeWuDF7KehSatUXzGf7x32g/6CYIxS8y
-         IfTYQx2jRY70LvRk1CZVL1vLMdWeIOLDUA3e9dUiIrQcsnunAZa0T5X3VtzPAUXiAYcF
-         L6wBXc1PZ+SRpVhgww8sS5zoClBFUWiy3h9qEWcPMkVrGJnpg20wSEseQdj8FpsumCcz
-         HhTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
-        b=qnlQFXzVyhJnv+gX/41B7UMJy4jTPE0SJCWgtAMEt3YcIT73+p0TXpv7JPYc5iibtj
-         3XoXnszxZJZ33W4Wkjas3ZdRuy4dE59dYbKwSXqeqCkF7QU3xfiZ+/tvfFrbJ4/xyFlz
-         rZ0Rnj8iCDk7UQZPzLK3tJPq2qPUoNVLloUg41m2LFuq9zENWyxGum51LTDVj7iDtSpw
-         o/w16nc+WTEiv1ljHC9qZQIQwlqkhX3zXZEmGG2MRPzKRQa3uP9+9vor3MFAN69zdMsa
-         M57KdKzUGlzRRss8xwGnPY77/Zq+Xe9cebX92d7ct96YkYJg2+rc9bvTCqaibXQS+FPN
-         Fiog==
-X-Gm-Message-State: AOAM532QpXVZoqvnquxHDha7ZL7+glePoy3GwxeDsYTx5Zv9In72rbo7
-        iou1rU6qkz6oSEkb9GE9jqM=
-X-Google-Smtp-Source: ABdhPJyoCTdM4ZvkweJXXQubH3n4cD7yadzdQkILMeSfZTtDa9VjctDnNDOsHdf8HzPbB8IhwNCiCQ==
-X-Received: by 2002:a50:fa0c:: with SMTP id b12mr4178260edq.226.1593187137753;
-        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id s2sm21132439edu.39.2020.06.26.08.58.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 18:58:54 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions
- Semi Owl SoCs
-Message-ID: <20200626155854.GB6611@BV030612LT>
-References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
- <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
- <20200626135415.GD8333@Mani-XPS-13-9360>
+        Fri, 26 Jun 2020 12:01:05 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F75AC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6rTnIjYBWSFaXSKyt5x//x/3Hp9oYrcMIr20sDCEQRM=; b=WNYit8mGWuNlSFXor5FgejX45+
+        LeJOqjhkAWrSc6Vcrimsb8JkalVAZpDRgSY3YHyCbLLD0Fyx3s393+fT/AqXmVQ1ssdywjHfieC5r
+        uzcfL0ohu2W9Bs42NlLPKcn1OkVPibcoTiIw4GI1CYc7i9JrVX0+G3X5KsRTR+OYyw948ObdxIT/D
+        2l/547ycLFsAcLoFMMyN1vX860/eiBB+Kh/fJHVPsxxZ206Xk7QYIUuU64QVhQncuS0D716bakWYv
+        YT0e01fxtgyQ6Awx6yZdzLSN/MKly3luN0XavygYCQkI0J1SgJLOHgH/b1H2/JT497OmL195ecXIQ
+        7Vf3AThQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joqm4-0006no-RN; Fri, 26 Jun 2020 16:00:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A519301DFC;
+        Fri, 26 Jun 2020 18:00:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 476F32B0AEC81; Fri, 26 Jun 2020 18:00:17 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 18:00:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        paulmck <paulmck@kernel.org>, Julien Desfossez <ju@klipix.org>
+Subject: Re: [RFC PATCH v2] sched_pair_cpu: Introduce scheduler task pairing
+ system call
+Message-ID: <20200626160017.GJ4817@hirez.programming.kicks-ass.net>
+References: <20200619202516.7109-1-mathieu.desnoyers@efficios.com>
+ <20200624121136.GF4800@hirez.programming.kicks-ass.net>
+ <269292405.11607.1593023493676.JavaMail.zimbra@efficios.com>
+ <20200624195030.GG4800@hirez.programming.kicks-ass.net>
+ <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626135415.GD8333@Mani-XPS-13-9360>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 07:24:16PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jun 24, 2020 at 08:47:57PM +0300, Cristian Ciocaltea wrote:
-> > Add a reset binding entry to match all members of Actions Semi Owl SoCs.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7b5ffd646c6b..e6285c13bab0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
-> >  F:	drivers/pinctrl/actions/*
-> >  F:	drivers/soc/actions/
-> >  F:	include/dt-bindings/power/owl-*
-> > +F:	include/dt-bindings/reset/actions,*-reset.h
-> 
-> You can just use, reset/actions,*
-> 
-> Thanks,
-> Mani
+On Thu, Jun 25, 2020 at 10:56:35AM -0400, Mathieu Desnoyers wrote:
+> ----- On Jun 24, 2020, at 3:50 PM, Peter Zijlstra peterz@infradead.org wrote:
 
-Done, thanks!
+I'll try and read the earlier bit later, I can't think today.
 
-> 
-> >  F:	include/linux/soc/actions/
-> >  N:	owl
-> >  
-> > -- 
-> > 2.27.0
+> > That's exactly what that signal would do. It would send SIGIO when the
+> > state changes.
 > > 
+> > So you want to access CPU-n's data, you open that file, register a
+> > signal and read it's state, if offline, you good, do the rseq. If it
+> > suddenly decides to come back online, you're guaranteed that SIGIO
+> > before it reaches userspace.
+> >
+> > The nice thing is that it's all R/O so available to normal users, you
+> > don't have to write to the file.
+> 
+> So let's say you have two threads trying to access (offline) CPU-n's data
+> with that algorithm concurrently. How are they serialized with each other ?
+
+Also implement F_SETLK or something :-)
+
+> >> We do not want to override the affinity restricted by cgroups because
+> >> we don't want to hurt performance characteristics of another partition
+> >> of the system.
+> >> 
+> >> The sched_pair_cpu approach has the benefit of allowing us to touch
+> >> per-cpu data of a given CPU without requiring to run on that CPU, which
+> >> ensures that we do not thrash the cpu cache of cpus on which a thread
+> >> is not allowed to run. It takes care of issues caused by both cgroup
+> >> cpusets and cpu hotplug.
+> > 
+> > But now I worry that your thing allows escaping the cgroup contraints,
+> > you can perturb random CPUs you're not allowed on. That's a really bad
+> > 'feature'.
+> > 
+> > Offline cpus are okay, because you don't actually need to do anything as
+> > long as they're offline, but restricted CPUs we really should not be
+> > touching, not even a little.
+> 
+> With sched_pair_cpu, the paired task never needs to run on the target CPU.
+> The kworker thread runs on the target CPU in the same way other existing
+> worker threads run today, e.g. the ones handling RCU callbacks. AFAIK the
+> priority of those threads can be configured by a system administrator.
+
+Ah, but the critical difference is that all those are only ever ran if
+the initial work was initialized on _that_ CPU to begin with. Consider
+an isolated CPU that's spinning in userspace, it would _never_ get any
+kthreads running.
+
+Except now you can, and you even want this system call to be unpriv.
+
+It utterly and completely wrecks NOHZ_FULL.
+
+> Are there additional steps we should take to minimize the impact of this
+> worker thread ? In the same way "no rcu callbacks" CPU can be configured
+> at boot time, we could have "no sched pair cpu" configured at boot, which
+> would prevent sched_pair_cpu system calls from targeting that CPU entirely,
+> and not spawn any kworker on that cpu.
+
+No, no, no! "at boot time" is an utter trainwreck. I've been trying to
+get NOHZ_FULL runtime configurable. This means that your cpuset can
+change at runtime and the CPU you tought you had now is a NOHZ_FULL CPU.
+
+We must not allow pears on it.
+
+I'm thinking that the best option might be to treat CPUs outside of your
+cpuset the same as offline CPUs. That more-or-less requires that tasks
+outside of your cpuset partition don't have access to your shared
+memory, but that isn't an entirely insane assumption.
+
+If you want to share memory across cpuset partitions, you get to keep
+the pieces.
+
+And the nice thing about offline, is that you don't actually need to run
+anything. You only need some exclusion thing (and using a spin-loop on a
+random other CPU for that is bloody insane).
