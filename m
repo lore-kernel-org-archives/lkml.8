@@ -6,93 +6,76 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBBFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4154C207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9678F20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgFZRUH (ORCPT
+        id S1726725AbgFZRUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:20:07 -0400
-Received: from ms.lwn.net ([45.79.88.28]:35772 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgFZRUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:20:06 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B79207DB;
-        Fri, 26 Jun 2020 17:20:04 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 11:20:03 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Tony Fischetti <tony.fischetti@gmail.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Joe Perches <joe@perches.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/process
-Message-ID: <20200626112003.50788c9b@lwn.net>
-In-Reply-To: <20200621133630.46435-1-grandmaster@al2klimov.de>
-References: <20200621133630.46435-1-grandmaster@al2klimov.de>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+        Fri, 26 Jun 2020 13:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgFZRUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:20:45 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71286C03E979;
+        Fri, 26 Jun 2020 10:20:45 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 730261573479B;
+        Fri, 26 Jun 2020 10:20:41 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 10:20:38 -0700 (PDT)
+Message-Id: <20200626.102038.1298513542272393362.davem@davemloft.net>
+To:     peterz@infradead.org
+Cc:     nitesh@redhat.com, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, frederic@kernel.org,
+        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+Subject: Re: [Patch v4 3/3] net: Restrict receive packets queuing to
+ housekeeping CPUs
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200626111401.GE4817@hirez.programming.kicks-ass.net>
+References: <20200625223443.2684-1-nitesh@redhat.com>
+        <20200625223443.2684-4-nitesh@redhat.com>
+        <20200626111401.GE4817@hirez.programming.kicks-ass.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 26 Jun 2020 10:20:42 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 15:36:30 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri, 26 Jun 2020 13:14:01 +0200
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+> On Thu, Jun 25, 2020 at 06:34:43PM -0400, Nitesh Narayan Lal wrote:
+>> From: Alex Belits <abelits@marvell.com>
+>> 
+>> With the existing implementation of store_rps_map(), packets are queued
+>> in the receive path on the backlog queues of other CPUs irrespective of
+>> whether they are isolated or not. This could add a latency overhead to
+>> any RT workload that is running on the same CPU.
+>> 
+>> Ensure that store_rps_map() only uses available housekeeping CPUs for
+>> storing the rps_map.
+>> 
+>> Signed-off-by: Alex Belits <abelits@marvell.com>
+>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Documentation/process/2.Process.rst           | 12 ++++----
->  Documentation/process/4.Coding.rst            |  4 +--
->  Documentation/process/botching-up-ioctls.rst  |  2 +-
->  Documentation/process/changes.rst             |  6 ++--
->  Documentation/process/clang-format.rst        |  2 +-
->  Documentation/process/coding-style.rst        |  2 +-
->  Documentation/process/howto.rst               |  2 +-
->  Documentation/process/kernel-docs.rst         | 28 +++++++++----------
->  .../process/maintainer-pgp-guide.rst          |  2 +-
->  Documentation/process/submitting-drivers.rst  | 22 +++++++--------
->  Documentation/process/submitting-patches.rst  |  4 +--
->  11 files changed, 43 insertions(+), 43 deletions(-)
+> Dave, ACK if I route this?
 
-I've applied this, thanks.
+No problem:
 
-jon
+Acked-by: David S. Miller <davem@davemloft.net>
