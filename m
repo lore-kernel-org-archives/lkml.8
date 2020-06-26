@@ -2,134 +2,96 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3248C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ECDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F84212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3171521548
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dse56/1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgFZJe6 (ORCPT
+        id S1726778AbgFZJg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:34:58 -0400
-Received: from 8bytes.org ([81.169.241.247]:50210 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbgFZJe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:34:58 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 72182391; Fri, 26 Jun 2020 11:34:57 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH] x86/mm: Pre-allocate p4d/pud pages for vmalloc area
-Date:   Fri, 26 Jun 2020 11:34:50 +0200
-Message-Id: <20200626093450.27741-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 26 Jun 2020 05:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgFZJg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 05:36:27 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D29BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 02:36:27 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so8181576wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 02:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3LBYu141hw98E13UOqnhZDFHzSPEWWQdWTb2aMJ0PXc=;
+        b=Dse56/1U1D2T0Y1skuDJhQdTlSUJqIVZqsM/aEuZIY8lqGruPDrJYz9JcYDshNuS1B
+         TDPtY2nxjGyr7g45HhIHm9tpHkHMWojL9mQCEQ/aOqvZYEmTEGyScVdsDtaBRO18NTWw
+         Ard+MEfbJVIPuf88i7HRWDt6XQHLwhKaqoDJydRIoHoBf/I/2hX7wsFj2QxzTX6QDeQb
+         HZJSDvfC3kXD2FjtfKNgitWk4zpEe2hIXtOxpkzpfw7YsllmFoPYc3KIGUS1EMUOJrqB
+         RC9LDz/NT70QXNa2dyilSOd+hl1QgvtKfctmWmEFvQY8m7r1KIE311VZWTgnHnXF3rq9
+         7klA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3LBYu141hw98E13UOqnhZDFHzSPEWWQdWTb2aMJ0PXc=;
+        b=sVBYmuUFzqImjMd77WZ1NrpK956+7pPuEQj2U7ZFGtF7BxRN7E+pE5dx5aeW+LFATR
+         8oMyDNsnyqWt57SKjfWZNPeoO9KoW1Kyg0HxtiFDv/He6lbzjENvIqSLIR3bXXzODz0d
+         /ZTQUbeBqHJ4bxTOJ/c1bsEK99WrAhiaOrkjNYVGBjJQ0YgjXBEeDp57xbkChE4x9CSI
+         g0S5b7b9G7JnAvJmu5iKGWDMS7tfBe0nHfdSHLdk5L5fEPkNqUkpnJWbnAIIVV3oriH/
+         ghhKB8ng5dM4D+4Vt41qo7lkNFlV4Y+ybXTBNA0QiJaSS12ntTPGYYlxJylfdTaA+ZPu
+         2u/A==
+X-Gm-Message-State: AOAM532Cgq02IJQ7SWPJP0f3GFahkeogOTsTlxY8475zy1JvehGjOQQ/
+        TFOCNYy1HZCrQTCr1ofsMPCPDg==
+X-Google-Smtp-Source: ABdhPJxr03d5woJLtnz3iceqifNbq3DT2NdKMPDe9g7cAjFXbPsn73tBJ2RMZdvlVrCRYoTwh//5bA==
+X-Received: by 2002:a1c:790a:: with SMTP id l10mr2316176wme.80.1593164185762;
+        Fri, 26 Jun 2020 02:36:25 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id a3sm16143214wmb.7.2020.06.26.02.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 02:36:25 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 10:36:23 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND 00/10] Fix a bunch of W=1 warnings in Regulator
+Message-ID: <20200626093623.GZ954398@dell>
+References: <20200625191708.4014533-1-lee.jones@linaro.org>
+ <20200625194813.GI5686@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625194813.GI5686@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Thu, 25 Jun 2020, Mark Brown wrote:
 
-Pre-allocate the page-table pages for the vmalloc area at the level
-which needs synchronization on x86. This is P4D for 5-level and PUD
-for 4-level paging.
+> On Thu, Jun 25, 2020 at 08:16:58PM +0100, Lee Jones wrote:
+> > Attempting to clean-up W=1 kernel builds, which are currently
+> > overwhelmingly riddled with niggly little warnings.
+> > 
+> > Resent to include patch contributors/maintainers/MLs.
+> 
+> Is this an actual resend or did you fix the issues I raised?
 
-Doing this at boot makes sure all page-tables in the system have these
-pages already and do not need to be synchronized at runtime. The
-runtime synchronizatin takes the pgd_lock and iterates over all
-page-tables in the system, so it can take quite long and is better
-avoided.
+They're fixed.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/mm/init_64.c | 55 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index dbae185511cd..475a4008445b 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1238,6 +1238,59 @@ static void __init register_page_bootmem_info(void)
- #endif
- }
- 
-+/*
-+ * Pre-allocates page-table pages for the vmalloc area in the kernel page-table.
-+ * Only the level which needs to be synchronized between all page-tables is
-+ * allocated because the synchronization can be expensive.
-+ */
-+static void __init preallocate_vmalloc_pages(void)
-+{
-+	unsigned long addr;
-+	const char *lvl;
-+	int count = 0;
-+
-+	for (addr = VMALLOC_START; addr <= VMALLOC_END; addr = ALIGN(addr + 1, PGDIR_SIZE)) {
-+		pgd_t *pgd = pgd_offset_k(addr);
-+		p4d_t *p4d;
-+		pud_t *pud;
-+
-+		p4d = p4d_offset(pgd, addr);
-+		if (p4d_none(*p4d)) {
-+			/* Can only happen with 5-level paging */
-+			p4d = p4d_alloc(&init_mm, pgd, addr);
-+			if (!p4d) {
-+				lvl = "p4d";
-+				goto failed;
-+			}
-+			count += 1;
-+		}
-+
-+		if (pgtable_l5_enabled())
-+			continue;
-+
-+		pud = pud_offset(p4d, addr);
-+		if (pud_none(*pud)) {
-+			/* Ends up here only with 4-level paging */
-+			pud = pud_alloc(&init_mm, p4d, addr);
-+			if (!pud) {
-+				lvl = "pud";
-+				goto failed;
-+			}
-+			count += 1;
-+		}
-+	}
-+
-+	return;
-+
-+failed:
-+
-+	/*
-+	 * A failure here is not fatal - If the pages can be allocated later it
-+	 * will be synchronized to other page-tables.
-+	 */
-+	pr_err("Failed to pre-allocate %s pages for vmalloc area\n", lvl);
-+}
-+
- void __init mem_init(void)
- {
- 	pci_iommu_alloc();
-@@ -1261,6 +1314,8 @@ void __init mem_init(void)
- 	if (get_gate_vma(&init_mm))
- 		kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
- 
-+	preallocate_vmalloc_pages();
-+
- 	mem_init_print_info(NULL);
- }
- 
 -- 
-2.27.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
