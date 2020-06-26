@@ -2,237 +2,99 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7778BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A18C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615C020836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB67520836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFZSZA (ORCPT
+        id S1725880AbgFZS0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:25:00 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59785 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgFZSXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:23:33 -0400
-IronPort-SDR: 8vRkOh+QnaH65Ek6VVnpLE5MmdHElPXrUn8co/ZwwhX7CAorx3OCEhfITTpt2RG4M6xCJbk1tR
- 1IR71S7zGfjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210512887"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="210512887"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:23:32 -0700
-IronPort-SDR: f0XsJgTubk+/MvrcpyfD2BlpOsTFd3D5jl7WVrriWaq2u1d6o1WfbX/UY7tGgly4vm53/7UIKs
- G0tMg5gxGJOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="424153840"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:23:32 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com, wei.w.wang@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 04/23] perf/x86/intel/lbr: Add the function pointers for LBR save and restore
-Date:   Fri, 26 Jun 2020 11:20:01 -0700
-Message-Id: <1593195620-116988-5-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
-References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
+        Fri, 26 Jun 2020 14:26:07 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:55225 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725768AbgFZS0G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:26:06 -0400
+Received: (qmail 305618 invoked by uid 1000); 26 Jun 2020 14:26:05 -0400
+Date:   Fri, 26 Jun 2020 14:26:05 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     syzbot <syzbot+145012a46658ac00fc9e@syzkaller.appspotmail.com>
+Cc:     alsa-devel@alsa-project.org, andreyknvl@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
+Subject: Re: KASAN: use-after-free Read in line6_submit_audio_in_all_urbs
+Message-ID: <20200626182605.GA305214@rowland.harvard.edu>
+References: <000000000000d44c6d05a8ffe488@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d44c6d05a8ffe488@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Fri, Jun 26, 2020 at 10:18:12AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    fb574682 usbip: tools: fix module name in man page
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> console output: https://syzkaller.appspot.com/x/log.txt?x=156560b1100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=63b40b2ae167bad6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=145012a46658ac00fc9e
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+145012a46658ac00fc9e@syzkaller.appspotmail.com
+> 
+> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
+> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
+> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
+> snd_usb_toneport 5-1:0.0: URB in #0 submission failed (-19)
+> ==================================================================
+> BUG: KASAN: use-after-free in line6_submit_audio_in_all_urbs+0x10b/0x120 sound/usb/line6/capture.c:72
+> Read of size 8 at addr ffff8881cffb1800 by task kworker/1:5/3257
+> 
+> CPU: 1 PID: 3257 Comm: kworker/1:5 Not tainted 5.8.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events line6_startup_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xf6/0x16e lib/dump_stack.c:118
+>  print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+>  line6_submit_audio_in_all_urbs+0x10b/0x120 sound/usb/line6/capture.c:72
+>  line6_stream_start+0x207/0x230 sound/usb/line6/pcm.c:197
+>  line6_pcm_acquire+0x161/0x210 sound/usb/line6/pcm.c:318
+>  line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:734
+>  process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x392/0x470 kernel/kthread.c:291
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> 
+> Allocated by task 76:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  kmalloc include/linux/slab.h:555 [inline]
+>  kzalloc include/linux/slab.h:669 [inline]
+>  line6_init_pcm+0x2a7/0x9e0 sound/usb/line6/pcm.c:533
+>  toneport_init+0xdd/0x6b0 sound/usb/line6/toneport.c:419
+>  line6_probe+0xaa0/0x1330 sound/usb/line6/driver.c:809
 
-The MSRs of Architectural LBR are different from previous model-specific
-LBR. Perf has to implement different functions to save and restore them.
+It look like the cancel_delayed_work() in line6_disconnect() needs to be 
+cancel_delayed_work_sync().  Unfortunately we can't test this until syzbot 
+is able to reproduce the bug.
 
-The function pointers for LBR save and restore are introduced. Perf
-should initialize the corresponding functions at boot time.
-
-The generic optimizations, e.g. avoiding restore LBR if no one else
-touched them, still apply for Architectural LBRs. The related codes are
-not moved to model-specific functions.
-
-Current model-specific LBR functions are set as default.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/core.c |  4 +++
- arch/x86/events/intel/lbr.c  | 71 +++++++++++++++++++++++++++-----------------
- arch/x86/events/perf_event.h |  6 ++++
- 3 files changed, 54 insertions(+), 27 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index e08a591..117307a 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3954,6 +3954,8 @@ static __initconst const struct x86_pmu core_pmu = {
- 
- 	.lbr_reset		= intel_pmu_lbr_reset_64,
- 	.lbr_read		= intel_pmu_lbr_read_64,
-+	.lbr_save		= intel_pmu_lbr_save,
-+	.lbr_restore		= intel_pmu_lbr_restore,
- };
- 
- static __initconst const struct x86_pmu intel_pmu = {
-@@ -4002,6 +4004,8 @@ static __initconst const struct x86_pmu intel_pmu = {
- 
- 	.lbr_reset		= intel_pmu_lbr_reset_64,
- 	.lbr_read		= intel_pmu_lbr_read_64,
-+	.lbr_save		= intel_pmu_lbr_save,
-+	.lbr_restore		= intel_pmu_lbr_restore,
- };
- 
- static __init void intel_clovertown_quirk(void)
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 42466a0..c0312ea 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -323,11 +323,37 @@ static inline u64 rdlbr_to(unsigned int idx)
- 	return val;
- }
- 
--static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
-+void intel_pmu_lbr_restore(void *ctx)
- {
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct x86_perf_task_context *task_ctx = ctx;
- 	int i;
- 	unsigned lbr_idx, mask;
-+	u64 tos = task_ctx->tos;
-+
-+	mask = x86_pmu.lbr_nr - 1;
-+	for (i = 0; i < task_ctx->valid_lbrs; i++) {
-+		lbr_idx = (tos - i) & mask;
-+		wrlbr_from(lbr_idx, task_ctx->lbr_from[i]);
-+		wrlbr_to  (lbr_idx, task_ctx->lbr_to[i]);
-+
-+		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
-+			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
-+	}
-+
-+	for (; i < x86_pmu.lbr_nr; i++) {
-+		lbr_idx = (tos - i) & mask;
-+		wrlbr_from(lbr_idx, 0);
-+		wrlbr_to(lbr_idx, 0);
-+		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
-+			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, 0);
-+	}
-+
-+	wrmsrl(x86_pmu.lbr_tos, tos);
-+}
-+
-+static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	u64 tos;
- 
- 	if (task_ctx->lbr_callstack_users == 0 ||
-@@ -349,40 +375,18 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- 		return;
- 	}
- 
--	mask = x86_pmu.lbr_nr - 1;
--	for (i = 0; i < task_ctx->valid_lbrs; i++) {
--		lbr_idx = (tos - i) & mask;
--		wrlbr_from(lbr_idx, task_ctx->lbr_from[i]);
--		wrlbr_to  (lbr_idx, task_ctx->lbr_to[i]);
--
--		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
--			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
--	}
--
--	for (; i < x86_pmu.lbr_nr; i++) {
--		lbr_idx = (tos - i) & mask;
--		wrlbr_from(lbr_idx, 0);
--		wrlbr_to(lbr_idx, 0);
--		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
--			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, 0);
--	}
-+	x86_pmu.lbr_restore(task_ctx);
- 
--	wrmsrl(x86_pmu.lbr_tos, tos);
- 	task_ctx->lbr_stack_state = LBR_NONE;
- }
- 
--static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-+void intel_pmu_lbr_save(void *ctx)
- {
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct x86_perf_task_context *task_ctx = ctx;
- 	unsigned lbr_idx, mask;
- 	u64 tos, from;
- 	int i;
- 
--	if (task_ctx->lbr_callstack_users == 0) {
--		task_ctx->lbr_stack_state = LBR_NONE;
--		return;
--	}
--
- 	mask = x86_pmu.lbr_nr - 1;
- 	tos = intel_pmu_lbr_tos();
- 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
-@@ -397,6 +401,19 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
- 	}
- 	task_ctx->valid_lbrs = i;
- 	task_ctx->tos = tos;
-+}
-+
-+static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	if (task_ctx->lbr_callstack_users == 0) {
-+		task_ctx->lbr_stack_state = LBR_NONE;
-+		return;
-+	}
-+
-+	x86_pmu.lbr_save(task_ctx);
-+
- 	task_ctx->lbr_stack_state = LBR_VALID;
- 
- 	cpuc->last_task_ctx = task_ctx;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 70a0b5e..83ff188 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -693,6 +693,8 @@ struct x86_pmu {
- 
- 	void		(*lbr_reset)(void);
- 	void		(*lbr_read)(struct cpu_hw_events *cpuc);
-+	void		(*lbr_save)(void *ctx);
-+	void		(*lbr_restore)(void *ctx);
- 
- 	/*
- 	 * Intel PT/LBR/BTS are exclusive
-@@ -1086,6 +1088,10 @@ void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc);
- 
- void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc);
- 
-+void intel_pmu_lbr_save(void *ctx);
-+
-+void intel_pmu_lbr_restore(void *ctx);
-+
- void intel_pmu_lbr_init_core(void);
- 
- void intel_pmu_lbr_init_nhm(void);
--- 
-2.7.4
-
+Alan Stern
