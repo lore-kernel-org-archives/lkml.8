@@ -3,84 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89048C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00580C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609892089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC39620B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgFZV6B (ORCPT
+        id S1725882AbgFZWBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:58:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57247 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbgFZV6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:58:01 -0400
-IronPort-SDR: BJHnpWhAfyXCaKFpKf2GTxUcbuIREp8G1uf+WeuA0eJi0mLM+xqEUvqc4BKR4QcETytIFK8q1V
- tXM4THXS0zkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143001176"
-X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="143001176"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 14:58:00 -0700
-IronPort-SDR: NSAyYbDiA+tJ5jsIFgTWYxItlBUAdbRRKZJmDvJ7X1geYoQb2irFqU0HDwl7NGBzGNlYk+JXp3
- jnPlv40/pwvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="354893275"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga001.jf.intel.com with ESMTP; 26 Jun 2020 14:57:59 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id E2024301B9F; Fri, 26 Jun 2020 14:57:59 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:57:59 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
-Message-ID: <20200626215759.GG818054@tassilo.jf.intel.com>
-References: <20200626194720.2915044-1-jolsa@kernel.org>
- <20200626212522.GF818054@tassilo.jf.intel.com>
- <CAP-5=fVMs4Ok3=gYmzheNTzbBUGGHbCr0cpJSm9TV45aeZb4Ng@mail.gmail.com>
+        Fri, 26 Jun 2020 18:01:35 -0400
+Received: from smtprelay0204.hostedemail.com ([216.40.44.204]:42576 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725803AbgFZWBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 18:01:35 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id E4384837F24A;
+        Fri, 26 Jun 2020 22:01:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: silk04_4e0f1b526e58
+X-Filterd-Recvd-Size: 2139
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 26 Jun 2020 22:01:32 +0000 (UTC)
+Message-ID: <58f25e61b285362ab28d14ac55d1cd632c460fa8.camel@perches.com>
+Subject: Re: [PATCH v2] Replace HTTP links with HTTPS ones: Documentation/arm
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     mchehab+samsung@kernel.org, alexandre.belloni@bootlin.com,
+        nicolas.ferre@microchip.com, robh@kernel.org,
+        j.neuschaefer@gmx.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 26 Jun 2020 15:01:31 -0700
+In-Reply-To: <20200626150911.3d4f9ca7@lwn.net>
+References: <20200626194408.61245-1-grandmaster@al2klimov.de>
+         <20200626150911.3d4f9ca7@lwn.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVMs4Ok3=gYmzheNTzbBUGGHbCr0cpJSm9TV45aeZb4Ng@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The name could be a metric or an event, the logic for each is quite
+On Fri, 2020-06-26 at 15:09 -0600, Jonathan Corbet wrote:
+> On Fri, 26 Jun 2020 21:44:08 +0200
+> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+> 
+> > Rationale:
+> > Reduces attack surface on kernel devs opening the links for MITM
+> > as HTTPS traffic is much harder to manipulate.
+[]
+> >  Changes in v2:
+> >  Undone all handhelds.org changes and 0 of 0 wearablegroup.org changes.
+> 
+> I wasn't asking that the changes be undone, I was asking that those links
+> simply be removed.  They are actively harmful - much more so than any http:
+> links - and shouldn't be there.  *Sigh*.  I guess I'll just do that.
 
-I would say collisions are unlikely. Event names follow quite structured
-patterns.
+One argument to mark old/invalid links differently somehow is
+that the wayback machine at archive.org may still have them.
 
-> different. You could look up an event and when it fails assume it was
-> a metric, but I like the simplicity of this approach.
+But when the domain has been transferred to a 3rd party, it is
+possibly harmful.
 
-I don't think it's simpler for the user.
+Another option might be to grab any archive.org content and
+put it into a Documentation/archived/outdated directory or
+the like.
 
-> Maybe this
-> change could be adopted more widely with something like "perf stat -e
-> metric:IPC -a -I 1000" rather than the current "perf stat -M IPC -a -I
-> 1000".
+For instance:
 
-I thought about just adding metrics to -e, without metric: of course.
+https://web.archive.org/web/20090423133742/http://www.handhelds.org/projects/h1940.html
 
--Andi
+Then gain, this might as well be prehistoric content.
+
