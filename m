@@ -2,121 +2,118 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39860C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E60EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC532082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593158949;
-	bh=Z7q74NuEg6nB5QogV/A6u8EleRsTeIsfiwDh1MnapBo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bVuVnwWywA6U8lMVLTkfAGmx7S/MeT3ILz017vodiVjUKYhqm9K6Eo2x0YplViHcd
-	 y3rEMZWd4tWWzSD9qVASzEn9NJtZ/WWndc4fiKLQCg4pmN74EWTokpxx6GYWMDbqX8
-	 bj8p/6epK1QNq6bBY+MtJViBmq+nEkvvfNgFCSoM=
+	by mail.kernel.org (Postfix) with ESMTP id F008E20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UrQ53aSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgFZIJG (ORCPT
+        id S1729247AbgFZIJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:09:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgFZIFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:05:39 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822F82076E;
-        Fri, 26 Jun 2020 08:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593158738;
-        bh=Z7q74NuEg6nB5QogV/A6u8EleRsTeIsfiwDh1MnapBo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z7T8/W+7jmcl7OD7rBOY93skqQN2HWJoYlIbL9hHSMTStui+d0wxKqY7menS6jlD4
-         62amiFzRxaxh5o7ag+IhUO5/xam1oCDUmvWIQqxU38/PFkhIrNZZPKm6ha+6sMtv+7
-         mN2qqcav/YDBHhBSd+/JUfCXokahevctoKIAHiuk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH] ARM: dts: arm-realview: Align L2 cache-controller nodename with dtschema
-Date:   Fri, 26 Jun 2020 10:05:34 +0200
-Message-Id: <20200626080534.3400-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 26 Jun 2020 04:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbgFZIJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:09:29 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9F5C08C5DB
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:09:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t194so8482663wmt.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rbLxPkU5zn6HuEV/rtbUuP7BkhVC3DU9UZS2cCgUUqs=;
+        b=UrQ53aSAoNkLtJVEW6BDnSQ+6v0IYcarF2DEe3WeSNTvG7qhv/sVQjRNLftA1/WvTd
+         rNga5sYIc0HtDHBmVny1DPoauZqqRn8iO8KpontGuzATd0MHdoAWU2xr9Xj1OdEZFShN
+         YDyZbpxLiDck3HTKArsqvk3lNFCR9A3pAYLmA6qSCdm8CfqftPGBgmrcX9TEKwjrXI2N
+         5hHn8+dFFTpVRNncH7Cjn1dfaEH2KxtiaeXc3itC4vpSwRpS8lfJSsx5i4+AdUM9twU8
+         4t6q0s/b2Yh5yiyi4k3UnlXnyjPddkjPNH2OvXBekElzPhoJferFRvZJdJjRxutlfkZL
+         jeZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rbLxPkU5zn6HuEV/rtbUuP7BkhVC3DU9UZS2cCgUUqs=;
+        b=WZ9eL1rLVZyaVBPMgDjG6b0msUbJDke6aILCMt+hthflLL82lCyZBAHDdS9LSDXAbx
+         AoRL+s2pCpsKhXRsBsPP4Fny/vXus3n5Hkbn28clno273vEZe6/t8UMCubD4JMNZet87
+         tww6f1BJ8wAuXG+3Hd9xgulWj9cYAjn68MSklWpix+CFWXHac3OG5fjnRZZnByA03GN5
+         j7rw1eXjxmXZ00xnDOIvUvsv5Fq7pSXl0PlVkxq81/rIwEv+ffnyHcA9rPZ8hXHEUgEW
+         mWDNADZCXIjdotmveNky3ctrDWHN43g0Vg8Jt3kxgl1snl4Fwy1WxIxBgwvFAB0iTDyh
+         dr0Q==
+X-Gm-Message-State: AOAM5325fH0+WvqNS2spOf5mSJHR2NowO4xzNc5bhYjomdT0dXIA31Ll
+        vkFHNkI+smy0DDMmlxEXtxZ5vU+5mfUVmw==
+X-Google-Smtp-Source: ABdhPJx1PfO/ReemODrB6fHZaYmkTV/XN0aLHdRmjz7wS+SEB2F1Yigl4vidu1EkS+IX0ywuZs+W1w==
+X-Received: by 2002:a1c:ed17:: with SMTP id l23mr2196788wmh.73.1593158968078;
+        Fri, 26 Jun 2020 01:09:28 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id d2sm35925710wrs.95.2020.06.26.01.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 01:09:27 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 09:09:24 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200626080924.GA281178@google.com>
+References: <20200623142138.209513-1-qperret@google.com>
+ <20200623142138.209513-3-qperret@google.com>
+ <20200626025346.z3g3ikdcin56gjlo@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626025346.z3g3ikdcin56gjlo@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix dtschema validator warnings like:
-    l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+On Friday 26 Jun 2020 at 08:23:46 (+0530), Viresh Kumar wrote:
+> On 23-06-20, 15:21, Quentin Perret wrote:
+> > @@ -2789,7 +2796,13 @@ static int __init cpufreq_core_init(void)
+> >  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+> >  	BUG_ON(!cpufreq_global_kobject);
+> >  
+> > +	mutex_lock(&cpufreq_governor_mutex);
+> > +	if (!default_governor)
+> 
+> Also is this check really required ? The pointer will always be NULL
+> at this point, isn't it ?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/arm-realview-eb-mp.dtsi | 2 +-
- arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pbx-a9.dts | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Not necessarily in this implementation -- the governors are registered
+at core_initcall time too, so I don't think we can assume any ordering
+there.
 
-diff --git a/arch/arm/boot/dts/arm-realview-eb-mp.dtsi b/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
-index 29b636fce23f..26783d053ac7 100644
---- a/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
-@@ -59,7 +59,7 @@
- 			interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		L2: l2-cache {
-+		L2: cache-controller {
- 			compatible = "arm,l220-cache";
- 			reg = <0x1f002000 0x1000>;
- 			interrupt-parent = <&intc>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-index 2625ce66f8e7..f925782f8560 100644
---- a/arch/arm/boot/dts/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -323,7 +323,7 @@
- 			      <0x10120000 0x100>;
- 		};
- 
--		L2: l2-cache {
-+		L2: cache-controller {
- 			compatible = "arm,l220-cache";
- 			reg = <0x10110000 0x1000>;
- 			interrupt-parent = <&intc_dc1176>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-index c69cf7ddbe61..9748e0fe800f 100644
---- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-@@ -92,7 +92,7 @@
- 		      <0x1f000100 0x100>;
- 	};
- 
--	L2: l2-cache {
-+	L2: cache-controller {
- 		compatible = "arm,l220-cache";
- 		reg = <0x1f002000 0x1000>;
- 		interrupt-parent = <&intc_tc11mp>;
-diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-index 90d00b407f85..85d3968fbb91 100644
---- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-+++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-@@ -60,7 +60,7 @@
- 		};
- 	};
- 
--	L2: l2-cache {
-+	L2: cache-controller {
- 		compatible = "arm,pl310-cache";
- 		reg = <0x1f002000 0x1000>;
- 		cache-unified;
--- 
-2.17.1
+But it looks like your new version has fixed that by design, so I'll go
+look at it some more, and try it out.
 
+Thanks for the help!
+Quentin
+> 
+> > +		default_governor = cpufreq_default_governor();
+> > +	mutex_unlock(&cpufreq_governor_mutex);
+> > +
+> >  	return 0;
+> >  }
+> >  module_param(off, int, 0444);
+> > +module_param_string(default_governor, cpufreq_param_governor, CPUFREQ_NAME_LEN, 0444);
+> >  core_initcall(cpufreq_core_init);
+> > -- 
+> > 2.27.0.111.gc72c7da667-goog
+> 
+> -- 
+> viresh
