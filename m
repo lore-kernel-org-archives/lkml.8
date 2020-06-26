@@ -4,169 +4,345 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD79C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE3E20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAEB20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="q0FhC1BI"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="JOr+j8WE";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="bSlNysyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgFZPKb (ORCPT
+        id S1728409AbgFZPLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbgFZPKb (ORCPT
+        Fri, 26 Jun 2020 11:11:08 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:32004 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbgFZPLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:10:31 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1180C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:10:30 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id g11so4639710qvs.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=e+rU3wQ+15Y5dUu7AZJ0biGdIOcHjZidZ4RqjjuYwPI=;
-        b=q0FhC1BIGj/8iZjjNBXyZ8lw70iJ3bg0LsYd4RwM10Frn1+XlpAfKG5H6/oOK7c5mZ
-         TOo45Yp55o5q+pz/BzGz8KlhI8ZdbaEjuVi4ybmtkIScvxXgsSsrayEhjRKt4LOndRPl
-         tms0ueRUd6oiwE540fZ0D1CE9Lb1tVyX6B2Is=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e+rU3wQ+15Y5dUu7AZJ0biGdIOcHjZidZ4RqjjuYwPI=;
-        b=ZQmC53AxWhP4xQFYaby82mtj5MEG7inomd9Czvfcvd34z7Lp9khkGXWx5d887DtABt
-         h6QxhX1WDocL/8MKQlVHneGSR3k8nEAB2HR8eL+GwfiyKQFrcjfuayrGeGTAndy7HbUD
-         XcFlTwQerqE+GyiEu248Ra+mRIWClwlpJ55EBNrWxNi76Ch8OoMtQRWGp+eNntLHhcM6
-         hqQbsu46xVHx8iAX7/mukHLDqh2c7iyg1VwgufOxmDRK2dp4CYmxWohLA3cFez3W5+my
-         IiNvHDD5Qwu/YjYQKqSyOOCHrEpxLgQr+Li6Rr9h2nn7PADKhzrO+HZh5/e5mWieKinX
-         wlmw==
-X-Gm-Message-State: AOAM531b3+VpQU2nF4BvB9Z7QyymD704IYFumEQjP7Fa4kEf07OKz8k+
-        l16989vuUiKUi/dlKUWOBcCVLg==
-X-Google-Smtp-Source: ABdhPJyLOKHaIWEJ5QdVeug1CZZlpiFr9D7V3Q2MZI/mYnagEk3JA7qI0vO/UXzdyR5Bc+NMv8oARg==
-X-Received: by 2002:a0c:e008:: with SMTP id j8mr59005qvk.87.1593184229767;
-        Fri, 26 Jun 2020 08:10:29 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p128sm6729042qka.47.2020.06.26.08.10.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 08:10:29 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 11:10:28 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Turner <pjt@google.com>
-Subject: Re: [RFC PATCH 00/13] Core scheduling v5
-Message-ID: <20200626151028.GA538235@google.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
- <CAEXW_YSU5=ZUf-4j55av9Q8b+PRiM2DCKydM9Bv__mzL2MWx4g@mail.gmail.com>
- <CANaguZCi7Gj5TSUfU5AZ5w1v=EEz23rdgUsSg1NVb3DBM+F6bA@mail.gmail.com>
+        Fri, 26 Jun 2020 11:11:07 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QF8dch007716;
+        Fri, 26 Jun 2020 08:10:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=kBP4cziVR83/nRHZPE+ym9U8TprozCSBmna/9dt95KU=;
+ b=JOr+j8WEP800xtX0Rbxn5ahA8vOkbU8PfR8zKPklvd+fgjjmYs6MqviUPYD/17VqrcCW
+ j7OQAKJWwkFPlZaJ/6xRzjhqsYyyH3W7GOzrCupJ98jNeEf7NO3XX0VflnCkRrwCI956
+ jFUURPdfKRmk5Sebrfc9Jwd5HyrMPfoYriHrv10I7IwBmC88faT45XPpmppMbSuYsuXZ
+ uEsEoWfpRVZndeHIgPzfzYXZf7/1qOLEMa3s7QEAGIH//ZzHH6IFtWrhBmA9HnxzomFe
+ mwT+ij5BXAV4u33JlhcUGGVvYQnvyipbkthqofaWpvZ2y2x5ymwrAeOn6bPnLvOUqWzA Rw== 
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2050.outbound.protection.outlook.com [104.47.36.50])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 31uur5u9aq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 08:10:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lxtMmvum5Tw+95UvhdC4l6c2Sk68lHwYIGduUMu/CdQNfZpeh80CkbvaR9zDN6T0YYdJgnE7fw758+bHbr9TVJyrdNpj7DhHwrvbzcg0bQGR+lacOtUZdNs+WtuVTn9neSc6e5VEXY2pIrsa47AYXi4F2iXryjut7pAf5T+3bXudhcHurzCHqyMDWi/K4+2aI3xUSdM4nrWLKbnq4f3OyP6FcDOslnRn0CrzI9WJVAEMKoPo7aSleYgHhTaxfYwpwY13TOCatq39GzEpM++czSt+h0kaosgnW3eWgFRW3FyWC+1dZdIX28ltnqBdPvTo/982u8Lq2bNZlhJmHfdtBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kBP4cziVR83/nRHZPE+ym9U8TprozCSBmna/9dt95KU=;
+ b=iJsVnd4yCi7ka3H53DrJMCNMb6Q9vSQna77QQYrchhUxG4YcHT3NIW6wBOddrIiDQdOKiCx/IZsatj9NUHdCSDR/nIPUasCcFNhvaSqs9jFOblYHP0P8B2ZH03CY48vx2S79VqszcRKrYnndo4SvkTqbBZpnTtIx7XYRPwFKfy0o5wxrMVZsxBaUmjTjzCAQqN2kCaFyC5yhcalHwQLrdIF6a9RMJ/G+1AlSNMNFX9pO1g/46GgDz590CufFpsxCD0JlXy5vRtnt6CooezIkqb8MnR64QvD6clkqJtuLHf81cnItqgFgCa/99DyXDZixGiEmFPYBc0RzKhY2L2ubWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kBP4cziVR83/nRHZPE+ym9U8TprozCSBmna/9dt95KU=;
+ b=bSlNysytqUYvmOIrkO6qwI4JX6QxJbrV9MWCGrD6LZI2tOPKQ+RAlidTkEl//Q3Ep5TDrITWIXh5Ifkah4qnMeCemJV9FtDEcB2r2Kmm3HBYIj6bQ5HX0VvGaeswZsN+wZMjRHUFnphTGuDcUtzLvfTBOnuJFUd0efCUgIwtdqc=
+Received: from DM6PR07MB5529.namprd07.prod.outlook.com (2603:10b6:5:7a::30) by
+ DM6PR07MB7324.namprd07.prod.outlook.com (2603:10b6:5:215::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3131.21; Fri, 26 Jun 2020 15:10:32 +0000
+Received: from DM6PR07MB5529.namprd07.prod.outlook.com
+ ([fe80::f447:6767:a746:9699]) by DM6PR07MB5529.namprd07.prod.outlook.com
+ ([fe80::f447:6767:a746:9699%7]) with mapi id 15.20.3109.033; Fri, 26 Jun 2020
+ 15:10:32 +0000
+From:   Pawel Laszczak <pawell@cadence.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Sanket Parmar <sparmar@cadence.com>
+Subject: RE: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
+Thread-Topic: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
+Thread-Index: AQHWS3YeujIotZUd8kOCCktMnZwmq6jqxmUAgAAx8KA=
+Date:   Fri, 26 Jun 2020 15:10:32 +0000
+Message-ID: <DM6PR07MB5529E239FBA41BDDB52CAFC4DD930@DM6PR07MB5529.namprd07.prod.outlook.com>
+References: <20200626045450.10205-1-pawell@cadence.com>
+ <20200626045450.10205-3-pawell@cadence.com> <20200626114057.GD2571@kadam>
+In-Reply-To: <20200626114057.GD2571@kadam>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMmM0MWMyNTktYjdiZi0xMWVhLTg3NjctMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDJjNDFjMjVhLWI3YmYtMTFlYS04NzY3LTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iNjI0NiIgdD0iMTMyMzc2NTc4MzA4MDE0NDM4IiBoPSJJL3QwM29OZG9kMlhMdmUrSklIcGl3MWtyWDA9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b58b5b8-7867-453a-68f8-08d819e3123d
+x-ms-traffictypediagnostic: DM6PR07MB7324:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR07MB7324DB55E7A10518CF740B01DD930@DM6PR07MB7324.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PIuQDmTIkwxfhyDquEbXbR2gk532YoVkaU6BAF1QFWsa59ryv1v5l8xZkTgiXbt0FkdiwpgJVyps0B9/RybxyePN/LB84PB/TjbQij1NCddsEajOzErp4gB2Vunsr8LDSM9MdnAXc6rgqH6Gva+n9K1OXf5vNRqwb+HM3vQx7jaLCf7L9CU0oFfe1h7fYpbmHEsjmWa8dbNiOqwVdl01kc162LwHQrKupzASKzDQ1TUPcUDBdZVZH851RQy5ubiHG8UTkANZv6KYUBfEDuKw870joThaT2+F3xfBt9ndUNmTL0Ww4QDehULc/6fwDJxVpo9VN5pQKix7KdEdiYp4XVBItrwWsCBjA6MoFmfyqUd4g7FbPqAMxpXEapHTdY9l
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB5529.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(36092001)(8936002)(52536014)(5660300002)(71200400001)(7696005)(6916009)(478600001)(8676002)(26005)(6506007)(7416002)(316002)(83380400001)(55016002)(33656002)(54906003)(66946007)(76116006)(9686003)(107886003)(2906002)(4326008)(186003)(66446008)(66476007)(64756008)(66556008)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: P9AJXwsEyDD01g0nq1S6MNgzw/udFqClkGEmh/kvWS5bYWFotwujdJnIP745wNdq40erBsD8Bt1VigfgXszjwnNjIZ1oj9qri64M16Y1e/gREuXp7TCceka53TWw9ZlicswjVkAIPlLFQjQBmZ5JcaYwcmBZkR6QQNbnF1K2nhFNF8+9vwfWaY2LKEY8lPmXgQM3f0mZqGVpSi/tUTj3Dkto5mcHxKIyG7JmZnsTi3wCHLbOy3LLqWxBAEufX6rwq/4M9Fqt39AtGTTankSrJ0OF3u1Qut7LteSbLmA0pL+gg2rJXHfPHZczBN+jlGQ0Ln3fd0tSyvEsxbJp3N5uG7bYCfD8ZEUGo3Xtt+4Cr+jpevNr9obEq7peQYytzI/eAyJjBsdH+cAw9I1gyXjoAdECmFfQFIDMDXyjcabi1SsGsJnfet0cz4QN/bPF1srdKHtMYRBDIE+XiUVUv1S0dsSNqHZR7SP4hY+hq8wWzIPt1CYgdaLarTN4Ln2A0PPP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANaguZCi7Gj5TSUfU5AZ5w1v=EEz23rdgUsSg1NVb3DBM+F6bA@mail.gmail.com>
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB5529.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b58b5b8-7867-453a-68f8-08d819e3123d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 15:10:32.5681
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4aWsxF77644pgL/BjSd7UZ5vkzFnOgiKVSCWj+OQ3ePQZYGYHh+iJWjASVHay3HMiPme83ENGBRuFY7/QzarD6cfDBl8Se7QYN1s2wLByEE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB7324
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_08:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ mlxlogscore=556 priorityscore=1501 malwarescore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006260107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 10:36:01AM -0400, Vineeth Remanan Pillai wrote:
-> On Thu, Jun 25, 2020 at 9:47 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Thu, Jun 25, 2020 at 4:12 PM Vineeth Remanan Pillai
-> > <vpillai@digitalocean.com> wrote:
-> > [...]
-> > > TODO lists:
-> > >
-> > >  - Interface discussions could not come to a conclusion in v5 and hence would
-> > >    like to restart the discussion and reach a consensus on it.
-> > >    - https://lwn.net/ml/linux-kernel/20200520222642.70679-1-joel@joelfernandes.org
-> >
-> > Thanks Vineeth, just want to add: I have a revised implementation of
-> > prctl(2) where you only pass a TID of a task you'd like to share a
-> > core with (credit to Peter for the idea [1]) so we can make use of
-> > ptrace_may_access() checks. I am currently finishing writing of
-> > kselftests for this and post it all once it is ready.
-> >
-> Thinking more about it, using TID/PID for prctl(2) and internally
-> using a task identifier to identify coresched group may have
-> limitations. A coresched group can exist longer than the lifetime
-> of a task and then there is a chance for that identifier to be
-> reused by a newer task which may or maynot be a part of the same
-> coresched group.
 
-True, for the prctl(2) tagging (a task wanting to share core with
-another) we will need some way of internally identifying groups which does
-not depend on any value that can be reused for another purpose.
+>
+>On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
+>> +static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_dev *func;
+>> +
+>> +	/*
+>> +	 * Gets the second function.
+>> +	 * It's little tricky, but this platform has two function.
+>> +	 * The fist keeps resources for Host/Device while the second
+>> +	 * keeps resources for DRD/OTG.
+>> +	 */
+>> +	func =3D pci_get_device(pdev->vendor, pdev->device, NULL);
+>> +	if (unlikely(!func))
+>
+>Delete all likely/unlikely annotations.  Likely and unlikely annotations
+>make the code less readable.  We are willing to sacrifice readability on
+>fast paths.
+>
+>They're only supposed to be used where they're supported by benchmarking.
+>Probably it's pretty tricky to benchmark probe.  The other rule of thumb
+>is don't add them to drivers.  Another thing to consider is that this
+>error path is probably obvious enough for the compiler to figure out
+>without help.
 
-[..]
-> What do you think about having a separate cgroup for coresched?
-> Both coresched cgroup and prctl() could co-exist where prctl could
-> be used to isolate individual process or task and coresched cgroup
-> to group trusted processes.
+Ok, I will remove unlikely.
+>
+>> +		return NULL;
+>> +
+>> +	if (func->devfn =3D=3D pdev->devfn) {
+>> +		func =3D pci_get_device(pdev->vendor, pdev->device, func);
+>> +		if (unlikely(!func))
+>> +			return NULL;
+>> +	}
+>> +
+>> +	return func;
+>> +}
+>> +
+>> +static int cdnsp_pci_probe(struct pci_dev *pdev,
+>> +			   const struct pci_device_id *id)
+>> +{
+>> +	struct platform_device_info plat_info;
+>> +	struct cdnsp_wrap *wrap;
+>> +	struct resource *res;
+>> +	struct pci_dev *func;
+>> +	int err;
+>> +
+>> +	/*
+>> +	 * For GADGET/HOST PCI (devfn) function number is 0,
+>> +	 * for OTG PCI (devfn) function number is 1.
+>> +	 */
+>> +	if (!id || (pdev->devfn !=3D PCI_DEV_FN_HOST_DEVICE &&
+>> +		    pdev->devfn !=3D PCI_DEV_FN_OTG))
+>> +		return -EINVAL;
+>> +
+>> +	func =3D cdnsp_get_second_fun(pdev);
+>> +	if (unlikely(!func))
+>> +		return -EINVAL;
+>> +
+>> +	if (func->class =3D=3D PCI_CLASS_SERIAL_USB_XHCI ||
+>> +	    pdev->class =3D=3D PCI_CLASS_SERIAL_USB_XHCI)
+>> +		return -EINVAL;
+>
+>
+>Do we need call pci_put_device(func) before returning?
 
-This sounds like a fine idea to me. I wonder how Tejun and Peter feel about
-having a new attribute-less CGroup controller for core-scheduling and just
-use that for tagging. (No need to even have a tag file, just adding/removing
-to/from CGroup will tag).
+We don't need.
+Such function doesn't exist.
 
-> > However a question: If using the prctl(2) on a CGroup tagged task, we
-> > discussed in previous threads [2] to override the CGroup cookie such
-> > that the task may not share a core with any of the tasks in its CGroup
-> > anymore and I think Peter and Phil are Ok with.  My question though is
-> > - would that not be confusing for anyone looking at the CGroup
-> > filesystem's "tag" and "tasks" files?
-> >
-> Having a dedicated cgroup for coresched could solve this problem
-> as well. "coresched.tasks" inside the cgroup hierarchy would list all
-> the taskx in the group and prctl can override this and take it out
-> of the group.
+>
+>		ret =3D -EINVAL;
+>		goto put_pci;
+>
+>> +
+>> +	err =3D pcim_enable_device(pdev);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
+>> +		return err;
+>
+>		goto put_pci;
+>
+>> +	}
+>> +
+>> +	pci_set_master(pdev);
+>> +
+>> +	if (pci_is_enabled(func)) {
+>> +		wrap =3D pci_get_drvdata(func);
+>> +	} else {
+>> +		wrap =3D kzalloc(sizeof(*wrap), GFP_KERNEL);
+>> +		if (!wrap) {
+>> +			pci_disable_device(pdev);
+>> +			return -ENOMEM;
+>
+>goto disable_pci;
+>
+>> +		}
+>> +	}
+>> +
+>> +	res =3D wrap->dev_res;
+>> +
+>> +	/* For GADGET device function number is 0. */
+>> +	if (pdev->devfn =3D=3D 0) {
+>> +		/* Function 0: host(BAR_0) + device(BAR_1).*/
+>> +		dev_dbg(&pdev->dev, "Initialize Device resources\n");
+>> +		res[RES_DEV_ID].start =3D pci_resource_start(pdev, PCI_BAR_DEV);
+>> +		res[RES_DEV_ID].end =3D   pci_resource_end(pdev, PCI_BAR_DEV);
+>> +		res[RES_DEV_ID].name =3D "dev";
+>> +		res[RES_DEV_ID].flags =3D IORESOURCE_MEM;
+>> +		dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
+>> +			&res[RES_DEV_ID].start);
+>> +
+>> +		res[RES_HOST_ID].start =3D pci_resource_start(pdev, PCI_BAR_HOST);
+>> +		res[RES_HOST_ID].end =3D pci_resource_end(pdev, PCI_BAR_HOST);
+>> +		res[RES_HOST_ID].name =3D "xhci";
+>> +		res[RES_HOST_ID].flags =3D IORESOURCE_MEM;
+>> +		dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
+>> +			&res[RES_HOST_ID].start);
+>> +
+>> +		/* Interrupt for XHCI, */
+>> +		wrap->dev_res[RES_IRQ_HOST_ID].start =3D pdev->irq;
+>> +		wrap->dev_res[RES_IRQ_HOST_ID].name =3D "host";
+>> +		wrap->dev_res[RES_IRQ_HOST_ID].flags =3D IORESOURCE_IRQ;
+>> +
+>> +		/* Interrupt device. It's the same as for HOST. */
+>> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].start =3D pdev->irq;
+>> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].name =3D "peripheral";
+>> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].flags =3D IORESOURCE_IRQ;
+>> +	} else {
+>> +		res[RES_DRD_ID].start =3D pci_resource_start(pdev, PCI_BAR_OTG);
+>> +		res[RES_DRD_ID].end =3D   pci_resource_end(pdev, PCI_BAR_OTG);
+>> +		res[RES_DRD_ID].name =3D "otg";
+>> +		res[RES_DRD_ID].flags =3D IORESOURCE_MEM;
+>> +		dev_dbg(&pdev->dev, "CDNSP-DRD physical base addr: %pa\n",
+>> +			&res[RES_DRD_ID].start);
+>> +
+>> +		/* Interrupt for OTG/DRD. */
+>> +		wrap->dev_res[RES_IRQ_OTG_ID].start =3D pdev->irq;
+>> +		wrap->dev_res[RES_IRQ_OTG_ID].name =3D "otg";
+>> +		wrap->dev_res[RES_IRQ_OTG_ID].flags =3D IORESOURCE_IRQ;
+>> +	}
+>> +
+>> +	if (pci_is_enabled(func)) {
+>> +		/* Set up platform device info. */
+>> +		memset(&plat_info, 0, sizeof(plat_info));
+>> +		plat_info.parent =3D &pdev->dev;
+>> +		plat_info.fwnode =3D pdev->dev.fwnode;
+>> +		plat_info.name =3D PLAT_DRIVER_NAME;
+>> +		plat_info.id =3D pdev->devfn;
+>> +		wrap->devfn  =3D pdev->devfn;
+>> +		plat_info.res =3D wrap->dev_res;
+>> +		plat_info.num_res =3D ARRAY_SIZE(wrap->dev_res);
+>> +		plat_info.dma_mask =3D pdev->dma_mask;
+>> +		/* Register platform device. */
+>> +		wrap->plat_dev =3D platform_device_register_full(&plat_info);
+>> +		if (IS_ERR(wrap->plat_dev)) {
+>> +			pci_disable_device(pdev);
+>> +			err =3D PTR_ERR(wrap->plat_dev);
+>> +			kfree(wrap);
+>
+>		err =3D PTR_ERR(wrap->plat_dev);
+>		goto free_wrap;
+>
+>Except, do we really want to kfree(wrap)?  It looks like it came from
+>pci_get_drvdata().
+>
+>> +			return err;
+>> +		}
+>> +	}
+>> +
+>> +	pci_set_drvdata(pdev, wrap);
+>> +	return err;
+>
+>free_wrap:
+>	if (!pci_is_enabled(func))
+>		kfree(wrap);
+>disable_pci:
+>	pci_disable_device(pdev);
 
-We don't even need coresched.tasks, just the existing 'tasks' of CGroups can
-be used.
+This is ok for me.
 
-> > To resolve this, I am proposing to add a new CGroup file
-> > 'tasks.coresched' to the CGroup, and this will only contain tasks that
-> > were assigned cookies due to their CGroup residency. As soon as one
-> > prctl(2)'s the task, it will stop showing up in the CGroup's
-> > "tasks.coresched" file (unless of course it was requesting to
-> > prctl-share a core with someone in its CGroup itself). Are folks Ok
-> > with this solution?
-> >
-> As I mentioned above, IMHO cpu cgroups should not be used to account
-> for core scheduling as well. Cpu cgroups serve a different purpose
-> and overloading it with core scheduling would not be flexible and
-> scalable. But if there is a consensus to move forward with cpu cgroups,
-> adding this new file seems to be okay with me.
+>put_pci:
+>	pci_put_device(func);
+>
+>> +}
+>> +
+>> +static void cdnsp_pci_remove(struct pci_dev *pdev)
+>> +{
+>> +	struct cdnsp_wrap *wrap;
+>> +	struct pci_dev *func;
+>> +
+>> +	func =3D cdnsp_get_second_fun(pdev);
+>> +
+>> +	wrap =3D (struct cdnsp_wrap *)pci_get_drvdata(pdev);
+>> +	if (wrap->devfn =3D=3D pdev->devfn)
+>> +		platform_device_unregister(wrap->plat_dev);
+>> +
+>> +	if (!pci_is_enabled(func))
+>> +		kfree(wrap);
+>
+>pci_put_device(func);
+>
+>> +}
+>> +
+>
+>regards,
+>dan carpenter
 
-Yes, this is the problem. Many people use CPU controller CGroups already for
-other purposes. In that case, tagging a CGroup would make all the entities in
-the group be able to share a core, which may not always make sense. May be a
-new CGroup controller is the answer (?).
-
-thanks,
-
- - Joel
+thanks Dan
+regards,
+pawel
 
