@@ -2,100 +2,99 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88405C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D01720836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SsA05MuH"
+	by mail.kernel.org (Postfix) with ESMTP id E1F2C206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgFZSR0 (ORCPT
+        id S1726429AbgFZSS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:17:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53208 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZSRW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:17:22 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHBPD006447;
-        Fri, 26 Jun 2020 13:17:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593195431;
-        bh=lT8XdTWCW5WowpSaiKVh9sxbAgiTlm+/tGMLH5F0svM=;
-        h=From:To:CC:Subject:Date;
-        b=SsA05MuHZ3KKsgm4/W0yYPEIfODLtCv303VbLm/usb6/29hwW15xJ40/RpBkRHVsK
-         8x/9R8l6+Agbc6+KNZDCodnUlsfH2UFCkMeL4F33woz1zAtWKjtIG/lsUY41iytG+3
-         vp0B2gr6/qeh+C1lQgebvcPD9zyLr+7Eu3q7APP8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHBXN004067;
-        Fri, 26 Jun 2020 13:17:11 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 13:17:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 13:17:10 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QIH9xa111521;
-        Fri, 26 Jun 2020 13:17:10 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 0/6] net: ethernet: ti: am65-cpsw: update and enable sr2.0 soc
-Date:   Fri, 26 Jun 2020 21:17:03 +0300
-Message-ID: <20200626181709.22635-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 26 Jun 2020 14:18:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:56435 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbgFZSS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:18:28 -0400
+IronPort-SDR: xMmZJhzWXjmxOCDj5+N2sUOJAylcQiaC1d+0UyHtsg9bLczcZgEukUfbJhf2RFO0pMOKFojWPV
+ zcX2AchrG+1A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="133807647"
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="133807647"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:18:21 -0700
+IronPort-SDR: zt3o9bkoY2+2CVGUSRNpYgXOxP/x4EH7zmKj1n+lLxhmxrtVehX/6N5gbuv7BcmeTMBznrePPY
+ yMz62I503MXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="424152589"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2020 11:18:20 -0700
+Date:   Fri, 26 Jun 2020 11:18:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200626181820.GG6583@linux.intel.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+ <20200625061544.GC2141@linux.intel.com>
+ <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com>
+ <20200626180732.GB175520@xz-x1>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626180732.GB175520@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Fri, Jun 26, 2020 at 02:07:32PM -0400, Peter Xu wrote:
+> On Thu, Jun 25, 2020 at 09:25:40AM -0700, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 5eb618dbf211..64322446e590 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -1013,9 +1013,9 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >                 *ebx = entry->ebx;
+> >                 *ecx = entry->ecx;
+> >                 *edx = entry->edx;
+> > -               if (function == 7 && index == 0) {
+> > +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) {
+> >                         u64 data;
+> > -                       if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> > +                       if (!kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data) &&
+> >                             (data & TSX_CTRL_CPUID_CLEAR))
+> >                                 *ebx &= ~(F(RTM) | F(HLE));
+> >                 }
+> > 
+> > 
+> > On VMX, MSR_IA32_TSX_CTRL will be added to the so called shared MSR array
+> > regardless of whether or not it is being advertised to userspace (this is
+> > a bug in its own right).  Using the host_initiated variant means KVM will
+> > incorrectly bypass VMX's ARCH_CAP_TSX_CTRL_MSR check, i.e. incorrectly
+> > clear the bits if userspace is being weird and stuffed MSR_IA32_TSX_CTRL
+> > without advertising it to the guest.
+> 
+> Btw, would it be more staightforward to check "vcpu->arch.arch_capabilities &
+> ARCH_CAP_TSX_CTRL_MSR" rather than "*ebx | (F(RTM) | F(HLE))" even if we want
+> to have such a fix?
 
-This series contains set of improvements for TI AM654x/J721E CPSW2G driver and
-adds support for TI AM654x SR2.0 SoC.
+Not really, That ends up duplicating the check in vmx_get_msr().  From an
+emulation perspective, this really is a "guest" access to the MSR, in the
+sense that it the virtual CPU is in the guest domain, i.e. not a god-like
+entity that gets to break the rules of emulation.
 
-Patch 1: adds vlans restoration after "if down/up"
-Patches 2-5: improvments
-Patch 6: adds support for TI AM654x SR2.0 SoC which allows to disable errata i2027 W/A.
-By default, errata i2027 W/A (TX csum offload disabled) is enabled on AM654x SoC
-for backward compatibility, unless SR2.0 SoC is identified using SOC BUS framework.
-
-Grygorii Strashko (6):
-  net: ethernet: ti: am65-cpsw-nuss: restore vlan configuration while
-    down/up
-  net: ethernet: ti: am65-cpsw: move to pf_p0_rx_ptype_rrobin init in
-    probe
-  net: ethernet: ti: am65-cpsw-nuss: fix ports mac sl initialization
-  net: ethernet: ti: am65-cpsw-ethtool: skip hw cfg when change
-    p0-rx-ptype-rrobin
-  net: ethernet: ti: am65-cpsw-ethtool: configured critical setting only
-    when no running netdevs
-  net: ethernet: ti: am65-cpsw-nuss: enable am65x sr2.0 support
-
- drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  6 +-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 77 +++++++++++++++++----
- drivers/net/ethernet/ti/am65-cpsw-nuss.h    |  2 +-
- 3 files changed, 69 insertions(+), 16 deletions(-)
-
--- 
-2.17.1
-
+The other thing to consider is that SVM doesn't have any knowledge of any
+of this, so arguably the "ignored msr" crud should get logged for SVM as
+it's effectively a userspace bug if they've configured the VM to have RTM
+or HLE on a system that can't possibly support either.
