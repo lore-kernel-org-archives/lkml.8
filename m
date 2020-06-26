@@ -2,114 +2,114 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2208C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5A32076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="StgvoN4F"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC262076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgFZH1K (ORCPT
+        id S1728766AbgFZH1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbgFZH1J (ORCPT
+        Fri, 26 Jun 2020 03:27:21 -0400
+Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:37523 "EHLO
+        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725855AbgFZH1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:27:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A03FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:27:09 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id d6so4582895pjs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=rVE2gGMcdBTrZylPbNiSgsk7HUdCF2EQnvGkDTn3LJ4=;
-        b=StgvoN4F8FU5QTAnNsQGhYge/1G6HeXMbO3EDr/y8YcUT/7iIRgkYkr2LS8QBA0+TE
-         aJwJQv38n1h859JcK+L/dM1GkWzwdB4cWujivrbEAJohF3f6qy9RifDqB6igGuyw/80j
-         nrjyxLykAs8ADjUkxPYD3Ye+qol0g0rNMpV7c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=rVE2gGMcdBTrZylPbNiSgsk7HUdCF2EQnvGkDTn3LJ4=;
-        b=HqRJhRWYEr+O0ADAlgvtUBRus4BTA1M/eiGIxxQMSXS0gwbrYnbk6v8LI8gBSRb1ve
-         2KasfNDGdYmJxf8shdjtjDRjyuOYgdR3xlVU4LXrupYb3UfRjx6A4ZNp6iGXJt0rQM7U
-         dc65dSlMJxfnatuix04f3gWAJc0M96l3oWPh6B8ygaHrvhCqX1yzTYx/va2kDeg5JykJ
-         Pct7/FucWWFT4DCm452sV55Zt9GMAzb/qmIApB1L8mkd/UkJUJPpvKt0IPBovbIjh4zh
-         4HQJ0YAjVeYW7juxKztITXsm1l1uON0OIeudOOpB/+Mb5nmqFKHkEYR7pkmZ8jyoUBnf
-         zDCw==
-X-Gm-Message-State: AOAM5331Y3cHQAgtGyS74XjgkKLC9GA+3Qca6Mgc//I3GlUGol3+59S8
-        UIoOFzVxlP20KYEeZokYYAiogE00yig=
-X-Google-Smtp-Source: ABdhPJy3QTnrjHmytYSAo2vMdiB1gRFjkDXC77YICclekAoyNkjxmCy06GCMeccAjXJbVOuLBh7q8A==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr1438095plb.185.1593156428885;
-        Fri, 26 Jun 2020 00:27:08 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id n12sm21216319pgr.88.2020.06.26.00.27.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:27:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 26 Jun 2020 03:27:21 -0400
+Received: from ytterbium.maphy.uni-hannover.de (ytterbium.maphy.uni-hannover.de [130.75.75.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id E4FE61F55F;
+        Fri, 26 Jun 2020 09:22:07 +0200 (CEST)
+Received: by ytterbium.maphy.uni-hannover.de (sSMTP sendmail emulation); Fri, 26 Jun 2020 09:22:07 +0200
+Date:   Fri, 26 Jun 2020 09:22:07 +0200
+From:   Tammo Block <tammo.block@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: [PATCH v0 1/5] Change/add data structures for SRG mouse reporting
+Message-ID: <7e65f1f060c2b9b22a4a051d4afb605913dedf79.1593155911.git.tammo.block@gmail.com>
+References: <cover.1593155911.git.tammo.block@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAODwPW9Gp+sjt7hdTrDmU-KnfpbXNkuQL52+v_FxwSzSSTH_yg@mail.gmail.com>
-References: <20200407082923.2001556-1-patrick.rudolph@9elements.com> <20200407082923.2001556-2-patrick.rudolph@9elements.com> <159306873839.62212.9311861115757727633@swboyd.mtv.corp.google.com> <CAODwPW9Gp+sjt7hdTrDmU-KnfpbXNkuQL52+v_FxwSzSSTH_yg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] firmware: google: Expose CBMEM over sysfs
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Coreboot <coreboot@coreboot.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Julius Werner <jwerner@chromium.org>,
-        Samuel Holland <samuel@sholland.org>
-To:     Julius Werner <jwerner@chromium.org>
-Date:   Fri, 26 Jun 2020 00:27:07 -0700
-Message-ID: <159315642733.62212.13203844825360378214@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1593155911.git.tammo.block@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Julius Werner (2020-06-25 13:51:34)
-> > > +What:          /sys/bus/coreboot/devices/.../cbmem_attributes/address
-> > > +Date:          Apr 2020
-> > > +KernelVersion: 5.6
-> > > +Contact:       Patrick Rudolph <patrick.rudolph@9elements.com>
-> > > +Description:
-> > > +               coreboot device directory can contain a file named
-> > > +               cbmem_attributes/address if the device corresponds to=
- a CBMEM
-> > > +               buffer.
-> > > +               The file holds an ASCII representation of the physica=
-l address
-> > > +               of the CBMEM buffer in hex (e.g. 0x000000008000d000) =
-and should
-> > > +               be used for debugging only.
-> >
-> > If this is for debugging purposes only perhaps it should go into
-> > debugfs. We try to not leak information about physical addresses to
-> > userspace and this would let an attacker understand where memory may be.
-> > That's not ideal and should be avoided.
->=20
-> This is memory allocated by firmware and not subject to (k)ASLR, so
-> nothing valuable can be leaked here. The same addresses could already
-> be parsed out of /sys/firmware/log. Before this interface we usually
-> accessed this stuff via /dev/mem (and tools that want to remain
-> backwards-compatible will probably want to keep doing that), so having
-> a quick shorthand to grab physical addresses can be convenient.
+This extends the data structures and defines needed for additional
+mouse reporting features. If URXVT and UTF8 reports should be supported
+in the future, vc_proto_mouse would need another bit.
 
-Ok. Regardless of the concern of the physical address is there any usage
-of this attribute by userspace? The description makes it sound like it's
-a pure debug feature, which implies that it should be in debugfs and not
-in sysfs.
+Signed-off-by: Tammo Block <tammo.block@gmail.com>
+---
+ include/linux/console_struct.h |  3 ++-
+ include/uapi/linux/tiocl.h     | 24 ++++++++++++++++--------
+ 2 files changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
+index 24d4c16e3ae0..cfb581eb8b82 100644
+--- a/include/linux/console_struct.h
++++ b/include/linux/console_struct.h
+@@ -122,7 +122,8 @@ struct vc_data {
+ 	unsigned int	vc_priv		: 3;
+ 	unsigned int	vc_need_wrap	: 1;
+ 	unsigned int	vc_can_do_color	: 1;
+-	unsigned int	vc_report_mouse : 2;
++	unsigned int	vc_report_mouse : 3;
++	unsigned int	vc_proto_mouse  : 1;
+ 	unsigned char	vc_utf		: 1;	/* Unicode UTF-8 encoding */
+ 	unsigned char	vc_utf_count;
+ 		 int	vc_utf_char;
+diff --git a/include/uapi/linux/tiocl.h b/include/uapi/linux/tiocl.h
+index b32acc229024..df27608648f7 100644
+--- a/include/uapi/linux/tiocl.h
++++ b/include/uapi/linux/tiocl.h
+@@ -3,13 +3,17 @@
+ #define _LINUX_TIOCL_H
+ 
+ #define TIOCL_SETSEL	2	/* set a selection */
+-#define 	TIOCL_SELCHAR	0	/* select characters */
+-#define 	TIOCL_SELWORD	1	/* select whole words */
+-#define 	TIOCL_SELLINE	2	/* select whole lines */
+-#define 	TIOCL_SELPOINTER	3	/* show the pointer */
+-#define 	TIOCL_SELCLEAR	4	/* clear visibility of selection */
+-#define 	TIOCL_SELMOUSEREPORT	16	/* report beginning of selection */
+-#define 	TIOCL_SELBUTTONMASK	15	/* button mask for report */
++#define		TIOCL_SELCHAR	0	/* select characters */
++#define		TIOCL_SELWORD	1	/* select whole words */
++#define		TIOCL_SELLINE	2	/* select whole lines */
++#define		TIOCL_SELPOINTER	3	/* show the pointer */
++#define		TIOCL_SELCLEAR	4	/* clear visibility of selection */
++#define		TIOCL_SELMOUSEREPORT	16	/* send X10 mouse report */
++#define		TIOCL_SELBUTTONMASK	15	/* button mask for X10 report */
++#define		TIOCL_SELSRGREPORT	32	/* send SRG mouse report */
++#define		TIOCL_SELSRGRELEASE	128	/* SRG report is release event */
++#define		TIOCL_SELSRGMASK	(255 << 8)	/* mask for SRG report */
++
+ /* selection extent */
+ struct tiocl_selection {
+ 	unsigned short xs;	/* X start */
+@@ -28,7 +32,11 @@ struct tiocl_selection {
+ 
+ /* these two don't return a value: they write it back in the type */
+ #define TIOCL_GETSHIFTSTATE	6	/* write shift state */
+-#define TIOCL_GETMOUSEREPORTING	7	/* write whether mouse event are reported */
++#define TIOCL_GETMOUSEREPORTING	7	/* write which mouse event to be reported */
++#define		TIOCL_REPORTBTNPRESS	1	/* report button press only    "9" */
++#define		TIOCL_REPORTRELEASE	2	/* report press and release "1000" */
++#define		TIOCL_REPORTDRAG	5	/* report drag events       "1002" */
++#define		TIOCL_REPORTANYMOVE	6	/* report any movement      "1003" */
+ #define TIOCL_SETVESABLANK	10	/* set vesa blanking mode */
+ #define TIOCL_SETKMSGREDIRECT	11	/* restrict kernel messages to a vt */
+ #define TIOCL_GETFGCONSOLE	12	/* get foreground vt */
+-- 
+2.27.0
+
