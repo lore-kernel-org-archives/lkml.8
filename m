@@ -2,48 +2,49 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B176CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5F8207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83358207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgFZRJU (ORCPT
+        id S1728280AbgFZRJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:09:20 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54537 "EHLO
+        Fri, 26 Jun 2020 13:09:19 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:33085 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbgFZRJR (ORCPT
+        with ESMTP id S1727897AbgFZRJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:09:17 -0400
-Received: by mail-il1-f199.google.com with SMTP id d18so6885252ill.21
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:09:16 -0700 (PDT)
+        Fri, 26 Jun 2020 13:09:16 -0400
+Received: by mail-il1-f199.google.com with SMTP id c11so6898007ilq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:09:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=PBbQ7cEucEY6CoFv1tPjVkpwYW+FAyD/Jgb/7La4UR0=;
-        b=MRKGiXjaqemqtDM7aUZTJzOUW1zBISAHH2tpVZqiBbxbD2F/eA4PqjcIgvuLBtXAx/
-         cEMvgF+c3avZR7RKtFohBMjLJi8TPTSMVlhPsjIwJvHWkpqLNuW8erXp29nwZfrjqZRG
-         e8UXLkdi0EJaSoB+XPB8NlEjnwBpXuZMKXkKHpf5Z0Z/7dXq2VF4z5dLbVOC6GBiDz5X
-         ToHeEdvQxtPaLe5n7KlKYP8MAjZoUtFLiGhujTv9dC8WGi3PlXmOK1JYD2ulQez3TRS1
-         oYq/RGC4a5fI4EGTym9rMGLS9z+daYkHF3Yyb9sT7PJSA+et8c77wtzHN2Q9MktC4nXb
-         kbyg==
-X-Gm-Message-State: AOAM5323/2Q0J7B82jX+1ol1GpDXZuCes2IQ3Zc3DuFl03MyfqA6odJ+
-        Eld2NWaX6XZm23CFCof26+IwVKh74QCITjfByS2vHFkGKUFX
-X-Google-Smtp-Source: ABdhPJwo34ysGkyv29CtoQpNVf4erXuROmB97DMaZVck/VNCBt76LB/yd69y+ehgAjxiWf1lFIoTWgGPqW8RUdwKsMMkoOKTe6Tt
+        bh=UJwYwmK89yxunKp2bcHoekLYQkO+BCKTNGonzhoLxuY=;
+        b=jk3n2akO32QpU8egfk75MWoQqUPnfyOnlunnDEjUzEPQUhaM/K2faNxPW1IWRVOGls
+         2t/d9yXEKsq2+ELhOt01cQ/rjc3yWrO9DnkU+/YoLVFH3WIUYp36Qhjmouh2WuPEOoTp
+         8ZmbNhrwiSlR7IgvS1e3cPH6pG5xU6TJ+j1hwTvIYS/dFA1gQnRKy4Ua6uFzdVMnjPP5
+         Af2AHlGEw8eczOUa3rPMFKINPprIxUdg+t+mrksExW4kQKUaceKODg73U1gZlWR8Mv+c
+         +8V+ylBuPgUIJxbKPZi7S89MH4pX8XC3A2AOVUNEfh6vy1lD9hoYvxQcU/sXAkzEdhEh
+         GdAQ==
+X-Gm-Message-State: AOAM532bU3Gahp57cSChQJS3UxypzeySqdYVr9jRigXAjsK7sF8q7qBw
+        cbMVZSh4c+qatZvDFSHxSSy1kzPSAH7xYSZVNCWV3p8TQdOW
+X-Google-Smtp-Source: ABdhPJwp1lBfebX04LkygcJHpJUSckhU/8A+t5yFT0sx4CQNGOFhvLxO0JSes1fhhpp7wu98khShfMLUoWIq93tjFAieFQb/ESYr
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2f0f:: with SMTP id q15mr4553270iow.23.1593191355911;
+X-Received: by 2002:a02:662d:: with SMTP id k45mr4483248jac.127.1593191355375;
  Fri, 26 Jun 2020 10:09:15 -0700 (PDT)
 Date:   Fri, 26 Jun 2020 10:09:15 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d411cf05a8ffc4a6@google.com>
-Subject: WARNING: suspicious RCU usage in tipc_l2_send_msg
-From:   syzbot <syzbot+47bbc6b678d317cccbe0@syzkaller.appspotmail.com>
+Message-ID: <000000000000cbef4a05a8ffc4ef@google.com>
+Subject: BUG: using smp_processor_id() in preemptible code in tipc_crypto_xmit
+From:   syzbot <syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com>
 To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         syzkaller-bugs@googlegroups.com,
@@ -58,52 +59,59 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    b835a71e usbnet: smsc95xx: Fix use-after-free after removal
+HEAD commit:    f4926d51 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
 git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1095a51d100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=137a899b100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=47bbc6b678d317cccbe0
+dashboard link: https://syzkaller.appspot.com/bug?extid=263f8c0d007dc09b2dda
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+47bbc6b678d317cccbe0@syzkaller.appspotmail.com
+Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
 
-=============================
-WARNING: suspicious RCU usage
-5.8.0-rc1-syzkaller #0 Not tainted
------------------------------
-net/tipc/bearer.c:466 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-2 locks held by kworker/0:16/19143:
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90006f9fda8 ((work_completion)(&cpu_queue->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
-
-stack backtrace:
-CPU: 0 PID: 19143 Comm: kworker/0:16 Not tainted 5.8.0-rc1-syzkaller #0
+BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.1/23385
+caller is tipc_aead_tfm_next net/tipc/crypto.c:402 [inline]
+caller is tipc_aead_encrypt net/tipc/crypto.c:639 [inline]
+caller is tipc_crypto_xmit+0x80a/0x2790 net/tipc/crypto.c:1605
+CPU: 1 PID: 23385 Comm: syz-executor.1 Not tainted 5.8.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: cryptd cryptd_queue_worker
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x18f/0x20d lib/dump_stack.c:118
- tipc_l2_send_msg+0x354/0x420 net/tipc/bearer.c:466
- tipc_aead_encrypt_done+0x204/0x3a0 net/tipc/crypto.c:761
- cryptd_aead_crypt+0xe8/0x1d0 crypto/cryptd.c:739
- cryptd_queue_worker+0x118/0x1b0 crypto/cryptd.c:181
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ tipc_aead_tfm_next net/tipc/crypto.c:402 [inline]
+ tipc_aead_encrypt net/tipc/crypto.c:639 [inline]
+ tipc_crypto_xmit+0x80a/0x2790 net/tipc/crypto.c:1605
+ tipc_bearer_xmit_skb+0x180/0x3f0 net/tipc/bearer.c:523
+ tipc_enable_bearer+0xb1d/0xdc0 net/tipc/bearer.c:331
+ __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
+ tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:691 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:736 [inline]
+ genl_rcv_msg+0x61d/0x9e0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb19
+Code: Bad RIP value.
+RSP: 002b:00007fa3c4dc1c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000501c40 RCX: 000000000045cb19
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a19 R14: 00000000004ccf82 R15: 00007fa3c4dc26d4
+tipc: Enabled bearer <eth:vlan1>, priority 10
 
 
 ---
