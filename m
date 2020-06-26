@@ -2,137 +2,71 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A02C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D682082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QPuSTCPU"
+	by mail.kernel.org (Postfix) with ESMTP id A84132080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgFZIev (ORCPT
+        id S1725933AbgFZIgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:34:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48716 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgFZIev (ORCPT
+        Fri, 26 Jun 2020 04:36:31 -0400
+Received: from mailbackend.panix.com ([166.84.1.89]:60394 "EHLO
+        mailbackend.panix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFZIga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:34:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05Q8S7xw134511;
-        Fri, 26 Jun 2020 08:34:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=fjqGH22vN8tmHJC5Ez+rpYalehtYxTKAP/PTFFOVU+A=;
- b=QPuSTCPUBeUywJ4cdRVBcX4j4qAoWBQytlLuZdN8MuV+SPw1Pi89PDGBSLyyDKjhyR2m
- L82kVyC4OqKWbbN2mH97QSXn6bVN/zrkmZboSY4/2cRKkHljjfKkWr3zq9bDGGAGlURz
- PBokYIZZsnNwwLnsg7DqOOob7KkSmJPknzjAbTLpJivOdT26/sxOL2o+dGxTVxrTdlIe
- M7sxDkAy8hM6c52o5QOeAoPToT1B7eCWVjSg3NxxPukODuVkVCecOGTpBSeieBUuernO
- 6ynvVrBtNdIAqal3L2QmAfCAdG1c138nJ28JSt7EL9fhrLWlclDFbbb9Y13wWVQoR4Cs GQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31uusu4ufe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 08:34:46 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05Q8YKSl009278;
-        Fri, 26 Jun 2020 08:34:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 31uurbp4bd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 08:34:46 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05Q8YhU9017943;
-        Fri, 26 Jun 2020 08:34:43 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 26 Jun 2020 08:34:43 +0000
-Date:   Fri, 26 Jun 2020 11:34:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Manish Chopra <manishc@marvell.com>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
-Message-ID: <20200626083436.GG2549@kadam>
-References: <20200625215755.70329-1-coiby.xu@gmail.com>
- <20200625215755.70329-3-coiby.xu@gmail.com>
+        Fri, 26 Jun 2020 04:36:30 -0400
+Received: from xps-7390 (cpe-23-242-39-94.socal.res.rr.com [23.242.39.94])
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 49tVbc6GHczxrj;
+        Fri, 26 Jun 2020 04:36:28 -0400 (EDT)
+Date:   Fri, 26 Jun 2020 01:36:26 -0700 (PDT)
+From:   "Kenneth R. Crudup" <kenny@panix.com>
+Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Commit 25f12ae45fc1 ("maccess: rename probe_kernel_address to
+ get_kernel_nofault") causing several OOPSes
+In-Reply-To: <CAHk-=wjDfQZN8BeM-21vZ=ALa5jaJSRjRei+_0ET9uruwaYwaw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.23.453.2006260127210.3063@xps-7390>
+References: <alpine.DEB.2.22.394.2006181751270.9276@xps-7390> <20200619065007.GA3041@lst.de> <alpine.DEB.2.22.394.2006182351090.9276@xps-7390> <20200619074233.GA3723@lst.de> <alpine.DEB.2.22.394.2006200640370.2845@xps-7390>
+ <CAHk-=whj7YBvNT3FPHc8oUqwRhjbRkJESnUx6bbpA5ys6W9ujw@mail.gmail.com> <alpine.DEB.2.22.394.2006211226240.9484@xps-7390> <CAHk-=wjDfQZN8BeM-21vZ=ALa5jaJSRjRei+_0ET9uruwaYwaw@mail.gmail.com>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625215755.70329-3-coiby.xu@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260062
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260061
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:57:55AM +0800, Coiby Xu wrote:
-> @@ -1404,11 +1403,10 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
->  			pr_err("%s: Failed read of mac index register\n",
->  			       __func__);
->  			return;
-                        ^^^^^^
-> -		} else {
-> -			if (value[0])
-> -				pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
-> -				       qdev->ndev->name, i, value[1], value[0]);
->  		}
-> +		if (value[0])
-> +			pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
-> +			       qdev->ndev->name, i, value[1], value[0]);
->  	}
->  	ql_sem_unlock(qdev, SEM_MAC_ADDR_MASK);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  }
-> @@ -1427,11 +1425,10 @@ void ql_dump_routing_entries(struct ql_adapter *qdev)
->  			pr_err("%s: Failed read of routing index register\n",
->  			       __func__);
->  			return;
-                        ^^^^^^
 
+On Sun, 21 Jun 2020, Linus Torvalds wrote:
 
-> -		} else {
-> -			if (value)
-> -				pr_err("%s: Routing Mask %d = 0x%.08x\n",
-> -				       qdev->ndev->name, i, value);
->  		}
-> +		if (value)
-> +			pr_err("%s: Routing Mask %d = 0x%.08x\n",
-> +			       qdev->ndev->name, i, value);
->  	}
->  	ql_sem_unlock(qdev, SEM_RT_IDX_MASK);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  }
+> For me that patch makes no difference.
 
-This is not caused by your patch, but in these two functions we return
-without dropping the lock.  There may be other places as well, but these
-are the two I can see without leaving my email client.
+So ... it looks like this original issue (random crashes if this commit was
+made and the ROMs thing isn't patched) is a red herring.
 
-Do you think you could fix that before we forget?  Just change the
-return to a break to fix the bug.
+For some time now, my Thunderbolt adapter (Lenovo 2nd-Gen TB dock) sometimes
+... "acts up" on reboots/powerons with my laptop (Dell XPS 13 2-in-1) if I
+boot with it connected- I'll get random disconnects and/or lack of external
+video and/or its internal devices will drop offline. I suspect these crashes
+were related to the PCIe scribbling(?) somewhere(?) (even though I have IOMMU
+turned on). I can't track it down, and I think the issue may lie somewhere
+either with the Thunderbolt subsystem (my TB domain UUID gets regenerated on
+every boot and is always changing) or a bug in this Dell's BIOS (probably
+the likely culprit).
 
-regards,
-dan carpenter
+... in any case, I booted a fresh branch that does contain the commit in the
+ Subject: line, and w/o Christoph's ROMs patch and as long as I don't boot
+with the TB adapter attached (or from a cold boot- SOMEtimes) it seems to
+work. So, my apologies for wasting everyone's time.
 
+	-Kenny
+
+-- 
+Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Orange County CA
