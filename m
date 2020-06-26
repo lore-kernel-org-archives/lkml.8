@@ -2,171 +2,102 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C309C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04AD320706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593186133;
-	bh=P8IYjU69AFY5eKHaIU+hw64ziKzzqZ+d1Z7SRKDZsH0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J/8YARLjeNHSg147KdnIez59WxNm4BaEC2JBHIJTiknkzMBTu6WBco8gW+YnNJ0Gf
-	 dnjpeHt5WpDkB2rCDAvz22BFZNvVF6FgYB0uKE0wFEPvZURPAN4M4rg5ycvGO9tlWG
-	 Y+k0Y18ra/MiS/iq4baph/jA9/0M5NL7GbH2fMos=
+	by mail.kernel.org (Postfix) with ESMTP id 1A7E620706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oyj/NEPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgFZPmL (ORCPT
+        id S1728345AbgFZPmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:42:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46893 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726361AbgFZPmK (ORCPT
+        Fri, 26 Jun 2020 11:42:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59380 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726361AbgFZPmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:42:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n24so6765942otr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:42:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9ude1bR8RU8qUzK94voP4g4TNkMR22P61Cfio3xgn+s=;
-        b=JfJ35XuYTQfpdK1OeS9kdKUHfkmTc6Bw2/HqCozQm06jw4x6bsK/jjzYAJudf+PAIV
-         9UAbL7O0AvgQziDkCm+YdvDNPR1xOvsVP2zRrb9rtCzPypZU+5paUdU3gtAoO/kEf8y3
-         B07FqNnxxq17tpYus4hdF7lpgubxptghqTVEQHsi1rsNX94WScoc/cy0pDBAl7S5XRIr
-         8RCFczK+n7tiuamXbyn8aceQDzrt8In6M9RuUBoglDE4kIaBjdFapVLk1tOkiPSPMd3O
-         o2HxitBHnL2/T0DyJMN5LUwjk3FPoNxVgef0YXQ1H5PON3wHdNS6+v8NHtuh8GNmVGEY
-         CBWA==
-X-Gm-Message-State: AOAM5316TyXS0PQXLdBG2hM6Jf7LZ3SQgljSKfCrZtpsKmQRo77v/+t4
-        2Yr/nlpLvafiKZcWfuxbZHQdyxjtrM/iFkKiuzy0sQ==
-X-Google-Smtp-Source: ABdhPJwykW8CrxuR35IBI3mVnWYSs2LHk0wtbO4rVQPPGyV2Q2g7uhLmf3ZijDe7l5lciP0dn5HkBGfAKNH4nhjtUaE=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr2867799otn.118.1593186130046;
- Fri, 26 Jun 2020 08:42:10 -0700 (PDT)
+        Fri, 26 Jun 2020 11:42:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QFgejC096131;
+        Fri, 26 Jun 2020 10:42:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593186160;
+        bh=nvx312mv4VGvwwIjEoy4EfaLo8OvbsRscw5gPQDVBlY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=oyj/NEPjKelpOnJyCG7t0Xv9vr3fhklcM10K6XnRfhzmqb7V0IrN3cGEXKqzCS7uI
+         qitjly3MmvGkJJATXnZvNsQXRgNSmEI85On+/wuQ/HEsR50VAwTgrUgTNalOGTkOkk
+         LbjuHYRKrfmPYxUZ9SokGS3ktU/mtRr/GNdufxPY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QFgei8080472
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 10:42:40 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
+ Jun 2020 10:42:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 26 Jun 2020 10:42:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QFge5p083900;
+        Fri, 26 Jun 2020 10:42:40 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 2/4] dt-bindings: tas2562: Add voltage sense slot property
+Date:   Fri, 26 Jun 2020 10:41:41 -0500
+Message-ID: <20200626154143.20351-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626154143.20351-1-dmurphy@ti.com>
+References: <20200626154143.20351-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <CGME20200626100109eucas1p25331652d017cd17d21c0ae60541d1f73@eucas1p2.samsung.com>
- <20200626100103.18879-1-a.hajda@samsung.com> <20200626100103.18879-2-a.hajda@samsung.com>
-In-Reply-To: <20200626100103.18879-2-a.hajda@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 26 Jun 2020 17:41:59 +0200
-Message-ID: <CAJZ5v0hDNvop_HCEqrwtDCPbNKSvayKUgdQzpi3UkLyZTTykwQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] driver core: add device probe log helper
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:01 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> During probe every time driver gets resource it should usually check for
-> error printk some message if it is not -EPROBE_DEFER and return the error.
-> This pattern is simple but requires adding few lines after any resource
-> acquisition code, as a result it is often omitted or implemented only
-> partially.
-> dev_err_probe helps to replace such code sequences with simple call,
-> so code:
->         if (err != -EPROBE_DEFER)
->                 dev_err(dev, ...);
->         return err;
-> becomes:
->         return probe_err(dev, err, ...);
->
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Add a property to configure the slot for the voltage sense monitoring of
+the device. Vsense data will be sent to the processor via the slot
+defined by the property
 
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/sound/tas2562.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> ---
->  drivers/base/core.c    | 42 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/device.h |  3 +++
->  2 files changed, 45 insertions(+)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 67d39a90b45c..3a827c82933f 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3953,6 +3953,48 @@ define_dev_printk_level(_dev_info, KERN_INFO);
->
->  #endif
->
-> +/**
-> + * dev_err_probe - probe error check and log helper
-> + * @dev: the pointer to the struct device
-> + * @err: error value to test
-> + * @fmt: printf-style format string
-> + * @...: arguments as specified in the format string
-> + *
-> + * This helper implements common pattern present in probe functions for error
-> + * checking: print debug or error message depending if the error value is
-> + * -EPROBE_DEFER and propagate error upwards.
-> + * It replaces code sequence:
-> + *     if (err != -EPROBE_DEFER)
-> + *             dev_err(dev, ...);
-> + *     else
-> + *             dev_dbg(dev, ...);
-> + *     return err;
-> + * with
-> + *     return dev_err_probe(dev, err, ...);
-> + *
-> + * Returns @err.
-> + *
-> + */
-> +int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
-> +{
-> +       struct va_format vaf;
-> +       va_list args;
-> +
-> +       va_start(args, fmt);
-> +       vaf.fmt = fmt;
-> +       vaf.va = &args;
-> +
-> +       if (err != -EPROBE_DEFER)
-> +               dev_err(dev, "error %d: %pV", err, &vaf);
-> +       else
-> +               dev_dbg(dev, "error %d: %pV", err, &vaf);
-> +
-> +       va_end(args);
-> +
-> +       return err;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_err_probe);
-> +
->  static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
->  {
->         return fwnode && !IS_ERR(fwnode->secondary);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 15460a5ac024..6b2272ae9af8 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -964,6 +964,9 @@ void device_link_remove(void *consumer, struct device *supplier);
->  void device_links_supplier_sync_state_pause(void);
->  void device_links_supplier_sync_state_resume(void);
->
-> +extern __printf(3, 4)
-> +int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-> +
->  /* Create alias, so I can be autoloaded. */
->  #define MODULE_ALIAS_CHARDEV(major,minor) \
->         MODULE_ALIAS("char-major-" __stringify(major) "-" __stringify(minor))
-> --
-> 2.17.1
->
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+index fd0ac8636c01..dc6d7362ded7 100644
+--- a/Documentation/devicetree/bindings/sound/tas2562.txt
++++ b/Documentation/devicetree/bindings/sound/tas2562.txt
+@@ -11,6 +11,8 @@ Required properties:
+  - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
+  - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
+  - ti,imon-slot-no:- TDM TX current sense time slot.
++ - ti,vmon-slot-no:- TDM TX voltage sense time slot. This slot must always be
++		     greater then ti,imon-slot-no.
+ 
+ Optional properties:
+ - interrupt-parent: phandle to the interrupt controller which provides
+@@ -30,5 +32,6 @@ tas2562@4c {
+ 
+ 	shut-down-gpio = <&gpio1 15 0>;
+         ti,imon-slot-no = <0>;
++        ti,vmon-slot-no = <1>;
+ };
+ 
+-- 
+2.26.2
+
