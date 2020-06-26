@@ -2,187 +2,125 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFADC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D409C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D54C207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F69207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGcHPocr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9icln6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgFZOCT (ORCPT
+        id S1728953AbgFZOC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        Fri, 26 Jun 2020 10:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZOCT (ORCPT
+        with ESMTP id S1725864AbgFZOC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:02:19 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104E7C03E979;
-        Fri, 26 Jun 2020 07:02:19 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d194so1627437pga.13;
-        Fri, 26 Jun 2020 07:02:19 -0700 (PDT)
+        Fri, 26 Jun 2020 10:02:57 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A855FC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:02:57 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d10so4318126pls.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OwogBhlZPHbNtl4UbEnjQatoIz2yS67pDWCnaqWKRIo=;
-        b=BGcHPocrGyifAWVabsdMVOkcxskpXV5B9yZcnhk98FM3deI1SWu7Q8IHksgG8v7SMj
-         lLy0z5/oijzicm9xB3C7YV+JGh/UaukIbM2/DggLUs9SSUGdnM+WETe6ByspjfdAJKd5
-         bvXzSQFBCskfSz2wegMMNjAnLVr2jfg8S3k7D1PNrE0Fwh7FthT3b6liUONfCMtMs5rV
-         LEDIadIKgbS3hVRdeJI7pYJxhhSZj/L8ZuIX/7WfUDv0zVrrik8ztRunKEh5EkPkYXY8
-         F8v3ACdPpriHqT2lvbX/qAmNIRzahRRySQfPJmmTVTyc0G+xuQVKT/G5UcB/GOzAEOwn
-         GHRQ==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wsTccNPiizn0fz7nFYthbYqYqqgPn20kogZkyyPGgEo=;
+        b=s9icln6pXQmn2Ld47CpHrj/Cr7JnWK7w+Wvs/pcn9HkBD5j0nXwpz1L6BWPrTZkm5I
+         66bNwWRQQOREHcDos+686Sog1zEXhqdxlqQ9LS47wWIkJ0mIWWdwnaKs7KkvcoVeS4M2
+         jpfJha9+HyqMQ0RSD8KrTyhNYSmDjeE7AamjkBTyFszO1GjNEAZYA6Rk7MkPD3dXpWSz
+         +9/j6hPt2IZZB5U0fNgXXFKW4W3lhZjrmsTGmmMaVSfgkDD0FoYSZK6C9F7ZhuwI7JDY
+         goi5MZvCMVBKuoPAzhor2B71dJLr5xHAP48UdfxzZYTcBPxduAcCyitiCR3dtMIgwTir
+         8Xmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OwogBhlZPHbNtl4UbEnjQatoIz2yS67pDWCnaqWKRIo=;
-        b=V3xRHu/2EEWwyB0JE6T+xtoFEBSt28SUbkmIq9P24RIwG6j8+iUwy3j46//CvO4kkY
-         TSRMJt8ddZBCOlWmvoMKXgw3LYaGYe59QVRcQcpXLBGs/KuPqZJywd0FhTSg0Hgky6nl
-         sYnW3bZwVR9LDLnC5j0ZE4hYgsnxwgCIdTVWVIjUqjMIIUQOkZbKcrtJLLEeWESZfhIy
-         C04ZzktJRU1ImQZ5yDb7SR9tb7Q5Vg0eH1zkZ5bKhvgQ0whQcL7KxwOVcS365ZQ8jbGE
-         8YL0k3Xfo/u34ZIaSLGfB/HaT9NxrvcdEgcZ1M0rbqPJYUz563E6xpqC58LbXvOZbcbB
-         4x8w==
-X-Gm-Message-State: AOAM530vho8guPGXj4wvXG4s3N14Oue6uWHZcIbfGHglT/KWrmulZjMm
-        wdzpge2AOvQ8OBLP1TVmnEA=
-X-Google-Smtp-Source: ABdhPJxm+gdSpsA1ZMBwNkq+3Ba2UrmHDNToD3ktgv1HfMTV1ZEHJ2tByJdW7P2/LxAcqCkbJ8TZSA==
-X-Received: by 2002:aa7:84d9:: with SMTP id x25mr2997557pfn.300.1593180138205;
-        Fri, 26 Jun 2020 07:02:18 -0700 (PDT)
-Received: from sol (220-235-108-194.dyn.iinet.net.au. [220.235.108.194])
-        by smtp.gmail.com with ESMTPSA id a16sm21694142pgj.27.2020.06.26.07.02.14
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=wsTccNPiizn0fz7nFYthbYqYqqgPn20kogZkyyPGgEo=;
+        b=XaHpsstXRAcPt59bFZaPQEPSn2YubSEoRpWBaZ17GjQid7URkWMR2sJPL0fba1FkDy
+         LMVr4cU/QA6iRczMqoN/gyLjxsRlzbv6cbwuKw37x1DI8xKdbWKJ6W+ADq0Zrl27kWeA
+         noTvQafqEtm/TYsoGVUtiZRt3RvIyyf11uxrebT96+Utj56Getkqr3UJr0n4TyLBeq8r
+         w49UTwrc9j1W93S44frfECvey07YLDpIc65havjVY2HxlvilBIi3PCmWpq4D93vc+Ens
+         UclkpRmr8G+pmBVt3SZNdBetwg29otNimeGrw7zAWtIoawHJrHjWYRoAAWv9fSmIfqh+
+         ibnw==
+X-Gm-Message-State: AOAM533OufogFlnrl9o9r4oayyddkXjP1ksTO8XZQWSaANcnDxD6IbUL
+        nkPwvvzd3za+aK9pMpICq01ts8py
+X-Google-Smtp-Source: ABdhPJxy3Wh2qtlfBGDhL9qh4+9Sr7CAEfx6nRoVXpTSOMHXrNKSfeCv7n09SXejFpIMMhS3xkJu5A==
+X-Received: by 2002:a17:90b:fd3:: with SMTP id gd19mr3873405pjb.83.1593180177164;
+        Fri, 26 Jun 2020 07:02:57 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x126sm26386383pfc.36.2020.06.26.07.02.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 07:02:16 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 22:02:11 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 13/22] gpio: uapi: define uAPI V2
-Message-ID: <20200626140211.GA29493@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-14-warthog618@gmail.com>
- <CAHp75VcEDnrQk5FeWTZdV3fMnTsLpnmy+hAnL4V3a0Ge0NEe2A@mail.gmail.com>
- <20200624154057.GA8622@sol>
+        Fri, 26 Jun 2020 07:02:55 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ingo Molnar <mingo@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] sched: Declare sched_rt_bandwidth_account() in include file
+Date:   Fri, 26 Jun 2020 07:02:53 -0700
+Message-Id: <20200626140253.141358-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624154057.GA8622@sol>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:40:57PM +0800, Kent Gibson wrote:
-> On Wed, Jun 24, 2020 at 05:33:26PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 23, 2020 at 7:04 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > Add a new version of the uAPI to address existing 32/64bit alignment
-> > 
+gcc reports:
 
-[ snip ]
-> > 
-> > I'm wondering how many lines (in average) the user usually changes at
-> > once? One? Two?
-> > 
-> > Perhaps we need to be better with this, something like single line /
-> > multiple lines?
-> > 
-> > So, having a struct for single line change being embedded multiple
-> > times would allow to configure atomically several lines with different
-> > requirements.
-> > For example you can turn directions of the two lines for some kind of
-> > half-duplex bit banging protocol.
-> > 
-> > I'm not sure about the rest, but to me it seems reasonable to have
-> > single vs. multiple separation in some of the structures.
-> > 
-> 
+kernel/sched/rt.c:626:6: warning:
+		no previous prototype for ‘sched_rt_bandwidth_account’
 
-I think you are right about this - we should be taking the opportunity
-to remove the homogeneous config restriction, so we can have a mixture
-of lines with different configs in the one request.
-e.g. I've had a request to have lines with different active low settings.
-Your example requires both inputs and outputs.
-And for a recent rotary encoder example I would've liked to be able to
-have edge detection on one line, but return a snapshot with the state
-of several lines in the edge event.
+Let's declare it, and remove the declaration from the source file
+where it is called.
 
-So what I'm thinking is to replace the config that I had proposed with
-something like this:
+Fixes: faa5993736d9 ("sched/deadline: Prevent rt_time growth to infinity")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+Note:
+    I know that checkpatch complains about this.
+    I declared the function 'extern' to match other declarations in sched.h.
 
-struct attrib {
-	/*
-	 * the set of lines from request.offsets that this attrib DOESN'T
-	 * apply to.  A zero value means it applies to all lines.
-     * A set bit means the line request.offsets[bit] does NOT get this
-     * attribute.
-	 */
-	__u64 mask[GPIOLINES_BITMAP_SIZE];
+ kernel/sched/deadline.c | 2 --
+ kernel/sched/sched.h    | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-	/*
-	 * an attribute identifier that dictates the which of the union
-	 * fields is valid and how it is interpreted.
-	 */
-	__u32 id;
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 504d2f51b0d6..ca1b66db5787 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1131,8 +1131,6 @@ int dl_runtime_exceeded(struct sched_dl_entity *dl_se)
+ 	return (dl_se->runtime <= 0);
+ }
+ 
+-extern bool sched_rt_bandwidth_account(struct rt_rq *rt_rq);
+-
+ /*
+  * This function implements the GRUB accounting rule:
+  * according to the GRUB reclaiming algorithm, the runtime is
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 1d4e94c1e5fe..02c5d48ed7f3 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -469,6 +469,7 @@ extern int sched_group_set_rt_period(struct task_group *tg, u64 rt_period_us);
+ extern long sched_group_rt_runtime(struct task_group *tg);
+ extern long sched_group_rt_period(struct task_group *tg);
+ extern int sched_rt_can_attach(struct task_group *tg, struct task_struct *tsk);
++extern bool sched_rt_bandwidth_account(struct rt_rq *rt_rq);
+ 
+ extern struct task_group *sched_create_group(struct task_group *parent);
+ extern void sched_online_group(struct task_group *tg,
+-- 
+2.17.1
 
-	union {
-		__u64 flags; /* similar to v1 handleflags + eventflags */
-		__u32 debounce_period;
-		__u64 values[GPIOLINES_BITMAP_SIZE]; /* for id == output */
-        /* ... */
-
-		/* future config values go here */
-
-		/*
-		 * padding to ensure 32/64-bit alignment of attrib
-		 *
-		 * This must be the largest sized value.
-		 */
-		__u32 padding[3];
-	};
-};
-
-/* config is a stack of attribs associated with requested lines. */
-struct config {
-	/* the number of populated attribs */
-	__u32 num_attribs;
-
-	/* for 32/64-bit alignment */
-	__u32 padding;
-
-	struct attrib attribs[MAX_CONFIG_ATTRIBS];
-};
-
-The idea is a stack of attributes, each of which can be applied to a
-subset of the requested lines, as determined by the attrib.mask.
-The config for a given attribute on a given line is determined by
-finding the first match while walking down the stack, or falling
-back to the sensible default if no match is found.
-
-To reduce the number of attributes required, a number of boolean or
-boolean-ish fields can be combined into flags, similar to v1.
-
-I'm guessing a handful of attribs would suffice for the vast majority of
-cases, so MAX_CONFIG_ATTRIBS would be in the 5-10 range.
-(Are we concerned about struct sizes?)
-
-Adding new config attribs in the future would involve adding a new id
-and a corresponding value in the union.  So we can potentially add as
-many new config attribs as we like - though the user would still be
-limited to MAX_CONFIG_ATTRIBS and may have to trade-off attribs in
-their particular application.
-
-Does that make any sense?
-
-Cheers,
-Kent.
