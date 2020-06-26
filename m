@@ -2,144 +2,111 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C225C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCAE2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BBD20773
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="a3oZTJP+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHQ0XxB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgFZIoa (ORCPT
+        id S1726007AbgFZIrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:44:30 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:54417 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725841AbgFZIoa (ORCPT
+        Fri, 26 Jun 2020 04:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgFZIrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:44:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593161069; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=jVx3nH7S5xKUiOrRlxL7Nb5c8DEGwfjC96cXuhDxVRA=; b=a3oZTJP+CdVNze64xvvyrFmovG0alZEzSJQ6xGUige7mRq4l0VsRCkneVjBsG6xz/51KZVV3
- Chnkc2dZSBSOyO+d9QpGCvWquVDUb/Y4nrUj7BlMtmJZ6CKborTjKGp/ETAjf4QTnhZpdssv
- H66IFmUDzSPPke3D0bbbIjWZVC0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5ef5b568356bcc26ab49f4de (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 08:44:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A700AC43395; Fri, 26 Jun 2020 08:44:23 +0000 (UTC)
-Received: from Pillair (unknown [183.83.71.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30D02C433C8;
-        Fri, 26 Jun 2020 08:44:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30D02C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Douglas Anderson'" <dianders@chromium.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     "'Evan Green'" <evgreen@chromium.org>,
-        "'Sibi Sankar'" <sibis@codeaurora.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200625131658.REPOST.1.I32960cd32bb84d6db4127c906d7e371fa29caebf@changeid>
-In-Reply-To: <20200625131658.REPOST.1.I32960cd32bb84d6db4127c906d7e371fa29caebf@changeid>
-Subject: RE: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on sc7180-idp
-Date:   Fri, 26 Jun 2020 14:14:16 +0530
-Message-ID: <002401d64b95$fd620c80$f8262580$@codeaurora.org>
+        Fri, 26 Jun 2020 04:47:53 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275ACC08C5C1;
+        Fri, 26 Jun 2020 01:47:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q17so4363509pfu.8;
+        Fri, 26 Jun 2020 01:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JI/FNcwdyAdin6Ur1Q7aBKHSJFRVIajQTwQ7ldYrmC8=;
+        b=VHQ0XxB8CemNyEW0YECC8FE3K9egsL2tOTVGWMGaeuV0MgtUDhU8VIFX/eHRvAVJqk
+         Cnw8D+eieVeLnHM8yH+bSsmAd/sMX684rTaFJ5kSycvbLZAa6JPhGO4xflp7E506KY14
+         2bG0xv4Vqlm9Y4T0fQz5L9I4Kr7LQh2GCJhbNmTk7Jj8M1mpv6Vtiz1gyZx8ZwxpVl/8
+         gm9g/mRMU2Ol0Ks7bn8UZxnDUj2JpEmFAER7fPJ38AR/v6fXCyJ3Y4ZwgluwTa1gS7ew
+         1bdztItqfrWThqsVpntoxvDDH54RzgXcCQV+pBg39qkBckMY4agtwgezElS9iGvUoGLH
+         w+UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JI/FNcwdyAdin6Ur1Q7aBKHSJFRVIajQTwQ7ldYrmC8=;
+        b=FoxFwvvTq08ef+olJRqa2YEd1fs8WCSMDoEMJd0zUp5/W6NNvzuOI4S67hx+Ia4oIw
+         VhJUgOgNdDSH5uiIZppJinG+MrvUqbQnHVNCOHuN3Q7WUpAQWHl+KO4CdF++h8mWoIlx
+         Fh0VP+UmrnJzoInZzr/RPZUnEvN/nVChNicj0LHgceMDo4oUuPhfDLssq8IAbe0k2UMd
+         pcVu3aBlcp/fX/QsLQr/cIwVUgCnc8WTFlq9qjsNYuvwwlvNNBJDCUuwarvL3FjFbHoQ
+         Ev3v9p39ZKI3Fn4m4eNkQuVM3dJcGX4Acf182BbVx37h02ECnxZPZzDrHzY0YE4dPor+
+         hLlQ==
+X-Gm-Message-State: AOAM5305vZ97xH2/AOjeZvZGD57MBs+99Bi4CBQ4LvW+qzQNIY8DQNFJ
+        PLubJ6E0qHvy2VSVA78r+wU/ZHHYd8cDAHJP+BU=
+X-Google-Smtp-Source: ABdhPJyzcy/EnnkJVkh4VCmUDv0EuqOkP7T5Q9t74koNfxidVlOE5ZRRJE1H+NyHSzDnj/A8bDCDmE4h7sIlVdqv3ZE=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr1766606pgn.74.1593161272465;
+ Fri, 26 Jun 2020 01:47:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIJkvzNJ2GrKQD23Wa0Ucd2+v4DjqiEBULw
-Content-Language: en-us
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com> <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
+ <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com> <CAFA6WYOiBNQt0ZRyRxfsqW57z+O=aLqi3DTEAfZ7fGjf8UPB3Q@mail.gmail.com>
+In-Reply-To: <CAFA6WYOiBNQt0ZRyRxfsqW57z+O=aLqi3DTEAfZ7fGjf8UPB3Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Jun 2020 11:47:36 +0300
+Message-ID: <CAHp75VcO=pEOhuvwwVxDmkXYmgq+4KR-j0___sbQ4LQ4p=5MDg@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Jerome Forissier <jerome@forissier.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 8:18 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+> On Thu, 25 Jun 2020 at 18:22, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
 
+...
 
-> -----Original Message-----
-> From: Douglas Anderson <dianders@chromium.org>
-> Sent: Friday, June 26, 2020 1:47 AM
-> To: Andy Gross <agross@kernel.org>; Bjorn Andersson
-> <bjorn.andersson@linaro.org>
-> Cc: Evan Green <evgreen@chromium.org>; Sibi Sankar
-> <sibis@codeaurora.org>; Rakesh Pillai <pillair@codeaurora.org>; Douglas
-> Anderson <dianders@chromium.org>; Rob Herring <robh+dt@kernel.org>;
-> devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on sc7180-idp
-> 
-> The WiFi supplies that were added recently can't have done anything
-> useful because they were missing the "-supply" suffix.  Booting
-> without the "-supply" suffix would give these messages:
-> 
-> ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-0.8-cx-mx not found,
-> using dummy regulator
-> ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.8-xo not found,
-using
-> dummy regulator
-> ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.3-rfa not found,
-using
-> dummy regulator
-> ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-3.3-ch0 not found,
-> using dummy regulator
-> 
-> Let's add the "-supply" suffix.
-> 
-> Fixes: 1e7594a38f37 ("arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> module device node")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
+> I guess you missed the point that uuid_t is implemented in BE format
+> in the kernel which is compliant as per RFC 4122.
 
-I missed this in the DTSI patch, while manually rebasing to the kernel tip.
+I guess you missed the point. Kernel doesn't have anything special
+about these types and does NOT compliant as per RFC.
+The only things the kernel distinguishes are a) byte order (always),
+and b) version bits when you get a random UUID (whatever you call it).
 
-> I don't have an IDP setup but I have a similar board.  Testing on IDP
-> would, of course, be appreciated.
-> 
-> Repost because I screwed up the "after-the-cut" notes on first post.
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 39dbfc89689e..472f7f41cc93 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -391,10 +391,10 @@ video-firmware {
-> 
->  &wifi {
->  	status = "okay";
-> -	vdd-0.8-cx-mx = <&vreg_l9a_0p6>;
-> -	vdd-1.8-xo = <&vreg_l1c_1p8>;
-> -	vdd-1.3-rfa = <&vreg_l2c_1p3>;
-> -	vdd-3.3-ch0 = <&vreg_l10c_3p3>;
-> +	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
-> +	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
-> +	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
-> +	vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
->  	wifi-firmware {
->  		iommus = <&apps_smmu 0xc2 0x1>;
->  	};
-> --
-> 2.27.0.212.ge8ba1cc988-goog
+I guess this discussion takes too much time. The idea is that kernel
+types are just for kernel use with as little intrusion as possible.
+The main principle, we get something, we carry it w/o modifications
+inside the kernel.
 
+So, you may use whatever you want and LE/BE is purely based on a) and b) above.
 
+-- 
+With Best Regards,
+Andy Shevchenko
