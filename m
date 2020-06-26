@@ -2,129 +2,119 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D66C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58382C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F50A2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249792089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SYNtdukF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsYdt1m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgFZWkT (ORCPT
+        id S1726160AbgFZWlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:40:19 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:37860 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgFZWji (ORCPT
+        Fri, 26 Jun 2020 18:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgFZWlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:39:38 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4C9B220B4901;
-        Fri, 26 Jun 2020 15:39:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4C9B220B4901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593211178;
-        bh=D75oD57lun0GUBDulxMpvcNQCA9bpPWPblxeS6BsHiQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SYNtdukF8WEuz0MozMQkGjt/TuIV1td+43ZBbQaQYfXdSMHB7c7JnasCv+ABi4s58
-         Yrs4vxRExlI6ToqPUWxi7kFrS73ra+bGLwRG4feO1XSnsul1fTAWcFptNfUuRJ6Mse
-         h6TVINC7vEgxKpaYPE5Xe0zsQta2Rwrv8rax/mYY=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH v2 05/11] ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an invalid cond
-Date:   Fri, 26 Jun 2020 17:38:54 -0500
-Message-Id: <20200626223900.253615-6-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+        Fri, 26 Jun 2020 18:41:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238AAC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:41:13 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id d6so5532198pjs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jyAPAzsMhs9Zr4S/upw4vcz2u3YBAX8bVwtFvbGa900=;
+        b=WsYdt1m7eb72QqAqYqr5Jmq/eveXJ3Q+s7NGWlAIIHy9K7bDaA9+mjVqBSqZmPL2at
+         /qzRxaie0k4SBTyPlCXPrAT6R1DysDDK4HvCS57Edd+JQpCC8vQeu4D3CUEsFHRw+0Zi
+         SCnyrchS/lcsfVdSU5fGX8Y2o3nLRbIJ4AvdzPk94wpyDgePg3XjTxuMBlfo5rM33/Hv
+         ZSR3DNZGXXexPh96lTsBLvHi7fI0d7gE419FKlyoEFnVOuVPeb9hi/OPE7JZb9oBYeSk
+         BufsvCyzS5V36ElryKAgxTcikwMNEtXIgv4hQZqnTU4xsXz23uCsztyxIY8CZh/HUdhm
+         0dFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jyAPAzsMhs9Zr4S/upw4vcz2u3YBAX8bVwtFvbGa900=;
+        b=eRCBlSpPKAPlGT1IOUpaspIC0SWh8xc5Pk5f1tdi9fOuiL67XxcyErwhIaEno8CFjO
+         dHN3BeViPflgr2gJ2XUPGSjHpJoxESNhuNyx8JXVYMpa0rnANSniZZpXY7LIMZnmCKGh
+         LvkAKBj7o/ecPM299HJTi3fnIrBCZgBFuxoOSZHHIDdVSxfroglNsUNgtn47hDMfX0DB
+         qzsArp73SY7a4MxCEGMsY/6C+BOgVEsIp3pH4wlT04OXj1rT1bl20mLeJY5rnT1uO/93
+         k+KN1L7xFyKsc2DP84OXM4+MXdmaEVN5Y9mOx4g7XWkPoPj8YJi0uWrxVSwnVh2AZj6q
+         eqZw==
+X-Gm-Message-State: AOAM532q/It7X+beXcApuyWTU+Pc++wKK7cI7wmj+5IQS0/3jYJgpV4i
+        VkjZTaDzh6803VPoZaBczuQ=
+X-Google-Smtp-Source: ABdhPJwRtp9N3wYng98P6k8DZ2bBVbepo59kjEENXi/gn4UHNaA8hGcbRchnSC/PlGcvs2HBTswmXw==
+X-Received: by 2002:a17:90b:78b:: with SMTP id l11mr5619404pjz.59.1593211272683;
+        Fri, 26 Jun 2020 15:41:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m20sm28737108pfk.52.2020.06.26.15.41.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 15:41:12 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 15:41:11 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: Declare sched_rt_bandwidth_account() in include
+ file
+Message-ID: <20200626224111.GB256865@roeck-us.net>
+References: <20200626140253.141358-1-linux@roeck-us.net>
+ <202006270351.lVmaZ420%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006270351.lVmaZ420%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KEXEC_CMDLINE hook function only supports the pcr conditional. Make
-this clear at policy load so that IMA policy authors don't assume that
-other conditionals are supported.
+On Sat, Jun 27, 2020 at 03:16:15AM +0800, kernel test robot wrote:
+> Hi Guenter,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on tip/sched/core]
+> [also build test ERROR on tip/auto-latest linux/master linus/master v5.8-rc2 next-20200626]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Guenter-Roeck/sched-Declare-sched_rt_bandwidth_account-in-include-file/20200626-220544
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
+> config: x86_64-allnoconfig (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 6e11ed52057ffc39941cb2de6d93cae522db4782)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> kernel/sched/deadline.c:1315:7: error: implicit declaration of function 'sched_rt_bandwidth_account' [-Werror,-Wimplicit-function-declaration]
+>                    if (sched_rt_bandwidth_account(rt_rq))
+>                        ^
 
-Since KEXEC_CMDLINE's inception, ima_match_rules() has always returned
-true on any loaded KEXEC_CMDLINE rule without any consideration for
-other conditionals present in the rule. Make it clear that pcr is the
-only supported KEXEC_CMDLINE conditional by returning an error during
-policy load.
+Guess I missed some condition. I'll try again.
 
-An example of why this is a problem can be explained with the following
-rule:
-
- dont_measure func=KEXEC_CMDLINE obj_type=foo_t
-
-An IMA policy author would have assumed that rule is valid because the
-parser accepted it but the result was that measurements for all
-KEXEC_CMDLINE operations would be disabled.
-
-Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
----
-
-* v2
-  - Added Mimi's Reviewed-by
-
- security/integrity/ima/ima_policy.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 166124d67774..676d5557af1a 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -343,6 +343,17 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
- 	return 0;
- }
- 
-+static bool ima_rule_contains_lsm_cond(struct ima_rule_entry *entry)
-+{
-+	int i;
-+
-+	for (i = 0; i < MAX_LSM_RULES; i++)
-+		if (entry->lsm[i].args_p)
-+			return true;
-+
-+	return false;
-+}
-+
- /*
-  * The LSM policy can be reloaded, leaving the IMA LSM based rules referring
-  * to the old, stale LSM policy.  Update the IMA LSM based rules to reflect
-@@ -993,6 +1004,16 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 		case POLICY_CHECK:
- 			break;
- 		case KEXEC_CMDLINE:
-+			if (entry->action & ~(MEASURE | DONT_MEASURE))
-+				return false;
-+
-+			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
-+				return false;
-+
-+			if (ima_rule_contains_lsm_cond(entry))
-+				return false;
-+
-+			break;
- 		case KEY_CHECK:
- 			if (entry->action & ~(MEASURE | DONT_MEASURE))
- 				return false;
--- 
-2.25.1
-
+Guenter
