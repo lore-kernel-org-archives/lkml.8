@@ -2,167 +2,124 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7700AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8055BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C254206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFDB20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593190844;
+	bh=Ep5w0n0x0kpCsEM51CkTVFeUvlkyp4jxK0RnRCz1oAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MNFqeEkaylFeZVjRgcQa0y2rHXm52sxgvInpGBnEa73vb35BWMCib6LbIREpb/xEw
+	 IPboGiwBtV7VLYar40T10+DMvWak40pB/Wat8wuakJuKKrQNSJJqNHHtaKvg5Dug9h
+	 hJhlqzpPpq9MvYz6DudaXP4AEvWCEo3ZUcJvKEJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgFZQ5m (ORCPT
+        id S1728214AbgFZRAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:57:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:11154 "EHLO mga14.intel.com"
+        Fri, 26 Jun 2020 13:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgFZQ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:57:40 -0400
-IronPort-SDR: S0k3uqtix7DeFZIwaYg+EiR/rccN00r1gZsAmdqX2i+HWlsNg+kwitxGWLdOzSEzPc5+FKbEWQ
- VgoUXQ7FlIpw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="144490917"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="144490917"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 09:57:37 -0700
-IronPort-SDR: b6Kqd4b1rtP2W3+kQHKvz3++u3tGPJ0VriMt1eFR5Jp0nVobVv1mP9OJ8s1VCH1vM4q6poyXVS
- odNnHiMUySeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="294252209"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2020 09:57:36 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jorfU-0002MC-9r; Fri, 26 Jun 2020 16:57:36 +0000
-Date:   Sat, 27 Jun 2020 00:56:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.06.25a] BUILD SUCCESS
- 50483f050f03ddbc8ba7a292c1d123a6a3c1723c
-Message-ID: <5ef628d2.Gv3PcLXIZS0sLm6K%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726500AbgFZRAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:00:42 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4A1C206BE;
+        Fri, 26 Jun 2020 17:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593190841;
+        bh=Ep5w0n0x0kpCsEM51CkTVFeUvlkyp4jxK0RnRCz1oAk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vDE2rR6FzM6Pz07Jcs4drmT/oc5tD0ahQYTXUqZoVdUvF4tlYa8zurHaNSDzub2DM
+         DktzkKpfWJ9ZtnjKy9lBpPPrLPCD/h00E7uX1IClo2uf+9nwCypqXrUNqtcAH+Bflz
+         ObK93WNiVf4KNZSShjU/5CKo9eLVD5+474g4jbMY=
+Date:   Fri, 26 Jun 2020 10:00:39 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Mike Snitzer <msnitzer@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Zaibo Xu <xuzaibo@Huawei.com>, linux-kernel@vger.kernel.org,
+        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
+        George Cherian <gcherian@marvell.com>,
+        linux-crypto@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 1/3 v2] crypto: introduce the flag
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200626170039.GB211634@gmail.com>
+References: <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200616173620.GA207319@gmail.com>
+ <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626044534.GA2870@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626164617.GA211634@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200626164617.GA211634@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.06.25a
-branch HEAD: 50483f050f03ddbc8ba7a292c1d123a6a3c1723c  scftorture: Implement weighted primitive selection
+On Fri, Jun 26, 2020 at 09:46:17AM -0700, Eric Biggers wrote:
+> On Fri, Jun 26, 2020 at 12:16:33PM -0400, Mikulas Patocka wrote:
+> > +/*
+> > + * Pass these flags down through the crypto API.
+> > + */
+> > +#define CRYPTO_ALG_INHERITED_FLAGS	(CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY)
+> 
+> This comment is useless.  How about:
+> 
+> /*
+>  * When an algorithm uses another algorithm (e.g., if it's an instance of a
+>  * template), these are the flags that always get set on the "outer" algorithm
+>  * if any "inner" algorithm has them set.  In some cases other flags are
+>  * inherited too; these are just the flags that are *always* inherited.
+>  */
+> #define CRYPTO_ALG_INHERITED_FLAGS	(CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY)
+> 
+> Also I wonder about the case where the inner algorithm is a fallback rather than
+> part of a template instance.  This patch only handles templates, not fallbacks.
+> Is that intentional?  Isn't that technically a bug?
 
-elapsed time: 721m
+Also is CRYPTO_ALG_ALLOCATES_MEMORY meant to apply for algorithms of type
+"cipher" and "shash"?  The code doesn't handle those, so presumably not?
 
-configs tested: 97
-configs skipped: 5
+What about "akcipher"?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > Index: linux-2.6/crypto/xts.c
+> > ===================================================================
+> > --- linux-2.6.orig/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
+> > +++ linux-2.6/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
+> > @@ -415,7 +415,7 @@ static int create(struct crypto_template
+> >  	} else
+> >  		goto err_free_inst;
+> >  
+> > -	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+> > +	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_INHERITED_FLAGS;
+> >  	inst->alg.base.cra_priority = alg->base.cra_priority;
+> >  	inst->alg.base.cra_blocksize = XTS_BLOCK_SIZE;
+> >  	inst->alg.base.cra_alignmask = alg->base.cra_alignmask |
+> 
+> Need to set the mask correctly in this file.
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arc                     haps_hs_smp_defconfig
-s390                             allyesconfig
-powerpc                          g5_defconfig
-mips                        jmr3927_defconfig
-sh                           se7751_defconfig
-arm                       imx_v6_v7_defconfig
-arm                            xcep_defconfig
-arm                      pxa255-idp_defconfig
-arm                          tango4_defconfig
-arm                             pxa_defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                     eseries_pxa_defconfig
-mips                      loongson3_defconfig
-i386                             alldefconfig
-sh                           se7724_defconfig
-mips                     loongson1b_defconfig
-nds32                             allnoconfig
-parisc                            allnoconfig
-arm                            lart_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+cryptd_create_skcipher(), cryptd_create_hash(), cryptd_create_aead(), and
+crypto_rfc4309_create() are also missing setting the mask.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+pcrypt_create_aead() is missing both setting the mask and inheriting the flags.
+
+Also, "seqiv" instances can be created without CRYPTO_ALG_ALLOCATES_MEMORY set,
+despite seqiv_aead_encrypt() allocating memory.
+
+- Eric
