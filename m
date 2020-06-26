@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3099BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2C920C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED37120B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IYUk8Yqg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u6J8VuAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgFZVJe (ORCPT
+        id S1726404AbgFZVJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+        Fri, 26 Jun 2020 17:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgFZVJ2 (ORCPT
+        with ESMTP id S1726196AbgFZVJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:09:28 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A7CC03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:28 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id 6so55712pjh.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:28 -0700 (PDT)
+        Fri, 26 Jun 2020 17:09:34 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CD9C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:32 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b14so4621847ybq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=9cJ18y40uUPYFZL7TN4SHcIdjwmkZDveAIhoXIvPo38=;
-        b=IYUk8YqgZgCYajUvAr7+TZpYM4MMks4ME5jJR4NVadGy4ZU8CwXELvDm9bauUFB3L6
-         MUcT96gdSqW5+5z/avFny8BX08RC9p8Y5njsdOPASFhovoAmh4OpguPdJDLxPdDlL8wH
-         sp8gBQ6KdTpddWyZpEu6zGrsSRpgYbXbK7x4cCxZRVANzDO3EjonaRvSwY1PXJroQJmj
-         8ohKF8v+doy8LmpsmkdBSyq0EG3AEnmmfRs0Rb2q8rpSFPq3YC+AUHyHeWkgoGopcbJn
-         nBDwB0rz8Ui93SdomCLrCW+Ku6Fjn0SFklLb+6i/vy36pSSNMv/TbI0f696FLOb/W9s8
-         ZqGA==
+        bh=0vYZtvNiMw5LFIFKa+iHi1yqO9mFLTJ7LRF4fjft6YQ=;
+        b=u6J8VuAHahXAYfZui4sfoaT0dsrVB0g/njRZ5MIakf/7bSZWFoZur8+vHZjZIgvkyd
+         rsiis3HuL4AzSgVfpTFGOsNv9/7tHGdL61VbY11KBuBRNquuaThfognGBSG6XDHhjVrh
+         liuTo+mvfU3D58KkhDomQtYXookl7U6ajEKfETHE1nWaRN0/gzOUI4z4bMwjPWQ6R2G4
+         zVR7MS6jsimbRTLQK965Ww+Cp//ng+4aqqoiGzs9geOb61x+qHK6AUxwcP2HuU1S8dLP
+         OEv3lAQzqQIPWit38K3OJmKJ+ONf/s2+d2jSKX83GtbI8ZYL+/awT6qOEcyz2uNC8LpH
+         kbaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=9cJ18y40uUPYFZL7TN4SHcIdjwmkZDveAIhoXIvPo38=;
-        b=A3WLdBpWjwygv4598K2CFxMpWaPgfbU4HDyLzmy5eundpftvAEBBhSuDJe1H9kJiy4
-         cJXLlmp5a01EiB+no4oXCzIisORaz7HIka+gMnQ4qtVtggIrIHVQ2L0Hh3WV18dhEmKE
-         rillO6YERXMS7gYagGPXdCKbIRZcDExs++R5gC9NReDQ9AUWwIlyDoEuL4E78feZYqTf
-         RBCtMGGklNqzLgQt3s94Uoha0SFsg2h/hrJUuy4px6lIBnKTXr/t2ntxvpNjbTD82Q+T
-         0zEAT3lkWyvV2mx5eTLPmls/W+D9aBSEuii17pthwZaUWDh/nv7LvzVYAHv0tX+U1L6+
-         o5Xg==
-X-Gm-Message-State: AOAM530PU7MdYgF/F1MAiQNpt0pvmpcqPxYOpJ46e2VnS05pmd4smpGI
-        BnWD4S9TNyG4WYeuxXRDarB7jo9fFs8VAojg8Rgn7Q==
-X-Google-Smtp-Source: ABdhPJzjvOtIhOG1aOdqb6LPRxa8gBDRx7iYFD1jkF8voJyCoykf8S53mwqKxZn9IwZNUt+dngOweMijabbbSnkBKS6K4A==
-X-Received: by 2002:a17:90a:70c6:: with SMTP id a6mr5043991pjm.16.1593205767469;
- Fri, 26 Jun 2020 14:09:27 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:09:07 -0700
+        bh=0vYZtvNiMw5LFIFKa+iHi1yqO9mFLTJ7LRF4fjft6YQ=;
+        b=XmTHxhZdI/JYejspbnMHhgfZrKjJPoksOFfEO3LD8Q2477U+IQixBoXJjcHz69LS5S
+         gFD5SJp64AmzrC1pt1GTs+aY1WYOyZWqqucavv29pOIl0M2BGaWs+U2ipO7x8Upiuxpz
+         kwLMTwCOL4D/fD9G6CGkGl29j+qQmmACNbIjLWJHmbvjNhI3zrQJROHM/1Q7eOItiChM
+         6oHK1IIuB0eiQgWxYJ3AActNeZMsULDqmWD2SnQhLL4CxY9GoHGNDEB6ofdMMxkKkm/Z
+         uAbapBQaE1qz1+CvbHTfXQiFtAK/DjPzBVURVLziI0idIOqwPk+zaBsQjOERWrLnIIT6
+         tc+w==
+X-Gm-Message-State: AOAM532n2NXBb9cH8WKSrAusdUNVrhI0NohZaBVzEFBK+k6g5pS0zZtJ
+        mWm5jIFDptoG15WZOcFyStwLh/8bBRZMkvMhW2RSXw==
+X-Google-Smtp-Source: ABdhPJx4P+f9DA00o4x+xqsn5YNYZSrsnifEZc+MXGWM1Q+GQ6+KAVyhHfpoUwDaYub8VfOW5n9UfKxOSH6ZQNhne0KQ9w==
+X-Received: by 2002:a25:99c8:: with SMTP id q8mr7798153ybo.3.1593205771432;
+ Fri, 26 Jun 2020 14:09:31 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:09:09 -0700
 In-Reply-To: <20200626210917.358969-1-brendanhiggins@google.com>
-Message-Id: <20200626210917.358969-3-brendanhiggins@google.com>
+Message-Id: <20200626210917.358969-5-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20200626210917.358969-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v5 02/12] arch: arm64: add linker section for KUnit test suites
+Subject: [PATCH v5 04/12] arch: powerpc: add linker section for KUnit test suites
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
@@ -83,30 +83,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker section to arm64 where KUnit can put references to its test
+Add a linker section to powerpc where KUnit can put references to its test
 suites. This patch is an early step in transitioning to dispatching all
 KUnit tests from a centralized executor rather than having each as its
 own separate late_initcall.
 
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- arch/arm64/kernel/vmlinux.lds.S | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/kernel/vmlinux.lds.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 6827da7f3aa54..a1cae9cc655d7 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -181,6 +181,9 @@ SECTIONS
- 		INIT_RAM_FS
- 		*(.init.rodata.* .init.bss)	/* from the EFI stub */
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 326e113d2e456..0cc97dbfde0ad 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -202,6 +202,10 @@ SECTIONS
+ 		CON_INITCALL
  	}
+ 
 +	.kunit_test_suites : {
 +		KUNIT_TEST_SUITES
 +	}
- 	.exit.data : {
- 		EXIT_DATA
- 	}
++
+ 	. = ALIGN(8);
+ 	__ftr_fixup : AT(ADDR(__ftr_fixup) - LOAD_OFFSET) {
+ 		__start___ftr_fixup = .;
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
