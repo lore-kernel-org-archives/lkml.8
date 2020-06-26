@@ -2,156 +2,178 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94808C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED8FE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Z2XS58E2"
+	by mail.kernel.org (Postfix) with ESMTP id 7B23B20773
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgFZPj5 (ORCPT
+        id S1729820AbgFZPkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:39:57 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:34850 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbgFZPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:39:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=L7cWSfK/Iv8UF6YZL4ZPTnIiXT+AsLVh6DlV/q1XyNs=; b=Z2XS58E2UK2OcuqEnmLfq0FyLx
-        wkHmOmo3jllETwpdt7onXH7FzVEa+kRUl9DXS8rYZpXzWDzk6ZGSiXpRWilsCWm0Q8DLcQm0S4R9z
-        hhOzjpp61rZsGYEOFZ7QbALr/IDJTI3v58qSj8SgQOVlYn/Yym7OYVYom8MxMMQmH+HjutKrqG58B
-        Xj04k3zVREctgA/v0IapglJ18M+T9xkegPlKlrvSGpPiFaLsRmSYJUyX5ZqtvMWIvylR7kMPQMCuA
-        47fufThGqRTDVLQvdhx2Ea14FEsUkZJX6Y2jhinS1arUP0F22nBiP/2bobvm1RlylATzmZtLPjbri
-        yrk8PrWw==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1joqRu-0000oT-4A; Fri, 26 Jun 2020 09:39:34 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1joqRn-0007Hc-Cx; Fri, 26 Jun 2020 09:39:23 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Date:   Fri, 26 Jun 2020 09:39:15 -0600
-Message-Id: <20200626153918.27929-7-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200626153918.27929-1-logang@deltatee.com>
-References: <20200626153918.27929-1-logang@deltatee.com>
+        Fri, 26 Jun 2020 11:40:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729799AbgFZPjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:39:55 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QFcS6P172810;
+        Fri, 26 Jun 2020 11:39:53 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31w3a44tyn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 11:39:53 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QFaD7B007796;
+        Fri, 26 Jun 2020 15:39:52 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 31uus1mwmw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 15:39:52 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QFdn4a29229356
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jun 2020 15:39:49 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FE51BE053;
+        Fri, 26 Jun 2020 15:39:51 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 084B1BE054;
+        Fri, 26 Jun 2020 15:39:51 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Jun 2020 15:39:50 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v8 2/2] tpm: Add support for event log pointer found in TPM2 ACPI table
+Date:   Fri, 26 Jun 2020 11:39:48 -0400
+Message-Id: <20200626153948.2059251-3-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200626153948.2059251-1-stefanb@linux.vnet.ibm.com>
+References: <20200626153948.2059251-1-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v14 6/9] nvme: Export existing nvme core functions
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_08:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006260106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export nvme_put_ns(), nvme_command_effects(), nvme_execute_passthru_rq()
-and nvme_find_get_ns() for use in the nvmet passthru code.
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-The exports are conditional on CONFIG_NVME_TARGET_PASSTHRU.
+In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+to get the event log from ACPI. If one is found, use it to get the
+start and length of the log area. This allows non-UEFI systems, such
+as SeaBIOS, to pass an event log when using a TPM2.
 
-Based-on-a-patch-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 ---
- drivers/nvme/host/core.c | 14 +++++++++-----
- drivers/nvme/host/nvme.h |  5 +++++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/char/tpm/eventlog/acpi.c | 63 +++++++++++++++++++++-----------
+ 1 file changed, 42 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index acd5af305f4b..7c35583ef9ca 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -450,7 +450,7 @@ static void nvme_free_ns(struct kref *kref)
- 	kfree(ns);
- }
+diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
+index 63ada5e53f13..51312c460335 100644
+--- a/drivers/char/tpm/eventlog/acpi.c
++++ b/drivers/char/tpm/eventlog/acpi.c
+@@ -49,9 +49,9 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+ 	void __iomem *virt;
+ 	u64 len, start;
+ 	struct tpm_bios_log *log;
+-
+-	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+-		return -ENODEV;
++	struct acpi_table_tpm2 *tbl;
++	struct acpi_tpm2_phy *t2phy;
++	int format;
  
--static void nvme_put_ns(struct nvme_ns *ns)
-+void nvme_put_ns(struct nvme_ns *ns)
- {
- 	kref_put(&ns->kref, nvme_free_ns);
- }
-@@ -886,8 +886,8 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
- 	return ERR_PTR(ret);
- }
+ 	log = &chip->log;
  
--static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
--				u8 opcode)
-+u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			 u8 opcode)
- {
- 	u32 effects = 0;
+@@ -61,23 +61,44 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+ 	if (!chip->acpi_dev_handle)
+ 		return -ENODEV;
  
-@@ -974,7 +974,7 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+-	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
+-	status = acpi_get_table(ACPI_SIG_TCPA, 1,
+-				(struct acpi_table_header **)&buff);
+-
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
+-
+-	switch(buff->platform_class) {
+-	case BIOS_SERVER:
+-		len = buff->server.log_max_len;
+-		start = buff->server.log_start_addr;
+-		break;
+-	case BIOS_CLIENT:
+-	default:
+-		len = buff->client.log_max_len;
+-		start = buff->client.log_start_addr;
+-		break;
++	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
++		status = acpi_get_table("TPM2", 1,
++					(struct acpi_table_header **)&tbl);
++		if (ACPI_FAILURE(status))
++			return -ENODEV;
++
++		if (tbl->header.length <
++				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
++			return -ENODEV;
++
++		t2phy = (void *)tbl + sizeof(*tbl);
++		len = t2phy->log_area_minimum_length;
++
++		start = t2phy->log_area_start_address;
++		if (!start || !len)
++			return -ENODEV;
++
++		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
++	} else {
++		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
++		status = acpi_get_table(ACPI_SIG_TCPA, 1,
++					(struct acpi_table_header **)&buff);
++		if (ACPI_FAILURE(status))
++			return -ENODEV;
++
++		switch (buff->platform_class) {
++		case BIOS_SERVER:
++			len = buff->server.log_max_len;
++			start = buff->server.log_start_addr;
++			break;
++		case BIOS_CLIENT:
++		default:
++			len = buff->client.log_max_len;
++			start = buff->client.log_start_addr;
++			break;
++		}
++
++		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
  	}
- }
+ 	if (!len) {
+ 		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
+@@ -98,7 +119,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+ 	memcpy_fromio(log->bios_event_log, virt, len);
  
--static void nvme_execute_passthru_rq(struct request *rq)
-+void nvme_execute_passthru_rq(struct request *rq)
- {
- 	struct nvme_command *cmd = nvme_req(rq)->cmd;
- 	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
-@@ -3606,7 +3606,7 @@ static int ns_cmp(void *priv, struct list_head *a, struct list_head *b)
- 	return nsa->head->ns_id - nsb->head->ns_id;
- }
+ 	acpi_os_unmap_iomem(virt, len);
+-	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
++	return format;
  
--static struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned nsid)
-+struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned nsid)
- {
- 	struct nvme_ns *ns, *ret = NULL;
- 
-@@ -4367,6 +4367,10 @@ EXPORT_SYMBOL_GPL(nvme_sync_queues);
-  * use by the nvmet-passthru and should not be used for
-  * other things.
-  */
-+EXPORT_SYMBOL_GPL(nvme_put_ns);
-+EXPORT_SYMBOL_GPL(nvme_command_effects);
-+EXPORT_SYMBOL_GPL(nvme_execute_passthru_rq);
-+EXPORT_SYMBOL_GPL(nvme_find_get_ns);
- 
- struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
- {
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index e7074afadb5f..5bab4dff1516 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -716,6 +716,11 @@ static inline void nvme_hwmon_init(struct nvme_ctrl *ctrl) { }
-  * These functions are only for use by nvmet-passthru and are only exported
-  * if CONFIG_NVME_TARGET_PASSTHRU is set.
-  */
-+void nvme_put_ns(struct nvme_ns *ns);
-+u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			 u8 opcode);
-+void nvme_execute_passthru_rq(struct request *rq);
-+struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned int nsid);
- struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
- 
- #endif /* _NVME_H */
+ err:
+ 	kfree(log->bios_event_log);
 -- 
-2.20.1
+2.26.2
 
