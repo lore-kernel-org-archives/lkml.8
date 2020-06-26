@@ -2,168 +2,119 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA614C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE648C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9331A20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkxXjwka"
+	by mail.kernel.org (Postfix) with ESMTP id 9DD9C2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593205326;
+	bh=3ubtQE80mbjSi783WHUFSz89WDbnGL6+7o6MCAD7A/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LUdiZMVoZa2wFXvHVJ6LIQYhHNx96fFhM/kezud9f/kDXV4MKWrUzqF3Lq9BQ0vYV
+	 srgLD2ep85vuf1PwvAStbXjlM6wTOPvET5id8LvzJVLqSLYlWPO9c4HjkENtNblL5o
+	 KY6UeqzLRtXhnKU+KbycZXjQyUerZe4ZhGtI6Vew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgFZVCA (ORCPT
+        id S1726028AbgFZVCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZVB7 (ORCPT
+        Fri, 26 Jun 2020 17:02:05 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45423 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgFZVCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:01:59 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79840C03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:01:59 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id h28so7963306edz.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LXYsPzxFqoIvncAosoNMRVHsqqhFjqQaZzr24JDv6GU=;
-        b=NkxXjwkadDehAxKBt5qCyqwJyMFjmm/tsHOXqKWLWtzcy08j6wps8G9hI84I2QbI7v
-         JmPlb/jN0cduge6+zra8/rgtL1+VK0S8hNlbMgSv++L1OXl007Qgil5l6t2HYzNs2Fjv
-         lKOEST9O7PwzOnyo7s1M+grpXcRcpYNaK8HJO7Xn+IyE4sfdot72A0q4TtrtOOs1eJpa
-         Cu6xnc0AxSAzv0OVXC58pW5Z1HP/B7EKMvEiujSD7ZDggQool5FV/RdZ+HoKFrL67X39
-         Hzmubt8ojRcl4Cbv3nsfwA7ejoobNmg3XQtNNJakalPzYE9PWqShM/bJsqWa3kA8g07d
-         XqyQ==
+        Fri, 26 Jun 2020 17:02:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g17so4682029plq.12;
+        Fri, 26 Jun 2020 14:02:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LXYsPzxFqoIvncAosoNMRVHsqqhFjqQaZzr24JDv6GU=;
-        b=BfGfoI18/l3W1zz5QCNUa4+BxGYH8dmAPFHtbRwjKSaodgfsvtP++Ep4eWRgYo6MdK
-         MuRSK9tMQmO/v3EEK69KyE9h9CnDlFt6jOFlD/Fe5jxIqJ7O+oI2C5wnG3ypLUCQNULm
-         /Uqtmf36NDQf4Fet9d6ATUKPy0vImOu8UkC7lAYe1HfK5aYbI+b6Npu2Xt6pjsz5InhX
-         RRFo4G2lksygqGlpcDkQ1gmwgn7/dC3ywdcmOQPt2x6mstQtc1v8xXcWM5n5YJyAVR2R
-         Buc/ny2AiYdINuxtXdrptdiTrBhoH+xfKqKf7GVlvoPWol2++5UiLapF5ovDVCsCXbeN
-         ZdrQ==
-X-Gm-Message-State: AOAM531prkrs3lrhT3vbpj5yoDi3bvquWrwOdEOcfJgggW9hzykkjVx1
-        7CevYMd/r2LQk84OUt5/608uGUtfuj78Eg==
-X-Google-Smtp-Source: ABdhPJz4VyPgTDG4D3ybw9iMwdqQtilkEccK+e+ObiNd3vOfbKOSHwpWfeZklQ7XDUsrmMUMFhiOUQ==
-X-Received: by 2002:a50:a721:: with SMTP id h30mr5397597edc.153.1593205317868;
-        Fri, 26 Jun 2020 14:01:57 -0700 (PDT)
-Received: from [192.168.1.4] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
-        by smtp.googlemail.com with ESMTPSA id u19sm13890982edd.62.2020.06.26.14.01.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 14:01:57 -0700 (PDT)
-Subject: Re: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance in
- venus_probe
-To:     dinghao.liu@zju.edu.cn
-Cc:     kjlu@umn.edu, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
- <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
- <35c749cf.28af7.172ee1e4ac3.Coremail.dinghao.liu@zju.edu.cn>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <f49040ee-a5c5-c106-2b51-cd48646306b0@linaro.org>
-Date:   Sat, 27 Jun 2020 00:01:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fu/Z3h59Qi11bfBtgTVUekaF3cv+TaA41WG230vnSZM=;
+        b=cPgyXwz4Lc5QnKe8kKUyKHQVylOl8PPRNCgupmuItsPlhw+gFvP7t/iyJ3eOl1JwIL
+         s4nfD/sBxtyvatCDGK8JTb+xKPZoFxqW5RXU1xLRMqJeKwBpz9r5hoJL2HweDY3YNb+U
+         YTnTde4/u8LSox+VRRdHgwLeOi9axRD4hZ/H/wGjwGMkNWybJTea6Ea8vUqF0Q9xeq5P
+         woV64QGwziL7WaIzFUL+FdC+2QNnjteHA2XJXMLep3Ag0gL3bVWH3zIyt8PqQktDivC8
+         wlvFKXIXCnuPEWUyTkV2wKRf73mS/0rx6jsqmWgfwSu/PQY+uKeLN+jqg8G4TvPgFXi+
+         Q3cw==
+X-Gm-Message-State: AOAM532SvzP8iG214yl8cNzYtQ6L4XAwZcwh/R1sJQCiRahKlqfGb+o1
+        TVcDFAQ2QIunzcd6rj2/GoA=
+X-Google-Smtp-Source: ABdhPJzcFUMrDK3UVS4LX1RK8H1O402fwEur56/ry3N6LwS/XKqtOSsHTKCSV0iIMplRjOlZMiqIxA==
+X-Received: by 2002:a17:90a:e2c7:: with SMTP id fr7mr1713020pjb.103.1593205321604;
+        Fri, 26 Jun 2020 14:02:01 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id w15sm12325067pjb.44.2020.06.26.14.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:02:01 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:02:00 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: fpga: xilinx-slave-serial: add
+ optional INIT_B GPIO
+Message-ID: <20200626210200.GA2259@epycbox.lan>
+References: <20200622133723.23326-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-In-Reply-To: <35c749cf.28af7.172ee1e4ac3.Coremail.dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622133723.23326-1-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/26/20 3:54 AM, dinghao.liu@zju.edu.cn wrote:
+On Mon, Jun 22, 2020 at 03:37:22PM +0200, Luca Ceresoli wrote:
+> The INIT_B is used by the 6 and 7 series to report the programming status,
+> providing more control and information about programming errors.
 > 
->> Hi Dinghao,
->>
->> On 6/24/20 9:30 AM, Dinghao Liu wrote:
->>> pm_runtime_get_sync() increments the runtime PM usage counter even
->>> when it returns an error code. Thus a pairing decrement is needed on
->>> the error handling path to keep the counter balanced. For other error
->>> paths after this call, things are the same.
->>>
->>> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
->>> ---
->>>
->>> Changelog:
->>>
->>> v2: - Add pm_runtime_get_noresume() on failure of
->>>       pm_runtime_put_sync() to balance PM counter instead of
->>>       releasing everything here.
-
-Could you reword this and add it to the patch description.
-
->>
->> You are adding pm_runtime_get_noresume in pm_runtime_put_sync error path
->> but the patch description is referring to pm_runtime_get_sync. I'm confused.
->>
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > 
-> When pm_runtime_put_sync failed, the control flow will jump to 
-> err_dev_unregister, where has already been a pm_runtime_put_noidle. 
-> If we don't add an extra pm_runtime_get_noresume here, we will 
-> decrease PM usage counter twice.
+> ---
 > 
-> Anyway, this may seem a little strange. Do you have a better
-> strategy to reorder the labels?
-
-No, it looks fine. With above addition to patch description:
-
-Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-
+> Changes in v2:
+>  - rename init_b-gpios to init-b-gpios (Rob Herring suggested to not use '_'
+>    in property names)
+> ---
+>  .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> Regards,
-> Dinghao
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> index 9f103f3872e8..5ef659c1394d 100644
+> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> @@ -16,6 +16,10 @@ Required properties:
+>  - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
+>  - done-gpios: config status pin (referred to as DONE in the manual)
+>  
+> +Optional properties:
+> +- init-b-gpios: initialization status and configuration error pin
+> +                (referred to as INIT_B in the manual)
+> +
+>  Example for full FPGA configuration:
+>  
+>  	fpga-region0 {
+> @@ -40,7 +44,8 @@ Example for full FPGA configuration:
+>  			spi-max-frequency = <60000000>;
+>  			spi-cpha;
+>  			reg = <0>;
+> -			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+>  			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+> +			init-b-gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
+> +			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+>  		};
+>  	};
+> -- 
+> 2.27.0
 > 
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c | 5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->>> index 203c6538044f..b0b932bf8c02 100644
->>> --- a/drivers/media/platform/qcom/venus/core.c
->>> +++ b/drivers/media/platform/qcom/venus/core.c
->>> @@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
->>>  		goto err_core_deinit;
->>>  
->>>  	ret = pm_runtime_put_sync(dev);
->>> -	if (ret)
->>> +	if (ret) {
->>> +		pm_runtime_get_noresume(dev);
->>>  		goto err_dev_unregister;
->>> +	}
->>>  
->>>  	return 0;
->>>  
->>> @@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
->>>  err_venus_shutdown:
->>>  	venus_shutdown(core);
->>>  err_runtime_disable:
->>> +	pm_runtime_put_noidle(dev);
->>>  	pm_runtime_set_suspended(dev);
->>>  	pm_runtime_disable(dev);
->>>  	hfi_destroy(core);
->>>
->>
->> -- 
->> regards,
->> Stan
 
--- 
-regards,
-Stan
+Will apply to for-next,
+
+Thanks!
