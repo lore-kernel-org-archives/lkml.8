@@ -2,139 +2,94 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D04C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F44C207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E1B20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgFZINf (ORCPT
+        id S1726145AbgFZIWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:13:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54748 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728817AbgFZINe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:13:34 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q89UrY054383;
-        Fri, 26 Jun 2020 04:13:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vxqkyb28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 04:13:15 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05Q89XJu054597;
-        Fri, 26 Jun 2020 04:13:15 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vxqkyb1c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 04:13:15 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05Q8Bmio024767;
-        Fri, 26 Jun 2020 08:13:13 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjjp7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 08:13:12 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05Q8DAGX34537708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 08:13:10 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCD9D42042;
-        Fri, 26 Jun 2020 08:13:10 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB02742049;
-        Fri, 26 Jun 2020 08:13:07 +0000 (GMT)
-Received: from [9.199.51.116] (unknown [9.199.51.116])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Jun 2020 08:13:07 +0000 (GMT)
-Subject: Re: [PATCH 2/3] mm/huge_memory.c: update tlb entry if pmd is changed
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Silsby <dansilsby@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
- <1592990792-1923-2-git-send-email-maobibo@loongson.cn>
- <07f78e99-6e59-0bce-8ac0-50d7c7600461@oracle.com>
- <87lfkbl5gz.fsf@linux.ibm.com>
- <6071df89-1438-1a25-136d-228b8863364e@oracle.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <ad67e08e-9da8-6123-2c14-c197d22ee27a@linux.ibm.com>
-Date:   Fri, 26 Jun 2020 13:43:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 04:22:14 -0400
+Received: from sauhun.de ([88.99.104.3]:37642 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgFZIWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:22:14 -0400
+Received: from localhost (p54b33841.dip0.t-ipconnect.de [84.179.56.65])
+        by pokefinder.org (Postfix) with ESMTPSA id 538F22C0307;
+        Fri, 26 Jun 2020 10:22:11 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 10:22:08 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: core: check returned size of emulated smbus block
+ read
+Message-ID: <20200626082208.GA4559@kunai>
+References: <20200613104109.2989-1-mans@mansr.com>
 MIME-Version: 1.0
-In-Reply-To: <6071df89-1438-1a25-136d-228b8863364e@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_04:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 cotscore=-2147483648
- spamscore=0 suspectscore=8 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006260058
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+In-Reply-To: <20200613104109.2989-1-mans@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 10:16 PM, Mike Kravetz wrote:
-> On 6/25/20 5:01 AM, Aneesh Kumar K.V wrote:
->> Mike Kravetz <mike.kravetz@oracle.com> writes:
->>
->>> On 6/24/20 2:26 AM, Bibo Mao wrote:
->>>> When set_pmd_at is called in function do_huge_pmd_anonymous_page,
->>>> new tlb entry can be added by software on MIPS platform.
->>>>
->>>> Here add update_mmu_cache_pmd when pmd entry is set, and
->>>> update_mmu_cache_pmd is defined as empty excepts arc/mips platform.
->>>> This patch has no negative effect on other platforms except arc/mips
->>>> system.
->>>
->>> I am confused by this comment.  It appears that update_mmu_cache_pmd
->>> is defined as non-empty on arc, mips, powerpc and sparc architectures.
->>> Am I missing something?
->>>
->>> If those architectures do provide update_mmu_cache_pmd, then the previous
->>> patch and this one now call update_mmu_cache_pmd with the actual faulting
->>> address instead of the huge page aligned address.  This was intentional
->>> for mips.  However, are there any potential issues on the other architectures?
->>> I am no expert in any of those architectures.  arc looks like it could be
->>> problematic as update_mmu_cache_pmd calls update_mmu_cache and then
->>> operates on (address & PAGE_MASK).  That could now be different.
->>>
->>
->> Also we added update_mmu_cache_pmd to update a THP entry. That could be
->> different from a hugetlb entry on some architectures. If we need to do
->> hugetlb equivalent for update_mmu_cache, we should add a different
->> function.
-> 
-> I do not know the mips architecture well enough or if the motivation for
-> this patch was based on THP or hugetlb pages.  However, it will change
-> the address passed to update_mmu_cache_pmd from huge page aligned to the
-> actual faulting address.  Will such a change in the passed address impact
-> the powerpc update_mmu_cache_pmd routine?
-> 
 
-Right now powerpc update_mmu_cache_pmd() is a dummy function. But I 
-agree we should audit arch to make sure such a change can work with 
-architectures. My comment was related to the fact that mmu cache update 
-w.r.t THP and hugetlb can be different on some platforms. So we may
-want to avoid using the same function for both.
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--aneesh
+On Sat, Jun 13, 2020 at 11:41:09AM +0100, Mans Rullgard wrote:
+> If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
+> them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
+
+Out of interest, which driver did you use?
+
+> on some random device to return an arbitrary value in the first
+> byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
+> will happily write past the end of the supplied data buffer, thus
+> causing Bad Things to happen.  To prevent this, check the size
+> before copying the data block and return an error if it is too large.
+
+Good catch, we were relying on the drivers too much here. I think the
+same fix is needed for the non-emulated case as well. Will have a look.
+
+> +			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
+> +				dev_err(&adapter->dev,
+> +					"Invalid block size returned: %d\n",
+> +					msg[1].buf[0]);
+> +				status = -EINVAL;
+
+I changed this to -EPROTO as described in
+Documentation/i2c/fault-codes.rst.
+
+Applied to for-current, thanks!
+
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl71sCwACgkQFA3kzBSg
+KbYGPw//ZrBp9jkyvtk0WmZ2Rkpaf69KHl9lgNoCFfsRVlHAMAOygAgedV6ih0an
+13bFDvRfjEIq2ZnWJT/M+PhraNOOUyNgujMbpeiyAMR9aff2W17QECuDFsyluQ9C
+SMQFtqpuLey+t0rVxO9gpNvGUhz5C5aZvPCQfGAsxVKve+2EwqlQep1S6JknN6HW
+4SBPeK+y2SdCIR00bwojpkFn7JHw2pwCsraz2lxX8EwQlJVcUxQ10tA0QEKu1zla
+DDsyfNlsg1YmntX315IJ4fnHU9MtROS7qv67sqo5A4+bPtWAQqkeIg+c00yyJRH/
+fyL0A8k/Cc2U9GtuXAGtZV9pCNzCe2wn8cw0gnEQ9HSQuAiKTV9fr5Nx/9NkFMev
+xvrz/4ay7TxSTcrrYtHADXrjDGKHGEJ0a8sXONAenCTJgmC4dy9wjHn5UNcap+nJ
+fMG+u5krSwcsCj/1cTbPcRV7F0MDZ5bkxleIhDAWh1dzpnr3/BKoCZrSiKV0Ln4N
+Dvy0+Q16ewbFwby0+p0Mrxsk10Rre+qcgKqZD5b3DPZbE6MZpC4XKZrOEUgilJaI
+Q3TBqXNNYHZ+oSaDKwQj3wO9SELbZdymZknEpS7vORgvMyIz4sBVhxIsQCtX944F
+eXYvJGjWFTQL700XPh0DsW+1R6G0ChavBzv8azB7OTNgrf18+Oc=
+=Tpvw
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
