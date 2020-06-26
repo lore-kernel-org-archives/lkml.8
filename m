@@ -7,108 +7,114 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3179EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327782089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E0920836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+LncNES"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7IxkQgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgFZNFm (ORCPT
+        id S1728179AbgFZNFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:05:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
+        Fri, 26 Jun 2020 09:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgFZNFg (ORCPT
+        with ESMTP id S1728069AbgFZNFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:05:36 -0400
+        Fri, 26 Jun 2020 09:05:38 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664FBC08C5DB
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:36 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g18so9483649wrm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05FFC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so9419998wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eNnA3JIm/nNhrY/m6pTfGCbKyGY/Dou+IuOqoFoMcwU=;
-        b=B+LncNESHZGTDdwm7FjaILQLgKfvB6QamNreWe/XQU8xhaEyEgsb4U4qxv08+ixDQ/
-         FnFt+RwqGrfUKnvBlql07hsVBCzE8UfjCT3v5eVekh5N4t1Bwgj3t+2SxxxU7SRQMXB0
-         iTIJMUDsufjuawLt1gCRmBs/5pxHL5XViTLUT+Uo07Yz19ugnCvaoVfcFUnnLjCb4OjZ
-         APmtU1Hf+9fSpX5lG6GEsXO6xskSzVK/ym1JiQDWWG5muto8+vU7oP854PneFglhTygr
-         IQp8m8nacqffpUHGayeWyU3H9dsP1a2WI5Ubcvp56QpipsQYivh3t90zZIS4lEEMDq1c
-         Bd6w==
+        bh=Z9egOal3uN/e6e9MaOrNvFSxzzJuszdkWNRmQ29ZgoU=;
+        b=V7IxkQgf7wGz0DpEojoH/IUl8uhIPCLkWJcfgONzZXJQVqVWNiIkbffuTbRAzPsnaG
+         9B1MG1NxVnNlGAQ7Mb2IRUomTjwKPNYs/NNjEMEg5Ell+59PWbiub25e5fGlfIp/zm8d
+         mkSITkB56G89qfu4DsDCxXOi8Q2tgL3PdogZGF0I5DSPiZZV4vA2RJoR60lJKfOViKoQ
+         O7Xt6Wgb2yb9DxMOZMKMif7av87+AOB42O+/wDA2KleCph7PaR4mGo4p0BssrOUq94Ou
+         ONN2LOo2d1+N81ZKjzCA3lxoXNmQe0K9vq4z09zwrnMSFncvknsqjTeShfjj2Rcv99s+
+         u/xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eNnA3JIm/nNhrY/m6pTfGCbKyGY/Dou+IuOqoFoMcwU=;
-        b=Z1kwYg6B+OiTaU3ES7yn1TWhg1tcbbW5+5Q9dioKZn+GL2GD4fkXpEmwrwG5sSt32t
-         DGPB1Uun2J2FgReXIH82/aTPB4uTzJSBvNLrj+/e6NuK08TI9XUeYWnOwdYEZhSTUL0V
-         inqH418weaPhnhq6DynJrvUTPmf4rZnjk1vXqLwY2GDI+kolKeMCy7Z59U48HWr/WzAY
-         IWbHpfiGDOfXSr2CvLwO3ChG8rN+Svy/QyFifZ839wLQizlhczWsiiPhyHwiSSsUCAOH
-         TbHt+PXef38oatzAlElHT5csF3cok0xp4jARMujmSI5Pch/CJ3bv0mGXEwejMR/e7W68
-         ncSg==
-X-Gm-Message-State: AOAM5329z115pNhrxB9GudrGsD5j4iJJrZpBk3ZKLWLNaDBbatMXKG/a
-        xyy3VAeKGNcsQLQpgk4KUvdfzg==
-X-Google-Smtp-Source: ABdhPJxBW4IPbPO5eoGMHxlvutWDO9MyQLFBGRb78I8VQ4Bim4qrRNtJrdF1lbgIHvXTS+XFhHn/sA==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr3677374wrp.412.1593176735173;
-        Fri, 26 Jun 2020 06:05:35 -0700 (PDT)
+        bh=Z9egOal3uN/e6e9MaOrNvFSxzzJuszdkWNRmQ29ZgoU=;
+        b=LE9aL4Y5I4cd6zg+ZURzf5IOG9CG90U1tod1v36/2QOMnE9aQhN3OqpLSHZex4baCL
+         buH0diqmaFEq/ArpHGQVN4MSP0b1PMjC1HBxCO16x5OwjMpVw2ge5Uq73mcmRHZuqme6
+         Ip1izRLoLNjOSrFNR9SWAJfJ3sJrY6M6kxTZEoJ+sFKITtr9Osol7MMmUx3sL6bm+Nnw
+         DQfowyVIvH+3z/4rdpqb+ChJ3ml362Oqx5HmDnyT/WQ+2qIKTF7tS0/UKEH791dyFLNC
+         +XQ/ohcRYWHHa95gSZk2coEAbiFN60BIdUUE1YP3P84JhAKx8cscloqzn1yY7oQSYtel
+         1hjQ==
+X-Gm-Message-State: AOAM531Q66RwsSDt/UwtD39dhbOC2hDhqFusQ+vZtOZksICDYCtmwlwm
+        c+znfIKxCbi/1Ex1j2bqK6AieQ==
+X-Google-Smtp-Source: ABdhPJwm4pLJby/llKlKk2pTQRstc6jX1VxdYEZilS6bFSSooSi0Sw/2PixW9k4WiLO2WnWEAkMYKw==
+X-Received: by 2002:a5d:51ce:: with SMTP id n14mr3716291wrv.155.1593176736454;
+        Fri, 26 Jun 2020 06:05:36 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id u20sm16746904wmc.44.2020.06.26.06.05.33
+        by smtp.gmail.com with ESMTPSA id u20sm16746904wmc.44.2020.06.26.06.05.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 06:05:34 -0700 (PDT)
+        Fri, 26 Jun 2020 06:05:35 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 05/10] misc: lkdtm: Always provide prototype for lkdtm_DOUBLE_FAULT()
-Date:   Fri, 26 Jun 2020 14:05:20 +0100
-Message-Id: <20200626130525.389469-6-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@kernel.org>
+Subject: [PATCH 06/10] misc: eeprom: eeprom_93cx6: Repair function arg descriptions
+Date:   Fri, 26 Jun 2020 14:05:21 +0100
+Message-Id: <20200626130525.389469-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200626130525.389469-1-lee.jones@linaro.org>
 References: <20200626130525.389469-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lkdtm_DOUBLE_FAULT() already has internal logic to handle
-!CONFIG_X86_32.  Compiling out the prototype actually prevents
-that logic from being useful.
+Copy-paste issue.  Looks like the kerneldoc style descriptions for
+these functions were taken from existing functions with slightly
+different argument names.
 
-Fixes the following W=1 warning:
+Fixes the following W=1 warnings:
 
- drivers/misc/lkdtm/bugs.c: At top level:
- drivers/misc/lkdtm/bugs.c:420:6: warning: no previous prototype for ‘lkdtm_DOUBLE_FAULT’ [-Wmissing-prototypes]
- 420 | void lkdtm_DOUBLE_FAULT(void)
- | ^~~~~~~~~~~~~~~~~~
+ drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Function parameter or member 'byte' not described in 'eeprom_93cx6_readb'
+ drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Excess function parameter 'word' description in 'eeprom_93cx6_readb'
+ drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Function parameter or member 'bytes' not described in 'eeprom_93cx6_multireadb'
+ drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Excess function parameter 'words' description in 'eeprom_93cx6_multireadb'
 
-Cc: Kees Cook <keescook@chromium.org>
+Cc: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/lkdtm/lkdtm.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/misc/eeprom/eeprom_93cx6.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 601a2156a0d48..8878538b2c132 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -31,9 +31,7 @@ void lkdtm_CORRUPT_USER_DS(void);
- void lkdtm_STACK_GUARD_PAGE_LEADING(void);
- void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
- void lkdtm_UNSET_SMEP(void);
--#ifdef CONFIG_X86_32
- void lkdtm_DOUBLE_FAULT(void);
--#endif
- void lkdtm_CORRUPT_PAC(void);
- 
- /* lkdtm_heap.c */
+diff --git a/drivers/misc/eeprom/eeprom_93cx6.c b/drivers/misc/eeprom/eeprom_93cx6.c
+index 36a2eb837371b..9627294fe3e95 100644
+--- a/drivers/misc/eeprom/eeprom_93cx6.c
++++ b/drivers/misc/eeprom/eeprom_93cx6.c
+@@ -228,7 +228,7 @@ EXPORT_SYMBOL_GPL(eeprom_93cx6_multiread);
+ /**
+  * eeprom_93cx6_readb - Read a byte from eeprom
+  * @eeprom: Pointer to eeprom structure
+- * @word: Byte index from where we should start reading
++ * @byte: Byte index from where we should start reading
+  * @data: target pointer where the information will have to be stored
+  *
+  * This function will read a byte of the eeprom data
+@@ -270,7 +270,7 @@ EXPORT_SYMBOL_GPL(eeprom_93cx6_readb);
+  * @eeprom: Pointer to eeprom structure
+  * @byte: Index from where we should start reading
+  * @data: target pointer where the information will have to be stored
+- * @words: Number of bytes that should be read.
++ * @bytes: Number of bytes that should be read.
+  *
+  * This function will read all requested bytes from the eeprom,
+  * this is done by calling eeprom_93cx6_readb() multiple times.
 -- 
 2.25.1
 
