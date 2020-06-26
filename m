@@ -2,158 +2,116 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43147C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A872081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="Nw2aOaTp"
+	by mail.kernel.org (Postfix) with ESMTP id 233A02081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593176852;
+	bh=16hSAoBgkzFDqdIECQ7sxZWZ9kzrW7zU6H3vwJLq6tc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nRquLCLwtsGqcnrLGOQBRnKklA1o5cl2T+dwjeEQoGj/PW754DjTA0lo/o24vU6Qa
+	 PdREv5BjglCCko97Zc6fMW7ZfbjiybeuXUjSqV7iEmFt4ZloLtuvhaiwwDmtBFo1vG
+	 83+Vndh6OJeIVDJHTC6CYrkPSO0XGt0nalPkwoJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgFZNH0 (ORCPT
+        id S1728545AbgFZNHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbgFZNHX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:07:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728493AbgFZNHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jun 2020 09:07:23 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52188C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:22 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so4273337pls.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p5f1RM1G3Lr7GaMJ5iGuAFQEEYFL5B+QSi2APysRKNI=;
-        b=Nw2aOaTp7dntGwpDclpV8L5OpCadjxLkCZkxpm1nhXCPZC9G5AGDmuTA7hcYD+iCOC
-         s1bV+JgCapJWgFcRVPMA8eNEnBfYlSWmsZ3+GqvENOiXU6pG4Tz7ncDd07igt/0ENU08
-         7Qnks9sVmCgEirnBlOvpxzU5bqg1a4XSY8LKEq35Diy/OybSBP4qhPiWfYUXAtddXpSa
-         LYw53wptcsTXs9Q2+3TLVhjBa5qyz8CjtIMETDQax+G/cYwzK1pt1lU3inrTcGc1/yNX
-         J9wDQHVZVY9C2r8O4NgN3tktaTbxAzdZYkSTZ36d2aGbVPL5n/p9K1Lva14MdBYA+wn4
-         71Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=p5f1RM1G3Lr7GaMJ5iGuAFQEEYFL5B+QSi2APysRKNI=;
-        b=E39+Kb3gA9N/k46lfZgS27nAO/J0AO4Cta2ffPpLZuzL62oNz6/JDpiuStk3Dh6y48
-         bQJgRVEO0FfTbXDxFMMwrKEjZm9yb1Izv5jbiwzw1564hqeYU3yB7zB3jSARDqY5P7/0
-         K+iL8o20Cx/2SH9iMiEwd5qTKXYHHR65KdF8GSLjOHr+5DEZCLdSOWtq+hxxV7VJo6pv
-         ZrwpMt++HIofVDhhMSK5P1tdZIQpl8d3c5T+SrTOrbAVW3fweFHllAgExdtxgNgPwfYf
-         69RwobzrjJVtowpezY44JJwSf/znwKrN1mC9pFMjVdmtk/knrvvLa4GooD7+UWZJfnhL
-         wncg==
-X-Gm-Message-State: AOAM531N8fJnnjqu31zg3aMScmwwZfffAnwirLUjn5BbMdM5FZuNDU2I
-        Hx4h0fjdmOiRpz6bYCDG8InIhA==
-X-Google-Smtp-Source: ABdhPJzNTJy2Kd+NRn0bHfE8f8YU4s3LNezimcOqIj3veZ18CCVfe5QoepFfjgYitoBkScGcnEYcHQ==
-X-Received: by 2002:a17:90a:ee95:: with SMTP id i21mr3526541pjz.77.1593176841782;
-        Fri, 26 Jun 2020 06:07:21 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id s10sm7246718pjl.41.2020.06.26.06.07.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 06:07:21 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v7 2/3] media: tpg: Add function to return colors' order of test image
-Date:   Fri, 26 Jun 2020 18:36:59 +0530
-Message-Id: <20200626130700.2453-3-kgupta@es.iitr.ac.in>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
-References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 105DF2080C;
+        Fri, 26 Jun 2020 13:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593176842;
+        bh=16hSAoBgkzFDqdIECQ7sxZWZ9kzrW7zU6H3vwJLq6tc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m1uqulmq0ck9PhOoNMR80zbtNsBuc3vZMydFHgVM30eTcDTQO3CKLyb/jUwyfJJZM
+         2exOrslcDYFlIGzMLEfeX9UpbMqiw1CrmHw13q9X7FXlbUqbuKyPcf1jM0VAYrDny4
+         oKfGjmf2Vzxb2fapvoQGZTBOm0R0qqWcjevv7yOY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1joo4e-006dkn-Jt; Fri, 26 Jun 2020 14:07:20 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 26 Jun 2020 14:07:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Oscar Carter <oscar.carter@gmx.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Len Brown <lenb@kernel.org>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v5 0/3] drivers/acpi: Remove function callback casts
+In-Reply-To: <20200530143430.5203-1-oscar.carter@gmx.com>
+References: <20200530143430.5203-1-oscar.carter@gmx.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <07911cc62ef21900c43aeefbcbfc8d9f@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, rjw@rjwysocki.net, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, lenb@kernel.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is no method to know the correct order of the colors for
-a test image generated by tpg. Write a function that returns a string of
-colors' order given a tpg. It returns a NULL pointer in case of test
-patterns which do not have a well defined colors' order. Hence add a
-NULL check for text in tpg_gen_text().
+Hi Rafael,
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
----
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 30 +++++++++++++++++--
- include/media/tpg/v4l2-tpg.h                  |  1 +
- 2 files changed, 29 insertions(+), 2 deletions(-)
+On 2020-05-30 15:34, Oscar Carter wrote:
+> In an effort to enable -Wcast-function-type in the top-level Makefile 
+> to
+> support Control Flow Integrity builds, there are the need to remove all
+> the function callback casts in the acpi driver.
+> 
+> The first patch creates a macro called 
+> ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+> to initialize the acpi_probe_entry struct using the probe_subtbl field
+> instead of the probe_table field to avoid function cast mismatches.
+> 
+> The second patch modifies the IRQCHIP_ACPI_DECLARE macro to use the new
+> defined macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
+> ACPI_DECLARE_PROBE_ENTRY. Also, modifies the prototype of the functions
+> used by the invocation of the IRQCHIP_ACPI_DECLARE macro to match all 
+> the
+> parameters.
+> 
+> The third patch removes the function cast in the 
+> ACPI_DECLARE_PROBE_ENTRY
+> macro to ensure that the functions passed as a last parameter to this 
+> macro
+> have the right prototype. This macro is used only in another macro
+> called "TIMER_ACPI_DECLARE". An this is used only in the file:
+> 
+> drivers/clocksource/arm_arch_timer.c
+> 
+> In this file, the function used in the last parameter of the
+> TIMER_ACPI_DECLARE macro already has the right prototype. So there is 
+> no
+> need to modify its prototype.
 
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index dde22a4cbd6c..c46ddd902675 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
- 	unsigned div = step;
- 	unsigned first = 0;
--	unsigned len = strlen(text);
-+	unsigned len;
- 	unsigned p;
- 
--	if (font8x16 == NULL || basep == NULL)
-+	if (font8x16 == NULL || basep == NULL || text == NULL)
- 		return;
- 
-+	len = strlen(text);
-+
- 	/* Checks if it is possible to show string */
- 	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
- 		return;
-@@ -2006,6 +2008,30 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- }
- EXPORT_SYMBOL_GPL(tpg_gen_text);
- 
-+const char *tpg_g_color_order(const struct tpg_data *tpg)
-+{
-+	switch (tpg->pattern) {
-+	case TPG_PAT_75_COLORBAR:
-+	case TPG_PAT_100_COLORBAR:
-+	case TPG_PAT_CSC_COLORBAR:
-+	case TPG_PAT_100_HCOLORBAR:
-+		return "white, yellow, cyan, green, magenta, red, blue, black";
-+	case TPG_PAT_BLACK:
-+		return "Black";
-+	case TPG_PAT_WHITE:
-+		return "White";
-+	case TPG_PAT_RED:
-+		return "Red";
-+	case TPG_PAT_GREEN:
-+		return "Green";
-+	case TPG_PAT_BLUE:
-+		return "Blue";
-+	default:
-+		return NULL;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(tpg_g_color_order);
-+
- void tpg_update_mv_step(struct tpg_data *tpg)
- {
- 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-index 9749ed409856..0b0ddb87380e 100644
---- a/include/media/tpg/v4l2-tpg.h
-+++ b/include/media/tpg/v4l2-tpg.h
-@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
- bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
- void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
- 		const struct v4l2_rect *compose);
-+const char *tpg_g_color_order(const struct tpg_data *tpg);
- 
- static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
- {
+I'd like to see this into 5.9. Can you please let me know if
+you are OK with the acpi.h changes? I can queue it via the irqchip
+tree.
+
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
