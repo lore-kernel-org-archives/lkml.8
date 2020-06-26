@@ -2,124 +2,121 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC57C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 671A720768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C75220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UmowHKu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgFZHzG convert rfc822-to-8bit (ORCPT
+        id S1728933AbgFZH7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:55:06 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:57818 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728635AbgFZHzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:55:06 -0400
-Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 4A9A0319FB231A37A57C;
-        Fri, 26 Jun 2020 15:55:01 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
- dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
- Fri, 26 Jun 2020 15:54:50 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Mahipal Challa" <mahipalreddy2006@gmail.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        "Dan Streetman" <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: RE: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Topic: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Index: AQHWS4ju6iURsG9yIk+EgvuPOVc69qjp91mAgACMbEA=
-Date:   Fri, 26 Jun 2020 07:54:49 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25245A6@DGGEMI525-MBS.china.huawei.com>
-References: <20200626070903.27988-1-song.bao.hua@hisilicon.com>
- <20200626072027.GA6153@gondor.apana.org.au>
-In-Reply-To: <20200626072027.GA6153@gondor.apana.org.au>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.200.84]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 26 Jun 2020 03:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgFZH67 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:58:59 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986A9C08C5DB;
+        Fri, 26 Jun 2020 00:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=JhVBSga62gHEgz4HGi54NKYgqov3EJL/ffRCuH+2YLw=; b=UmowHKu8q4WVgCjF8Ze08+GvJg
+        pgP8MuO77AOQSlGhimYAgA3nuE1UuBWOjyaue8DEQLcH8hwwkvYmDfmIc+Qdd/xtj6K6sr5gh7PBS
+        MKYioGH1Pmx/dTR9N8PsiBGV52JEEUzOzoXdhvnAZiOWRcvpe9mupj9qHZ2TU/ErUk/mX5Jltyt6n
+        dvlh+SUAgiHQn2FKvRP+c8AEp9RHR0/36vKNRGlWuzgCykK99OeeIG0C94F0j1n+C/D0UOpAC4Ajm
+        vMkanOFeZu5IF5twzA8jGM/nu0XVA9DB+t+XjJeBEDzMBNCwRK+I3eWv5kg3+yxPp8KMxFzubeTAG
+        s6s571SQ==;
+Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jojFv-0006yc-W9; Fri, 26 Jun 2020 07:58:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/9] fs: refactor new_sync_read
+Date:   Fri, 26 Jun 2020 09:58:28 +0200
+Message-Id: <20200626075836.1998185-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
+References: <20200626075836.1998185-1-hch@lst.de>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pass the read_iter method as a parameter and mark the function
+non-static.  This allows reusing it for additional callsites e.g.
+in procfs.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/read_write.c    | 8 +++++---
+ include/linux/fs.h | 2 ++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org
-> [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Herbert Xu
-> Sent: Friday, June 26, 2020 7:20 PM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: akpm@linux-foundation.org; linux-mm@kvack.org;
-> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Luis Claudio
-> R . Goncalves <lgoncalv@redhat.com>; Sebastian Andrzej Siewior
-> <bigeasy@linutronix.de>; David S . Miller <davem@davemloft.net>; Mahipal
-> Challa <mahipalreddy2006@gmail.com>; Seth Jennings
-> <sjenning@redhat.com>; Dan Streetman <ddstreet@ieee.org>; Vitaly Wool
-> <vitaly.wool@konsulko.com>; Wangzhou (B) <wangzhou1@hisilicon.com>;
-> Colin Ian King <colin.king@canonical.com>
-> Subject: Re: [PATCH v3] mm/zswap: move to use crypto_acomp API for
-> hardware acceleration
-> 
-> On Fri, Jun 26, 2020 at 07:09:03PM +1200, Barry Song wrote:
-> >
-> > +	mutex_lock(&acomp_ctx->mutex);
-> > +
-> > +	src = kmap(page);
-> > +	dst = acomp_ctx->dstmem;
-> > +	sg_init_one(&input, src, PAGE_SIZE);
-> > +	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-> > +	sg_init_one(&output, dst, PAGE_SIZE * 2);
-> > +	acomp_request_set_params(acomp_ctx->req, &input, &output,
-> PAGE_SIZE, dlen);
-> > +	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req),
-> &acomp_ctx->wait);
-> > +	dlen = acomp_ctx->req->dlen;
-> > +	kunmap(page);
-> 
-> Waiting on an async request like this is just silly.  This defeats
-> the whole purpose of having a fallback.
-
-For this zswap case and for this moment, it is probably not.
-As for this case, there are no two parallel (de)compressions which can be done in parallel
-in a single (de)compressor instance.
-The original zswap code is doing all compression/decompression in atomic context.
-Right now, to use acomp api, the patch has moved to sleep-able context.
-
-However, compression/decompression can be done in parallel in different instances
-of acomp, also different cpus.
-
-If we want to do multiple (de)compressions simultaneously in one acomp instance
-by callbacks, it will ask a large changes in zswap.c not only using the new APIs. I think
-we can only achieve the ideal goal step by step.
-
-> 
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
-
--barry
+diff --git a/fs/read_write.c b/fs/read_write.c
+index e7f36b15683049..e765c95ff3440d 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -401,7 +401,8 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
+ 				read_write == READ ? MAY_READ : MAY_WRITE);
+ }
+ 
+-static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
++ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
++		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter))
+ {
+ 	struct iovec iov = { .iov_base = buf, .iov_len = len };
+ 	struct kiocb kiocb;
+@@ -412,7 +413,7 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
+ 	kiocb.ki_pos = (ppos ? *ppos : 0);
+ 	iov_iter_init(&iter, READ, &iov, 1, len);
+ 
+-	ret = call_read_iter(filp, &kiocb, &iter);
++	ret = cb(&kiocb, &iter);
+ 	BUG_ON(ret == -EIOCBQUEUED);
+ 	if (ppos)
+ 		*ppos = kiocb.ki_pos;
+@@ -488,7 +489,8 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+ 	if (file->f_op->read)
+ 		ret = file->f_op->read(file, buf, count, pos);
+ 	else if (file->f_op->read_iter)
+-		ret = new_sync_read(file, buf, count, pos);
++		ret = iter_read(file, buf, count, pos,
++				file->f_op->read_iter);
+ 	else
+ 		ret = -EINVAL;
+ 	if (ret > 0) {
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index fac6aead402a98..b9b2ee31ef9bf1 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1916,6 +1916,8 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+ 			      unsigned long nr_segs, unsigned long fast_segs,
+ 			      struct iovec *fast_pointer,
+ 			      struct iovec **ret_pointer);
++ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
++		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter));
+ 
+ extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
+ extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
+-- 
+2.26.2
 
