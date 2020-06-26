@@ -2,82 +2,208 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB80BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FACC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8BE2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD23220E65
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="v7iDdDE1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D3PCkC1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgFZK2E (ORCPT
+        id S1727905AbgFZK2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgFZK2D (ORCPT
+        Fri, 26 Jun 2020 06:28:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56474 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgFZK2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:28:03 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0ECC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 03:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Hs96HbG/Xh5+3hw6mjPm+ejHwdnSqO9Gma802aQU/fg=; b=v7iDdDE1GlK/vC1H80dQ1JCmjT
-        NCIZLejpRZ0GIjobeJHhdgldeYqws637KzGAYqfr/Z3x9WcUkTPFK7WXZ5+tjmfNj0Jlgl1wFg0qL
-        xXWbp+SxjIMP38wIY2/4wmA+z25ALxpS4X2qxrSOlJrSoiHkAk5plu958PNi5L4sToGv182ax7F3+
-        n7xdR9m/HBUuMpx0+lpCwF2gCqnbxLLSx6xEzf+FXuKpSQ/9X85fSNwbSm93VfKczM0V1kP7UYkfB
-        JtzQ30c/oDf1hocX3UlIf7x8FjFbtVMTWj3yBOaJIxSEi/XjFtjuFmCIZHZWXrLCLm6YyS2h1kCxN
-        jV7LVSxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jolZr-0001F9-70; Fri, 26 Jun 2020 10:27:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6977E3007CD;
-        Fri, 26 Jun 2020 12:27:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5048B20BE639D; Fri, 26 Jun 2020 12:27:22 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 12:27:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] sched: Optionally skip uclamp logic in fast path
-Message-ID: <20200626102722.GA4817@hirez.programming.kicks-ass.net>
-References: <20200625154352.24767-1-qais.yousef@arm.com>
+        Fri, 26 Jun 2020 06:28:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QASVew022878;
+        Fri, 26 Jun 2020 05:28:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593167311;
+        bh=2sgKdorcdIQb8LjqWsTteHIxdXbBN5knpabZ6nwoafs=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=D3PCkC1/VCfGCD7k/3eOdi9XGaQscK+5RKsXGCQwKgc18gfb/qtqLxLEhVuo87ntD
+         8Q/f2KiCp8r5Fkd/fUBgJYArIraq+uQ66acSlePF8scpaxkK7Iujpx+YnOIlj2xFP2
+         drC+ABBiCI3WUm0LOWrC1OrGP065xYDhI7WX5c9I=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QASVRs104244
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 05:28:31 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
+ Jun 2020 05:28:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 26 Jun 2020 05:28:31 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QASSYD018142;
+        Fri, 26 Jun 2020 05:28:29 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: DMA Engine: Transfer From Userspace
+To:     Thomas Ruf <freelancer@rufusul.de>, Vinod Koul <vkoul@kernel.org>
+CC:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+ <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+ <20200624093800.GV2324254@vkoul-mobl>
+ <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
+ <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
+X-Pep-Version: 2.0
+Message-ID: <1a610c67-73a4-f66d-877a-5c4d35cbf76a@ti.com>
+Date:   Fri, 26 Jun 2020 13:29:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625154352.24767-1-qais.yousef@arm.com>
+In-Reply-To: <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 04:43:50PM +0100, Qais Yousef wrote:
-> Qais Yousef (2):
->   sched/uclamp: Fix initialization of struct uclamp_rq
->   sched/uclamp: Protect uclamp fast path code with static key
-> 
->  kernel/sched/core.c              | 80 ++++++++++++++++++++++++++++----
->  kernel/sched/cpufreq_schedutil.c |  2 +-
->  kernel/sched/sched.h             |  7 +++
->  3 files changed, 79 insertions(+), 10 deletions(-)
 
-Thanks!
+
+On 24/06/2020 16.58, Thomas Ruf wrote:
+>=20
+>> On 24 June 2020 at 14:07 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:=
+
+>> On 24/06/2020 12.38, Vinod Koul wrote:
+>>> On 24-06-20, 11:30, Thomas Ruf wrote:
+>>>
+>>>> To make it short - i have two questions:
+>>>> - what are the chances to revive DMA_SG?
+>>>
+>>> 100%, if we have a in-kernel user
+>>
+>> Most DMAs can not handle differently provisioned sg_list for src and d=
+st.
+>> Even if they could handle non symmetric SG setup it requires entirely
+>> different setup (two independent channels sending the data to each
+>> other, one reads, the other writes?).
+>=20
+> Ok, i implemented that using zynqmp_dma on a Xilinx Zynq platform (obvi=
+ously ;-) and it works nicely for us.
+
+I see, if the HW does not support it then something along the lines of
+what the atc_prep_dma_sg did can be implemented for most engines.
+
+In essence: create a new set of sg_list which is symmetric.
+
+> Don't think that it uses two channels from what a saw in their implemen=
+tation.
+
+I believe it was breaking it up like atc_prep_dma_sg did.
+
+> Of course that was on kernel 4.19.x where DMA_SG was still available.
+>=20
+>>>> - what are the chances to get my driver for memcpy like transfers fr=
+om
+>>>> user space using DMA_SG upstream? ("dma-sg-proxy")
+>>>
+>>> pretty bleak IMHO.
+>>
+>> fwiw, I also get requests time-to-time to DMA memcpy support from user=
+
+>> space from companies trying to move from bare-metal code to Linux.
+>>
+>> What could be plausible is a generic dmabuf-to-dmabuf copy driver (V4L=
+2
+>> can provide dma-buf, DRM can also).
+>> If there is a DMA memcpy channel available, use that, otherwise use so=
+me
+>> method to do the copy, user space should not care how it is done.
+>=20
+> Yes, i'm using it together with a v4l2 capture driver and also saw the =
+dma-buf thing but did not find a way how to bring this together with "ord=
+inary user memory".
+
+One of the aim of dma-buf is to share buffers between drivers and user
+space (among drivers and/or drivers and userspace), but I might be
+missing something.
+
+> For me the root of my problem seems to be that dma_alloc_coherent leads=
+ to uncached memory on ARM platforms.
+
+It depends, but in most cases that is true.
+
+> But maybe i am doing it all wrong ;-)
+>=20
+>> Where things are going to get a bit more trickier is when the copy nee=
+ds
+>> to be triggered by other DMA channel (completion of a frame reception
+>> triggering an interleaved sub-frame extraction copy).
+>> You don't want to extract from a buffer which can be modified while th=
+e
+>> other channel is writing to it.
+>=20
+> I think that would be no problem in case of our v4l2 capture driver doi=
+ng both DMAs:
+> Framebuffer DMA for streaming and Zynqmp DMA (using DMA_SG) to get it t=
+o "ordinary user memory".
+> But as i wrote before i prefer to do the "logic and management" in user=
+space so the capture driver is just using the first DMA and the "dma-sg-p=
+roxy" driver is only used as a memcpy replacement.
+> As said this is all working fine with kernel 4.19.x but now we are stuc=
+k :-(
+>=20
+>> In Linux the DMA is used for kernel and user space can only use it
+>> implicitly via standard subsystems.
+>> Misused DMA can be very dangerous and giving full access to program a
+>> transfer can open a can of worms.
+>=20
+> Fully understand that!
+> But i also hope you understand that we are developing a "closed system"=
+ and do not have a problem with that at all.
+> We are also willing to bring that driver upstream for anyone doing the =
+same but of course this should not affect security of any desktop or serv=
+er systems.
+> Maybe we just need the right place for that driver?!
+
+What might be plausible is to introduce hw offloading support for memcpy
+type of operations in a similar fashion how for example crypto does it?
+
+The issue with a user space implemented logic is that it is not portable
+between systems with different DMAs. It might be that on one DMA the
+setup takes longer than do a CPU copy of X bytes, on the other DMA it
+might be significantly less or higher.
+
+Using CPU vs DMA for a copy in certain lengths and setups should not be
+a concern of the user space.
+Yes, you have a closed system with controlled parameters, but a generic
+mem2mem_offload framework should be usable on other setups and the same
+binary should be working on different DMAs where one is not efficient
+for <512 bytes, the other shows benefits under 128bytes.
+
+> Not sure if staging would change your concerns.
+>=20
+> Thanks and best regards,
+> Thomas
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
