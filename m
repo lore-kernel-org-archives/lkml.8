@@ -2,85 +2,113 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06846C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB25C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFB4F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AD42070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593182360;
+	bh=3p9mdRB4uLRHfM5ED4x+A+enypba1du86Fnnn5R3oN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f+LnZWnzz9exJTOZdpTbt2Zp5jiwQ43Adn6L8rMc4fDUu2f330RwacqblKOo88IAK
+	 WuGMqVT2eZ/9KOWjw1i1SeC3cllmRchKwbmgWuSxB2RicpNpileTrhoqspeNju4v7p
+	 7CPJ9BD8vhqRk9bKN3kLR8bB0WOWKI7PPalVpsVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgFZOiV (ORCPT
+        id S1729306AbgFZOjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:38:21 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:55233 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgFZOiV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:38:21 -0400
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MZSJa-1jIVZN3Agw-00WTwM for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
- 2020 16:38:19 +0200
-Received: by mail-qv1-f46.google.com with SMTP id h18so4577893qvl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:38:19 -0700 (PDT)
-X-Gm-Message-State: AOAM533P0GK/URejM9im7PyN55skwiJKYyfEVh6fBpfmA2htzlNWVL2B
-        LIiEfkv4L9Rfz6bD/u1jxcuSwYo5bMloetJiSQs=
-X-Google-Smtp-Source: ABdhPJzU2pJ/DVdl89LZUoVSIRq9gExv/2PUvldmzwiyp//wzCyXgDLKBfzFdoubCsuwWsC04Acg52OraZjG32EuONg=
-X-Received: by 2002:a0c:f802:: with SMTP id r2mr2489000qvn.197.1593182298713;
- Fri, 26 Jun 2020 07:38:18 -0700 (PDT)
+        Fri, 26 Jun 2020 10:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725792AbgFZOjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:39:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA69E2070A;
+        Fri, 26 Jun 2020 14:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593182357;
+        bh=3p9mdRB4uLRHfM5ED4x+A+enypba1du86Fnnn5R3oN4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E9LufMZjZpUsdOj5NZxZ7ZHzlf/GCD0ggoYB4HMhANZKUAxOlqxXLJcwYUioz50Eu
+         pfGx2oI2JYvKW/SgrMNXZsvlwzW1GmfJs63bjSWffsymfxeHQWYE/8jhVbvPzH2LIE
+         uiyqv9sHqhMFowmcIctUfVlLn9BpzXzDX4ZL2Kjw=
+Date:   Fri, 26 Jun 2020 15:39:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     ulf.hansson@linaro.org, lgirdwood@gmail.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Message-ID: <20200626143914.GE5289@sirena.org.uk>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-7-lee.jones@linaro.org>
-In-Reply-To: <20200626130525.389469-7-lee.jones@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jun 2020 16:38:02 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a06m8ShEDGisd14M2TNi9szzb4Ut9dcc28NkYvV=JrwVg@mail.gmail.com>
-Message-ID: <CAK8P3a06m8ShEDGisd14M2TNi9szzb4Ut9dcc28NkYvV=JrwVg@mail.gmail.com>
-Subject: Re: [PATCH 06/10] misc: eeprom: eeprom_93cx6: Repair function arg descriptions
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:I40IUFJuOb32KJe25iXU6zoY0zXiWwkrUU/qq7lL43xu8O9Bpt3
- udYmW0XG7k7ByYfCRdoLFKijYI+tgzYQLXpeqG1xgWozi2lzhqvvZMgfZCH/b6D/8pzotmx
- P7czB48SjoLoWYvfDKeD1FFmtZyc6YYwZFngsQhLJg0mVADt2EQzGaA0IhXEhEWZY8HxdIg
- 8UJn1AlrGvIE5yACTQnlw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lYlQf5qTNZY=:WoPKH8/96dNHlJHUWCTKcx
- ak78A8YEpoLZ4UDJxx2HgTrysCx2eD2Ob4U7AJQ0v6bwneZGJEdHSxBfmkn2JMAxIns6Cke80
- ynprl3bqsP+aJ1Ug1jXdm0XjONGTRSrmZXjrGaJ4NE86vTIwHD8xlLJnbnaEEhrAMCw5WqyQJ
- SxtMDXQGF1aqG6VmfxqnBeNU9LTyLnV1YEdgs2CCKnd6xdKUIeZfiudkhRI92ucECb0U8g8JH
- 03ZG38bWhel+vPB+oPBD2xZSPVQOiQru79arOi3UvSxtRefK7dzjIAVosrUGMwlQcjdDyvWaA
- hAWIbrZ+jOXcxL6G6G46p2V6ykNI+VX8WLA7Y9WxkvKe3FrINL7fYyVXunTSPKPSqE294dlEH
- N/4j/dwRdI/TpZMfNR5ekAqdB6oE/1Sy31nVGiKKRNzzNWBbCI3F/knxvhHdIpl9PMjqGKdjd
- mm0fSOQa8QbxfSshovkr+DKufS0GGhZaCwQld0+IqoOEcPnVvRh0B7HLstRk/CEP1JYrvm8Sc
- 1GJUHnYkKnHB5eQfxil5Op0pDeVdB/RV3clBGIXnylKF1zaWX0/BPN3muAVflorj0lLcjBayT
- igPSpCexvaJMPyiJWVSF5dhK4IhAjrE5wat/OP05UhMG6sHcS8AuvqFrfcOOUdIVje3dyDvJy
- XcToB7BlIVT2r8cdN59Tb1pYnMXEb56Ic9Z3V+URRG8JMIuSOTNUxNMkmTsTZcfImqDsacX0C
- +2lFKEnBcGvVyGwGmUloQ3qR5AmuX7lr4/DaVviWdasrrTkZa0hARB0k2I0tyOU1DQ0DNGubc
- FtyXr/qDlMKJRD3fDwmCkw0rY2ZlPJE9EFb/WeZ+yeE9tFuED4=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0QFb0wBpEddLcDHQ"
+Content-Disposition: inline
+In-Reply-To: <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Cookie: You can't get there from here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 3:05 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Copy-paste issue.  Looks like the kerneldoc style descriptions for
-> these functions were taken from existing functions with slightly
-> different argument names.
->
-> Fixes the following W=1 warnings:
->
->  drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Function parameter or member 'byte' not described in 'eeprom_93cx6_readb'
->  drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Excess function parameter 'word' description in 'eeprom_93cx6_readb'
->  drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Function parameter or member 'bytes' not described in 'eeprom_93cx6_multireadb'
->  drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Excess function parameter 'words' description in 'eeprom_93cx6_multireadb'
->
-> Cc: Wolfram Sang <wsa@kernel.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+--0QFb0wBpEddLcDHQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jun 26, 2020 at 06:32:20PM +0900, Yoshihiro Shimoda wrote:
+
+> +static int reg_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	struct fixed_voltage_data *priv = rdev_get_drvdata(rdev);
+> +
+> +	return !priv->disabled_in_suspend;
+> +}
+
+This is broken, the state of the regualtor during system runtime need
+have no connection with the state of the regulator during system
+suspend.
+
+> +static int reg_prepare_disable(struct regulator_dev *rdev)
+> +{
+> +	struct fixed_voltage_data *priv = rdev_get_drvdata(rdev);
+> +
+> +	priv->disabled_in_suspend = true;
+> +
+> +	return 0;
+> +}
+
+According to the changelog this is all about reflecting changes in the
+system state done by firmware but there's no interaction with firmware
+here which means this will be at best fragile.  If we need to reflect
+changes in firmware configuration I'd expect there to be some
+interaction with firmware about how it is configured, or at least that
+the configuration would come from the same source.
+
+--0QFb0wBpEddLcDHQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl72CJIACgkQJNaLcl1U
+h9DtxAf/SHBTf/bf1KLIMtfn3QpvX8tAKMTkjKxxLt5uDi44mIbHupi++154iR0i
+PijYvg619uBRWLzS9hvuE0kM5xaILhuYjbL/dOcbIdNTNEMopThp9hK+AnuVqqbW
+m58nR81OX59/+BIe+B4VvH2c/TstwLGn0hKFeCjEpwvN+Weood3jAhawMgx9Q4hc
+kfs632t8Ubsm1/ZtwFZmtKhF+6eikUXQ2Qd6qTtLHkHhaLEw82M86iwv3rxRukei
+aVdIYUPqZ6bFX6mrYLQ4iJd1e9HjEV3HERenkk+eb+VEHsx/TPEaHhnBBcqRX7dO
+6PaaiNsguoaIt+08oLgu8LtkrBFPYA==
+=/fkR
+-----END PGP SIGNATURE-----
+
+--0QFb0wBpEddLcDHQ--
