@@ -2,105 +2,156 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B41EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFA020720
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3703620720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgFZUIQ (ORCPT
+        id S1726160AbgFZUIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:08:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:8814 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgFZUIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:08:16 -0400
-IronPort-SDR: 6CUANNw87mm0T/cC4tTQ5Qu1D4l9JrvWd6EFJO5g+M7FMZIQSGAXfxuAn1IJVJ5t5Wj74Brufz
- t3Wu3Ez7lh3A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="163495099"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="163495099"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 13:08:15 -0700
-IronPort-SDR: DFxhAN9uAkgMQalhsvNo9cBN/6ui9Dzq1fygm1mPOL8AVTs4uAwUqd36H8Rr7JhvRtvzPtOvP2
- Uv4rlwNWx0Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="302432552"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Jun 2020 13:08:15 -0700
-Date:   Fri, 26 Jun 2020 13:08:15 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Thomas Ruf <freelancer@rufusul.de>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Subject: Re: DMA Engine: Transfer From Userspace
-Message-ID: <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
- <84270660.632865.1593072688966@mailbusiness.ionos.de>
+        Fri, 26 Jun 2020 16:08:22 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56592 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgFZUIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:08:20 -0400
+Received: by mail-io1-f71.google.com with SMTP id l22so7005080iob.23
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:08:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dtnkD+akOW0FGGW63gF00wjPRoN0fMAttFlcVW1sdeQ=;
+        b=ihP1+Zx++TGHfi8k2R7IT7kFd9VH2s2h23O2eKel/YUuaJ3FaZwxQwpci9+3na8TVD
+         kQlAsUaKIjDMtKtXozUhvg5BlgSOHU4qfAIJVZfTL2+U0bl9B1Gk5dUesMv4TSL61kaP
+         NzzeQxG9OQGvJnCMxNWpdYYsW7UOqD0b8cUY6Lv9pwvNmAOi6jKns+bF/zEIPRE9rJkH
+         WFAQtY0C1i+PeOrxfZrr01qI0LhYD9/2GCSj195xQ36YgnL6BO8Gk/MwvvhSq9933xmi
+         NQUFL4T5aJzlbEQ/wE8o0G/U1zxujcUSUlHajzYZbaYH7saUEwVAFrWkLhWxGYWplO8b
+         Itjw==
+X-Gm-Message-State: AOAM531TibGn61DCz1Km2qejjvN5J6i9nygzY1ANjN1veJ5eb/IxXAme
+        EEQasZZSxjUUQRBZtdES+CkpDlaSB9N8iuLO79UwohYx7GQd
+X-Google-Smtp-Source: ABdhPJyhhHPTgYRHLjTWhT0wiJEBuw33hT2u+i0HguFA5DDP5BEdzCQmPm15ik/HGLCLO+DY/CMM5QsjLPA041era1o5XCxRescX
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84270660.632865.1593072688966@mailbusiness.ionos.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-Received: by 2002:a92:cf42:: with SMTP id c2mr4946215ilr.13.1593202099251;
+ Fri, 26 Jun 2020 13:08:19 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 13:08:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002e703905a902457b@google.com>
+Subject: general protection fault in pvclock_gtod_notify
+From:   syzbot <syzbot+b46fb19f175c5c7d1f03@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:11:28AM +0200, Thomas Ruf wrote:
-> 
-> > On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
-> > 
-> > 
-> > 
-> > 
-> > On 6/21/2020 12:24 AM, Vinod Koul wrote:
-> > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > >>
-> > >>
-> > >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > >>> Hello,
-> > >>>
-> > >>> is there the possibility of using a DMA engine channel from userspace?
-> > >>>
-> > >>> Something like:
-> > >>> - configure DMA using ioctl() (or whatever configuration mechanism)
-> > >>> - read() or write() to trigger the transfer
-> > >>>
-> > >>
-> > >> I may have supposedly promised Vinod to look into possibly providing
-> > >> something like this in the future. But I have not gotten around to do that
-> > >> yet. Currently, no such support.
-> > > 
-> > > And I do still have serious reservations about this topic :) Opening up
-> > > userspace access to DMA does not sound very great from security point of
-> > > view.
-> > 
-> > What about doing it with DMA engine that supports PASID? That way the user can 
-> > really only trash its own address space and kernel is protected.
-> 
-> Sounds interesting! Not sure if this is really needed in that case...
-> I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
+Hello,
 
-FWIW there is a new pin_user_pages_fast()/unpin_user_page() interface now.
+syzbot found the following crash on:
 
-Ira
+HEAD commit:    4a21185c Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16958f4d100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+dashboard link: https://syzkaller.appspot.com/bug?extid=b46fb19f175c5c7d1f03
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1080e9c5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1685d2e3100000
 
-> But i will do some checks if my code is really suitable to avoid misusage.
-> 
-> Best regards,
-> Thomas
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b46fb19f175c5c7d1f03@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0x1ffffffff135a2b4: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:pvclock_gtod_notify+0x0/0x4d0 arch/x86/kvm/x86.c:7400
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90000007bf8 EFLAGS: 00010046
+RAX: 1ffffffff135a2b4 RBX: 00000000ffffffff RCX: ffffffff814db41b
+RDX: ffffffff8c90a9c0 RSI: 0000000000000000 RDI: ffffffff89ad15a0
+RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffffff8c58aa27
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff89ad15a0
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8ae8dd4e78 CR3: 00000000a1f9e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ update_pvclock_gtod kernel/time/timekeeping.c:578 [inline]
+ timekeeping_update+0x28a/0x4a0 kernel/time/timekeeping.c:672
+ timekeeping_advance+0x663/0x9a0 kernel/time/timekeeping.c:2119
+ tick_do_update_jiffies64.part.0+0x183/0x290 kernel/time/tick-sched.c:101
+ tick_do_update_jiffies64 kernel/time/tick-sched.c:64 [inline]
+ tick_sched_do_timer kernel/time/tick-sched.c:147 [inline]
+ tick_sched_timer+0x22c/0x290 kernel/time/tick-sched.c:1313
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x1d5/0xfc0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0x18f/0x220 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: ff 4c 89 ef e8 63 70 cb f9 e9 8e fe ff ff 48 89 df e8 56 70 cb f9 eb 8a cc cc cc cc e9 07 00 00 00 0f 00 2d 24 79 61 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d 14 79 61 00 f4 c3 cc cc 55 53 e8 a9
+RSP: 0018:ffffffff89a07c70 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 1ffffffff155cb92
+RDX: ffffffff89a86580 RSI: ffffffff87e736f8 RDI: ffffffff89a86e00
+RBP: ffff8880a6b58064 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880a6b58064
+R13: 1ffffffff1340f98 R14: ffff8880a6b58065 R15: 0000000000000001
+ arch_safe_halt arch/x86/include/asm/paravirt.h:150 [inline]
+ acpi_safe_halt+0x8d/0x110 drivers/acpi/processor_idle.c:111
+ acpi_idle_do_entry+0x15c/0x1b0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x3f9/0xab0 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xff/0x960 drivers/cpuidle/cpuidle.c:234
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:345
+ call_cpuidle kernel/sched/idle.c:117 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:207 [inline]
+ do_idle+0x431/0x6a0 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:365
+ start_kernel+0x9cb/0xa06 init/main.c:1043
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+Modules linked in:
+---[ end trace 7b036d48895e60ed ]---
+RIP: 0010:pvclock_gtod_notify+0x0/0x4d0 arch/x86/kvm/x86.c:7400
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90000007bf8 EFLAGS: 00010046
+RAX: 1ffffffff135a2b4 RBX: 00000000ffffffff RCX: ffffffff814db41b
+RDX: ffffffff8c90a9c0 RSI: 0000000000000000 RDI: ffffffff89ad15a0
+RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffffff8c58aa27
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff89ad15a0
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8ae8dd4e78 CR3: 00000000a1f9e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
