@@ -2,81 +2,147 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77880C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A44C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3525A206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6072080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tIuW0RUD"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="dyNgCud3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgFZLcs (ORCPT
+        id S1728681AbgFZLgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
+        Fri, 26 Jun 2020 07:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbgFZLcr (ORCPT
+        with ESMTP id S1726417AbgFZLgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:32:47 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 368D8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9F5sFgP9Bn8cXiYViW8jd6fQuEsP0WlFlPFHdqj9h4w=; b=tIuW0RUDKUL0tHC3tOR/EvjGtb
-        EvACl84kLjv98Gf3yBaaYcFik7AgLAnDjSC8JECnwfVhnsyoY1jWNEC45cBf08vvItZgktkTmk1qH
-        aamaQMyYgdtU7VgxtH/AU6DTD0ALcgQnMSlmnFTspApQsFOKJUUcldcnT5s9Kkrs3XEvt4QJzKXFM
-        z8FmeM549x+GwIrmP6S3hljAC8FvkxacFXNryIH4qPTXL/xSgWgfhJ9hIm7IZ9lvG55ECzdtzGNJe
-        XFh+uhZ9mP1unuTJOMEEVIR4bPJV+uSDsC2GFLkwC4sKR0HoWhKPewoERWd6h+nbmASoB+qri9Co/
-        W0DgtV6w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jomad-00085b-Oh; Fri, 26 Jun 2020 11:32:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4A6F0301DFC;
-        Fri, 26 Jun 2020 13:32:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3C13729C4228A; Fri, 26 Jun 2020 13:32:15 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 13:32:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] x86/mm: Pre-allocate p4d/pud pages for vmalloc area
-Message-ID: <20200626113215.GG117543@hirez.programming.kicks-ass.net>
-References: <20200626093450.27741-1-joro@8bytes.org>
- <20200626110731.GC4817@hirez.programming.kicks-ass.net>
- <20200626111711.GO14101@suse.de>
- <20200626113101.GG4817@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626113101.GG4817@hirez.programming.kicks-ass.net>
+        Fri, 26 Jun 2020 07:36:38 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D900C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:36:35 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 67so463902pfg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=+RhNTdG3sZhXip9jhuj+0eaP8uV70LKtavyxI4TH1vI=;
+        b=dyNgCud3V6L2yvfZUK8udQwHpIeh1tUyQrpxnay7y7KstD9KK+rO5mmQ8ftPH01QlI
+         TeVV4Qh7FDXXKMeTJx0sgBiiIWNFhuhwhb6k97TW42JoPjzKWhBKbJbyq9N+g+IeSVRc
+         6XXJ5A4gRBgPPmeuhtc42p/NEjiNgzG286jZu9DQohZysUoHvGLRi7gYMQe8eekIendB
+         GmDqr12nJ2RHPuYD139/XH3+Wxqy9ITiCDLzOQM/LWKkw7fE9CTJaaPQZCWjUJ3xDtVz
+         Ch0zqHs7yw0veD0+qJk5ANHaHiXvLRtFFq+mjRlcuCPXXVAVnXKGsTGauD69K3Xa8/fE
+         QXJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+RhNTdG3sZhXip9jhuj+0eaP8uV70LKtavyxI4TH1vI=;
+        b=TfyjjacWBwyG1zd8tTi+uw6qZ3Mj9Eca9YraXNOZzItcgMg9fBUpI17snj/FxvuJNZ
+         Yx1zzJEuBAEB/CWAmmLKYBDytHhGG00fkSB8eBETZZHjHUKhyN5V1hOIFI0YrG0N/kro
+         DFujfOTLzDROtMMVsXKRZIzaQl2ggX1AvsKaRB8qyBTaflhI+bj83c+jzjRh/oZHWU37
+         EgEG/5eWxGdKtnr1QEzulyEJPeIcyFpvDiU8AdpfscUXPxsipn8pp7sMcCXp4qv2GT25
+         XMw8J3q8l82RhYgP+1AHMhfqW25KMsnXZanO1jchJr9AnP4EzriK4zcsAWfPXS6IboQg
+         Xpzw==
+X-Gm-Message-State: AOAM5330WNOsgDQ/XgFyVQNnEW5EfgOKbmK9P16irbDk+4u7DytuAKZr
+        su0avDS0sZKo8yLWbzEC6S5M1A==
+X-Google-Smtp-Source: ABdhPJwsORR6WfAerd0xGe1Ixa+gugD76mYtywZ2ovUgUO5sF8J60bxjEUXnb9CX6OGv+cgYzNqmUw==
+X-Received: by 2002:aa7:9184:: with SMTP id x4mr2324308pfa.271.1593171394715;
+        Fri, 26 Jun 2020 04:36:34 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id i191sm26561943pfe.99.2020.06.26.04.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 04:36:33 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v6 0/3] media: Add colors' order and other info over test image
+Date:   Fri, 26 Jun 2020 17:06:15 +0530
+Message-Id: <20200626113618.15280-1-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:31:01PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 26, 2020 at 01:17:11PM +0200, Joerg Roedel wrote:
-> > On Fri, Jun 26, 2020 at 01:07:31PM +0200, Peter Zijlstra wrote:
-> > > Can't we now remove arch_sync_kernel_mappings() from this same file?
-> > 
-> > Only if we panic on allocation failure.
-> 
-> I think we do that in plenty places already, so sure ;-)
+This patchset aims to add a method to display the correct order of
+colors for a test image generated. It does so by adding a function
+which returns a string of correct order of the colors for a test
+pattern. It then adds a control in vimc which displays the string
+over test image. It also displays some other information like saturation,
+hue, contrast brightness and time since the stream started over test
+image generated by vimc.
 
-That is, this is boot time only, right? clone() would return -ENOMEM, as
-it's part of the normal page-table copy.
+Changes since v5:
+	In patch 2:
+	- Add missing EXPORT_SYMBOL_GPL()
+	In patch 3:
+	- Renamed varaibles.
+	- use u64 instead of int for getting current time in
+	  nanoseconds.
+	- Use enum instead of numbers to describe the state of osd_mode
+	  control in code.
+
+Changes since v4:
+        - Add another patch which changes char argument to const char
+        in function tpg_gen_text()
+        - Return const char * from function tpg_g_color_order() in patch
+          2
+        In 3rd patch:
+        - Check font in probe() instead of s_stream()
+        - Use dev_err instead of pr_err
+        - Fix errors in commit message.
+        - Base VIMC_CID_SHOW_INFO on VIVID_CID_OSD_TEXT_MODE
+
+Changes since v3:
+        In 1st patch:
+        -Improved formatting of returned string.
+
+        In 2nd patch:
+         - Add CID prefix in control name and change it to a more
+           generic name.
+         - Rename bool variable to a generic name.
+         - Disable text rendering instead of stopping stream if no
+           font found.
+         - Display more info like VIVID in VIMC.
+
+Changes since v2:
+        In 1st patch:
+        - Create a 'define' to prevent repetition of the common color
+          sequence string.
+        - Use 'fallthrough' on case statement to prevent repetition of
+          code.
+
+Changes since v1:
+        - Divided the patch into two patches.
+        - Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+        - Renamed variables from camelcase to use '_'
+        - prefixed 'media' to the patches.
+
+Kaaira Gupta (3):
+  media: tpg: change char argument to const char
+  media: tpg: Add function to return colors' order of test image
+  media: vimc: Add a control to display info on test image
+
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 40 ++++++++++---
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-core.c   | 10 ++++
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 60 +++++++++++++++++++
+ include/media/tpg/v4l2-tpg.h                  |  3 +-
+ 6 files changed, 108 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
+
