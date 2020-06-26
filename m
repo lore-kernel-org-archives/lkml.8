@@ -2,250 +2,220 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58902088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbHSthgB"
+	by mail.kernel.org (Postfix) with ESMTP id 949E02088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgFZS4A (ORCPT
+        id S1725847AbgFZS6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFZSzy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:55:54 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B769C03E979;
-        Fri, 26 Jun 2020 11:55:53 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n24so10378278ejd.0;
-        Fri, 26 Jun 2020 11:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IQwkxOOhqcLU58zMWRLZm0lsX7lS4aR3d1Ike0aCDWE=;
-        b=YbHSthgBD0hCv2+QKG0oolKQJ1JEHalVYH8VJn/pyW2gpQKO71nOf8BHHfHgD+fi2I
-         GaiNfuv2NzQFqEnQ6zoTFLsSRcSACLgKJA+xBY2FS9hX0JS/PNk1cdCj59JnnFoYtybv
-         A0mowpuUgXnQqFZVwQb4UZr5KZjgRwnW9g1FLR/cqOt5uHCGl9gBPiywBI0uSK7Pr/j/
-         MkGv9F5tHO7zm5aaJ6PU6rQocL5Ci6umepSaK1LX/pw8RGrI3TROu345GeviF8wXYQkH
-         b+fYC8xbVtrfK8KnF++csX2Iv19tZ6iFskBA3TOIIXtj5WUsfxQX2Yn+4ngKA30+hHIe
-         iRLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IQwkxOOhqcLU58zMWRLZm0lsX7lS4aR3d1Ike0aCDWE=;
-        b=i9U38mYHziLByl1tHWO3imZIqwUulA3fdBJf0vx7UMJP06y+mrIgTEfR3MXi5v5PP2
-         9jTaPHUUNIlYu2zPaGpw/JWYXi6ME0xPHGau0BK4BgbDAiziviC3OIqlYwMaWNpLMcj8
-         PinLORMtHxHrxKuKYmla0hgrhGbdnyOSdWfnM6ymVjNkbumu2HDpR0saOXbBroyGY4Gg
-         Kop8UB1F8FoSzvL1ePt+BVBOXQiZeGDlTQmpfWgAcZ8xd1IXfM1dr4+/bQxOWCqfsTql
-         d4mEt2LFwxRoiva8TmTgHfSLsRhkEKjF/ihD2rbx21QP68oHOWDUAoQ65epX6yT1S6Ra
-         Z1Sg==
-X-Gm-Message-State: AOAM531oWFAPWaWm7DDm2BKbGnBDgLtj2DqQ9ijrWfR9M/VYgvVTwNOu
-        Uns1BUd6QHTGM+BrfE4V5pxDpWeU
-X-Google-Smtp-Source: ABdhPJzU3b90aYYQmZjbXp6nxucMm4gApi0XOaXCCMONRIczHtQEKs7lnenefjdnIPECNZjPwpVvUg==
-X-Received: by 2002:a17:906:c155:: with SMTP id dp21mr3645756ejc.92.1593197751899;
-        Fri, 26 Jun 2020 11:55:51 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id oz7sm6490168ejb.96.2020.06.26.11.55.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 11:55:51 -0700 (PDT)
-Subject: Re: [EXT] Re: [PATCH net-next v3 2/7] dt-bindings: net: add backplane
- dt bindings
-To:     Florinel Iordache <florinel.iordache@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
- <7035531d-3e74-6fd4-0df6-fa730998b065@gmail.com>
- <AM0PR04MB5443F5EDD551C7613AF21EF4FB950@AM0PR04MB5443.eurprd04.prod.outlook.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <b62166dc-c38c-3287-f469-342ca81b4f6f@gmail.com>
-Date:   Fri, 26 Jun 2020 11:55:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 26 Jun 2020 14:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgFZS6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:58:23 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F152053B;
+        Fri, 26 Jun 2020 18:58:21 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 14:58:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
+Message-ID: <20200626145819.0d3cae3c@oasis.local.home>
+In-Reply-To: <304619857.14491.1593195230002.JavaMail.zimbra@efficios.com>
+References: <20200625094454.732790f7@oasis.local.home>
+        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+        <20200625143525.2f3a2902@oasis.local.home>
+        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
+        <20200625223611.1dbb3b35@oasis.local.home>
+        <20200625233552.2c8a0d1e@oasis.local.home>
+        <20200626095801.14cfa8a3@oasis.local.home>
+        <304619857.14491.1593195230002.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <AM0PR04MB5443F5EDD551C7613AF21EF4FB950@AM0PR04MB5443.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/20 5:55 AM, Florinel Iordache wrote:
->> -----Original Message-----
->> From: Florian Fainelli <f.fainelli@gmail.com>
->> Sent: Tuesday, June 23, 2020 1:21 AM
->> To: Florinel Iordache <florinel.iordache@nxp.com>; davem@davemloft.net;
->> netdev@vger.kernel.org; andrew@lunn.ch; hkallweit1@gmail.com;
->> linux@armlinux.org.uk
->> Cc: devicetree@vger.kernel.org; linux-doc@vger.kernel.org;
->> robh+dt@kernel.org; mark.rutland@arm.com; kuba@kernel.org;
->> corbet@lwn.net; shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; Madalin
->> Bucur (OSS) <madalin.bucur@oss.nxp.com>; Ioana Ciornei
->> <ioana.ciornei@nxp.com>; linux-kernel@vger.kernel.org
->> Subject: [EXT] Re: [PATCH net-next v3 2/7] dt-bindings: net: add backplane dt
->> bindings
->>
->> Caution: EXT Email
->>
->> On 6/22/20 6:35 AM, Florinel Iordache wrote:
->>> Add ethernet backplane device tree bindings
->>>
->>> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
->>> ---
->>
->> [snip]
->>
->>> +properties:
->>> +  $nodename:
->>> +    pattern: "^serdes(@[a-f0-9]+)?$"
->>> +
->>> +  compatible:
->>> +    oneOf:
->>> +      - const: serdes-10g
->>> +        description: SerDes module type of 10G
->>
->> Since this appears to be memory mapped in your case, it does not sound like
->> "serdes-10g" alone is going to be sufficient, should not we have a SoC specific
->> compatible string if nothing else?
-> 
-> My intention was to make it generic enough to be used by any SerDes (Serializer/Deserializer) block.
-> So I was thinking that specifying serdes as HW block and the type: 10g (or 28g for example) should be enough.
-> I could add SoC specific (or family of SoC) to the compatible string
-> like for example Freescale/NXP QorIQ Soc: "fsl,ls1046a-serdes-10g" or "fsl,qoriq-serdes-10g"
+On Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-It does not seem to me that the register interface is going to be
-anything but generic, therefore using SoC specific compatible strings
-would be a safer and forward looking approach. If a generic/fall back
-compatibility string can be added, it can be added later on, that is
-much less problematic than the opposite.
+> > 
+> > static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
+> > {
+> >	unsigned long top, bottom;
+> > 
+> >	top = local_read(&t->top);
+> >	bottom = local_read(&t->bottom);
+> > 
+> >	*cnt = rb_time_cnt(top);
+> > 
+> >	if (*cnt != rb_time_cnt(bottom))
+> >		return false;
+> > 
+> >	*ret = rb_time_val(top, bottom);
+> >	return true;
+> > }  
+
+BTW, I've decided to include this in my final patch series which I'm
+finishing up now.
 
 > 
->>
->>> +
->>> +  reg:
->>> +    description:
->>> +      Registers memory map offset and size for this serdes module
->>> +
->>> +  reg-names:
->>> +    description:
->>> +      Names of the register map given in "reg" node.
->>
->> You would also need to describe how many of these two properties are
->> expected.
+> If __rb_time_read or rb_time_cmpxchg are used in an interrupt over
+> rb_time_set (between setting top and bottom), those will never succeed.
 > 
-> Only one memory map is required since the memory maps for lanes are individually described
-> (as it is documented in serdes-lane.yaml).
-> I will specify this.
-
-Then I believe you need to advertise that with maxItems property to
-denote how many.
-
+> How is this case handled ?
 > 
->>
->>> +
->>> +  little-endian:
->>> +    description:
->>> +      Specifies the endianness of serdes module
->>> +      For complete definition see
->>> +      Documentation/devicetree/bindings/common-properties.txt
->>
->> This is redundant with the default binding then, and if it is not already in the
->> common YAML binding, can you please add little-endian and native-endian
->> added there?
-> 
-> The endianness of the serdes block must be specified as little-endian or big-endian.
-> The serdes endianness may be different than the cores endianness.
-> This is also the case for QorIQ LS1043/LS1046 platforms with ARM cores which
-> are little endian but serdes block is big endian.
-> So endianness must be specified in device tree in order for the driver to know how to access it.
 
-I understand that part, my point was more than these properties are
-generic properties, therefore it should not be necessary to provide a
-description, and their definition belongs in the common properties
-binding. If the common binding does not have a definition for those
-(that is, in a YAML way), then please add them there.
--- 
-Florian
+The three places using cmpxchg:
+
+In the discard code (which is only called when nesting already happened
+as it uses per_cpu buffers first, as they are faster), thus this
+requires a double nest:
+
+
+	if (bpage->page == (void *)addr && rb_page_write(bpage) == old_index) {
+		unsigned long write_mask =
+			local_read(&bpage->write) & ~RB_WRITE_MASK;
+		unsigned long event_length = rb_event_length(event);
+
+		/* Something came in, can't discard */
+		if (!rb_time_cmpxchg(&cpu_buffer->write_stamp,
+				     write_stamp, write_stamp - delta))
+			return 0;
+
+
+It fails to do the discard and fills the buffer with "padding".
+
+Second usage:
+
+		/* SLOW PATH - Interrupted between A and C */
+		a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
+		ts = rb_time_stamp(cpu_buffer->buffer);
+		barrier();
+ /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+		    a_ok && after < ts) {
+			/* Nothing came after this event between C and E */
+			info->delta = ts - after;
+			(void)rb_time_cmpxchg(&cpu_buffer->write_stamp, after, info->ts);
+			info->ts = ts;
+		} else {
+			info->delta = 0;
+
+Not only did this event interrupt something, but something interrupt
+this event. Punt and just use the delta zero.
+
+Third usage:
+
+		if (unlikely(info->ts != save_before)) {
+			/* SLOW PATH - Interrupted between C and E */
+
+			a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
+			RB_WARN_ON(cpu_buffer, !a_ok);
+
+			/* Write stamp must only go forward */
+			if (save_before > after) {
+				/*
+				 * We do not care about the result, only that
+				 * it gets updated atomically.
+				 */
+				(void)rb_time_cmpxchg(&cpu_buffer->write_stamp, after, save_before);
+			}
+		}
+
+It's where we want to update the write stamp to the latest, and which
+it already wrote to the write_stamp. Notice there's even a warning that
+will cause the ring buffer to crash (fail) if it's not OK. Which I
+triggered when I forgot to handle the case where reading could get
+corrupted by being interrupted, which I fixed soon after ;-)
+
+As for the save_before. This event writes to the before after reading
+it, so the before_stamp had better be ok (and there's a warning there
+too).
+
+Here's the read locations:
+
+In the discard as well. If it can't read it, it will just fill with padding.
+
+	if (!rb_time_read(&cpu_buffer->write_stamp, &write_stamp))
+		return 0;
+
+
+On reserving the event:
+
+	barrier();
+	b_ok = rb_time_read(&cpu_buffer->before_stamp, &before);
+	a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
+	barrier();
+
+[..]
+	if (unlikely(!a_ok || !b_ok || (before != after && w)))
+		info->add_timestamp |= RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND;
+
+It treats these failed reads as interrupting the event and uses the
+full time stamp.  Thanks to your suggestion about combining the the
+case where I went back to the delta, I don't need these values anymore.
+
+	/* See if we shot pass the end of this buffer page */
+	if (unlikely(write > BUF_PAGE_SIZE)) {
+		if (tail != w) {
+			/* before and after may now different, fix it up*/
+			b_ok = rb_time_read(&cpu_buffer->before_stamp, &before);
+			a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
+			if (a_ok && b_ok && before != after)
+				(void)rb_time_cmpxchg(&cpu_buffer->before_stamp, before, after);
+		}
+		return rb_move_tail(cpu_buffer, tail, info);
+	}
+
+This is when we overrun the sub buffer. This is more of a clean up.
+because I found that because we always write to before_stamp, and then
+go back to the page, it triggered it as being different. The only
+reason we want them to be the same is to prevent a unnecessary time
+stamp at the beginning of the page, which already stores a full time
+stamp.
+
+ /*E*/		s_ok = rb_time_read(&cpu_buffer->before_stamp, &save_before);
+		RB_WARN_ON(cpu_buffer, !s_ok);
+
+As mentioned, this before_stamp was written to by this event, and is
+now used to know if it was interrupted since.
+
+I think I hit all the locations, and that is how it handles not being
+able to read it. The important thing is, it must be able to read it if
+it was written by itself or an event that interrupted it. And it must
+be able to know if it is invalid, and that can only happen if the event
+interrupted the writing of it.
+
+Cheers!
+
+-- Steve
