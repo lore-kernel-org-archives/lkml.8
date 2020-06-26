@@ -2,100 +2,77 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34252C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A1720791
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593178390;
-	bh=NmsoXRgCssSYs4IUhkGQnFo/FnSkjhGhZ5xT0o/o4oU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1SdRxCAw6t6jPRRACz9a+6P/jPoX08znTry8CHY1LqCFri8naE1zwuWcpKhY2M+ZF
-	 nwN0o/XKBSDcosFOPckrdMaqOzH8xwVjUb+7l7Ru4M6roIM6HAH5tdyTJx3RYRMqsG
-	 NnUCArK8D5FgBLvAHKDylIodHZkKuc7xBhf4WXIU=
+	by mail.kernel.org (Postfix) with ESMTP id 13D8B20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgFZNdI (ORCPT
+        id S1728493AbgFZNd4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 09:33:56 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:40838 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbgFZNdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:33:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF6120679;
-        Fri, 26 Jun 2020 13:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593178387;
-        bh=NmsoXRgCssSYs4IUhkGQnFo/FnSkjhGhZ5xT0o/o4oU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WPL7Q5abEi1z5J0y3JMV3lT4gYPjPxIw1x38FdN8vWnc7OGwPJ9K+siHB3q7N5kSE
-         fSF21zITGdt7hRL1l+Agh7N5APMWnBpIVCRee/7+D5tjU5cauTtde6rI1UEIRN0Yyq
-         EzJJor08cnbf+Q9kO3lXjZWfGRMccq1vwU48woF4=
-Date:   Fri, 26 Jun 2020 14:33:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@ti.com>,
-        Keerthy <j-keerthy@ti.com>, AnilKumar Ch <anilkumar@ti.com>,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 6/9] regulator: tps65217-regulator: Use the returned
- value of tps65217_reg_read()
-Message-ID: <20200626133304.GB5289@sirena.org.uk>
-References: <20200626065738.93412-1-lee.jones@linaro.org>
- <20200626065738.93412-7-lee.jones@linaro.org>
+        id S1725925AbgFZNdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:33:55 -0400
+X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jun 2020 09:33:55 EDT
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 6C3D515360; Fri, 26 Jun 2020 14:33:54 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: core: check returned size of emulated smbus block read
+References: <20200613104109.2989-1-mans@mansr.com>
+        <20200626082208.GA4559@kunai>
+Date:   Fri, 26 Jun 2020 14:33:54 +0100
+In-Reply-To: <20200626082208.GA4559@kunai> (Wolfram Sang's message of "Fri, 26
+        Jun 2020 10:22:08 +0200")
+Message-ID: <yw1x1rm2vtml.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
-Content-Disposition: inline
-In-Reply-To: <20200626065738.93412-7-lee.jones@linaro.org>
-X-Cookie: You can't get there from here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wolfram Sang <wsa@the-dreams.de> writes:
 
---tjCHc7DPkfUGtrlw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Sat, Jun 13, 2020 at 11:41:09AM +0100, Mans Rullgard wrote:
+>> If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
+>> them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
+>
+> Out of interest, which driver did you use?
 
-On Fri, Jun 26, 2020 at 07:57:35AM +0100, Lee Jones wrote:
+I saw it with the mv64xxx (Allwinner) and omap (Beaglebone) drivers.
+From a quick look, it seems like quite a few others have the same
+problem.
 
-> Until now the aforementioned return value has been ignored.
+>> on some random device to return an arbitrary value in the first
+>> byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
+>> will happily write past the end of the supplied data buffer, thus
+>> causing Bad Things to happen.  To prevent this, check the size
+>> before copying the data block and return an error if it is too large.
+>
+> Good catch, we were relying on the drivers too much here. I think the
+> same fix is needed for the non-emulated case as well. Will have a look.
+>
+>> +			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
+>> +				dev_err(&adapter->dev,
+>> +					"Invalid block size returned: %d\n",
+>> +					msg[1].buf[0]);
+>> +				status = -EINVAL;
+>
+> I changed this to -EPROTO as described in
+> Documentation/i2c/fault-codes.rst.
+>
+> Applied to for-current, thanks!
+>
 
-This is only aforementioned in the subject.
-
->  		/* Store default strobe info */
->  		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
-> +		if (ret)
-> +			return ret;
-> +
-
-We should really be logging an error there rather than just returning,
-that way it's a bit more apparent to someone debugging things what went
-wrong if there is actually a problem.
-
---tjCHc7DPkfUGtrlw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl71+Q8ACgkQJNaLcl1U
-h9Cv/Qf/cbpYSJEN3jQQV+GzYVRgKls1QC+R6WOmUqdD1mxNB8EKYK+8Bs0aZpYu
-TPOF18P4n5abjmA+kGQI3GMs3CtH3necUWYX+OQa/Fwm7jTEeeknggKxPAVkSkgv
-KivMKlw1QwmPrqjMkSBa4ureSmHNxTunw3UR6wcPyD/qW3LZOyqzqgfPa9hh81N/
-cFkARnxTTraSFxGT1rEr99aQ1Bo/weYJJiFLrX2D/w9UG1R+SE5Xy6Qb/XYQoXKo
-MyaOPHu8CrC7QgrTiCxuhO4WugOVp3+yGo6QfUgQaikdOJxj1XMM03XazMyDuIBw
-x9MJmWAaFVaM3nQhTEfznSH1haFGjw==
-=0sq/
------END PGP SIGNATURE-----
-
---tjCHc7DPkfUGtrlw--
+-- 
+Måns Rullgård
