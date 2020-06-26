@@ -2,230 +2,178 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D122AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52987C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF7120C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1932137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gTf/NCTs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RgRGcSMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgFZVKs (ORCPT
+        id S1726422AbgFZVLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48922 "EHLO
+        Fri, 26 Jun 2020 17:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgFZVKp (ORCPT
+        with ESMTP id S1725835AbgFZVLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:10:45 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49F3C03E97E
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:10:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l63so5440646pge.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:10:45 -0700 (PDT)
+        Fri, 26 Jun 2020 17:11:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AB8C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:11:10 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a6so9633887wmm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:11:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=09jAsYJwkYqWgGeIN0AmuyG0GtAikBUajiEMgtPwz8E=;
-        b=gTf/NCTsGV+cR4OJogDUOEozyx3Kt5iCbwGn5JHed6Y70CEMvMZc/luJ26cOdFy8ke
-         OYW1GQ1OMcwz4Z9uUfrZXiebF+fXcJ51ZHIJ5wKqAD3oNMe82EuutU5NiXcvHMaXW5Oc
-         JbV70b8V5sFO6Va9uJXEMrt7TP12KFXr+/JMcgwCsQQKc43QlYFlNEaFxn9MFIxPvy5o
-         lukPR0L3ef5ZfH+cacvZzAmasnZzJdLNCH16FmhQOFYZuhrMsqNjvR8pH0z6EgyWG/s6
-         p6c02u2KroQ6jxAyHz0+CyO02PEGoJ9hPkCM5rdhl8cJB6+rJCU9gTlYgFYmqoi4mKsG
-         brww==
+        bh=JheVoZwO8k0jmPVu/g3KXqdNyf9JfGI9W35mhlnDf2o=;
+        b=RgRGcSMJzEnnjiJ+aeyEG+dm/0hDQFXMDTqba3ELjSSenFDq2jLUT1okGHoDbwJCFY
+         c2kPb+Rn3T7qU0oeW/j85BTd2MvYCCDIq3sFBAq0SkGQAktbDYL8HcyzlLuRMD8sGCyi
+         8/5gq+Zj1/2e+oVne5tEb/lBxuiSuPEZfAbQXDToJNl5JEpnzECw8goaOWXSJTrmXEEx
+         r/rvcrLbufVn3daAyjyKrl/O/uNj9EaYAf6+vDCaFOZLll0oaKixNlCUDSM7P7z9TeJl
+         5S4WNFEQu2vBQP9pV/XRVi9gVl+T/nH8Q8Vzwt/tr6kcOfKsZXpCeNDZYk+CFgZL8qfS
+         PYGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=09jAsYJwkYqWgGeIN0AmuyG0GtAikBUajiEMgtPwz8E=;
-        b=cDB3nIxNHrx2FJFaLjLpz6csx1fEZ0HBR0RdOCNVV21KgXAkoITiYOcP3Zc7gjrPRE
-         gWDZQEx2CTgeEtma9TiD2U29nUmxAbgdVR29+XvuIMPp8D9E2ps6Aor8TOKPEsTH2FQE
-         QxbH7Gokstty8HXTZu675ZQmy10zTZlI481h3fp0+XcDvxRI22HlrCPkoPp8xnfxDtfo
-         QYo3FXvU8dGzvjmlWAcD5q0Kg4qSngiulD2yfIBJT6TEd7q7pikVikrxGzjDut56Dhfi
-         GxkCc7sZdnI9CuFy22GNJLngVWEHvgtsukSwa66pPnmBHHkiaRE67G0X0p960/ucHz3i
-         D1Ow==
-X-Gm-Message-State: AOAM5314Lb/4wQDyKGnAyxSSnqLBErLUEoFmiienudUmnMN5YkCiNzK0
-        LR8/0QRuLkz+nI8eNN6Y8g8rNnR/kTRdKqjX4ZXC0w==
-X-Google-Smtp-Source: ABdhPJwuegEmd5G894HChNiLM7h4gJuaN8Wc5CXNSzQMEhNA4KwPQMXU98hdZFQs5nkdIQPqCAyGMKTUoIv9MhK2mDs=
-X-Received: by 2002:a62:1d52:: with SMTP id d79mr4436505pfd.106.1593205844721;
- Fri, 26 Jun 2020 14:10:44 -0700 (PDT)
+        bh=JheVoZwO8k0jmPVu/g3KXqdNyf9JfGI9W35mhlnDf2o=;
+        b=Isl0s0CqUtx4uQSDnu0nqN5aNgocCKrdrUEfOfagcFewgHifeZPyUJhSq3EAgmpERr
+         wtKiEgEn8jsEISkWb6+Cn8b9YCJTq5cOD74qh3rQ112kMPW6kDnWLG/cG6aE09BNSwsc
+         vRJm86dwq7fqKznwDwAKkUEB7R9EZlv/j2MXa6+n3Y68NERnrpk09ZiM8ltjeDsuWvrc
+         J/F8M2F2PoTqGkFggrF3lXZ347I8VugZZOceszst+/IXEN5SSoBhhDc4fpzA0PIfQHzU
+         zR/hdMoUk3mf9lxZXw+TiVs6vx39wD/l46w2k1+2YXJlvBcs5Dsot57oU7DHMV4Pq8/6
+         AFYA==
+X-Gm-Message-State: AOAM5320EUwgHR0Z9AAIyXqyAcVpzw0gucNfayZ9L9BfBeM63bsOCqsY
+        gXqGOJgWx9sAW6FaW1TQvPAf2Oya2GNHdx3TVC4hPA==
+X-Google-Smtp-Source: ABdhPJx+/RcSsWHs5yrxH7FA7fqliEB/cSlY+1TVVHqcZMoTEGw/E1qcLpltzQ6bFBBLbI5ln1h1pAO8Y74IIFmc+Dw=
+X-Received: by 2002:a1c:7e94:: with SMTP id z142mr5275559wmc.124.1593205868736;
+ Fri, 26 Jun 2020 14:11:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624205550.215599-1-brendanhiggins@google.com> <CABVgOSnkYfXZ1YELsXAjA0GzCQT9YWO8x+Tssw_+avkDdBB4aw@mail.gmail.com>
-In-Reply-To: <CABVgOSnkYfXZ1YELsXAjA0GzCQT9YWO8x+Tssw_+avkDdBB4aw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 26 Jun 2020 14:10:33 -0700
-Message-ID: <CAFd5g45x04Q+r+1M+kwqkp1DsY9PjJN+Gs0Q+MkOdYTz0SdzKw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] kunit: create a centralized executor to dispatch
- all KUnit tests
-To:     David Gow <davidgow@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com,
-        will@kernel.org, monstr@monstr.eu,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        paulus@samba.org, chris@zankel.net, jcmvbkbc@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org
+References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-8-jolsa@kernel.org>
+In-Reply-To: <20200626194720.2915044-8-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 26 Jun 2020 14:10:57 -0700
+Message-ID: <CAP-5=fUB3cs7Px6NkpBtWaWdR5-qQGAd2hAGjQjyMJt=bDKXOA@mail.gmail.com>
+Subject: Re: [PATCH 07/10] perf tools: Collect other metrics in struct metric_expr
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 6:47 PM David Gow <davidgow@google.com> wrote:
+On Fri, Jun 26, 2020 at 12:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Glad this is back out there: a couple of minor nitpicks below:
+> Add 'other' metrics into struct metric_expr object,
+> so they are accessible when computing the metric.
 >
-> On Thu, Jun 25, 2020 at 4:58 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > ## TL;DR
-> >
-> > This patchset adds a centralized executor to dispatch tests rather than
-> > relying on late_initcall to schedule each test suite separately along
-> > with a couple of new features that depend on it.
-> >
-> > Also, sorry for the extreme delay in getting this out. Part of the delay
-> > came from finding that there were actually several architectures that
-> > the previous revision of this patchset didn't work on, so I went through
-> > and attempted to test this patchset on every architecture - more on that
-> > later.
-> >
-> > ## What am I trying to do?
-> >
-> > Conceptually, I am trying to provide a mechanism by which test suites
-> > can be grouped together so that they can be reasoned about collectively.
-> > The last two of three patches in this series add features which depend
-> > on this:
-> >
-> > PATCH 8/11 Prints out a test plan[1] right before KUnit tests are run;
-> >            this is valuable because it makes it possible for a test
-> >            harness to detect whether the number of tests run matches the
-> >            number of tests expected to be run, ensuring that no tests
-> >            silently failed. The test plan includes a count of tests that
-> >            will run. With the centralized executor, the tests are
-> >            located in a single data structure and thus can be counted.
-> >
->
-> This appears to actually be patch 9/11.
->
-> > PATCH 9/11 Add a new kernel command-line option which allows the user to
-> >            specify that the kernel poweroff, halt, or reboot after
-> >            completing all KUnit tests; this is very handy for running
-> >            KUnit tests on UML or a VM so that the UML/VM process exits
-> >            cleanly immediately after running all tests without needing a
-> >            special initramfs. The centralized executor provides a
-> >            definitive point when all tests have completed and the
-> >            poweroff, halt, or reboot could occur.
->
-> This seems to have been merged into the above patch (9/11).
+> Storing just name and expression itself, so the metric
+> can be resolved and computed.
 
-Whoops, good catch.
+Nit, other vs something like referenced_metric but otherwise lgtm.
 
-Fixed in v5!
+Acked-by: Ian Rogers
 
-> > In addition, by dispatching tests from a single location, we can
-> > guarantee that all KUnit tests run after late_init is complete, which
-> > was a concern during the initial KUnit patchset review (this has not
-> > been a problem in practice, but resolving with certainty is nevertheless
-> > desirable).
-> >
-> > Other use cases for this exist, but the above features should provide an
-> > idea of the value that this could provide.
-> >
-> > ## Changes since last revision:
-> >  - On the last revision I got some messages from 0day that showed that
-> >    this patchset didn't work on several architectures, one issue that
-> >    this patchset addresses is that we were aligning both memory segments
-> >    as well as structures in the segments to specific byte boundaries
-> >    which was incorrect.
-> >  - The issue mentioned above also caused me to test on additional
-> >    architectures which revealed that some architectures other than UML
-> >    do not use the default init linker section macro that most
-> >    architectures use. There are now several new patches (2, 3, 4, and
-> >    6).
-> >  - Fixed a formatting consistency issue in the kernel params
-> >    documentation patch (9/9).
-> >  - Add a brief blurb on how and when the kunit_test_suite macro works.
-> >
-> > ## Remaining work to be done:
-> >
-> > The only architecture for which I was able to get a compiler, but was
-> > apparently unable to get KUnit into a section that the executor to see
-> > was m68k - not sure why.
-> >
-> > Alan Maguire (1):
-> >   kunit: test: create a single centralized executor for all tests
-> >
-> > Brendan Higgins (10):
-> >   vmlinux.lds.h: add linker section for KUnit test suites
-> >   arch: arm64: add linker section for KUnit test suites
-> >   arch: microblaze: add linker section for KUnit test suites
-> >   arch: powerpc: add linker section for KUnit test suites
-> >   arch: um: add linker section for KUnit test suites
-> >   arch: xtensa: add linker section for KUnit test suites
-> >   init: main: add KUnit to kernel init
-> >   kunit: test: add test plan to KUnit TAP format
-> >   Documentation: Add kunit_shutdown to kernel-parameters.txt
-> >   Documentation: kunit: add a brief blurb about kunit_test_suite
-> >
-> >  .../admin-guide/kernel-parameters.txt         |   8 ++
-> >  Documentation/dev-tools/kunit/usage.rst       |   5 ++
-> >  arch/arm64/kernel/vmlinux.lds.S               |   3 +
-> >  arch/microblaze/kernel/vmlinux.lds.S          |   4 +
-> >  arch/powerpc/kernel/vmlinux.lds.S             |   4 +
-> >  arch/um/include/asm/common.lds.S              |   4 +
-> >  arch/xtensa/kernel/vmlinux.lds.S              |   4 +
-> >  include/asm-generic/vmlinux.lds.h             |   8 ++
-> >  include/kunit/test.h                          |  73 ++++++++++++-----
-> >  init/main.c                                   |   4 +
-> >  lib/kunit/Makefile                            |   3 +-
-> >  lib/kunit/executor.c                          |  63 +++++++++++++++
-> >  lib/kunit/test.c                              |  13 +--
-> >  tools/testing/kunit/kunit_kernel.py           |   2 +-
-> >  tools/testing/kunit/kunit_parser.py           |  74 +++++++++++++++---
-> >  .../test_is_test_passed-all_passed.log        | Bin 1562 -> 1567 bytes
-> >  .../test_data/test_is_test_passed-crash.log   | Bin 3016 -> 3021 bytes
-> >  .../test_data/test_is_test_passed-failure.log | Bin 1700 -> 1705 bytes
-> >  18 files changed, 226 insertions(+), 46 deletions(-)
-> >  create mode 100644 lib/kunit/executor.c
-> >
-> >
-> > base-commit: 4333a9b0b67bb4e8bcd91bdd80da80b0ec151162
-> > prerequisite-patch-id: 2d4b5aa9fa8ada9ae04c8584b47c299a822b9455
-> > prerequisite-patch-id: 582b6d9d28ce4b71628890ec832df6522ca68de0
-> >
-> > These patches are available for download with dependencies here:
-> >
-> > https://kunit-review.googlesource.com/c/linux/+/3829
-> >
-> > [1] https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
-> > [2] https://patchwork.kernel.org/patch/11383635/
-> >
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/metricgroup.c | 27 +++++++++++++++++++++++++++
+>  tools/perf/util/metricgroup.h |  6 ++++++
+>  2 files changed, 33 insertions(+)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index f88fd667cc78..a5d5dcc1b805 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -83,6 +83,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
+>         struct metric_expr *expr, *tmp;
+>
+>         list_for_each_entry_safe(expr, tmp, &me->head, nd) {
+> +               free(expr->metric_other);
+>                 free(expr);
+>         }
+>
+> @@ -243,6 +244,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>
+>         list_for_each_entry (eg, groups, nd) {
+>                 struct evsel **metric_events;
+> +               struct metric_other *other = NULL;
+>
+>                 metric_events = calloc(sizeof(void *),
+>                                 hashmap__size(&eg->pctx.ids) + 1);
+> @@ -274,6 +276,31 @@ static int metricgroup__setup_events(struct list_head *groups,
+>                         free(metric_events);
+>                         break;
+>                 }
+> +
+> +               /*
+> +                * Collect and store collected 'other' expressions
+> +                * for metric processing.
+> +                */
+> +               if (eg->other_cnt) {
+> +                       struct eother *eo;
+> +
+> +                       other = zalloc(sizeof(struct metric_other) * (eg->other_cnt + 1));
+> +                       if (!other) {
+> +                               ret = -ENOMEM;
+> +                               free(metric_events);
+> +                               free(other);
+> +                               break;
+> +                       }
+> +
+> +                       i = 0;
+> +                       list_for_each_entry(eo, &eg->other, list) {
+> +                               other[i].metric_name = eo->metric_name;
+> +                               other[i].metric_expr = eo->metric_expr;
+> +                               i++;
+> +                       }
+> +               };
+> +
+> +               expr->metric_other = other;
+>                 expr->metric_expr = eg->metric_expr;
+>                 expr->metric_name = eg->metric_name;
+>                 expr->metric_unit = eg->metric_unit;
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+> index 8315bd1a7da4..3a1e320cb2d3 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -18,12 +18,18 @@ struct metric_event {
+>         struct list_head head; /* list of metric_expr */
+>  };
+>
+> +struct metric_other {
+> +       const char *metric_name;
+> +       const char *metric_expr;
+> +};
+> +
+>  struct metric_expr {
+>         struct list_head nd;
+>         const char *metric_expr;
+>         const char *metric_name;
+>         const char *metric_unit;
+>         struct evsel **metric_events;
+> +       struct metric_other *metric_other;
+>         int runtime;
+>  };
+>
+> --
+> 2.25.4
+>
