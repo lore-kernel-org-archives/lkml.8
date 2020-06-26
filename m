@@ -2,133 +2,99 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D918AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC11206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAUUdhfO"
+	by mail.kernel.org (Postfix) with ESMTP id A95A120CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593144758;
+	bh=mH3fgegvAMw88KIXqT9GoWN67oTIoBSRBIWsIiPCOXI=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=WMbbZoR2rZq7USxMjDvrtKZQM8jECI59UtG1z3eIWN7wnZqz/RPPpDjLje5wGBFvq
+	 SblBqgz5/WTTBzwlG9jzP/RH1TjpmXbFqBEDLpB9soOpP/p/VMMjxbFoQ75cYBc1D0
+	 YXz6y0K5p5IB3qVPpqXJvcITT+qDY0Hnp61JhEus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgFZEKa (ORCPT
+        id S1726532AbgFZEMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZEKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:10:30 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46121C08C5C1;
-        Thu, 25 Jun 2020 21:10:30 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m2so7391218otr.12;
-        Thu, 25 Jun 2020 21:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yiGoscDyaEFK2a4Hhbr5oo8EKClzH7wIyqZRrKV4JjQ=;
-        b=NAUUdhfOaao8gFQRyvS+BVKpdzkwnAWjQO0msoPeaH+N59nmgmh8+cRU4X+85nL257
-         CdVAmIszSqOjEL1DcPfXzbSap0JSIJUTRT3W85HflgSZyzpA1rWzibtEdEzWhyvFGIjA
-         v/VspvwX0KXKEQZisE7l4xiRZywdeWyq5msgMw12SzM140IBoZnFvhgeG+CjO89OViPs
-         lNZdP+9mf454BPIDt5kqllT/Z9VKGwGMdqXaWsRLfFxOaYulAjMEFNPJnPlFRtNpcm7d
-         /TVzm8hhnSjVnyxl449qwNnw5Xqg/V2m0WJrS0s9jUNNpU02xr3mvV5RqfvlCH5GmRKu
-         xWcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yiGoscDyaEFK2a4Hhbr5oo8EKClzH7wIyqZRrKV4JjQ=;
-        b=cXH/BEZXaTRkUEaUXOFw8o2BERgoCejES3mTXJcPMb+JDYKRH0pzi2o+1NkjNKEmU4
-         mx4jXhhlqB4j4YUbCiIOJDMagp/1ZIGe5jLmh/iHgRl19BV4ZXXD7dhw+ZtZXWI47zE3
-         KCdyXCzyX7tMyoidXCZp0p1GuF32wQcgiLkqym55X3SC5ZwivTUNZDbFjLzwqzTJo3nJ
-         /Oyhs4KFj+6xNeYnGGvphCXEpATwxfE9AObjNCOxXNOiFJJm+ZGN8lkE62Zk4m0Awvm8
-         EddkMff063BA1jAKQjm4ShK7qMX152/0z0qlIwAwudJDpxk+xDlqrAeN/zJEOK2wc6Ha
-         euyQ==
-X-Gm-Message-State: AOAM531gKskPkfDDMqUFHYCRY8uRWk8in7nU2+uC91Yp+h3DBWJf0KuS
-        UUwKRlk/dT12oMZu1qg1RA3+gwoY
-X-Google-Smtp-Source: ABdhPJwE6OUco0cxeHwheCoA0H5zavZw/pkR82GqKYyvVUchqjjcZtx+m7BL89xHLARawT4LRnksGg==
-X-Received: by 2002:a4a:a8cc:: with SMTP id r12mr785952oom.86.1593144629354;
-        Thu, 25 Jun 2020 21:10:29 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id h22sm4165908oos.48.2020.06.25.21.10.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 21:10:28 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Jarod Wilson <jarod@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH net-next] bonding: Remove extraneous parentheses in bond_setup
-Date:   Thu, 25 Jun 2020 21:10:02 -0700
-Message-Id: <20200626041001.1194928-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 26 Jun 2020 00:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgFZEMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 00:12:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF2920767;
+        Fri, 26 Jun 2020 04:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593144753;
+        bh=mH3fgegvAMw88KIXqT9GoWN67oTIoBSRBIWsIiPCOXI=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=oRA1sQ2M/IlPQMQjhu7uqq1gDrDoXQ/ZOv0I3w+Rk2Mq7zcoBn/rbU2wyrm4Gd/vD
+         XZew+OupN+c8tZd0fC1u5KZMtKP1KCDCooey6WLgIOladrhtdBUW1hmwzrz1hkIR4i
+         qr8xnxZinLvIPxpHcbbtKWu+4+86cYOzLqZ0mn7Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D342B3523611; Thu, 25 Jun 2020 21:12:32 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 21:12:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     mingo@kernel.org, tglx@linutronix.de
+Cc:     peterz@infradead.org, x86@kernel.org, elver@google.com,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: [GIT RFC PULL rcu/urgent] Fix noinstr warnings for KCSAN
+Message-ID: <20200626041232.GA10544@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Hello!
 
-drivers/net/bonding/bond_main.c:4657:23: warning: equality comparison
-with extraneous parentheses [-Wparentheses-equality]
-        if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
-             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+This pull request contains a single commit that uses "arch_" atomic
+operations to avoid the instrumentation that comes with the non-"arch_"
+versions.  In preparation for that commit, it also has another commit
+that makes these "arch_" atomic operations available to generic code.
 
-drivers/net/bonding/bond_main.c:4681:23: warning: equality comparison
-with extraneous parentheses [-Wparentheses-equality]
-        if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
-             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+Without these commits, KCSAN uses can see pointless errors.
 
-This warning occurs when a comparision has two sets of parentheses,
-which is usually the convention for doing an assignment within an
-if statement. Since equality comparisons do not need a second set of
-parentheses, remove them to fix the warning.
+This pull request is currently RFC pending ongoing -next testing.
+This was not entirely free of drama, with Stephen needing to handle
+a merge conflict:
 
-Fixes: 18cb261afd7b ("bonding: support hardware encryption offload to slaves")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1066
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/bonding/bond_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+https://lore.kernel.org/lkml/20200626131425.73ee4e27@canb.auug.org.au/
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 4ef99efc37f6..b3479584cc16 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4654,7 +4654,7 @@ void bond_setup(struct net_device *bond_dev)
- 
- #ifdef CONFIG_XFRM_OFFLOAD
- 	/* set up xfrm device ops (only supported in active-backup right now) */
--	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
-+	if (BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP)
- 		bond_dev->xfrmdev_ops = &bond_xfrmdev_ops;
- 	bond->xs = NULL;
- #endif /* CONFIG_XFRM_OFFLOAD */
-@@ -4678,7 +4678,7 @@ void bond_setup(struct net_device *bond_dev)
- 
- 	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
- #ifdef CONFIG_XFRM_OFFLOAD
--	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
-+	if (BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP)
- 		bond_dev->hw_features |= BOND_XFRM_FEATURES;
- #endif /* CONFIG_XFRM_OFFLOAD */
- 	bond_dev->features |= bond_dev->hw_features;
+However, the resolution looks straightforward to me.  In addition,
+these two commits pass rcutorture testing and associated KCSAN testing.
 
-base-commit: 7bed14551659875e1cd23a7c0266394a29a773b3
--- 
-2.27.0
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git rcu/urgent
+
+for you to fetch changes up to b58e733fd774f3f4b49d9e7640d172a57e35200e:
+
+  rcu: Fixup noinstr warnings (2020-06-25 08:24:32 -0700)
+
+----------------------------------------------------------------
+Peter Zijlstra (2):
+      locking/atomics: Provide the arch_atomic_ interface to generic code
+      rcu: Fixup noinstr warnings
+
+ include/linux/atomic-fallback.h       | 236 +++++++++++++++++++++++++++++++++-
+ include/linux/compiler.h              |   2 +-
+ kernel/rcu/tree.c                     |  32 ++++-
+ scripts/atomic/gen-atomic-fallback.sh |  31 +++++
+ 4 files changed, 292 insertions(+), 9 deletions(-)
