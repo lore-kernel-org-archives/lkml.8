@@ -2,162 +2,80 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1683C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAEC206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asziHWfJ"
+	by mail.kernel.org (Postfix) with ESMTP id 338F420B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgFZT6j (ORCPT
+        id S1725882AbgFZUAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
+        Fri, 26 Jun 2020 16:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFZT6i (ORCPT
+        with ESMTP id S1725803AbgFZUAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:58:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4D2C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:58:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id d6so5364085pjs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=taJpkHjbit6GSnXY6CgYGxPxu2VnJV0zi6VGm2eT+v0=;
-        b=asziHWfJW2e9Ecz+JH75NFuwW/6x7JieQ6YHFu5P5Iq2bqQ59KyA6TdzgrDCbF/IKs
-         Dy2mijdalInD/2D4LbH5E/F8BLW0Xhlu0NbtBZlkg+QT4ccA2sYosDbNEUKTSmoVPkXY
-         n7RWhfkkIaXrwdSH0iCIhOxfSsqIRJpAK3HjLLDpNDpVVWIQCDHBiPKMjLkQlqUdecp0
-         XcaLDgi5eiq21/4Sdb4cHpI5ZM/KNaSsznT/6WUEEhO1z58a14quZYWmDMPbTfM+FyVp
-         h6PskQwCDl57tVUjwtFqpm8PEZ/Rih94zvjKWsgA/MF/cz/08u5Qbah7xV1XFZSCyp42
-         U2Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=taJpkHjbit6GSnXY6CgYGxPxu2VnJV0zi6VGm2eT+v0=;
-        b=uZ4J9skp1hOWuw8Xr7Ys9GJEIuSLNF9L9GVF1zGW/2aZJGPQ6g+GhJgebKm8x7Qva5
-         CQscx/QxhTY96RE9VNMDUX4P4J/krWdXUP4GZljqLTyW1VEqZIKVGZr8PYETj+g9zL8R
-         k3paW406r6krAOOet6YtdMJy3FYtnsuhldsSVFLPhelI5gnh4TtvU9amvPJ5L46jfWx+
-         4koJM6eZJNc4DrJdzA49cLN4QLEpQ3VucqIp12DrGjY9C/j8mV5rXxAB1RcrUrVGCRzF
-         KCNP4WTJqiExPcUTrjDivxQrqzt5qstNPUCyVURB9fVcFc0H+l5HKVFUahNW0eiZ22Ha
-         cZtw==
-X-Gm-Message-State: AOAM5331M7d8vGLbKD1XJHr6P/PGXEHHpkooEyeyEo3nAjnDbZbjDcZ4
-        KSzB0FaLp85t/HJ76wAMPR74ufmPKtioiSqK41avYw==
-X-Google-Smtp-Source: ABdhPJxIdj06GPh3DcqA+tMERbU74tnx7im0OJvT7k028uEQsqKEEqe11t0XIcgt/4kKGEmx7Isi2eVSzVWG19FmBd4=
-X-Received: by 2002:a17:902:7208:: with SMTP id ba8mr3909663plb.179.1593201516722;
- Fri, 26 Jun 2020 12:58:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200626185913.92890-1-masahiroy@kernel.org> <20200626185913.92890-2-masahiroy@kernel.org>
-In-Reply-To: <20200626185913.92890-2-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 26 Jun 2020 12:58:24 -0700
-Message-ID: <CAKwvOdnPN0=32R=35oJ-WmJwwCtJ-NqAFsp57KXW6Cb2NgUDFg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: remove cc-option test of -ffreestanding
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 26 Jun 2020 16:00:33 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFBFC03E979;
+        Fri, 26 Jun 2020 13:00:33 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D72CF118EE359;
+        Fri, 26 Jun 2020 13:00:32 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 13:00:29 -0700 (PDT)
+Message-Id: <20200626.130029.89317239393030387.davem@davemloft.net>
+To:     horatiu.vultur@microchip.com
+Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+Subject: Re: [PATCH net-next v3 0/2] bridge: mrp: Extend MRP netlink
+ interface with IFLA_BRIDGE_MRP_CLEAR
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200626073349.3495526-1-horatiu.vultur@microchip.com>
+References: <20200626073349.3495526-1-horatiu.vultur@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 26 Jun 2020 13:00:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:59 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Some Makefiles already pass -ffreestanding unconditionally.
-> For example, arch/arm64/lib/Makefile, arch/x86/purgatory/Makefile.
-> No problem report so far about hard-coding this option. So, we can
-> assume all supported compilers know -ffreestanding.
->
-> I confirmed GCC 4.8 and Clang manuals document this option.
->
-> Get rid of cc-option from -ffreestanding.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Fri, 26 Jun 2020 09:33:47 +0200
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> This patch series extends MRP netlink interface with IFLA_BRIDGE_MRP_CLEAR.
+> To allow the userspace to clear all MRP instances when is started. The
+> second patch in the series fix different sparse warnings.
+> 
+> v3:
+>   - add the second patch to fix sparse warnings
 
-> ---
->
->  arch/s390/Makefile                    | 2 +-
->  arch/x86/Makefile                     | 2 +-
->  arch/x86/boot/compressed/Makefile     | 2 +-
->  drivers/firmware/efi/libstub/Makefile | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> index 8dfa2cf1f05c..ba94b03c8b2f 100644
-> --- a/arch/s390/Makefile
-> +++ b/arch/s390/Makefile
-> @@ -27,7 +27,7 @@ KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
->  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
->  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
->  KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
-> -KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
-> +KBUILD_CFLAGS_DECOMPRESSOR += -ffreestanding
->  KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
->  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
->  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 89c3cdfba753..edc68538a04e 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -36,7 +36,7 @@ REALMODE_CFLAGS       := $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
->                    -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
->                    -mno-mmx -mno-sse
->
-> -REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
-> +REALMODE_CFLAGS += -ffreestanding
+These changes are completely unrelated.
 
-See also
-commit 032a2c4f65a2 ("x86/build: Use __cc-option for boot code
-compiler options")
-for additional context (to fellow reviewers).
+The sparse stuff should probably be submitted to 'net'.
 
->  REALMODE_CFLAGS += -fno-stack-protector
->  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
->  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index c88a31569a5e..b7beabecef8a 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -35,7 +35,7 @@ cflags-$(CONFIG_X86_32) := -march=i386
->  cflags-$(CONFIG_X86_64) := -mcmodel=small
->  KBUILD_CFLAGS += $(cflags-y)
->  KBUILD_CFLAGS += -mno-mmx -mno-sse
-> -KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
-> +KBUILD_CFLAGS += -ffreestanding
->  KBUILD_CFLAGS += -fno-stack-protector
->  KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
->  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index f8418763cd79..296b18fbd7a2 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -28,7 +28,7 @@ cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
->  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
->                                    -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
->                                    -D__NO_FORTIFY \
-> -                                  $(call cc-option,-ffreestanding) \
-> +                                  -ffreestanding \
->                                    -fno-stack-protector \
->                                    $(call cc-option,-fno-addrsig) \
->                                    -D__DISABLE_EXPORTS
-> --
+And I have to ask why you really need a clear operation.  Routing
+daemons come up and see what routes are installed, and update their
+internal SW tables to match.  This not only allows efficient restart
+after a crash, but it also allows multiple daemons to work
+cooperatively as an agent for the same forwarding/routing table.
 
--- 
-Thanks,
-~Nick Desaulniers
+Your usage model limits one daemon to manage the table and that
+limitation is completely unnecessary.
+
+Furthermore, even in a one-daemon scenerio, it's wasteful to throw
+away all the work the previous daemon did to load the MRP entries into
+the bridge.
+
+Thanks.
+
