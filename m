@@ -2,394 +2,464 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
+X-Spam-Status: No, score=-13.5 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02057C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD35C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE25120768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8504220836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgFZHK6 (ORCPT
+        id S1728367AbgFZHTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:10:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728145AbgFZHK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:10:58 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C3743B90A9A25EF6118C;
-        Fri, 26 Jun 2020 15:10:54 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.200.84) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 26 Jun 2020 15:10:43 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware acceleration
-Date:   Fri, 26 Jun 2020 19:09:03 +1200
-Message-ID: <20200626070903.27988-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Fri, 26 Jun 2020 03:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbgFZHTK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:19:10 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404E7C08C5C1;
+        Fri, 26 Jun 2020 00:19:10 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id A72B22A375B
+Subject: Re: media/master bisection:
+ v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF
+ on rk3399-gru-kevin
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel@vger.kernel.org, Pawel Osciak <pawel@osciak.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Vandana BN <bnvandana@gmail.com>, kernel@collabora.com
+References: <5ef522e0.1c69fb81.4605d.65f8@mx.google.com>
+ <06ca9f11-5bd7-27d4-9de4-e7e5efa24842@collabora.com>
+ <6f67fbb5-9799-e7d9-4946-4cf4c83c1742@xs4all.nl>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <c0378016-4dcf-9608-ca64-b0b67ee6dee8@collabora.com>
+Date:   Fri, 26 Jun 2020 08:19:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.200.84]
-X-CFilter-Loop: Reflected
+In-Reply-To: <6f67fbb5-9799-e7d9-4946-4cf4c83c1742@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-right now, all new ZIP drivers are using crypto_acomp APIs rather than
-legacy crypto_comp APIs. But zswap.c is still using the old APIs. That
-means zswap won't be able to use any new zip drivers in kernel.
+On 26/06/2020 08:02, Hans Verkuil wrote:
+> Hi Guillaume,
+> 
+> You need to update v4l-utils to the latest version from our git master branch.
+> 
+> The reserved field in reqbufs is now in use as a flags field, so it is no longer
+> zero. The compliance test has been updated accordingly in the v4l-utils git repo.
 
-This patch moves to use cryto_acomp APIs to fix the problem. On the
-other hand, tradiontal compressors like lz4,lzo etc have been wrapped
-into acomp via scomp backend. So platforms without async compressors
-can fallback to use acomp via scomp backend.
+I see, thanks.  It's getting updated today.
 
-Cc: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Seth Jennings <sjenning@redhat.com>
-Cc: Dan Streetman <ddstreet@ieee.org>
-Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- -v3: fix resource leak in error handle path;
- remove redundant assignment according to Colin King, thanks!
+Guillaume
 
- mm/zswap.c | 160 +++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 117 insertions(+), 43 deletions(-)
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index fbb782924ccc..d170ef06c693 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -24,8 +24,10 @@
- #include <linux/rbtree.h>
- #include <linux/swap.h>
- #include <linux/crypto.h>
-+#include <linux/scatterlist.h>
- #include <linux/mempool.h>
- #include <linux/zpool.h>
-+#include <crypto/acompress.h>
- 
- #include <linux/mm_types.h>
- #include <linux/page-flags.h>
-@@ -127,9 +129,17 @@ module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
- * data structures
- **********************************/
- 
-+struct crypto_acomp_ctx {
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+	struct crypto_wait wait;
-+	u8 *dstmem;
-+	struct mutex mutex;
-+};
-+
- struct zswap_pool {
- 	struct zpool *zpool;
--	struct crypto_comp * __percpu *tfm;
-+	struct crypto_acomp_ctx * __percpu *acomp_ctx;
- 	struct kref kref;
- 	struct list_head list;
- 	struct work_struct release_work;
-@@ -415,30 +425,68 @@ static int zswap_dstmem_dead(unsigned int cpu)
- static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+	int ret;
- 
--	if (WARN_ON(*per_cpu_ptr(pool->tfm, cpu)))
-+	if (WARN_ON(*per_cpu_ptr(pool->acomp_ctx, cpu)))
- 		return 0;
- 
--	tfm = crypto_alloc_comp(pool->tfm_name, 0, 0);
--	if (IS_ERR_OR_NULL(tfm)) {
--		pr_err("could not alloc crypto comp %s : %ld\n",
--		       pool->tfm_name, PTR_ERR(tfm));
-+	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
-+	if (!acomp_ctx)
- 		return -ENOMEM;
-+
-+	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
-+	if (IS_ERR(acomp)) {
-+		pr_err("could not alloc crypto acomp %s : %ld\n",
-+				pool->tfm_name, PTR_ERR(acomp));
-+		ret = PTR_ERR(acomp);
-+		goto free_ctx;
-+	}
-+	acomp_ctx->acomp = acomp;
-+
-+	req = acomp_request_alloc(acomp_ctx->acomp);
-+	if (!req) {
-+		pr_err("could not alloc crypto acomp_request %s\n",
-+		       pool->tfm_name);
-+		ret = -ENOMEM;
-+		goto free_acomp;
- 	}
--	*per_cpu_ptr(pool->tfm, cpu) = tfm;
-+	acomp_ctx->req = req;
-+
-+	mutex_init(&acomp_ctx->mutex);
-+	crypto_init_wait(&acomp_ctx->wait);
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				   crypto_req_done, &acomp_ctx->wait);
-+
-+	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
-+	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
-+
- 	return 0;
-+
-+free_acomp:
-+	crypto_free_acomp(acomp_ctx->acomp);
-+free_ctx:
-+	kfree(acomp_ctx);
-+	return ret;
- }
- 
- static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+
-+	acomp_ctx = *per_cpu_ptr(pool->acomp_ctx, cpu);
-+	if (!IS_ERR_OR_NULL(acomp_ctx)) {
-+		if (!IS_ERR_OR_NULL(acomp_ctx->req))
-+			acomp_request_free(acomp_ctx->req);
-+		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
-+			crypto_free_acomp(acomp_ctx->acomp);
-+		kfree(acomp_ctx);
-+	}
-+	*per_cpu_ptr(pool->acomp_ctx, cpu) = NULL;
- 
--	tfm = *per_cpu_ptr(pool->tfm, cpu);
--	if (!IS_ERR_OR_NULL(tfm))
--		crypto_free_comp(tfm);
--	*per_cpu_ptr(pool->tfm, cpu) = NULL;
- 	return 0;
- }
- 
-@@ -561,8 +609,9 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
- 
- 	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
--	pool->tfm = alloc_percpu(struct crypto_comp *);
--	if (!pool->tfm) {
-+
-+	pool->acomp_ctx = alloc_percpu(struct crypto_acomp_ctx *);
-+	if (!pool->acomp_ctx) {
- 		pr_err("percpu alloc failed\n");
- 		goto error;
- 	}
-@@ -585,7 +634,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	return pool;
- 
- error:
--	free_percpu(pool->tfm);
-+	free_percpu(pool->acomp_ctx);
- 	if (pool->zpool)
- 		zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
-@@ -596,14 +645,14 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
- {
- 	bool has_comp, has_zpool;
- 
--	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+	has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	if (!has_comp && strcmp(zswap_compressor,
- 				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
- 		pr_err("compressor %s not available, using default %s\n",
- 		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
- 		param_free_charp(&zswap_compressor);
- 		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
--		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+		has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	}
- 	if (!has_comp) {
- 		pr_err("default compressor %s not available\n",
-@@ -639,7 +688,7 @@ static void zswap_pool_destroy(struct zswap_pool *pool)
- 	zswap_pool_debug("destroying", pool);
- 
- 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
--	free_percpu(pool->tfm);
-+	free_percpu(pool->acomp_ctx);
- 	zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
- }
-@@ -723,7 +772,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		}
- 		type = s;
- 	} else if (!compressor) {
--		if (!crypto_has_comp(s, 0, 0)) {
-+		if (!crypto_has_acomp(s, 0, 0)) {
- 			pr_err("compressor %s not available\n", s);
- 			return -ENOENT;
- 		}
-@@ -774,7 +823,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		 * failed, maybe both compressor and zpool params were bad.
- 		 * Allow changing this param, so pool creation will succeed
- 		 * when the other param is changed. We already verified this
--		 * param is ok in the zpool_has_pool() or crypto_has_comp()
-+		 * param is ok in the zpool_has_pool() or crypto_has_acomp()
- 		 * checks above.
- 		 */
- 		ret = param_set_charp(s, kp);
-@@ -876,7 +925,9 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	pgoff_t offset;
- 	struct zswap_entry *entry;
- 	struct page *page;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -916,14 +967,21 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 
- 	case ZSWAP_SWAPCACHE_NEW: /* page is locked */
- 		/* decompress */
-+		acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+
- 		dlen = PAGE_SIZE;
- 		src = (u8 *)zhdr + sizeof(struct zswap_header);
--		dst = kmap_atomic(page);
--		tfm = *get_cpu_ptr(entry->pool->tfm);
--		ret = crypto_comp_decompress(tfm, src, entry->length,
--					     dst, &dlen);
--		put_cpu_ptr(entry->pool->tfm);
--		kunmap_atomic(dst);
-+		dst = kmap(page);
-+
-+		mutex_lock(&acomp_ctx->mutex);
-+		sg_init_one(&input, src, entry->length);
-+		sg_init_one(&output, dst, dlen);
-+		acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+		ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+		dlen = acomp_ctx->req->dlen;
-+		mutex_unlock(&acomp_ctx->mutex);
-+
-+		kunmap(page);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
- 
-@@ -1004,7 +1062,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry, *dupentry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	int ret;
- 	unsigned int hlen, dlen = PAGE_SIZE;
- 	unsigned long handle, value;
-@@ -1074,12 +1133,20 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	}
- 
- 	/* compress */
--	dst = get_cpu_var(zswap_dstmem);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	src = kmap_atomic(page);
--	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
--	kunmap_atomic(src);
--	put_cpu_ptr(entry->pool->tfm);
-+	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+
-+	mutex_lock(&acomp_ctx->mutex);
-+
-+	src = kmap(page);
-+	dst = acomp_ctx->dstmem;
-+	sg_init_one(&input, src, PAGE_SIZE);
-+	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-+	sg_init_one(&output, dst, PAGE_SIZE * 2);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
-+	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-+	dlen = acomp_ctx->req->dlen;
-+	kunmap(page);
-+
- 	if (ret) {
- 		ret = -EINVAL;
- 		goto put_dstmem;
-@@ -1103,7 +1170,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	memcpy(buf, &zhdr, hlen);
- 	memcpy(buf + hlen, dst, dlen);
- 	zpool_unmap_handle(entry->pool->zpool, handle);
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	/* populate entry */
- 	entry->offset = offset;
-@@ -1131,7 +1198,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	return 0;
- 
- put_dstmem:
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(&acomp_ctx->mutex);
- 	zswap_pool_put(entry->pool);
- freepage:
- 	zswap_entry_cache_free(entry);
-@@ -1148,7 +1215,8 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -1175,11 +1243,17 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- 	src = zpool_map_handle(entry->pool->zpool, entry->handle, ZPOOL_MM_RO);
- 	if (zpool_evictable(entry->pool->zpool))
- 		src += sizeof(struct zswap_header);
--	dst = kmap_atomic(page);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
--	put_cpu_ptr(entry->pool->tfm);
--	kunmap_atomic(dst);
-+	dst = kmap(page);
-+
-+	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-+	mutex_lock(&acomp_ctx->mutex);
-+	sg_init_one(&input, src, entry->length);
-+	sg_init_one(&output, dst, dlen);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+	ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+	mutex_unlock(&acomp_ctx->mutex);
-+
-+	kunmap(page);
- 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 	BUG_ON(ret);
- 
--- 
-2.27.0
-
+> On 26/06/2020 08:56, Guillaume Tucker wrote:
+>> Please see the bisection report below about a regression in
+>> v4l2-compliance with uvcvideo:
+>>
+>> [   25.495039] uvcvideo: Failed to query (SET_CUR) UVC control 10 on unit 2: -32 (exp. 2).
+>> 		fail: v4l2-test-buffers.cpp(680): check_0(reqbufs.reserved, sizeof(reqbufs.reserved))
+>> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+>>
+>>
+>> as seen in the full job log:
+>>
+>>     https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.html#L1713
+>>
+>> with a few more details about the regression here:
+>>
+>>     https://kernelci.org/test/case/id/5ef23169140826f73d97bf51/
+>>
+>> and the same test case failure also seen with vivid:
+>>
+>>     https://kernelci.org/test/case/id/5ef23699f641f7b3e597bf3f/
+>>
+>>
+>> The bisection actually ran a couple of days ago but there was an
+>> email error when sending the report, so I'm sending it by hand
+>> now.  I hope the issue hasn't spread too widely already, I know
+>> it's also affecting linux-next.
+>>
+>> Guillaume
+>>
+>>
+>> On 25/06/2020 23:19, kernelci.org bot wrote:
+>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>> * This automated bisection report was sent to you on the basis  *
+>>> * that you may be involved with the breaking commit it has      *
+>>> * found.  No manual investigation has been done to verify it,   *
+>>> * and the root cause of the problem may be somewhere else.      *
+>>> *                                                               *
+>>> * If you do send a fix, please include this trailer:            *
+>>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+>>> *                                                               *
+>>> * Hope this helps!                                              *
+>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>
+>>> media/master bisection: v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF on rk3399-gru-kevin
+>>>
+>>> Summary:
+>>>   Start:      e30cc79cc80f media: media-request: Fix crash if memory allocation fails
+>>>   Plain log:  https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.txt
+>>>   HTML log:   https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.html
+>>>   Result:     1e0b2318fa75 media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>>>
+>>> Checks:
+>>>   revert:     PASS
+>>>   verify:     PASS
+>>>
+>>> Parameters:
+>>>   Tree:       media
+>>>   URL:        https://git.linuxtv.org/media_tree.git
+>>>   Branch:     master
+>>>   Target:     rk3399-gru-kevin
+>>>   CPU arch:   arm64
+>>>   Lab:        lab-collabora
+>>>   Compiler:   gcc-8
+>>>   Config:     defconfig
+>>>   Test case:  v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF
+>>>
+>>> Breaking commit found:
+>>>
+>>> -------------------------------------------------------------------------------
+>>> commit 1e0b2318fa75d186ee0d2be31843ce867385fcc4
+>>> Author: Sergey Senozhatsky <senozhatsky@chromium.org>
+>>> Date:   Thu May 14 18:01:45 2020 +0200
+>>>
+>>>     media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>>>     
+>>>     This patch lets user-space to request a non-consistent memory
+>>>     allocation during CREATE_BUFS and REQBUFS ioctl calls.
+>>>     
+>>>     = CREATE_BUFS
+>>>     
+>>>       struct v4l2_create_buffers has seven 4-byte reserved areas,
+>>>       so reserved[0] is renamed to ->flags. The struct, thus, now
+>>>       has six reserved 4-byte regions.
+>>>     
+>>>     = CREATE_BUFS32
+>>>     
+>>>       struct v4l2_create_buffers32 has seven 4-byte reserved areas,
+>>>       so reserved[0] is renamed to ->flags. The struct, thus, now
+>>>       has six reserved 4-byte regions.
+>>>     
+>>>     = REQBUFS
+>>>     
+>>>      We use one bit of a ->reserved[1] member of struct v4l2_requestbuffers,
+>>>      which is now renamed to ->flags. Unlike v4l2_create_buffers, struct
+>>>      v4l2_requestbuffers does not have enough reserved room. Therefore for
+>>>      backward compatibility  ->reserved and ->flags were put into anonymous
+>>>      union.
+>>>     
+>>>     Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+>>>     Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>>>     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>>>
+>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst b/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
+>>> index e1afc5b504c2..f2a702870fad 100644
+>>> --- a/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
+>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
+>>> @@ -121,7 +121,12 @@ than the number requested.
+>>>  	other changes, then set ``count`` to 0, ``memory`` to
+>>>  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
+>>>      * - __u32
+>>> -      - ``reserved``\ [7]
+>>> +      - ``flags``
+>>> +      - Specifies additional buffer management attributes.
+>>> +	See :ref:`memory-flags`.
+>>> +
+>>> +    * - __u32
+>>> +      - ``reserved``\ [6]
+>>>        - A place holder for future extensions. Drivers and applications
+>>>  	must set the array to zero.
+>>>  
+>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst b/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
+>>> index 96a59793d857..75d894d9c36c 100644
+>>> --- a/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
+>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
+>>> @@ -112,10 +112,17 @@ aborting or finishing any DMA in progress, an implicit
+>>>  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
+>>>  	free any previously allocated buffers, so this is typically something
+>>>  	that will be done at the start of the application.
+>>> +    * - union {
+>>> +      - (anonymous)
+>>> +    * - __u32
+>>> +      - ``flags``
+>>> +      - Specifies additional buffer management attributes.
+>>> +	See :ref:`memory-flags`.
+>>>      * - __u32
+>>>        - ``reserved``\ [1]
+>>> -      - A place holder for future extensions. Drivers and applications
+>>> -	must set the array to zero.
+>>> +      - Kept for backwards compatibility. Use ``flags`` instead.
+>>> +    * - }
+>>> +      -
+>>>  
+>>>  .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
+>>>  
+>>> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+>>> index 0fdcf90330df..626c4db5134c 100644
+>>> --- a/drivers/media/common/videobuf2/videobuf2-core.c
+>>> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+>>> @@ -694,6 +694,9 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+>>>  	unsigned int i;
+>>>  	int ret;
+>>>  
+>>> +	if (flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+>>> +		consistent_mem = false;
+>>> +
+>>>  	if (q->streaming) {
+>>>  		dprintk(1, "streaming active\n");
+>>>  		return -EBUSY;
+>>> @@ -837,6 +840,9 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+>>>  	bool consistent_mem = true;
+>>>  	int ret;
+>>>  
+>>> +	if (flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+>>> +		consistent_mem = false;
+>>> +
+>>>  	if (q->num_buffers == VB2_MAX_FRAME) {
+>>>  		dprintk(1, "maximum number of buffers already allocated\n");
+>>>  		return -ENOBUFS;
+>>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> index 26a3ec333bb7..559a229cac41 100644
+>>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> @@ -718,12 +718,22 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
+>>>  #endif
+>>>  }
+>>>  
+>>> +static void clear_consistency_attr(struct vb2_queue *q,
+>>> +				   int memory,
+>>> +				   unsigned int *flags)
+>>> +{
+>>> +	if (!q->allow_cache_hints || memory != V4L2_MEMORY_MMAP)
+>>> +		*flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+>>> +}
+>>> +
+>>>  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
+>>>  {
+>>>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
+>>>  
+>>>  	fill_buf_caps(q, &req->capabilities);
+>>> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, 0, &req->count);
+>>> +	clear_consistency_attr(q, req->memory, &req->flags);
+>>> +	return ret ? ret : vb2_core_reqbufs(q, req->memory,
+>>> +					    req->flags, &req->count);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(vb2_reqbufs);
+>>>  
+>>> @@ -755,6 +765,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+>>>  	unsigned i;
+>>>  
+>>>  	fill_buf_caps(q, &create->capabilities);
+>>> +	clear_consistency_attr(q, create->memory, &create->flags);
+>>>  	create->index = q->num_buffers;
+>>>  	if (create->count == 0)
+>>>  		return ret != -EBUSY ? ret : 0;
+>>> @@ -797,8 +808,11 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+>>>  	for (i = 0; i < requested_planes; i++)
+>>>  		if (requested_sizes[i] == 0)
+>>>  			return -EINVAL;
+>>> -	return ret ? ret : vb2_core_create_bufs(q, create->memory, 0,
+>>> -		&create->count, requested_planes, requested_sizes);
+>>> +	return ret ? ret : vb2_core_create_bufs(q, create->memory,
+>>> +						create->flags,
+>>> +						&create->count,
+>>> +						requested_planes,
+>>> +						requested_sizes);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(vb2_create_bufs);
+>>>  
+>>> @@ -969,11 +983,12 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
+>>>  	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
+>>>  
+>>>  	fill_buf_caps(vdev->queue, &p->capabilities);
+>>> +	clear_consistency_attr(vdev->queue, p->memory, &p->flags);
+>>>  	if (res)
+>>>  		return res;
+>>>  	if (vb2_queue_is_busy(vdev, file))
+>>>  		return -EBUSY;
+>>> -	res = vb2_core_reqbufs(vdev->queue, p->memory, 0, &p->count);
+>>> +	res = vb2_core_reqbufs(vdev->queue, p->memory, p->flags, &p->count);
+>>>  	/* If count == 0, then the owner has released all buffers and he
+>>>  	   is no longer owner of the queue. Otherwise we have a new owner. */
+>>>  	if (res == 0)
+>>> @@ -991,6 +1006,7 @@ int vb2_ioctl_create_bufs(struct file *file, void *priv,
+>>>  
+>>>  	p->index = vdev->queue->num_buffers;
+>>>  	fill_buf_caps(vdev->queue, &p->capabilities);
+>>> +	clear_consistency_attr(vdev->queue, p->memory, &p->flags);
+>>>  	/*
+>>>  	 * If count == 0, then just check if memory and type are valid.
+>>>  	 * Any -EBUSY result from vb2_verify_memory_type can be mapped to 0.
+>>> diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>>> index a99e82ec9ab6..593bcf6c3735 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>>> @@ -246,6 +246,9 @@ struct v4l2_format32 {
+>>>   * @memory:	buffer memory type
+>>>   * @format:	frame format, for which buffers are requested
+>>>   * @capabilities: capabilities of this buffer type.
+>>> + * @flags:	additional buffer management attributes (ignored unless the
+>>> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability and
+>>> + *		configured for MMAP streaming I/O).
+>>>   * @reserved:	future extensions
+>>>   */
+>>>  struct v4l2_create_buffers32 {
+>>> @@ -254,7 +257,8 @@ struct v4l2_create_buffers32 {
+>>>  	__u32			memory;	/* enum v4l2_memory */
+>>>  	struct v4l2_format32	format;
+>>>  	__u32			capabilities;
+>>> -	__u32			reserved[7];
+>>> +	__u32			flags;
+>>> +	__u32			reserved[6];
+>>>  };
+>>>  
+>>>  static int __bufsize_v4l2_format(struct v4l2_format32 __user *p32, u32 *size)
+>>> @@ -355,7 +359,8 @@ static int get_v4l2_create32(struct v4l2_create_buffers __user *p64,
+>>>  {
+>>>  	if (!access_ok(p32, sizeof(*p32)) ||
+>>>  	    copy_in_user(p64, p32,
+>>> -			 offsetof(struct v4l2_create_buffers32, format)))
+>>> +			 offsetof(struct v4l2_create_buffers32, format)) ||
+>>> +	    assign_in_user(&p64->flags, &p32->flags))
+>>>  		return -EFAULT;
+>>>  	return __get_v4l2_format32(&p64->format, &p32->format,
+>>>  				   aux_buf, aux_space);
+>>> @@ -417,6 +422,7 @@ static int put_v4l2_create32(struct v4l2_create_buffers __user *p64,
+>>>  	    copy_in_user(p32, p64,
+>>>  			 offsetof(struct v4l2_create_buffers32, format)) ||
+>>>  	    assign_in_user(&p32->capabilities, &p64->capabilities) ||
+>>> +	    assign_in_user(&p32->flags, &p64->flags) ||
+>>>  	    copy_in_user(p32->reserved, p64->reserved, sizeof(p64->reserved)))
+>>>  		return -EFAULT;
+>>>  	return __put_v4l2_format32(&p64->format, &p32->format);
+>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> index 2322f08a98be..02bfef0da76d 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> @@ -2038,9 +2038,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
+>>>  
+>>>  	if (ret)
+>>>  		return ret;
+>>> -
+>>> -	CLEAR_AFTER_FIELD(p, capabilities);
+>>> -
+>>>  	return ops->vidioc_reqbufs(file, fh, p);
+>>>  }
+>>>  
+>>> @@ -2080,7 +2077,7 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> -	CLEAR_AFTER_FIELD(create, capabilities);
+>>> +	CLEAR_AFTER_FIELD(create, flags);
+>>>  
+>>>  	v4l_sanitize_format(&create->format);
+>>>  
+>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>> index 34ba1017b89b..fec2607a07e3 100644
+>>> --- a/include/uapi/linux/videodev2.h
+>>> +++ b/include/uapi/linux/videodev2.h
+>>> @@ -946,7 +946,10 @@ struct v4l2_requestbuffers {
+>>>  	__u32			type;		/* enum v4l2_buf_type */
+>>>  	__u32			memory;		/* enum v4l2_memory */
+>>>  	__u32			capabilities;
+>>> -	__u32			reserved[1];
+>>> +	union {
+>>> +		__u32		flags;
+>>> +		__u32		reserved[1];
+>>> +	};
+>>>  };
+>>>  
+>>>  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
+>>> @@ -2450,6 +2453,9 @@ struct v4l2_dbg_chip_info {
+>>>   * @memory:	enum v4l2_memory; buffer memory type
+>>>   * @format:	frame format, for which buffers are requested
+>>>   * @capabilities: capabilities of this buffer type.
+>>> + * @flags:	additional buffer management attributes (ignored unless the
+>>> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
+>>> + *		and configured for MMAP streaming I/O).
+>>>   * @reserved:	future extensions
+>>>   */
+>>>  struct v4l2_create_buffers {
+>>> @@ -2458,7 +2464,8 @@ struct v4l2_create_buffers {
+>>>  	__u32			memory;
+>>>  	struct v4l2_format	format;
+>>>  	__u32			capabilities;
+>>> -	__u32			reserved[7];
+>>> +	__u32			flags;
+>>> +	__u32			reserved[6];
+>>>  };
+>>>  
+>>>  /*
+>>> -------------------------------------------------------------------------------
+>>>
+>>>
+>>> Git bisection log:
+>>>
+>>> -------------------------------------------------------------------------------
+>>> git bisect start
+>>> # good: [2630e1bb0948c3134c6f22ad275ae27cc6023532] media: rkvdec: Fix H264 scaling list order
+>>> git bisect good 2630e1bb0948c3134c6f22ad275ae27cc6023532
+>>> # bad: [e30cc79cc80fd919b697a15c5000d9f57487de8e] media: media-request: Fix crash if memory allocation fails
+>>> git bisect bad e30cc79cc80fd919b697a15c5000d9f57487de8e
+>>> # good: [cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+>>> git bisect good cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2
+>>> # good: [3b69e8b4571125bec1f77f886174fe6cab6b9d75] Merge tag 'sh-for-5.8' of git://git.libc.org/linux-sh
+>>> git bisect good 3b69e8b4571125bec1f77f886174fe6cab6b9d75
+>>> # good: [3ed740841bf94a8028ec44164d84f9af9bd552fd] maccess: remove duplicate kerneldoc comments
+>>> git bisect good 3ed740841bf94a8028ec44164d84f9af9bd552fd
+>>> # good: [2ab70319bc1f79228da4dce7b9d604740c9beeef] nmi, tracing: Make hardware latency tracing noinstr safe
+>>> git bisect good 2ab70319bc1f79228da4dce7b9d604740c9beeef
+>>> # good: [df2fbf5bfa0e7fff8b4784507e4d68f200454318] Merge tag 'thermal-v5.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux
+>>> git bisect good df2fbf5bfa0e7fff8b4784507e4d68f200454318
+>>> # good: [91fa58840ae22cbf6d7c505ce6564c4c48f29af3] Merge branch 'i2c/for-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
+>>> git bisect good 91fa58840ae22cbf6d7c505ce6564c4c48f29af3
+>>> # good: [bc139119a1708ae3db1ebb379630f286e28d06e8] net: ethernet: ti: ale: fix allmulti for nu type ale
+>>> git bisect good bc139119a1708ae3db1ebb379630f286e28d06e8
+>>> # good: [157282a5c6273976b31cf4ba4b1c46663f6519d1] media: s5k6a3: Fix runtime PM imbalance on error
+>>> git bisect good 157282a5c6273976b31cf4ba4b1c46663f6519d1
+>>> # bad: [286cf7d3a99e1ca8c1d8e674b9a98f2dbe8520dc] media: videodev2.h: add V4L2_FMT_FLAG_ENC_CAP_FRAME_INTERVAL flag
+>>> git bisect bad 286cf7d3a99e1ca8c1d8e674b9a98f2dbe8520dc
+>>> # good: [ac53503ee38a1ffbc47c7cca6cbfc48ba9c65c5e] media: videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>>> git bisect good ac53503ee38a1ffbc47c7cca6cbfc48ba9c65c5e
+>>> # bad: [d4db5eb57cab049d378fbfb7ee842857009a8679] media: videobuf2: add begin/end cpu_access callbacks to dma-sg
+>>> git bisect bad d4db5eb57cab049d378fbfb7ee842857009a8679
+>>> # bad: [38a417e88aad1e5ad5ff2647d4cd26040b567fc3] media: videobuf2: factor out planes prepare/finish functions
+>>> git bisect bad 38a417e88aad1e5ad5ff2647d4cd26040b567fc3
+>>> # bad: [1e0b2318fa75d186ee0d2be31843ce867385fcc4] media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>>> git bisect bad 1e0b2318fa75d186ee0d2be31843ce867385fcc4
+>>> # good: [7b4b45555c79db03dad8192e6ef85cb30236827b] media: videobuf2: add queue memory consistency parameter
+>>> git bisect good 7b4b45555c79db03dad8192e6ef85cb30236827b
+>>> # first bad commit: [1e0b2318fa75d186ee0d2be31843ce867385fcc4] media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>>> -------------------------------------------------------------------------------
+>>>
+>>
+> 
 
