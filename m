@@ -6,77 +6,68 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47778C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C94120775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACDF20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgFZEpz (ORCPT
+        id S1727020AbgFZEqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgFZEpy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:45:54 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5225AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 21:45:54 -0700 (PDT)
+        Fri, 26 Jun 2020 00:46:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:41671 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726984AbgFZEp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 00:45:58 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49tPTX1xB3z9sT6; Fri, 26 Jun 2020 14:45:51 +1000 (AEST)
+        id 49tPTc04WXz9sTC; Fri, 26 Jun 2020 14:45:55 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     benh@kernel.crashing.org, paulus@samba.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        christophe.leroy@c-s.fr, mpe@ellerman.id.au
+To:     Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Albert Herranz <albert_herranz@yahoo.es>,
+        Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200611224220.25066-1-chris.packham@alliedtelesis.co.nz>
-References: <20200611224220.25066-1-chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v3 0/2] powerpc: CMDLINE config cleanup
-Message-Id: <159314672616.1150869.14723126983856405829.b4-ty@ellerman.id.au>
-Date:   Fri, 26 Jun 2020 14:45:51 +1000 (AEST)
+In-Reply-To: <ca8c9f8249f523b1fab873e67b81b11989d46553.1592207216.git.christophe.leroy@csgroup.eu>
+References: <ca8c9f8249f523b1fab873e67b81b11989d46553.1592207216.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k
+Message-Id: <159314672762.1150869.11958650760523739309.b4-ty@ellerman.id.au>
+Date:   Fri, 26 Jun 2020 14:45:55 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020 10:42:18 +1200, Chris Packham wrote:
-> This series cleans up the config options related to the boot command line.
+On Mon, 15 Jun 2020 07:48:25 +0000 (UTC), Christophe Leroy wrote:
+> FIX_EARLY_DEBUG_BASE reserves a 128k area for debuging.
 > 
-> Chris Packham (2):
->   powerpc: Remove inaccessible CMDLINE default
->   powerpc: configs: remove CMDLINE_BOOL
+> When page size is 256k, the calculation results in a 0 number of
+> pages, leading to the following failure:
 > 
->  arch/powerpc/Kconfig                           | 6 +-----
->  arch/powerpc/configs/44x/akebono_defconfig     | 2 --
->  arch/powerpc/configs/44x/arches_defconfig      | 2 --
->  arch/powerpc/configs/44x/bamboo_defconfig      | 2 --
->  arch/powerpc/configs/44x/bluestone_defconfig   | 2 --
->  arch/powerpc/configs/44x/canyonlands_defconfig | 2 --
->  arch/powerpc/configs/44x/currituck_defconfig   | 2 --
->  arch/powerpc/configs/44x/eiger_defconfig       | 2 --
->  arch/powerpc/configs/44x/fsp2_defconfig        | 1 -
->  arch/powerpc/configs/44x/icon_defconfig        | 2 --
->  arch/powerpc/configs/44x/iss476-smp_defconfig  | 1 -
->  arch/powerpc/configs/44x/katmai_defconfig      | 2 --
->  arch/powerpc/configs/44x/rainier_defconfig     | 2 --
->  arch/powerpc/configs/44x/redwood_defconfig     | 2 --
->  arch/powerpc/configs/44x/sam440ep_defconfig    | 2 --
->  arch/powerpc/configs/44x/sequoia_defconfig     | 2 --
->  arch/powerpc/configs/44x/taishan_defconfig     | 2 --
->  arch/powerpc/configs/44x/warp_defconfig        | 1 -
->  arch/powerpc/configs/holly_defconfig           | 1 -
->  arch/powerpc/configs/mvme5100_defconfig        | 3 +--
->  arch/powerpc/configs/ps3_defconfig             | 2 --
->  arch/powerpc/configs/skiroot_defconfig         | 1 -
->  arch/powerpc/configs/storcenter_defconfig      | 1 -
->  23 files changed, 2 insertions(+), 43 deletions(-)
+>   CC      arch/powerpc/kernel/asm-offsets.s
+> In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:77:0,
+>                  from ./arch/powerpc/include/asm/nohash/pgtable.h:8,
+>                  from ./arch/powerpc/include/asm/pgtable.h:20,
+>                  from ./include/linux/pgtable.h:6,
+>                  from ./arch/powerpc/include/asm/kup.h:42,
+>                  from ./arch/powerpc/include/asm/uaccess.h:9,
+>                  from ./include/linux/uaccess.h:11,
+>                  from ./include/linux/crypto.h:21,
+>                  from ./include/crypto/hash.h:11,
+>                  from ./include/linux/uio.h:10,
+>                  from ./include/linux/socket.h:8,
+>                  from ./include/linux/compat.h:15,
+>                  from arch/powerpc/kernel/asm-offsets.c:14:
+> ./arch/powerpc/include/asm/fixmap.h:75:2: error: overflow in enumeration values
+>   __end_of_permanent_fixed_addresses,
+>   ^
+> make[2]: *** [arch/powerpc/kernel/asm-offsets.s] Error 1
+> 
+> [...]
 
 Applied to powerpc/next.
 
-[1/2] powerpc: Remove inaccessible CMDLINE default
-      https://git.kernel.org/powerpc/c/f134a7cef1d7de45fab028a945b7f34c615718e1
-[2/2] powerpc/configs: Remove CMDLINE_BOOL
-      https://git.kernel.org/powerpc/c/0488d32530ecff973c40f2592a6eab2907d0a5cc
+[1/1] powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k
+      https://git.kernel.org/powerpc/c/03fd42d458fb9cb69e712600bd69ff77ff3a45a8
 
 cheers
