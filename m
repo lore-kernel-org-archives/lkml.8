@@ -2,146 +2,87 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32168C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F6D20EDD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008BD20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IVDK+YvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgFZQ2o (ORCPT
+        id S1727018AbgFZQ3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:28:44 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38973 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726252AbgFZQ2o (ORCPT
+        Fri, 26 Jun 2020 12:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgFZQ3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:28:44 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=guoren@linux.alibaba.com;NM=1;PH=DW;RN=7;SR=0;TI=alimail_imapd_guoren@linux.alibaba.com-10.182.158.86-3463-1593186994_a783821e-1e9e-43b0-9a18-bda5c32d1b6e;
-Received: from WS-web (guoren@linux.alibaba.com[alimail_imapd_guoren@linux.alibaba.com-10.182.158.86-3463-1593186994_a783821e-1e9e-43b0-9a18-bda5c32d1b6e]) by e01f04389.eu6 at Sat, 27 Jun 2020 00:28:38 +0800
-Date:   Sat, 27 Jun 2020 00:28:38 +0800
-From:   "guoren" <guoren@linux.alibaba.com>
-To:     "Greentime Hu" <greentime.hu@sifive.com>,
-        "linux-riscv" <linux-riscv@lists.infradead.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "aou" <aou@eecs.berkeley.edu>, "palmer" <palmer@dabbelt.com>,
-        "paul.walmsley" <paul.walmsley@sifive.com>,
-        "guoren" <guoren@linux.alibaba.com>
-Reply-To: "guoren" <guoren@linux.alibaba.com>
-Message-ID: <c0b15ad6-4385-41bb-82a6-a43107c0e0a1.guoren@linux.alibaba.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzJdIHJpc2N2OiBFbmFibGUgY29udGV4dCB0cmFja2luZw==?=
-X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
+        Fri, 26 Jun 2020 12:29:02 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2060DC03E979;
+        Fri, 26 Jun 2020 09:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=aX0k6r1YJ4CEqGeB4aFf2H+m6osTQrznTYtFPosh1II=; b=IVDK+YvYyu/wRs4g7LpfEBP8g1
+        FcErEcse6PE7u7TIr9XAJ8rivGYSHmNaVZpFRQRAAWhTjC6A3YGvnfo694KRxA7LrD5DW13mRPpJq
+        D0O1w14UcJbKgqDoFLyWTZ59L5i7hmRqKGoQp3rowyjgEGlcj9DVUDfHUu5P5aqNnO5sd2eCC237K
+        s+XjYFp7MKFCi28ctkbT2VQL0c6LKOsNGobFD7rwbV1ZlWORCh491F1QHSx30x4j49kO8xxIU6NR7
+        2i7Gl/PXDHzBlZwtQMMb5maN6aonslLOgOhDlhhHp2XbUyLRwCEAh03yQbHVfSobzfpBa0i/+t9ze
+        WExSqWXg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jorDV-0007Ca-3A; Fri, 26 Jun 2020 16:28:42 +0000
+Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/slab.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20200626033744.URfGO%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org>
+Date:   Fri, 26 Jun 2020 09:28:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-x-aliyun-mail-creator: W4_5899425_DEFAULT_M3LTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTRfNikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgzLjAuNDEwMy4xMDYgU2FmYXJpLzUzNy4zNg==vN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200626033744.URfGO%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3JlZW50aW1lLAoKT24gMjAyMC82LzIzIDk6Mjgg5LiL5Y2ILCBHcmVlbnRpbWUgSHUgd3Jv
-dGU6Cj4gVGhpcyBwYXRjaCBpbXBsZW1lbnRzIGFuZCBlbmFibGVzIGNvbnRleHQgdHJhY2tpbmcg
-Zm9yIHJpc2N2ICh3aGljaCBpcyBhCj4gcHJlcmVxdWlzaXRlIGZvciBDT05GSUdfTk9fSFpfRlVM
-TCBzdXBwb3J0KQo+Cj4gSXQgYWRkcyBjaGVja2luZyBmb3IgcHJldmlvdXMgc3RhdGUgaW4gdGhl
-IGVudHJ5IHRoYXQgYWxsIGV4Y2VwdHRpb25zIGFuZAo+IGludGVycnVwdHMgZ29lcyB0byBhbmQg
-Y2FsbHMgY29udGV4dF90cmFja2luZ191c2VyX2V4aXQoKSBpZiBpdCBjb21lcyBmcm9tCj4gdXNl
-ciBzcGFjZS4gSXQgYWxzbyBjYWxscyBjb250ZXh0X3RyYWNraW5nX3VzZXJfZW50ZXIoKSBpZiBp
-dCB3aWxsIHJldHVybgo+IHRvIHVzZXIgc3BhY2UgYmVmb3JlIHJlc3RvcmVfYWxsLgo+Cj4gVGhp
-cyBwYXRjaCBpcyB0ZXN0ZWQgd2l0aCB0aGUgZHludGlja3MtdGVzdGluZyB0ZXN0Y2FzZSBpbgo+
-IHFlbXUtc3lzdGVtLXJpc2N2NjQgdmlydCBtYWNoaW5lIGFuZCBVbmxlYXNoZWQgYm9hcmQuCj4g
-Z2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2ZyZWRlcmljL2R5
-bnRpY2tzLXRlc3RpbmcuZ2l0Cj4KPiBXZSBjYW4gc2VlIHRoZSBsb2cgaGVyZS4gVGhlIHRpY2sg
-Z290IG1vc3RseSBzdG9wcGVkIGR1cmluZyB0aGUgZXhlY3V0aW9uCj4gb2YgdGhlIHVzZXIgbG9v
-cC4KPgo+ICAgICAgICAgICAgICAgICAgICAgICAgICBfLS0tLS09PiBpcnFzLW9mZgo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIC8gXy0tLS09PiBuZWVkLXJlc2NoZWQKPiAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgLyBfLS0tPT4gaGFyZGlycS9zb2Z0aXJxCj4gICAgICAgICAgICAgICAgICAg
-ICAgICB8fCAvIF8tLT0+IHByZWVtcHQtZGVwdGgKPiAgICAgICAgICAgICAgICAgICAgICAgIHx8
-fCAvICAgICBkZWxheQo+ICAgICAgIFRBU0stUElEICAgQ1BVIyAgfHx8fCAgICBUSU1FU1RBTVAg
-IEZVTkNUSU9OCj4gICAgICAgICAgfCB8ICAgICAgIHwgICB8fHx8ICAgICAgIHwgICAgICAgICB8
-Cj4gICAgIDxpZGxlPi0wICAgICBbMDAxXSBkLi4yICAgNjA0LjE4MzUxMjogc2NoZWRfc3dpdGNo
-OiBwcmV2X2NvbW09c3dhcHBlci8xIHByZXZfcGlkPTAgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRl
-PVIgPT0+IG5leHRfY29tbT10YXNrc2V0IG5leHRfcGlkPTI3MyBuZXh0X3ByaW89MTIwCj4gdXNl
-cl9sb29wLTI3MyAgIFswMDFdIGQuaDEgICA2MDQuMTg0Nzg4OiBocnRpbWVyX2V4cGlyZV9lbnRy
-eTogaHJ0aW1lcj0wMDAwMDAwMDJlZGE1ZmFiIGZ1bmN0aW9uPXRpY2tfc2NoZWRfdGltZXIgbm93
-PTYwNDE3NjA5NjMwMAo+IHVzZXJfbG9vcC0yNzMgICBbMDAxXSBkLnMyICAgNjA0LjE4NDg5Nzog
-d29ya3F1ZXVlX3F1ZXVlX3dvcms6IHdvcmsgc3RydWN0PTAwMDAwMDAwMzgzNDAyYzIgZnVuY3Rp
-b249dm1zdGF0X3VwZGF0ZSB3b3JrcXVldWU9MDAwMDAwMDBmMzZkMzVkNCByZXFfY3B1PTEgY3B1
-PTEKPiB1c2VyX2xvb3AtMjczICAgWzAwMV0gZG5zMiAgIDYwNC4xODUwMzk6IHRpY2tfc3RvcDog
-c3VjY2Vzcz0wIGRlcGVuZGVuY3k9U0NIRUQKPiB1c2VyX2xvb3AtMjczICAgWzAwMV0gZG4uMSAg
-IDYwNC4xODUxMDM6IHRpY2tfc3RvcDogc3VjY2Vzcz0wIGRlcGVuZGVuY3k9U0NIRUQKPiB1c2Vy
-X2xvb3AtMjczICAgWzAwMV0gZC4uMiAgIDYwNC4xODUxNTQ6IHNjaGVkX3N3aXRjaDogcHJldl9j
-b21tPXRhc2tzZXQgcHJldl9waWQ9MjczIHByZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1SKyA9PT4g
-bmV4dF9jb21tPWt3b3JrZXIvMToxIG5leHRfcGlkPTQ2IG5leHRfcHJpbz0xMjAKPiAgICAgIDwu
-Li4+LTQ2ICAgIFswMDFdIC4uLi4gICA2MDQuMTg1MTk0OiB3b3JrcXVldWVfZXhlY3V0ZV9zdGFy
-dDogd29yayBzdHJ1Y3QgMDAwMDAwMDAzODM0MDJjMjogZnVuY3Rpb24gdm1zdGF0X3VwZGF0ZQo+
-ICAgICAgPC4uLj4tNDYgICAgWzAwMV0gZC4uMiAgIDYwNC4xODUyNjY6IHNjaGVkX3N3aXRjaDog
-cHJldl9jb21tPWt3b3JrZXIvMToxIHByZXZfcGlkPTQ2IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0
-ZT1JID09PiBuZXh0X2NvbW09dGFza3NldCBuZXh0X3BpZD0yNzMgbmV4dF9wcmlvPTEyMAo+IHVz
-ZXJfbG9vcC0yNzMgICBbMDAxXSBkLmgxICAgNjA0LjE4ODgxMjogaHJ0aW1lcl9leHBpcmVfZW50
-cnk6IGhydGltZXI9MDAwMDAwMDAyZWRhNWZhYiBmdW5jdGlvbj10aWNrX3NjaGVkX3RpbWVyIG5v
-dz02MDQxODAxMzM0MDAKPiB1c2VyX2xvb3AtMjczICAgWzAwMV0gZC4uMSAgIDYwNC4xODkwNTA6
-IHRpY2tfc3RvcDogc3VjY2Vzcz0xIGRlcGVuZGVuY3k9Tk9ORQo+IHVzZXJfbG9vcC0yNzMgICBb
-MDAxXSBkLi4yICAgNjE0LjI1MTM4Njogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09dXNlcl9sb29w
-IHByZXZfcGlkPTI3MyBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9WCA9PT4gbmV4dF9jb21tPXN3
-YXBwZXIvMSBuZXh0X3BpZD0wIG5leHRfcHJpbz0xMjAKPiAgICAgPGlkbGU+LTAgICAgIFswMDFd
-IGQuLjIgICA2MTQuMzE1MzkxOiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1zd2FwcGVyLzEgcHJl
-dl9waWQ9MCBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPXRhc2tzZXQg
-bmV4dF9waWQ9Mjc2IG5leHRfcHJpbz0xMjAKPgo+IFNpZ25lZC1vZmYtYnk6IEdyZWVudGltZSBI
-dTxncmVlbnRpbWUuaHVAc2lmaXZlLmNvbT4KPiAtLS0KPiAgIGFyY2gvcmlzY3YvS2NvbmZpZyAg
-ICAgICAgfCAgMSArCj4gICBhcmNoL3Jpc2N2L2tlcm5lbC9lbnRyeS5TIHwgMjMgKysrKysrKysr
-KysrKysrKysrKysrKysKPiAgIDIgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQo+Cj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvS2NvbmZpZyBiL2FyY2gvcmlzY3YvS2NvbmZpZwo+IGlu
-ZGV4IDEyODE5MmUxNGZmMi4uMTc1MjBlMTE4MTViIDEwMDY0NAo+IC0tLSBhL2FyY2gvcmlzY3Yv
-S2NvbmZpZwo+ICsrKyBiL2FyY2gvcmlzY3YvS2NvbmZpZwo+IEBAIC01Miw2ICs1Miw3IEBAIGNv
-bmZpZyBSSVNDVgo+ICAgCXNlbGVjdCBIQVZFX0FSQ0hfU0VDQ09NUF9GSUxURVIKPiAgIAlzZWxl
-Y3QgSEFWRV9BUkNIX1RSQUNFSE9PSwo+ICAgCXNlbGVjdCBIQVZFX0FTTV9NT0RWRVJTSU9OUwo+
-ICsJc2VsZWN0IEhBVkVfQ09OVEVYVF9UUkFDS0lORwo+ICAgCXNlbGVjdCBIQVZFX0NPUFlfVEhS
-RUFEX1RMUwo+ICAgCXNlbGVjdCBIQVZFX0RNQV9DT05USUdVT1VTIGlmIE1NVQo+ICAgCXNlbGVj
-dCBIQVZFX0VCUEZfSklUIGlmIE1NVQo+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2tlcm5lbC9l
-bnRyeS5TIGIvYXJjaC9yaXNjdi9rZXJuZWwvZW50cnkuUwo+IGluZGV4IGNhZTdlNmQ0YzdlZi4u
-NmVkNTc5ZmMxMDczIDEwMDY0NAo+IC0tLSBhL2FyY2gvcmlzY3Yva2VybmVsL2VudHJ5LlMKPiAr
-KysgYi9hcmNoL3Jpc2N2L2tlcm5lbC9lbnRyeS5TCj4gQEAgLTk3LDYgKzk3LDE0IEBAIF9zYXZl
-X2NvbnRleHQ6Cj4gICAJbGEgZ3AsIF9fZ2xvYmFsX3BvaW50ZXIkCj4gICAub3B0aW9uIHBvcAo+
-ICAgCj4gKyNpZmRlZiBDT05GSUdfQ09OVEVYVF9UUkFDS0lORwo+ICsJLyogSWYgcHJldmlvdXMg
-c3RhdGUgaXMgaW4gdXNlciBtb2RlLCBjYWxsIGNvbnRleHRfdHJhY2tpbmdfdXNlcl9leGl0LiAq
-Lwo+ICsJYW5kaSBhMCwgczEsIFNSX1NQUAo+ICsJYm5leiBhMCwgc2tpcF9jb250ZXh0X3RyYWNr
-aW5nCj4gKwljYWxsIGNvbnRleHRfdHJhY2tpbmdfdXNlcl9leGl0CgpJdCB3aWxsIGRlc3Ryb3kg
-czEtczUgd2hpY2ggYXJlIHVzZWQgaW4gZW50cnkuUyBsaWtlIHRoZXNlOgoKIMKgwqDCoMKgwqDC
-oMKgIFJFR19TIHMwLCBQVF9TUChzcCkKIMKgwqDCoMKgwqDCoMKgIFJFR19TIHMxLCBQVF9TVEFU
-VVMoc3ApCiDCoMKgwqDCoMKgwqDCoCBSRUdfUyBzMiwgUFRfRVBDKHNwKQogwqDCoMKgwqDCoMKg
-wqAgUkVHX1MgczMsIFBUX0JBREFERFIoc3ApCiDCoMKgwqDCoMKgwqDCoCBSRUdfUyBzNCwgUFRf
-Q0FVU0Uoc3ApCiDCoMKgwqDCoMKgwqDCoCBSRUdfUyBzNSwgUFRfVFAoc3ApCi4uLgogwqDCoMKg
-wqDCoMKgwqAgLyoKIMKgwqDCoMKgwqDCoMKgwqAgKiBNU0Igb2YgY2F1c2UgZGlmZmVyZW50aWF0
-ZXMgYmV0d2VlbgogwqDCoMKgwqDCoMKgwqDCoCAqIGludGVycnVwdHMgYW5kIGV4Y2VwdGlvbnMK
-IMKgwqDCoMKgwqDCoMKgwqAgKi8KIMKgwqDCoMKgwqDCoMKgIGJnZSBzNCwgemVybywgMWYKCi4u
-LgoKIMKgwqDCoMKgwqDCoMKgIC8qCiDCoMKgwqDCoMKgwqDCoMKgICogRXhjZXB0aW9ucyBydW4g
-d2l0aCBpbnRlcnJ1cHRzIGVuYWJsZWQgb3IgZGlzYWJsZWQgZGVwZW5kaW5nIApvbiB0aGUKIMKg
-wqDCoMKgwqDCoMKgwqAgKiBzdGF0ZSBvZiBTUl9QSUUgaW4gbS9zc3RhdHVzLgogwqDCoMKgwqDC
-oMKgwqDCoCAqLwogwqDCoMKgwqDCoMKgwqAgYW5kaSB0MCwgczEsIFNSX1BJRQoKLi4uCgogwqDC
-oMKgwqDCoMKgwqAgLyogSGFuZGxlIHN5c2NhbGxzICovCiDCoMKgwqDCoMKgwqDCoCBsaSB0MCwg
-RVhDX1NZU0NBTEwKIMKgwqDCoMKgwqDCoMKgIGJlcSBzNCwgdDAsIGhhbmRsZV9zeXNjYWxsCgou
-Li4KCkkgYWxzbyBzb2x2ZWQgaXQgaW4gbXkgbG9ja2RlcCBwYXRjaGVzLCBwbGVhc2UgaGF2ZSBh
-IGxvb2s6Cmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXJpc2N2LzE1OTIzMjMwMjEtOTg1
-NDEtNC1naXQtc2VuZC1lbWFpbC1ndW9yZW5Aa2VybmVsLm9yZy9ULyN1CgoKQmVzdCBSZWdhcmRz
-CgogwqBHdW8gUmVuCgo+ICsKPiArc2tpcF9jb250ZXh0X3RyYWNraW5nOgo+ICsjZW5kaWYKPiAg
-IAlsYSByYSwgcmV0X2Zyb21fZXhjZXB0aW9uCj4gICAJLyoKPiAgIAkgKiBNU0Igb2YgY2F1c2Ug
-ZGlmZmVyZW50aWF0ZXMgYmV0d2Vlbgo+IEBAIC0xMzcsNiArMTQ1LDE3IEBAIF9zYXZlX2NvbnRl
-eHQ6Cj4gICAJdGFpbCBkb190cmFwX3Vua25vd24KPiAgIAo+ICAgaGFuZGxlX3N5c2NhbGw6Cj4g
-KyNpZmRlZiBDT05GSUdfQ09OVEVYVF9UUkFDS0lORwo+ICsJLyogUmVjb3ZlciBhMCAtIGE3IGZv
-ciBzeXN0ZW0gY2FsbHMgKi8KPiArCVJFR19MIHgxMCwgUFRfQTAoc3ApCj4gKwlSRUdfTCB4MTEs
-IFBUX0ExKHNwKQo+ICsJUkVHX0wgeDEyLCBQVF9BMihzcCkKPiArCVJFR19MIHgxMywgUFRfQTMo
-c3ApCj4gKwlSRUdfTCB4MTQsIFBUX0E0KHNwKQo+ICsJUkVHX0wgeDE1LCBQVF9BNShzcCkKPiAr
-CVJFR19MIHgxNiwgUFRfQTYoc3ApCj4gKwlSRUdfTCB4MTcsIFBUX0E3KHNwKQo+ICsjZW5kaWYK
-PiAgIAkgLyogc2F2ZSB0aGUgaW5pdGlhbCBBMCB2YWx1ZSAobmVlZGVkIGluIHNpZ25hbCBoYW5k
-bGVycykgKi8KPiAgIAlSRUdfUyBhMCwgUFRfT1JJR19BMChzcCkKPiAgIAkvKgo+IEBAIC0yMDUs
-NiArMjI0LDEwIEBAIHJlc3VtZV91c2Vyc3BhY2U6Cj4gICAJYW5kaSBzMSwgczAsIF9USUZfV09S
-S19NQVNLCj4gICAJYm5leiBzMSwgd29ya19wZW5kaW5nCj4gICAKPiArI2lmZGVmIENPTkZJR19D
-T05URVhUX1RSQUNLSU5HCj4gKwljYWxsIGNvbnRleHRfdHJhY2tpbmdfdXNlcl9lbnRlcgo+ICsj
-ZW5kaWYKPiArCj4gICAJLyogU2F2ZSB1bndvdW5kIGtlcm5lbCBzdGFjayBwb2ludGVyIGluIHRo
-cmVhZF9pbmZvICovCj4gICAJYWRkaSBzMCwgc3AsIFBUX1NJWkVfT05fU1RBQ0sKPiAgIAlSRUdf
-UyBzMCwgVEFTS19USV9LRVJORUxfU1AodHAp
+On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+
+
+when CONFIG_NUMA is not set/enabled:
+
+../mm/slab.c: In function ‘___cache_free’:
+../mm/slab.c:3471:2: error: implicit declaration of function ‘__free_one’; did you mean ‘__free_page’? [-Werror=implicit-function-declaration]
+  __free_one(ac, objp);
+  ^~~~~~~~~~
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
