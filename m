@@ -2,50 +2,49 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1817BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4265BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE095207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WGHo01Ni"
+	by mail.kernel.org (Postfix) with ESMTP id 2635621473
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbgFZSP7 (ORCPT
+        id S1726118AbgFZSQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:15:59 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43220 "EHLO mail.skyhub.de"
+        Fri, 26 Jun 2020 14:16:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64784 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgFZSP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:15:58 -0400
-Received: from zn.tnic (p200300ec2f0d1400d99b017616e7d256.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1400:d99b:176:16e7:d256])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B3DFC1EC0136;
-        Fri, 26 Jun 2020 20:15:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593195355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=K2CJIk9iowgPaK93YLqKtsoeAarMKRZRNRyX9xlsHGw=;
-        b=WGHo01Ni5a9EIBQZ8DoOJEDy11rUkc5B8Y8CS9BQdGp+nQRYe0awSHaWwqqB53p0mxhFJM
-        Lsu/rM53eHDAw34OJQ2FJBVzuq+UQ08aKNwsMIH3mQ8f4RCdkPuxMLHiDGSh0WFqFtYYT6
-        HOzMGAZzedykl06V0+IwBKAKwAbZLu8=
-Date:   Fri, 26 Jun 2020 20:15:50 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1725780AbgFZSQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:16:45 -0400
+IronPort-SDR: l2oiloYgDf5NF7a/IY7RALemqzIFlH2c0CaSQ9XbLwxqqbgoghC6m8FTpoRzzQ23H7grnD80FX
+ w5lApmuIqT+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143661750"
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="143661750"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:16:44 -0700
+IronPort-SDR: LrvGyNnpWX6ik5OFFqZoBMW0OQOmmNpAFfodvXeT2j9bQlZKueLItipolrt/V64t2tcadV1dna
+ D9NzoyBXgSJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="385835873"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2020 11:16:44 -0700
+Date:   Fri, 26 Jun 2020 11:16:24 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        H Peter Anvin <hpa@zytor.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
         David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
         Christoph Hellwig <hch@infradeed.org>,
         Ashok Raj <ashok.raj@intel.com>,
@@ -56,48 +55,89 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
 Subject: Re: [PATCH v4 12/12] x86/traps: Fix up invalid PASID
-Message-ID: <20200626181550.GF27151@zn.tnic>
+Message-ID: <20200626181624.GA32961@romley-ivt3.sc.intel.com>
 References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
  <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
  <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
- <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:10:00AM -0700, Luck, Tony wrote:
-> Do we have a standard way of coding for a feature that depends on multiple
-> other features?  For this case the system needs to both suport the ENQCMD
-> instruction, and also have kernel code that programs the IOMMU.
+Hi, Peter,
 
-Yes, you need both. Consider distros enabling everything so that they
-can ship a single kernel image.
+On Fri, Jun 26, 2020 at 11:44:50AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 01:17:22PM -0700, Fenghua Yu wrote:
+> 
+> > +static bool fixup_pasid_exception(void)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> > +		return false;
+> > +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
+> > +		return false;
+> 
+> elsewhere you had another variation:
+> 
+> +       if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> +               return;
+> +
+> +       if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
+> +               return;
+> 
+> Which is it, and why do we need the CONFIG thing when combined with the
+> enabled thing?
+> 
 
-> And/or guidance on when to use each of the very somewhat simlar looking
-> 	boot_cpu_has()
-> 	static_cpu_has()
+I will use the second one with cpu_feature_enabled() for both cases.
 
-See the comment over _static_cpu_has() in arch/x86/include/asm/cpufeature.h
+The CONFIG thing is for compilation time optimization when
+CONFIG_INTEL_IOMMU_SVM is not set.
 
-In the exception path you should use the static_ variant.
+If CONFIG_INTEL_IOMMU_SVM is not set, IS_ENABLED(CONFIG_INTEL_IOMMU_SVM) 
+is "false" during compilation time. Then GCC will optimize 
+fixup_pasid_execption() to empty and will not define
+__fixup_pasid_exception() at all because no one calls it.
 
-> 	IS_ENABLED()
+If CONFIG_INTEL_IOMMU_SVM is set, IS_ENABLED(...) is always true.
+Depending on cpu_feature_enabled(X86_FEATURE_ENQCMD), __fixup_pasid_execption()
+will be called or not during run time.
 
-This is testing CONFIG_ settings, i.e., build time.
+Does it make sense?
 
-> 	cpu_feature_enabled()
+Do you want me to define a helper enqcmd_enabled()?
 
-This too, indirectly. See
+static inline bool enqcmd_enabled(void)
+{
+   if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+           return false;
+   if (!static_cpu_has(X86_FEATURE_ENQCMD))
+           return false;
+   return true;
+}
 
-arch/x86/include/asm/disabled-features.h
+Then both fixup_pasid_execption() and free_pasid() can call it.
 
--- 
-Regards/Gruss,
-    Boris.
+static bool fixup_pasid_exception(void)
+{
+	if (!enqcmd_enabled())
+		return false;
+	
+	return __fixup_pasid_exception();
+}
 
-https://people.kernel.org/tglx/notes-about-netiquette
+statis inline void free_pasid(struct m_struct *mm)
+{
+	if (!enqcmd_enabled())
+		return;
+
+	__free_pasid(mm);
+}
+
+Please advice.
+
+-Fenghua
