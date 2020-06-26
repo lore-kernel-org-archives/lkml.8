@@ -2,95 +2,129 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F62C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F959C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5232065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE17206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:02:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QFH5H3jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgFZPAW (ORCPT
+        id S1727870AbgFZPCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:00:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46378 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgFZPAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:00:22 -0400
-IronPort-SDR: 92O6C5haC1m3SSiM4D1TLXW2dJ/dspDMjmPh+XvhXL2vqXWO2QUI92dDXCWBnTFJHt0NY+/pIP
- G5UZoNoPVDgA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132767126"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="132767126"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 08:00:21 -0700
-IronPort-SDR: yHl0O8SJJXKqifHtnUd6rN0qqjbg+YRRAnToPjCoKu1gXAK69IhBXcq/RzLn3wgWDRa3+tnRcI
- tJQN/277K2hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="312340678"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jun 2020 08:00:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jopq1-00GC6h-0d; Fri, 26 Jun 2020 18:00:21 +0300
-Date:   Fri, 26 Jun 2020 18:00:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/7] Some atomisp fixes and improvements
-Message-ID: <20200626150021.GY3703480@smile.fi.intel.com>
-References: <cover.1593180146.git.mchehab+huawei@kernel.org>
+        Fri, 26 Jun 2020 11:02:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30117 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725836AbgFZPCs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:02:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593183767;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fHKbqpiGBYPXJ+14sGPnxiW9V8XsYSBUqlw0hE9Dm9c=;
+        b=QFH5H3jkeT/0JieVJ7o/qMCm4Wy7hkfzA4lTQeegR9z/sZ6u04MvDo4kGbPNe1c61PWmpQ
+        zUwFfdho4tA65KAL8SzI6Si03lky5QaXv7ZytHQ0KYvOK+LY/ZJKPvU2bqvIZyihYrd8np
+        TMy/2B1WJOJTBkExGZVOFulZsuOHIp4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-6Os_ZGzQM0a4ZkBmt1xVMw-1; Fri, 26 Jun 2020 11:02:27 -0400
+X-MC-Unique: 6Os_ZGzQM0a4ZkBmt1xVMw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E290464;
+        Fri, 26 Jun 2020 15:02:26 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99A9A60F8A;
+        Fri, 26 Jun 2020 15:02:22 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05QF2MDr012492;
+        Fri, 26 Jun 2020 11:02:22 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05QF2J5i012464;
+        Fri, 26 Jun 2020 11:02:21 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Fri, 26 Jun 2020 11:02:19 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
+In-Reply-To: <20200625113122.7540-1-willy@infradead.org>
+Message-ID: <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200625113122.7540-1-willy@infradead.org>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1593180146.git.mchehab+huawei@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 04:04:52PM +0200, Mauro Carvalho Chehab wrote:
-> Those patches are meant to improve device detection by the atomisp driver,
-> relying on ACPI bios when possible.
-> 
-> It also adds a basis for using ACPI PM, but only if the DSDT tables have
-> a description about how to turn on the resources needed by the cameras.
-> 
-> At least on the device I'm using for tests, this is not the case.
+Hi
 
-Is this in your experimental tree? I'll rebase mine on top and test.
-After I will send the rest from my series and give a tag to this.
+I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
+prevents both filesystem recursion and i/o recursion.
 
+Note that any I/O can recurse into a filesystem via the loop device, thus 
+it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
+and PF_MEMALLOC_NOIO is not set.
+
+Mikulas
+
+On Thu, 25 Jun 2020, Matthew Wilcox (Oracle) wrote:
+
+> I want a memalloc_nowait like we have memalloc_noio and memalloc_nofs
+> for an upcoming patch series, and Jens also wants it for non-blocking
+> io_uring.  It turns out we already have dm-bufio which could benefit
+> from memalloc_nowait, so it may as well go into the tree now.
 > 
-> Mauro Carvalho Chehab (7):
->   media: atomisp: reorganize the code under gmin_subdev_add()
->   media: atomisp: Prepare sensor support for ACPI PM
->   media: atomisp: properly parse CLK PMIC on newer devices
->   media: atomisp: fix call to g_frame_interval
->   media: atomisp: print info if gpio0 and gpio2 were detected
->   media: atomisp: split add from find subdev
->   media: atomisp: place all gpio parsing together
+> The biggest problem is that we're basically out of PF_ flags, so we need
+> to find somewhere else to store the PF_MEMALLOC_NOWAIT flag.  It turns
+> out the PF_ flags are really supposed to be used for flags which are
+> accessed from other tasks, and the MEMALLOC flags are only going to
+> be used by this task.  So shuffling everything around frees up some PF
+> flags and generally makes the world a better place.
 > 
->  .../staging/media/atomisp/pci/atomisp_cmd.c   |   2 +-
->  .../media/atomisp/pci/atomisp_gmin_platform.c | 393 ++++++++++++------
->  2 files changed, 267 insertions(+), 128 deletions(-)
+> Patch series also available from
+> http://git.infradead.org/users/willy/linux.git/shortlog/refs/heads/memalloc
+> 
+> Matthew Wilcox (Oracle) (6):
+>   mm: Replace PF_MEMALLOC_NOIO with memalloc_noio
+>   mm: Add become_kswapd and restore_kswapd
+>   xfs: Convert to memalloc_nofs_save
+>   mm: Replace PF_MEMALLOC_NOFS with memalloc_nofs
+>   mm: Replace PF_MEMALLOC_NOIO with memalloc_nocma
+>   mm: Add memalloc_nowait
+> 
+>  drivers/block/loop.c           |  3 +-
+>  drivers/md/dm-bufio.c          | 30 ++++--------
+>  drivers/md/dm-zoned-metadata.c |  5 +-
+>  fs/iomap/buffered-io.c         |  2 +-
+>  fs/xfs/kmem.c                  |  2 +-
+>  fs/xfs/libxfs/xfs_btree.c      | 14 +++---
+>  fs/xfs/xfs_aops.c              |  4 +-
+>  fs/xfs/xfs_buf.c               |  2 +-
+>  fs/xfs/xfs_linux.h             |  6 ---
+>  fs/xfs/xfs_trans.c             | 14 +++---
+>  fs/xfs/xfs_trans.h             |  2 +-
+>  include/linux/sched.h          |  7 +--
+>  include/linux/sched/mm.h       | 84 ++++++++++++++++++++++++++--------
+>  kernel/sys.c                   |  8 ++--
+>  mm/vmscan.c                    | 16 +------
+>  15 files changed, 105 insertions(+), 94 deletions(-)
 > 
 > -- 
-> 2.26.2
+> 2.27.0
 > 
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
