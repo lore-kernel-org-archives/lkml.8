@@ -2,145 +2,106 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B676C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA47F20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C8920702
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JAecZ0nq"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="aXUNBRHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbgFZPxy (ORCPT
+        id S1730128AbgFZPx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        Fri, 26 Jun 2020 11:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730093AbgFZPxs (ORCPT
+        with ESMTP id S1730093AbgFZPxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:53:48 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 686DBC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:53:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so8339157wmf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:53:48 -0700 (PDT)
+        Fri, 26 Jun 2020 11:53:54 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126EEC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:53:55 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i3so10876350ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4HpTeBheR2Max3bhies4A06Ktq37O/EquFsiIja/0Us=;
-        b=JAecZ0nqvo8AmnXIX2it/8IMyi2bxnGgFQInkwWVdB1gyEwzvTZguf53OiXpKjDr6y
-         XP2eAnAw1phsaoewWx9UM711SHyjGGQdeq5cZ1l7dm/CVkG+gffP/GiO44aTIYXu9Sj7
-         SoiPsJ/Iewa8R6x8q+8xHp7Q9YsYONLEXHs5N6HdHwJzMkr52uE192l7JFB9sfFE96Cj
-         sRzv2MhjjKl9+QiKr320vkzzqyZWP7HUMGB9t47/01awDQxXSONb/BI5McCjkKDOOLz/
-         EQt3qTjgN9QXIhz6OcSfMNLFxrS0hNrzzgfa4n23U8vG5+uhGcLtkHuXGYGJ7oFPqf7A
-         wmVg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wS3ZoLwVxMYE5aOSMJlL4wxZx5NfasIcwsCreNsKCHg=;
+        b=aXUNBRHApb/d4chCFqPEAPBCerd3HA1AvzgBAtxqWUNfOP2ounPi0BGuHU/6m1fMLy
+         iZUgVzdo4eoyvRyCiukLyt5m7teU8Bt/nXESIblqrPBS8siY3NlycbomLgD6F4O97yVX
+         Yc6EqjHlhno2UoZfMpghdRCPxOK8hvq8MMShIZpLFyWt+ICmU5qANsip6istpwh2ATbS
+         7TJoAXNg7C+bWwqwIZ2bFiKsNqC4/dosBpHgjQKhtBrYHYNiUoePWmDXvonUWiz36CvB
+         SBybpbeMe/pSr54YHQuY0qFNbrQn5/1Pu5ViKf1lJa4+hB4rJnGLh5593rzpjFuoFwXO
+         B5Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4HpTeBheR2Max3bhies4A06Ktq37O/EquFsiIja/0Us=;
-        b=NUVOQ7EqFMuwkpYK1WJZNtkEr4kh7vY/F/T4g6ixoH9vpzNyky/zC5KcUYdGbMUjUG
-         pUvWYCmi20kpP4dEMtTDak/7qJ/KvWFBEIiqfhdhBMeDWzVfyH3yiCPwSi8TAmBuO65F
-         8XCcR7yzofBdWr1IbmDfbF9y/e3Bdrwaq45yOFLTK1oL4ASXcThOFchYGh6u/HDSlaRF
-         R9iSZXgXHAIn/NeGhLjGoQTJT9CztYEnqPf9XlEAcrfKI4jSpG7L+ne10E4L1CylEe3N
-         l96XMBYN+1VZinFm2ttCtHf9ZufPMS4WI7QB/mkSIr3nyz4YriWZDYQOlZzh+5y704Z4
-         Nv4A==
-X-Gm-Message-State: AOAM532e7XBbrH4Z55IOt13/jJQFeorMUK/uhiscc35mkYm0R5U2QaE9
-        c7MuuvwaOvSC9IkSj8rvU/+Ltw==
-X-Google-Smtp-Source: ABdhPJy3y+RszAJGTbdP/01nZi0Y5pYeHN3bFnyQygRzQP1z4vAf5Ce19XLI9TY8keSgctRUay0Xjg==
-X-Received: by 2002:a1c:5583:: with SMTP id j125mr4342157wmb.189.1593186827220;
-        Fri, 26 Jun 2020 08:53:47 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id h142sm8242791wme.3.2020.06.26.08.53.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 08:53:46 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 3/6] net: phy: arrange headers in phy_device.c alphabetically
-Date:   Fri, 26 Jun 2020 17:53:22 +0200
-Message-Id: <20200626155325.7021-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200626155325.7021-1-brgl@bgdev.pl>
-References: <20200626155325.7021-1-brgl@bgdev.pl>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wS3ZoLwVxMYE5aOSMJlL4wxZx5NfasIcwsCreNsKCHg=;
+        b=gCFPI/6Jje0yMk8CmM75+D9jCOMVui/Rag7077yNtaTkkMywoZR1ZhYLWZnkWWin6o
+         A1OBTQkZ85nU557bYJOHeyPItlN/t/GpUDbk9lrRhQya+b/RyBwpea4bRrtspxyL4yhH
+         2lcHWZbc/dhbb0WFW8vVXuZA3eQTIdi8yDbmZ9uLxMKwFBy8AFL/1vNNTrFjK650YYfU
+         7m+o/M+EJbQvEoBR59Ju0AmdzUWCj9T+rX1kvNt4/f1htjxJyuIiBdyYCvdu2wrVhxM/
+         JO8BXY84XXfZrsAw7/pWtWA+xg5dtAglJ05pWsdnXEZuF7tGg1l66yLYCkdgp1xmtgSI
+         uMSA==
+X-Gm-Message-State: AOAM530okmvnGMcDuF/8KE8ALT6pTHLdKAhdNOC+7luawwd+D8Dge07b
+        +Hu6CoizJVkhkMbSBuUK3yeNXg==
+X-Google-Smtp-Source: ABdhPJxVanab6IRVSKzmHEyKsqu6Hh1aLxUPDUAS04E63YfmDijCpVv/qdoDyztglfWI0L3Z931Ieg==
+X-Received: by 2002:a2e:a548:: with SMTP id e8mr1822890ljn.76.1593186833518;
+        Fri, 26 Jun 2020 08:53:53 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4807:b213:5663:e485:3cf8:764f])
+        by smtp.gmail.com with ESMTPSA id d6sm2733412lja.77.2020.06.26.08.53.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jun 2020 08:53:52 -0700 (PDT)
+Subject: Re: [PATCH/RFC v4 3/4] mmc: core: Call mmc_poweroff_nofity() if
+ regulators are disabled
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        ulf.hansson@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        geert+renesas@glider.be, magnus.damm@gmail.com
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <059bced3-00d3-cf2e-6628-a8c9f1544909@cogentembedded.com>
+Date:   Fri, 26 Jun 2020 18:53:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593163942-5087-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello!
 
-Keeping the headers in alphabetical order is better for readability and
-allows to easily see if given header is already included.
+On 06/26/2020 12:32 PM, Yoshihiro Shimoda wrote:
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/phy_device.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+> If regulator_is_enabled() of both vmmc and vqmmc returns false,
+> _mmc_suspend() should call mmc_poweroff_nofity() instead of
+                                          ^^^^^^
+  That hard word again. :-)        
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..1b4df12c70ad 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -9,28 +9,28 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/kernel.h>
--#include <linux/string.h>
--#include <linux/errno.h>
--#include <linux/unistd.h>
--#include <linux/slab.h>
--#include <linux/interrupt.h>
--#include <linux/init.h>
-+#include <linux/bitmap.h>
- #include <linux/delay.h>
--#include <linux/netdevice.h>
-+#include <linux/errno.h>
- #include <linux/etherdevice.h>
--#include <linux/skbuff.h>
-+#include <linux/ethtool.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mdio.h>
-+#include <linux/mii.h>
- #include <linux/mm.h>
- #include <linux/module.h>
--#include <linux/mii.h>
--#include <linux/ethtool.h>
--#include <linux/bitmap.h>
-+#include <linux/netdevice.h>
- #include <linux/phy.h>
- #include <linux/phy_led_triggers.h>
- #include <linux/sfp.h>
--#include <linux/mdio.h>
--#include <linux/io.h>
-+#include <linux/skbuff.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/uaccess.h>
-+#include <linux/unistd.h>
- 
- MODULE_DESCRIPTION("PHY library");
- MODULE_AUTHOR("Andy Fleming");
--- 
-2.26.1
+> mmc_sleep().
+> 
+> Note that this is possible to happen when the regulator-fixed driver
+> turns the vmmc and vqmmc off by firmware like PSCI while the system
+> is suspended.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[...]
 
+MBR, Sergei
