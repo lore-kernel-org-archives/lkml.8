@@ -2,105 +2,103 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1604C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751EE20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3D220775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzt02VDu"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VUQyqp4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgFZG6T (ORCPT
+        id S1728711AbgFZG61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbgFZG5q (ORCPT
+        Fri, 26 Jun 2020 02:58:27 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:41249 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728590AbgFZG6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:57:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84618C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:57:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so8367591wrm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V/fY+SKO1Jj5D5YQYaGnVvTrQu75adS3mRb5y+EqAwo=;
-        b=yzt02VDu0CzSC/QEDj7E7YM9X1XLw0ISddmZdLk9sScfqkbGp0Xq+20XMr1gslxJS6
-         KHFEQG7qy01LuqwWZJr/r+RaQLZDRUFEcVK6uXQzJALuIp1aqt5UN7hJi5Qe7D8QfwvG
-         AWZ5I6QeKJWM0ax4C1xMPqrw/6cxvpQej9vui13gMOGceQIt3sjLY79AO9x4lfGSBxLD
-         LmETWiL9qaPWmANArrjT1QP6tTgDn6+WtzVetfkCVf/otoyvfRf1A/EER61/b+dqIAbG
-         oEen04QTx5EwVGOpsdzhKozLB8ueIJWYYwmXAW1IUiIAuxUVBNlaKjzhbQ20Np54ti8e
-         LS9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V/fY+SKO1Jj5D5YQYaGnVvTrQu75adS3mRb5y+EqAwo=;
-        b=VFVq0qc7TacyTCU72712KZOAc3UvVC9NLANf5ycur+AWYnIIiiklsWzRGVe7TnGbnJ
-         iJD5F++c+0JsAjWFd0LDZR2UkO6MtMprZu4eTXk9qgfvm7f82/Gpm6O97PgfsOZl4gU5
-         uL+wrCmZAcc8jzfNf0cHdwAgx9CnzQawNEcfUpruS2JUeI22vmf7ip6Lo8zihUpTyQK1
-         mfiZLCZmWbxZDyTBnwGbmOGJijs/CGL8K2PoWKSxf9vZjuYBKaphZRG1ASo3xpt8OOsT
-         D9LgACVMKPQreYr1aiL+/svA7QrtCDvc+ySuI2/TR8HxRjvecPFxCu0rFHNYA53R32bi
-         SqWg==
-X-Gm-Message-State: AOAM531dJyQkf98sgSv2mWWYM/wXx6trxIxxZDE+yE72oM8ADuuPGlhm
-        tKZgd4V84wjG3CmsL1BtwbBHIQ==
-X-Google-Smtp-Source: ABdhPJwCkkYYaOhccmFsNz/Yhg7coOjKTR+t9o30rYzg3GOOoRKpB9DeJhL5Nc6h+vNDcVxJOLd7Lw==
-X-Received: by 2002:a5d:68c7:: with SMTP id p7mr2245534wrw.16.1593154665319;
-        Thu, 25 Jun 2020 23:57:45 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x18sm15355269wmi.35.2020.06.25.23.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 23:57:44 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     broonie@kernel.org, lgirdwood@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/9] regulator: pwm-regulator: Demote kerneldoc header to standard comment
-Date:   Fri, 26 Jun 2020 07:57:32 +0100
-Message-Id: <20200626065738.93412-4-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200626065738.93412-1-lee.jones@linaro.org>
-References: <20200626065738.93412-1-lee.jones@linaro.org>
+        Fri, 26 Jun 2020 02:58:25 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id oiJVjZpLgxmkVoiJZjgaTI; Fri, 26 Jun 2020 08:58:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593154702; bh=R6Ir/Bz75ZuOudF6KyzPGOEaxClJeiHyCzSqQo5MsMQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=VUQyqp4fpNHEEBJ7tqRiL6kX8TE90+9Ueif61BuvbZCy335uBrqwDpy6hnA7wSFFW
+         J16jrFXDlILKoJdBsY2yN47tkOiMReQoY0F9eUGHdr1BBYdyfpUEEJ0l5FZQq3R8mU
+         dZaxFJt67FA+oz0STAsyQ9j+XHa4oKTiz0cVb/nOjZ+41WXSH3WOZi10lwxzr5BlVW
+         XvClmBSB155wsE+FanYyqcfI7QM0IL5Zoz9vxiH3zPH8qPOALzIxToaJXOpD47zME6
+         KKT1CEufKEM0jJxNgJt3dJkQXIzaOpNtvwX04WYx9+SZREE+0T8x1GAyzM+hk/zV07
+         FKyaaUxM77IAA==
+Subject: Re: [PATCH v2 0/4] Tegra Video Decoder driver power management
+ corrections
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200624150847.22672-1-digetx@gmail.com>
+ <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
+ <23cbaa18-9461-8f72-3d43-aa14cd0c1095@gmail.com>
+ <0e14df05-8299-52d6-df8f-0dd476f4109d@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <e41ff660-6c6c-d603-c767-34e7f4b4a23d@xs4all.nl>
+Date:   Fri, 26 Jun 2020 08:58:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <0e14df05-8299-52d6-df8f-0dd476f4109d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfPLvU4k9HoHcsriBfUKOvb1jI4bhwxiauTAC9rGOgP28MbgwWKOlxenX5oo62ZWwMWqckA5P6RtdkVpGxhVm/RgmH3edVm1o86fl/r+1N8w+Ohwly0ZA
+ +bnnPZohhYlepqoQUcBy4KrNDAloZOAclQ9KJYO6vae8dXFpzf1BAGJ5bMcik5bIvmqu5GGRZq5Ng/NdoDk8ZlmdDYJNFMC5Pc5jg0Jd91X2T5B1iAqzpz1I
+ fruTlmbflCZy3U/dKwB9pK02fZ0adpyGBRnMRzR6VgXzOvMnhXviimkwcrv8p3e5vPlGBmMOFmUEOHyalREmtKst3yKT103wlYG9sgkfU61Ns3l19BDuIjwQ
+ 5gJAb+9dP2ZvKSa4nfvxNuaV/rl2tiQYFANyPf8tfOmK3ifqIKsb9e58EadMV6iL6RDR6/rR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This particular comment doesn't have anything to do with documenting
-functions or data structures.  Instead it is used as a section header.
+On 26/06/2020 02:17, Dmitry Osipenko wrote:
+> 24.06.2020 18:23, Dmitry Osipenko пишет:
+>> 24.06.2020 18:16, Hans Verkuil пишет:
+>>> On 24/06/2020 17:08, Dmitry Osipenko wrote:
+>>>> Hello,
+>>>>
+>>>> This small series addresses a Runtime PM issue that was discovered during
+>>>> of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
+>>>> failure. Secondly it fixes reboot on some Tegra devices due to bootloader
+>>>> expecting VDE power partition to be ON at the boot time, which wasn't
+>>>> happening in case of a warm re-booting (i.e. by PMC resetting).
+>>>
+>>> Can you rebase this on top of the media_tree master branch? I think a variant
+>>> of patch 1 has already been applied. I found a mail today where you mentioned
+>>> that you preferred your version (it looks like I missed that) so you'll need to
+>>> rework patch 1.
+>>
+>> Hello Hans,
+>>
+>> I'll take a look at what patches has been applied, my bad for sending
+>> the v2 too late. Thank you for the heads up!
+>>
+> 
+> I tested the already-applied variant of the patch 1 and it has the same
+> behaviour as my variant, so it's okay.
+> 
+> Would you want me to send a v3 without the conflicting patch 1 or you
+> could apply the patches 2-4 from this series?
+> 
 
-Fixes W=1 warning:
+I'll mark 1/4 as superseded and will apply patches 2-4. No need for you
+to do anything.
 
- drivers/regulator/pwm-regulator.c:55: warning: Function parameter or member 'rdev' not described in 'pwm_regulator_init_state'
+Regards,
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/regulator/pwm-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 638329bd0745e..3234b118b53ea 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -48,7 +48,7 @@ struct pwm_voltages {
- 	unsigned int dutycycle;
- };
- 
--/**
-+/*
-  * Voltage table call-backs
-  */
- static void pwm_regulator_init_state(struct regulator_dev *rdev)
--- 
-2.25.1
-
+	Hans
