@@ -2,138 +2,120 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D638C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC2F52089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355582089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kKEbfSWn"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="qL1iJ7bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgFZV4j (ORCPT
+        id S1725867AbgFZV5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
+        Fri, 26 Jun 2020 17:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgFZV4i (ORCPT
+        with ESMTP id S1725803AbgFZV5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:56:38 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54467C03E979;
-        Fri, 26 Jun 2020 14:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7IHCsdnoUmmfDZldhAWNkEIt+lt8DWXAOajFIarz2tE=; b=kKEbfSWnL3KXAAUyV5RJhsMkFq
-        R168LUlj+Kwcx5NqFvReQe4AX2Yqvt/2oLFrlX6nD9Zezq3YWFwNXbSl3N2TlQIk84oxLkxYuPFiN
-        h5g7fLxL176wH380RcqVwdrXjNXgn9mf8ETlFXyCl3iFQQgwvZDhqOjS8UZGEtDiLwNo=;
-Received: from p200300ccff124000e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff12:4000:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jowK9-00029R-MS; Fri, 26 Jun 2020 23:56:00 +0200
-Received: from [::1] (helo=localhost)
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jowK8-0005Gb-RO; Fri, 26 Jun 2020 23:55:52 +0200
-Date:   Fri, 26 Jun 2020 23:55:52 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix
- embedded controller RTC
-Message-ID: <20200626235552.7820a999@kemnade.info>
-In-Reply-To: <20200621000220.GB131826@piout.net>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
-        <20200620224222.1312520-6-j.neuschaefer@gmx.net>
-        <20200621000220.GB131826@piout.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Fri, 26 Jun 2020 17:57:45 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852E6C03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:57:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so10802964wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GaefEko3kEAOd19TubqWqNAf+AVqFUJ4Wq5QM8k6oA0=;
+        b=qL1iJ7bZpKKnvVKjD187zlZlhBdctCIOERlzFxD2/eUC+EigcNn9fFXpSLUQiHsyPM
+         J2GyHAN1uXx0fDpU6ax3Q+zfqDjOXSEV4Imh/Rr/W9vmTL3sHKRmaPqoKv/uCzOoM5xe
+         jnSN/Kniwd9tOv+pNM5FyqOtdLSjaqdhl1eCw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GaefEko3kEAOd19TubqWqNAf+AVqFUJ4Wq5QM8k6oA0=;
+        b=WX2bn2IrQemDnRRQusVj2t3QrmDrRvanzh5ErBNUK3NqP5pJLyatY7ysj+KdOvSVFj
+         cXg+p3OWpdkQ2P3ZuDtWHHiQ5fP1sJt9U+qOQ82wyOCUunUCE0UDvPx3pBYXppwElrxs
+         VtBxCO9u1WP5ApthlwEuCGJOXAC5MD+m/kgcnL1FL9Fcg8dUbtlUymBJpK4semDpkE/4
+         N6ulIIF5LaEibD6YOZMbgl6Xxwyw3vnERwYq1bHQFFZm1zcyvcnFNPybhPIxJ/97Azlr
+         e+6BlTdbhE9N94owxwo+bw1ZAyguzui+FhibyYOfEI3fVORfTX8qIz2UjCb3/ml9EXsA
+         0qFw==
+X-Gm-Message-State: AOAM531QY/aX0XLLwdLXFw3SYd/mT/0exM1S+KqoSHrpHK6+4CF27iSY
+        OzMqqfJQbJWzLqzNSrVbo+Z09l0zdi1LaK8NaJbY
+X-Google-Smtp-Source: ABdhPJyOcljMPyApSrrEvUL7seEvgR6bpWPbI+cLBCYQT1ljE7hdK0sJpijoILYe0Ntw+U/b51zVLnq6pnDNP2TU1tE=
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr5616423wrv.162.1593208664289;
+ Fri, 26 Jun 2020 14:57:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-11-atish.patra@wdc.com>
+ <8b71b663-8a68-26f3-c806-a2873a6d8923@gmx.de>
+In-Reply-To: <8b71b663-8a68-26f3-c806-a2873a6d8923@gmx.de>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 26 Jun 2020 14:57:33 -0700
+Message-ID: <CAOnJCU+=0Ozz=qfMULsN4-4rq_q4UFYsnkH50Bo5PfzUU45e6g@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/11] efi: Rename arm-init to efi-init common for all arch
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 02:02:20 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-
-> Hi,
->=20
-> On 21/06/2020 00:42:18+0200, Jonathan Neusch=E4fer wrote:
-> > The Netronix EC implements an RTC with the following functionality:
-> >=20
-> > - Calendar-based time keeping with single-second resolution
-> > - Automatic power-on with single-minute resolution
-> > - Alarm at single-second resolution
-> >=20
-> > This binding only supports timekeeping for now.
-> >=20
-> > Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
+On Thu, Jun 25, 2020 at 8:00 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+>
+> On 6/26/20 1:45 AM, Atish Patra wrote:
+> > arm-init is responsible for setting up efi runtime and doesn't actually
+> > do any ARM specific stuff. RISC-V can use the same source code as it is.
+> >
+> > Rename it to efi-init so that RISC-V can use it.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > > ---
-> >  .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
-> >  .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxe=
-c-rtc.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml =
-b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > index 6562c41c5a9a9..f6a32f46f47bb 100644
-> > --- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > @@ -34,6 +34,9 @@ properties:
-> >    pwm:
-> >      $ref: ../pwm/netronix,ntxec-pwm.yaml
-> >=20
-> > +  rtc:
-> > +    $ref: ../rtc/netronix,ntxec-rtc.yaml
-> > + =20
->=20
-> Shouldn't the node simply be documented here?
->=20
-> Also, do you really need a compatible string to be able to proe the
-> driver? What are the chances that you'll get a similar EC without an
-> RTC?
->=20
-Tolino Shine 2 HD has the mentioned EC but the vendor kernel does not use
-its RTC (not checked whether it is present or functional).
-As a key for grepping in the vendor sources:=20
-gptNtxHwCfg->m_val.bPCB =3D 0x50
+> >  drivers/firmware/efi/{arm-init.c => efi-init.c} | 0
+> >  1 file changed, 0 insertions(+), 0 deletions(-)
+> >  rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
+> >
+> > diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/efi-init.c
+> > similarity index 100%
+> > rename from drivers/firmware/efi/arm-init.c
+> > rename to drivers/firmware/efi/efi-init.c
+> >
+>
+> After each patch we should have code that builds. This helps when
 
-Tolino Shine 3  and Kobo Clara HD do not have that EC.
+Absolutely.
 
-Regrads,
-Andreas
+> bisecting. Therefore I would have expected an adjustment of
+> drivers/firmware/efi/Makefile in this patch and not in patch 11/11:
+>
+> -arm-obj-$(CONFIG_EFI)                  := arm-init.o arm-runtime.o
+> +arm-obj-$(CONFIG_EFI)                  := efi-init.o arm-runtime.o
+>
+
+I think I messed it up while rebasing. My bad. I will fix it in the
+next version.
+
+> Best regards
+>
+> Heinrich
+>
+
+
+-- 
+Regards,
+Atish
