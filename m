@@ -2,96 +2,143 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE391C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6416C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4C206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593186025;
-	bh=05L+7xVsrTLG4OU3T0txCkHpkCbWjUo+//fX62/adLE=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=fLJQxr6LjxZYlJ4rC22vh8opzfJ8G0nlMapW+DrZpMd2RXvMdyb8TQnDjgeExT6Sh
-	 IkOWDgDxVdqCM5PFKmkelarrCil8bLvYqYVbc0WxNFuB1ndOrdhEf8rDqkF9cr7qAk
-	 JePzevj5g0+RIR+gD7xJUL1ZrZ6liIS1Ur47wZ08=
+	by mail.kernel.org (Postfix) with ESMTP id BBF8320706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="bB22qYrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgFZPkY (ORCPT
+        id S1729847AbgFZPk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:40:24 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43762 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgFZPkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:40:18 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x83so849782oif.10;
-        Fri, 26 Jun 2020 08:40:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Ok8v13Cv4FCzAZhKNNcmCGL0KKiV49QkXwmc3vVd7B0=;
-        b=cduz2Dpy5qGzVnKn6jDT9tHftmyVjjrMY0w9T9AHFhXBvERV+JwijoCNzs2mqulvun
-         7rlRR1YgRPz49Y7xpHezWoG1AeKqQ992Dyhunc02pPPXmcEM19YWqAuJSH1mY0T/xPRb
-         vDhT56pMe9Z/k7R1YvEcM0cQwxDl0i1FWtv7tWsKzi7a/vZRGOTRg4EHUqqurfwtymyq
-         iruD4uJlO8HmJmTfairFPA6kZdvlfiQGjjs/vfYnug1QGTAGhDQWLQMyZ0seJeFfYsed
-         zo3zK/PONx0Qt4+IXN3KHLo1CRMmWb80+9PCJcV0G3gkQyCdyCyKBCWWOhXDH1QPP2On
-         2MUA==
-X-Gm-Message-State: AOAM531lJwQZV72P05Ke+IgmfmAeR9yzw6YlfcQOhVy7hw4PxxwJEOQ0
-        Ui8lzNd7chbd/7mgszp98TblXCkBZoURQUv6yU7kwIgt
-X-Google-Smtp-Source: ABdhPJyFzJUv+9yld/k8cWXllEHV9YDbGccM+bEVkP7RC+fybeXuXq/EhC4eytap3n/oDcGGEG/vx7NoRbbJGipECIw=
-X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2839510oic.68.1593186017715;
- Fri, 26 Jun 2020 08:40:17 -0700 (PDT)
+        Fri, 26 Jun 2020 11:40:28 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:34834 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729724AbgFZPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:39:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YVpFGCh6EGMUx4V1DZhBcdqMu33QeEIPAYjGc/iH+uU=; b=bB22qYrCaEH9GS6N7EoA2Hnmx6
+        kz5rUm+2e5XV/Gj2EQT6dPMNvv4M3gdJHG0qKR/ZZ/zjqbrbDOHJrtIxZFxaNYfaE6JDLMz6GNlX/
+        PDl+5dNtcLgsz33mmmaI2qkZpAlTjeYCiezLssfi5ltKhF2FJ8yefcPxjT0DWKg79DzcWzzyZFU3d
+        lBrTIm3ClC8hvTWCCoMhYGM2etUbH+Z2uAzBd0x+7oAM0JztUu+9ygB7CFBsHOwef/sP9mnLh3QsD
+        UyqO7b2REM1LkRFGI3j4I0auOUgLmxgVkY4U8IpJ77YQ3+5Xc0iwG3PPybg2Luq3R4zyVCSItEWJV
+        F5c598pQ==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1joqRu-0000oP-43; Fri, 26 Jun 2020 09:39:34 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1joqRm-0007HQ-Tv; Fri, 26 Jun 2020 09:39:22 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 26 Jun 2020 09:39:11 -0600
+Message-Id: <20200626153918.27929-3-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200626153918.27929-1-logang@deltatee.com>
+References: <20200626153918.27929-1-logang@deltatee.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 26 Jun 2020 17:40:06 +0200
-Message-ID: <CAJZ5v0iCm=bku-rKaOLveA-Kr0NbJ0Wp3mvQGTv2G9mpjJZpxg@mail.gmail.com>
-Subject: [GIT PULL] ACPI fixes for v5.8-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v14 2/9] nvme: Create helper function to obtain command effects
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Separate the code to obtain command effects from the code
+to start a passthru request and open code nvme_known_admin_effects()
+in the new helper.
 
-Please pull from the tag
+The new helper function will be necessary for nvmet passthru
+code to determine if we need to change out of interrupt context
+to handle the effects.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.8-rc3
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ drivers/nvme/host/core.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
-with top-most commit 0f29c20bf4342c7757d9f4bf81159b02498b1b0d
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c0f5d82f2c3d..85521a523076 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1326,22 +1326,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+-static u32 nvme_known_admin_effects(u8 opcode)
+-{
+-	switch (opcode) {
+-	case nvme_admin_format_nvm:
+-		return NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+-					NVME_CMD_EFFECTS_CSE_MASK;
+-	case nvme_admin_sanitize_nvm:
+-		return NVME_CMD_EFFECTS_CSE_MASK;
+-	default:
+-		break;
+-	}
+-	return 0;
+-}
+-
+-static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+-								u8 opcode)
++static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++				u8 opcode)
+ {
+ 	u32 effects = 0;
+ 
+@@ -1357,7 +1343,26 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	if (ctrl->effects)
+ 		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+-	effects |= nvme_known_admin_effects(opcode);
++
++	switch (opcode) {
++	case nvme_admin_format_nvm:
++		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
++			NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	case nvme_admin_sanitize_nvm:
++		effects |= NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	default:
++		break;
++	}
++
++	return effects;
++}
++
++static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++			       u8 opcode)
++{
++	u32 effects = nvme_command_effects(ctrl, ns, opcode);
+ 
+ 	/*
+ 	 * For simplicity, IO to all namespaces is quiesced even if the command
+-- 
+2.20.1
 
- Merge branch 'acpi-sysfs'
-
-on top of commit 48778464bb7d346b47157d21ffde2af6b2d39110
-
- Linux 5.8-rc2
-
-to receive ACPI fixes for 5.8-rc3.
-
-These prevent bypassing kernel lockdown via the ACPI tables loading
-interface (Jason A. Donenfeld) and fix the handling of an ACPI sysfs
-attribute (Nathan Chancellor).
-
-Thanks!
-
-
----------------
-
-Jason A. Donenfeld (1):
-      ACPI: configfs: Disallow loading ACPI tables when locked down
-
-Nathan Chancellor (1):
-      ACPI: sysfs: Fix pm_profile_attr type
-
----------------
-
- drivers/acpi/acpi_configfs.c | 6 +++++-
- drivers/acpi/sysfs.c         | 4 ++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
