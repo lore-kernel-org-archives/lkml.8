@@ -2,118 +2,119 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257F420836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4214207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tecf5TAV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uerlbCVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgFZNpv (ORCPT
+        id S1728929AbgFZNqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        Fri, 26 Jun 2020 09:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbgFZNpu (ORCPT
+        with ESMTP id S1728749AbgFZNqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:45:50 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4F1C03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:45:50 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l63so4956321pge.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:45:50 -0700 (PDT)
+        Fri, 26 Jun 2020 09:46:51 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B581EC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:46:51 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id r8so8105823oij.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iIKrcqeZ/i+f7whrTWQttEpM7MFJWEe9ttvjCjKg7/w=;
-        b=tecf5TAVVVyUR8ngN4Fz8fZJiiv6DU71FIxKoobEUl9C1tK2V3fCAdIu+fHD4inYV4
-         ltdndw4wnRj5zca5dt0YbD2/MUdVIlK+Jz+/DYQwX1myIucKxCdsrl8Z6rQxSi25Q+yt
-         A5P8ARb7Lz/p3uBXflHy1kdvumhHTzr0T9q+sLgNSd3Ly5oB6W6wFg1cjp+iM67z0opm
-         11wj0g7cZnxjlccOm3oFe0XNqyL+dKESSjjhi+9WjvO1k1ikn/GJgCwPXIgaXB0NDmPI
-         h7W0j/TO+AWkPw9berZQ9RQf7HDKkMrr6D5DUIo+uz2e1dDIWIVYgFWTxpJ6+ukI8dG0
-         Li+A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u52uSN3tbB8BJ8TCDzaGgSoU5fUp65xk0NIsBfbCuUw=;
+        b=uerlbCVTm6bhJPJdRojlnnrVxEtxsK8hQALAle/RapM3i54Jijx/GgCL+gWqtF3N4k
+         xtoF9Ck1Y5zFKR0Z2vnTmdS2fJFdPQdqPZQFCzOhXT+aVX4jtdutgtJ3HVU//vGV1hhV
+         7RU6uVK+canEjisRISkr6f0QyXTs7+YdWYczjlZXP/1I9mdm9upwfBNqlIKNuBDuaAtV
+         V/IQKKwxQKQ0i3Hh3jilqGiytDNjm043a1ON5gHoMzySV4VqLzeC0/saz7/dm+WCwZYK
+         3G1w5vNinpFUaW3sVnXPPCQJh9+5vc4M+qmgMLq0+6PFc4LvO9DPTn61OMSBzdaJVgkz
+         P6hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iIKrcqeZ/i+f7whrTWQttEpM7MFJWEe9ttvjCjKg7/w=;
-        b=O9pRSSOSeFnF5t4UOUgAz31PuYTfWMhDmWwhcY7g8psS0SqFhJP2WAWp3rENcO8oXL
-         FeK9fXqVhzFVdcJnQEk8ODvPSwB47lm3hVXAnOzxKXznTIsmhXEUa+qTnJ8VsOHVMpnp
-         qLALkp3DoJzm8K4G1yVxQ8jjKhzpTO7Rkfp0LtmRaEn+PGlWf6avlsR/KZBJtsbmyk0Q
-         +xUv20lBOcbX5Dws3iWfOoLFtDjQyp/M5nC74JrYzTwmV6UE/dGkfLOXYKrb8l2hxDHV
-         zu/ApWAu8Aw1Gx+B+w2ghlYbJt2xARrlQxK+LWt3XVgzjAUOzmnBajAQYOlei0FeB54o
-         gYtA==
-X-Gm-Message-State: AOAM533qqiJPIW1GK2wKCUytrMjJNdLbzF5kP4w8BaHOVwEvgYwvY1pX
-        Kp56szBdQ/vtwvHPG07frcBp
-X-Google-Smtp-Source: ABdhPJy6GKN5oZxhs1qJPhycRPPQhrr0M0SAerf2AVBlPOHDu89roVwvCH8Zidvh8yoTQVGjpN518Q==
-X-Received: by 2002:aa7:9ec2:: with SMTP id r2mr2868941pfq.265.1593179150313;
-        Fri, 26 Jun 2020 06:45:50 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e11:8623:980f:4d73:2b9:f602])
-        by smtp.gmail.com with ESMTPSA id b19sm25459300pft.74.2020.06.26.06.45.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 06:45:49 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:15:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] clk: actions: Fix h_clk for Actions S500 SoC
-Message-ID: <20200626134541.GB8333@Mani-XPS-13-9360>
-References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
- <58c4bddaf178cb85d9930064af342190f6010e6e.1592941257.git.cristian.ciocaltea@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u52uSN3tbB8BJ8TCDzaGgSoU5fUp65xk0NIsBfbCuUw=;
+        b=Y6PDjE6FYR1vE1g2nyH26AcTW/aiToSMUDGLF7WGosV3k7JCiaC3Iq4zWTdr1SXWil
+         kxABwfBYMFNWx5S6nTxthMy9+/5dY1E+SFdAWTPeNYaY3XInSwSAeK/nj8Qd9LW/mAdx
+         kKm3uKUgfplOvIJUcfdVCP2pHeyJz+Dj9JV6WZvzJZWSi2av4N4u0/yhpe3UMt+k4gfa
+         DAU1/XK4lZ+jfIUegCoLSIF4C5MUXbigm2J+uUWcvMRPu1I0E/JUoiaOT4x6Z0mOfzAP
+         3/4uIfSZGV9pIGMdwYUnWqe6/t6ZMyLXvF7aWlFTt8IbsJQYYgL/o/i9QSjAxzUm85Q7
+         Wvnw==
+X-Gm-Message-State: AOAM531vkxkE5KCpYNKRHupaWitkcLoZv4KZ8Y4DK1tJ9bIvW9xiVno3
+        Ei6efE1pj9YLWHcWJW3fexWVdkEj6rPs59Kx741hMk8W
+X-Google-Smtp-Source: ABdhPJw+adT2C8ScqVlyivOWskDWeFChgGpyoi580SKSGJZ6QdPB5OZwDMfLxuG0ID1SRCoWOBHtdfxqS6DttVK53nQ=
+X-Received: by 2002:a54:4494:: with SMTP id v20mr2521613oiv.154.1593179211074;
+ Fri, 26 Jun 2020 06:46:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58c4bddaf178cb85d9930064af342190f6010e6e.1592941257.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-10-lee.jones@linaro.org>
+ <CAFCwf12-s_xCvL9XggE7C3OJdDoK79DTYc7_A_Q4zD_aH-O4ew@mail.gmail.com>
+In-Reply-To: <CAFCwf12-s_xCvL9XggE7C3OJdDoK79DTYc7_A_Q4zD_aH-O4ew@mail.gmail.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Fri, 26 Jun 2020 16:46:23 +0300
+Message-ID: <CAFCwf109CG0HiKD4+R581kSWhtoXrJU+CcLGMp1YiFF=QGVeGA@mail.gmail.com>
+Subject: Re: [PATCH 09/10] misc: habanalabs: irq: Add missing struct
+ identifier for 'struct hl_eqe_work'
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:47:52PM +0300, Cristian Ciocaltea wrote:
-> The h_clk clock in the Actions Semi S500 SoC clock driver has an
-> invalid parent. Replace with the correct one.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-You should add fixes tag for this patch and it needs to be backported as well.
-
-Thanks,
-Mani
-
-> ---
->  drivers/clk/actions/owl-s500.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-> index e2007ac4d235..0eb83a0b70bc 100644
-> --- a/drivers/clk/actions/owl-s500.c
-> +++ b/drivers/clk/actions/owl-s500.c
-> @@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
->  static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
->  
->  /* divider clocks */
-> -static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-> +static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
->  static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
->  
->  /* factor clocks */
-> -- 
-> 2.27.0
-> 
+On Fri, Jun 26, 2020 at 4:45 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
+>
+> On Fri, Jun 26, 2020 at 4:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > In kerneldoc format, data structures have to start with 'struct'
+> > else the kerneldoc tooling/parsers/validators get confused.
+> >
+> > Squashes the following W=1 warning:
+> >
+> >  drivers/misc/habanalabs/irq.c:19: warning: cannot understand function prototype: 'struct hl_eqe_work '
+> >
+> > Cc: Oded Gabbay <oded.gabbay@gmail.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/misc/habanalabs/irq.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
+> > index fac65fbd70e81..4e77a73857793 100644
+> > --- a/drivers/misc/habanalabs/irq.c
+> > +++ b/drivers/misc/habanalabs/irq.c
+> > @@ -10,7 +10,8 @@
+> >  #include <linux/slab.h>
+> >
+> >  /**
+> > - * This structure is used to schedule work of EQ entry and armcp_reset event
+> > + * struct hl_eqe_work - This structure is used to schedule work of EQ
+> > + *                      entry and armcp_reset event
+> >   *
+> >   * @eq_work          - workqueue object to run when EQ entry is received
+> >   * @hdev             - pointer to device structure
+> > --
+> > 2.25.1
+> >
+>
+> This patch is:
+> Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+>
+> Applied to my -fixes tree.
+> Oded
+Ah, just saw it is part of a series, so I'm not applying it to my tree.
+Oded
