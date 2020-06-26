@@ -2,192 +2,691 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0087C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D75C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4592076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A33F2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFZF5h (ORCPT
+        id S1728151AbgFZF7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 01:57:37 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:56407 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726392AbgFZF5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 01:57:36 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id A1F4C1060AE;
-        Fri, 26 Jun 2020 15:57:32 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1johMd-0003aJ-Ay; Fri, 26 Jun 2020 15:57:27 +1000
-Date:   Fri, 26 Jun 2020 15:57:27 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [Bug, sched, 5.8-rc2]: PREEMPT kernels crashing in
- check_preempt_wakeup() running fsx on XFS
-Message-ID: <20200626055727.GG2005@dread.disaster.area>
-References: <20200626004722.GF2005@dread.disaster.area>
+        Fri, 26 Jun 2020 01:59:55 -0400
+Received: from ms-10.1blu.de ([178.254.4.101]:45508 "EHLO ms-10.1blu.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbgFZF7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 01:59:54 -0400
+Received: from [78.43.71.214] (helo=marius.fritz.box)
+        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <mail@mariuszachmann.de>)
+        id 1johOp-0006Fj-Er; Fri, 26 Jun 2020 07:59:43 +0200
+From:   Marius Zachmann <mail@mariuszachmann.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Marius Zachmann <mail@mariuszachmann.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH v7] hwmon: add Corsair Commander Pro driver
+Date:   Fri, 26 Jun 2020 07:59:36 +0200
+Message-Id: <20200626055936.4441-1-mail@mariuszachmann.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626004722.GF2005@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=r4WhLfbNE1kVJq11wAEA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+X-Con-Id: 241080
+X-Con-U: 0-mail
+X-Originating-IP: 78.43.71.214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 10:47:22AM +1000, Dave Chinner wrote:
-> Hi folks,
-> 
-> I turned on CONFIG_PREEMPT=y yesterday to try to reproduce problems
-> Darrick was having with one of my patchsets. We've both been seeing
-> a dead stop panic on these configs, and I managed to find a
-> relatively reliable reproducer in fstests generic/127. It's
-> basically just single fsx process exercising a single file, and it
-> results in this happening within 15 minutes of starting the test
-> running in a loop:
-> 
-> [ 1102.169209] BUG: kernel NULL pointer dereference, address: 0000000000000150
-> [ 1102.171270] #PF: supervisor read access in kernel mode
-> [ 1102.172894] #PF: error_code(0x0000) - not-present page
-> [ 1102.174408] PGD 0 P4D 0
-> [ 1102.175136] Oops: 0000 [#1] PREEMPT SMP
-> [ 1102.176293] CPU: 2 PID: 909 Comm: kworker/2:1H Not tainted 5.8.0-rc2-dgc+ #2469
-> [ 1102.178395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [ 1102.180762] Workqueue: xfs-log/pmem0 xlog_ioend_work
-> [ 1102.182286] RIP: 0010:check_preempt_wakeup+0xc8/0x1e0
-> [ 1102.183804] Code: 39 c2 75 f2 89 d0 39 d0 7d 20 83 ea 01 4d 8b a4 24 48 01 00 00 39 d0 75 f1 eb 0f 48 8b 9b 48 01 00 00 4d 8b a4 24 48 01 00 00 <48> 8b bb 50 01 00 00 49 39 bc 24 b
-> [ 1102.189125] RSP: 0018:ffffc9000071cea0 EFLAGS: 00010006
-> [ 1102.190625] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff822305a0
-> [ 1102.192737] RDX: 0000000000000000 RSI: ffff88853337cd80 RDI: ffff88853ea2a940
-> [ 1102.194827] RBP: ffffc9000071ced8 R08: ffffffff822305a0 R09: ffff88853ec2b2d0
-> [ 1102.196886] R10: ffff88800f74b010 R11: ffff88853ec2a970 R12: 0000000000000000
-> [ 1102.199040] R13: ffff88853ea2a8c0 R14: 0000000000000001 R15: ffff88853e3b0000
-> [ 1102.200883] FS:  0000000000000000(0000) GS:ffff88853ea00000(0000) knlGS:0000000000000000
-> [ 1102.203306] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1102.205024] CR2: 0000000000000150 CR3: 00000000ae7b5004 CR4: 0000000000060ee0
-> [ 1102.207117] Call Trace:
-> [ 1102.207895]  <IRQ>
-> [ 1102.208500]  ? enqueue_task_fair+0x1d7/0x9f0
-> [ 1102.209709]  check_preempt_curr+0x74/0x80
-> [ 1102.210931]  ttwu_do_wakeup+0x1e/0x170
-> [ 1102.212064]  ttwu_do_activate+0x5b/0x70
-> [ 1102.213225]  sched_ttwu_pending+0x94/0xe0
-> [ 1102.214410]  flush_smp_call_function_queue+0xf1/0x190
-> [ 1102.215885]  generic_smp_call_function_single_interrupt+0x13/0x20
-> [ 1102.217790]  __sysvec_call_function_single+0x2b/0xe0
-> [ 1102.219375]  asm_call_on_stack+0xf/0x20
-> [ 1102.220599]  </IRQ>
-> [ 1102.221280]  sysvec_call_function_single+0x7e/0x90
-> [ 1102.222854]  asm_sysvec_call_function_single+0x12/0x20
-> [ 1102.224515] RIP: 0010:_raw_spin_unlock_irqrestore+0x14/0x30
-> [ 1102.226350] Code: e8 e8 20 25 ff 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 66 66 66 66 90 55 48 89 e5 53 48 89 f3 e8 5e 11 39 ff 53 9d <65> ff 0d c5 72 26 7e 74 03 5b 5d f
-> [ 1102.232213] RSP: 0018:ffffc900020b7cc8 EFLAGS: 00000246
-> [ 1102.233902] RAX: 0000000000000001 RBX: 0000000000000246 RCX: 0000000000000000
-> [ 1102.236134] RDX: 0000000000000002 RSI: 0000000000000246 RDI: ffff88852679a400
-> [ 1102.238402] RBP: ffffc900020b7cd0 R08: ffff88852679a400 R09: ffffc900020b7ce8
-> [ 1102.240598] R10: ffff88852a04e480 R11: 0000000000000001 R12: 00000000ffffffff
-> [ 1102.242906] R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-> [ 1102.245191]  __wake_up_common_lock+0x8a/0xc0
-> [ 1102.246572]  __wake_up+0x13/0x20
-> [ 1102.247636]  xlog_state_clean_iclog+0xf7/0x1a0
-> [ 1102.249075]  xlog_state_do_callback+0x257/0x300
-> [ 1102.250548]  xlog_state_done_syncing+0x69/0xb0
-> [ 1102.251958]  xlog_ioend_work+0x6c/0xc0
-> [ 1102.253151]  process_one_work+0x1a6/0x390
-> [ 1102.254403]  worker_thread+0x50/0x3b0
-> [ 1102.255595]  ? process_one_work+0x390/0x390
-> [ 1102.256913]  kthread+0x131/0x170
-> [ 1102.257993]  ? __kthread_create_on_node+0x1b0/0x1b0
-> [ 1102.259546]  ret_from_fork+0x1f/0x30
-> [ 1102.260707] CR2: 0000000000000150
-> [ 1102.261779] ---[ end trace d5f0aeef2eb333bd ]---
-> [ 1102.263238] RIP: 0010:check_preempt_wakeup+0xc8/0x1e0
-> [ 1102.264848] Code: 39 c2 75 f2 89 d0 39 d0 7d 20 83 ea 01 4d 8b a4 24 48 01 00 00 39 d0 75 f1 eb 0f 48 8b 9b 48 01 00 00 4d 8b a4 24 48 01 00 00 <48> 8b bb 50 01 00 00 49 39 bc 24 b
-> [ 1102.270645] RSP: 0018:ffffc9000071cea0 EFLAGS: 00010006
-> [ 1102.272237] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff822305a0
-> [ 1102.274439] RDX: 0000000000000000 RSI: ffff88853337cd80 RDI: ffff88853ea2a940
-> [ 1102.276613] RBP: ffffc9000071ced8 R08: ffffffff822305a0 R09: ffff88853ec2b2d0
-> [ 1102.278797] R10: ffff88800f74b010 R11: ffff88853ec2a970 R12: 0000000000000000
-> [ 1102.280930] R13: ffff88853ea2a8c0 R14: 0000000000000001 R15: ffff88853e3b0000
-> [ 1102.283094] FS:  0000000000000000(0000) GS:ffff88853ea00000(0000) knlGS:0000000000000000
-> [ 1102.285648] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1102.287415] CR2: 0000000000000150 CR3: 00000000ae7b5004 CR4: 0000000000060ee0
-> [ 1102.289606] Kernel panic - not syncing: Fatal exception in interrupt
-> [ 1102.291850] Kernel Offset: disabled
-> [ 1102.293002] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-> 
-> This was from a vanilla 5.8-rc2 kernel, a current linus tree also
-> fails like this. It looks like it is taking a scheduler preempt IPI
-> and trying to do a task akeup while already processing tasks wakeups
-> on that CPU....
-> 
-> A 5.7 kernel survived for about 20 minutes - not conclusive that the
-> bug didn't exist on that kernel, but in general it reproduces within
-> 5 minutes of starting the test looping.  Pre-empt related config
-> options:
-> 
-> $ grep PREEMPT .config
-> # CONFIG_PREEMPT_NONE is not set
-> # CONFIG_PREEMPT_VOLUNTARY is not set
-> CONFIG_PREEMPT=y
-> CONFIG_PREEMPT_COUNT=y
-> CONFIG_PREEMPTION=y
-> CONFIG_PREEMPT_RCU=y
-> CONFIG_PREEMPT_NOTIFIERS=y
-> # CONFIG_DEBUG_PREEMPT is not set
-> # CONFIG_PREEMPTIRQ_EVENTS is not set
-> # CONFIG_PREEMPT_TRACER is not set
-> $
-> 
-> I just reproduced it on commit d479c5a1919b ("Merge tag
-> 'sched-core-2020-06-02' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip"), and I'm
-> going to try to do a bisect it. I'm not sure this is going to be
-> reliable, because running for 20+ minutes isn't a guarantee the
-> problem isn't there...
-> 
-> More info will follow as I find it.
+This is v7 of a driver for the Corsair Commander Pro.
+It provides sysfs attributes for:
+- Reading fan speed
+- Reading temp sensors
+- Reading voltage values
+- Writing pwm and reading last written pwm
+- Reading fan and temp connection status
 
-Ok, so this is definitely caused by a commit inside the above merge;
-the prior merge commit does not show this issue.
+It is an usb driver, so it needs to be ignored by usbhid.
+The Corsair Commander Pro is a fan controller and provides
+no means for user interaction.
+The two device numbers are there, because there is a slightly
+different version of the same device. (Only difference
+seem to be in some presets.)
 
-After wasting the entire day on two failed bisects (i.e. three hours
-of testing to get to "first bad commit", test previous "good"
-commit, watch it fail instantly) manual testing indicates that
-this commit:
+This is based on the staging/hwmon tree.
 
-2ebb17717550 sched/core: Offload wakee task activation if it the wakee is descheduling
+Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+---
 
-Is the first commit that I have been able to reproduce the failure.
-The prior commit:
+Changes from v6
+- used break after connection checks in ccp_is_visible
 
-c6e7bd7afaeb sched/core: Optimize ttwu() spinning on p->on_cpu
+Changes from v5
+- added bitmaps for temp_cnct and fan_cnct
+- ccp_visible returns 0 when there is no connection
+  and removed tests for connection in other functions
+- removed temp labels
+- add define for fan and temp sensor count
+- removed unneccesary mutex from get_temp_cnct and get_fan_cnct
+  and moved these functions directly above ccp_probe
+- no more setting return values in ccp_read, ccp_read_string, ccp_write
+  just return directly instead of break
+- get_data returns values (always >= 0) directly
+- inlined get_temp
+- removed first two error messages in send_usb_cmd and
+  changed last one to dev_dbg
+- comment alignments and clarifications
+- renamed goto label to "out_unlock"
 
-Has run for almost an hour now without failing, and it was tested in
-one of the bisecs for half an hour without failing, too.
+Changes from v4
+- squashed 3 commits into one.
 
-Hence I'd say it's most likely a regression introduced by
-2ebb17717550.
+Changes from v3
+- add device ids to hid_ignore_list in hid-quirks.h
+- removed unused update_interval
+- ccp_disconnect is static
+---
+ Documentation/hwmon/corsair-cpro.rst |  39 +++
+ Documentation/hwmon/index.rst        |   1 +
+ MAINTAINERS                          |   6 +
+ drivers/hid/hid-quirks.c             |   2 +
+ drivers/hwmon/Kconfig                |  10 +
+ drivers/hwmon/Makefile               |   1 +
+ drivers/hwmon/corsair-cpro.c         | 456 +++++++++++++++++++++++++++
+ 7 files changed, 515 insertions(+)
+ create mode 100644 Documentation/hwmon/corsair-cpro.rst
+ create mode 100644 drivers/hwmon/corsair-cpro.c
 
-Cheers,
+diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
+new file mode 100644
+index 000000000000..5913e23d764c
+--- /dev/null
++++ b/Documentation/hwmon/corsair-cpro.rst
+@@ -0,0 +1,39 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++Kernel driver corsair-cpro
++==========================
++
++Supported devices:
++
++  * Corsair Commander Pro
++  * Corsair Commander Pro (1000D)
++
++Author: Marius Zachmann
++
++Description
++-----------
++
++This driver implements the sysfs interface for the Corsair Commander Pro.
++The Corsair Commander Pro is a USB device with 6 fan connectors,
++4 temperature sensor connectors and 2 Corsair LED connectors.
++It can read the voltage levels on the SATA power connector.
++
++Usage Notes
++-----------
++
++Since it is a USB device, hotswapping is possible. The device is autodetected.
++
++Sysfs entries
++-------------
++
++======================= =====================================================================
++in0_input		Voltage on SATA 12v
++in1_input		Voltage on SATA 5v
++in2_input		Voltage on SATA 3.3v
++temp[1-4]_input		Temperature on connected temperature sensors
++fan[1-6]_input		Connected fan rpm.
++fan[1-6]_label		Shows fan type as detected by the device.
++pwm[1-6]		Sets the fan speed. Values from 0-255.
++			When reading, it reports the last value if it was set by the driver.
++			Otherwise returns 0.
++======================= =====================================================================
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index 55ff4b7c5349..750d3a975d82 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -47,6 +47,7 @@ Hardware Monitoring Kernel Drivers
+    bel-pfe
+    bt1-pvt
+    coretemp
++   corsair-cpro
+    da9052
+    da9055
+    dell-smm-hwmon
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..47b0361718f4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4400,6 +4400,12 @@ S:	Maintained
+ F:	Documentation/hwmon/coretemp.rst
+ F:	drivers/hwmon/coretemp.c
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
++CORSAIR-CPRO HARDWARE MONITOR DRIVER
++M:	Marius  <mail@mariuszachmann.de>
++L:	linux-hwmon@vger.kernel.org
++S:	Maintained
++F:	drivers/hwmon/corsair-cpro.c
++
+ COSA/SRP SYNC SERIAL DRIVER
+ M:	Jan "Yenya" Kasprzak <kas@fi.muni.cz>
+ S:	Maintained
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index ca8b5c261c7c..7b7bc7737c53 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -699,6 +699,8 @@ static const struct hid_device_id hid_ignore_list[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x0c10) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x1d00) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM109) },
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 288ae9f63588..8b046a5dfa40 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -439,6 +439,16 @@ config SENSORS_BT1_PVT_ALARMS
+ 	  the data conversion will be periodically performed and the data will be
+ 	  saved in the internal driver cache.
+
++config SENSORS_CORSAIR_CPRO
++	tristate "Corsair Commander Pro controller"
++	depends on USB
++	help
++	  If you say yes here you get support for the Corsair Commander Pro
++	  controller.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called corsair-cpro.
++
+ config SENSORS_DRIVETEMP
+ 	tristate "Hard disk drives with temperature sensors"
+ 	depends on SCSI && ATA
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 3e32c21f5efe..18e1ef74ade7 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -56,6 +56,7 @@ obj-$(CONFIG_SENSORS_ATXP1)	+= atxp1.o
+ obj-$(CONFIG_SENSORS_AXI_FAN_CONTROL) += axi-fan-control.o
+ obj-$(CONFIG_SENSORS_BT1_PVT)	+= bt1-pvt.o
+ obj-$(CONFIG_SENSORS_CORETEMP)	+= coretemp.o
++obj-$(CONFIG_SENSORS_CORSAIR_CPRO) += corsair-cpro.o
+ obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
+ obj-$(CONFIG_SENSORS_DA9055)+= da9055-hwmon.o
+ obj-$(CONFIG_SENSORS_DELL_SMM)	+= dell-smm-hwmon.o
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+new file mode 100644
+index 000000000000..a22583acc229
+--- /dev/null
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -0,0 +1,456 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * corsair-cpro.c - Linux driver for Corsair Commander Pro
++ * Copyright (C) 2020 Marius Zachmann <mail@mariuszachmann.de>
++ */
++
++#include <linux/bitops.h>
++#include <linux/kernel.h>
++#include <linux/hwmon.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/usb.h>
++
++#define USB_VENDOR_ID_CORSAIR			0x1b1c
++#define USB_PRODUCT_ID_CORSAIR_COMMANDERPRO	0x0c10
++#define USB_PRODUCT_ID_CORSAIR_1000D		0x1d00
++
++#define OUT_BUFFER_SIZE		63
++#define IN_BUFFER_SIZE		16
++#define LABEL_LENGTH		11
++
++#define CTL_GET_TMP_CNCT	0x10	/*
++					 * returns in bytes 1-4 for each temp sensor:
++					 * 0 not connected
++					 * 1 connected
++					 */
++#define CTL_GET_TMP		0x11	/*
++					 * send: byte 1 is channel, rest zero
++					 * rcv:  returns temp for channel in centi-degree celsius
++					 * in bytes 1 and 2
++					 * returns 17 in byte 0 if no sensor is connected
++					 */
++#define CTL_GET_VOLT		0x12	/*
++					 * send: byte 1 is rail number: 0 = 12v, 1 = 5v, 2 = 3.3v
++					 * rcv:  returns millivolt in bytes 1,2
++					 */
++#define CTL_GET_FAN_CNCT	0x20	/*
++					 * returns in bytes 1-6 for each fan:
++					 * 0 not connected
++					 * 1 3pin
++					 * 2 4pin
++					 */
++#define CTL_GET_FAN_RPM		0x21	/*
++					 * send: byte 1 is channel, rest zero
++					 * rcv:  returns rpm in bytes 1,2
++					 */
++#define CTL_SET_FAN_FPWM	0x23	/*
++					 * set fixed pwm
++					 * send: byte 1 is fan number
++					 * send: byte 2 is percentage from 0 - 100
++					 */
++
++#define NUM_FANS		6
++#define NUM_TEMP_SENSORS	4
++
++struct ccp_device {
++	struct usb_device *udev;
++	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
++	u8 *buffer;
++	int pwm[6];
++	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
++	DECLARE_BITMAP(fan_cnct, NUM_FANS);
++	char fan_label[6][LABEL_LENGTH];
++};
++
++/* send command, check for error in response, response in ccp->buffer */
++static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
++{
++	int actual_length;
++	int ret;
++
++	memset(ccp->buffer, 0x00, OUT_BUFFER_SIZE);
++	ccp->buffer[0] = command;
++	ccp->buffer[1] = byte1;
++	ccp->buffer[2] = byte2;
++
++	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
++			   &actual_length, 1000);
++	if (ret)
++		return ret;
++
++	/* response needs to be received every time */
++	ret = usb_bulk_msg(ccp->udev, usb_rcvintpipe(ccp->udev, 1), ccp->buffer, IN_BUFFER_SIZE,
++			   &actual_length, 1000);
++	if (ret)
++		return ret;
++
++	/* first byte of response is error code */
++	if (ccp->buffer[0] != 0x00) {
++		dev_dbg(&ccp->udev->dev, "device response error: %d", ccp->buffer[0]);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++/* requests and returns single data values depending on channel */
++static int get_data(struct ccp_device *ccp, int command, int channel)
++{
++	int ret;
++
++	mutex_lock(&ccp->mutex);
++
++	ret = send_usb_cmd(ccp, command, channel, 0);
++	if (ret)
++		goto out_unlock;
++
++	ret = (ccp->buffer[1] << 8) + ccp->buffer[2];
++
++out_unlock:
++	mutex_unlock(&ccp->mutex);
++	return ret;
++}
++
++static int set_pwm(struct ccp_device *ccp, int channel, long val)
++{
++	int ret;
++
++	if (val < 0 || val > 255)
++		return -EINVAL;
++
++	ccp->pwm[channel] = val;
++
++	/* The Corsair Commander Pro uses values from 0-100 */
++	val = DIV_ROUND_CLOSEST(val * 100, 255);
++
++	mutex_lock(&ccp->mutex);
++
++	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val);
++
++	mutex_unlock(&ccp->mutex);
++	return ret;
++}
++
++static int ccp_read_string(struct device *dev, enum hwmon_sensor_types type,
++			   u32 attr, int channel, const char **str)
++{
++	struct ccp_device *ccp = dev_get_drvdata(dev);
++
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_label:
++			*str = ccp->fan_label[channel];
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
++		    u32 attr, int channel, long *val)
++{
++	struct ccp_device *ccp = dev_get_drvdata(dev);
++	int ret;
++
++	switch (type) {
++	case hwmon_temp:
++		switch (attr) {
++		case hwmon_temp_input:
++			ret = get_data(ccp, CTL_GET_TMP, channel);
++			if (ret < 0)
++				return ret;
++			*val = ret * 10;
++			return 0;
++		default:
++			break;
++		}
++		break;
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			ret = get_data(ccp, CTL_GET_FAN_RPM, channel);
++			if (ret < 0)
++				return ret;
++			*val = ret;
++			return 0;
++		default:
++			break;
++		}
++		break;
++	case hwmon_pwm:
++		switch (attr) {
++		case hwmon_pwm_input:
++			/* how to read pwm values from the device is currently unknown */
++			/* driver returns last set value or 0		               */
++			*val = ccp->pwm[channel];
++			return 0;
++		default:
++			break;
++		}
++		break;
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_input:
++			ret = get_data(ccp, CTL_GET_VOLT, channel);
++			if (ret < 0)
++				return ret;
++			*val = ret;
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++};
++
++static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
++		     u32 attr, int channel, long val)
++{
++	struct ccp_device *ccp = dev_get_drvdata(dev);
++
++	switch (type) {
++	case hwmon_pwm:
++		switch (attr) {
++		case hwmon_pwm_input:
++			return set_pwm(ccp, channel, val);
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++};
++
++static umode_t ccp_is_visible(const void *data, enum hwmon_sensor_types type,
++			      u32 attr, int channel)
++{
++	const struct ccp_device *ccp = data;
++
++	switch (type) {
++	case hwmon_temp:
++		if (!test_bit(channel, ccp->temp_cnct))
++			break;
++
++		switch (attr) {
++		case hwmon_temp_input:
++			return 0444;
++		case hwmon_temp_label:
++			return 0444;
++		default:
++			break;
++		}
++		break;
++	case hwmon_fan:
++		if (!test_bit(channel, ccp->fan_cnct))
++			break;
++
++		switch (attr) {
++		case hwmon_fan_input:
++			return 0444;
++		case hwmon_fan_label:
++			return 0444;
++		default:
++			break;
++		}
++		break;
++	case hwmon_pwm:
++		if (!test_bit(channel, ccp->fan_cnct))
++			break;
++
++		switch (attr) {
++		case hwmon_pwm_input:
++			return 0644;
++		default:
++			break;
++		}
++		break;
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_input:
++			return 0444;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++};
++
++static const struct hwmon_ops ccp_hwmon_ops = {
++	.is_visible = ccp_is_visible,
++	.read = ccp_read,
++	.read_string = ccp_read_string,
++	.write = ccp_write,
++};
++
++static const struct hwmon_channel_info *ccp_info[] = {
++	HWMON_CHANNEL_INFO(chip,
++			   HWMON_C_REGISTER_TZ),
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_INPUT,
++			   HWMON_T_INPUT,
++			   HWMON_T_INPUT,
++			   HWMON_T_INPUT
++			   ),
++	HWMON_CHANNEL_INFO(fan,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL
++			   ),
++	HWMON_CHANNEL_INFO(pwm,
++			   HWMON_PWM_INPUT,
++			   HWMON_PWM_INPUT,
++			   HWMON_PWM_INPUT,
++			   HWMON_PWM_INPUT,
++			   HWMON_PWM_INPUT,
++			   HWMON_PWM_INPUT
++			   ),
++	HWMON_CHANNEL_INFO(in,
++			   HWMON_I_INPUT,
++			   HWMON_I_INPUT,
++			   HWMON_I_INPUT
++			   ),
++	NULL
++};
++
++static const struct hwmon_chip_info ccp_chip_info = {
++	.ops = &ccp_hwmon_ops,
++	.info = ccp_info,
++};
++
++/* read fan connection status and set labels */
++static int get_fan_cnct(struct ccp_device *ccp)
++{
++	int channel;
++	int mode;
++	int ret;
++
++	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0);
++	if (ret)
++		return ret;
++
++	for (channel = 0; channel < NUM_FANS; channel++) {
++		mode = ccp->buffer[channel + 1];
++		if (mode == 0)
++			continue;
++
++		set_bit(channel, ccp->fan_cnct);
++
++		switch (mode) {
++		case 1:
++			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
++				  "fan%d 3pin", channel + 1);
++			break;
++		case 2:
++			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
++				  "fan%d 4pin", channel + 1);
++			break;
++		default:
++			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
++				  "fan%d other", channel + 1);
++			break;
++		}
++	}
++
++	return 0;
++}
++
++/* read temp sensor connection status */
++static int get_temp_cnct(struct ccp_device *ccp)
++{
++	int channel;
++	int mode;
++	int ret;
++
++	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0);
++	if (ret)
++		return ret;
++
++	for (channel = 0; channel < NUM_TEMP_SENSORS; channel++) {
++		mode = ccp->buffer[channel + 1];
++		if (mode == 0)
++			continue;
++
++		set_bit(channel, ccp->temp_cnct);
++	}
++
++	return 0;
++}
++
++static int ccp_probe(struct usb_interface *intf, const struct usb_device_id *id)
++{
++	struct device *hwmon_dev;
++	struct ccp_device *ccp;
++	int ret;
++
++	ccp = devm_kzalloc(&intf->dev, sizeof(*ccp), GFP_KERNEL);
++	if (!ccp)
++		return -ENOMEM;
++
++	ccp->buffer = devm_kmalloc(&intf->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
++	if (!ccp->buffer)
++		return -ENOMEM;
++
++	mutex_init(&ccp->mutex);
++
++	ccp->udev = interface_to_usbdev(intf);
++
++	/* temp and fan connection status only updates when device is powered on */
++	ret = get_temp_cnct(ccp);
++	if (ret)
++		return ret;
++
++	ret = get_fan_cnct(ccp);
++	if (ret)
++		return ret;
++
++	hwmon_dev = devm_hwmon_device_register_with_info(&intf->dev, "corsaircpro", ccp,
++							 &ccp_chip_info, 0);
++
++	return PTR_ERR_OR_ZERO(hwmon_dev);
++}
++
++static void ccp_disconnect(struct usb_interface *intf)
++{
++}
++
++static const struct usb_device_id ccp_devices[] = {
++	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
++	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
++	{ }
++};
++
++static struct usb_driver ccp_driver = {
++	.name = "corsair-cpro",
++	.probe = ccp_probe,
++	.disconnect = ccp_disconnect,
++	.id_table = ccp_devices
++};
++
++MODULE_DEVICE_TABLE(usb, ccp_devices);
++MODULE_LICENSE("GPL");
++
++module_usb_driver(ccp_driver);
+--
+2.27.0
