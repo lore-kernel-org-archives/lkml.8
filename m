@@ -2,158 +2,181 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90391C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A001207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA32080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qmi8KBoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgFZH2f (ORCPT
+        id S1728715AbgFZHaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:28:35 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:37597 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728341AbgFZH2f (ORCPT
+        Fri, 26 Jun 2020 03:30:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35844 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgFZHaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:28:35 -0400
-Received: from ytterbium.maphy.uni-hannover.de (ytterbium.maphy.uni-hannover.de [130.75.75.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id D3FB21F56A;
-        Fri, 26 Jun 2020 09:23:18 +0200 (CEST)
-Received: by ytterbium.maphy.uni-hannover.de (sSMTP sendmail emulation); Fri, 26 Jun 2020 09:23:18 +0200
-Date:   Fri, 26 Jun 2020 09:23:18 +0200
-From:   Tammo Block <tammo.block@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH v0 5/5] Add Documentation for console mouse reporting
-Message-ID: <1eb8c1220ad8315a05ed55a54c54e163029467f1.1593155911.git.tammo.block@gmail.com>
-References: <cover.1593155911.git.tammo.block@gmail.com>
+        Fri, 26 Jun 2020 03:30:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05Q7TiKO110026;
+        Fri, 26 Jun 2020 02:29:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593156584;
+        bh=H7Sye2F6KYJGyt86hcv78Gg9uUrflv9GgwpNcNmMWqA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qmi8KBoS3LJBml2lCLL+R4h2DzChe0sIGuMZoPXycfI9jeo8yaJtuxe5BVmJYgjh1
+         PZbDJ06D6FPBdVDAXOWcdrx7wGJdEzrQNZIv6mRUkyzyhxSvVxawabrhynKB4K8yya
+         9kmXrg5m5Jp1qmBMC9DbdyU2WsdK0LxNWSUUBbjU=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05Q7TimS099997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 02:29:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
+ Jun 2020 02:29:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 26 Jun 2020 02:29:43 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05Q7Tgwm111765;
+        Fri, 26 Jun 2020 02:29:42 -0500
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200619224334.GA7857@embeddedor>
+ <20200624055535.GX2324254@vkoul-mobl>
+ <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+Date:   Fri, 26 Jun 2020 10:30:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1593155911.git.tammo.block@gmail.com>
+In-Reply-To: <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a description of the kernel interface(s) used for mouse
-reporting and compares the old and new bitmask layout.
 
-Signed-off-by: Tammo Block <tammo.block@gmail.com>
----
- .../admin-guide/console-mouse-reporting.rst   | 82 +++++++++++++++++++
- Documentation/admin-guide/index.rst           |  1 +
- 2 files changed, 83 insertions(+)
- create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
 
-diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
-new file mode 100644
-index 000000000000..799288295655
---- /dev/null
-+++ b/Documentation/admin-guide/console-mouse-reporting.rst
-@@ -0,0 +1,82 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+Console Mouse Reporting
-+=======================
-+
-+A terminal may send escape sequences to enable applications to react on mouse
-+input. As the kernel does not know when to emit these events a mouse daemon
-+is needed to react on mouse movements and signal the kernel accordingly. The
-+kernel will then send an escape sequence to the application. This is called
-+mouse reporting and several types and protocols have been developed over time.
-+
-+See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
-+man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
-+list and description of the various protocols, their bit layout as well as
-+their limitations.
-+
-+You can check which mouse events are requested *clients* via the TIOCLINUX
-+ioctl, using the TIOCL_GETMOUSEREPORTING subcall. The values of these event
-+classes (9, 1000, 1002, 1003, 1005) are described in tiocl.h.
-+
-+Report layout
-+-------------
-+
-+A report is send by a mouse *daemon* to the kernel via the TIOCLINUX ioctl,
-+using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
-+xs and ys, with 0,0 as upper left corner, but see note below.
-+
-+The bits of the sel_mode are used the following way:
-+
-+X10/X11 like protocol
-++++++++++++++++++++++
-+
-+For the X10/X11 like protocol (if DECSET 1005 is *not* set), the lower 5 bits
-+of the sel_mode are used like this:
-+
-+- 1,2  : Encode Buttons (see notes below) / TIOCL_SELBUTTONMASK
-+- 3,4  : Modifier keys (Shift, Alt) / TIOCL_SELBUTTONMASK
-+- 5    : Always 1, identifies X10 protocol / TIOCL_SELMOUSEREPORT
-+
-+SRG protocol
-+++++++++++++
-+
-+For the SRG style protocol (xterm style, DECSET 1005 *is* set) the upper 11
-+bits of sel_mode are used like this:
-+
-+- 6    : Always 1, identifies SRG protocol / TIOCL_SELSRGREPORT
-+- 7    : Unused, should be 0. Ignored by kernel (future extensions)
-+- 8    : Set on button release events / TIOCL_SELSRGRELEASE
-+- 9-16 : The SRG byte, send to userspace as is / TIOCL_SELSRGMASK
-+
-+The SRG (upper) byte
-+++++++++++++++++++++
-+
-+The layout of the *upper byte* ("SRG") is identical to the SRG data layout,
-+for protocol "1005", as described in detail in the xterm [1]_ or
-+terminalguide [2]_ home pages. Short summary:
-+
-+ - 1,2 : Buttons, lower bits (see notes below)
-+ - 3-5 : Modifier keys (Shift, Alt and Ctrl)
-+ - 6   : Mouse movement only, no button status change
-+ - 7-8 : Buttons, upper bits (for buttons 4-15)
-+
-+Notes
-++++++
-+
-+Button numbers are encoded like this:
-+
-+- 0-2  : Left, middle and right button
-+- 3    : No button pressed / Button release
-+- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
-+
-+Please note that button releases should only be reported for buttons 0-2.
-+
-+Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
-+syscall but one based for the escape sequences send by the kernel, so the
-+kernel will increase all coordinates by one.
-+
-+.. [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
-+.. [2] https://terminalguide.namepad.de/mouse/
-+
-+
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 58c7f9fc2396..c535902f3851 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -71,6 +71,7 @@ configure specific aspects of kernel behavior to your liking.
-    cgroup-v2
-    cifs/index
-    clearing-warn-once
-+   console-mouse-reporting
-    cpu-load
-    cputopology
-    dell_rbu
--- 
-2.27.0
+On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
+> Hi Vinod,
+>=20
+> On 6/24/20 00:55, Vinod Koul wrote:
+>> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+>>> Make use of the struct_size() helper instead of an open-coded version=
+
+>>> in order to avoid any potential type mistakes.
+>>>
+>>> This code was detected with the help of Coccinelle and, audited and
+>>> fixed manually.
+>>>
+>>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>  drivers/dma/ti/k3-udma.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>>> index 0d5fb154b8e2..411c54b86ba8 100644
+>>> --- a/drivers/dma/ti/k3-udma.c
+>>> +++ b/drivers/dma/ti/k3-udma.c
+>>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, st=
+ruct scatterlist *sgl,
+>>>  	u32 ring_id;
+>>>  	unsigned int i;
+>>> =20
+>>> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT=
+);
+>>> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+>>
+>> struct_size() is a * b + c but here we need, a + b * c.. the trailing
+>> struct is N times here..
+>>
+>=20
+> struct_size() works exactly as expected in this case. :)
+> Please, see:
+>=20
+> include/linux/overflow.h:314:
+> 314 #define struct_size(p, member, count)                              =
+     \
+> 315         __ab_c_size(count,                                         =
+     \
+> 316                     sizeof(*(p)->member) + __must_be_array((p)->mem=
+ber),\
+> 317                     sizeof(*(p)))
+
+True, struct_size is for this sort of things.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+While looking it up in include/linux/overflow.h I have noticed your
+commit in linux-next, which adds flex_array_size()
+
+The example in the commit message contradicts with what the helper
+does imho. To be correct it should have been:
+
+struct something {
+	size_t count;
+	struct foo items[];
+};
+
+- struct something *instance;
++ struct something instance;
+
+- instance =3D kmalloc(struct_size(instance, items, count), GFP_KERNEL);
++ instance.items =3D kmalloc(struct_size(instance, items, count), GFP_KER=
+NEL);
+instance->count =3D count;
+memcpy(instance->items, src, flex_array_size(instance, items, instance->c=
+ount));
+
+If I'm not mistaken..
+
+
+>=20
+> Thanks
+> --
+> Gustavo
+>=20
+>>>  	if (!d)
+>>>  		return NULL;
+>>> =20
+>>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, =
+dma_addr_t buf_addr,
+>>>  	if (period_len >=3D SZ_4M)
+>>>  		return NULL;
+>>> =20
+>>> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWA=
+IT);
+>>> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+>>>  	if (!d)
+>>>  		return NULL;
+>>> =20
+>>> --=20
+>>> 2.27.0
+>>
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/=
+Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
