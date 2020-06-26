@@ -2,464 +2,207 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD35C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8504220836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EDD2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ElSHiA4H";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="wSwSejXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgFZHTL (ORCPT
+        id S1728518AbgFZHUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgFZHTK (ORCPT
+        Fri, 26 Jun 2020 03:20:30 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:7672 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726206AbgFZHU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:19:10 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404E7C08C5C1;
-        Fri, 26 Jun 2020 00:19:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id A72B22A375B
-Subject: Re: media/master bisection:
- v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF
- on rk3399-gru-kevin
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel@vger.kernel.org, Pawel Osciak <pawel@osciak.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Vandana BN <bnvandana@gmail.com>, kernel@collabora.com
-References: <5ef522e0.1c69fb81.4605d.65f8@mx.google.com>
- <06ca9f11-5bd7-27d4-9de4-e7e5efa24842@collabora.com>
- <6f67fbb5-9799-e7d9-4946-4cf4c83c1742@xs4all.nl>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <c0378016-4dcf-9608-ca64-b0b67ee6dee8@collabora.com>
-Date:   Fri, 26 Jun 2020 08:19:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <6f67fbb5-9799-e7d9-4946-4cf4c83c1742@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
+        Fri, 26 Jun 2020 03:20:29 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q7EiDZ022164;
+        Fri, 26 Jun 2020 00:19:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
+ b=ElSHiA4HzR1ETyEQwHq9781WX/iU23+kQtyAByU247qCjx9QKUA4ggibhC9rIM1X9E1A
+ O7QTrSZNyHu6ALB72tT/WHPkirdGjZTRc84RIXBJObxxzu4zaCuKFbrvr0rb+l8zLuSX
+ 6xtOzhf12niyUJ9WwV80rY12S1Tbbmo/FSAXgnAMu4GS+whIVrrz99B2PPE0Zie0emwY
+ ijgkn5RqQ9iSxkO8rEivflkvsXnx5AzDaXLqq0iG4zsWeUSpJjFYXmqT//TCUwbnm9is
+ mfUgc0bt83EuHWWh1hDZGfT8MeQMqi+eLskyGZK7c1aefdySsQhphynVE3UU5Em1DItv DA== 
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 31uuqbhyxt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 00:19:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H209k++9Wv53y65JRSnTA68EDedMfIjmlyW54bBjEOjzRK2AfE4twhiU76W5KoPYQkhc2IO7xz8vmHxS6yzqKrFkZyF/jvjvac5PjsNrccz5Ju6EYEY4gteRpcFxlybstiJ5UVIivtvzgQ/KNf9b6mw6VF/uuzax6WBzBSM71qlav899sBK8D/BZx8DdU4Lvzk94JjP25mhFLFjWKx/7atS4W7kev00tMbRTBh/iyF6RojzY3U20W5e10OiZ1tOS4Iqf1ITSwqfTc0vBUNXTsDP3Xw5ojDKqOz93Mn08Y8qpAT38FLI/1o1u/Nthg9e8RMv2vHu0oY22FDl/LAH/NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
+ b=digM0a32OnQ+67L1BqRC1ADCppcOAYyzYWxVb/RJfn0KqS4iL2OP5D8qDD47WPDvR8O8AWOJz4si8oYH7zyn4hohO9vVfqaR/eN5FvQa75EdO2hGRvv1nv6Lmr8zEGhMujiUTsLr1sCbYPx1aAVxxf93vFs5pTYiYKoptdZzMiaykMyXm5ghkzfQ5fSrGs37yehViFpVCKgX0uPa0jEWaXkrcIdVP0fhZmO6OQNiH+YteI5NB72VZI1d7N/DDxJP21V1vj4YXmtBAVL2Pf8LU5JLdpUxEVH5udaGoDFeOj+08MrSC0dUsPR78cJ1hRf/mdHoqrkjULvsT0SUsbElhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
+ b=wSwSejXZ8FxFoKBY+JTzckd2QrhLVM2riaXzZrDa4m+TPlulRPzRFjhRWu+VZgjnf+B0o3HOndvh4SXKX9U43O6L6GbmpoB1X8fyEHY7c/oL618bYY49kdCf8uOj/car0W8BdPkmFvR06DKzKA34AhPyyVHuZIAYo4c9Av6lB8g=
+Received: from BL0PR07MB5522.namprd07.prod.outlook.com (2603:10b6:208:37::25)
+ by BL0PR07MB5763.namprd07.prod.outlook.com (2603:10b6:208:8f::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Fri, 26 Jun
+ 2020 07:19:56 +0000
+Received: from BL0PR07MB5522.namprd07.prod.outlook.com
+ ([fe80::e08e:810f:d1d7:e98]) by BL0PR07MB5522.namprd07.prod.outlook.com
+ ([fe80::e08e:810f:d1d7:e98%7]) with mapi id 15.20.3131.023; Fri, 26 Jun 2020
+ 07:19:56 +0000
+From:   Pawel Laszczak <pawell@cadence.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Sanket Parmar <sparmar@cadence.com>
+Subject: RE: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
+Thread-Topic: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
+Thread-Index: AQHWS3YSDa4tJNrkMUOR89XcmNbpYKjqdbIAgAABeQA=
+Date:   Fri, 26 Jun 2020 07:19:56 +0000
+Message-ID: <BL0PR07MB5522A8796EE7BFB5062A8E76DD930@BL0PR07MB5522.namprd07.prod.outlook.com>
+References: <20200626045450.10205-1-pawell@cadence.com>
+ <878sga5nfr.fsf@kernel.org>
+In-Reply-To: <878sga5nfr.fsf@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNmMxNDNkNGItYjc3ZC0xMWVhLTg3NjctMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDZjMTQzZDRjLWI3N2QtMTFlYS04NzY3LTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMjc5MSIgdD0iMTMyMzc2Mjk1OTEwODkwNTQ0IiBoPSJIWGRWRE5VV2cxUmNZNTRuNUxnbFRHcG9jNmc9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 59818699-ce2b-4bf3-8845-08d819a1543b
+x-ms-traffictypediagnostic: BL0PR07MB5763:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR07MB576352F4B05B133049CFFA58DD930@BL0PR07MB5763.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r4ZzbR7u2oQH21gnseYWo0gnIa+RqF9pI9b25vy0wSov19t1G9iTiv3w/Sp0hLjdu2UxQO37L/0aaNM74TWzK2RfFWRsGGSUdyAiuZfnkWqUQMFkhpOhcRDv4AVkfmYPlxr/s4lxGMLZHy72lPZ+wvGt9B3XBfICI7N8nMZE9vfCgvF+S8rVDpcHAg0b/oRyQyYDblutz3IBeyMFiqCkNlMWMJw4xwano3fd8slJMb2bJvPXWXZuPuYaR6Og0W1EcjwasHdWThpYfDcC498zlUIix8kMVAVAqRZHZoIAariE5AjrnjG6FkItQ56lBRsHDtHeUmWjPOAVmXTLpJbUIcb/EADsBJMU/QuABmTBgFdWJB1g9p6+xNbeEyJeZly7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR07MB5522.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(36092001)(26005)(55016002)(107886003)(8936002)(316002)(33656002)(66946007)(110136005)(54906003)(52536014)(5660300002)(66556008)(66476007)(4326008)(66446008)(76116006)(71200400001)(6506007)(7416002)(83380400001)(478600001)(86362001)(9686003)(64756008)(2906002)(8676002)(186003)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: UXWXl1JPjPP9jXKnmioEXf9joVRVrP9p2a3e4ZxbTxw6ocLNoTGl+UubjnuB7UFJiNGAsqpBH1yckKrv1wOS4K4Q2zI1auTKv+/QrMOXdXz/sUJqJW3o7WmZfKSCeNcW8hm9/0rTliQf6lzqhHDg3Z3rC1PThxoNjwcoDCIGRKZQTN2oguXdi+L0+CFcmGUEFJKTA7wCkxMP0p17fnJFxYiA2pSDpO1lj98cPiYcMMs5grbSE3q8m3233LIzobrT9UAiKSGYGN0lXU4QLMKtei/PiFxg459E55Jul8N3UdteuCVhW3LL7JrQ4gZC3PjFx8wFyR6Xl8FpsXmwV0N4dkrRIkmSZWzDFv9DPwtD3Pi5V4h5yI3sI6dWwozMDicZWdoaXI9K1N5RgX1t6fQtSt9q0lbVAEwmDQe6LoGBRpaUV7Ep6+BmfWmYviuH/5jUbDPP2Ve1PgAvHKSR2hrSi2xP0zaEpT1khNEyyUmdc8eU9bLifXoQpihuWl2kWcSD
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR07MB5522.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59818699-ce2b-4bf3-8845-08d819a1543b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 07:19:56.5172
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QVzQ0OAMtSrEzHMAeJZBdyvtctcnG6qCuuuJiE/rk0dz0SLboD8VG+MAzbMcPQ2vxDBw774uKgMuMBmEK3TTqDLDCzv7yk7ijkdbJxdqKno=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5763
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_04:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 impostorscore=0
+ phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=480 adultscore=0
+ clxscore=1015 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006260052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/2020 08:02, Hans Verkuil wrote:
-> Hi Guillaume,
-> 
-> You need to update v4l-utils to the latest version from our git master branch.
-> 
-> The reserved field in reqbufs is now in use as a flags field, so it is no longer
-> zero. The compliance test has been updated accordingly in the v4l-utils git repo.
+Hi Felipe,
 
-I see, thanks.  It's getting updated today.
+>
+>Hi,
+>
+>Pawel Laszczak <pawell@cadence.com> writes:
+>> This patch introduce new Cadence USBSS DRD driver to linux kernel.
+>>
+>> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+>> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+>> Host Only (XHCI)configurations.
+>>
+>> The current driver has been validated with FPGA burned. We have support
+>> for PCIe bus, which is used on FPGA prototyping.
+>>
+>> The host side of USBSS-DRD controller is compliance with XHCI
+>> specification, so it works with standard XHCI Linux driver.
+>>
+>> The host side of USBSS DRD controller is compliant with XHCI.
+>> The architecture for device side is almost the same as for host side,
+>> and most of the XHCI specification can be used to understand how
+>> this controller operates.
+>>
+>> This controller and driver support Full Speed, Hight Speed, Supper Speed
+>> and Supper Speed Plus USB protocol.
+>>
+>> The prefix cdnsp used in driver has chosen by analogy to cdn3 driver.
+>> The last letter of this acronym means PLUS. The formal name of controlle=
+r
+>> is USBSSP but it's to generic so I've decided to use CDNSP.
+>>
+>> The patch 1: adds DT binding.
+>> The patch 2: adds PCI to platform wrapper used on Cadnece testing
+>>              platform. It is FPGA based on platform.
+>> The patches 3-5: add the main part of driver and has been intentionally
+>>              split into 3 part. In my opinion such division should not
+>>              affect understanding and reviewing the driver, and cause th=
+at
+>>              main patch (4/5) is little smaller. Patch 3 introduces main
+>>              header file for driver, 4 is the main part that implements =
+all
+>>              functionality of driver and 5 introduces tracepoints.
+>
+>I'm more interested in how is this different from CDNS3. Aren't they SW co=
+mpatible?
 
-Guillaume
+In general, the controller can be split into 2 part- DRD part and the rest =
+UDC.=20
 
+The second part UDC which consist gadget.c, ring.c and mem.c file is comple=
+tely different.=20
 
-> On 26/06/2020 08:56, Guillaume Tucker wrote:
->> Please see the bisection report below about a regression in
->> v4l2-compliance with uvcvideo:
->>
->> [   25.495039] uvcvideo: Failed to query (SET_CUR) UVC control 10 on unit 2: -32 (exp. 2).
->> 		fail: v4l2-test-buffers.cpp(680): check_0(reqbufs.reserved, sizeof(reqbufs.reserved))
->> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
->>
->>
->> as seen in the full job log:
->>
->>     https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.html#L1713
->>
->> with a few more details about the regression here:
->>
->>     https://kernelci.org/test/case/id/5ef23169140826f73d97bf51/
->>
->> and the same test case failure also seen with vivid:
->>
->>     https://kernelci.org/test/case/id/5ef23699f641f7b3e597bf3f/
->>
->>
->> The bisection actually ran a couple of days ago but there was an
->> email error when sending the report, so I'm sending it by hand
->> now.  I hope the issue hasn't spread too widely already, I know
->> it's also affecting linux-next.
->>
->> Guillaume
->>
->>
->> On 25/06/2020 23:19, kernelci.org bot wrote:
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>> * This automated bisection report was sent to you on the basis  *
->>> * that you may be involved with the breaking commit it has      *
->>> * found.  No manual investigation has been done to verify it,   *
->>> * and the root cause of the problem may be somewhere else.      *
->>> *                                                               *
->>> * If you do send a fix, please include this trailer:            *
->>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->>> *                                                               *
->>> * Hope this helps!                                              *
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>
->>> media/master bisection: v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF on rk3399-gru-kevin
->>>
->>> Summary:
->>>   Start:      e30cc79cc80f media: media-request: Fix crash if memory allocation fails
->>>   Plain log:  https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.txt
->>>   HTML log:   https://storage.kernelci.org/media/master/v5.8-rc1-64-ge30cc79cc80f/arm64/defconfig/gcc-8/lab-collabora/v4l2-compliance-uvc-rk3399-gru-kevin.html
->>>   Result:     1e0b2318fa75 media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->>>
->>> Checks:
->>>   revert:     PASS
->>>   verify:     PASS
->>>
->>> Parameters:
->>>   Tree:       media
->>>   URL:        https://git.linuxtv.org/media_tree.git
->>>   Branch:     master
->>>   Target:     rk3399-gru-kevin
->>>   CPU arch:   arm64
->>>   Lab:        lab-collabora
->>>   Compiler:   gcc-8
->>>   Config:     defconfig
->>>   Test case:  v4l2-compliance-uvc.Buffer-ioctls-Input-0.VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF
->>>
->>> Breaking commit found:
->>>
->>> -------------------------------------------------------------------------------
->>> commit 1e0b2318fa75d186ee0d2be31843ce867385fcc4
->>> Author: Sergey Senozhatsky <senozhatsky@chromium.org>
->>> Date:   Thu May 14 18:01:45 2020 +0200
->>>
->>>     media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->>>     
->>>     This patch lets user-space to request a non-consistent memory
->>>     allocation during CREATE_BUFS and REQBUFS ioctl calls.
->>>     
->>>     = CREATE_BUFS
->>>     
->>>       struct v4l2_create_buffers has seven 4-byte reserved areas,
->>>       so reserved[0] is renamed to ->flags. The struct, thus, now
->>>       has six reserved 4-byte regions.
->>>     
->>>     = CREATE_BUFS32
->>>     
->>>       struct v4l2_create_buffers32 has seven 4-byte reserved areas,
->>>       so reserved[0] is renamed to ->flags. The struct, thus, now
->>>       has six reserved 4-byte regions.
->>>     
->>>     = REQBUFS
->>>     
->>>      We use one bit of a ->reserved[1] member of struct v4l2_requestbuffers,
->>>      which is now renamed to ->flags. Unlike v4l2_create_buffers, struct
->>>      v4l2_requestbuffers does not have enough reserved room. Therefore for
->>>      backward compatibility  ->reserved and ->flags were put into anonymous
->>>      union.
->>>     
->>>     Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
->>>     Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->>>     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>>
->>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst b/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
->>> index e1afc5b504c2..f2a702870fad 100644
->>> --- a/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
->>> +++ b/Documentation/userspace-api/media/v4l/vidioc-create-bufs.rst
->>> @@ -121,7 +121,12 @@ than the number requested.
->>>  	other changes, then set ``count`` to 0, ``memory`` to
->>>  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
->>>      * - __u32
->>> -      - ``reserved``\ [7]
->>> +      - ``flags``
->>> +      - Specifies additional buffer management attributes.
->>> +	See :ref:`memory-flags`.
->>> +
->>> +    * - __u32
->>> +      - ``reserved``\ [6]
->>>        - A place holder for future extensions. Drivers and applications
->>>  	must set the array to zero.
->>>  
->>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst b/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
->>> index 96a59793d857..75d894d9c36c 100644
->>> --- a/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
->>> +++ b/Documentation/userspace-api/media/v4l/vidioc-reqbufs.rst
->>> @@ -112,10 +112,17 @@ aborting or finishing any DMA in progress, an implicit
->>>  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
->>>  	free any previously allocated buffers, so this is typically something
->>>  	that will be done at the start of the application.
->>> +    * - union {
->>> +      - (anonymous)
->>> +    * - __u32
->>> +      - ``flags``
->>> +      - Specifies additional buffer management attributes.
->>> +	See :ref:`memory-flags`.
->>>      * - __u32
->>>        - ``reserved``\ [1]
->>> -      - A place holder for future extensions. Drivers and applications
->>> -	must set the array to zero.
->>> +      - Kept for backwards compatibility. Use ``flags`` instead.
->>> +    * - }
->>> +      -
->>>  
->>>  .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
->>>  
->>> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
->>> index 0fdcf90330df..626c4db5134c 100644
->>> --- a/drivers/media/common/videobuf2/videobuf2-core.c
->>> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
->>> @@ -694,6 +694,9 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->>>  	unsigned int i;
->>>  	int ret;
->>>  
->>> +	if (flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
->>> +		consistent_mem = false;
->>> +
->>>  	if (q->streaming) {
->>>  		dprintk(1, "streaming active\n");
->>>  		return -EBUSY;
->>> @@ -837,6 +840,9 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->>>  	bool consistent_mem = true;
->>>  	int ret;
->>>  
->>> +	if (flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
->>> +		consistent_mem = false;
->>> +
->>>  	if (q->num_buffers == VB2_MAX_FRAME) {
->>>  		dprintk(1, "maximum number of buffers already allocated\n");
->>>  		return -ENOBUFS;
->>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> index 26a3ec333bb7..559a229cac41 100644
->>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> @@ -718,12 +718,22 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
->>>  #endif
->>>  }
->>>  
->>> +static void clear_consistency_attr(struct vb2_queue *q,
->>> +				   int memory,
->>> +				   unsigned int *flags)
->>> +{
->>> +	if (!q->allow_cache_hints || memory != V4L2_MEMORY_MMAP)
->>> +		*flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
->>> +}
->>> +
->>>  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
->>>  {
->>>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
->>>  
->>>  	fill_buf_caps(q, &req->capabilities);
->>> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, 0, &req->count);
->>> +	clear_consistency_attr(q, req->memory, &req->flags);
->>> +	return ret ? ret : vb2_core_reqbufs(q, req->memory,
->>> +					    req->flags, &req->count);
->>>  }
->>>  EXPORT_SYMBOL_GPL(vb2_reqbufs);
->>>  
->>> @@ -755,6 +765,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->>>  	unsigned i;
->>>  
->>>  	fill_buf_caps(q, &create->capabilities);
->>> +	clear_consistency_attr(q, create->memory, &create->flags);
->>>  	create->index = q->num_buffers;
->>>  	if (create->count == 0)
->>>  		return ret != -EBUSY ? ret : 0;
->>> @@ -797,8 +808,11 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->>>  	for (i = 0; i < requested_planes; i++)
->>>  		if (requested_sizes[i] == 0)
->>>  			return -EINVAL;
->>> -	return ret ? ret : vb2_core_create_bufs(q, create->memory, 0,
->>> -		&create->count, requested_planes, requested_sizes);
->>> +	return ret ? ret : vb2_core_create_bufs(q, create->memory,
->>> +						create->flags,
->>> +						&create->count,
->>> +						requested_planes,
->>> +						requested_sizes);
->>>  }
->>>  EXPORT_SYMBOL_GPL(vb2_create_bufs);
->>>  
->>> @@ -969,11 +983,12 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
->>>  	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
->>>  
->>>  	fill_buf_caps(vdev->queue, &p->capabilities);
->>> +	clear_consistency_attr(vdev->queue, p->memory, &p->flags);
->>>  	if (res)
->>>  		return res;
->>>  	if (vb2_queue_is_busy(vdev, file))
->>>  		return -EBUSY;
->>> -	res = vb2_core_reqbufs(vdev->queue, p->memory, 0, &p->count);
->>> +	res = vb2_core_reqbufs(vdev->queue, p->memory, p->flags, &p->count);
->>>  	/* If count == 0, then the owner has released all buffers and he
->>>  	   is no longer owner of the queue. Otherwise we have a new owner. */
->>>  	if (res == 0)
->>> @@ -991,6 +1006,7 @@ int vb2_ioctl_create_bufs(struct file *file, void *priv,
->>>  
->>>  	p->index = vdev->queue->num_buffers;
->>>  	fill_buf_caps(vdev->queue, &p->capabilities);
->>> +	clear_consistency_attr(vdev->queue, p->memory, &p->flags);
->>>  	/*
->>>  	 * If count == 0, then just check if memory and type are valid.
->>>  	 * Any -EBUSY result from vb2_verify_memory_type can be mapped to 0.
->>> diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->>> index a99e82ec9ab6..593bcf6c3735 100644
->>> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->>> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->>> @@ -246,6 +246,9 @@ struct v4l2_format32 {
->>>   * @memory:	buffer memory type
->>>   * @format:	frame format, for which buffers are requested
->>>   * @capabilities: capabilities of this buffer type.
->>> + * @flags:	additional buffer management attributes (ignored unless the
->>> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability and
->>> + *		configured for MMAP streaming I/O).
->>>   * @reserved:	future extensions
->>>   */
->>>  struct v4l2_create_buffers32 {
->>> @@ -254,7 +257,8 @@ struct v4l2_create_buffers32 {
->>>  	__u32			memory;	/* enum v4l2_memory */
->>>  	struct v4l2_format32	format;
->>>  	__u32			capabilities;
->>> -	__u32			reserved[7];
->>> +	__u32			flags;
->>> +	__u32			reserved[6];
->>>  };
->>>  
->>>  static int __bufsize_v4l2_format(struct v4l2_format32 __user *p32, u32 *size)
->>> @@ -355,7 +359,8 @@ static int get_v4l2_create32(struct v4l2_create_buffers __user *p64,
->>>  {
->>>  	if (!access_ok(p32, sizeof(*p32)) ||
->>>  	    copy_in_user(p64, p32,
->>> -			 offsetof(struct v4l2_create_buffers32, format)))
->>> +			 offsetof(struct v4l2_create_buffers32, format)) ||
->>> +	    assign_in_user(&p64->flags, &p32->flags))
->>>  		return -EFAULT;
->>>  	return __get_v4l2_format32(&p64->format, &p32->format,
->>>  				   aux_buf, aux_space);
->>> @@ -417,6 +422,7 @@ static int put_v4l2_create32(struct v4l2_create_buffers __user *p64,
->>>  	    copy_in_user(p32, p64,
->>>  			 offsetof(struct v4l2_create_buffers32, format)) ||
->>>  	    assign_in_user(&p32->capabilities, &p64->capabilities) ||
->>> +	    assign_in_user(&p32->flags, &p64->flags) ||
->>>  	    copy_in_user(p32->reserved, p64->reserved, sizeof(p64->reserved)))
->>>  		return -EFAULT;
->>>  	return __put_v4l2_format32(&p64->format, &p32->format);
->>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
->>> index 2322f08a98be..02bfef0da76d 100644
->>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
->>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
->>> @@ -2038,9 +2038,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
->>>  
->>>  	if (ret)
->>>  		return ret;
->>> -
->>> -	CLEAR_AFTER_FIELD(p, capabilities);
->>> -
->>>  	return ops->vidioc_reqbufs(file, fh, p);
->>>  }
->>>  
->>> @@ -2080,7 +2077,7 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> -	CLEAR_AFTER_FIELD(create, capabilities);
->>> +	CLEAR_AFTER_FIELD(create, flags);
->>>  
->>>  	v4l_sanitize_format(&create->format);
->>>  
->>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->>> index 34ba1017b89b..fec2607a07e3 100644
->>> --- a/include/uapi/linux/videodev2.h
->>> +++ b/include/uapi/linux/videodev2.h
->>> @@ -946,7 +946,10 @@ struct v4l2_requestbuffers {
->>>  	__u32			type;		/* enum v4l2_buf_type */
->>>  	__u32			memory;		/* enum v4l2_memory */
->>>  	__u32			capabilities;
->>> -	__u32			reserved[1];
->>> +	union {
->>> +		__u32		flags;
->>> +		__u32		reserved[1];
->>> +	};
->>>  };
->>>  
->>>  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
->>> @@ -2450,6 +2453,9 @@ struct v4l2_dbg_chip_info {
->>>   * @memory:	enum v4l2_memory; buffer memory type
->>>   * @format:	frame format, for which buffers are requested
->>>   * @capabilities: capabilities of this buffer type.
->>> + * @flags:	additional buffer management attributes (ignored unless the
->>> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
->>> + *		and configured for MMAP streaming I/O).
->>>   * @reserved:	future extensions
->>>   */
->>>  struct v4l2_create_buffers {
->>> @@ -2458,7 +2464,8 @@ struct v4l2_create_buffers {
->>>  	__u32			memory;
->>>  	struct v4l2_format	format;
->>>  	__u32			capabilities;
->>> -	__u32			reserved[7];
->>> +	__u32			flags;
->>> +	__u32			reserved[6];
->>>  };
->>>  
->>>  /*
->>> -------------------------------------------------------------------------------
->>>
->>>
->>> Git bisection log:
->>>
->>> -------------------------------------------------------------------------------
->>> git bisect start
->>> # good: [2630e1bb0948c3134c6f22ad275ae27cc6023532] media: rkvdec: Fix H264 scaling list order
->>> git bisect good 2630e1bb0948c3134c6f22ad275ae27cc6023532
->>> # bad: [e30cc79cc80fd919b697a15c5000d9f57487de8e] media: media-request: Fix crash if memory allocation fails
->>> git bisect bad e30cc79cc80fd919b697a15c5000d9f57487de8e
->>> # good: [cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->>> git bisect good cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2
->>> # good: [3b69e8b4571125bec1f77f886174fe6cab6b9d75] Merge tag 'sh-for-5.8' of git://git.libc.org/linux-sh
->>> git bisect good 3b69e8b4571125bec1f77f886174fe6cab6b9d75
->>> # good: [3ed740841bf94a8028ec44164d84f9af9bd552fd] maccess: remove duplicate kerneldoc comments
->>> git bisect good 3ed740841bf94a8028ec44164d84f9af9bd552fd
->>> # good: [2ab70319bc1f79228da4dce7b9d604740c9beeef] nmi, tracing: Make hardware latency tracing noinstr safe
->>> git bisect good 2ab70319bc1f79228da4dce7b9d604740c9beeef
->>> # good: [df2fbf5bfa0e7fff8b4784507e4d68f200454318] Merge tag 'thermal-v5.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux
->>> git bisect good df2fbf5bfa0e7fff8b4784507e4d68f200454318
->>> # good: [91fa58840ae22cbf6d7c505ce6564c4c48f29af3] Merge branch 'i2c/for-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
->>> git bisect good 91fa58840ae22cbf6d7c505ce6564c4c48f29af3
->>> # good: [bc139119a1708ae3db1ebb379630f286e28d06e8] net: ethernet: ti: ale: fix allmulti for nu type ale
->>> git bisect good bc139119a1708ae3db1ebb379630f286e28d06e8
->>> # good: [157282a5c6273976b31cf4ba4b1c46663f6519d1] media: s5k6a3: Fix runtime PM imbalance on error
->>> git bisect good 157282a5c6273976b31cf4ba4b1c46663f6519d1
->>> # bad: [286cf7d3a99e1ca8c1d8e674b9a98f2dbe8520dc] media: videodev2.h: add V4L2_FMT_FLAG_ENC_CAP_FRAME_INTERVAL flag
->>> git bisect bad 286cf7d3a99e1ca8c1d8e674b9a98f2dbe8520dc
->>> # good: [ac53503ee38a1ffbc47c7cca6cbfc48ba9c65c5e] media: videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->>> git bisect good ac53503ee38a1ffbc47c7cca6cbfc48ba9c65c5e
->>> # bad: [d4db5eb57cab049d378fbfb7ee842857009a8679] media: videobuf2: add begin/end cpu_access callbacks to dma-sg
->>> git bisect bad d4db5eb57cab049d378fbfb7ee842857009a8679
->>> # bad: [38a417e88aad1e5ad5ff2647d4cd26040b567fc3] media: videobuf2: factor out planes prepare/finish functions
->>> git bisect bad 38a417e88aad1e5ad5ff2647d4cd26040b567fc3
->>> # bad: [1e0b2318fa75d186ee0d2be31843ce867385fcc4] media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->>> git bisect bad 1e0b2318fa75d186ee0d2be31843ce867385fcc4
->>> # good: [7b4b45555c79db03dad8192e6ef85cb30236827b] media: videobuf2: add queue memory consistency parameter
->>> git bisect good 7b4b45555c79db03dad8192e6ef85cb30236827b
->>> # first bad commit: [1e0b2318fa75d186ee0d2be31843ce867385fcc4] media: videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->>> -------------------------------------------------------------------------------
->>>
->>
-> 
+The DRD part contains drd.c and core.c.=20
+cdnsp drd.c is similar to cdns3 drd.c but it's little different. CDNSP has =
+similar, but has different register space.
+Some register was moved, some was removed and some was added. =20
 
+core.c is very similar and eventually could be common for both drivers.  I =
+thought about this but
+I wanted to avoid interfering with cdns3 driver at this point CDNSP is stil=
+l under testing and=20
+CDNS3 is used by some products on the market.=20
+
+I thought about merging cdnsp core.c  with cdns3 core.c but after upstreami=
+ng over, but=20
+I'm not sure if it's a good idea.
+
+>
+>--
+>balbi
+
+pawel
