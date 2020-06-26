@@ -2,127 +2,98 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B082070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0132075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="pz4gvXVi";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="pz4gvXVi"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="UhLStb8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgFZOgf (ORCPT
+        id S1729265AbgFZOhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:36:35 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51438 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725970AbgFZOgf (ORCPT
+        Fri, 26 Jun 2020 10:37:00 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:58965 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725970AbgFZOg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:36:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B3E678EE25D;
-        Fri, 26 Jun 2020 07:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593182193;
-        bh=NNjSYoJa2E2i2KfOg27iengig6S5FbChi0NfMaOraSU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pz4gvXViKqgsBhUOpwcoswSq9g2Wy155Sl/4/GJYyxLPgoNX3WPtS59KK6lfx6kW5
-         X7hAN9psYUkRi19Jr6M+imH1uh08NoR9TfiqMWzhZgtEAcKtSZuKOUAZ54BQNMKNyl
-         bBBj87WHJfEbfnIXcTl3CetdmtqqmLOeD3FbkLGc=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dGrBzAFreGIx; Fri, 26 Jun 2020 07:36:33 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C863D8EE051;
-        Fri, 26 Jun 2020 07:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593182193;
-        bh=NNjSYoJa2E2i2KfOg27iengig6S5FbChi0NfMaOraSU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pz4gvXViKqgsBhUOpwcoswSq9g2Wy155Sl/4/GJYyxLPgoNX3WPtS59KK6lfx6kW5
-         X7hAN9psYUkRi19Jr6M+imH1uh08NoR9TfiqMWzhZgtEAcKtSZuKOUAZ54BQNMKNyl
-         bBBj87WHJfEbfnIXcTl3CetdmtqqmLOeD3FbkLGc=
-Message-ID: <1593182191.7381.11.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-integrity@vger.kernel.org,
-        "Ferry Toth :" <ferry.toth@elsinga.info>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Fri, 26 Jun 2020 10:36:59 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id opTIjNoEl0MRaopTMjNIdm; Fri, 26 Jun 2020 16:36:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593182218; bh=eEXatkmLWv6Cn91mrDmo2zkvbJBl1/6cb6rg4xzWyxc=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=UhLStb8BHj9s4skZajutHeZlGXrISp1NAUJlOJ0QlCYjg8FM42BsrAWI6DD3sJ7+s
+         6nrsVLgBsBz/WvyVrNn8f6Dg5skqIb+hvFl8tt74eOXuBgyxssCJFndWNvrRJSUxTv
+         9Z0KkptYCbJ/LLrjuIKMflk4aLroF9gVG0VQRXGHDNUEfJJ+AgdIa2bBNnZEBqGllt
+         CTsrwSTFPYVvMvm28JxMv8xJPAUn4t4OLHNY+htFw4Ily8GK/Ul1/BGqz+s6iEqdBH
+         YJT6v2sVC7D0e72gUzuwbYyBUGZPOQD9qtjEIKvTq7ugP3WK+oA4h48gpa78KC/1fZ
+         IwYD7zwiHfIMA==
+Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
+ before ',' (ctx:WxW)
+To:     B K Karthik <bkkarthik@pesu.pes.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@osdl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 26 Jun 2020 07:36:31 -0700
-In-Reply-To: <20200626131523.GB7853@linux.intel.com>
-References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
-         <20200625062150.idm6j3vm2neyt4sh@cantor>
-         <20200625210202.GA20341@linux.intel.com>
-         <20200625211923.2jirvix6zbrbgj6e@cantor>
-         <1593120239.3332.17.camel@HansenPartnership.com>
-         <20200626131523.GB7853@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a9efda13-4425-8cb0-5854-8421f6c14181@xs4all.nl>
+Date:   Fri, 26 Jun 2020 16:36:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIABrg0rj/3IAf1UbDBBrjdwQxRn5BzdsdIYziZ7B2iCppG1JK7WTE2dwMLgs6AthjTJuuryUrWsqyuLryCpWLJiBEWKLnXOIfa96vYuN/vdQ1qrJb94
+ 7QMhRe8YNRjJim+NhxI7F8PYFpoyfXFJDgaj7luf2EBe4yxG3UPahJVsCZvRHO5GgjdFLgLn3KetegxEK/SligwOdJWMiLqVS4wFDvuZ30PO3501NkQJK+0m
+ GVyaejVoBvEsGEFuGZqQEkfcJdPhup497w1bdfT7JPjesuhlV4b3aFsUqehaczLBGBk2GRN/u99RtzodAKduQPyp4OXaBQe36u9Twjav0l/Q7OCiPweoux4o
+ whRWnkeo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-26 at 16:15 +0300, Jarkko Sakkinen wrote:
-> I have an obstacle with that.
+On 26/06/2020 16:32, B K Karthik wrote:
+> fixing ERROR: space prohibited before that ',' (ctx:WxW)
 > 
-> I lost my previous PGP key a year ago and created a new one, which is
-> not trusted yet by anyone [*]. I've backed this up now and have it
-> stored inside Nitrokey Pro 2 in order to prevent this happening
-> again.
+> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
 
-I wouldn't do that.  If the nitro key gets lost or breaks, you'll be in
-the same position.  Best practice is to have your key offline somewhere
-in a secure vault (like an encrypted USB key in a bank vault) so you
-can restore in case of loss and then present inside a token (so I use
-the TPM2 for mine).
+usbvision is another driver that is scheduled for removal by the end of the year,
+so I won't apply this patch.
 
-> Now the problem is that in order to get a kernel.org account, I need
-> to be in the web of trust of the kernel maintainers.
+> ---
+>  drivers/staging/media/usbvision/usbvision-i2c.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I can request an accunt only after I see face to face another kernel
-> maintainers, so that I can proof that I am I.
+> diff --git a/drivers/staging/media/usbvision/usbvision-i2c.c b/drivers/staging/media/usbvision/usbvision-i2c.c
+> index 6e4df3335b1b..010ad03c6ec1 100644
+> --- a/drivers/staging/media/usbvision/usbvision-i2c.c
+> +++ b/drivers/staging/media/usbvision/usbvision-i2c.c
+> @@ -32,7 +32,7 @@ MODULE_PARM_DESC(i2c_debug, "enable debug messages [i2c]");
+>  #define PDEBUG(level, fmt, args...) { \
+>  		if (i2c_debug & (level)) \
+>  			printk(KERN_INFO KBUILD_MODNAME ":[%s:%d] " fmt, \
+> -				__func__, __LINE__ , ## args); \
+> +				__func__, __LINE__, ## args); \
+
+Actually, older (buggy) gcc compiler needed a space there, if memory serves.
+
+Regards,
+
+	Hans
+
+>  	}
+>  
+>  static int usbvision_i2c_write(struct usb_usbvision *usbvision, unsigned char addr, char *buf,
 > 
-> [*] http://keys.gnupg.net/pks/lookup?op=get&search=0x3AB05486C7752FE1
-
-Well, I would sign this and send it back to you, except I can't.  The
-verification procedures require an encrypted email and you don't have a
-working encryption key:
-
-gpg --export -a 3AB05486C7752FE1 | gpg --encrypt -r 3AB05486C7752FE1 -a --output 3AB05486C7752FE1.gpg 
-gpg: 3AB05486C7752FE1: skipped: Unusable public key
-gpg: [stdin]: encryption failed: Unusable public key
-
-The reason is your main key is certification only (as is should be):
-
-pub  rsa4096/3AB05486C7752FE1
-     created: 2019-06-24  expires: 2023-06-24  usage: C   
-     trust: unknown       validity: full
-
-but your only encryption subkey is revoked:
-
-sub  rsa2048/3A4EC6E56FDD3158
-     created: 2019-06-25  revoked: 2019-10-22  usage: E   
-
-You seem to have only one unrevoked, unexpired subkey which is an
-authentication one, so you wouldn't even be able to sign with that key:
-
-sub  rsa2048/962F0565523E5DC5
-     created: 2019-06-26  expires: 2021-06-25  usage: A   
-
-James
 
