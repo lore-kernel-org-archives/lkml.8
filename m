@@ -2,208 +2,241 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3906BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD23220E65
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:28:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D3PCkC1/"
+	by mail.kernel.org (Postfix) with ESMTP id 0B02620EDD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgFZK2m (ORCPT
+        id S1727926AbgFZK3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:28:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56474 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgFZK2l (ORCPT
+        Fri, 26 Jun 2020 06:29:00 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:38478 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgFZK27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:28:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QASVew022878;
-        Fri, 26 Jun 2020 05:28:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593167311;
-        bh=2sgKdorcdIQb8LjqWsTteHIxdXbBN5knpabZ6nwoafs=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=D3PCkC1/VCfGCD7k/3eOdi9XGaQscK+5RKsXGCQwKgc18gfb/qtqLxLEhVuo87ntD
-         8Q/f2KiCp8r5Fkd/fUBgJYArIraq+uQ66acSlePF8scpaxkK7Iujpx+YnOIlj2xFP2
-         drC+ABBiCI3WUm0LOWrC1OrGP065xYDhI7WX5c9I=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QASVRs104244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 05:28:31 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 05:28:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 05:28:31 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QASSYD018142;
-        Fri, 26 Jun 2020 05:28:29 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: DMA Engine: Transfer From Userspace
-To:     Thomas Ruf <freelancer@rufusul.de>, Vinod Koul <vkoul@kernel.org>
-CC:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
- <1835214773.354594.1592843644540@mailbusiness.ionos.de>
- <2077253476.601371.1592991035969@mailbusiness.ionos.de>
- <20200624093800.GV2324254@vkoul-mobl>
- <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
- <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
-X-Pep-Version: 2.0
-Message-ID: <1a610c67-73a4-f66d-877a-5c4d35cbf76a@ti.com>
-Date:   Fri, 26 Jun 2020 13:29:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 06:28:59 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 7727F3C0585;
+        Fri, 26 Jun 2020 12:28:55 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jI0BiUiwz0EU; Fri, 26 Jun 2020 12:28:50 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9B1853C04C1;
+        Fri, 26 Jun 2020 12:28:50 +0200 (CEST)
+Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 26 Jun
+ 2020 12:28:50 +0200
+Date:   Fri, 26 Jun 2020 12:28:45 +0200
+From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        niklas soderlund <niklas.soderlund@ragnatech.se>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
+ ENUM/GET/SET INPUT
+Message-ID: <20200626102832.GA89964@vmlxhi-110.adit-jv.com>
+References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+ <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
+ <20200625020138.GW5980@pendragon.ideasonboard.com>
+ <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
+ <20200625094724.GE5865@pendragon.ideasonboard.com>
+ <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
+ <20200625102701.GG5865@pendragon.ideasonboard.com>
+ <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
+ <20200626090913.GA1348@vmlxhi-110.adit-jv.com>
+ <722b67b4-05a3-5785-0196-15bf5466c981@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <722b67b4-05a3-5785-0196-15bf5466c981@xs4all.nl>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.196]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 11:25:31AM +0200, Hans Verkuil wrote:
+> On 26/06/2020 11:09, Ramzi Ben Meftah wrote:
+> > Hi Laurent, Hans,
+> > 
+> > On Thu, Jun 25, 2020 at 12:35:02PM +0200, Hans Verkuil wrote:
+> >> On 25/06/2020 12:29, Laurent Pinchart wrote:
+> >>> Hi Ramzi,
+> >>>
+> >>> On Thu, Jun 25, 2020 at 12:18:35PM +0200, Ramzi Ben Meftah wrote:
+> >>>> On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
+> >>>>> On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
+> >>>>>> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
+> >>>>>>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
+> >>>>>>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
+> >>>>>>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>>>>>>>
+> >>>>>>>>  +Niklas, +Laurent
+> >>>>>>>>
+> >>>>>>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
+> >>>>>>>
+> >>>>>>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
+> >>>>>>> idea either :-) Routing doesn't go through the subdev [gs]_input
+> >>>>>>> operations in MC-based drivers. It should be configured through link
+> >>>>>>> setup instead. This patch goes in the wrong direction, sorry Steve.
+> >>>>>>
+> >>>>>> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
+> >>>>>> with Media Controller?
+> >>>>>
+> >>>>> No there isn't at the moment. I'm not opposed to adding such a feature,
+> >>>>> but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
+> >>>>> subdev pad operation (v4l2_subdev_pad_ops), not a video operation
+> >>>>> (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
+> >>>>> as it would retrieve properties of the input corresponding to the pad,
+> >>>>> not enumerate inputs.
+> >>>>
+> >>>> Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
+> >>>> this need. But, seems this is not expose to user space although many drivers
+> >>>> do implememt it.
+> >>>> Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
+> >>>
+> >>> Isn't g_input_status a video operation ? I would propose adding a
+> >>> g_input_status pad operation, and expose that to userspace. We should
+> >>> take that as an opportunity to consider designing that new operation
+> >>> from scratch (possibly naming it differently) and make sure it could
+> >>> address both analog and digital systems (for instance being able to
+> >>> report the status of an SDI input).
+> > 
+> > Sorry, my mistake. But, does it make sens that it belongs to video ops?
+> > I think it should be part of pad ops, it is used now as alternative to 
+> > ENUMINPUT and we agreed that it should(if we are going to implement it) be 
+> > part of pad ops.
+> > 
+> >>
+> >> Yes, I was wondering the same. The status bits are ancient and we might
+> >> want to improve on it.
+> >>
+> >> Ramzi, what exactly is your use-case? Is this for an HDMI input? Analog
+> >> video input? Before adding a new ioctl I'd like to know why you think
+> >> you need it :-)
+> > 
+> > I need to know if the input signal(analog and digital) is there, before
+> > starting streaming. I am not aware of other way to check for it.
+> 
+> You can check for digital timings using QUERY_DV_TIMINGS: it will return an
+> error if there is no lock. Subscribe to the SOURCE_CHANGE event to know when
+> the signal is found/lost.
+> 
+> For analog timings you have QUERYSTD and the same event. The main limitation
+> with analog (SDTV) video receivers is that not all analog receivers have implemented
+> this event. But the adv7180 and tvp5150 do support this.
+> 
+> This is the recommended way of implementing this and it has the advantage of
+> being interrupt-driven, so no need to poll for a status in the application.
 
+Thank you Hans, things are clear now.
 
-On 24/06/2020 16.58, Thomas Ruf wrote:
->=20
->> On 24 June 2020 at 14:07 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:=
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> >>
+> >> Regards,
+> >>
+> >> 	Hans
+> >>
+> >>>
+> >>>>>>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+> >>>>>>>>> ioctls for use via v4l2 subdevice node.
+> >>>>>>>>>
+> >>>>>>>>> This commit should probably not be pushed upstream, because the (old)
+> >>>>>>>>> idea of video inputs conflicts with the newer concept of establishing
+> >>>>>>>>> media links between src->sink pads.
+> >>>>>>>>>
+> >>>>>>>>> However it might make sense for some subdevices to support enum/get/set
+> >>>>>>>>> inputs. One example would be the analog front end subdevice for the
+> >>>>>>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+> >>>>>>>>> can be done without requiring the implementation of media entities that
+> >>>>>>>>> would define the analog source for which to establish a media link.
+> >>>>>>>>>
+> >>>>>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>>>>>>>> ---
+> >>>>>>>>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+> >>>>>>>>>  include/media/v4l2-subdev.h           | 11 +++++++++++
+> >>>>>>>>>  2 files changed, 20 insertions(+)
+> >>>>>>>>>
+> >>>>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>>>> index 6b989fe..73fbfe9 100644
+> >>>>>>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>>>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+> >>>>>>>>>  			return -ENOTTY;
+> >>>>>>>>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
+> >>>>>>>>>
+> >>>>>>>>> +	case VIDIOC_ENUMINPUT:
+> >>>>>>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
+> >>>>>>>>> +
+> >>>>>>>>> +	case VIDIOC_G_INPUT:
+> >>>>>>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
+> >>>>>>>>> +
+> >>>>>>>>> +	case VIDIOC_S_INPUT:
+> >>>>>>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
+> >>>>>>>>> +
+> >>>>>>>>>  	case VIDIOC_G_CTRL:
+> >>>>>>>>>  		if (!vfh->ctrl_handler)
+> >>>>>>>>>  			return -ENOTTY;
+> >>>>>>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> >>>>>>>>> index f7fe78a..6e1a9cd 100644
+> >>>>>>>>> --- a/include/media/v4l2-subdev.h
+> >>>>>>>>> +++ b/include/media/v4l2-subdev.h
+> >>>>>>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+> >>>>>>>>>   * @g_input_status: get input status. Same as the status field in the
+> >>>>>>>>>   *	&struct &v4l2_input
+> >>>>>>>>>   *
+> >>>>>>>>> + * @enuminput: enumerate inputs. Should return the same input status as
+> >>>>>>>>> + *      @g_input_status if the passed input index is the currently active
+> >>>>>>>>> + *      input.
+> >>>>>>>>> + *
+> >>>>>>>>> + * @g_input: returns the currently active input index.
+> >>>>>>>>> + *
+> >>>>>>>>> + * @s_input: set the active input.
+> >>>>>>>>> + *
+> >>>>>>>>>   * @s_stream: used to notify the driver that a video stream will start or has
+> >>>>>>>>>   *	stopped.
+> >>>>>>>>>   *
+> >>>>>>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+> >>>>>>>>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>>>>>>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>>>>>>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
+> >>>>>>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
+> >>>>>>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
+> >>>>>>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+> >>>>>>>>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+> >>>>>>>>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+> >>>>>>>>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
+> >>>
+> >>
+> > 
+> 
 
->> On 24/06/2020 12.38, Vinod Koul wrote:
->>> On 24-06-20, 11:30, Thomas Ruf wrote:
->>>
->>>> To make it short - i have two questions:
->>>> - what are the chances to revive DMA_SG?
->>>
->>> 100%, if we have a in-kernel user
->>
->> Most DMAs can not handle differently provisioned sg_list for src and d=
-st.
->> Even if they could handle non symmetric SG setup it requires entirely
->> different setup (two independent channels sending the data to each
->> other, one reads, the other writes?).
->=20
-> Ok, i implemented that using zynqmp_dma on a Xilinx Zynq platform (obvi=
-ously ;-) and it works nicely for us.
-
-I see, if the HW does not support it then something along the lines of
-what the atc_prep_dma_sg did can be implemented for most engines.
-
-In essence: create a new set of sg_list which is symmetric.
-
-> Don't think that it uses two channels from what a saw in their implemen=
-tation.
-
-I believe it was breaking it up like atc_prep_dma_sg did.
-
-> Of course that was on kernel 4.19.x where DMA_SG was still available.
->=20
->>>> - what are the chances to get my driver for memcpy like transfers fr=
-om
->>>> user space using DMA_SG upstream? ("dma-sg-proxy")
->>>
->>> pretty bleak IMHO.
->>
->> fwiw, I also get requests time-to-time to DMA memcpy support from user=
-
->> space from companies trying to move from bare-metal code to Linux.
->>
->> What could be plausible is a generic dmabuf-to-dmabuf copy driver (V4L=
-2
->> can provide dma-buf, DRM can also).
->> If there is a DMA memcpy channel available, use that, otherwise use so=
-me
->> method to do the copy, user space should not care how it is done.
->=20
-> Yes, i'm using it together with a v4l2 capture driver and also saw the =
-dma-buf thing but did not find a way how to bring this together with "ord=
-inary user memory".
-
-One of the aim of dma-buf is to share buffers between drivers and user
-space (among drivers and/or drivers and userspace), but I might be
-missing something.
-
-> For me the root of my problem seems to be that dma_alloc_coherent leads=
- to uncached memory on ARM platforms.
-
-It depends, but in most cases that is true.
-
-> But maybe i am doing it all wrong ;-)
->=20
->> Where things are going to get a bit more trickier is when the copy nee=
-ds
->> to be triggered by other DMA channel (completion of a frame reception
->> triggering an interleaved sub-frame extraction copy).
->> You don't want to extract from a buffer which can be modified while th=
-e
->> other channel is writing to it.
->=20
-> I think that would be no problem in case of our v4l2 capture driver doi=
-ng both DMAs:
-> Framebuffer DMA for streaming and Zynqmp DMA (using DMA_SG) to get it t=
-o "ordinary user memory".
-> But as i wrote before i prefer to do the "logic and management" in user=
-space so the capture driver is just using the first DMA and the "dma-sg-p=
-roxy" driver is only used as a memcpy replacement.
-> As said this is all working fine with kernel 4.19.x but now we are stuc=
-k :-(
->=20
->> In Linux the DMA is used for kernel and user space can only use it
->> implicitly via standard subsystems.
->> Misused DMA can be very dangerous and giving full access to program a
->> transfer can open a can of worms.
->=20
-> Fully understand that!
-> But i also hope you understand that we are developing a "closed system"=
- and do not have a problem with that at all.
-> We are also willing to bring that driver upstream for anyone doing the =
-same but of course this should not affect security of any desktop or serv=
-er systems.
-> Maybe we just need the right place for that driver?!
-
-What might be plausible is to introduce hw offloading support for memcpy
-type of operations in a similar fashion how for example crypto does it?
-
-The issue with a user space implemented logic is that it is not portable
-between systems with different DMAs. It might be that on one DMA the
-setup takes longer than do a CPU copy of X bytes, on the other DMA it
-might be significantly less or higher.
-
-Using CPU vs DMA for a copy in certain lengths and setups should not be
-a concern of the user space.
-Yes, you have a closed system with controlled parameters, but a generic
-mem2mem_offload framework should be usable on other setups and the same
-binary should be working on different DMAs where one is not efficient
-for <512 bytes, the other shows benefits under 128bytes.
-
-> Not sure if staging would change your concerns.
->=20
-> Thanks and best regards,
-> Thomas
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+-- 
+Best Regards,
+Ramzi Ben Meftah.
