@@ -2,157 +2,109 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B189B207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F352089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSaPK0+J"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QypkpiSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbgFZUVP (ORCPT
+        id S1725980AbgFZUVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        Fri, 26 Jun 2020 16:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUVO (ORCPT
+        with ESMTP id S1725780AbgFZUVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:21:14 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE183C03E979;
-        Fri, 26 Jun 2020 13:21:14 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id di5so141450qvb.11;
-        Fri, 26 Jun 2020 13:21:14 -0700 (PDT)
+        Fri, 26 Jun 2020 16:21:52 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FA0C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:21:53 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j1so5098274pfe.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XSfjPIdCIsSUipm7ILrWBk5ID/BPDxK2vNHFKOdu/U4=;
-        b=lSaPK0+JPLyNdjeg44ZWhL5Sd5hWJy4APwBYm0qOhXZECdCcn4WbFgb8s3yDnw5/Fx
-         iX1yc0vAALFXrPmBqCcFTmzr5mi7unSMyHRrYwAj3Cn12HlX5+BgjPFRqrCYK0S0Y8cD
-         BrMztWqqLWfFtCT7Juy0sHsBdEj3d9UXLnnP+Qq/mp6h/8CYS6hzuz7QIi28sp9Eok/n
-         qoHQyb4S8TBuvE7r1HT7lE1QpiK3S6iIoFeyD6Z6zb4s8RKiw8vUdEoxFfrN3Bc7dboN
-         AFihQiXXTOlXXJHBmG1MbuSk4aIY/EM8v9imoRa9RDXIfWj5NWyd8YrutRXzuryKDCDR
-         Nbhw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mCCNxLWvOEPbR1jlpJw8AgOuTdUdrqJ6GuWfi7uxTow=;
+        b=QypkpiSsx4NUwMWxcUn+8hePyF1+R2042GPj2XUDzNHJadpb6r+7aOaNBGB70MTNuG
+         MLJtSscoNogqziRuqfrwx+9ELZoJAm3hPZrH7CiW+G/4HKkqtcUubzBzcLxs9Ny9D6yK
+         UZOoZ/Iy2mRWZiJ2nV3raq74FOeM7j5zXApjI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XSfjPIdCIsSUipm7ILrWBk5ID/BPDxK2vNHFKOdu/U4=;
-        b=NlJs8bf1qydGrdFXoxLitllEkMReXJnPWDds6vu0C13gxZojmhdJH/+Gpr6nft/WJ4
-         Yb15B7hHmA2SUIgkvtQWNJkyfqCFQkcGHK6xPdjCv7YHOPGEXBwzw7tBr8O0W3XoQ2jO
-         oezyZp2HC3HYadbCYDCSiUT3S/zrct1dRrTfO8rvjhpX4oOqZro7lH8trOEqaqJyWHjd
-         KWnKpqMJFjB+/PAdkzIR0GEQ91zokLzPisC4iT01nW6jF6RI9OtbH/ScPbQl2Cg6fkju
-         d59uLjwubMZ6RhXSi6G9900s9HJ0csMAUcDzIxY7IkKQ2eo1LRujKYCKrxVbrD+JKman
-         C6WA==
-X-Gm-Message-State: AOAM531xsGeRYgAZbmYgPUjqzXbuq3RWav8A90zyZoj5VWcsZxEoOj0H
-        60O0f/aX9fXNQYCA1DXsu37+xLSPOW3xKQ7y5VI=
-X-Google-Smtp-Source: ABdhPJy/MdxbXmq/GzaQlZLepq/e6SFCRQMz/Nma8lYTPsmMDsWzdpvoaCjHRz0PDl8l71fAxgoFtF0r35PdfNdA8uM=
-X-Received: by 2002:a0c:f388:: with SMTP id i8mr4888184qvk.224.1593202874252;
- Fri, 26 Jun 2020 13:21:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mCCNxLWvOEPbR1jlpJw8AgOuTdUdrqJ6GuWfi7uxTow=;
+        b=SJr3I1Z6DuY90n99G18Vu9KLoyVnVXBBLS/QROqFHtDMWgsGKVsX9KlK3Vu68R9QAp
+         /TAuE39hIMMcEKDcup+OGZ4fo6SOktGAAyQXDt9tyyQ8ljuBzh/0IBO4167ug+6j5VNL
+         lFpKLP63Xzs8ldiH77tZdWoQbHCSXEwIko04pwwaY7drMuK1On6gkeqm/yjZcQMfDbwx
+         VvmZlPm2btJ6yqFzFWAuJjxcIITPK/0fPYQBYBC952URHV1WiWu3V6RfgZqjK8aAocD0
+         M22TCjjhlflP4ATOpN89N4iCg9pcGduZqsh65G/0uzFcsazasZUkEsW++vr3qgU9ueLR
+         L32g==
+X-Gm-Message-State: AOAM533SDfztcQpmIiGJXOzBwfv6x76gjrry+NpjHUBinBz2yBnjIRNZ
+        q9di8IcRHylUIKd+qtwdPiFajA==
+X-Google-Smtp-Source: ABdhPJzzKO0Y6uxrVG0V0dlF6eO3WerWosOLQ/7tIGgWjqtKUKIB7ff57STce4b/Hd01Er7roSIa0Q==
+X-Received: by 2002:a63:1910:: with SMTP id z16mr441252pgl.50.1593202912639;
+        Fri, 26 Jun 2020 13:21:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o8sm15798576pgb.23.2020.06.26.13.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 13:21:51 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 13:21:51 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] kbuild: remove cc-option test of -fno-stack-protector
+Message-ID: <202006261319.F130204@keescook>
+References: <20200626185913.92890-1-masahiroy@kernel.org>
+ <CAKwvOd=V_M43CP7G87K3TqSsxua2NcXPz6BnDt-z6167O2WAzQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200626001332.1554603-1-songliubraving@fb.com> <20200626001332.1554603-5-songliubraving@fb.com>
-In-Reply-To: <20200626001332.1554603-5-songliubraving@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 26 Jun 2020 13:21:03 -0700
-Message-ID: <CAEf4Bzb6H3a48S3L4WZtPTMSLZpAe4C5_2aFwJAnNDVLVWDTQA@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 4/4] selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=V_M43CP7G87K3TqSsxua2NcXPz6BnDt-z6167O2WAzQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 5:15 PM Song Liu <songliubraving@fb.com> wrote:
->
-> The new test is similar to other bpf_iter tests.
->
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++++
->  .../selftests/bpf/progs/bpf_iter_task_stack.c | 60 +++++++++++++++++++
->  2 files changed, 77 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> index 87c29dde1cf96..baa83328f810d 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> @@ -5,6 +5,7 @@
->  #include "bpf_iter_netlink.skel.h"
->  #include "bpf_iter_bpf_map.skel.h"
->  #include "bpf_iter_task.skel.h"
-> +#include "bpf_iter_task_stack.skel.h"
->  #include "bpf_iter_task_file.skel.h"
->  #include "bpf_iter_test_kern1.skel.h"
->  #include "bpf_iter_test_kern2.skel.h"
-> @@ -106,6 +107,20 @@ static void test_task(void)
->         bpf_iter_task__destroy(skel);
->  }
->
-> +static void test_task_stack(void)
-> +{
-> +       struct bpf_iter_task_stack *skel;
-> +
-> +       skel = bpf_iter_task_stack__open_and_load();
-> +       if (CHECK(!skel, "bpf_iter_task_stack__open_and_load",
-> +                 "skeleton open_and_load failed\n"))
-> +               return;
-> +
-> +       do_dummy_read(skel->progs.dump_task_stack);
-> +
-> +       bpf_iter_task_stack__destroy(skel);
-> +}
-> +
->  static void test_task_file(void)
->  {
->         struct bpf_iter_task_file *skel;
-> @@ -392,6 +407,8 @@ void test_bpf_iter(void)
->                 test_bpf_map();
->         if (test__start_subtest("task"))
->                 test_task();
-> +       if (test__start_subtest("task_stack"))
-> +               test_task_stack();
->         if (test__start_subtest("task_file"))
->                 test_task_file();
->         if (test__start_subtest("anon"))
-> diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-> new file mode 100644
-> index 0000000000000..83aca5b1a7965
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2020 Facebook */
-> +/* "undefine" structs in vmlinux.h, because we "override" them below */
-> +#define bpf_iter_meta bpf_iter_meta___not_used
-> +#define bpf_iter__task bpf_iter__task___not_used
-> +#include "vmlinux.h"
-> +#undef bpf_iter_meta
-> +#undef bpf_iter__task
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +/* bpf_get_task_stack needs a stackmap to work */
+On Fri, Jun 26, 2020 at 01:13:20PM -0700, Nick Desaulniers wrote:
+> On Fri, Jun 26, 2020 at 12:00 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > +++ b/Makefile
+> > @@ -762,7 +762,7 @@ ifneq ($(CONFIG_FRAME_WARN),0)
+> >  KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
+> >  endif
+> >
+> > -stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
+> > +stackp-flags-y                                    := -fno-stack-protector
+> >  stackp-flags-$(CONFIG_STACKPROTECTOR)             := -fstack-protector
+> >  stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+> 
+> So it looks like the previous behavior always added
+> `-fno-stack-protector` (since CONFIG_CC_HAS_STACKPROTECTOR_NONE was
+> always true), but then we append either `-fstack-protector` or
+> `-fstack-protector-strong` based on configs.  While that's ok, and you
+> patch doesn't change that behavior, and it's good to be explicit to
+> set the stack protector or not...it seems weird to have
+> `-fno-stack-protector -fstack-protector` in the command line flags.  I
+> would prefer if we checked for not having CONFIG_STACKPROTECTOR or
+> CONFIG_STACKPROTECTOR_STRONG before adding `-fno-stack-protector`.
+> That doesn't have to be done in this patch, per se.
 
-no it doesn't anymore :) please drop
+No, it would add only what was latest and most selected. (They're all
+":=" assignments.) If CONFIG_STACKPROTECTOR_STRONG, only
+-fstack-protector-strong is set. If only CONFIG_STACKPROTECTOR, only
+-fstack-protector is set. Otherwise -fno-stack-protector.
 
-
-[...]
+-- 
+Kees Cook
