@@ -2,76 +2,113 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25E9A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CD2207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgFZQiv (ORCPT
+        id S1727799AbgFZQlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgFZQiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:38:51 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EEBC03E979;
-        Fri, 26 Jun 2020 09:38:50 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 648E0374;
-        Fri, 26 Jun 2020 16:38:50 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 10:38:49 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Shuli Zhang <zhshuli@aliyun.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] Documentation/features: Add KGDB support on RISC-V
-Message-ID: <20200626103849.458a84e2@lwn.net>
-In-Reply-To: <20200621123016.9289-1-zhshuli@aliyun.com>
-References: <20200621123016.9289-1-zhshuli@aliyun.com>
-Organization: LWN.net
+        Fri, 26 Jun 2020 12:41:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:37200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgFZQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 12:41:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F2801FB;
+        Fri, 26 Jun 2020 09:40:58 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1AFF3F6CF;
+        Fri, 26 Jun 2020 09:40:56 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/2] arm64: kvm: Introduce MTE VCPU feature
+To:     Steven Price <steven.price@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave P Martin <Dave.Martin@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <20200617123844.29960-3-steven.price@arm.com> <20200617143809.GF5388@gaia>
+ <9d4ef6cf-2333-83b8-c555-e70b99b95b28@arm.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <c2883b2b-6c71-f5ee-74b7-4e4d08d2183c@arm.com>
+Date:   Fri, 26 Jun 2020 17:40:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <9d4ef6cf-2333-83b8-c555-e70b99b95b28@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 20:30:16 +0800
-Shuli Zhang <zhshuli@aliyun.com> wrote:
+Hi Steve,
 
-> As KGDB has been implemented on RISC-V, update the feature list.
-> 
-> Signed-off-by: Shuli Zhang <zhshuli@aliyun.com>
-> ---
->  Documentation/features/debug/kgdb/arch-support.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/features/debug/kgdb/arch-support.txt b/Documentation/features/debug/kgdb/arch-support.txt
-> index 38c40cf..8e5a6c3 100644
-> --- a/Documentation/features/debug/kgdb/arch-support.txt
-> +++ b/Documentation/features/debug/kgdb/arch-support.txt
-> @@ -23,7 +23,7 @@
->      |    openrisc: | TODO |
->      |      parisc: |  ok  |
->      |     powerpc: |  ok  |
-> -    |       riscv: | TODO |
-> +    |       riscv: |  ok  |
->      |        s390: | TODO |
->      |          sh: |  ok  |
->      |       sparc: |  ok  |
+On 17/06/2020 16:34, Steven Price wrote:
+> On 17/06/2020 15:38, Catalin Marinas wrote:
+>> On Wed, Jun 17, 2020 at 01:38:44PM +0100, Steven Price wrote:
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index e3b9ee268823..040a7fffaa93 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -1783,6 +1783,17 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t
+>>> fault_ipa,
+>>>               vma_pagesize = PMD_SIZE;
+>>>       }
+>>>   +    if (system_supports_mte() && kvm->arch.vcpu_has_mte) {
+>>> +        /*
+>>> +         * VM will be able to see the page's tags, so we must ensure
+>>> +         * they have been initialised.
+>>> +         */
+>>> +        struct page *page = pfn_to_page(pfn);
+>>> +
+>>> +        if (!test_and_set_bit(PG_mte_tagged, &page->flags))
+>>> +            mte_clear_page_tags(page_address(page), page_size(page));
+>>> +    }
+>>
+>> Are all the guest pages always mapped via a Stage 2 fault? It may be
+>> better if we did that via kvm_set_spte_hva().
 
-Applied, thanks.
+> I was under the impression that pages are always faulted into the stage 2, but I have to
+> admit I'm not 100% sure about that.
 
-jon
+I think there is only one case: VMA with VM_PFNMAP set will get pre-populated during
+kvm_arch_prepare_memory_region(), but they are always made device at stage2, so MTE isn't
+a concern there.
+
+
+> kvm_set_spte_hva() may be more appropriate, although on first look I don't understand how
+> that function deals with huge pages. Is it actually called for normal mappings or only for
+> changes due to the likes of KSM?
+
+It looks like its only called through set_pte_at_notify(), which is used by things like
+KSM/COW that change a mapping, and really don't want to fault it a second time. I guess
+they are only for PAGE_SIZE mappings.
+
+Other mapping sizes would get faulted in by user_mem_abort().
+
+
+I think this should happen in the same places as we clean new pages to PoC, as that is
+also an additional piece of maintenance KVM has to do that the host's stage 1 doesn't.
+
+You may be able to rename clean_dcache_guest_page() to encompass maintenance that we need
+when a page is accessible to a different EL1.
+
+
+Thanks,
+
+James
