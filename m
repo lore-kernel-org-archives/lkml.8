@@ -2,122 +2,109 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A81AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8884FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DEE207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A112089D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cVnSP+/m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtoaCFxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgFZUWO (ORCPT
+        id S1726067AbgFZUWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41334 "EHLO
+        Fri, 26 Jun 2020 16:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUWO (ORCPT
+        with ESMTP id S1725780AbgFZUWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:22:14 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA2FC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:22:14 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id e6so4865895vsm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:22:14 -0700 (PDT)
+        Fri, 26 Jun 2020 16:22:16 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14EF4C03E979;
+        Fri, 26 Jun 2020 13:22:16 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l6so9980662qkc.6;
+        Fri, 26 Jun 2020 13:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7bYsvRQj/KxO7y6dcHjKoVfFZMfrtTcsCp4sG21kGBU=;
-        b=cVnSP+/m+7yKuZx6yu96KuQZagQE2QwRL8rlUKUdf7JB8RzaML0YfYX0XCNHk3q2AL
-         1sEoS7KqNSGVHu8R9gM8PQc7xETIM3LxOnV1tHenKcyY7IWU/uqES3yBkHhO6rUuWOlw
-         3F5uTuzCOzTOE8hRDq9rJCCArcCMLmk11dPUs=
+        bh=IkGkXGsVlF8YAtrTLJ08heYqji9HN61SREZdAPXTiXE=;
+        b=FtoaCFxdg1PumOIK43C7AwM+BpIBEA5FWkWQvOc3fxJP+xk82Eav5/+pf0l+uJGfD7
+         ZZw3WvymAWU8jbz9VYMNojwTfLIKYyFvIOBEPTYcS8ivAViaynNzC8SxeMHOeBa/UoEe
+         WjDhmu/d6glt7zSHXUNY+xUIXZ57TO4fQnORefboy+47OLF+6AuGN2Db/nL/1jO1mr8L
+         1gV+tL1AibaUoqif5pOxQgf5pZEfoqRV4lr2EOWFhKyPh+9q3sEycWju8yPrzJ24UVaL
+         hVJLJJsCsOLPfp/73DaZLh4OF5gb3sQV3ALC5RavpmDYqBDkVNm5syIeI4gzi0+pFF9i
+         VycA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7bYsvRQj/KxO7y6dcHjKoVfFZMfrtTcsCp4sG21kGBU=;
-        b=lqFCjGyaejsxGML2eG4YKcqE/x7xondygERJfkbb7W9w77RNjKN8Ttr+C8Tnc4ZMft
-         kZK1NpBH7lsyC0wrgIihN8I1r5RDiTWRS7GVKlAM2moRLi5L4mTiA/qRjqDggr0KidDM
-         VGE2hv4jKtWSxXj8Cl8MRXSagwurokZiNxgD1Zl7OeyHtLSdwAZwVFGwCbpx8m3ZQYzN
-         ayDtReN9vPnSGPByEl4ZloYNkRegh6SvtHf+58u+FN0oP/P7UrsaJQlhN3lLYpKCFWls
-         K0qTbE0sM/9yoNmCoOPelh0wjAWUhRRk3v1qZ+CXz9VrtpVBkbJIoEMjuRyKoai8FS5v
-         MKnw==
-X-Gm-Message-State: AOAM530bmWCVM+hTGasELWpEhDj2CxVABY9FFt4BNiAXyhmOUp7TBsRY
-        2nb+BaI8NgPsLKsQkjLVDSfi411tj0g=
-X-Google-Smtp-Source: ABdhPJxcweHfS+z9vr4wbFrdaSju/JV5hPbjS70PRTIzGhHxqP3mrG4njbhMvTkttPuw/stIysd7fA==
-X-Received: by 2002:a67:db0b:: with SMTP id z11mr3807269vsj.25.1593202933154;
-        Fri, 26 Jun 2020 13:22:13 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id x22sm1527400vkx.6.2020.06.26.13.22.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 13:22:10 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id e3so3441046uan.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:22:09 -0700 (PDT)
-X-Received: by 2002:ab0:2eab:: with SMTP id y11mr3463084uay.22.1593202929409;
- Fri, 26 Jun 2020 13:22:09 -0700 (PDT)
+        bh=IkGkXGsVlF8YAtrTLJ08heYqji9HN61SREZdAPXTiXE=;
+        b=FXHcKnGBk+iH5+6ew5QKUg/bClPGMhFcNzQlIcM67K1SRbmT8HYpwbzzN36ZGCQXUS
+         OjUbNTWuiGyrD+XqMpHmnknQ4Gqd10bFwT9lnX9GVgB+iOo6jj91h/OGe1L7FTFydZnX
+         RSgVvJJB4WW6AX4TR0n+hrV17W9UxxAUPeCFgMtRxOimVfn5jZsXYEB2hgbA6dTh1VEF
+         i93Wvfkh9I8nxr302obVsjXuM7SD1shpQVaZgiF2WwmXkCrjtUEUFxksTS9Zuqggkiqe
+         3davYDgU+0UzyP1iLyb14l5Y1aLuvPIdqDvZ1BZlaaai6Q3nl8TzMMrwKPlR+XpKDroR
+         RBfA==
+X-Gm-Message-State: AOAM530reoYDhz/D4jWx33uQ/uxw9IRW4JXqitdtOqyb11g+CqhsMNO8
+        U9FmfAJuCczHzkhME+6j5qvOJpjJ6WGtUHkncYg=
+X-Google-Smtp-Source: ABdhPJzq7gqIUCa5tRA8SEt84pn9vJMJY9oNKpFNTZ8baih7oWUXsfgE/kuHAfQGYzuGJ3pClJA5SzHF6Vyqy7oYH5M=
+X-Received: by 2002:a05:620a:2409:: with SMTP id d9mr4702549qkn.36.1593202935341;
+ Fri, 26 Jun 2020 13:22:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626190808.8716-1-sibis@codeaurora.org>
-In-Reply-To: <20200626190808.8716-1-sibis@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Jun 2020 13:21:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X_0s-YOCj72F3rzu0oFkNBx82MeHsP2Yqrj0=LAOF_tg@mail.gmail.com>
-Message-ID: <CAD=FV=X_0s-YOCj72F3rzu0oFkNBx82MeHsP2Yqrj0=LAOF_tg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add cpu OPP tables
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Evan Green <evgreen@chromium.org>
+References: <20200626001332.1554603-1-songliubraving@fb.com>
+ <20200626001332.1554603-3-songliubraving@fb.com> <CAEf4BzZ6-s-vqp+bLiCAVgS2kmp09a1WdaSvaL_jJySx7s7inA@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ6-s-vqp+bLiCAVgS2kmp09a1WdaSvaL_jJySx7s7inA@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 26 Jun 2020 13:22:03 -0700
+Message-ID: <CAEf4BzZ-a1gB8wjf85n=EbRUETOgrhXHa_+vAXoEeFun5GTr=g@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 2/4] bpf: introduce helper bpf_get_task_stak()
+To:     Song Liu <songliubraving@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Jun 26, 2020 at 12:09 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Fri, Jun 26, 2020 at 1:17 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Add OPP tables required to scale DDR/L3 per freq-domain on SC7180 SoCs.
+> On Thu, Jun 25, 2020 at 5:14 PM Song Liu <songliubraving@fb.com> wrote:
+> >
+> > Introduce helper bpf_get_task_stack(), which dumps stack trace of given
+> > task. This is different to bpf_get_stack(), which gets stack track of
+> > current task. One potential use case of bpf_get_task_stack() is to call
+> > it from bpf_iter__task and dump all /proc/<pid>/stack to a seq_file.
+> >
+> > bpf_get_task_stack() uses stack_trace_save_tsk() instead of
+> > get_perf_callchain() for kernel stack. The benefit of this choice is that
+> > stack_trace_save_tsk() doesn't require changes in arch/. The downside of
+> > using stack_trace_save_tsk() is that stack_trace_save_tsk() dumps the
+> > stack trace to unsigned long array. For 32-bit systems, we need to
+> > translate it to u64 array.
+> >
+> > Signed-off-by: Song Liu <songliubraving@fb.com>
+> > ---
 >
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
+> Looks great, I just think that there are cases where user doesn't
+> necessarily has valid task_struct pointer, just pid, so would be nice
+> to not artificially restrict such cases by having extra helper.
 >
-> v2:
->  * drop interconnect-tag property
->
-> v1: https://patchwork.kernel.org/patch/11527597/
->
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 160 +++++++++++++++++++++++++++
->  1 file changed, 160 insertions(+)
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-This is a huge perf boost and I'd love to see it land while waiting
-for the interconnect-tag stuff to get resolved.  In theory I guess we
-could land the sdm845 one too...
+oh, please also fix a typo in the subject, it will make grepping more
+frustrating
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
-
-I'm also not really an expert here, but the patch seems sane to me, so
-I'd give it a weak:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-
--Doug
+[...]
