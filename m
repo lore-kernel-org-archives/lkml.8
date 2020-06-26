@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB04C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD93C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 383F5206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0854207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j8TuFR/J"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KaXcba3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFZSR1 (ORCPT
+        id S1726419AbgFZSRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:17:27 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48542 "EHLO
+        Fri, 26 Jun 2020 14:17:32 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48598 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZSRZ (ORCPT
+        with ESMTP id S1726378AbgFZSRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:17:25 -0400
+        Fri, 26 Jun 2020 14:17:30 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHD2b002410;
-        Fri, 26 Jun 2020 13:17:13 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHGIJ002416;
+        Fri, 26 Jun 2020 13:17:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593195433;
-        bh=ObJy3OzFPVwRVlL2NFhYDlEcbRHlojhYSa7S3qkOSMA=;
+        s=ti-com-17Q1; t=1593195436;
+        bh=CxrNJvy49UltKzg8PWt+ReX2BFl8riwjabZ60O6qQNg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=j8TuFR/J7tzCEu0fsyPp2wq/HN0wHLQnNXXmVz4Z4rzEmd8FmPpH09snDjiWzdMmB
-         2VrqdaM3xLl22uds7bq9W0vdW8mRc5JVEN0k4/UT0aMhjNybpty7fBvJpdcYzlyjRO
-         567AcqvOyKb1pg1z33X7iWeFrVr03rEHDE+ynf+c=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QIHDL0058613
+        b=KaXcba3GnACSHVvbXmGnlTSVdCNENiwjlio+efHBflx2KXGAOfbztH5Xmn/AiuueR
+         SVe5/1mkQ9P1nbOoGRqwiMfu4OKxhNxNJwFJk5mXMwhvFS0/q0zfQRdCMDuJaCd0+J
+         cyUxXyTKvfmArkmYuwuirbTVSPL3Yew2e5pM9NLA=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QIHGKO058715
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 13:17:13 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 26 Jun 2020 13:17:16 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 13:17:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 13:17:15 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 13:17:12 -0500
+ Frontend Transport; Fri, 26 Jun 2020 13:17:15 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHBAA081457;
-        Fri, 26 Jun 2020 13:17:12 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QIHFgQ122852;
+        Fri, 26 Jun 2020 13:17:15 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Jan Kiszka <jan.kiszka@siemens.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 1/6] net: ethernet: ti: am65-cpsw-nuss: restore vlan configuration while down/up
-Date:   Fri, 26 Jun 2020 21:17:04 +0300
-Message-ID: <20200626181709.22635-2-grygorii.strashko@ti.com>
+Subject: [PATCH net-next 3/6] net: ethernet: ti: am65-cpsw-nuss: fix ports mac sl initialization
+Date:   Fri, 26 Jun 2020 21:17:06 +0300
+Message-ID: <20200626181709.22635-4-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200626181709.22635-1-grygorii.strashko@ti.com>
 References: <20200626181709.22635-1-grygorii.strashko@ti.com>
@@ -71,72 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vlan configuration is not restored after interface down/up sequence.
+The MAC SL has to be initialized for each port otherwise
+am65_cpsw_nuss_slave_disable_unused() will crash for disabled ports.
 
-Steps to check:
- # ip link add link eth0 name eth0.100 type vlan id 100
- # ifconfig eth0 down
- # ifconfig eth0 up
-
-This patch fixes it, restoring vlan ALE entries on .ndo_open().
-
-Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Not critical as current driver supports one port only.
+
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 1492648247d9..82d3b1f20890 100644
+index 89ea29a26c3a..7a921a480f29 100644
 --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
 +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -223,6 +223,9 @@ static int am65_cpsw_nuss_ndo_slave_add_vid(struct net_device *ndev,
- 	u32 port_mask, unreg_mcast = 0;
- 	int ret;
+@@ -1768,6 +1768,10 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+ 				common->cpsw_base + AM65_CPSW_NU_FRAM_BASE +
+ 				(AM65_CPSW_NU_FRAM_PORT_OFFSET * (port_id - 1));
  
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
++		port->slave.mac_sl = cpsw_sl_get("am65", dev, port->port_base);
++		if (IS_ERR(port->slave.mac_sl))
++			return PTR_ERR(port->slave.mac_sl);
 +
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -246,6 +249,9 @@ static int am65_cpsw_nuss_ndo_slave_kill_vid(struct net_device *ndev,
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
- 	int ret;
- 
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
-+
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -571,6 +577,16 @@ static int am65_cpsw_nuss_ndo_slave_stop(struct net_device *ndev)
- 	return 0;
- }
- 
-+static int cpsw_restore_vlans(struct net_device *vdev, int vid, void *arg)
-+{
-+	struct am65_cpsw_port *port = arg;
-+
-+	if (!vdev)
-+		return 0;
-+
-+	return am65_cpsw_nuss_ndo_slave_add_vid(port->ndev, 0, vid);
-+}
-+
- static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
- {
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-@@ -644,6 +660,9 @@ static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
+ 		port->disabled = !of_device_is_available(port_np);
+ 		if (port->disabled)
+ 			continue;
+@@ -1811,10 +1815,6 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+ 			return ret;
  		}
- 	}
  
-+	/* restore vlan configurations */
-+	vlan_for_each(ndev, cpsw_restore_vlans, port);
-+
- 	phy_attached_info(port->slave.phy);
- 	phy_start(port->slave.phy);
- 
+-		port->slave.mac_sl = cpsw_sl_get("am65", dev, port->port_base);
+-		if (IS_ERR(port->slave.mac_sl))
+-			return PTR_ERR(port->slave.mac_sl);
+-
+ 		mac_addr = of_get_mac_address(port_np);
+ 		if (!IS_ERR(mac_addr)) {
+ 			ether_addr_copy(port->slave.mac_addr, mac_addr);
 -- 
 2.17.1
 
