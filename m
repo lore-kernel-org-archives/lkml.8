@@ -6,90 +6,143 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E1B20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8D720775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgFZIWO (ORCPT
+        id S1726384AbgFZIWS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:22:14 -0400
-Received: from sauhun.de ([88.99.104.3]:37642 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgFZIWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:22:14 -0400
-Received: from localhost (p54b33841.dip0.t-ipconnect.de [84.179.56.65])
-        by pokefinder.org (Postfix) with ESMTPSA id 538F22C0307;
-        Fri, 26 Jun 2020 10:22:11 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 10:22:08 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: core: check returned size of emulated smbus block
- read
-Message-ID: <20200626082208.GA4559@kunai>
-References: <20200613104109.2989-1-mans@mansr.com>
+        Fri, 26 Jun 2020 04:22:18 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:51156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbgFZIWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:22:17 -0400
+Received: from dggemi406-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 930681BD52C6200B705D;
+        Fri, 26 Jun 2020 16:22:09 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
+ dggemi406-hub.china.huawei.com ([10.3.17.144]) with mapi id 14.03.0487.000;
+ Fri, 26 Jun 2020 16:22:00 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mahipal Challa" <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        "Dan Streetman" <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: RE: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Topic: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Index: AQHWS4ju6iURsG9yIk+EgvuPOVc69qjp91mAgACMbECAAAjt4A==
+Date:   Fri, 26 Jun 2020 08:22:00 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD252473C@DGGEMI525-MBS.china.huawei.com>
+References: <20200626070903.27988-1-song.bao.hua@hisilicon.com>
+ <20200626072027.GA6153@gondor.apana.org.au> 
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.200.84]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-In-Reply-To: <20200613104109.2989-1-mans@mansr.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org
+> > [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Herbert Xu
+> > Sent: Friday, June 26, 2020 7:20 PM
+> > To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+> > Cc: akpm@linux-foundation.org; linux-mm@kvack.org;
+> > linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Luis
+> > Claudio R . Goncalves <lgoncalv@redhat.com>; Sebastian Andrzej Siewior
+> > <bigeasy@linutronix.de>; David S . Miller <davem@davemloft.net>;
+> > Mahipal Challa <mahipalreddy2006@gmail.com>; Seth Jennings
+> > <sjenning@redhat.com>; Dan Streetman <ddstreet@ieee.org>; Vitaly Wool
+> > <vitaly.wool@konsulko.com>; Wangzhou (B) <wangzhou1@hisilicon.com>;
+> > Colin Ian King <colin.king@canonical.com>
+> > Subject: Re: [PATCH v3] mm/zswap: move to use crypto_acomp API for
+> > hardware acceleration
+> >
+> > On Fri, Jun 26, 2020 at 07:09:03PM +1200, Barry Song wrote:
+> > >
+> > > +	mutex_lock(&acomp_ctx->mutex);
+> > > +
+> > > +	src = kmap(page);
+> > > +	dst = acomp_ctx->dstmem;
+> > > +	sg_init_one(&input, src, PAGE_SIZE);
+> > > +	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
+> > > +	sg_init_one(&output, dst, PAGE_SIZE * 2);
+> > > +	acomp_request_set_params(acomp_ctx->req, &input, &output,
+> > PAGE_SIZE, dlen);
+> > > +	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req),
+> > &acomp_ctx->wait);
+> > > +	dlen = acomp_ctx->req->dlen;
+> > > +	kunmap(page);
+> >
+> > Waiting on an async request like this is just silly.  This defeats the
+> > whole purpose of having a fallback.
+> 
+> For this zswap case and for this moment, it is probably not.
+> As for this case, there are no two parallel (de)compressions which can be done
+> in parallel in a single (de)compressor instance.
+> The original zswap code is doing all compression/decompression in atomic
+> context.
+> Right now, to use acomp api, the patch has moved to sleep-able context.
+> 
+> However, compression/decompression can be done in parallel in different
+> instances of acomp, also different cpus.
+> 
+> If we want to do multiple (de)compressions simultaneously in one acomp
+> instance by callbacks, it will ask a large changes in zswap.c not only using the
+> new APIs. I think we can only achieve the ideal goal step by step.
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On the other hand, I also don't think mm/frontswap.c supports async store. It is pretty much
+a sync operation to call store callback of frontswap for every single page:
 
-On Sat, Jun 13, 2020 at 11:41:09AM +0100, Mans Rullgard wrote:
-> If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
-> them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
+int __frontswap_store(struct page *page)
+{
+	...
+	/* Try to store in each implementation, until one succeeds. */
+	for_each_frontswap_ops(ops) {
+		ret = ops->store(type, offset, page);
+		if (!ret) /* successful store */
+			break;
+	}
+	...
+	if (frontswap_writethrough_enabled)
+		/* report failure so swap also writes to swap device */
+		ret = -1;
+	return ret;
+}
 
-Out of interest, which driver did you use?
+If we don't want to execute a sync wait in zswap, a lot of things need changes, not only zswap.
 
-> on some random device to return an arbitrary value in the first
-> byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
-> will happily write past the end of the supplied data buffer, thus
-> causing Bad Things to happen.  To prevent this, check the size
-> before copying the data block and return an error if it is too large.
+> 
+> >
+> > Cheers,
+> > --
+> > Email: Herbert Xu <herbert@gondor.apana.org.au> Home Page:
+> > http://gondor.apana.org.au/~herbert/
+> > PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
+> -barry
 
-Good catch, we were relying on the drivers too much here. I think the
-same fix is needed for the non-emulated case as well. Will have a look.
+Thanks
+Barry
 
-> +			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
-> +				dev_err(&adapter->dev,
-> +					"Invalid block size returned: %d\n",
-> +					msg[1].buf[0]);
-> +				status = -EINVAL;
-
-I changed this to -EPROTO as described in
-Documentation/i2c/fault-codes.rst.
-
-Applied to for-current, thanks!
-
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl71sCwACgkQFA3kzBSg
-KbYGPw//ZrBp9jkyvtk0WmZ2Rkpaf69KHl9lgNoCFfsRVlHAMAOygAgedV6ih0an
-13bFDvRfjEIq2ZnWJT/M+PhraNOOUyNgujMbpeiyAMR9aff2W17QECuDFsyluQ9C
-SMQFtqpuLey+t0rVxO9gpNvGUhz5C5aZvPCQfGAsxVKve+2EwqlQep1S6JknN6HW
-4SBPeK+y2SdCIR00bwojpkFn7JHw2pwCsraz2lxX8EwQlJVcUxQ10tA0QEKu1zla
-DDsyfNlsg1YmntX315IJ4fnHU9MtROS7qv67sqo5A4+bPtWAQqkeIg+c00yyJRH/
-fyL0A8k/Cc2U9GtuXAGtZV9pCNzCe2wn8cw0gnEQ9HSQuAiKTV9fr5Nx/9NkFMev
-xvrz/4ay7TxSTcrrYtHADXrjDGKHGEJ0a8sXONAenCTJgmC4dy9wjHn5UNcap+nJ
-fMG+u5krSwcsCj/1cTbPcRV7F0MDZ5bkxleIhDAWh1dzpnr3/BKoCZrSiKV0Ln4N
-Dvy0+Q16ewbFwby0+p0Mrxsk10Rre+qcgKqZD5b3DPZbE6MZpC4XKZrOEUgilJaI
-Q3TBqXNNYHZ+oSaDKwQj3wO9SELbZdymZknEpS7vORgvMyIz4sBVhxIsQCtX944F
-eXYvJGjWFTQL700XPh0DsW+1R6G0ChavBzv8azB7OTNgrf18+Oc=
-=Tpvw
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
