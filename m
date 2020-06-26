@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E506C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0B9206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8F2206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="P8OISsXa"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ODf1qLrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgFZQ4L (ORCPT
+        id S1728200AbgFZQ4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37792 "EHLO
+        Fri, 26 Jun 2020 12:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbgFZQz7 (ORCPT
+        with ESMTP id S1726892AbgFZQzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:55:59 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA635C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:55:58 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so2092924wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:55:58 -0700 (PDT)
+        Fri, 26 Jun 2020 12:55:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F313CC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:55:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u26so9266397wmn.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:55:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XwLPHUiUd7u8i6DlgTqpUvjVOFN4vpyWhbccIRdmj5g=;
-        b=P8OISsXa/l4EX27H6DX2GeRuI7OsQIMd2NP+uFFYiaautFiYCDjrQ/jnPipqUwr1mt
-         uFC8WZaN3b1HYPWEXLjvO42FShpnGs/xqt70CjD7VuO4w33auwI6QzJuWPxsMqio/7Dd
-         BGkv68viVX1g5PHlqiE0GA/8pmJ6KfG6TUbI92TYy6io+WwM7LLm4Q6BZbxd3IJu+fdM
-         v/qdKZRhFJLU5LM6Fw5tiKfF7pYjBDJNHJBnD4oAYw8+m4MO+Z66auejVSVaOtkpGSxL
-         mdXHbU9+cH+nw2X6tmTG0RuCHf/VAoLIcdPKJyqtZZuIOSx09/h1EB0eYthkNiO6TOr9
-         3xZQ==
+        bh=YrSMqNfBoEk4+fX9YqI78/jZTXRW6ktfo7V3K+aMn3w=;
+        b=ODf1qLrK8C75l4csBNa28ShD2JvP1VITfSbkol/mVz4l/Nggp0Bxu6tin/T4einR+F
+         1Z809a2zXScu/dFsu3KwXrr8dkzFIoAenoEijF3R7CS3+ypa58d+FALuxPB/SnrY8CFJ
+         BFMhNFF6borMmZhhnoZEqjF44Hv/xogMioRbNSvLTA0ICZSgmqDCEczzilXj9D4jVWFK
+         ZcliQXe5SKPXTncj2Az/MxXb96+bZyW/olb2g3v3fna5IiBXGSETTuBcHLriV4BRwZW4
+         tgmO1Vkfaurtx39hQiuXuX8RxrMFg93pzH9AcwbOkogpSkwHmWpCIOfx1u3mGRk4t/KX
+         k5ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XwLPHUiUd7u8i6DlgTqpUvjVOFN4vpyWhbccIRdmj5g=;
-        b=Dx95mZCMtqJos1W4Xvk32l9tndyuqF7ML0Np7b/ffim2GUp2QGEftcbgyZMyklgISv
-         uyS6kToVSj40HPBG13pK0LEHg1BxhBoGgtwM9Bqa4mDmL2++aWTVzFoW2QOn5ZnfmvHB
-         KOIKmgrgtYJdtFzFaOOnzmDvQL7QC1DgNWT3y3dysA6XJEaN6sKVKQfz1t3A3n2YyIgw
-         oFKlf3qHBh9buptZyG8txLPhL+PxeUSg8l8/ueP8ensED9fzHG49rYEEH0gxZqon9SiX
-         Lh6UKgiYchfrb7QexXboGkXqt85nG5iZ9MdtBC9Q3zqMy7EIWq3Qp/ojBJC2+S+HWbtZ
-         31Mw==
-X-Gm-Message-State: AOAM530E/guigAaE2k9Z2OOBsNuMIXy7SWL/klkKY6TS7uyptRaX/YAX
-        85Uiafmi9wN2Y6Adozgs4aaAWg==
-X-Google-Smtp-Source: ABdhPJz7Z3lbibvn2eFNKQQVtNher7YiK3Ofc/8i1HS+2vEqMXpOmSAwue/dzldCRTy5t7UVFKYj5w==
-X-Received: by 2002:adf:f842:: with SMTP id d2mr5069407wrq.55.1593190557481;
-        Fri, 26 Jun 2020 09:55:57 -0700 (PDT)
+        bh=YrSMqNfBoEk4+fX9YqI78/jZTXRW6ktfo7V3K+aMn3w=;
+        b=kDlj/ZECOatwy48NxdA3n1hp0DT/sUO8BQO+C8pvQwnUY9ZOgvAN36jrKJSFmMZ4PI
+         bqkzi3vrAG7rD5LuVjy0bHlkm4poOauRjh6IiKkGUsIdFZuUGMvBdnLyDAYruP13mxbP
+         1GZ7zdpcjd9rNTeo5m5L0Ge1odeOixyiC7dyumvZhLVTmBZ7ds+K9KJj6L1HWChqRBEj
+         sy2CGmtJll5i5oWvrUpqNOPIN0hwI+733RXbuBv0W3w1kJPJCOWxNMiGQ3EcfRMlIIRR
+         LLm0kev8BMG3zgX19LP/SBFJ9Hle+AHpSfySBXQpL0Dm9cyIxKkqk1++Fip3JczNsp/y
+         wumw==
+X-Gm-Message-State: AOAM531UgLQQXVM/h4PxqD0QDN0PH70mRNnOeA7ex6HP0Wf118mj6inu
+        zlpXmt+qtpiRGCKIBJZnPJ/7Nw==
+X-Google-Smtp-Source: ABdhPJywW9EslIlEG4xGnIIz/FnNGMv7QXiKTP/zXruJmAodeLhm9p3zq3POFS/SVYW2Jb5B4tPX4A==
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr4569316wmo.72.1593190553746;
+        Fri, 26 Jun 2020 09:55:53 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id x5sm18654706wmg.2.2020.06.26.09.55.56
+        by smtp.gmail.com with ESMTPSA id x5sm18654706wmg.2.2020.06.26.09.55.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 09:55:56 -0700 (PDT)
+        Fri, 26 Jun 2020 09:55:53 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -68,9 +68,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hwmon@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4/5] devres: provide devm_krealloc()
-Date:   Fri, 26 Jun 2020 18:55:34 +0200
-Message-Id: <20200626165535.7662-5-brgl@bgdev.pl>
+Subject: [PATCH 1/5] devres: remove stray space from devm_kmalloc() definition
+Date:   Fri, 26 Jun 2020 18:55:31 +0200
+Message-Id: <20200626165535.7662-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200626165535.7662-1-brgl@bgdev.pl>
 References: <20200626165535.7662-1-brgl@bgdev.pl>
@@ -83,97 +83,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Implement the managed variant of krealloc(). This function works with
-all memory allocated by devm_kmalloc() (or devres functions using it
-implicitly like devm_kmemdup(), devm_kstrdup() etc.).
-
-Managed realloc'ed chunks can be manually released with devm_kfree().
+Use the preferred coding style for functions returning pointers.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/base/devres.c                         | 42 +++++++++++++++++++
- include/linux/device.h                        |  2 +
- 3 files changed, 45 insertions(+)
+ drivers/base/devres.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index e0b58c392e4f..0a2572c3813c 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -352,6 +352,7 @@ MEM
-   devm_kfree()
-   devm_kmalloc()
-   devm_kmalloc_array()
-+  devm_krealloc()
-   devm_kmemdup()
-   devm_kstrdup()
-   devm_kvasprintf()
 diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index 1df1fb10b2d9..baf41a290356 100644
+index 0bbb328bd17f..c34327219c34 100644
 --- a/drivers/base/devres.c
 +++ b/drivers/base/devres.c
-@@ -834,6 +834,48 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
- }
- EXPORT_SYMBOL_GPL(devm_kmalloc);
+@@ -807,7 +807,7 @@ static int devm_kmalloc_match(struct device *dev, void *res, void *data)
+  * RETURNS:
+  * Pointer to allocated memory on success, NULL on failure.
+  */
+-void * devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
++void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+ {
+ 	struct devres *dr;
  
-+void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
-+{
-+	struct devres *old_dr, *new_dr;
-+	struct list_head old_head;
-+	unsigned long flags;
-+	void *ret = NULL;
-+	size_t tot_size;
-+
-+	if (unlikely(!new_size)) {
-+		devm_kfree(dev, ptr);
-+		return ZERO_SIZE_PTR;
-+	}
-+
-+	if (unlikely(!ptr))
-+		return devm_kmalloc(dev, new_size, gfp);
-+
-+	if (!check_dr_size(new_size, &tot_size))
-+		return NULL;
-+
-+	spin_lock_irqsave(&dev->devres_lock, flags);
-+
-+	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-+	if (WARN_ONCE(!old_dr, "Memory chunk not managed or managed by a different device"))
-+		goto out;
-+
-+	old_head = old_dr->node.entry;
-+
-+	new_dr = krealloc(old_dr, tot_size, gfp);
-+	if (!new_dr)
-+		goto out;
-+
-+	if (new_dr != old_dr)
-+		list_replace(&old_head, &new_dr->node.entry);
-+
-+	ret = new_dr->data;
-+
-+out:
-+	spin_unlock_irqrestore(&dev->devres_lock, flags);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_krealloc);
-+
- /**
-  * devm_kstrdup - Allocate resource managed space and
-  *                copy an existing string into that.
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 9cadb647cacc..228063c6392c 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -201,6 +201,8 @@ int devres_release_group(struct device *dev, void *id);
- 
- /* managed devm_k.alloc/kfree for device drivers */
- void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
-+void *devm_krealloc(struct device *dev, void *ptr, size_t size,
-+		    gfp_t gfp) __must_check;
- __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
- 				     const char *fmt, va_list ap) __malloc;
- __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
 -- 
 2.26.1
 
