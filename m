@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06846C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A25602070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB4F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgFZOh6 convert rfc822-to-8bit (ORCPT
+        id S1726680AbgFZOiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:37:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:37499 "EHLO
+        Fri, 26 Jun 2020 10:38:21 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:55233 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgFZOh5 (ORCPT
+        with ESMTP id S1725792AbgFZOiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:37:57 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+        Fri, 26 Jun 2020 10:38:21 -0400
+Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
  mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MzTCy-1itrBk1WDo-00vL9G for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
- 2020 16:37:56 +0200
-Received: by mail-qv1-f42.google.com with SMTP id g11so4585886qvs.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:37:56 -0700 (PDT)
-X-Gm-Message-State: AOAM531EVzHfX5WdPmL4qSLTyKtNAqGEgYv5bQjAx/D9gLdCkpIVCXZE
-        RlgBnCf34o8d1/CJLFk45QqHE2ZrnXGjj2cR1Ok=
-X-Google-Smtp-Source: ABdhPJyfuQEYBa5MgOiBy8bbX63hjSU2tNfkceBKI1Vd8sPd8rCYB1PvDeCJCf2TLn2908S5iDQx2pZ/HBZU9pmuKJE=
-X-Received: by 2002:a0c:f385:: with SMTP id i5mr3580097qvk.4.1593182275276;
- Fri, 26 Jun 2020 07:37:55 -0700 (PDT)
+ id 1MZSJa-1jIVZN3Agw-00WTwM for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
+ 2020 16:38:19 +0200
+Received: by mail-qv1-f46.google.com with SMTP id h18so4577893qvl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:38:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533P0GK/URejM9im7PyN55skwiJKYyfEVh6fBpfmA2htzlNWVL2B
+        LIiEfkv4L9Rfz6bD/u1jxcuSwYo5bMloetJiSQs=
+X-Google-Smtp-Source: ABdhPJzU2pJ/DVdl89LZUoVSIRq9gExv/2PUvldmzwiyp//wzCyXgDLKBfzFdoubCsuwWsC04Acg52OraZjG32EuONg=
+X-Received: by 2002:a0c:f802:: with SMTP id r2mr2489000qvn.197.1593182298713;
+ Fri, 26 Jun 2020 07:38:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-6-lee.jones@linaro.org>
-In-Reply-To: <20200626130525.389469-6-lee.jones@linaro.org>
+References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-7-lee.jones@linaro.org>
+In-Reply-To: <20200626130525.389469-7-lee.jones@linaro.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jun 2020 16:37:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0f1mojUw3jwuZWYcVRB7u9THt62vHe-jS2P3L=PKTV=g@mail.gmail.com>
-Message-ID: <CAK8P3a0f1mojUw3jwuZWYcVRB7u9THt62vHe-jS2P3L=PKTV=g@mail.gmail.com>
-Subject: Re: [PATCH 05/10] misc: lkdtm: Always provide prototype for lkdtm_DOUBLE_FAULT()
+Date:   Fri, 26 Jun 2020 16:38:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a06m8ShEDGisd14M2TNi9szzb4Ut9dcc28NkYvV=JrwVg@mail.gmail.com>
+Message-ID: <CAK8P3a06m8ShEDGisd14M2TNi9szzb4Ut9dcc28NkYvV=JrwVg@mail.gmail.com>
+Subject: Re: [PATCH 06/10] misc: eeprom: eeprom_93cx6: Repair function arg descriptions
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     gregkh <gregkh@linuxfoundation.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+        Wolfram Sang <wsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:Wohm3fhlLguIrcTt0zsqN5SZMg7n/fBN7rHkHv2J09vid5ngTJM
- ebubAYVS2+8i6Qa4owdKoiS49QRI3JxPyXRcZqmdS3Rv0ZfHVbon3G8XjRA1etJ3uzCsxPs
- Hkh9rxapRRunXmeeSmeZgD9iai2Z7tcBgKzHnjS7w1akoZwzPJp+nCnmSjmd9825hOPEIsK
- qK5BiQzxKFeBfNmqb7CHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I6PBN6WgPis=:pXet1GDyFEoFIKskEWLZQv
- cwfd3iZxRiGt4xDoF351ie+7fX/gApz3VGTKh8+ZDAeW0ahgeGEWf7NicRSsb38feLmzYHKES
- 8Kx3MJ/c8UrBUiQkYxiOm1Br2IAu3z20Cw0SGs/+etorQMch6vNc/yVxGIkBQ6bNE6eeZddzj
- dP7OHERVK21C7NMpMbwYcxX931tF0eZzCABaI8BTB4SXd2SKaobIQpr1u9TNy2mRhndHrfEOs
- Yi/86erWFbO0KlZYGV5a/KLIbDuZf4+NtUmUh8gYh3OD+zNY7DSM/ywTcNYTbjNWNlWn5uzz4
- gUrWODyjOE9VaiE74rUn6gOsJrIWCrskKUrDqOE2+krmLdPJ8iaO/4Ahjq/jmJJJahL/pi4jB
- 61WR6xyzW5E5R9EV/ZFmD77nyP7uTcbutbhavU8SqXxJq5MHMSNyzkNat4vdyEsVntYadnjDb
- rBMOWiRdstPFY0ibwUl32jY9o04sW74sq/YkXt3JmI9MAyvSyGfSjyaE8GfLA8kV52vjDcK4u
- 57eou5dpQ4qFZTKA+fdtVX9pVcQXqVWrSvRI54l+GIPvhDCOHlUAqlKBB5sjRRLgwQ6Cm/K9q
- lSe6kgu+twL3m4lqqtgolRmnif3I/Vk93C3D2Zz9VrRuJ3UXbeqWzo2os7AgMT/lcBhMbb550
- ujLvChPDI8Gy7pVGUMb5Y76WrVgPDUPW1twlyBDUlJhvWdmMyzpbG/63GOfD/yoNb2Isi3KiF
- gpAV4BcMCHiuC14UPfQeyLVd1nIDeH3SlV72aMdqLMKh1K7Vpm9U0a6l4Os4ZbP2Kg7+UJ2EP
- HLp9xH0u86sNSiP2F1erriJH/gMsMJL0cJ6DRfDb6LT7MQCpSk=
+X-Provags-ID: V03:K1:I40IUFJuOb32KJe25iXU6zoY0zXiWwkrUU/qq7lL43xu8O9Bpt3
+ udYmW0XG7k7ByYfCRdoLFKijYI+tgzYQLXpeqG1xgWozi2lzhqvvZMgfZCH/b6D/8pzotmx
+ P7czB48SjoLoWYvfDKeD1FFmtZyc6YYwZFngsQhLJg0mVADt2EQzGaA0IhXEhEWZY8HxdIg
+ 8UJn1AlrGvIE5yACTQnlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lYlQf5qTNZY=:WoPKH8/96dNHlJHUWCTKcx
+ ak78A8YEpoLZ4UDJxx2HgTrysCx2eD2Ob4U7AJQ0v6bwneZGJEdHSxBfmkn2JMAxIns6Cke80
+ ynprl3bqsP+aJ1Ug1jXdm0XjONGTRSrmZXjrGaJ4NE86vTIwHD8xlLJnbnaEEhrAMCw5WqyQJ
+ SxtMDXQGF1aqG6VmfxqnBeNU9LTyLnV1YEdgs2CCKnd6xdKUIeZfiudkhRI92ucECb0U8g8JH
+ 03ZG38bWhel+vPB+oPBD2xZSPVQOiQru79arOi3UvSxtRefK7dzjIAVosrUGMwlQcjdDyvWaA
+ hAWIbrZ+jOXcxL6G6G46p2V6ykNI+VX8WLA7Y9WxkvKe3FrINL7fYyVXunTSPKPSqE294dlEH
+ N/4j/dwRdI/TpZMfNR5ekAqdB6oE/1Sy31nVGiKKRNzzNWBbCI3F/knxvhHdIpl9PMjqGKdjd
+ mm0fSOQa8QbxfSshovkr+DKufS0GGhZaCwQld0+IqoOEcPnVvRh0B7HLstRk/CEP1JYrvm8Sc
+ 1GJUHnYkKnHB5eQfxil5Op0pDeVdB/RV3clBGIXnylKF1zaWX0/BPN3muAVflorj0lLcjBayT
+ igPSpCexvaJMPyiJWVSF5dhK4IhAjrE5wat/OP05UhMG6sHcS8AuvqFrfcOOUdIVje3dyDvJy
+ XcToB7BlIVT2r8cdN59Tb1pYnMXEb56Ic9Z3V+URRG8JMIuSOTNUxNMkmTsTZcfImqDsacX0C
+ +2lFKEnBcGvVyGwGmUloQ3qR5AmuX7lr4/DaVviWdasrrTkZa0hARB0k2I0tyOU1DQ0DNGubc
+ FtyXr/qDlMKJRD3fDwmCkw0rY2ZlPJE9EFb/WeZ+yeE9tFuED4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,18 +69,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 3:05 PM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> lkdtm_DOUBLE_FAULT() already has internal logic to handle
-> !CONFIG_X86_32.  Compiling out the prototype actually prevents
-> that logic from being useful.
+> Copy-paste issue.  Looks like the kerneldoc style descriptions for
+> these functions were taken from existing functions with slightly
+> different argument names.
 >
-> Fixes the following W=1 warning:
+> Fixes the following W=1 warnings:
 >
->  drivers/misc/lkdtm/bugs.c: At top level:
->  drivers/misc/lkdtm/bugs.c:420:6: warning: no previous prototype for ‘lkdtm_DOUBLE_FAULT’ [-Wmissing-prototypes]
->  420 | void lkdtm_DOUBLE_FAULT(void)
->  | ^~~~~~~~~~~~~~~~~~
+>  drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Function parameter or member 'byte' not described in 'eeprom_93cx6_readb'
+>  drivers/misc/eeprom/eeprom_93cx6.c:239: warning: Excess function parameter 'word' description in 'eeprom_93cx6_readb'
+>  drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Function parameter or member 'bytes' not described in 'eeprom_93cx6_multireadb'
+>  drivers/misc/eeprom/eeprom_93cx6.c:280: warning: Excess function parameter 'words' description in 'eeprom_93cx6_multireadb'
 >
-> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Wolfram Sang <wsa@kernel.org>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
 Acked-by: Arnd Bergmann <arnd@arndb.de>
