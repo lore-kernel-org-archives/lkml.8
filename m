@@ -2,116 +2,273 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43147C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41644C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233A02081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593176852;
-	bh=16hSAoBgkzFDqdIECQ7sxZWZ9kzrW7zU6H3vwJLq6tc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nRquLCLwtsGqcnrLGOQBRnKklA1o5cl2T+dwjeEQoGj/PW754DjTA0lo/o24vU6Qa
-	 PdREv5BjglCCko97Zc6fMW7ZfbjiybeuXUjSqV7iEmFt4ZloLtuvhaiwwDmtBFo1vG
-	 83+Vndh6OJeIVDJHTC6CYrkPSO0XGt0nalPkwoJA=
+	by mail.kernel.org (Postfix) with ESMTP id 104DB20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:07:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="C9HB4SED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbgFZNHa (ORCPT
+        id S1728592AbgFZNHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:07:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgFZNHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:07:23 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 105DF2080C;
-        Fri, 26 Jun 2020 13:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593176842;
-        bh=16hSAoBgkzFDqdIECQ7sxZWZ9kzrW7zU6H3vwJLq6tc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m1uqulmq0ck9PhOoNMR80zbtNsBuc3vZMydFHgVM30eTcDTQO3CKLyb/jUwyfJJZM
-         2exOrslcDYFlIGzMLEfeX9UpbMqiw1CrmHw13q9X7FXlbUqbuKyPcf1jM0VAYrDny4
-         oKfGjmf2Vzxb2fapvoQGZTBOm0R0qqWcjevv7yOY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1joo4e-006dkn-Jt; Fri, 26 Jun 2020 14:07:20 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 26 Jun 2020 14:07:20 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Oscar Carter <oscar.carter@gmx.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Len Brown <lenb@kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] drivers/acpi: Remove function callback casts
-In-Reply-To: <20200530143430.5203-1-oscar.carter@gmx.com>
-References: <20200530143430.5203-1-oscar.carter@gmx.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <07911cc62ef21900c43aeefbcbfc8d9f@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, rjw@rjwysocki.net, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, lenb@kernel.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Fri, 26 Jun 2020 09:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgFZNHb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:07:31 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D32C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r18so4929421pgk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 06:07:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NRJmV6QfNACg/W2qGdUyNfNSRYBISUhip+jiANXSZ2U=;
+        b=C9HB4SEDS2B7u1kQDaipaFKfr7hH6OpplX5jWV8b6ZHCBND/tTgHL6PVf6dHc2f6Sd
+         5NwS88iK75iPQfV7AefXxKkZOxPRxLwWEQjCL2ilZmNqOTbRoSkptL8QMnJdDAIVeRD8
+         n8z4n9oY6FvqHnciDAL0ikMjWBqBzo1nvpu+HHTyY1ba1ezjuZpKQ89Q8DkJTmpTwAJK
+         n/UJRXb5+sF3xQ5DZxE6IXuuzbxNRP4C4YmCHtIzLcJXurLDofQ1WpMpCnFf5NsKYKRQ
+         pq1YYaML6SWB/bOkxZa0v0nWkuGFtu0jdeK2Xh01GNjzyWjkExubOZnfEj8hR1uWZtjp
+         X0Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NRJmV6QfNACg/W2qGdUyNfNSRYBISUhip+jiANXSZ2U=;
+        b=EcvQHWrqXkwl4fqy3BVzX2uMWc5JhxUPVeehBry3NNMHRNG3++Ge/pG+uXJ7GOljX5
+         CUl1xzSU94KF34ufxVRRJ8J9e/RUR4loO6aKVGgCTtbPdvOWts77/b8qSZ/MDPxr7TuJ
+         CzItPAijrVpXMp9xc2STeW7dnegJYrpdmFWWPdFk70lPeazKhf99fSXaPDy1k+yrZFB1
+         yrEmN5QzBWDrzeI2YTz5x1ZoupVsRB/yKasiw+ku6vFiRahh9Py6Ciuirg8ZTDUFeYXw
+         iJ5newVakb8tZS7ovjxVq0GFabbJ4O55J7i66EblV33ME61079a7//joAZytwDUsxUGw
+         Yiww==
+X-Gm-Message-State: AOAM533m7bVCOtwAMXw74MBMwu7G7IzGmivxraTcNDCG+IpQOH7GlRk2
+        GEGTgs2ceyJ141oi8UQvmK/9gw==
+X-Google-Smtp-Source: ABdhPJyUy2sNWyz/EYNDLPMgLiILJgLDLkSMLhV1fdEM9RqMwZTH+4yl8tY2R49P7nSH7SwuIr11iQ==
+X-Received: by 2002:a63:5b07:: with SMTP id p7mr2633032pgb.250.1593176849698;
+        Fri, 26 Jun 2020 06:07:29 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id z14sm26023750pfj.64.2020.06.26.06.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 06:07:29 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v7 3/3] media: vimc: Add a control to display info on test image
+Date:   Fri, 26 Jun 2020 18:37:00 +0530
+Message-Id: <20200626130700.2453-4-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+Add a control in VIMC to display information such as the correct order of
+colors for a given test pattern, brightness, hue, saturation, contrast,
+width and height at sensor over test image.
 
-On 2020-05-30 15:34, Oscar Carter wrote:
-> In an effort to enable -Wcast-function-type in the top-level Makefile 
-> to
-> support Control Flow Integrity builds, there are the need to remove all
-> the function callback casts in the acpi driver.
-> 
-> The first patch creates a macro called 
-> ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-> to initialize the acpi_probe_entry struct using the probe_subtbl field
-> instead of the probe_table field to avoid function cast mismatches.
-> 
-> The second patch modifies the IRQCHIP_ACPI_DECLARE macro to use the new
-> defined macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
-> ACPI_DECLARE_PROBE_ENTRY. Also, modifies the prototype of the functions
-> used by the invocation of the IRQCHIP_ACPI_DECLARE macro to match all 
-> the
-> parameters.
-> 
-> The third patch removes the function cast in the 
-> ACPI_DECLARE_PROBE_ENTRY
-> macro to ensure that the functions passed as a last parameter to this 
-> macro
-> have the right prototype. This macro is used only in another macro
-> called "TIMER_ACPI_DECLARE". An this is used only in the file:
-> 
-> drivers/clocksource/arm_arch_timer.c
-> 
-> In this file, the function used in the last parameter of the
-> TIMER_ACPI_DECLARE macro already has the right prototype. So there is 
-> no
-> need to modify its prototype.
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+---
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
+ 4 files changed, 83 insertions(+)
 
-I'd like to see this into 5.9. Can you please let me know if
-you are OK with the acpi.h changes? I can queue it via the irqchip
-tree.
-
-Thanks,
-
-         M.
+diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+index 4068a67585f9..da4b2ad6e40c 100644
+--- a/drivers/media/test-drivers/vimc/Kconfig
++++ b/drivers/media/test-drivers/vimc/Kconfig
+@@ -2,6 +2,8 @@
+ config VIDEO_VIMC
+ 	tristate "Virtual Media Controller Driver (VIMC)"
+ 	depends on VIDEO_DEV && VIDEO_V4L2
++	select FONT_SUPPORT
++	select FONT_8x16
+ 	select MEDIA_CONTROLLER
+ 	select VIDEO_V4L2_SUBDEV_API
+ 	select VIDEOBUF2_VMALLOC
+diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+index ae163dec2459..a289434e75ba 100644
+--- a/drivers/media/test-drivers/vimc/vimc-common.h
++++ b/drivers/media/test-drivers/vimc/vimc-common.h
+@@ -20,6 +20,7 @@
+ #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+ #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+ #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
++#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
+ 
+ #define VIMC_FRAME_MAX_WIDTH 4096
+ #define VIMC_FRAME_MAX_HEIGHT 2160
+diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+index 11210aaa2551..4b0ae6f51d76 100644
+--- a/drivers/media/test-drivers/vimc/vimc-core.c
++++ b/drivers/media/test-drivers/vimc/vimc-core.c
+@@ -5,10 +5,12 @@
+  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+  */
+ 
++#include <linux/font.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <media/media-device.h>
++#include <media/tpg/v4l2-tpg.h>
+ #include <media/v4l2-device.h>
+ 
+ #include "vimc-common.h"
+@@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
+ 
+ static int vimc_probe(struct platform_device *pdev)
+ {
++	const struct font_desc *font = find_font("VGA8x16");
+ 	struct vimc_device *vimc;
+ 	int ret;
+ 
+ 	dev_dbg(&pdev->dev, "probe");
+ 
++	if (!font) {
++		dev_err(&pdev->dev, "could not find font\n");
++		return -ENODEV;
++	}
++
++	tpg_set_font(font->data);
++
+ 	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+ 	if (!vimc)
+ 		return -ENOMEM;
+diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+index a2f09ac9a360..9e4fb3f4d60d 100644
+--- a/drivers/media/test-drivers/vimc/vimc-sensor.c
++++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+@@ -19,6 +19,8 @@ struct vimc_sen_device {
+ 	struct v4l2_subdev sd;
+ 	struct tpg_data tpg;
+ 	u8 *frame;
++	unsigned int osd_mode;
++	u64 start_stream_ts;
+ 	/* The active format */
+ 	struct v4l2_mbus_framefmt mbus_format;
+ 	struct v4l2_ctrl_handler hdl;
+@@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+ {
+ 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+ 						    ved);
++	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
++	const unsigned int line_height = 16;
++	u8 *basep[TPG_MAX_PLANES][2];
++	unsigned int line = 1;
++	char str[100];
+ 
+ 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
++	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
++	switch (vsen->osd_mode) {
++	case OSD_SHOW_ALL:
++		{
++			const char *order = tpg_g_color_order(&vsen->tpg);
++
++			tpg_gen_text(&vsen->tpg, basep,
++				     line++ * line_height, 16, order);
++			snprintf(str, sizeof(str),
++				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
++				 vsen->tpg.brightness,
++				 vsen->tpg.contrast,
++				 vsen->tpg.saturation,
++				 vsen->tpg.hue);
++			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
++				     16, str);
++			snprintf(str, sizeof(str), "sensor size: %dx%d",
++				 vsen->mbus_format.width,
++				 vsen->mbus_format.height);
++			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
++				     16, str);
++		}
++	case OSD_SHOW_COUNTERS:
++		{
++			unsigned int ms;
++
++			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
++			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
++				 (ms / (60 * 60 * 1000)) % 24,
++				 (ms / (60 * 1000)) % 60,
++				 (ms / 1000) % 60,
++				 ms % 1000);
++			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
++				     16, str);
++			break;
++		}
++	case OSD_SHOW_NONE:
++	default:
++		break;
++	}
++
+ 	return vsen->frame;
+ }
+ 
+@@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
++		vsen->start_stream_ts = ktime_get_ns();
++
+ 		/* Calculate the frame size */
+ 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+ 		frame_size = vsen->mbus_format.width * vpix->bpp *
+@@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_SATURATION:
+ 		tpg_s_saturation(&vsen->tpg, ctrl->val);
+ 		break;
++	case VIMC_CID_OSD_TEXT_MODE:
++		vsen->osd_mode = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+ 	.qmenu = tpg_pattern_strings,
+ };
+ 
++static const char * const vimc_ctrl_osd_mode_strings[] = {
++	"All",
++	"Counters Only",
++	"None",
++	NULL,
++};
++
++static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
++	.ops = &vimc_sen_ctrl_ops,
++	.id = VIMC_CID_OSD_TEXT_MODE,
++	.name = "Show Information",
++	.type = V4L2_CTRL_TYPE_MENU,
++	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
++	.qmenu = vimc_ctrl_osd_mode_strings,
++};
++
+ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 					    const char *vcfg_name)
+ {
+@@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 
+ 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+ 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
++	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
+ 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+ 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+ 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
