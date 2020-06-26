@@ -2,172 +2,167 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE384C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65622073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuV68Sj0"
+	by mail.kernel.org (Postfix) with ESMTP id 431A52073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgFZXMJ (ORCPT
+        id S1726411AbgFZXM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFZXMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:12:09 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA0AC03E979;
-        Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j10so8735916qtq.11;
-        Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pTmR+y5xQvCfn7qLWQjIR68Juu6JdR5gHIQY84QdEd4=;
-        b=IuV68Sj0SKSJ8kJjMhRBv9rc+wRa/O+XtkXwVtnjm7MTGWGuJrVPQ+E/1xuhQFFzxt
-         Jst27nZ5ngYKEXFcNkh5sn4SzU1XaPQuvCbnIOAFFavbzQ4ZtH2L3Hypyu1nsdBnm3Fo
-         Xq4TrdiFvw1hMdh5eep5MK7hnVkfLopKDB8T1zgcTDgaOzNhJvImLfHDMLVNRUUMyH1u
-         ofMPXZrjNtIkZDcG7eTNxjr9TPWauKc8q1lUpsHfeAJIRG+lJ7MzKOF8PfAXx/CQy8tY
-         5oyXfEKd7mTGriQm2etbaS/uuJgmSnC1PC+moNrG/vDJDP+zC/pylnqEnKR9aEdeuykz
-         iBJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pTmR+y5xQvCfn7qLWQjIR68Juu6JdR5gHIQY84QdEd4=;
-        b=hjNuAkgxBuC6MU541v63JR4e/GkEbk9LarKwWIC3oCgJ6Nb6jpi/cL5PQEEItvYzXM
-         75YZYX8HtYVvN//r1SuGwREqQ7ItK8NQE/501Zw4Z+L6S0/cmUshg3+jBZxcrwqELMlX
-         47aRi7+T+rJ8HVN/q/UbPyjz1V/f3TikWerarKDbyV3zH3+CoOnFCZ26XGhL51dZdNBQ
-         IbGE907/X53HmXdve51QjTJIGSdowkG4RecnZAN9FSkWLqKfY2IpHVhclPVXWtxcQ2xk
-         wiX2BtmkUkokDwKuobHNlttFYQDv64f3z7RJux0ihSgr+z1usyx+3kg7XnEE58ypKSIv
-         sJ9Q==
-X-Gm-Message-State: AOAM530jfm9d3URqi25uXulcimCMlEVwAXDupD9RfQthc2V/VE7yKn7Y
-        TUY2vE2qSZrLUF5heeBc6tn8itwef76w/+ZqxxWUGBdu
-X-Google-Smtp-Source: ABdhPJxzIyclZTlu3aoGsOzhVwJsAXglRMI7FIJ4PJA2sz/uUtUXt8Zh+DhIqtUNNUK+mveDG+YVuDseREIBsP1ls1s=
-X-Received: by 2002:ac8:1991:: with SMTP id u17mr5099484qtj.93.1593213128220;
- Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
+        Fri, 26 Jun 2020 19:12:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23790 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgFZXM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 19:12:56 -0400
+IronPort-SDR: sn8SNQlocs8xTww8B7yfhGYa2ouIX7AVw5xTNKhIs+pfhB4cTf7/KkRUDb+jO7DVb6J1LHO6WU
+ CiXczVPObtWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143741522"
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="143741522"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 16:12:55 -0700
+IronPort-SDR: Va5ZRa0qpOSA5N1rQk0ZKyQL9s3OULIRGENZ57+mbfdJefh56TjqJke7WGE3HfnXxkkzdA6q54
+ Ol32c9J7JKOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="294329406"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2020 16:12:54 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1joxWf-0002VI-SA; Fri, 26 Jun 2020 23:12:53 +0000
+Date:   Sat, 27 Jun 2020 07:12:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/entry] BUILD SUCCESS
+ 2c92d787cc9fad57d05c96bd117782183768258a
+Message-ID: <5ef680dd.S4+0TLpJgZ3CVYcy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-5-songliubraving@fb.com> <CAEf4Bzb6H3a48S3L4WZtPTMSLZpAe4C5_2aFwJAnNDVLVWDTQA@mail.gmail.com>
- <6B6E4195-BC5C-4A13-80A6-9493469D6A2E@fb.com>
-In-Reply-To: <6B6E4195-BC5C-4A13-80A6-9493469D6A2E@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 26 Jun 2020 16:11:57 -0700
-Message-ID: <CAEf4Bzb543EVJF+nU0X+1JNMaTehgiwx_0V=80W-frBYku0odA@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 4/4] selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 4:05 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jun 26, 2020, at 1:21 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Jun 25, 2020 at 5:15 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> The new test is similar to other bpf_iter tests.
-> >>
-> >> Signed-off-by: Song Liu <songliubraving@fb.com>
-> >> ---
-> >> .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++++
-> >> .../selftests/bpf/progs/bpf_iter_task_stack.c | 60 +++++++++++++++++++
-> >> 2 files changed, 77 insertions(+)
-> >> create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-> >>
-> >> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> >> index 87c29dde1cf96..baa83328f810d 100644
-> >> --- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> >> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-> >> @@ -5,6 +5,7 @@
-> >> #include "bpf_iter_netlink.skel.h"
-> >> #include "bpf_iter_bpf_map.skel.h"
-> >> #include "bpf_iter_task.skel.h"
-> >> +#include "bpf_iter_task_stack.skel.h"
-> >> #include "bpf_iter_task_file.skel.h"
-> >> #include "bpf_iter_test_kern1.skel.h"
-> >> #include "bpf_iter_test_kern2.skel.h"
-> >> @@ -106,6 +107,20 @@ static void test_task(void)
-> >>        bpf_iter_task__destroy(skel);
-> >> }
-> >>
-> >> +static void test_task_stack(void)
-> >> +{
-> >> +       struct bpf_iter_task_stack *skel;
-> >> +
-> >> +       skel = bpf_iter_task_stack__open_and_load();
-> >> +       if (CHECK(!skel, "bpf_iter_task_stack__open_and_load",
-> >> +                 "skeleton open_and_load failed\n"))
-> >> +               return;
-> >> +
-> >> +       do_dummy_read(skel->progs.dump_task_stack);
-> >> +
-> >> +       bpf_iter_task_stack__destroy(skel);
-> >> +}
-> >> +
-> >> static void test_task_file(void)
-> >> {
-> >>        struct bpf_iter_task_file *skel;
-> >> @@ -392,6 +407,8 @@ void test_bpf_iter(void)
-> >>                test_bpf_map();
-> >>        if (test__start_subtest("task"))
-> >>                test_task();
-> >> +       if (test__start_subtest("task_stack"))
-> >> +               test_task_stack();
-> >>        if (test__start_subtest("task_file"))
-> >>                test_task_file();
-> >>        if (test__start_subtest("anon"))
-> >> diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-> >> new file mode 100644
-> >> index 0000000000000..83aca5b1a7965
-> >> --- /dev/null
-> >> +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-> >> @@ -0,0 +1,60 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/* Copyright (c) 2020 Facebook */
-> >> +/* "undefine" structs in vmlinux.h, because we "override" them below */
-> >> +#define bpf_iter_meta bpf_iter_meta___not_used
-> >> +#define bpf_iter__task bpf_iter__task___not_used
-> >> +#include "vmlinux.h"
-> >> +#undef bpf_iter_meta
-> >> +#undef bpf_iter__task
-> >> +#include <bpf/bpf_helpers.h>
-> >> +#include <bpf/bpf_tracing.h>
-> >> +
-> >> +char _license[] SEC("license") = "GPL";
-> >> +
-> >> +/* bpf_get_task_stack needs a stackmap to work */
-> >
-> > no it doesn't anymore :) please drop
->
-> We still need stack_map_alloc() to call get_callchain_buffers() in this
-> case. Without an active stack map, get_callchain_buffers() may fail.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
+branch HEAD: 2c92d787cc9fad57d05c96bd117782183768258a  Merge branch 'linus' into x86/entry, to resolve conflicts
 
-Oh... um... is it possible to do it some other way? It's extremely
-confusing dependency. Does bpf_get_stack() also require stackmap?
+elapsed time: 722m
 
->
-> Thanks,
-> Song
+configs tested: 97
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                               defconfig
+sh                           se7751_defconfig
+arm                       imx_v6_v7_defconfig
+arm                            xcep_defconfig
+arm                      pxa255-idp_defconfig
+arm                          tango4_defconfig
+h8300                            allyesconfig
+arc                                 defconfig
+arm                            lart_defconfig
+m68k                          atari_defconfig
+arm                        mini2440_defconfig
+arm                          pxa168_defconfig
+arm                             pxa_defconfig
+arm                         lpc18xx_defconfig
+mips                           ip27_defconfig
+arm                     eseries_pxa_defconfig
+mips                      loongson3_defconfig
+i386                             alldefconfig
+nds32                             allnoconfig
+sh                           se7724_defconfig
+mips                     loongson1b_defconfig
+parisc                            allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
