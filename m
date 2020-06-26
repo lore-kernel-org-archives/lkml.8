@@ -2,193 +2,325 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF69C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10591C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B3A207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6FA2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d3SYiHEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgFZQtb (ORCPT
+        id S1728080AbgFZQx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:49:31 -0400
-Received: from out28-125.mail.aliyun.com ([115.124.28.125]:60049 "EHLO
-        out28-125.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgFZQtZ (ORCPT
+        Fri, 26 Jun 2020 12:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgFZQx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:49:25 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436325|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.41423-0.00350768-0.582263;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03293;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HsyHo9F_1593190149;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HsyHo9F_1593190149)
-          by smtp.aliyun-inc.com(10.147.41.137);
-          Sat, 27 Jun 2020 00:49:18 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        paul@crapouillou.net, mturquette@baylibre.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 2/2] clk: X1000: Add support for calculat REFCLK of USB PHY.
-Date:   Sat, 27 Jun 2020 00:48:44 +0800
-Message-Id: <20200626164844.25436-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200626164844.25436-1-zhouyanjie@wanyeetech.com>
-References: <20200626164844.25436-1-zhouyanjie@wanyeetech.com>
+        Fri, 26 Jun 2020 12:53:57 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB37C03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:53:56 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so11057238ljv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BpcAKrRR2y1hN2RPj8C5fND99mRqbVolDfMZWPUBdwA=;
+        b=d3SYiHENtF3ykdK56P0W+0m1QsPiVrdi67hmOjt0l5BLep5HO+okxPgtyJnsl1KaSO
+         lwrHJEYHubGRXVb0G++Pxlr+TeSoUXIldte1yU61Oo9K2AwSYSX1Deilq9PEk/KFbiiR
+         xES6CO5MP7zsU1FHo9e1lRvneYDXmkgwBruwa2eaEVls3nXlP+nl7P9Pxm72hXzraXK0
+         vWm6CdwEP3LztMwMR9iNEf1WJuQ8LOoAhpnFfKVXQGr9aOZAW0hJAIfwzAuRlMmSK/Eg
+         lUHWdQRKkQh7VIrhwW2/PyPgvICvd913JPFUUMENXBBW1C05lC+CJr+J7DgmBdf15E+i
+         g7vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BpcAKrRR2y1hN2RPj8C5fND99mRqbVolDfMZWPUBdwA=;
+        b=gWp8egNLYufefdZ39JaJ1QfgSY5mfXAAd2KavdVvcndHT/l7E33z6GRJR3+wVXY4hp
+         qJDAirRXBvqsA+5vfXMtTY9fhEtDKy8G1HJn8104L8qsaUusqQjc1OBElhWHOK4muWTx
+         l6+J/uZp2ZJqW4LHtqjO95r+JSRpiy9sjtO8pHnCtd+4WHpZnZ3iuCRckrYVPeN1HpBG
+         DVLeuVkscJsb7Srn0eStxhRk4JjjO6hngTuB4z9p1PtV8jQriMXaOqKn/nbc1o7qWbvA
+         oi9tnBZFLNqekthRhdfF5vnByaosdkSwgqr5i+TlGv9jSb+pndE7e2x4bFeZhGWF03gP
+         Bs8w==
+X-Gm-Message-State: AOAM530HtGavq2zq4X/4a6+kxBzjpaMSZg6tD1QvMZV0DGP6NYzbGd0q
+        Oc31G1RQJ2VgE46UEh9gciTtAhia6euct+cOSAgc5Wo8gLCaQQ==
+X-Google-Smtp-Source: ABdhPJwyQamuTnCkxPEam1v0ezyq0r+KR7ADlZ2peLxqhQ1vshyAMXp+dXBWIy8KwlZfY7djnFu1cR+KcdxRSk8BGgc=
+X-Received: by 2002:a2e:9116:: with SMTP id m22mr1896930ljg.431.1593190434899;
+ Fri, 26 Jun 2020 09:53:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200624150137.7052-1-nao.horiguchi@gmail.com> <20200624150137.7052-14-nao.horiguchi@gmail.com>
+In-Reply-To: <20200624150137.7052-14-nao.horiguchi@gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 26 Jun 2020 22:23:43 +0530
+Message-ID: <CA+G9fYvopXWr+Y34xz2NVv17yeFs7fuKnJO_iUMnfCwaDNRXYg@mail.gmail.com>
+Subject: Re: [PATCH v3 13/15] mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
+To:     nao.horiguchi@gmail.com
+Cc:     linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>, osalvador@suse.de,
+        Tony Luck <tony.luck@intel.com>, david@redhat.com,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        zeil@yandex-team.ru, naoya.horiguchi@nec.com,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new functions to "x1000_otg_phy_ops" to calculat the rate of REFCLK,
-which is needed by USB PHY in the Ingenic X1000 SoC.
+On Wed, 24 Jun 2020 at 20:32, <nao.horiguchi@gmail.com> wrote:
+>
+> From: Oscar Salvador <osalvador@suse.de>
+>
+> Merging soft_offline_huge_page and __soft_offline_page let us get rid of
+> quite some duplicated code, and makes the code much easier to follow.
+>
+> Now, __soft_offline_page will handle both normal and hugetlb pages.
+>
+> Note that move put_page() block to the beginning of page_handle_poison()
+> with drain_all_pages() in order to make sure that the target page is
+> freed and sent into free list to make take_page_off_buddy() work properly=
+.
+>
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
+> ---
+> ChangeLog v2 -> v3:
+> - use page_is_file_lru() instead of page_is_file_cache(),
+> - add description about put_page() and drain_all_pages().
+> - fix coding style warnings by checkpatch.pl
+> ---
+>  mm/memory-failure.c | 185 ++++++++++++++++++++------------------------
+>  1 file changed, 86 insertions(+), 99 deletions(-)
+>
+> diff --git v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c v5.8-rc1-m=
+mots-2020-06-20-21-44_patched/mm/memory-failure.c
+> index f744eb90c15c..22c904f6d17a 100644
+> --- v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c
+> +++ v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/memory-failure.c
+> @@ -78,14 +78,36 @@ EXPORT_SYMBOL_GPL(hwpoison_filter_dev_minor);
+>  EXPORT_SYMBOL_GPL(hwpoison_filter_flags_mask);
+>  EXPORT_SYMBOL_GPL(hwpoison_filter_flags_value);
+>
+> -static void page_handle_poison(struct page *page, bool release)
+> +static bool page_handle_poison(struct page *page, bool hugepage_or_freep=
+age, bool release)
+>  {
+> +       if (release) {
+> +               put_page(page);
+> +               drain_all_pages(page_zone(page));
+> +       }
+> +
+> +       if (hugepage_or_freepage) {
+> +               /*
+> +                * Doing this check for free pages is also fine since dis=
+solve_free_huge_page
+> +                * returns 0 for non-hugetlb pages as well.
+> +                */
+> +               if (dissolve_free_huge_page(page) || !take_page_off_buddy=
+(page))
+> +               /*
+> +                * The hugetlb page can end up being enqueued back into
+> +                * the freelists by means of:
+> +                * unmap_and_move_huge_page
+> +                *  putback_active_hugepage
+> +                *   put_page->free_huge_page
+> +                *    enqueue_huge_page
+> +                * If this happens, we might lose the race against an all=
+ocation.
+> +                */
+> +                       return false;
+> +       }
+>
+>         SetPageHWPoison(page);
+> -       if (release)
+> -               put_page(page);
+>         page_ref_inc(page);
+>         num_poisoned_pages_inc();
+> +
+> +       return true;
+>  }
+>
+>  static int hwpoison_filter_dev(struct page *p)
+> @@ -1718,63 +1740,52 @@ static int get_any_page(struct page *page, unsign=
+ed long pfn)
+>         return ret;
+>  }
+>
+> -static int soft_offline_huge_page(struct page *page)
+> +static bool isolate_page(struct page *page, struct list_head *pagelist)
+>  {
+> -       int ret;
+> -       unsigned long pfn =3D page_to_pfn(page);
+> -       struct page *hpage =3D compound_head(page);
+> -       LIST_HEAD(pagelist);
+> +       bool isolated =3D false;
+> +       bool lru =3D PageLRU(page);
+> +
+> +       if (PageHuge(page)) {
+> +               isolated =3D isolate_huge_page(page, pagelist);
+> +       } else {
+> +               if (lru)
+> +                       isolated =3D !isolate_lru_page(page);
+> +               else
+> +                       isolated =3D !isolate_movable_page(page, ISOLATE_=
+UNEVICTABLE);
+> +
+> +               if (isolated)
+> +                       list_add(&page->lru, pagelist);
+>
+> -       /*
+> -        * This double-check of PageHWPoison is to avoid the race with
+> -        * memory_failure(). See also comment in __soft_offline_page().
+> -        */
+> -       lock_page(hpage);
+> -       if (PageHWPoison(hpage)) {
+> -               unlock_page(hpage);
+> -               put_page(hpage);
+> -               pr_info("soft offline: %#lx hugepage already poisoned\n",=
+ pfn);
+> -               return -EBUSY;
+>         }
+> -       unlock_page(hpage);
+>
+> -       ret =3D isolate_huge_page(hpage, &pagelist);
+> +       if (isolated && lru)
+> +               inc_node_page_state(page, NR_ISOLATED_ANON +
+> +                                   page_is_file_lru(page));
+> +
+>         /*
+> -        * get_any_page() and isolate_huge_page() takes a refcount each,
+> -        * so need to drop one here.
+> +        * If we succeed to isolate the page, we grabbed another refcount=
+ on
+> +        * the page, so we can safely drop the one we got from get_any_pa=
+ges().
+> +        * If we failed to isolate the page, it means that we cannot go f=
+urther
+> +        * and we will return an error, so drop the reference we got from
+> +        * get_any_pages() as well.
+>          */
+> -       put_page(hpage);
+> -       if (!ret) {
+> -               pr_info("soft offline: %#lx hugepage failed to isolate\n"=
+, pfn);
+> -               return -EBUSY;
+> -       }
+> -
+> -       ret =3D migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL=
+,
+> -                               MIGRATE_SYNC, MR_MEMORY_FAILURE);
+> -       if (ret) {
+> -               pr_info("soft offline: %#lx: hugepage migration failed %d=
+, type %lx (%pGp)\n",
+> -                       pfn, ret, page->flags, &page->flags);
+> -               if (!list_empty(&pagelist))
+> -                       putback_movable_pages(&pagelist);
+> -               if (ret > 0)
+> -                       ret =3D -EIO;
+> -       } else {
+> -               /*
+> -                * We set PG_hwpoison only when we were able to take the =
+page
+> -                * off the buddy.
+> -                */
+> -               if (!dissolve_free_huge_page(page) && take_page_off_buddy=
+(page))
+> -                       page_handle_poison(page, false);
+> -               else
+> -                       ret =3D -EBUSY;
+> -       }
+> -       return ret;
+> +       put_page(page);
+> +       return isolated;
+>  }
+>
+> +/*
+> + * __soft_offline_page handles hugetlb-pages and non-hugetlb pages.
+> + * If the page is a non-dirty unmapped page-cache page, it simply invali=
+dates.
+> + * If the page is mapped, it migrates the contents over.
+> + */
+>  static int __soft_offline_page(struct page *page)
+>  {
+> -       int ret;
+> +       int ret =3D 0;
+>         unsigned long pfn =3D page_to_pfn(page);
+> +       struct page *hpage =3D compound_head(page);
+> +       const char *msg_page[] =3D {"page", "hugepage"};
+> +       bool huge =3D PageHuge(page);
+> +       LIST_HEAD(pagelist);
+>
+>         /*
+>          * Check PageHWPoison again inside page lock because PageHWPoison
+> @@ -1783,98 +1794,74 @@ static int __soft_offline_page(struct page *page)
+>          * so there's no race between soft_offline_page() and memory_fail=
+ure().
+>          */
+>         lock_page(page);
+> -       wait_on_page_writeback(page);
+> +       if (!PageHuge(page))
+> +               wait_on_page_writeback(page);
+>         if (PageHWPoison(page)) {
+>                 unlock_page(page);
+>                 put_page(page);
+>                 pr_info("soft offline: %#lx page already poisoned\n", pfn=
+);
+>                 return -EBUSY;
+>         }
+> -       /*
+> -        * Try to invalidate first. This should work for
+> -        * non dirty unmapped page cache pages.
+> -        */
+> -       ret =3D invalidate_inode_page(page);
+> +
+> +       if (!PageHuge(page))
+> +               /*
+> +                * Try to invalidate first. This should work for
+> +                * non dirty unmapped page cache pages.
+> +                */
+> +               ret =3D invalidate_inode_page(page);
+>         unlock_page(page);
+> +
+>         /*
+>          * RED-PEN would be better to keep it isolated here, but we
+>          * would need to fix isolation locking first.
+>          */
+> -       if (ret =3D=3D 1) {
+> +       if (ret) {
+>                 pr_info("soft_offline: %#lx: invalidated\n", pfn);
+> -               page_handle_poison(page, true);
+> +               page_handle_poison(page, false, true);
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- drivers/clk/ingenic/x1000-cgu.c | 113 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+arm64 build failed on linux-next 20200626 tag
 
-diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
-index 453f3323cb99..a61c16f98a11 100644
---- a/drivers/clk/ingenic/x1000-cgu.c
-+++ b/drivers/clk/ingenic/x1000-cgu.c
-@@ -48,8 +48,114 @@
- #define USBPCR_SIDDQ		BIT(21)
- #define USBPCR_OTG_DISABLE	BIT(20)
- 
-+/* bits within the USBPCR1 register */
-+#define USBPCR1_REFCLKSEL_SHIFT	26
-+#define USBPCR1_REFCLKSEL_MASK	(0x3 << USBPCR1_REFCLKSEL_SHIFT)
-+#define USBPCR1_REFCLKSEL_CORE	(0x2 << USBPCR1_REFCLKSEL_SHIFT)
-+#define USBPCR1_REFCLKDIV_SHIFT	24
-+#define USBPCR1_REFCLKDIV_MASK	(0x3 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_48	(0x2 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_24	(0x1 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_12	(0x0 << USBPCR1_REFCLKDIV_SHIFT)
-+
- static struct ingenic_cgu *cgu;
- 
-+static u8 x1000_otg_phy_get_parent(struct clk_hw *hw)
-+{
-+	/* we only use CLKCORE, revisit if that ever changes */
-+	return 0;
-+}
-+
-+static int x1000_otg_phy_set_parent(struct clk_hw *hw, u8 idx)
-+{
-+	unsigned long flags;
-+	u32 usbpcr1;
-+
-+	if (idx > 0)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+
-+	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
-+	usbpcr1 &= ~USBPCR1_REFCLKSEL_MASK;
-+	/* we only use CLKCORE */
-+	usbpcr1 |= USBPCR1_REFCLKSEL_CORE;
-+	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
-+
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+	return 0;
-+}
-+
-+static unsigned long x1000_otg_phy_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	u32 usbpcr1;
-+	unsigned refclk_div;
-+
-+	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
-+	refclk_div = usbpcr1 & USBPCR1_REFCLKDIV_MASK;
-+
-+	switch (refclk_div) {
-+	case USBPCR1_REFCLKDIV_12:
-+		return 12000000;
-+
-+	case USBPCR1_REFCLKDIV_24:
-+		return 24000000;
-+
-+	case USBPCR1_REFCLKDIV_48:
-+		return 48000000;
-+	}
-+
-+	BUG();
-+	return parent_rate;
-+}
-+
-+static long x1000_otg_phy_round_rate(struct clk_hw *hw, unsigned long req_rate,
-+				      unsigned long *parent_rate)
-+{
-+	if (req_rate < 18000000)
-+		return 12000000;
-+
-+	if (req_rate < 36000000)
-+		return 24000000;
-+
-+	return 48000000;
-+}
-+
-+static int x1000_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
-+				   unsigned long parent_rate)
-+{
-+	unsigned long flags;
-+	u32 usbpcr1, div_bits;
-+
-+	switch (req_rate) {
-+	case 12000000:
-+		div_bits = USBPCR1_REFCLKDIV_12;
-+		break;
-+
-+	case 24000000:
-+		div_bits = USBPCR1_REFCLKDIV_24;
-+		break;
-+
-+	case 48000000:
-+		div_bits = USBPCR1_REFCLKDIV_48;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+
-+	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
-+	usbpcr1 &= ~USBPCR1_REFCLKDIV_MASK;
-+	usbpcr1 |= div_bits;
-+	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
-+
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+	return 0;
-+}
-+
- static int x1000_usb_phy_enable(struct clk_hw *hw)
- {
- 	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-@@ -80,6 +186,13 @@ static int x1000_usb_phy_is_enabled(struct clk_hw *hw)
- }
- 
- static const struct clk_ops x1000_otg_phy_ops = {
-+	.get_parent = x1000_otg_phy_get_parent,
-+	.set_parent = x1000_otg_phy_set_parent,
-+
-+	.recalc_rate = x1000_otg_phy_recalc_rate,
-+	.round_rate = x1000_otg_phy_round_rate,
-+	.set_rate = x1000_otg_phy_set_rate,
-+
- 	.enable		= x1000_usb_phy_enable,
- 	.disable	= x1000_usb_phy_disable,
- 	.is_enabled	= x1000_usb_phy_is_enabled,
--- 
-2.11.0
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
+CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+aarch64-linux-gnu-gcc" O=3Dbuild Image
+79 #
+80 ../mm/memory-failure.c: In function =E2=80=98__soft_offline_page=E2=80=
+=99:
+81 ../mm/memory-failure.c:1827:3: error: implicit declaration of
+function =E2=80=98page_handle_poison=E2=80=99; did you mean =E2=80=98page_i=
+nit_poison=E2=80=99?
+[-Werror=3Dimplicit-function-declaration]
+82  1827 | page_handle_poison(page, false, true);
+83  | ^~~~~~~~~~~~~~~~~~
+84  | page_init_poison
 
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
