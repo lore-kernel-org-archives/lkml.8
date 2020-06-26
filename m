@@ -2,241 +2,195 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E65BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758CB214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B46B214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="T9eyPk5M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yMl9r8bC";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="nviFQcty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgFZJZl (ORCPT
+        id S1726522AbgFZJZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:25:41 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:54213 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725983AbgFZJZl (ORCPT
+        Fri, 26 Jun 2020 05:25:57 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:13466 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbgFZJZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:25:41 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id okbzjaon2xmkVokc3jhHyp; Fri, 26 Jun 2020 11:25:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593163537; bh=SLLgLZsPzHaks2F9qkVOMuuElU3gdhemEA1Zlr5br34=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=T9eyPk5M0VeudUH7py1xWOxE3QFdvDxsZNT5chUrdzqaS28yFZUDrCfnf5wtpgPQ7
-         94IQkCz8KGANh/MioMB9aDBa0jXS3lZ5qQcOnJ4d5TTcq/heYPIIJBuAT53l1sXYGK
-         a0NWSNaheeJRO2t31/WOoMA9EQf60IAhNVsMfxtKUr1gKx6bIXYTr5rlqw6Q5IKLfS
-         733eMhGqUGKWcIjrEFzz37vkhdliixqrEfrwWYDsl75mG590uLiLABCKXczpUeqDBX
-         iGhS+31S9msis833Bm+y5rRiZjY7SMXJ79PsseQQvNfR9WwUV1k2K4RkSnsIcvZhsS
-         JNXY8NSwvIfQA==
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-To:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
- <20200625094724.GE5865@pendragon.ideasonboard.com>
- <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
- <20200625102701.GG5865@pendragon.ideasonboard.com>
- <f0fef540-aaeb-9831-c045-77eb8c95b3b9@xs4all.nl>
- <20200626090913.GA1348@vmlxhi-110.adit-jv.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <722b67b4-05a3-5785-0196-15bf5466c981@xs4all.nl>
-Date:   Fri, 26 Jun 2020 11:25:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200626090913.GA1348@vmlxhi-110.adit-jv.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 26 Jun 2020 05:25:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593163555; x=1624699555;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MS61EfMHV1bsobcMYtRKCzD0LOC8ydMVTTW4z682Xew=;
+  b=yMl9r8bCJ8hbi7holUz1mZ1u2ANAxOxITTzm8ND+TNGuytarOAfikSFa
+   XIzD/oGJQGiCOOTqy7UlDFIdOZuImSpdM2kCGW6d7ddqTvk+HPb9yoivd
+   2WG4w5TaCtX/ZvAnmjBmSd1FjDAH2GOq4uEQkvfWoo1LRgDsdE4Ba78E3
+   xH4eEYI19JxwBWS0So4hM+Pe/Yw0WL9cbnGogZgxMK2x++onTiRBApMMn
+   xM2kxM2zjUhfVlUROp/TwhUziTv6NPUJXoNqi1qRREfJoyYaIR4Q7ReT4
+   RHFOBVhl2tgGpy1ek/ba7kcLmqsJl+4JDjtoWIazySP4Gj7KhjwKJkIKm
+   g==;
+IronPort-SDR: DYGYxiIfkwdDy2lZS4nkHDpS+YrnnFp8KkHh8U2S5WRRjAv1alQNu/LFE7Wx0cJweOLlAwHDJM
+ Uio1eXvLsUK6Rh2AcEAerkHWjx8Uqg9FhBA4FfjZY2OoxSHqxmslZe7TDAqTWbxAazwyD6M3xo
+ 4ZECFfAFDfgnVVZY0qPEhmuY+aSOzjG8J7bAG+ffD+dSZjX3aLdxRA6Ik4yT+lSpGPi6lNhqD1
+ axWXB4CtLNXvjKLj+JWcECHp0SWE67GyhDFxZUmpJJ+bTa3K071oXCAvBKiSX097JLhByj6nNJ
+ vi8=
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="85195860"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jun 2020 02:25:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 26 Jun 2020 02:25:40 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Fri, 26 Jun 2020 02:25:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B/XzFY825YApFLSPHuIAIP9A0c7Na5GI58Vhs1b77nWuSWy5AVzFDpidB8/zKsNKMzvM5iG3Tw3l3IYyFkfqn0FJ5BQLoMfNU1e0kWCXQzh9LphmaJ+FZ/i7uATnbhGKOvqQK4IMG6oA5/k3NWrZRSAopiHX6/9ycJI2SKOJqDIbNLVsMUhyxmlKk05ZlqhFIT+ET6R7tP59TGu67ARurlU7O1PAa8fVlV4bCpA04Bnpafcs10N8K8QljqT9RT00m5oX688OkzZPF43XkPDZPhICBrtPuU23oPKdDHYSWCEmVeDK6w9sxOd2Cikzzmipta+dCP0vmW5lEosdeC+X+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQxSF6BD09cTa786RD+TS7uSnIbhxtpuvzTY5s1qV9k=;
+ b=kH4Plui2/fbqkEzh5AB/rL4eKfgt5/DNpVRbmXVX0ZIyA/peU/uY9ztddZNxwQ1M2rr0nW1qPco5Jg+2UHDfNiN8ZfLQFkpnX9QiFPwXcgsGdKIqtNg7QEK7VM1NAzBoN35tcd6eCCf5K8+Te0WW0bgHpo2KBaBckAKjuG/tpRaemz8AwRHoI1lqWsqtXruvIBFJqUPM78iu45fpK6RXcECNDvP0/Md8B4mWiypIdXivFU8tpBmCeDcM1uyFm8ce5nLaqCSOaUja2WrMNC+/xOYE2E6TOc2OOYlAhpGfNFzZs5o2afZkGnmKBoMhXxNObRfRmZynGkF3UhF9U+6qdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQxSF6BD09cTa786RD+TS7uSnIbhxtpuvzTY5s1qV9k=;
+ b=nviFQctyrBB9nbG+nNT1yUsagxrKjom8sTr4zJnlsIsHqdBpPyfelG5ujCk+mYKaSzDL05Yu8zeE9y1iEtppOL/3SbDlKvDlCUHdSRyNpzx69Kwk9Tfra97Ug9LZX1lquICTVQ7z4qT6y+jM2q9hblUlFLe09Dn8Jx3b0IwA3co=
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
+ by BYAPR11MB3750.namprd11.prod.outlook.com (2603:10b6:a03:f9::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 26 Jun
+ 2020 09:25:51 +0000
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3131.025; Fri, 26 Jun 2020
+ 09:25:51 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <broonie@kernel.org>
+CC:     <vigneshr@ti.com>, <bbrezillon@kernel.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: Re: [RESEND PATCH v3 0/8] mtd: spi-nor: Move cadence-qaudspi to
+ spi-mem framework
+Thread-Topic: [RESEND PATCH v3 0/8] mtd: spi-nor: Move cadence-qaudspi to
+ spi-mem framework
+Thread-Index: AQHWRi9bRsHSVVCOu0SkX6Y85WgKZw==
+Date:   Fri, 26 Jun 2020 09:25:51 +0000
+Message-ID: <79c4bedc-f2fc-edcc-518c-eadd68ac1f2e@microchip.com>
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200619105701.GD5396@sirena.org.uk>
+ <0007c019-1ecf-1913-56a7-facffe345b1f@microchip.com>
+ <20200619151746.GF5396@sirena.org.uk>
+In-Reply-To: <20200619151746.GF5396@sirena.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLXMq26lOFQz2DzLNRukpjpgSmMXoOn+qLGn+851WzEpIr2dv2iYj/XDkux7ArJW1tQMGFXFoUzen17x/3Y3XxzvOn1QMSjb4eIUDrQBgzXiKvryKCy7
- e8Xh1SCsULdNm1xISOLNoIlh6rQn4aeIBMJpbL0/opgrIS9RFaDZhx2qEdGHRWT0dlOOOHBAIM+jkQeVbGbHCGv6aJL0Z3QHQeLs5lI7Ndc7Sm/K2HRXFXfK
- lsfUbL9KzTeSYCFeU5TOMcxmQ4xAqrFZm+UNX1hvlWB7ZmkfI/eie93oWLpG1NP6vEhBm53Y/umajJvHjH+clftfCh131W/+VpPo/KeidXGT9o/1DJQq2U+x
- BZb64ayEIm0yhPeo9tuDvpQEkQ3RJDYBCnIgOQofyGyhbN+YKAKInvx0hqzydjQqFr5vVyf+99agx+o75tc0D58WzQAuDBOxl7dRvQYD5N4xwx1lvhGrNBvE
- /nK7qOGqyx1fh6IGWmbxoChAUm3DltIttT+K+6xIKPhNwfBmPL7+jIC9vij4Qo2WrAFuMXhXsXO9cd7PUStNhmHWDra1c9rSpg/f42QquraXpbbLnd1jds6i
- BSCYrjXBCmRiYX7axuJPfcCzba9ieLhx3G7smUbrp7IbZpgdVI6ml+kqmZZ89gv0YN6npt5nIjVUoBUvntmtQhByemN59WtbYl7WGeEZ8jifQDiNJV/mCaf5
- JI/OvfT26V3OcLLnnbjFErlVxM1JGb6iqQ7NQuLiEt6ZmQ6b9XaggQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [86.127.52.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 13bf7cb1-a23d-46f4-9b39-08d819b2eb68
+x-ms-traffictypediagnostic: BYAPR11MB3750:
+x-microsoft-antispam-prvs: <BYAPR11MB37502DBAD2BC90C40DCD1EB0F0930@BYAPR11MB3750.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: haAR0B3YlbiXQSmhyMoVVysr2RTr+Xtw/DiIvliUMwfaTbDgVdZJ9IoT1R7YCS0xpECfukF0m9xme3r193JUBREJUJUzgk1lADYcfHBt1jlOGPwajbYFC3TvaK/nvVBZVD1jlPdgG8nuBDxIcL1wmemdgwA5o3A1hFeyZ4iGO3CrESA5VprIwWn7BLi0WUmYJz3mxGbBCzDBw07t9/cV3BHHpJRoMhpuQlvO4/cC8RoU9maEaUu+YuZ0fzqXKf08mCxxqJQZ/OAD/VLL+uSBbzG9sYQjmwTEclqksg5PWD9JoNMvd50drhqfTfg0yPU4/p0bcHUIY1stn0SRajMTdu5lM5Lav7RT1EAyjfcigbTMxBRfrG427HJRP1mk9+8nfGJtDEoCpZB/FaktZweu0hquofoWzxNX4tuBfTxixfv9XCmNEeSPZ4ltkaj7ToYzpsvqyko5WuNCYpmUJI0mwQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(346002)(376002)(366004)(396003)(6506007)(6512007)(2906002)(8676002)(36756003)(86362001)(478600001)(5660300002)(966005)(31696002)(7416002)(53546011)(8936002)(83380400001)(66446008)(76116006)(71200400001)(66946007)(91956017)(66556008)(26005)(64756008)(4326008)(316002)(66476007)(6916009)(54906003)(2616005)(31686004)(6486002)(186003)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: N+Uz1Ed+MWc41+QfEfluEcH/O1kaIpRwDOvGq0D4bFpl7A+aq6ZJblYLCPQzTLCvVga7eb313tQVUymiEl/YYgWpM5JgIAI0n0j7nixRiYyXkTRYzK6QYMZ8EvpC41p0StkRMivXtH7y1sWqq2Q3O8PPie8aEkUmHod7j2+PgVj8B9ezbVsPJjNXpn88j1MvyqmvwzbcdG+8Pl9DPJCmQ/gj6WCLnyFeDB3K5BrCmymA9eR4WYkoqCv5wgeGj6Pe3ygKrYpb3QW7UQwCn8aoc+nAtgK0Oj8sYecl8DZ5QmYdedzdmhxHblFJdKRN7DIeSZgqRdcKjyU4GaC2B7PywwdhM+SbScsjhWHdDjnSk+lIHyJAEuhHFz8whEipBHlUHSmGv3ldPuX2tiU0ehcZtZYhfk1WIiwbnbHrt1h9x4De0o3VU/fotRstD6u0YwvgCaYsdSTPF34Zwd6grfzYHVyOHtBjw8/kV+keTyc9g4M=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C596C975063B7F4C8C0667102A501995@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13bf7cb1-a23d-46f4-9b39-08d819b2eb68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 09:25:51.5620
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Re5yIJwon3ljnKcAVvhnHKvbJiKl9zsziOBBdgyjswheBRYmXY03IoCUdM1FjkhflKVkPHLc4dy4VWDfJVHuvTMR3wzybS4haIPLTjEYCX0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3750
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/2020 11:09, Ramzi Ben Meftah wrote:
-> Hi Laurent, Hans,
-> 
-> On Thu, Jun 25, 2020 at 12:35:02PM +0200, Hans Verkuil wrote:
->> On 25/06/2020 12:29, Laurent Pinchart wrote:
->>> Hi Ramzi,
->>>
->>> On Thu, Jun 25, 2020 at 12:18:35PM +0200, Ramzi Ben Meftah wrote:
->>>> On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
->>>>> On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
->>>>>> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
->>>>>>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
->>>>>>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
->>>>>>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>>>>>
->>>>>>>>  +Niklas, +Laurent
->>>>>>>>
->>>>>>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
->>>>>>>
->>>>>>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
->>>>>>> idea either :-) Routing doesn't go through the subdev [gs]_input
->>>>>>> operations in MC-based drivers. It should be configured through link
->>>>>>> setup instead. This patch goes in the wrong direction, sorry Steve.
->>>>>>
->>>>>> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
->>>>>> with Media Controller?
->>>>>
->>>>> No there isn't at the moment. I'm not opposed to adding such a feature,
->>>>> but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
->>>>> subdev pad operation (v4l2_subdev_pad_ops), not a video operation
->>>>> (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
->>>>> as it would retrieve properties of the input corresponding to the pad,
->>>>> not enumerate inputs.
->>>>
->>>> Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
->>>> this need. But, seems this is not expose to user space although many drivers
->>>> do implememt it.
->>>> Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
->>>
->>> Isn't g_input_status a video operation ? I would propose adding a
->>> g_input_status pad operation, and expose that to userspace. We should
->>> take that as an opportunity to consider designing that new operation
->>> from scratch (possibly naming it differently) and make sure it could
->>> address both analog and digital systems (for instance being able to
->>> report the status of an SDI input).
-> 
-> Sorry, my mistake. But, does it make sens that it belongs to video ops?
-> I think it should be part of pad ops, it is used now as alternative to 
-> ENUMINPUT and we agreed that it should(if we are going to implement it) be 
-> part of pad ops.
-> 
->>
->> Yes, I was wondering the same. The status bits are ancient and we might
->> want to improve on it.
->>
->> Ramzi, what exactly is your use-case? Is this for an HDMI input? Analog
->> video input? Before adding a new ioctl I'd like to know why you think
->> you need it :-)
-> 
-> I need to know if the input signal(analog and digital) is there, before
-> starting streaming. I am not aware of other way to check for it.
+On 6/19/20 6:17 PM, Mark Brown wrote:
+>> Would you please provide an immutable tag on top of v5.8-rc1 so that I
+>> can merge back in spi-nor/next?
+> Here you go:
+>=20
+> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c74=
+07:
+>=20
+>   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/ca=
+dence-mtd-spi-move
+>=20
+> for you to fetch changes up to 31fb632b5d43ca16713095b3a4fe17e3d7331e28:
+>=20
+>   spi: Move cadence-quadspi driver to drivers/spi/ (2020-06-19 14:26:54 +=
+0100)
+>=20
+> ----------------------------------------------------------------
+> mtd/spi: Move the cadence-quadspi driver to spi-mem
+>=20
+> ----------------------------------------------------------------
+> Ramuthevar Vadivel Murugan (2):
+>       mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
+>       spi: Move cadence-quadspi driver to drivers/spi/
+>=20
+> Vignesh Raghavendra (6):
+>       mtd: spi-nor: cadence-quadspi: Make driver independent of flash geo=
+metry
+>       mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
+>       mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on =
+failure
+>       mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire=
+ reset lines
+>       mtd: spi-nor: cadence-quadspi: Handle probe deferral while requesti=
+ng DMA channel
+>       mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
+>=20
+>  drivers/mtd/spi-nor/controllers/Kconfig            |  11 -
+>  drivers/mtd/spi-nor/controllers/Makefile           |   1 -
+>  drivers/spi/Kconfig                                |  11 +
+>  drivers/spi/Makefile                               |   1 +
+>  .../spi-cadence-quadspi.c}                         | 541 ++++++++-------=
+------
+>  5 files changed, 222 insertions(+), 343 deletions(-)
+>  rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c =3D> spi/spi-c=
+adence-quadspi.c} (74%)
 
-You can check for digital timings using QUERY_DV_TIMINGS: it will return an
-error if there is no lock. Subscribe to the SOURCE_CHANGE event to know when
-the signal is found/lost.
-
-For analog timings you have QUERYSTD and the same event. The main limitation
-with analog (SDTV) video receivers is that not all analog receivers have implemented
-this event. But the adv7180 and tvp5150 do support this.
-
-This is the recommended way of implementing this and it has the advantage of
-being interrupt-driven, so no need to poll for a status in the application.
-
-Regards,
-
-	Hans
-
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>>
->>>>>>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
->>>>>>>>> ioctls for use via v4l2 subdevice node.
->>>>>>>>>
->>>>>>>>> This commit should probably not be pushed upstream, because the (old)
->>>>>>>>> idea of video inputs conflicts with the newer concept of establishing
->>>>>>>>> media links between src->sink pads.
->>>>>>>>>
->>>>>>>>> However it might make sense for some subdevices to support enum/get/set
->>>>>>>>> inputs. One example would be the analog front end subdevice for the
->>>>>>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
->>>>>>>>> can be done without requiring the implementation of media entities that
->>>>>>>>> would define the analog source for which to establish a media link.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>>>>>> ---
->>>>>>>>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
->>>>>>>>>  include/media/v4l2-subdev.h           | 11 +++++++++++
->>>>>>>>>  2 files changed, 20 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->>>>>>>>> index 6b989fe..73fbfe9 100644
->>>>>>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->>>>>>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->>>>>>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->>>>>>>>>  			return -ENOTTY;
->>>>>>>>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
->>>>>>>>>
->>>>>>>>> +	case VIDIOC_ENUMINPUT:
->>>>>>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
->>>>>>>>> +
->>>>>>>>> +	case VIDIOC_G_INPUT:
->>>>>>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
->>>>>>>>> +
->>>>>>>>> +	case VIDIOC_S_INPUT:
->>>>>>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
->>>>>>>>> +
->>>>>>>>>  	case VIDIOC_G_CTRL:
->>>>>>>>>  		if (!vfh->ctrl_handler)
->>>>>>>>>  			return -ENOTTY;
->>>>>>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->>>>>>>>> index f7fe78a..6e1a9cd 100644
->>>>>>>>> --- a/include/media/v4l2-subdev.h
->>>>>>>>> +++ b/include/media/v4l2-subdev.h
->>>>>>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
->>>>>>>>>   * @g_input_status: get input status. Same as the status field in the
->>>>>>>>>   *	&struct &v4l2_input
->>>>>>>>>   *
->>>>>>>>> + * @enuminput: enumerate inputs. Should return the same input status as
->>>>>>>>> + *      @g_input_status if the passed input index is the currently active
->>>>>>>>> + *      input.
->>>>>>>>> + *
->>>>>>>>> + * @g_input: returns the currently active input index.
->>>>>>>>> + *
->>>>>>>>> + * @s_input: set the active input.
->>>>>>>>> + *
->>>>>>>>>   * @s_stream: used to notify the driver that a video stream will start or has
->>>>>>>>>   *	stopped.
->>>>>>>>>   *
->>>>>>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
->>>>>>>>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>>>>>>>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>>>>>>>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
->>>>>>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
->>>>>>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
->>>>>>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
->>>>>>>>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
->>>>>>>>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
->>>>>>>>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
->>>
->>
-> 
-
+Merged also in spi-nor/next in order to avoid conflicts during the release =
+cycle.
+Thanks,
+ta
