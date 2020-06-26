@@ -2,170 +2,154 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA379C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98251C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D246A206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BD120C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgFZKG7 (ORCPT
+        id S1727777AbgFZKP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:06:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37722 "EHLO mga14.intel.com"
+        Fri, 26 Jun 2020 06:15:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42226 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbgFZKG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:06:58 -0400
-IronPort-SDR: xEINcCMnRLNZ9Bo/qOOmYOIJ2jdDF3O6WMA0iZNcmM7VbzKIgrmDcLDVgD6uQzghdHpEk6Rpkq
- AiBZEpbh+P2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144354679"
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="144354679"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 03:06:58 -0700
-IronPort-SDR: pd1ihpN8R/97XNixh/WG3gwIGZTJUULrvKUoVbWitmqsDlfRxFWjNBfqFy9HpdxpR8SIv6lJSV
- ds3g2nAE09rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="479786372"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Jun 2020 03:06:57 -0700
-Received: from [10.249.229.55] (abudanko-mobl.ccr.corp.intel.com [10.249.229.55])
-        by linux.intel.com (Postfix) with ESMTP id 35667580689;
-        Fri, 26 Jun 2020 03:06:53 -0700 (PDT)
-Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
- fdarray__filter() call
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
- <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
- <20200625171405.GL2719003@krava>
- <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
- <20200626093745.GM2719003@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <6582201a-9570-709f-f6e9-5a644296f49d@linux.intel.com>
-Date:   Fri, 26 Jun 2020 13:06:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726531AbgFZKP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 06:15:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2DDA2AED6;
+        Fri, 26 Jun 2020 10:15:24 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 12:15:23 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Alan Maguire <alan.maguire@oracle.com>, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux@rasmusvillemoes.dk, joe@perches.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
+ specifier which uses BTF
+Message-ID: <20200626101523.GM8444@alley>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+ <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626093745.GM2719003@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 2020-06-23 13:07:07, Alan Maguire wrote:
+> printk supports multiple pointer object type specifiers (printing
+> netdev features etc).  Extend this support using BTF to cover
+> arbitrary types.  "%pT" specifies the typed format, and the pointer
+> argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
+> 
+> struct btf_ptr {
+>         void *ptr;
+>         const char *type;
+>         u32 id;
+> };
+> 
+> Either the "type" string ("struct sk_buff") or the BTF "id" can be
+> used to identify the type to use in displaying the associated "ptr"
+> value.  A convenience function to create and point at the struct
+> is provided:
+> 
+>         printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> 
+> When invoked, BTF information is used to traverse the sk_buff *
+> and display it.  Support is present for structs, unions, enums,
+> typedefs and core types (though in the latter case there's not
+> much value in using this feature of course).
+> 
+> Default output is indented, but compact output can be specified
+> via the 'c' option.  Type names/member values can be suppressed
+> using the 'N' option.  Zero values are not displayed by default
+> but can be using the '0' option.  Pointer values are obfuscated
+> unless the 'x' option is specified.  As an example:
+> 
+>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+>   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> 
+> ...gives us:
+> 
+> (struct sk_buff){
+>  .transport_header = (__u16)65535,
+>  .mac_header = (__u16)65535,
+>  .end = (sk_buff_data_t)192,
+>  .head = (unsigned char *)0x000000006b71155a,
+>  .data = (unsigned char *)0x000000006b71155a,
+>  .truesize = (unsigned int)768,
+>  .users = (refcount_t){
+>   .refs = (atomic_t){
+>    .counter = (int)1,
+>   },
+>  },
+>  .extensions = (struct skb_ext *)0x00000000f486a130,
+> }
+> 
+> printk output is truncated at 1024 bytes.  For cases where overflow
+> is likely, the compact/no type names display modes may be used.
 
-On 26.06.2020 12:37, Jiri Olsa wrote:
-> On Thu, Jun 25, 2020 at 10:32:29PM +0300, Alexey Budankov wrote:
->>
->> On 25.06.2020 20:14, Jiri Olsa wrote:
->>> On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
->>>>
->>>> On 17.06.2020 11:35, Alexey Budankov wrote:
->>>>>
->>>>> Skip fds with zeroed revents field from count and avoid fds moving
->>>>> at fdarray__filter() call so fds indices returned by fdarray__add()
->>>>> call stay the same and can be used for direct access and processing
->>>>> of fd revents status field at entries array of struct fdarray object.
->>>>>
->>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>>> ---
->>>>>  tools/lib/api/fd/array.c   | 11 +++++------
->>>>>  tools/perf/tests/fdarray.c | 20 ++------------------
->>>>>  2 files changed, 7 insertions(+), 24 deletions(-)
->>>>>
->>>>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
->>>>> index 58d44d5eee31..97843a837370 100644
->>>>> --- a/tools/lib/api/fd/array.c
->>>>> +++ b/tools/lib/api/fd/array.c
->>>>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
->>>>>  		return 0;
->>>>>  
->>>>>  	for (fd = 0; fd < fda->nr; ++fd) {
->>>>> +		if (!fda->entries[fd].revents)
->>>>> +			continue;
->>>>> +
->>>>
->>>> So it looks like this condition also filters out non signaling events fds, not only
->>>> control and others fds, and this should be somehow avoided so such event related fds
->>>> would be counted. Several options have been proposed so far:
->>>>
->>>> 1) Explicit typing of fds via API extension and filtering based on the types:
->>>>    a) with separate fdarray__add_stat() call
->>>>    b) with type arg of existing fdarray__add() call
->>>>    c) various memory management design is possible
->>>>
->>>> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
->>>>    - looks more like a hack than a designed solution
->>>>
->>>> 3) Rewrite of fdarray class to allocate separate object for every added fds
->>>>    - can be replaced with nonscrewing of fds by __filter()
->>>>
->>>> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
->>>>    - seems to have corner cases and thus not applicable
->>>>
->>>> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
->>>>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
->>>>
->>>> 6) Rewrite of fdarray class on epoll() call basis
->>>>    - introduces new scalability restrictions for Perf tool
->>>
->>> hum, how many fds for polling do you expect in your workloads?
->>
->> Currently it is several hundreds so default of 1K is easily hit and 
->> "Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
->> recommends:
->>
->> soft nofile 65535
->> hard nofile 65535
-> 
-> I'm confused, are you talking about file descriptors limit now?
-> this wont be affected by epoll change.. what do I miss?
+Hmm, this scares me:
 
-Currently there is already uname -n limit on the amount of open file descriptors
-and Perf tool process is affected by that limit.
+   1. The long message and many lines are going to stretch printk
+      design in another dimensions.
 
-Moving to epoll() will impose one more max_user_watches limit and that can additionally
-confine Perf applicability even though default value on some machines currently
-is high enough.
+   2. vsprintf() is important for debugging the system. It has to be
+      stable. But the btf code is too complex.
 
-~Alexey
+I would strongly prefer to keep this outside vsprintf and printk.
+Please, invert the logic and convert it into using separate printk()
+call for each printed line.
 
-> 
-> I thought your concern was fs.epoll.max_user_watches, which has
-> default value that seems to be enough:
-> 
-> 	$ cat /proc/sys/fs/epoll/max_user_watches
-> 	3169996
-> 
-> jirka
-> 
-> 
->>
->> for for /etc/security/limits.conf settings.
->>
->> ~Alexey
->>
->> [1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
->>
->>>
->>> jirka
->>>
->>
-> 
+
+More details:
+
+Add 1: Long messages with many lines:
+
+  IMHO, all existing printk() users are far below this limit. And this is
+  even worse because there are many short lines. They would require
+  double space to add prefixes (loglevel, timestamp, caller id) when
+  printing to console.
+
+  You might argue that 1024bytes are enough for you. But for how long?
+
+  Now, we have huge troubles to make printk() lockless and thus more
+  reliable. There is no way to allocate any internal buffers
+  dynamically. People using kernel on small devices have problem
+  with large static buffers.
+
+  printk() is primary designed to print single line messages. There are
+  many use cases where many lines are needed and they are solved by
+  many separate printk() calls.
+
+
+Add 2: Complex code:
+
+  vsprintf() is currently called in printk() under logbuf_lock. It
+  might block printk() on the entire system.
+
+  Most existing %p<modifier> handlers are implemented by relatively
+  simple routines inside lib/vsprinf.c. The other external routines
+  look simple as well.
+
+  btf looks like a huge beast to me. For example, probe_kernel_read()
+  prevented boot recently, see the commit 2ac5a3bf7042a1c4abb
+  ("vsprintf: Do not break early boot with probing addresses").
+
+
+Best Regards,
+Petr
