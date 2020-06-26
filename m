@@ -2,202 +2,111 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E717920836
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371092070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="NQTltRUU"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bZNUv2Ul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgFZTTv (ORCPT
+        id S1725821AbgFZTYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
+        Fri, 26 Jun 2020 15:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgFZTTv (ORCPT
+        with ESMTP id S1725768AbgFZTYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:19:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD98AC03E97B
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:19:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s10so10473613wrw.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:19:50 -0700 (PDT)
+        Fri, 26 Jun 2020 15:24:34 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286F6C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:24:34 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id r22so9787587qke.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        d=lca.pw; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=v3oOHqdeiilgAo1krqYM7ZW2FYPIuBxdWkBI8kNf8w4=;
-        b=NQTltRUUQEyW33Cu2UEltV6GamFzrhZ94/moDjBBeDIWK+eLNpNbN3QnKUQZ633i2K
-         SAsyOsZB2dkM/QqQzckArvwRNsGVVPcFsTY3EBvlYaR1TH2zFC+ToIUhC3weBqAwMNqY
-         46WgvtmTea15ADPMKPKljDfRBsW1N6yeG9DPkIqCntAcs+IIAJ7Q3uhTiN9qATp6+4Gb
-         uVNjVPK5U6YHPGAtTdvXUTqdLbqBuznHnSm7leob0E5rMqNAoLutVOjPOmoP1dyYLzT6
-         CAjpfEhlqeTrl0rjehSk66/5E9syf5SYN3q29L41ioUbUusekaKJf+TwW8farRSItzlT
-         /Jqg==
+        bh=bVNITXsH6ARrT0iyl9SMYhunOQ9C68Vgy+G+vYxeBIQ=;
+        b=bZNUv2Uly4BUZw63U5yhlWhcO7skTGQLSzUc8Qex6AlUPmwdDEmo93zMJbBIqzRpuj
+         hDDzRvzEfk06xBiQeu7KlCUywScOYS1bSFmTctKQZ2xCoY2s6bo63N8Um3rPJBdzRO+m
+         lZ/Hqke2UiYw/G8IVFOiF0gk6yxdrLDfY+hEEQCUrpZFLRfPQ3jcwx4nce95tl48+uOl
+         BLGUeyzfJNPZzv/BHNpRIM2Lfpu2MhOeR5Gs/BcoRemjBlB2giVtXry2Wr8Z7sk0oN9h
+         j2PJPty9aQJGtx5mIzjNUrIdWx1mgMlDvrhfA6uTh/x6CPnVh2FZ6WNHKaSa3F4ubBi+
+         wAhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=v3oOHqdeiilgAo1krqYM7ZW2FYPIuBxdWkBI8kNf8w4=;
-        b=dSlbn0tEo1J+XIzr4cTc7NjZtcXQjAk6U3/maWjELutfIy2R8B2ePuOPUyb9sSfgfr
-         5Ggj68c4s+J5YkSJ5BCZ8aIsg4YxeLvKPREWJmX0/WuihDIyZk+9/7tqkP6ndbHRL6UW
-         ugWxW/TzZ4tS33nbd+DvM8Vr0t9UL2EiqNaEqj5KnMdgDyh42uL5Kzs9mwVXwLqPvrk/
-         ZWMLsQBRBW9YnWa53fGIY9GG5aC7EZh7Ah/INtyR/ru/BDI5DA0RWVLB16ruJ9llN/Sh
-         fGyuO3VD1nkz5P8DFTQM6o0fepBDzzHFYcAq5qXuLqpTHh1o7YwaCCXkhqK4OgQFPLXV
-         Kbjg==
-X-Gm-Message-State: AOAM5310iBm6ztesyVxY6qR9qr5HMfswYjJD6A3ymMiW2sPznbIkV80+
-        +/s9hkJfYUM/qJ6EEuPNZMpMAA==
-X-Google-Smtp-Source: ABdhPJyxppcg9yXdgcCtGmzUVM0Qhgol51JAPy/Ev0oDVmvT+dzG+dcduwYmDgiNPxITN/BSFtuOaA==
-X-Received: by 2002:a5d:664a:: with SMTP id f10mr5249137wrw.300.1593199189262;
-        Fri, 26 Jun 2020 12:19:49 -0700 (PDT)
-Received: from x1 ([2001:16b8:5c03:b001:3446:ed90:fece:8da5])
-        by smtp.gmail.com with ESMTPSA id w12sm29179536wrm.79.2020.06.26.12.19.47
+        bh=bVNITXsH6ARrT0iyl9SMYhunOQ9C68Vgy+G+vYxeBIQ=;
+        b=gLq6Sdb3Ns7P0a03ivzfy5keTEMWalJoBlIsTT5x6klbG/MePyyO3tzubFSVLviwu4
+         ZzGvS5aTgI+51AqP61a/S4BtrDqZ325JZdA6PcdLrN0bszJAVzvXn/H+Qd15Iv/zVm0f
+         j4M2FaV1Ei9Kie+6bsDUa6NWN0pOHrzQDa9OBjOWP90lqLN/krDUutGZEdU9wJcgNGaU
+         E9X71uCja/Hera3AwG7yWwHZgrlqtDUGMRKjrzzSRv6Mgnm+dL9xzAECNyijZTzYAo0s
+         URxLfQQamVz07v6hcyaql266V8+Yag/agZ7VmPq0bvGUnws92TlxqZ6+kr8opRqxcXWk
+         Pdkw==
+X-Gm-Message-State: AOAM531tJFbdDw1OahC1VxcNJhUhFobN1YxVfuLxta23ft8gi1L1w16s
+        VO0OBcuUr0AO+E42MaXUKYA/qe7iY9IDYA==
+X-Google-Smtp-Source: ABdhPJw74V8RzA7jJYlCKa+BewAAc5LsXr0oeTkJ087/bjboYvwJ2o1iJBi37yiqf5S2azmewqi14Q==
+X-Received: by 2002:a37:a4c6:: with SMTP id n189mr4098837qke.484.1593199473287;
+        Fri, 26 Jun 2020 12:24:33 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p7sm8247131qki.61.2020.06.26.12.24.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 12:19:48 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 21:19:46 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
-Message-ID: <20200626191946.GA97666@x1>
-References: <20200608125143.GA2789203@x1>
- <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
- <20200616115951.GA3976568@x1>
+        Fri, 26 Jun 2020 12:24:32 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 15:24:26 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
+        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
+        akpm@linux-foundation.org, stable@kernel.org
+Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
+Message-ID: <20200626192426.GA4329@lca.pw>
+References: <20200626003459.D8E015CA@viggo.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616115951.GA3976568@x1>
+In-Reply-To: <20200626003459.D8E015CA@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 01:59:51PM +0200, Drew Fustini wrote:
-> On Tue, Jun 16, 2020 at 10:31:54AM +0200, Linus Walleij wrote:
-> > On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
-> > 
-> > > This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-> > > pinctrl_map is added.  The current behavior is to return 0 when
-> > > !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-> > > incorrectly assumes that a map was added and sets num_maps = 2.
-> > >
-> > > Analysis:
-> > > =========
-> > > The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
-> > > if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
-> > > returns 0 to indicate there was no error and num_maps is then set to 2:
-> > >
-> > >  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
-> > >  981                                                 struct device_node *np,
-> > >  982                                                 struct pinctrl_map **map,
-> > >  983                                                 unsigned *num_maps,
-> > >  984                                                 const char **pgnames)
-> > >  985 {
-> > > <snip>
-> > > 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-> > > 1054         (*map)->data.mux.group = np->name;
-> > > 1055         (*map)->data.mux.function = np->name;
-> > > 1056
-> > > 1057         if (PCS_HAS_PINCONF && function) {
-> > > 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
-> > > 1059                 if (res)
-> > > 1060                         goto free_pingroups;
-> > > 1061                 *num_maps = 2;
-> > > 1062         } else {
-> > > 1063                 *num_maps = 1;
-> > > 1064         }
-> > >
-> > > However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
-> > > !nconfs.  I believe these conditions should indicate that no map was
-> > > added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
-> > > will set num_maps = 2 even though no maps were successfully added, as
-> > > it does not reach "m++" on line 940:
-> > >
-> > >  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
-> > >  896                              struct pcs_function *func,
-> > >  897                              struct pinctrl_map **map)
-> > >  898
-> > >  899 {
-> > >  900         struct pinctrl_map *m = *map;
-> > > <snip>
-> > >  917         /* If pinconf isn't supported, don't parse properties in below. */
-> > >  918         if (!PCS_HAS_PINCONF)
-> > >  919                 return 0;
-> > >  920
-> > >  921         /* cacluate how much properties are supported in current node */
-> > >  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
-> > >  923                 if (of_find_property(np, prop2[i].name, NULL))
-> > >  924                         nconfs++;
-> > >  925         }
-> > >  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
-> > >  927                 if (of_find_property(np, prop4[i].name, NULL))
-> > >  928                         nconfs++;
-> > >  929         }
-> > >  930         if (!nconfs)
-> > >  919                 return 0;
-> > >  932
-> > >  933         func->conf = devm_kcalloc(pcs->dev,
-> > >  934                                   nconfs, sizeof(struct pcs_conf_vals),
-> > >  935                                   GFP_KERNEL);
-> > >  936         if (!func->conf)
-> > >  937                 return -ENOMEM;
-> > >  938         func->nconfs = nconfs;
-> > >  939         conf = &(func->conf[0]);
-> > >  940         m++;
-> > >
-> > > This situtation will cause a boot failure [0] on the BeagleBone Black
-> > > (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
-> > > has compatible = "pinconf-single" instead of "pinctrl-single".
-> > >
-> > > The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
-> > > or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
-> > > map was added.
-> > >
-> > > Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
-> > > between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
-> > > is set to 1 as it is valid for pinconf to be enabled and a given pin
-> > > group to not any pinconf properties.
-> > >
-> > > [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
-> > >
-> > > Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
-> > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > 
-> > Patch applied as non-critical (for-next) fix.
-> > 
-> > If there is no hurry let's merge it this way with lots of testing
-> > along the way.
-> > 
-> > Yours,
-> > Linus Walleij
+On Thu, Jun 25, 2020 at 05:34:59PM -0700, Dave Hansen wrote:
 > 
-> Thanks, I agree more testing is a good idea.
+> From: Dave Hansen <dave.hansen@linux.intel.com>
 > 
-> In particular, do you have a way to followup with Haojian Zhuang within
-> Linaro?
+> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
+> sysctl.  Like a good kernel developer, I also went to go update the
+> documentation.  I noticed that the bits in the documentation didn't
+> match the bits in the #defines.
 > 
+> The VM evidently stopped caring about RECLAIM_ZONE at some point (or
+> never cared) and the #define itself was later removed as a cleanup.
+> Those things by themselves are fine.
+> 
+> But, the _other_ bit locations also got changed.  That's not OK because
+> the bit values are documented to mean one specific thing and users
+> surely rely on them meaning that one thing and not changing from
+> kernel to kernel.  The end result is that if someone had a script
+> that did:
+> 
+> 	sysctl vm.zone_reclaim_mode=1
+> 
+> That script went from doing nothing to writing out pages during
+> node reclaim after the commit in question.  That's not great.
+> 
+> Put the bits back the way they were and add a comment so something
+> like this is a bit harder to do again.  Update the documentation to
+> make it clear that the first bit is ignored.
+> 
+> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Fixes: commit 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
 
-Linus - do you have a way to contact Haojian Zhuan?
-
-I found them on Freenode but they have been idle since beginning of
-June.  Last email I can find on the mailing list is from March.
-
-Tony and I would both like someone familiar with Hisilicon to comment on
-this patch as it is using pinctrl-single.
-
-Thanks,
-Drew
+This is a wrong format.
