@@ -2,111 +2,89 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371092070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bZNUv2Ul"
+	by mail.kernel.org (Postfix) with ESMTP id F07E7207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593199809;
+	bh=jA5es0Ur1eplSo2ilpi6BzKAmXLfXei8r6/oNcoJiZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZDnevXABHS+6NiuD/9XC5tLoiAvr6VQ37h/WQ2cWbLBUTbu3qA8MUeGS1NWGW2dYs
+	 GTUR0xWhRlezNUeliFuTfGqBXhFGI3/8Najxaz2BAS+KVOkyeRzKo7L6mIV68/M4Nw
+	 HEJSqpu4IJrRY2nu2qeR7lG3c/tjjQIenCAp7p94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgFZTYf (ORCPT
+        id S1725836AbgFZTaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFZTYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:24:34 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286F6C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:24:34 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id r22so9787587qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 12:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bVNITXsH6ARrT0iyl9SMYhunOQ9C68Vgy+G+vYxeBIQ=;
-        b=bZNUv2Uly4BUZw63U5yhlWhcO7skTGQLSzUc8Qex6AlUPmwdDEmo93zMJbBIqzRpuj
-         hDDzRvzEfk06xBiQeu7KlCUywScOYS1bSFmTctKQZ2xCoY2s6bo63N8Um3rPJBdzRO+m
-         lZ/Hqke2UiYw/G8IVFOiF0gk6yxdrLDfY+hEEQCUrpZFLRfPQ3jcwx4nce95tl48+uOl
-         BLGUeyzfJNPZzv/BHNpRIM2Lfpu2MhOeR5Gs/BcoRemjBlB2giVtXry2Wr8Z7sk0oN9h
-         j2PJPty9aQJGtx5mIzjNUrIdWx1mgMlDvrhfA6uTh/x6CPnVh2FZ6WNHKaSa3F4ubBi+
-         wAhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bVNITXsH6ARrT0iyl9SMYhunOQ9C68Vgy+G+vYxeBIQ=;
-        b=gLq6Sdb3Ns7P0a03ivzfy5keTEMWalJoBlIsTT5x6klbG/MePyyO3tzubFSVLviwu4
-         ZzGvS5aTgI+51AqP61a/S4BtrDqZ325JZdA6PcdLrN0bszJAVzvXn/H+Qd15Iv/zVm0f
-         j4M2FaV1Ei9Kie+6bsDUa6NWN0pOHrzQDa9OBjOWP90lqLN/krDUutGZEdU9wJcgNGaU
-         E9X71uCja/Hera3AwG7yWwHZgrlqtDUGMRKjrzzSRv6Mgnm+dL9xzAECNyijZTzYAo0s
-         URxLfQQamVz07v6hcyaql266V8+Yag/agZ7VmPq0bvGUnws92TlxqZ6+kr8opRqxcXWk
-         Pdkw==
-X-Gm-Message-State: AOAM531tJFbdDw1OahC1VxcNJhUhFobN1YxVfuLxta23ft8gi1L1w16s
-        VO0OBcuUr0AO+E42MaXUKYA/qe7iY9IDYA==
-X-Google-Smtp-Source: ABdhPJw74V8RzA7jJYlCKa+BewAAc5LsXr0oeTkJ087/bjboYvwJ2o1iJBi37yiqf5S2azmewqi14Q==
-X-Received: by 2002:a37:a4c6:: with SMTP id n189mr4098837qke.484.1593199473287;
-        Fri, 26 Jun 2020 12:24:33 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p7sm8247131qki.61.2020.06.26.12.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 12:24:32 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 15:24:26 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
-        akpm@linux-foundation.org, stable@kernel.org
-Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
-Message-ID: <20200626192426.GA4329@lca.pw>
-References: <20200626003459.D8E015CA@viggo.jf.intel.com>
+        Fri, 26 Jun 2020 15:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgFZTaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 15:30:07 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0982070A;
+        Fri, 26 Jun 2020 19:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593199806;
+        bh=jA5es0Ur1eplSo2ilpi6BzKAmXLfXei8r6/oNcoJiZg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mk7/e/A3wZj4mbsysOyZ/farVgeJBfHabvlxR/7PNNJrTwo7gKRjDm2oX0Kpehh2y
+         38Aes/7SOkcxFEahMDOvqL3OtVlTfNX2nQi6FxVTypHNwg8FF4RDgua3jgog/gB1qE
+         UOVr1Hhq6z84tCVwBdQZxW5u1a2xlPjvVR8Rd4DM=
+Date:   Fri, 26 Jun 2020 15:30:05 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 4.19 012/206] ALSA: hda/realtek - Introduce polarity for
+ micmute LED GPIO
+Message-ID: <20200626193005.GH1931@sasha-vm>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195317.567695457@linuxfoundation.org>
+ <20200625190255.GB5531@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200626003459.D8E015CA@viggo.jf.intel.com>
+In-Reply-To: <20200625190255.GB5531@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 05:34:59PM -0700, Dave Hansen wrote:
-> 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
-> sysctl.  Like a good kernel developer, I also went to go update the
-> documentation.  I noticed that the bits in the documentation didn't
-> match the bits in the #defines.
-> 
-> The VM evidently stopped caring about RECLAIM_ZONE at some point (or
-> never cared) and the #define itself was later removed as a cleanup.
-> Those things by themselves are fine.
-> 
-> But, the _other_ bit locations also got changed.  That's not OK because
-> the bit values are documented to mean one specific thing and users
-> surely rely on them meaning that one thing and not changing from
-> kernel to kernel.  The end result is that if someone had a script
-> that did:
-> 
-> 	sysctl vm.zone_reclaim_mode=1
-> 
-> That script went from doing nothing to writing out pages during
-> node reclaim after the commit in question.  That's not great.
-> 
-> Put the bits back the way they were and add a comment so something
-> like this is a bit harder to do again.  Update the documentation to
-> make it clear that the first bit is ignored.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Fixes: commit 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
+On Thu, Jun 25, 2020 at 09:02:55PM +0200, Pavel Machek wrote:
+>Hi!
+>
+>> Currently mute LED and micmute LED share the same GPIO polarity.
+>>
+>> So split the polarity for mute and micmute, in case they have different
+>> polarities.
+>
+>> +++ b/sound/pci/hda/patch_realtek.c
+>> @@ -94,6 +94,7 @@ struct alc_spec {
+>>
+>>  	/* mute LED for HP laptops, see alc269_fixup_mic_mute_hook() */
+>>  	int mute_led_polarity;
+>> +	int micmute_led_polarity;
+>>  	hda_nid_t mute_led_nid;
+>>  	hda_nid_t cap_mute_led_nid;
+>>
+>
+>This variable will be always zero in 4.19.130... so the patch does not
+>really do anything.
+>
+>In mainline, commit 3e0650ab26e20 makes use of this variable.
 
-This is a wrong format.
+I'll queue 3e0650ab26e20 for 4.19, thanks!
+
+-- 
+Thanks,
+Sasha
