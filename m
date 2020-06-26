@@ -2,118 +2,182 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A135C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D6A207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593156211;
-	bh=eQSuxiAP2rvXhUaQ+3dfTWngxSmtC6TJfEJoqkOb0fg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pexnsn3MBn1J7fE/49dkyC9BAOLuMRRTLi6ervGVRO9WsArveExzyz3fxLM8TnQbE
-	 Qae5PA6MEvlnkCBuUC9lpuimWML8dyAiMVywVWR47YzzsqNQARcJjmQFYH+DZm+WUc
-	 rr9/ehOhHw/fj6MBQeWO5vzusw/p7BBUsAQx2EXg=
+	by mail.kernel.org (Postfix) with ESMTP id D09FB2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:26:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZNBlEuV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgFZHX3 (ORCPT
+        id S1728361AbgFZH0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:23:29 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39290 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgFZHX3 (ORCPT
+        Fri, 26 Jun 2020 03:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgFZH0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:23:29 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d18so483910edv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:23:27 -0700 (PDT)
+        Fri, 26 Jun 2020 03:26:37 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45684C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:26:37 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g139so4583902lfd.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cw7fszpLiMfrIe/x4mrTm0zt4AL0ex45ZDoUuui7OOM=;
+        b=ZNBlEuV7nuAwi/3xINotpkZFYoSyoduflbwP1WVpiojIx56BqAK7kAB9tJK6o/fSEC
+         kbJfb9lc10mlxKYEK6VPvYNCqZca2+QVWuRjoUzKsHF+AjulUmncAkiX547o+rNQjwpV
+         DjUN9kW/889p9CxCnaX7XjcwfTjtXzhhfaZuEHnbdkGA058NAM/YpNRc2lgnJiggajQj
+         rJUBCd4BDJHmOJ0uxMEmRRktScwNi58yVxHF35EezzGlrAFWH03pdmx5wHrYCm2FK8eG
+         xF54fddRx3qHIypr4FCCJ13OZ+t3ROCgWLBaWYTrfOtgRPP3oexWKBaRZ7k7DO1Dy7YC
+         eNtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QEbKXP8FUgYuXuT6takZ5c8rrVZ/DcOt9hyzMr4EANc=;
-        b=nvVV0MJP64/SG+lyHDgDeWLgI4R/SMNY2NydzDFVtqcQq04DL7LYLVOdOKc7jyfNuj
-         IvJuekRKiXLopxNZ5S9nePfpmvufhirKq0xl9vmsAa/eRMZRbfC1UzxRjl3/Ub5G583r
-         W7FtBGtskGnebeWLF/0x+PDN9O1yR1uKfWnieFPXfm+2RDat5xNQRwoX9iXYxufe9VWa
-         009oztXRnuuWFKcM/3Ejo7G4+Y39FJ/5rd/07jSEHAeXV6tsGiPAtq0sk17SuRqZDsEs
-         uzBl2fqAE+H9Wo1ooeF6uzKI6R0E1xH+8cMEnocfHcvyUiFHgdnsOfIVNWPnl7Ojxq2g
-         PizQ==
-X-Gm-Message-State: AOAM530yo1DvAOKp6pXuHPEx/rI3K+LSjlvAlimKm9NSmzF97g/Uod9o
-        EyU48bbtZAmEbQsOyB0/aO8=
-X-Google-Smtp-Source: ABdhPJwVwkw4iKVEaU0es39MMKnKwPM9vSwQC0Z4BjvkXK/ajy/GR7r3yl+tcX7xw9YuzXumF7gmMQ==
-X-Received: by 2002:a50:e8c8:: with SMTP id l8mr2050076edn.386.1593156207272;
-        Fri, 26 Jun 2020 00:23:27 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id a2sm8817292ejg.76.2020.06.26.00.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 00:23:26 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 09:23:24 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v3 4/8] mm/hugetlb: make hugetlb migration callback CMA
- aware
-Message-ID: <20200626072324.GT1320@dhcp22.suse.cz>
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-5-git-send-email-iamjoonsoo.kim@lge.com>
- <20200625115422.GE1320@dhcp22.suse.cz>
- <CAAmzW4MHuRhNqVXMntLAc_x4kJgkgQ-pD5GfFxRxJRchrEFr9g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cw7fszpLiMfrIe/x4mrTm0zt4AL0ex45ZDoUuui7OOM=;
+        b=E9jlyBCdoCwGMHWoTv5C+eZtxuB+CoGv689/86z1X4sYaT7fujinIacuhdvPHb57eR
+         esAgbqh6lRl2bSbCCa4U76HoBe8OInMhHehCVTOKS/lXAqgLANfZbDFNTgzQbdOIWjpe
+         qUkQVGyO7I43vxhWjhUsTyOfwNn8nEr7daaJksYZbtxHF5uv3lykVxdzXJ/yJKcPUxAt
+         pK8OFfWop0DOAnO5kyZQ39bHzYTrEvb9il1aMuBbyCyvnUpS74D7quMUfONFK5RiVEr7
+         3X2RVedrSSt1hDkiyXt3lwrwL6eJF+iUISaXhiXj5O+mlaelwiWJ01ZUtMmIVj1+SIxl
+         0vpQ==
+X-Gm-Message-State: AOAM5318neNLr1Bnxx8s5pgMBZa/AVbewfxvjzZtGIGwhndel3E8CUuI
+        kZe18sKg6WhiTSuLrnAY6+JTe5WpS+QlIMJo/qT/5vViN4ZZOw==
+X-Google-Smtp-Source: ABdhPJwvCjTPMG3DGY417CWhy1Vn5ylVbzduY+Geu6YJsJsNdoK9hd2Lmls7tX2lk0jNLu/BbDnRv8U9BuFhqvHbPZ4=
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr1058410lfn.122.1593156395726;
+ Fri, 26 Jun 2020 00:26:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAmzW4MHuRhNqVXMntLAc_x4kJgkgQ-pD5GfFxRxJRchrEFr9g@mail.gmail.com>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com> <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
+ <1593127902.13253.11.camel@HansenPartnership.com> <CAFA6WYMPtLtv=cWppU=-LZp6FD_3KYymrLgVP+-KQd_N_GcT_Q@mail.gmail.com>
+In-Reply-To: <CAFA6WYMPtLtv=cWppU=-LZp6FD_3KYymrLgVP+-KQd_N_GcT_Q@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 26 Jun 2020 12:56:24 +0530
+Message-ID: <CAFA6WYOc8JGud2edy7KHwu3US32Z_HNJ51usNA2d=wy8fWoRbw@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-06-20 13:49:15, Joonsoo Kim wrote:
-> 2020년 6월 25일 (목) 오후 8:54, Michal Hocko <mhocko@kernel.org>님이 작성:
+On Fri, 26 Jun 2020 at 10:40, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> On Fri, 26 Jun 2020 at 05:01, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
 > >
-> > On Tue 23-06-20 15:13:44, Joonsoo Kim wrote:
-> > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > On Thu, 2020-06-25 at 19:54 +0530, Sumit Garg wrote:
+> > > On Wed, 24 Jun 2020 at 20:51, James Bottomley
+> > > <James.Bottomley@hansenpartnership.com> wrote:
+> > > >
+> > > > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> > > > > Apologies for delay in my reply as I was busy with some other
+> > > > > stuff.
+> > > > >
+> > > > > On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> > > > > <James.Bottomley@hansenpartnership.com> wrote:
+> > > >
+> > > > [...]
+> > > > > > it's about consistency with what the kernel types mean.  When
+> > > > > > some checker detects your using little endian operations on a
+> > > > > > big endian structure (like in the prink for instance) they're
+> > > > > > going to keep emailing you about it.
+> > > > >
+> > > > > As mentioned above, using different terminology is meant to cause
+> > > > > more confusion than just difference in endianness which is
+> > > > > manageable inside TEE.
+> > > > >
+> > > > > And I think it's safe to say that the kernel implements UUID in
+> > > > > big endian format and thus uses %pUb whereas OP-TEE implements
+> > > > > UUID in little endian format and thus uses %pUl.
+> > > >
+> > > > So what I think you're saying is that if we still had uuid_be and
+> > > > uuid_le you'd use uuid_le, because that's exactly the structure
+> > > > described in the docs.  But because we renamed
+> > > >
+> > > > uuid_be -> uuid_t
+> > > > uuid_le -> guid_t
+> > > >
+> > > > You can't use guid_t as a kernel type because it has the wrong
+> > > > name?
 > > >
-> > > new_non_cma_page() in gup.c which try to allocate migration target page
-> > > requires to allocate the new page that is not on the CMA area.
-> > > new_non_cma_page() implements it by removing __GFP_MOVABLE flag. This way
-> > > works well for THP page or normal page but not for hugetlb page.
+> > > Isn't the rename commit description [1] pretty clear about which is
+> > > the true UUID type from Linux point of view?
 > >
-> > Could you explain why? I mean why cannot you simply remove __GFP_MOVABLE
-> > flag when calling alloc_huge_page_nodemask and check for it in dequeue
-> > path?
-> 
-> If we remove __GFP_MOVABLE when calling alloc_huge_page_nodemask, we cannot
-> use the page in ZONE_MOVABLE on dequeing.
-> 
-> __GFP_MOVABLE is not only used for CMA selector but also used for zone
-> selector.  If we clear it, we cannot use the page in the ZONE_MOVABLE
-> even if it's not CMA pages.  For THP page or normal page allocation,
-> there is no way to avoid this weakness without introducing another
-> flag or argument. For me, introducing another flag or argument for
-> these functions looks over-engineering so I don't change them and
-> leave them as they are (removing __GFP_MOVABLE).
-> 
-> But, for alloc_huge_page_nodemask(), introducing a new argument
-> doesn't seem to be a problem since it is not a general function but
-> just a migration target allocation function.
+> > I don't think the kernel code takes a position on eternal verity, just
+> > on logical or arithmetic truth.  We just have to deal with both LE and
+> > BE UUIDs so we have appropriate types for them and the LE type is now
+> > named guid_t.  They're both equally correct to use provided the use
+> > case matches the designed one. So does the name really matter?
+>
+> Yes it does. I guess I have provided enough reasoning for that. Also,
+> the rename commit itself illustrates its importance and clarifies the
+> use case for which they are meant to be used.
+>
+> > If we
+> > did
+> >
+> > #define uuid_le_t guid_t
+> >
+> > would you be happy? (not that the kernel cares about karmic emotional
+> > states either ...)
+>
+> It's not about me being happy but more about confusion and
+> inconsistency it will bring.
+>
+> IMO, either kernel should be opinionated about UUID endianness like
+> currently it is:
+>
+> uuid_t and its corresponding helpers (eg. UUID_INIT) follows BE format.
+>
+> or support both endianness for UUID (no common type: uuid_t) like we
+> had earlier prior to rename commit:
+>
+> uuid_be_t and its corresponding helpers (eg. UUID_BE_INIT) follow BE format.
+> uuid_le_t and its corresponding helpers (eg. UUID_LE_INIT) follow LE format.
+>
+> But even if we consider later case as well, I am still not sure if we
+> can switch to uuid_le_t as it's been part of TEE core ABI
+> (open_session) where UUID is passed in BE format (see LE to BE
+> conversion in TEE client [1] and vice-versa in OP-TEE OS [2]) and
+> won't be a backwards compatible change.
+>
+> [1] https://github.com/OP-TEE/optee_client/blob/master/libteec/src/tee_client_api.c#L595
+> [2] https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/ree_fs_ta.c#L92
 
-I really do not see why hugetlb and only the dequeing part should be
-special. This just leads to a confusion. From the code point of view it
-makes perfect sense to opt out CMA regions for !__GFP_MOVABLE when
-dequeing. So I would rather see a consistent behavior than a special
-case deep in the hugetlb allocator layer.
--- 
-Michal Hocko
-SUSE Labs
+Sorry, the second reference is incorrect, correct one is:
+
+[2] https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/tee/entry_std.c#L279
+
+-Sumit
+
+>
+> -Sumit
+>
+> >
+> > James
+> >
