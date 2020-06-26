@@ -2,98 +2,75 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B45C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE81C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0CC20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B1+UCT17"
+	by mail.kernel.org (Postfix) with ESMTP id D2F7420885
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgFZW1X (ORCPT
+        id S1726073AbgFZW2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:27:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47093 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725909AbgFZW1W (ORCPT
+        Fri, 26 Jun 2020 18:28:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34084 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgFZW2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:27:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593210441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ezANVk9qOxqEaH3BZXiYSkQMCdN7GNKpY7AcMYxVw+Q=;
-        b=B1+UCT17EgegdI1C/zf2TaU5ub9wUfqIaB2qMR4MHlWeArLQ9K6L4NpOlVR0VaA0QPs+M9
-        i2PHOI8slg2sWvsAY3Wio62d9zeXLadq2qUDK0hKslQreNhUW2aTJ6JCOYV0ENnq/5Cgme
-        QDOr0fjl1JNlTX0Qf42zWOGJ4nUSIZg=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-HjAJke4dMEOTvXTzbe1ihA-1; Fri, 26 Jun 2020 18:27:11 -0400
-X-MC-Unique: HjAJke4dMEOTvXTzbe1ihA-1
-Received: by mail-qv1-f69.google.com with SMTP id v1so7352996qvx.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:27:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ezANVk9qOxqEaH3BZXiYSkQMCdN7GNKpY7AcMYxVw+Q=;
-        b=MukzbyG3H9j7ktG/jWvxVdOlbWseqLfqQopcyx95rCCh1IiPVRkakPp4BI/whByyb0
-         2RHGha2aAgPcLyOElvlxZ8sutrOTu6+IPpQ2SiMmYu4phk5yaxC2exdLKMCrdKO+GkPZ
-         3+csaDZ0MphKayew1/OZp4UG3RJ+KnpyNkr/Blbzk8ex3qve/1h/xKqhiHDvXnJXheDL
-         6hHRuKdLvnOpde7v5PLtQMSXqv63KhCc0vnO95pJrUfABDTlje+c+BS8eQ5Y5TtM20nl
-         yRdWZ2Hp01W4eyeg+/PknA82TN2hvJN5bNrliGhjaOImBW8iaf0SuiFscCISvJcNfku6
-         nrAQ==
-X-Gm-Message-State: AOAM532qV0V40VPmOPWgekwEOYTe0UrxTO4KrInzbfEl/jP/S9Bwz4Jw
-        Px1l4U/nyUMPlS44YIIhw0PkxS+VgChTwGzkx+Ix+i4CLdxhPEwZHqztuVjG+TsSf85hPn4hf86
-        5kkfCY51abEQ521Qvwnkg17X4
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr5006307qka.446.1593210429999;
-        Fri, 26 Jun 2020 15:27:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwmZLtHpJAeBZ399vMiz1mJyuQdHk6v2hbTMEsydCoQct3oDd3SA+V5XqBCvEG6lXJVwmr+Rw==
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr5006291qka.446.1593210429806;
-        Fri, 26 Jun 2020 15:27:09 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id x26sm9307758qtp.54.2020.06.26.15.27.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 15:27:09 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 18:27:07 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 01/26] mm: Do page fault accounting in handle_mm_fault
-Message-ID: <20200626222707.GF175520@xz-x1>
-References: <20200619160538.8641-1-peterx@redhat.com>
- <20200619160538.8641-2-peterx@redhat.com>
- <20200624204903.097a5a58@thinkpad>
- <20200624203412.GB64004@xz-x1>
- <20200626215424.581d6077@thinkpad>
- <20200626215346.GE175520@xz-x1>
+        Fri, 26 Jun 2020 18:28:17 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1041)
+        id 0A95A20B4901; Fri, 26 Jun 2020 15:28:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A95A20B4901
+From:   Joseph Salisbury <joseph.salisbury@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, wei.liu@kernel.org, mikelley@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH][v2] Drivers: hv: Change flag to write log level in panic msg to false
+Date:   Fri, 26 Jun 2020 15:28:17 -0700
+Message-Id: <1593210497-114310-1-git-send-email-joseph.salisbury@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200626215346.GE175520@xz-x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Reply-To: joseph.salisbury@microsoft.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:53:46PM -0400, Peter Xu wrote:
-> Since this patch seems to be the only one that needs a new post so far, I'll
-> repost this patch only by replying to itself with v2.1.  Hopefully that can
-> avoid some unecessary mail bombs.
+When the kernel panics, one page of kmsg data may be collected and sent to
+Hyper-V to aid in diagnosing the failure.  The collected kmsg data typically
+ contains 50 to 100 lines, each of which has a log level prefix that isn't
+very useful from a diagnostic standpoint.  So tell kmsg_dump_get_buffer()
+to not include the log level, enabling more information that *is* useful to
+fit in the page.
 
-Unluckily patch 25 will need a trivial touch-up on the comment...  I'll just
-resend the whole series for simplicity.  Thanks,
+Requesting in stable kernels, since many kernels running in production are
+stable releases.
 
+Cc: stable@vger.kernel.org
+Signed-off-by: Joseph Salisbury <joseph.salisbury@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 9147ee9d5f7d..d69f4efa3719 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1368,7 +1368,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+ 	 * Write dump contents to the page. No need to synchronize; panic should
+ 	 * be single-threaded.
+ 	 */
+-	kmsg_dump_get_buffer(dumper, true, hv_panic_page, HV_HYP_PAGE_SIZE,
++	kmsg_dump_get_buffer(dumper, false, hv_panic_page, HV_HYP_PAGE_SIZE,
+ 			     &bytes_written);
+ 	if (bytes_written)
+ 		hyperv_report_panic_msg(panic_pa, bytes_written);
 -- 
-Peter Xu
+2.17.1
 
