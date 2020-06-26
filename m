@@ -2,455 +2,137 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5780AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32159C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8162065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593192293;
-	bh=sFqGhqCvtp0DWTfcTV91VzYtRh3RY2VWjhidNTpgQO8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scn+UKaTiyltPppfj/zPcvu29j9hKebaZi7MT3e4YjW3V7lPKlK9y4Vvh9NbXrmnH
-	 DtlRxtJW32kk7guZvr9ar3Y6oR3zXS+ybYnh1/0EPj06hmB0PqxeatuivH2fVaZk0a
-	 tbUy+gIhVVfoCfwk8MvkyeXfaJ/nmngO2WMljFGc=
+	by mail.kernel.org (Postfix) with ESMTP id EEC7720707
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ff+Aldsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgFZRYl (ORCPT
+        id S1727904AbgFZRZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgFZRYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:24:35 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4648A2089D;
-        Fri, 26 Jun 2020 17:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593192274;
-        bh=sFqGhqCvtp0DWTfcTV91VzYtRh3RY2VWjhidNTpgQO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsq7iNm4GXy3qIsySlEXcw6VPFY2+C2AbDy+DluMqnSDrnzRA2HazOz+tgjot99Xy
-         yS4aIqvTvRG8nMcrTleZg7OKTNhh7pXJfBTknFFfCr+yll5h5X7zxacRsThW+N9IOi
-         5FXwGwbX5ns0ALMlQhFPOi457nAMXQ1wdvyyv0Yk=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     x86@kernel.org
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH fsgsbase v2 3/4] x86/ptrace: Fix 32-bit PTRACE_SETREGS vs fsbase and gsbase
-Date:   Fri, 26 Jun 2020 10:24:29 -0700
-Message-Id: <229cc6a50ecbb701abd50fe4ddaf0eda888898cd.1593192140.git.luto@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1593192140.git.luto@kernel.org>
-References: <cover.1593192140.git.luto@kernel.org>
+        Fri, 26 Jun 2020 13:25:07 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35040 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFZRZF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:25:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QHMYvR009908;
+        Fri, 26 Jun 2020 17:24:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ftdr6mHim54L1C0LjxRdGjksokmlNmltTbluVqJWzgg=;
+ b=ff+AldsaEEavTREY/UndN4fxK9RRCxWg6o7vMnL9Jr+465fnvPdA8INlJTr9fdoROhcn
+ eonn5wv+4p1LxIVUTknAE2AVQTpTwZ6/dhkF0EB0CB2fsjIZqlzXrfVaEH5yGV8bMq5N
+ pJ+IbL1tVs9GSsRSRPdKD7X3MidA+wnWohu1dW2cfXcmqzb5CrNg918MkZWy14LkVGPt
+ o56EddzV2FsiSc9AIFmGJm8LWeFrF1jFEfIgMnww7SNvNK30WqS+mmVctGJY31XjW/XI
+ Jj5D580JHjA/IdzgaOpK89Dw3GE9EmRA+75YJN0P+VbK7lupWuERZvkjQjWGUSkpZG2i Wg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31uusu79b4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 17:24:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QHMM9v098753;
+        Fri, 26 Jun 2020 17:24:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31uurctv1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jun 2020 17:24:32 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05QHORRU016433;
+        Fri, 26 Jun 2020 17:24:27 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 26 Jun 2020 17:24:20 +0000
+Date:   Fri, 26 Jun 2020 20:24:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Pawel Laszczak <pawell@cadence.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Sanket Parmar <sparmar@cadence.com>
+Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
+Message-ID: <20200626172411.GE2571@kadam>
+References: <20200626045450.10205-1-pawell@cadence.com>
+ <20200626045450.10205-3-pawell@cadence.com>
+ <20200626114057.GD2571@kadam>
+ <DM6PR07MB5529E239FBA41BDDB52CAFC4DD930@DM6PR07MB5529.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR07MB5529E239FBA41BDDB52CAFC4DD930@DM6PR07MB5529.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9664 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006260122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9664 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006260122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debuggers expect that doing PTRACE_GETREGS, then poking at a tracee
-and maybe letting it run for a while, then doing PTRACE_SETREGS will
-put the tracee back where it was.  In the specific case of a 32-bit
-tracer and tracee, the PTRACE_GETREGS/SETREGS data structure doesn't
-have fs_base or gs_base fields, so FSBASE and GSBASE fields are
-never stored anywhere.  Everything used to still work because
-nonzero FS or GS would result full reloads of the segment registers
-when the tracee resumes, and the bases associated with FS==0 or
-GS==0 are irrelevant to 32-bit code.
+On Fri, Jun 26, 2020 at 03:10:32PM +0000, Pawel Laszczak wrote:
+> >> +static int cdnsp_pci_probe(struct pci_dev *pdev,
+> >> +			   const struct pci_device_id *id)
+> >> +{
+> >> +	struct platform_device_info plat_info;
+> >> +	struct cdnsp_wrap *wrap;
+> >> +	struct resource *res;
+> >> +	struct pci_dev *func;
+> >> +	int err;
+> >> +
+> >> +	/*
+> >> +	 * For GADGET/HOST PCI (devfn) function number is 0,
+> >> +	 * for OTG PCI (devfn) function number is 1.
+> >> +	 */
+> >> +	if (!id || (pdev->devfn != PCI_DEV_FN_HOST_DEVICE &&
+> >> +		    pdev->devfn != PCI_DEV_FN_OTG))
+> >> +		return -EINVAL;
+> >> +
+> >> +	func = cdnsp_get_second_fun(pdev);
+> >> +	if (unlikely(!func))
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (func->class == PCI_CLASS_SERIAL_USB_XHCI ||
+> >> +	    pdev->class == PCI_CLASS_SERIAL_USB_XHCI)
+> >> +		return -EINVAL;
+> >
+> >
+> >Do we need call pci_put_device(func) before returning?
+> 
+> We don't need.
+> Such function doesn't exist.
+> 
 
-Adding FSGSBASE support broke this: when FSGSBASE is enabled, FSBASE
-and GSBASE are now restored independently of FS and GS for all tasks
-when context-switched in.  This means that, if a 32-bit tracer
-restores a previous state using PTRACE_SETREGS but the tracee's
-pre-restore and post-restore bases don't match, then the tracee is
-resumed with the wrong base.
+I meant pci_dev_put().  I'm pretty sure that we do need it to match the
+pci_get_device() in cdnsp_get_second_fun().
 
-Fix it by explicitly loading the base when a 32-bit tracer pokes FS
-or GS on a 64-bit kernel.
-
-Also add a test case.
-
-Fixes: 673903495c85 ("x86/process/64: Use FSBSBASE in switch_to() if available")
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- arch/x86/include/asm/fsgsbase.h               |   2 +
- arch/x86/kernel/process_64.c                  |   4 +-
- arch/x86/kernel/ptrace.c                      |  43 ++-
- tools/testing/selftests/x86/Makefile          |   2 +-
- .../testing/selftests/x86/fsgsbase_restore.c  | 245 ++++++++++++++++++
- 5 files changed, 280 insertions(+), 16 deletions(-)
- create mode 100644 tools/testing/selftests/x86/fsgsbase_restore.c
-
-diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
-index aefd53767a5d..d552646411a9 100644
---- a/arch/x86/include/asm/fsgsbase.h
-+++ b/arch/x86/include/asm/fsgsbase.h
-@@ -75,6 +75,8 @@ static inline void x86_fsbase_write_cpu(unsigned long fsbase)
- 
- extern unsigned long x86_gsbase_read_cpu_inactive(void);
- extern void x86_gsbase_write_cpu_inactive(unsigned long gsbase);
-+extern unsigned long x86_fsgsbase_read_task(struct task_struct *task,
-+					    unsigned short selector);
- 
- #endif /* CONFIG_X86_64 */
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index d618969cea66..cb8e37d3acaa 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -347,8 +347,8 @@ static __always_inline void x86_fsgsbase_load(struct thread_struct *prev,
- 	}
- }
- 
--static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
--					    unsigned short selector)
-+unsigned long x86_fsgsbase_read_task(struct task_struct *task,
-+				     unsigned short selector)
- {
- 	unsigned short idx = selector >> 3;
- 	unsigned long base;
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 1c7646c8d0fe..3f006489087f 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -281,17 +281,9 @@ static int set_segment_reg(struct task_struct *task,
- 		return -EIO;
- 
- 	/*
--	 * This function has some ABI oddities.
--	 *
--	 * A 32-bit ptracer probably expects that writing FS or GS will change
--	 * FSBASE or GSBASE respectively.  In the absence of FSGSBASE support,
--	 * this code indeed has that effect.  When FSGSBASE is added, this
--	 * will require a special case.
--	 *
--	 * For existing 64-bit ptracers, writing FS or GS *also* currently
--	 * changes the base if the selector is nonzero the next time the task
--	 * is run.  This behavior may not be needed, and trying to preserve it
--	 * when FSGSBASE is added would be complicated at best.
-+	 * Writes to FS and GS will change the stored selector.  Whether
-+	 * this changes the segment base as well depends on whether
-+	 * FSGSBASE is enabled.
- 	 */
- 
- 	switch (offset) {
-@@ -867,14 +859,39 @@ long arch_ptrace(struct task_struct *child, long request,
- static int putreg32(struct task_struct *child, unsigned regno, u32 value)
- {
- 	struct pt_regs *regs = task_pt_regs(child);
-+	int ret;
- 
- 	switch (regno) {
- 
- 	SEG32(cs);
- 	SEG32(ds);
- 	SEG32(es);
--	SEG32(fs);
--	SEG32(gs);
-+
-+	/*
-+	 * A 32-bit ptracer on a 64-bit kernel expects that writing
-+	 * FS or GS will also update the base.  This is needed for
-+	 * operations like PTRACE_SETREGS to fully restore a saved
-+	 * CPU state.
-+	 */
-+
-+	case offsetof(struct user32, regs.fs):
-+		ret = set_segment_reg(child,
-+				      offsetof(struct user_regs_struct, fs),
-+				      value);
-+		if (ret == 0)
-+			child->thread.fsbase =
-+				x86_fsgsbase_read_task(child, value);
-+		return ret;
-+
-+	case offsetof(struct user32, regs.gs):
-+		ret = set_segment_reg(child,
-+				      offsetof(struct user_regs_struct, gs),
-+				      value);
-+		if (ret == 0)
-+			child->thread.gsbase =
-+				x86_fsgsbase_read_task(child, value);
-+		return ret;
-+
- 	SEG32(ss);
- 
- 	R32(ebx, bx);
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index 5f16821c7f63..3ff94575d02d 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -13,7 +13,7 @@ CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC) trivial_program.c -no-pie)
- TARGETS_C_BOTHBITS := single_step_syscall sysret_ss_attrs syscall_nt test_mremap_vdso \
- 			check_initial_reg_state sigreturn iopl ioperm \
- 			test_vdso test_vsyscall mov_ss_trap \
--			syscall_arg_fault
-+			syscall_arg_fault fsgsbase_restore
- TARGETS_C_32BIT_ONLY := entry_from_vm86 test_syscall_vdso unwind_vdso \
- 			test_FCMOV test_FCOMI test_FISTTP \
- 			vdso_restorer
-diff --git a/tools/testing/selftests/x86/fsgsbase_restore.c b/tools/testing/selftests/x86/fsgsbase_restore.c
-new file mode 100644
-index 000000000000..6fffadc51579
---- /dev/null
-+++ b/tools/testing/selftests/x86/fsgsbase_restore.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * fsgsbase_restore.c, test ptrace vs fsgsbase
-+ * Copyright (c) 2020 Andy Lutomirski
-+ *
-+ * This test case simulates a tracer redirecting tracee execution to
-+ * a function and then restoring tracee state using PTRACE_GETREGS and
-+ * PTRACE_SETREGS.  This is similar to what gdb does when doing
-+ * 'p func()'.  The catch is that this test has the called function
-+ * modify a segment register.  This makes sure that ptrace correctly
-+ * restores segment state when using PTRACE_SETREGS.
-+ *
-+ * This is not part of fsgsbase.c, because that test is 64-bit only.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+#include <err.h>
-+#include <sys/user.h>
-+#include <asm/prctl.h>
-+#include <sys/prctl.h>
-+#include <asm/ldt.h>
-+#include <sys/mman.h>
-+#include <stddef.h>
-+#include <sys/ptrace.h>
-+#include <sys/wait.h>
-+#include <stdint.h>
-+
-+#define EXPECTED_VALUE 0x1337f00d
-+
-+#ifdef __x86_64__
-+# define SEG "%gs"
-+#else
-+# define SEG "%fs"
-+#endif
-+
-+static unsigned int dereference_seg_base(void)
-+{
-+	int ret;
-+	asm volatile ("mov %" SEG ":(0), %0" : "=rm" (ret));
-+	return ret;
-+}
-+
-+static void init_seg(void)
-+{
-+	unsigned int *target = mmap(
-+		NULL, sizeof(unsigned int),
-+		PROT_READ | PROT_WRITE,
-+		MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT, -1, 0);
-+	if (target == MAP_FAILED)
-+		err(1, "mmap");
-+
-+	*target = EXPECTED_VALUE;
-+
-+	printf("\tsegment base address = 0x%lx\n", (unsigned long)target);
-+
-+	struct user_desc desc = {
-+		.entry_number    = 0,
-+		.base_addr       = (unsigned int)(uintptr_t)target,
-+		.limit           = sizeof(unsigned int) - 1,
-+		.seg_32bit       = 1,
-+		.contents        = 0, /* Data, grow-up */
-+		.read_exec_only  = 0,
-+		.limit_in_pages  = 0,
-+		.seg_not_present = 0,
-+		.useable         = 0
-+	};
-+	if (syscall(SYS_modify_ldt, 1, &desc, sizeof(desc)) == 0) {
-+		printf("\tusing LDT slot 0\n");
-+		asm volatile ("mov %0, %" SEG :: "rm" ((unsigned short)0x7));
-+	} else {
-+		/* No modify_ldt for us (configured out, perhaps) */
-+
-+		struct user_desc *low_desc = mmap(
-+			NULL, sizeof(desc),
-+			PROT_READ | PROT_WRITE,
-+			MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT, -1, 0);
-+		memcpy(low_desc, &desc, sizeof(desc));
-+
-+		low_desc->entry_number = -1;
-+
-+		/* 32-bit set_thread_area */
-+		long ret;
-+		asm volatile ("int $0x80"
-+			      : "=a" (ret), "+m" (*low_desc)
-+			      : "a" (243), "b" (low_desc)
-+#ifdef __x86_64__
-+			      : "r8", "r9", "r10", "r11"
-+#endif
-+			);
-+		memcpy(&desc, low_desc, sizeof(desc));
-+		munmap(low_desc, sizeof(desc));
-+
-+		if (ret != 0) {
-+			printf("[NOTE]\tcould not create a segment -- can't test anything\n");
-+			exit(0);
-+		}
-+		printf("\tusing GDT slot %d\n", desc.entry_number);
-+
-+		unsigned short sel = (unsigned short)((desc.entry_number << 3) | 0x3);
-+		asm volatile ("mov %0, %" SEG :: "rm" (sel));
-+	}
-+}
-+
-+static void tracee_zap_segment(void)
-+{
-+	/*
-+	 * The tracer will redirect execution here.  This is meant to
-+	 * work like gdb's 'p func()' feature.  The tricky bit is that
-+	 * we modify a segment register in order to make sure that ptrace
-+	 * can correctly restore segment registers.
-+	 */
-+	printf("\tTracee: in tracee_zap_segment()\n");
-+
-+	/*
-+	 * Write a nonzero selector with base zero to the segment register.
-+	 * Using a null selector would defeat the test on AMD pre-Zen2
-+	 * CPUs, as such CPUs don't clear the base when loading a null
-+	 * selector.
-+	 */
-+	unsigned short sel;
-+	asm volatile ("mov %%ss, %0\n\t"
-+		      "mov %0, %" SEG
-+		      : "=rm" (sel));
-+
-+	pid_t pid = getpid(), tid = syscall(SYS_gettid);
-+
-+	printf("\tTracee is going back to sleep\n");
-+	syscall(SYS_tgkill, pid, tid, SIGSTOP);
-+
-+	/* Should not get here. */
-+	while (true) {
-+		printf("[FAIL]\tTracee hit unreachable code\n");
-+		pause();
-+	}
-+}
-+
-+int main()
-+{
-+	printf("\tSetting up a segment\n");
-+	init_seg();
-+
-+	unsigned int val = dereference_seg_base();
-+	if (val != EXPECTED_VALUE) {
-+		printf("[FAIL]\tseg[0] == %x; should be %x\n", val, EXPECTED_VALUE);
-+		return 1;
-+	}
-+	printf("[OK]\tThe segment points to the right place.\n");
-+
-+	pid_t chld = fork();
-+	if (chld < 0)
-+		err(1, "fork");
-+
-+	if (chld == 0) {
-+		prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0, 0);
-+
-+		if (ptrace(PTRACE_TRACEME, 0, 0, 0) != 0)
-+			err(1, "PTRACE_TRACEME");
-+
-+		pid_t pid = getpid(), tid = syscall(SYS_gettid);
-+
-+		printf("\tTracee will take a nap until signaled\n");
-+		syscall(SYS_tgkill, pid, tid, SIGSTOP);
-+
-+		printf("\tTracee was resumed.  Will re-check segment.\n");
-+
-+		val = dereference_seg_base();
-+		if (val != EXPECTED_VALUE) {
-+			printf("[FAIL]\tseg[0] == %x; should be %x\n", val, EXPECTED_VALUE);
-+			exit(1);
-+		}
-+
-+		printf("[OK]\tThe segment points to the right place.\n");
-+		exit(0);
-+	}
-+
-+	int status;
-+
-+	/* Wait for SIGSTOP. */
-+	if (waitpid(chld, &status, 0) != chld || !WIFSTOPPED(status))
-+		err(1, "waitpid");
-+
-+	struct user_regs_struct regs;
-+
-+	if (ptrace(PTRACE_GETREGS, chld, NULL, &regs) != 0)
-+		err(1, "PTRACE_GETREGS");
-+
-+#ifdef __x86_64__
-+	printf("\tChild GS=0x%lx, GSBASE=0x%lx\n", (unsigned long)regs.gs, (unsigned long)regs.gs_base);
-+#else
-+	printf("\tChild FS=0x%lx\n", (unsigned long)regs.xfs);
-+#endif
-+
-+	struct user_regs_struct regs2 = regs;
-+#ifdef __x86_64__
-+	regs2.rip = (unsigned long)tracee_zap_segment;
-+	regs2.rsp -= 128;	/* Don't clobber the redzone. */
-+#else
-+	regs2.eip = (unsigned long)tracee_zap_segment;
-+#endif
-+
-+	printf("\tTracer: redirecting tracee to tracee_zap_segment()\n");
-+	if (ptrace(PTRACE_SETREGS, chld, NULL, &regs2) != 0)
-+		err(1, "PTRACE_GETREGS");
-+	if (ptrace(PTRACE_CONT, chld, NULL, NULL) != 0)
-+		err(1, "PTRACE_GETREGS");
-+
-+	/* Wait for SIGSTOP. */
-+	if (waitpid(chld, &status, 0) != chld || !WIFSTOPPED(status))
-+		err(1, "waitpid");
-+
-+	printf("\tTracer: restoring tracee state\n");
-+	if (ptrace(PTRACE_SETREGS, chld, NULL, &regs) != 0)
-+		err(1, "PTRACE_GETREGS");
-+	if (ptrace(PTRACE_DETACH, chld, NULL, NULL) != 0)
-+		err(1, "PTRACE_GETREGS");
-+
-+	/* Wait for SIGSTOP. */
-+	if (waitpid(chld, &status, 0) != chld)
-+		err(1, "waitpid");
-+
-+	if (WIFSIGNALED(status)) {
-+		printf("[FAIL]\tTracee crashed\n");
-+		return 1;
-+	}
-+
-+	if (!WIFEXITED(status)) {
-+		printf("[FAIL]\tTracee stopped for an unexpected reason: %d\n", status);
-+		return 1;
-+	}
-+
-+	int exitcode = WEXITSTATUS(status);
-+	if (exitcode != 0) {
-+		printf("[FAIL]\tTracee reported failure\n");
-+		return 1;
-+	}
-+
-+	printf("[OK]\tAll is well.\n");
-+	return 0;
-+}
--- 
-2.25.4
+regards,
+dan carpenter
 
