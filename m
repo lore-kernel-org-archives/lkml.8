@@ -2,118 +2,160 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B24DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F912080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1A52076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JGfM1XPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgFZIC4 (ORCPT
+        id S1728973AbgFZIFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:02:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37434 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgFZICy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:02:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 530B5ABE2;
-        Fri, 26 Jun 2020 08:02:52 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 10:02:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        Justin Cook <justin.cook@linaro.org>,
-        lkft-triage@lists.linaro.org, Miroslav Benes <mbenes@suse.cz>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 1/2] selftests/lkdtm: Don't clear dmesg when running tests
-Message-ID: <20200626080252.GL8444@alley>
-References: <20200508065356.2493343-1-mpe@ellerman.id.au>
- <CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com>
- <c5b77970-ecaf-24ad-c34d-134acc1a6063@redhat.com>
- <20200624083955.GF8444@alley>
- <20200624201247.GA25319@redhat.com>
+        Fri, 26 Jun 2020 04:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbgFZIFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:05:30 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6956EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:05:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l6so1591803pjq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=03vmF/xJtrW7TxKJ7ORVagTSJF1iyHBUoz7bXZv7j/M=;
+        b=JGfM1XPbikiN9aaUpji02wfEtcW3z/uTaGoNwWt4d2L+2waHQkN3RQKw8bDPMKrtra
+         3dvvTJsgEbM4dMcSxNvLWUXO0DnGMNG5Vmmjp/GyG1VZAYHYuqA27oNtV5kuDiaOM4ku
+         gdO6F9b51zZZwrk5uwj5joFv/BsLmwj6609mY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=03vmF/xJtrW7TxKJ7ORVagTSJF1iyHBUoz7bXZv7j/M=;
+        b=d4uMRTUJ/n/bXQZktvTyWYT5pln6G11GSZVq9syar0aAFg6pzemQVkmm3AN0v8++q/
+         qmRdi+xBnecC5N/hgm/qHclb9Od8HLx0oQgiC7SMxeA4Zmf0BrycSJUoUmEFWkbKZKJ5
+         NknVTFcmk4FqHdQNzjAoxNYNJqcrX0IJarLjgfjabsImzN0M93z6dMbChrPxrVRzLlzY
+         JFAx8yypbVdvoAyPqjxmt8DTS95sSY4Ei4bfYQt7+8yHrd+qfF43u3Gc8/6n2Fa6I6Cp
+         4GB2J0nWTLdjM4vHDdIgJUdYpisXxKeKS3EFswyI7VAwuczAoReEo+OmN8rMzlJSlQbg
+         MsCQ==
+X-Gm-Message-State: AOAM531WNrc63XLQP7QVVjR+fzUqigT4zd3TQCktGEdBZvbNDGf4R9Yr
+        2aldAHL7kEuyy8LTJ2wQY9p7hw==
+X-Google-Smtp-Source: ABdhPJzzos0vx8gDmMLPE+o8X+HuOkVKt5pQdiTIqQ6bCa8H5Mp+j4F5kBDXTyFbH4A3j1Zd0I03HQ==
+X-Received: by 2002:a17:90a:6a03:: with SMTP id t3mr2129478pjj.174.1593158729825;
+        Fri, 26 Jun 2020 01:05:29 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
+        by smtp.gmail.com with ESMTPSA id 137sm21809843pgg.72.2020.06.26.01.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 01:05:28 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2 00/18] media: mtk-vcodec: venc: support for MT8183 and v4l2-compliance fixes
+Date:   Fri, 26 Jun 2020 17:04:24 +0900
+Message-Id: <20200626080442.292309-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624201247.GA25319@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-06-24 16:12:47, Joe Lawrence wrote:
-> On Wed, Jun 24, 2020 at 10:39:55AM +0200, Petr Mladek wrote:
-> > On Tue 2020-06-23 23:48:36, Joe Lawrence wrote:
-> > > On 6/22/20 4:51 AM, Naresh Kamboju wrote:
-> > > > On Fri, 8 May 2020 at 12:23, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > > > > 
-> > > > > It is Very Rude to clear dmesg in test scripts. That's because the
-> > > > > script may be part of a larger test run, and clearing dmesg
-> > > > > potentially destroys the output of other tests.
-> > > > > 
-> > > > > We can avoid using dmesg -c by saving the content of dmesg before the
-> > > > > test, and then using diff to compare that to the dmesg afterward,
-> > > > > producing a log with just the added lines.
-> > > > >
-> > > > > > > > diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-> > > > > index dadf819148a4..0b409e187c7b 100755
-> > > > > --- a/tools/testing/selftests/lkdtm/run.sh
-> > > > > +++ b/tools/testing/selftests/lkdtm/run.sh
-> > > > >   # Record and dump the results
-> > > > > -dmesg -c >"$LOG"
-> > > > > +dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
-> > > > 
-> > > > We are facing problems with the diff `=%>` part of the option.
-> > > > This report is from the OpenEmbedded environment.
-> > > > We have the same problem from livepatch_testcases.
-> > > > 
-> > > > # selftests lkdtm BUG.sh
-> > > > lkdtm: BUG.sh_ #
-> > > > # diff unrecognized option '--changed-group-format=%>'
-> > > > unrecognized: option_'--changed-group-format=%>' #
-> > > > # BusyBox v1.27.2 (2020-03-30 164108 UTC) multi-call binary.
-> > > > v1.27.2: (2020-03-30_164108 #
+This is the second revision of the series adding support for the MT8183 encoder
+(patches 1-9). It also fixes 9 v4l2-compliance failures (patches 10-18). Of note
+is patch 10 which reverts a previous patch that seems to have been merged by
+mistake (see https://lore.kernel.org/linux-media/CAPBb6MWuhJGq_etJN4WX0NOBXK0cA7rxVCMx70xCg7Uzmj_cMw@mail.gmail.com/T/#me1b4a97adb119c25dc79826d49746216dd94bd26).
 
-> I did a bit more hacking to work that awk script into the livepatching
-> tests.  The changes aren't too bad and coding it ourselves lets us drop
-> the temporary dmesg file business.  If this looks good, I can send out
-> as a real patch, but then that raises a few questions:
+As mentioned in v1's discussion, this time v4l2-compliance has been run before
+and after each patch to make sure no regressions are introduced. The latest
+v4l2-compliance does find quite a few errors on the current mainline though, and
+the second half of this series fixes several of them.
 
-The patch worked and I agree that it is not that bad.
+After this series the following v4l2-compliance failures remain:
 
-Well, what about using "comm" as proposed by Michael in the other
-mail? It seems to be part of coreutils and should be everywhere.
+* VIDIOC_(TRY_)ENCODER_CMD fails because there is no support for encoder
+  commands. I have a patch fixing this but it depends on some extra refactoring
+  introduced by the decoder series (that will follow this one), so it will be
+  submitted along with it.
+* VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT also fails because one cannot subscribe to
+  the EOS event. This depends on encoder commands to be properly sent, so the
+  fix will also follow.
 
-I guess that many people, including me, are not fluent in awk.
-So, I am slightly in favor of the "comm" approach ;-)
+Changes since v1:
+* Checked that no regressions against v4l2-compliance were introduced,
+* Fixed 9 failing v4l2-compliance tests,
+* Removed 1 cleanup patch of contested utility,
+* Carried Acked-bys and Reviewed-bys from mtk-vcodec maintainer.
 
+Alexandre Courbot (14):
+  media: mtk-vcodec: venc: handle firmware version field
+  media: mtk-vcodec: venc: specify bitrate range per-chip
+  media: mtk-vcodec: venc: specify supported formats per-chip
+  media: dt-bindings: mtk-vcodec: specify SCP node
+  media: dt-bindings: mtk-vcodec: document mediatek,mt8183-vcodec-enc
+  Revert "media: mtk-vcodec: Remove extra area allocation in an input
+    buffer on encoding"
+  media: mtk-vcodec: venc support MIN_OUTPUT_BUFFERS control
+  media: mtk-vcodec: venc: set OUTPUT buffers field to V4L2_FIELD_NONE
+  media: mtk-vcodec: venc: use platform data for ENUM_FRAMESIZES
+  media: mtk-vcodec: venc: support ENUM_FRAMESIZES on OUTPUT formats
+  media: mtk-vcodec: venc: support G_PARM on CAPTURE queue
+  media: mtk-vcodec: venc: make S_PARM return -ENOTTY for CAPTURE queue
+  media: mtk-vcodec: venc: set default time per frame
+  media: mtk-vcodec: venc: fix invalid time per frame in S_PARM
 
->   1 - f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running
->       tests") has already merged, updating that file doesn't look too
->       difficult, but will need a Fixes tag and should probably go
->       through Shuah's tree.
+Yunfei Dong (4):
+  media: mtk-vcodec: abstract firmware interface
+  media: mtk-vcodec: add SCP firmware ops
+  media: mtk-vcodec: venc: support SCP firmware
+  media: mtk-vcodec: add support for MT8183 encoder
 
-Yup.
+ .../bindings/media/mediatek-vcodec.txt        |   9 +-
+ drivers/media/platform/Kconfig                |   1 +
+ drivers/media/platform/mtk-vcodec/Makefile    |   4 +-
+ .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  53 ++--
+ .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
+ .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  38 ++-
+ .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 217 ++++++++---------
+ .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  | 149 ++++++++----
+ .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 228 ++++++++++++++++++
+ .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  38 +++
+ .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
+ .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   1 -
+ .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   1 -
+ .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   1 -
+ .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
+ .../media/platform/mtk-vcodec/vdec_drv_if.c   |   1 -
+ .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  12 +-
+ .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  11 +-
+ .../platform/mtk-vcodec/venc/venc_h264_if.c   |  80 ++++--
+ .../platform/mtk-vcodec/venc/venc_vp8_if.c    |  11 +-
+ .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
+ .../media/platform/mtk-vcodec/venc_drv_if.h   |   6 +
+ .../media/platform/mtk-vcodec/venc_ipi_msg.h  |  24 +-
+ .../media/platform/mtk-vcodec/venc_vpu_if.c   | 141 ++++++++---
+ .../media/platform/mtk-vcodec/venc_vpu_if.h   |   8 +-
+ 26 files changed, 760 insertions(+), 281 deletions(-)
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
 
->   2 - We haven't actually merged the livepatch copy yet.  I can roll
->       another version of that patchset, substituting a fix for the
->       problematic patch, or we could just tack this one on at the end.
->       In fine with either approach.
+--
+2.27.0.212.ge8ba1cc988-goog
 
-I prefer the followup patch to avoid rebase.
-
-Best Regards,
-Petr
