@@ -2,150 +2,158 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1565C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9BF206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959F82070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="OEgzlI5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgFZOeo (ORCPT
+        id S1726593AbgFZOgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:34:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45202 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgFZOeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:34:44 -0400
-IronPort-SDR: G3DGm09CveZ+FRfIXAQHdLZZ3pE/R1QmJgfjFX440THoGOA01xv2bYBbbbGI3NRwWLy67gkNQf
- O0b5qUnX20/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="125543201"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="125543201"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 07:34:43 -0700
-IronPort-SDR: hvr2GwvSgu67UN13TX3i1cx6xPeuqscnnbTFJUQtLl8I/4XRPZUo8yycMk+bABaIixayDn61GU
- np7qqGSSD24w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="265639847"
-Received: from cgheban-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.199])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Jun 2020 07:34:38 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] tpm: Define TPM2_SPACE_BUFFER_SIZE to replace the use of PAGE_SIZE
-Date:   Fri, 26 Jun 2020 17:34:35 +0300
-Message-Id: <20200626143436.396889-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 26 Jun 2020 10:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgFZOgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:36:13 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17D9C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:36:13 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j11so5566944oiw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZKPvIuViYkr2Snan7oWb6BknUAQBFXZsGLcEJyjgN3s=;
+        b=OEgzlI5w7/Up5VvvUIIK5acs7tyqKHfsHucS2tiBIbjbNA9tGmVQ0G73RqId/wf7CU
+         EmTf3pfEWkOzFZZzsiZqGFcrxKmeoRQdLqdLhbePumjuaIBhusqSpRPYvkeHDueQA2ap
+         CoUU8BrMyeRnnjGOtmfUBCHTmCFpAVj7vDbGY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZKPvIuViYkr2Snan7oWb6BknUAQBFXZsGLcEJyjgN3s=;
+        b=gh1tS8q4N1trhCtfPRbKPTWlDqgeuBNt2XiNme9r3p2No+rbQ88tRwsLD3T+928WXw
+         zUpbbj2eNumRrYDpRpMjiowDawVOXXdqrfhiWSHvAdzJMW1mFB+jo/18JhG+vqVTwKxt
+         pFHMArxuEoN/mThf8KXUcJixDMhiCDs94+I/Ic0G6lC4ZMXw30dwitJlcyESh8u11KwQ
+         rqShqvgMNspl73/ndkijqRSEyQ3ZBhzjHJI0LMKqIRlZAaV/owFvhYky6r26o0BxScwv
+         b6zDPnkoxsi4/aAPpl0K8Q2fvwHxzxxLAYttIBfldWLJ63V3KTBX+fYtiUhE64xlgzJt
+         Ryqg==
+X-Gm-Message-State: AOAM531r4I2gVzuGEZheDwahYfLA5e0Xc1j77MpDH91mkijJg35W6dwq
+        XZBPHHY+fuFSskrfXoey5H7lG7cV4Y3swcTk3C7elQ==
+X-Google-Smtp-Source: ABdhPJyOzZ9+MiOD65tZJCRwesIrg1PbM5h6xkTNOvC0zBWcPQweL3siO0ruooLGdvTN9EK0UFKs1pI/QOHl8Zs0fyA=
+X-Received: by 2002:a54:4d9b:: with SMTP id y27mr2572873oix.115.1593182172986;
+ Fri, 26 Jun 2020 07:36:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com> <CAEXW_YSU5=ZUf-4j55av9Q8b+PRiM2DCKydM9Bv__mzL2MWx4g@mail.gmail.com>
+In-Reply-To: <CAEXW_YSU5=ZUf-4j55av9Q8b+PRiM2DCKydM9Bv__mzL2MWx4g@mail.gmail.com>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Fri, 26 Jun 2020 10:36:01 -0400
+Message-ID: <CANaguZCi7Gj5TSUfU5AZ5w1v=EEz23rdgUsSg1NVb3DBM+F6bA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/13] Core scheduling v5
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The size of the buffers for storing context's and sessions can vary from
-arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-maximum for PPC64). Define a fixed buffer size set to 16 kB. This should
-be enough for most use with three handles (that is how many we allow at
-the moment).
+On Thu, Jun 25, 2020 at 9:47 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 4:12 PM Vineeth Remanan Pillai
+> <vpillai@digitalocean.com> wrote:
+> [...]
+> > TODO lists:
+> >
+> >  - Interface discussions could not come to a conclusion in v5 and hence would
+> >    like to restart the discussion and reach a consensus on it.
+> >    - https://lwn.net/ml/linux-kernel/20200520222642.70679-1-joel@joelfernandes.org
+>
+> Thanks Vineeth, just want to add: I have a revised implementation of
+> prctl(2) where you only pass a TID of a task you'd like to share a
+> core with (credit to Peter for the idea [1]) so we can make use of
+> ptrace_may_access() checks. I am currently finishing writing of
+> kselftests for this and post it all once it is ready.
+>
+Thinking more about it, using TID/PID for prctl(2) and internally
+using a task identifier to identify coresched group may have
+limitations. A coresched group can exist longer than the lifetime
+of a task and then there is a chance for that identifier to be
+reused by a newer task which may or maynot be a part of the same
+coresched group.
 
-Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-Cc: stable@vger.kernel.org
-Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- drivers/char/tpm/tpm2-space.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+A way to overcome this is to have a coresched group with a seperate
+identifier implemented internally and have mapping from task to the
+group. And cgroup framework provides exactly that.
 
-diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-index 982d341d8837..9bef646093d1 100644
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -15,6 +15,8 @@
- #include <asm/unaligned.h>
- #include "tpm.h"
- 
-+#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-+
- enum tpm2_handle_types {
- 	TPM2_HT_HMAC_SESSION	= 0x02000000,
- 	TPM2_HT_POLICY_SESSION	= 0x03000000,
-@@ -40,11 +42,11 @@ static void tpm2_flush_sessions(struct tpm_chip *chip, struct tpm_space *space)
- 
- int tpm2_init_space(struct tpm_space *space)
- {
--	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->context_buf = kzalloc(TPM2_SPACE_BUFFER_SIZE, GFP_KERNEL);
- 	if (!space->context_buf)
- 		return -ENOMEM;
- 
--	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->session_buf = kzalloc(TPM2_SPACE_BUFFER_SIZE, GFP_KERNEL);
- 	if (space->session_buf == NULL) {
- 		kfree(space->context_buf);
- 		return -ENOMEM;
-@@ -311,8 +313,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
- 	       sizeof(space->context_tbl));
- 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
--	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-+	memcpy(chip->work_space.context_buf, space->context_buf,
-+	       TPM2_SPACE_BUFFER_SIZE);
-+	memcpy(chip->work_space.session_buf, space->session_buf,
-+	       TPM2_SPACE_BUFFER_SIZE);
- 
- 	rc = tpm2_load_space(chip);
- 	if (rc) {
-@@ -492,8 +496,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->context_tbl[i],
--				       space->context_buf, PAGE_SIZE,
--				       &offset);
-+				       space->context_buf,
-+				       TPM2_SPACE_BUFFER_SIZE, &offset);
- 		if (rc == -ENOENT) {
- 			space->context_tbl[i] = 0;
- 			continue;
-@@ -509,9 +513,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->session_tbl[i],
--				       space->session_buf, PAGE_SIZE,
--				       &offset);
--
-+				       space->session_buf,
-+				       TPM2_SPACE_BUFFER_SIZE, &offset);
- 		if (rc == -ENOENT) {
- 			/* handle error saving session, just forget it */
- 			space->session_tbl[i] = 0;
-@@ -557,8 +560,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
- 	       sizeof(space->context_tbl));
- 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
--	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-+	memcpy(space->context_buf, chip->work_space.context_buf,
-+	       TPM2_SPACE_BUFFER_SIZE);
-+	memcpy(space->session_buf, chip->work_space.session_buf,
-+	       TPM2_SPACE_BUFFER_SIZE);
- 
- 	return 0;
- out:
--- 
-2.25.1
+I feel we could use prctl for isolating individual tasks/processes
+and use grouping frameworks like cgroup for core scheduling groups.
+Cpu cgroup might not be a good idea as it has its own purpose. Users
+might not always want a group of trusted tasks in the same cpu cgroup.
+Or all the processes in an existing cpu cgroup might not be mutually
+trusted as well.
 
+What do you think about having a separate cgroup for coresched?
+Both coresched cgroup and prctl() could co-exist where prctl could
+be used to isolate individual process or task and coresched cgroup
+to group trusted processes.
+
+> However a question: If using the prctl(2) on a CGroup tagged task, we
+> discussed in previous threads [2] to override the CGroup cookie such
+> that the task may not share a core with any of the tasks in its CGroup
+> anymore and I think Peter and Phil are Ok with.  My question though is
+> - would that not be confusing for anyone looking at the CGroup
+> filesystem's "tag" and "tasks" files?
+>
+Having a dedicated cgroup for coresched could solve this problem
+as well. "coresched.tasks" inside the cgroup hierarchy would list all
+the taskx in the group and prctl can override this and take it out
+of the group.
+
+> To resolve this, I am proposing to add a new CGroup file
+> 'tasks.coresched' to the CGroup, and this will only contain tasks that
+> were assigned cookies due to their CGroup residency. As soon as one
+> prctl(2)'s the task, it will stop showing up in the CGroup's
+> "tasks.coresched" file (unless of course it was requesting to
+> prctl-share a core with someone in its CGroup itself). Are folks Ok
+> with this solution?
+>
+As I mentioned above, IMHO cpu cgroups should not be used to account
+for core scheduling as well. Cpu cgroups serve a different purpose
+and overloading it with core scheduling would not be flexible and
+scalable. But if there is a consensus to move forward with cpu cgroups,
+adding this new file seems to be okay with me.
+
+Thoughts/suggestions/concerns?
+
+Thanks,
+Vineeth
