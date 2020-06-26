@@ -5,234 +5,131 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17747C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3248C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CD8212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F84212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgFZJcq (ORCPT
+        id S1726725AbgFZJe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:32:46 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:59362 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgFZJca (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:32:30 -0400
-X-IronPort-AV: E=Sophos;i="5.75,283,1589209200"; 
-   d="scan'208";a="50657266"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 26 Jun 2020 18:32:28 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 91A02420330E;
-        Fri, 26 Jun 2020 18:32:28 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     ulf.hansson@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        geert+renesas@glider.be, magnus.damm@gmail.com
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v4 4/4] arm64: dts: renesas: add regulator-off-in-suspend property for eMMC
-Date:   Fri, 26 Jun 2020 18:32:22 +0900
-Message-Id: <1593163942-5087-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Fri, 26 Jun 2020 05:34:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:50210 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726613AbgFZJe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 05:34:58 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 72182391; Fri, 26 Jun 2020 11:34:57 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] x86/mm: Pre-allocate p4d/pud pages for vmalloc area
+Date:   Fri, 26 Jun 2020 11:34:50 +0200
+Message-Id: <20200626093450.27741-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add regulator-off-in-suspend property into eMMC related regulator-fixed
-nodes because PSCI on the boards will turn the regulators off in suspend.
+From: Joerg Roedel <jroedel@suse.de>
 
-By this property, the regulator's status will be disabled in suspend.
-MMC subsystem can get the condition and then eMMC condition will
-be better than before.
- before:
-  - enter sleep mode and then turn the vmmc and vqmmc off.
- after:
-  - call mmc_poweroff_nofity() and then turn the vmmc and vqmmc off.
+Pre-allocate the page-table pages for the vmalloc area at the level
+which needs synchronization on x86. This is P4D for 5-level and PUD
+for 4-level paging.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Doing this at boot makes sure all page-tables in the system have these
+pages already and do not need to be synchronized at runtime. The
+runtime synchronizatin takes the pgd_lock and iterates over all
+page-tables in the system, so it can take quite long and is better
+avoided.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts   | 10 ++++++++--
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts  | 10 ++++++++--
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts   | 10 ++++++++--
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts   |  9 ++++++++-
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 10 ++++++++--
- arch/arm64/boot/dts/renesas/ulcb.dtsi            | 10 ++++++++--
- 6 files changed, 48 insertions(+), 11 deletions(-)
+ arch/x86/mm/init_64.c | 55 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts b/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-index 01c4ba0..9fe634a 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-@@ -74,7 +74,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index dbae185511cd..475a4008445b 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1238,6 +1238,59 @@ static void __init register_page_bootmem_info(void)
+ #endif
+ }
  
- 	vcc_d3_3v: regulator-1 {
-@@ -83,7 +86,10 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
--		regulator-always-on;
++/*
++ * Pre-allocates page-table pages for the vmalloc area in the kernel page-table.
++ * Only the level which needs to be synchronized between all page-tables is
++ * allocated because the synchronization can be expensive.
++ */
++static void __init preallocate_vmalloc_pages(void)
++{
++	unsigned long addr;
++	const char *lvl;
++	int count = 0;
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	vcc_vddq_vin0: regulator-2 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a77980-condor.dts b/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-index ef8350a..5898c7f 100644
---- a/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -37,7 +37,10 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
--		regulator-always-on;
++	for (addr = VMALLOC_START; addr <= VMALLOC_END; addr = ALIGN(addr + 1, PGDIR_SIZE)) {
++		pgd_t *pgd = pgd_offset_k(addr);
++		p4d_t *p4d;
++		pud_t *pud;
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	hdmi-out {
-@@ -87,7 +90,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
++		p4d = p4d_offset(pgd, addr);
++		if (p4d_none(*p4d)) {
++			/* Can only happen with 5-level paging */
++			p4d = p4d_alloc(&init_mm, pgd, addr);
++			if (!p4d) {
++				lvl = "p4d";
++				goto failed;
++			}
++			count += 1;
++		}
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	x1_clk: x1-clock {
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index dc24cec4..80736f8 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -113,7 +113,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
++		if (pgtable_l5_enabled())
++			continue;
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	reg_3p3v: regulator1 {
-@@ -122,7 +125,10 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
--		regulator-always-on;
++		pud = pud_offset(p4d, addr);
++		if (pud_none(*pud)) {
++			/* Ends up here only with 4-level paging */
++			pud = pud_alloc(&init_mm, p4d, addr);
++			if (!pud) {
++				lvl = "pud";
++				goto failed;
++			}
++			count += 1;
++		}
++	}
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	reg_12p0v: regulator2 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 79c73a9..9ac5361 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -103,7 +103,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
++	return;
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	reg_3p3v: regulator-3p3v {
-@@ -113,6 +116,10 @@
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
- 		regulator-always-on;
++failed:
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	reg_12p0v: regulator-12p0v {
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 98bbcaf..fa8c45f 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -172,7 +172,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
++	/*
++	 * A failure here is not fatal - If the pages can be allocated later it
++	 * will be synchronized to other page-tables.
++	 */
++	pr_err("Failed to pre-allocate %s pages for vmalloc area\n", lvl);
++}
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
+ void __init mem_init(void)
+ {
+ 	pci_iommu_alloc();
+@@ -1261,6 +1314,8 @@ void __init mem_init(void)
+ 	if (get_gate_vma(&init_mm))
+ 		kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
  
- 	reg_3p3v: regulator1 {
-@@ -181,7 +184,10 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
--		regulator-always-on;
++	preallocate_vmalloc_pages();
 +
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
+ 	mem_init_print_info(NULL);
+ }
  
- 	reg_12v: regulator2 {
-diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-index ff88af8..7c5bccc 100644
---- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-@@ -79,7 +79,10 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-boot-on;
--		regulator-always-on;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	reg_3p3v: regulator1 {
-@@ -88,7 +91,10 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-boot-on;
--		regulator-always-on;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
- 	};
- 
- 	sound_card: sound {
 -- 
-2.7.4
+2.27.0
 
