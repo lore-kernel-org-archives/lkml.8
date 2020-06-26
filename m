@@ -2,113 +2,121 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE42C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4637C20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7447E20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BiSmIrJG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODOylG7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgFZLqN (ORCPT
+        id S1728766AbgFZLrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46366 "EHLO
+        Fri, 26 Jun 2020 07:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgFZLqM (ORCPT
+        with ESMTP id S1726972AbgFZLrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:46:12 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D61C08C5C1;
-        Fri, 26 Jun 2020 04:46:12 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d140021dd7ed6b715c4c4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1400:21dd:7ed6:b715:c4c4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 23A021EC0328;
-        Fri, 26 Jun 2020 13:46:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593171969;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yucFdKjCgoeX7C5mwPW8/rg/saxXn/xSVvZ7fS34kZo=;
-        b=BiSmIrJGCJ0faVBTZtyCh7yIB1Uqh9DHPhI2oITaZpZkMxJelcG9IUXj87k4aPSN9CDwfQ
-        NWSmB1HxwZn/+psfecdpLWBxf30ds9kL9HUXdAG1jYW/DrYmbBsZMtJGqwHemik4kwPaUw
-        f1ErWNzJemfGf7t3q9dl/erT/q4WHto=
-Date:   Fri, 26 Jun 2020 13:46:03 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 09/13] x86: Remove dev->archdata.iommu pointer
-Message-ID: <20200626114603.GC27151@zn.tnic>
-References: <20200625130836.1916-1-joro@8bytes.org>
- <20200625130836.1916-10-joro@8bytes.org>
+        Fri, 26 Jun 2020 07:47:41 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D975C08C5DB;
+        Fri, 26 Jun 2020 04:47:41 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d66so4545795pfd.6;
+        Fri, 26 Jun 2020 04:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qQNGW1ubfzePDn/nTOZGpiUilVnPMC5Ou6eBIhQTrzs=;
+        b=ODOylG7bpS1L8pej1mt62biajx9xwQFo0p9iDxsI/oGwkmPvMJ/0GXIWzTv6TN0P6+
+         CHLJtwm0Ry5loEGOYSS5DJuEz6ybKhjiqHa8FFY+bcoC8O0ohxSAFeWMSl5jLCp8cqgk
+         ayPh9Rhgrirl2xGv1L5KQu3VK8uLBB108tHDqEJuX8ZlMjUgpA4wNXA8tUelglqkPChg
+         RnWCHye7vZsA4kVvVyWl/8fLU0fTgmje3cvLpPyYfHIyy/rWNWQQs+MIfdmGAuUUT4Er
+         UqGjTOTC1pUntLCWjCu81H4pt1y4JspScJCcYnB2DzxNGeb1qv6JC7H/yQ2mmB+4gmL/
+         q3Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qQNGW1ubfzePDn/nTOZGpiUilVnPMC5Ou6eBIhQTrzs=;
+        b=mIHxUSBM4Z1c8ZprZie5SMA7vCgoykzIltsa6TUVvLOh62xFaK7KYnCfsdnltWwufn
+         3QURB+nscq0UpDuDmgpOpTECHEdZ4W2zRTXhGV0R2qp0tMZtBZv7byaCcXpwijBR8gZq
+         Me0ad1mQpoacnli8jqzNUFQ2QNPDz8GjlCYv2eupj6yM/wQ6pxxrXUvkjs0zP9Xurl7F
+         6R2FhoauzYZSEA4O4uKNXiFKIYbsFFgYswcpdC1RFxIdsdK3Yc7CoNPpdnusWX4oxpwO
+         nXt0yxal7SJQXqpEJedsYIv+Yd4kTn0ZShuTn2ZSGKXbhTayOUpcyem3ikQInE72tdPq
+         Gf0A==
+X-Gm-Message-State: AOAM531FfEvvda8Z4GK0WziuR2lSOkERgkHLB7NU9nc7ZArLsdKvHSsW
+        vEvHTlJmc50KrwhuEmBnYHg=
+X-Google-Smtp-Source: ABdhPJyNQB41X8+JmdMeQ2PuQfgsiTxZvhldBnutus1649bWIwUSZJPdWiPXZL9wKFWrHZzkJEZ0fw==
+X-Received: by 2002:aa7:98c6:: with SMTP id e6mr2460572pfm.17.1593172060828;
+        Fri, 26 Jun 2020 04:47:40 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id o1sm11077238pjp.37.2020.06.26.04.47.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 04:47:40 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Fri, 26 Jun 2020 19:47:33 +0800
+To:     Joe Perches <joe@perches.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
+Message-ID: <20200626114733.ffjbwy7uooz2i73x@Rk>
+References: <20200625215755.70329-1-coiby.xu@gmail.com>
+ <20200625215755.70329-3-coiby.xu@gmail.com>
+ <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200625130836.1916-10-joro@8bytes.org>
+In-Reply-To: <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 03:08:32PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> There are no users left, all drivers have been converted to use the
-> per-device private pointer offered by IOMMU core.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/device.h | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-> index 49bd6cf3eec9..7c0a52ca2f4d 100644
-> --- a/arch/x86/include/asm/device.h
-> +++ b/arch/x86/include/asm/device.h
-> @@ -3,9 +3,6 @@
->  #define _ASM_X86_DEVICE_H
->  
->  struct dev_archdata {
-> -#ifdef CONFIG_IOMMU_API
-> -	void *iommu; /* hook for IOMMU specific extension */
-> -#endif
->  };
->  
->  struct pdev_archdata {
-> -- 
+On Thu, Jun 25, 2020 at 03:13:14PM -0700, Joe Perches wrote:
+>On Fri, 2020-06-26 at 05:57 +0800, Coiby Xu wrote:
+>> Remove unnecessary elses after return or break.
+>
+>unrelated trivia:
+>
+>> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+>[]
+>> @@ -1391,12 +1391,11 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
+>>  			pr_err("%s: Failed read of mac index register\n",
+>>  			       __func__);
+>>  			return;
+>> -		} else {
+>> -			if (value[0])
+>> -				pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
+>> -				       qdev->ndev->name, i, value[1], value[0],
+>> -				       value[2]);
+>
+>looks like all of these could use netdev_err
+>
+>				netdev_err(qdev, "etc...",
+>					   i, value[1], value[0], value[2]);
+>
+>etc...
+>
+Interestingly, scripts/checkpatch.pl couldn't detect this problem.
+I once used printk(KERN_ALERT...) and the script would properly warn me
+that,
 
-Acked-by: Borislav Petkov <bp@suse.de>
+     WARNING: Prefer [subsystem eg: netdev]_alert([subsystem]dev, ... then dev_alert(dev, ... then pr_alert(...  to printk(KERN_ALERT .
 
--- 
-Regards/Gruss,
-    Boris.
+I'll fix this issue when sending another version of the patches. Thank
+you for the reminding!
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Best regards,
+Coiby
