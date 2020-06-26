@@ -2,144 +2,94 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D93C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34DF2081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593178808;
-	bh=H19nFT12aZPcp8/O8HppsOpjA5roTacTuL691DsfL98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yARFbDbl9kQ/FclbS/8TU4IZ5YNLwR/XCcxvyIvk06yGFydFWg+EDwhMkXzhg5RgZ
-	 cLBHtPfMqCXapEmHp97r63jGZ2/p/MfXbozLlwn8JANwrntbhwsObq0530Oe0JTR+U
-	 /533UdZ9kLdT2A8tZCjLvS9IEnNhSYpXF5O8iqCo=
+	by mail.kernel.org (Postfix) with ESMTP id D6FBD20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 13:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgFZNkG (ORCPT
+        id S1728735AbgFZNk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38932 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 09:40:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12509 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgFZNkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:40:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A71D52081A;
-        Fri, 26 Jun 2020 13:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593178805;
-        bh=H19nFT12aZPcp8/O8HppsOpjA5roTacTuL691DsfL98=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mSzna5Af/u+ZAHHtyCff4l4vPMIRDlprpeGCIbKuv6zMJl+0vZjg0URJoJRwY7/Bl
-         9Cxpa4G55rNCpf4NTvh1MM0l6H0T6/S3iQNaytyEvW9Vm+Qd/IKo2Srale5+rXqUdb
-         zvbajss+VVcNZBcrNY7tVavZh6UE7+KeXJ5ABpYo=
-Date:   Fri, 26 Jun 2020 15:39:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gabriel C <nix.or.die@googlemail.com>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: ath9k broken [was: Linux 5.7.3]
-Message-ID: <20200626133959.GA4024297@kroah.com>
-References: <1592410366125160@kroah.com>
- <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
- <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
- <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
- <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
- <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
+        id S1725864AbgFZNk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:40:28 -0400
+IronPort-SDR: 7L5zhCV7TIxwWJp6K/utLTqbcwV0DIarwO/TvlLqCHeEbUPlID4X0+ZONks1id+dZ9jir9c69a
+ EBGpSWTEb97w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="142829052"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="142829052"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 06:40:27 -0700
+IronPort-SDR: 5aTYDJxytPvzzUBUDivWwJJcsPilqbm4B5+OPCXJvz1IrKvdCTC7bffLq59rKoQVbmk1UyXJjx
+ ylq2M3rRMEEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="264216341"
+Received: from cgheban-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.199])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2020 06:40:13 -0700
+Date:   Fri, 26 Jun 2020 16:40:11 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+Message-ID: <20200626134011.GA390691@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200625172319.GJ20319@zn.tnic>
+ <20200625202148.GB15394@linux.intel.com>
+ <20200625202520.GQ20319@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
+In-Reply-To: <20200625202520.GQ20319@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:48:59PM +0200, Gabriel C wrote:
-> Am Do., 25. Juni 2020 um 12:52 Uhr schrieb Gabriel C
-> <nix.or.die@googlemail.com>:
-> >
-> > Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
-> > <nix.or.die@googlemail.com>:
-> > >
-> > > Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
-> > > >
-> > > > On 25. 06. 20, 0:05, Gabriel C wrote:
-> > > > > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org>:
-> > > > >>
-> > > > >> I'm announcing the release of the 5.7.3 kernel.
-> > > > >>
-> > > > >
-> > > > > Hello Greg,
-> > > > >
-> > > > >> Qiujun Huang (5):
-> > > > >>       ath9k: Fix use-after-free Read in htc_connect_service
-> > > > >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-> > > > >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-> > > > >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-> > > > >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > > > >>
-> > > > >
-> > > > > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
-> > > > > while working fine on <5.7.3.
-> > > > >
-> > > > > I don't have myself such HW, and the reported doesn't have any experience
-> > > > > in bisecting the kernel, so we build kernels, each with one of the
-> > > > > above commits reverted,
-> > > > > to find the bad commit.
-> > > > >
-> > > > > The winner is:
-> > > > >
-> > > > > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
-> > > > > Author: Qiujun Huang <hqjagain@gmail.com>
-> > > > > Date:   Sat Apr 4 12:18:38 2020 +0800
-> > > > >
-> > > > >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > > > >
-> > > > >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
-> > > > > ...
-> > > > >
-> > > > > Reverting this one fixed his problem.
-> > > >
-> > > > Obvious question: is 5.8-rc1 (containing the commit) broken too?
-> > >
-> > > Yes, it does, just checked.
-> > >
-> > > git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
-> > > v5.8-rc1
-> > > v5.8-rc2
-> > >
-> >
-> > Sorry, I read the wrong, I just woke up.
-> >
-> > We didn't test 5.8-rc{1,2} yet but we will today and let you know.
-> >
+On Thu, Jun 25, 2020 at 10:25:39PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 25, 2020 at 11:21:48PM +0300, Jarkko Sakkinen wrote:
+> > Would be probably easier to review also this way because the commit kind
+> > of rationalizes why things exist.
+> > 
+> > What do you think?
 > 
-> We tested 5.8-rc2 and it is broken too.
-> 
-> The exact HW name is:
-> 
-> TP-link tl-wn722n (Atheros AR9271 chip)
+> Sounds like a plan but you can do this for the next version - no need to
+> do it now. I'll try to review this way, per ioctl as I said in my mail
+> to Sean.
 
-Great!
+OK, sure I won't rush with a new version :-)
 
-Can you work with the developers to fix this in Linus's tree first?
+The code has been reworked so many times that it is somewhat easy to
+make such split and I think it is one measure that an implementation is
+somewhat sound when parts of functionality build up cleanly on top of
+each other.
 
-I bet they want to see the output of 'lsusb -v' for this device to see
-if the endpoint calculations are correct...
-
-thanks,
-
-greg k-h
+/Jarkko
