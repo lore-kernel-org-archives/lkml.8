@@ -2,122 +2,157 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3006AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926F020DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089CB20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H0t9tcKO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muNc1zvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgFZJBS (ORCPT
+        id S1726361AbgFZJGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
+        Fri, 26 Jun 2020 05:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgFZJBR (ORCPT
+        with ESMTP id S1725820AbgFZJGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:01:17 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD36C08C5C1;
-        Fri, 26 Jun 2020 02:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PW5Ju7i2z/xdb7PaCVtfmKC/YY2ETFHvsdEj0WQnO9U=; b=H0t9tcKO/oe2xP19f0tqZ2btQ2
-        JydK0qH+x4SGaETRrERKdMOpP621gT0V3kPnsFp86jSzNYd24TuXWryuHydxSYYaOE1tFaSz7xDmh
-        rftH0TCYRw7oTvAnQAZT3kQwbGv6xjkmFVSUfAu3Vedud733FNTz/Yp3HW0Fl2W6H/0VE0DEckB9s
-        fvQjjc574P7/dfEj2sLldqMG5TzexTqTAAkV7qWphtWgkzgmQTX3sSJy0UOTFW6iYfKnOZAY061Mp
-        GXVh1/UHj5bzI6Yit0MKd/wtbdVF+8i0N5bVT6NPR3SUUiA39SuWJMG9gkiKlUm76y44fglbXvRzT
-        sftdo1RQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jokDJ-0008JE-71; Fri, 26 Jun 2020 09:00:01 +0000
-Date:   Fri, 26 Jun 2020 10:00:01 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200626090001.GA30103@infradead.org>
-References: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624144311.GA5839@infradead.org>
- <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <feb6a8c4-2b94-3f95-6637-679e089a71ca@de.ibm.com>
+        Fri, 26 Jun 2020 05:06:24 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBE7C08C5C1;
+        Fri, 26 Jun 2020 02:06:23 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dr13so8646305ejc.3;
+        Fri, 26 Jun 2020 02:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7k82GdfRQZIx/YywdeTQaGLOZj9qWIQ3HM2GGjeWyUU=;
+        b=muNc1zvPbOcqM0AZGa4ENKGHHvs5qfjHgOqwmOWYFZO6IyGXNbaDyWW5hFIMQxXQhZ
+         RjnHnqug0gx0eOoNveqteLuQCK6bDC1OIzfMko9z+I0Mevu6IqfoNFbPWE7Y7Sq3TMAV
+         6OXYsWsbn5SWFuuqvAlrw1J9MtZox2rxgCFpEwlXB9hzwLOLFIHLgLiUN4rHdsBnKppd
+         SfaoJJL656l5uRFUKbbrXqDLjkMHRiq3o11BzcpEtNcBG12vc4gaiNHIfcf0LGOK5+B5
+         brljkx1ZY8TUHLQHQZc8vb3xmlNW6kzGZHitgbLb8PIJH+S/UQ3FbTUAmd/EZJgKJ/v3
+         uhGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7k82GdfRQZIx/YywdeTQaGLOZj9qWIQ3HM2GGjeWyUU=;
+        b=DhjLeXuKsyRtshxmowmH1q+8Z8OFIPT8i4CqJIPr6JqsyeW66VhW0UcvzJ43nahSMr
+         Fu+dMOVQRfy4uzQ/rXgVuUR2UkNVa91xfZmvCQECsl6XrKAh6wossBkdOjxVNpwB7SAC
+         RoEOMON7d8+vjgeTQM/3QQjRJEvUvAbjqhJfEPQbXwcZD2t14qWVv2KJKSibVzx1Rm8q
+         06YN0W9FzTtemW/eegL/hORAVPrGj94P4xa/FeK/sPFCd4C0IIgKa8L+4IoIMMvzoj7H
+         tt8YcyJKs0Nx2gAadYJRyZzA+6rkm2apZdvnM/Dy73eH/0e9j3e8Es/778ai75ZnfYXf
+         SITg==
+X-Gm-Message-State: AOAM531zov1beIzto09gSaOVDwKHvY9CkG9Jh66a2rGO2f8wIwUg+GW6
+        NwlzSehixluScIneF1Aaf5K+qXIO
+X-Google-Smtp-Source: ABdhPJwL/O8ELz2OXgRCyWiTh5z9d1vYQ0aRl6btpPl1+FavJ/m62CF9RL3vOD1b4KD41Lf3WwdYDw==
+X-Received: by 2002:a17:906:4086:: with SMTP id u6mr1807597ejj.9.1593162382413;
+        Fri, 26 Jun 2020 02:06:22 -0700 (PDT)
+Received: from ?IPv6:2001:a61:253c:8201:b2fb:3ef8:ca:1604? ([2001:a61:253c:8201:b2fb:3ef8:ca:1604])
+        by smtp.gmail.com with ESMTPSA id z15sm18408763eju.18.2020.06.26.02.06.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 02:06:21 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ebiggers@kernel.org
+Subject: Re: [PATCH v2] sync.2: syncfs() now returns errors if writeback fails
+To:     Jeff Layton <jlayton@kernel.org>
+References: <20200625233731.61555-1-jlayton@kernel.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <3e2d6625-72bd-324c-b6d3-4e2a4bc5e369@gmail.com>
+Date:   Fri, 26 Jun 2020 11:06:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <feb6a8c4-2b94-3f95-6637-679e089a71ca@de.ibm.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200625233731.61555-1-jlayton@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 07:22:34AM +0200, Christian Borntraeger wrote:
-> 
-> 
-> On 26.06.20 04:54, Luis Chamberlain wrote:
-> > On Wed, Jun 24, 2020 at 08:37:55PM +0200, Christian Borntraeger wrote:
-> >>
-> >>
-> >> On 24.06.20 20:32, Christian Borntraeger wrote:
-> >> [...]> 
-> >>> So the translations look correct. But your change is actually a sematic change
-> >>> if(ret) will only trigger if there is an error
-> >>> if (KWIFEXITED(ret)) will always trigger when the process ends. So we will always overwrite -ECHILD
-> >>> and we did not do it before. 
-> >>>
-> >>
-> >> So the right fix is
-> >>
-> >> diff --git a/kernel/umh.c b/kernel/umh.c
-> >> index f81e8698e36e..a3a3196e84d1 100644
-> >> --- a/kernel/umh.c
-> >> +++ b/kernel/umh.c
-> >> @@ -154,7 +154,7 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
-> >>                  * the real error code is already in sub_info->retval or
-> >>                  * sub_info->retval is 0 anyway, so don't mess with it then.
-> >>                  */
-> >> -               if (KWIFEXITED(ret))
-> >> +               if (KWEXITSTATUS(ret))
-> >>                         sub_info->retval = KWEXITSTATUS(ret);
-> >>         }
-> >>  
-> >> I think.
-> > 
-> > Nope, the right form is to check for WIFEXITED() before using WEXITSTATUS().
-> 
-> But this IS a change over the previous code, no?
-> I will test next week as I am travelling right now. 
+Hi Jeff,
 
-I'm all for reverting back to the previous behavior.  If someone wants
-a behavior change it should be a separate patch.  And out of pure self
-interest I'd like to see that change after my addition of the
-kernel_wait helper to replace the kernel_wait4 abuse :)
+On 6/26/20 1:37 AM, Jeff Layton wrote:
+> A patch has been merged for v5.8 that changes how syncfs() reports
+> errors. Change the sync() manpage accordingly.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+Thanks. Patch applied. (I've not yet pushed it, in case any 
+review comments might still come in.)
+
+Cheers,
+
+Michael
+
+> ---
+>  man2/sync.2 | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+>  v2: update the NOTES verbiage according to Eric's suggestion
+> 
+> diff --git a/man2/sync.2 b/man2/sync.2
+> index 7198f3311b05..61e994c5affc 100644
+> --- a/man2/sync.2
+> +++ b/man2/sync.2
+> @@ -86,11 +86,26 @@ to indicate the error.
+>  is always successful.
+>  .PP
+>  .BR syncfs ()
+> -can fail for at least the following reason:
+> +can fail for at least the following reasons:
+>  .TP
+>  .B EBADF
+>  .I fd
+>  is not a valid file descriptor.
+> +.TP
+> +.B EIO
+> +An error occurred during synchronization.
+> +This error may relate to data written to any file on the filesystem, or on
+> +metadata related to the filesytem itself.
+> +.TP
+> +.B ENOSPC
+> +Disk space was exhausted while synchronizing.
+> +.TP
+> +.BR ENOSPC ", " EDQUOT
+> +Data was written to a files on NFS or another filesystem which does not
+> +allocate space at the time of a
+> +.BR write (2)
+> +system call, and some previous write failed due to insufficient
+> +storage space.
+>  .SH VERSIONS
+>  .BR syncfs ()
+>  first appeared in Linux 2.6.39;
+> @@ -121,6 +136,13 @@ or
+>  .BR syncfs ()
+>  provide the same guarantees as fsync called on every file in
+>  the system or filesystem respectively.
+> +.PP
+> +In mainline kernel versions prior to 5.8,
+> +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
+> +.BR syncfs ()
+> +will only fail when passed a bad file descriptor (EBADF). In 5.8
+> +and later kernels, it will also report an error if one or more inodes failed
+> +to be written back since the last syncfs call.
+>  .SH BUGS
+>  Before version 1.3.20 Linux did not wait for I/O to complete
+>  before returning.
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
