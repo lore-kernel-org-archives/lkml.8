@@ -2,76 +2,133 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D918AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D47206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC11206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAUUdhfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgFZEF5 (ORCPT
+        id S1726481AbgFZEKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:05:57 -0400
-Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:56192 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZEF4 (ORCPT
+        Fri, 26 Jun 2020 00:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgFZEKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:05:56 -0400
-Received: from localhost.localdomain ([92.148.198.76])
-        by mwinf5d16 with ME
-        id vg5u2200F1fPLi403g5vwo; Fri, 26 Jun 2020 06:05:55 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 26 Jun 2020 06:05:55 +0200
-X-ME-IP: 92.148.198.76
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     linux@armlinux.org.uk, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH V2] scsi: eesox: Fix different dev_id between 'request_irq()' and 'free_irq()'
-Date:   Fri, 26 Jun 2020 06:05:53 +0200
-Message-Id: <20200626040553.944352-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <26d388f5-be67-b643-c76c-b9fe52f111f7@wanadoo.fr>
-References: <26d388f5-be67-b643-c76c-b9fe52f111f7@wanadoo.fr>
+        Fri, 26 Jun 2020 00:10:30 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46121C08C5C1;
+        Thu, 25 Jun 2020 21:10:30 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m2so7391218otr.12;
+        Thu, 25 Jun 2020 21:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yiGoscDyaEFK2a4Hhbr5oo8EKClzH7wIyqZRrKV4JjQ=;
+        b=NAUUdhfOaao8gFQRyvS+BVKpdzkwnAWjQO0msoPeaH+N59nmgmh8+cRU4X+85nL257
+         CdVAmIszSqOjEL1DcPfXzbSap0JSIJUTRT3W85HflgSZyzpA1rWzibtEdEzWhyvFGIjA
+         v/VspvwX0KXKEQZisE7l4xiRZywdeWyq5msgMw12SzM140IBoZnFvhgeG+CjO89OViPs
+         lNZdP+9mf454BPIDt5kqllT/Z9VKGwGMdqXaWsRLfFxOaYulAjMEFNPJnPlFRtNpcm7d
+         /TVzm8hhnSjVnyxl449qwNnw5Xqg/V2m0WJrS0s9jUNNpU02xr3mvV5RqfvlCH5GmRKu
+         xWcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yiGoscDyaEFK2a4Hhbr5oo8EKClzH7wIyqZRrKV4JjQ=;
+        b=cXH/BEZXaTRkUEaUXOFw8o2BERgoCejES3mTXJcPMb+JDYKRH0pzi2o+1NkjNKEmU4
+         mx4jXhhlqB4j4YUbCiIOJDMagp/1ZIGe5jLmh/iHgRl19BV4ZXXD7dhw+ZtZXWI47zE3
+         KCdyXCzyX7tMyoidXCZp0p1GuF32wQcgiLkqym55X3SC5ZwivTUNZDbFjLzwqzTJo3nJ
+         /Oyhs4KFj+6xNeYnGGvphCXEpATwxfE9AObjNCOxXNOiFJJm+ZGN8lkE62Zk4m0Awvm8
+         EddkMff063BA1jAKQjm4ShK7qMX152/0z0qlIwAwudJDpxk+xDlqrAeN/zJEOK2wc6Ha
+         euyQ==
+X-Gm-Message-State: AOAM531gKskPkfDDMqUFHYCRY8uRWk8in7nU2+uC91Yp+h3DBWJf0KuS
+        UUwKRlk/dT12oMZu1qg1RA3+gwoY
+X-Google-Smtp-Source: ABdhPJwE6OUco0cxeHwheCoA0H5zavZw/pkR82GqKYyvVUchqjjcZtx+m7BL89xHLARawT4LRnksGg==
+X-Received: by 2002:a4a:a8cc:: with SMTP id r12mr785952oom.86.1593144629354;
+        Thu, 25 Jun 2020 21:10:29 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id h22sm4165908oos.48.2020.06.25.21.10.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 21:10:28 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Jarod Wilson <jarod@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net-next] bonding: Remove extraneous parentheses in bond_setup
+Date:   Thu, 25 Jun 2020 21:10:02 -0700
+Message-Id: <20200626041001.1194928-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dev_id used in 'request_irq()' and 'free_irq()' should match.
-So use 'info' in both cases.
+Clang warns:
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-V2: update free_irq instead of request_irq in order not to obviously break
-    code
----
- drivers/scsi/arm/eesox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+drivers/net/bonding/bond_main.c:4657:23: warning: equality comparison
+with extraneous parentheses [-Wparentheses-equality]
+        if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
+             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
 
-diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
-index 6e204a2e0c8d..591ae2a6dd74 100644
---- a/drivers/scsi/arm/eesox.c
-+++ b/drivers/scsi/arm/eesox.c
-@@ -571,7 +571,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+drivers/net/bonding/bond_main.c:4681:23: warning: equality comparison
+with extraneous parentheses [-Wparentheses-equality]
+        if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
+             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+
+This warning occurs when a comparision has two sets of parentheses,
+which is usually the convention for doing an assignment within an
+if statement. Since equality comparisons do not need a second set of
+parentheses, remove them to fix the warning.
+
+Fixes: 18cb261afd7b ("bonding: support hardware encryption offload to slaves")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1066
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/bonding/bond_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 4ef99efc37f6..b3479584cc16 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4654,7 +4654,7 @@ void bond_setup(struct net_device *bond_dev)
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
+ #ifdef CONFIG_XFRM_OFFLOAD
+ 	/* set up xfrm device ops (only supported in active-backup right now) */
+-	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
++	if (BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP)
+ 		bond_dev->xfrmdev_ops = &bond_xfrmdev_ops;
+ 	bond->xs = NULL;
+ #endif /* CONFIG_XFRM_OFFLOAD */
+@@ -4678,7 +4678,7 @@ void bond_setup(struct net_device *bond_dev)
  
-  out_remove:
- 	fas216_remove(host);
+ 	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
+ #ifdef CONFIG_XFRM_OFFLOAD
+-	if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP))
++	if (BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP)
+ 		bond_dev->hw_features |= BOND_XFRM_FEATURES;
+ #endif /* CONFIG_XFRM_OFFLOAD */
+ 	bond_dev->features |= bond_dev->hw_features;
+
+base-commit: 7bed14551659875e1cd23a7c0266394a29a773b3
 -- 
-2.25.1
+2.27.0
 
