@@ -2,284 +2,151 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2669C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45084C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715A22082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB88208B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yPARac3q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HW7pMPoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgFZLlh (ORCPT
+        id S1728720AbgFZLnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:41:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45386 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgFZLlf (ORCPT
+        Fri, 26 Jun 2020 07:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgFZLnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:41:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcaLg154439;
-        Fri, 26 Jun 2020 11:41:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=PNI0Jua3x5q2I8Nlxm//VVHUGpNd4BRRAAm+pfIrA4c=;
- b=yPARac3qPia0iakKOb8Q+t8Smaf2bfuyV5Sy4XtC1c9rDmD5dUOca6eyqh9l5AU6XaOC
- vDZA1WKyCwOcLsCflUZQhbbZuQcHVfqcFWTb1fqE0jeS9kUeHT1cUmipz4nmNKaSEZd1
- uhFswiUJd7Hhs39GXgDcRuU/m85GuOuAtv2D9AitjiISQPHPgsx/p1jb7eX4j68bOcXO
- Xio+D9WGnNjUSi9wQYbwOg684Lda7n2Bqlo0iOo8BImjWiIoqxrBIaZ+abNy1byToqh7
- 20A+k8x5FmZwltj8juaoWphve9YYPNhPyMG52ed9In5l0aby+Pj83LYjcIoaYhhiYwzD 3g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31wg3bg1x3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 11:41:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcZvt037295;
-        Fri, 26 Jun 2020 11:41:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31uuraj4um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 11:41:11 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05QBf7LN026222;
-        Fri, 26 Jun 2020 11:41:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 26 Jun 2020 11:41:06 +0000
-Date:   Fri, 26 Jun 2020 14:40:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        balbi@kernel.org, devicetree@vger.kernel.org,
-        ben.dooks@codethink.co.uk, colin.king@canonical.com, rogerq@ti.com,
-        peter.chen@nxp.com, weiyongjun1@huawei.com, jpawar@cadence.com,
-        kurahul@cadene.com, sparmar@cadence.com
-Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
-Message-ID: <20200626114057.GD2571@kadam>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-3-pawell@cadence.com>
+        Fri, 26 Jun 2020 07:43:22 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D4AC08C5C1;
+        Fri, 26 Jun 2020 04:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dY6UukHlcZ+e82YPYVTQRIm6jOfXAELNJfA0ddnH3+0=; b=HW7pMPohMNzcNWBrOKQR8629sZ
+        nWVaNWWPYIkUbTocP1X7DaVMrLJyG+42HOb3gYa31ahAN0A9SDdMsxfvrhpa2NhQm82vYxw9YspeO
+        1M5y3dWrFnrmgzCjiVs8YhefAkoxs/xTmpxvoQ3Nbpz8Q+In7EI/KlCNxjmjP5rgTbfm6eBTBeF76
+        vizq1+U5H2tltHhneBCOdiW/U+nLYPmp4Zav8pPi8++UvCfn9aFu2mm4se8UZowRKHXBhSuBX1exq
+        mHY2ns73zDMjIkR2nTGxS88dg/TS6tMHFLQutMWIVA9O+RXcOX0QKMAQPFwX25yccxW0i76etxb+g
+        WXnTya+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jomkW-0001Sj-F5; Fri, 26 Jun 2020 11:42:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BFB7D301DFC;
+        Fri, 26 Jun 2020 13:42:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B3EF429CC71EB; Fri, 26 Jun 2020 13:42:26 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 13:42:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        mhelsley@vmware.com
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200626114226.GH4817@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com>
+ <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com>
+ <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com>
+ <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com>
+ <20200626112931.GF4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626045450.10205-3-pawell@cadence.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=2 mlxlogscore=858 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2 phishscore=0
- malwarescore=0 cotscore=-2147483648 adultscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1011 mlxscore=0 mlxlogscore=872 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006260084
+In-Reply-To: <20200626112931.GF4817@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
-> +static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *func;
-> +
-> +	/*
-> +	 * Gets the second function.
-> +	 * It's little tricky, but this platform has two function.
-> +	 * The fist keeps resources for Host/Device while the second
-> +	 * keeps resources for DRD/OTG.
-> +	 */
-> +	func = pci_get_device(pdev->vendor, pdev->device, NULL);
-> +	if (unlikely(!func))
+On Fri, Jun 26, 2020 at 01:29:31PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 03:40:42PM -0700, Sami Tolvanen wrote:
 
-Delete all likely/unlikely annotations.  Likely and unlikely annotations
-make the code less readable.  We are willing to sacrifice readability on
-fast paths.
+> > Anyway, since objtool is run before recordmcount, I just left this unchanged
+> > for testing and ignored the recordmcount warnings about __mcount_loc already
+> > existing. Something is a bit off still though, I see this at boot:
+> > 
+> >   ------------[ ftrace bug ]------------
+> >   ftrace failed to modify
+> >   [<ffffffff81000660>] __tracepoint_iter_initcall_level+0x0/0x40
+> >    actual:   0f:1f:44:00:00
+> >   Initializing ftrace call sites
+> >   ftrace record flags: 0
+> >    (0)
+> >    expected tramp: ffffffff81056500
+> >   ------------[ cut here ]------------
+> > 
+> > Otherwise, this looks pretty good.
+> 
+> Ha! it is trying to convert the "CALL __fentry__" into a NOP and not
+> finding the CALL -- because objtool already made it a NOP...
+> 
+> Weird, I thought recordmcount would also write NOPs, it certainly has
+> code for that. I suppose we can use CC_USING_NOP_MCOUNT to avoid those,
+> but I'd rather Steve explain this before I wreck things further.
 
-They're only supposed to be used where they're supported by benchmarking.
-Probably it's pretty tricky to benchmark probe.  The other rule of thumb
-is don't add them to drivers.  Another thing to consider is that this
-error path is probably obvious enough for the compiler to figure out
-without help.
+Something like so would ignore whatever text is there and rewrite it
+with ideal_nop.
 
-> +		return NULL;
-> +
-> +	if (func->devfn == pdev->devfn) {
-> +		func = pci_get_device(pdev->vendor, pdev->device, func);
-> +		if (unlikely(!func))
-> +			return NULL;
-> +	}
-> +
-> +	return func;
-> +}
-> +
-> +static int cdnsp_pci_probe(struct pci_dev *pdev,
-> +			   const struct pci_device_id *id)
-> +{
-> +	struct platform_device_info plat_info;
-> +	struct cdnsp_wrap *wrap;
-> +	struct resource *res;
-> +	struct pci_dev *func;
-> +	int err;
-> +
-> +	/*
-> +	 * For GADGET/HOST PCI (devfn) function number is 0,
-> +	 * for OTG PCI (devfn) function number is 1.
-> +	 */
-> +	if (!id || (pdev->devfn != PCI_DEV_FN_HOST_DEVICE &&
-> +		    pdev->devfn != PCI_DEV_FN_OTG))
-> +		return -EINVAL;
-> +
-> +	func = cdnsp_get_second_fun(pdev);
-> +	if (unlikely(!func))
-> +		return -EINVAL;
-> +
-> +	if (func->class == PCI_CLASS_SERIAL_USB_XHCI ||
-> +	    pdev->class == PCI_CLASS_SERIAL_USB_XHCI)
-> +		return -EINVAL;
-
-
-Do we need call pci_put_device(func) before returning?
-
-		ret = -EINVAL;
-		goto put_pci;
-
-> +
-> +	err = pcim_enable_device(pdev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
-> +		return err;
-
-		goto put_pci;
-
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +
-> +	if (pci_is_enabled(func)) {
-> +		wrap = pci_get_drvdata(func);
-> +	} else {
-> +		wrap = kzalloc(sizeof(*wrap), GFP_KERNEL);
-> +		if (!wrap) {
-> +			pci_disable_device(pdev);
-> +			return -ENOMEM;
-
-goto disable_pci;
-
-> +		}
-> +	}
-> +
-> +	res = wrap->dev_res;
-> +
-> +	/* For GADGET device function number is 0. */
-> +	if (pdev->devfn == 0) {
-> +		/* Function 0: host(BAR_0) + device(BAR_1).*/
-> +		dev_dbg(&pdev->dev, "Initialize Device resources\n");
-> +		res[RES_DEV_ID].start = pci_resource_start(pdev, PCI_BAR_DEV);
-> +		res[RES_DEV_ID].end =   pci_resource_end(pdev, PCI_BAR_DEV);
-> +		res[RES_DEV_ID].name = "dev";
-> +		res[RES_DEV_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
-> +			&res[RES_DEV_ID].start);
-> +
-> +		res[RES_HOST_ID].start = pci_resource_start(pdev, PCI_BAR_HOST);
-> +		res[RES_HOST_ID].end = pci_resource_end(pdev, PCI_BAR_HOST);
-> +		res[RES_HOST_ID].name = "xhci";
-> +		res[RES_HOST_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
-> +			&res[RES_HOST_ID].start);
-> +
-> +		/* Interrupt for XHCI, */
-> +		wrap->dev_res[RES_IRQ_HOST_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_HOST_ID].name = "host";
-> +		wrap->dev_res[RES_IRQ_HOST_ID].flags = IORESOURCE_IRQ;
-> +
-> +		/* Interrupt device. It's the same as for HOST. */
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].name = "peripheral";
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].flags = IORESOURCE_IRQ;
-> +	} else {
-> +		res[RES_DRD_ID].start = pci_resource_start(pdev, PCI_BAR_OTG);
-> +		res[RES_DRD_ID].end =   pci_resource_end(pdev, PCI_BAR_OTG);
-> +		res[RES_DRD_ID].name = "otg";
-> +		res[RES_DRD_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "CDNSP-DRD physical base addr: %pa\n",
-> +			&res[RES_DRD_ID].start);
-> +
-> +		/* Interrupt for OTG/DRD. */
-> +		wrap->dev_res[RES_IRQ_OTG_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_OTG_ID].name = "otg";
-> +		wrap->dev_res[RES_IRQ_OTG_ID].flags = IORESOURCE_IRQ;
-> +	}
-> +
-> +	if (pci_is_enabled(func)) {
-> +		/* Set up platform device info. */
-> +		memset(&plat_info, 0, sizeof(plat_info));
-> +		plat_info.parent = &pdev->dev;
-> +		plat_info.fwnode = pdev->dev.fwnode;
-> +		plat_info.name = PLAT_DRIVER_NAME;
-> +		plat_info.id = pdev->devfn;
-> +		wrap->devfn  = pdev->devfn;
-> +		plat_info.res = wrap->dev_res;
-> +		plat_info.num_res = ARRAY_SIZE(wrap->dev_res);
-> +		plat_info.dma_mask = pdev->dma_mask;
-> +		/* Register platform device. */
-> +		wrap->plat_dev = platform_device_register_full(&plat_info);
-> +		if (IS_ERR(wrap->plat_dev)) {
-> +			pci_disable_device(pdev);
-> +			err = PTR_ERR(wrap->plat_dev);
-> +			kfree(wrap);
-
-		err = PTR_ERR(wrap->plat_dev);
-		goto free_wrap;
-
-Except, do we really want to kfree(wrap)?  It looks like it came from
-pci_get_drvdata().
-
-> +			return err;
-> +		}
-> +	}
-> +
-> +	pci_set_drvdata(pdev, wrap);
-> +	return err;
-
-free_wrap:
-	if (!pci_is_enabled(func))
-		kfree(wrap);
-disable_pci:
-	pci_disable_device(pdev);
-put_pci:
-	pci_put_device(func);
-
-> +}
-> +
-> +static void cdnsp_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct cdnsp_wrap *wrap;
-> +	struct pci_dev *func;
-> +
-> +	func = cdnsp_get_second_fun(pdev);
-> +
-> +	wrap = (struct cdnsp_wrap *)pci_get_drvdata(pdev);
-> +	if (wrap->devfn == pdev->devfn)
-> +		platform_device_unregister(wrap->plat_dev);
-> +
-> +	if (!pci_is_enabled(func))
-> +		kfree(wrap);
-
-pci_put_device(func);
-
-> +}
-> +
-
-regards,
-dan carpenter
-
+---
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index c84d28e90a58..98a6a93d7615 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -109,9 +109,11 @@ static int __ref
+ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+ 			  const char *new_code)
+ {
+-	int ret = ftrace_verify_code(ip, old_code);
+-	if (ret)
+-		return ret;
++	if (old_code) {
++		int ret = ftrace_verify_code(ip, old_code);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/* replace the text with the new text */
+ 	if (ftrace_poke_late)
+@@ -124,9 +126,8 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long addr)
+ {
+ 	unsigned long ip = rec->ip;
+-	const char *new, *old;
++	const char *new;
+ 
+-	old = ftrace_call_replace(ip, addr);
+ 	new = ftrace_nop_replace();
+ 
+ 	/*
+@@ -138,7 +139,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+ 	 * just modify the code directly.
+ 	 */
+ 	if (addr == MCOUNT_ADDR)
+-		return ftrace_modify_code_direct(ip, old, new);
++		return ftrace_modify_code_direct(ip, NULL, new);
+ 
+ 	/*
+ 	 * x86 overrides ftrace_replace_code -- this function will never be used
