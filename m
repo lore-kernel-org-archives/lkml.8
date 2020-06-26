@@ -2,211 +2,121 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430342075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2CE2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m8J34OgF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L758zaU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgFZP55 (ORCPT
+        id S1726399AbgFZP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
+        Fri, 26 Jun 2020 11:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgFZP54 (ORCPT
+        with ESMTP id S1725958AbgFZP67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:57:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF71DC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:57:55 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 22so9295355wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:57:55 -0700 (PDT)
+        Fri, 26 Jun 2020 11:58:59 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A33C03E979;
+        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id dg28so7318735edb.3;
+        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SLVYA+KPlPsy9yYgUjFYIqSkRv4wawTtFWm+qvVkpo4=;
-        b=m8J34OgFfXzLvgc2if7QNbh2n9WDF0es4wCI5PdUUYAIWFt1H+DMIQ8TdH8szFYi3Z
-         OhziB1Ey6NE4hEfulz5iFal5p5A7Sc7x4SAP5aUJbDfLwn7RhY/7b74L1JLOy9xEXkTB
-         HT/ARs/NhMlaXXLdlepTcS1Gr9xCxFnc4KaqGrzKtcw+JFtafDJfyB7nAjQb/sdTQIse
-         wd/v6QR7DlZnmNvj8bTL8Rpiwzjx+JuSGn53xTDo7qJbeUpH9kUdnkq39ODpH8H+B1RS
-         qOj1vVvu/dzbZXcNvxmIT7D5cQgP8LO1E4K+NcP4IscV6XuNXT9oimRBsqC9SxdlHjxG
-         +SLw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
+        b=L758zaU6Q5soAykwZ2Cj4fZCxEiq0bK5AbIT76HtieRMWdp0AKiaw2I0bPdddlx3JP
+         uQf+XHrpnMqigdETNytKi8CDGYjZFLa0zC2gijvdyXgO1LLhgW9J9X1Eh12kBtIyTSQM
+         8Ib2PegUFK28yRiGYXIfPy1cM7F1oT1g06o/jeWuDF7KehSatUXzGf7x32g/6CYIxS8y
+         IfTYQx2jRY70LvRk1CZVL1vLMdWeIOLDUA3e9dUiIrQcsnunAZa0T5X3VtzPAUXiAYcF
+         L6wBXc1PZ+SRpVhgww8sS5zoClBFUWiy3h9qEWcPMkVrGJnpg20wSEseQdj8FpsumCcz
+         HhTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SLVYA+KPlPsy9yYgUjFYIqSkRv4wawTtFWm+qvVkpo4=;
-        b=GrjynTd1MLvcd0PBe0tyuPFizkOc8HhBITijkKeitJrGNFpCOXw9R1P83L83nXqCc1
-         o13egnqSP88GAb37J3whXBdYtLr8C5SpbvudvkuV6Y3ra9QAsW8Yuh58TOTgjlgpHnMq
-         u5qfIWtCvI/bi9GvGnVGcT9YVFc3F+i1wKRXwzTBH6gXki4RUsiR2YETs5GO9ojtFENS
-         wy8HUO9Qt4Ep5Ce+GEO2oB3ggwrXYaxQVqppJj/1Qt002QwMdAYSC/Myaq6NZEeWLWbg
-         4a4LaLzeLfFmqvo5PfpL97JAeqohXzi5N4s4EqAObikBpEuhQ2i9DwEUvzLoCfKoZN7d
-         hd/A==
-X-Gm-Message-State: AOAM531X8da8UScjTGqK4e2g1nKmSCIB8eLWt0/7cUvCp2B48XnFkbfm
-        xKRMyhS1L12de5HkLSyKIKE4Kg==
-X-Google-Smtp-Source: ABdhPJyN/TqWJB0s+HOEo3+G7pkP5DR7DUqjxT+LOyXk/S8tZH/iVagIQRM3AUWWBY3aR03bTU2d5g==
-X-Received: by 2002:a1c:7e49:: with SMTP id z70mr4013279wmc.24.1593187074525;
-        Fri, 26 Jun 2020 08:57:54 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id f1sm17429843wmj.12.2020.06.26.08.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 08:57:53 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 16:57:50 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 3/3] cpufreq: Specify default governor on command line
-Message-ID: <20200626155750.GA540785@google.com>
-References: <cover.1593143118.git.viresh.kumar@linaro.org>
- <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
+        b=qnlQFXzVyhJnv+gX/41B7UMJy4jTPE0SJCWgtAMEt3YcIT73+p0TXpv7JPYc5iibtj
+         3XoXnszxZJZ33W4Wkjas3ZdRuy4dE59dYbKwSXqeqCkF7QU3xfiZ+/tvfFrbJ4/xyFlz
+         rZ0Rnj8iCDk7UQZPzLK3tJPq2qPUoNVLloUg41m2LFuq9zENWyxGum51LTDVj7iDtSpw
+         o/w16nc+WTEiv1ljHC9qZQIQwlqkhX3zXZEmGG2MRPzKRQa3uP9+9vor3MFAN69zdMsa
+         M57KdKzUGlzRRss8xwGnPY77/Zq+Xe9cebX92d7ct96YkYJg2+rc9bvTCqaibXQS+FPN
+         Fiog==
+X-Gm-Message-State: AOAM532QpXVZoqvnquxHDha7ZL7+glePoy3GwxeDsYTx5Zv9In72rbo7
+        iou1rU6qkz6oSEkb9GE9jqM=
+X-Google-Smtp-Source: ABdhPJyoCTdM4ZvkweJXXQubH3n4cD7yadzdQkILMeSfZTtDa9VjctDnNDOsHdf8HzPbB8IhwNCiCQ==
+X-Received: by 2002:a50:fa0c:: with SMTP id b12mr4178260edq.226.1593187137753;
+        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
+Received: from BV030612LT ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id s2sm21132439edu.39.2020.06.26.08.58.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 18:58:54 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions
+ Semi Owl SoCs
+Message-ID: <20200626155854.GB6611@BV030612LT>
+References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
+ <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
+ <20200626135415.GD8333@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
+In-Reply-To: <20200626135415.GD8333@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 26 Jun 2020 at 09:21:44 (+0530), Viresh Kumar wrote:
-> index e798a1193bdf..93c6399c1a42 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -50,6 +50,9 @@ static LIST_HEAD(cpufreq_governor_list);
->  #define for_each_governor(__governor)				\
->  	list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
->  
-> +static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
-> +static char default_governor[CPUFREQ_NAME_LEN];
-> +
->  /**
->   * The "cpufreq driver" - the arch- or hardware-dependent low
->   * level driver of CPUFreq support, and its spinlock. This lock
-> @@ -1061,7 +1064,6 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
->  
->  static int cpufreq_init_policy(struct cpufreq_policy *policy)
->  {
-> -	struct cpufreq_governor *def_gov = cpufreq_default_governor();
->  	struct cpufreq_governor *gov = NULL;
->  	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
->  	bool put_governor = false;
-> @@ -1071,22 +1073,29 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
->  		/* Update policy governor to the one used before hotplug. */
->  		gov = get_governor(policy->last_governor);
->  		if (gov) {
-> -			put_governor = true;
->  			pr_debug("Restoring governor %s for cpu %d\n",
-> -				 policy->governor->name, policy->cpu);
-> -		} else if (def_gov) {
-> -			gov = def_gov;
-> +				 gov->name, policy->cpu);
->  		} else {
-> -			return -ENODATA;
-> +			gov = get_governor(default_governor);
-> +		}
-> +
-> +		if (gov) {
-> +			put_governor = true;
-> +		} else {
-> +			gov = cpufreq_default_governor();
-> +			if (!gov)
-> +				return -ENODATA;
->  		}
+On Fri, Jun 26, 2020 at 07:24:16PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jun 24, 2020 at 08:47:57PM +0300, Cristian Ciocaltea wrote:
+> > Add a reset binding entry to match all members of Actions Semi Owl SoCs.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 7b5ffd646c6b..e6285c13bab0 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
+> >  F:	drivers/pinctrl/actions/*
+> >  F:	drivers/soc/actions/
+> >  F:	include/dt-bindings/power/owl-*
+> > +F:	include/dt-bindings/reset/actions,*-reset.h
+> 
+> You can just use, reset/actions,*
+> 
+> Thanks,
+> Mani
 
-As mentioned on patch 01, doing put_module() below if gov != NULL would
-avoid this dance with put_governor, but this works too, so no strong
-opinion.
+Done, thanks!
 
-> +
->  	} else {
-> +
->  		/* Use the default policy if there is no last_policy. */
->  		if (policy->last_policy) {
->  			pol = policy->last_policy;
-> -		} else if (def_gov) {
-> -			pol = cpufreq_parse_policy(def_gov->name);
-> +		} else {
-> +			pol = cpufreq_parse_policy(default_governor);
->  			/*
-> -			 * In case the default governor is neiter "performance"
-> +			 * In case the default governor is neither "performance"
->  			 * nor "powersave", fall back to the initial policy
->  			 * value set by the driver.
->  			 */
-> @@ -2796,13 +2805,22 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
->  
->  static int __init cpufreq_core_init(void)
->  {
-> +	struct cpufreq_governor *gov = cpufreq_default_governor();
-> +	char *name = gov->name;
-> +
->  	if (cpufreq_disabled())
->  		return -ENODEV;
->  
->  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
->  	BUG_ON(!cpufreq_global_kobject);
->  
-> +	if (strlen(cpufreq_param_governor))
-> +		name = cpufreq_param_governor;
-> +
-> +	strncpy(default_governor, name, CPUFREQ_NAME_LEN);
-
-Do we need both cpufreq_param_governor and default_governor?
-Could we move everything to only one of them? Something a little bit
-like that maybe?
-
----8<---
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 93c6399c1a42..a0e90b567e1e 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -50,7 +50,6 @@ static LIST_HEAD(cpufreq_governor_list);
- #define for_each_governor(__governor)                          \
-        list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
- 
--static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
- static char default_governor[CPUFREQ_NAME_LEN];
- 
- /**
-@@ -2814,13 +2813,11 @@ static int __init cpufreq_core_init(void)
-        cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
-        BUG_ON(!cpufreq_global_kobject);
- 
--       if (strlen(cpufreq_param_governor))
--               name = cpufreq_param_governor;
--
--       strncpy(default_governor, name, CPUFREQ_NAME_LEN);
-+       if (!strlen(default_governor))
-+               strncpy(default_governor, name, CPUFREQ_NAME_LEN);
- 
-        return 0;
- }
- module_param(off, int, 0444);
--module_param_string(default_governor, cpufreq_param_governor, CPUFREQ_NAME_LEN, 0444);
-+module_param_string(default_governor, default_governor, CPUFREQ_NAME_LEN, 0444);
---->8---
-
-Also, one thing to keep in mind with this version (or the one you
-suggested) is that if the command line parameter is not valid, we will
-not fallback on the builtin default for the ->setpolicy() case. But I
-suppose one might argue this is a reasonable behaviour, so no objection
-from me.
-
-Otherwise, apart from these nits, I gave this a go on my setup, with
-builtin and modular governors & drivers, and everything worked exactly
-as expected.
-
-Thanks Viresh for the help!
-Quentin
+> 
+> >  F:	include/linux/soc/actions/
+> >  N:	owl
+> >  
+> > -- 
+> > 2.27.0
+> > 
