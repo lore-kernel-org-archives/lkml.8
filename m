@@ -2,27 +2,27 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36935206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7BB20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgFZRe1 (ORCPT
+        id S1726946AbgFZReW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:34:27 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56028 "EHLO
+        Fri, 26 Jun 2020 13:34:22 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42218 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgFZReS (ORCPT
+        with ESMTP id S1725917AbgFZReR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:34:18 -0400
+        Fri, 26 Jun 2020 13:34:17 -0400
 Received: from 89-64-83-223.dynamic.chello.pl (89.64.83.223) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id aea2085616e28395; Fri, 26 Jun 2020 19:34:16 +0200
+ id 85d3147370415763; Fri, 26 Jun 2020 19:34:13 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Erik Kaneda <erik.kaneda@intel.com>
@@ -34,11 +34,11 @@ Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [RFT][PATCH v3 0/4] ACPI: ACPICA / OSL: Avoid unmapping ACPI memory inside of the AML interpreter
-Date:   Fri, 26 Jun 2020 19:28:27 +0200
-Message-ID: <2788992.3K7huLjdjL@kreacher>
-In-Reply-To: <2713141.s8EVnczdoM@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher>
+Subject: [RFT][PATCH v3 2/4] ACPI: OSL: Implement deferred unmapping of ACPI memory
+Date:   Fri, 26 Jun 2020 19:31:24 +0200
+Message-ID: <4507864.RZ40Oy75i1@kreacher>
+In-Reply-To: <2788992.3K7huLjdjL@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -47,55 +47,350 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-On Monday, June 22, 2020 3:50:42 PM CEST Rafael J. Wysocki wrote:
-> Hi All,
-> 
-> This series is to address the problem with RCU synchronization occurring,
-> possibly relatively often, inside of acpi_ex_system_memory_space_handler(),
-> when the namespace and interpreter mutexes are held.
-> 
-> Like I said before, I had decided to change the approach used in the previous
-> iteration of this series and to allow the unmap operations carried out by 
-> acpi_ex_system_memory_space_handler() to be deferred in the first place,
-> which is done in patches [1-2/4].
+Rework acpi_os_unmap_memory() so that it does not release the memory
+mapping matching the given address range right away but queues it
+up for later removal, implement acpi_os_release_unused_mappings()
+that will remove the unused ACPI memory mappings and add invocations
+of it to acpi_release_memory() and to the table loading/unloading
+code, to get rid of memory mappings that may be left behind.
 
-In the meantime I realized that calling syncrhonize_rcu_expedited() under the
-"tables" mutex within ACPICA is not quite a good idea too and that there is no
-reason for any users of acpi_os_unmap_memory() in the tree to use the "sync"
-variant of unmapping.
+Reported-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/acpi_configfs.c      |   3 +
+ drivers/acpi/osl.c                | 153 +++++++++++++++++++++++-------
+ drivers/acpi/tables.c             |   2 +
+ include/acpi/platform/aclinux.h   |   1 +
+ include/acpi/platform/aclinuxex.h |   2 +
+ 5 files changed, 125 insertions(+), 36 deletions(-)
 
-So, unless I'm missing something, acpi_os_unmap_memory() can be changed to
-always defer the final unmapping and the only ACPICA change needed to support
-that is the addition of the acpi_os_release_unused_mappings() call to get rid
-of the unused mappings when leaving the interpreter (module the extra call in
-the debug code for consistency).
+diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+index ece8c1a921cc..dd167ff87dc4 100644
+--- a/drivers/acpi/acpi_configfs.c
++++ b/drivers/acpi/acpi_configfs.c
+@@ -59,6 +59,8 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+ 		table->header = NULL;
+ 	}
+ 
++	acpi_os_release_unused_mappings();
++
+ 	return ret;
+ }
+ 
+@@ -224,6 +226,7 @@ static void acpi_table_drop_item(struct config_group *group,
+ 
+ 	ACPI_INFO(("Host-directed Dynamic ACPI Table Unload"));
+ 	acpi_unload_table(table->index);
++	acpi_os_release_unused_mappings();
+ }
+ 
+ static struct configfs_group_operations acpi_table_group_ops = {
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 762c5d50b8fe..749ae3e32193 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -77,12 +77,16 @@ struct acpi_ioremap {
+ 	void __iomem *virt;
+ 	acpi_physical_address phys;
+ 	acpi_size size;
+-	unsigned long refcount;
++	union {
++		unsigned long refcount;
++		struct list_head gc;
++	} track;
+ };
+ 
+ static LIST_HEAD(acpi_ioremaps);
+ static DEFINE_MUTEX(acpi_ioremap_lock);
+ #define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
++static LIST_HEAD(unused_mappings);
+ 
+ static void __init acpi_request_region (struct acpi_generic_address *gas,
+ 	unsigned int length, char *desc)
+@@ -250,7 +254,7 @@ void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size)
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+ 		virt = map->virt + (phys - map->phys);
+-		map->refcount++;
++		map->track.refcount++;
+ 	}
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return virt;
+@@ -335,7 +339,7 @@ void __iomem __ref
+ 	/* Check if there's a suitable mapping already. */
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+-		map->refcount++;
++		map->track.refcount++;
+ 		goto out;
+ 	}
+ 
+@@ -358,7 +362,7 @@ void __iomem __ref
+ 	map->virt = virt;
+ 	map->phys = pg_off;
+ 	map->size = pg_sz;
+-	map->refcount = 1;
++	map->track.refcount = 1;
+ 
+ 	list_add_tail_rcu(&map->list, &acpi_ioremaps);
+ 
+@@ -375,40 +379,39 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+ 
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+-static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
++static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+ {
+-	unsigned long refcount = --map->refcount;
++	if (--map->track.refcount)
++		return true;
+ 
+-	if (!refcount)
+-		list_del_rcu(&map->list);
+-	return refcount;
++	list_del_rcu(&map->list);
++
++	if (defer) {
++		INIT_LIST_HEAD(&map->track.gc);
++		list_add_tail(&map->track.gc, &unused_mappings);
++	}
++	return defer;
+ }
+ 
+-static void acpi_os_map_cleanup(struct acpi_ioremap *map)
++static void __acpi_os_map_cleanup(struct acpi_ioremap *map)
+ {
+-	synchronize_rcu_expedited();
+ 	acpi_unmap(map->phys, map->virt);
+ 	kfree(map);
+ }
+ 
+-/**
+- * acpi_os_unmap_iomem - Drop a memory mapping reference.
+- * @virt: Start of the address range to drop a reference to.
+- * @size: Size of the address range to drop a reference to.
+- *
+- * Look up the given virtual address range in the list of existing ACPI memory
+- * mappings, drop a reference to it and unmap it if there are no more active
+- * references to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_unmap_table() to get the job done.  Since
+- * __acpi_unmap_table() is an __init function, the __ref annotation is needed
+- * here.
+- */
+-void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++static void acpi_os_map_cleanup(struct acpi_ioremap *map)
++{
++	if (!map)
++		return;
++
++	synchronize_rcu_expedited();
++	__acpi_os_map_cleanup(map);
++}
++
++static void __ref __acpi_os_unmap_iomem(void __iomem *virt, acpi_size size,
++					bool defer)
+ {
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (!acpi_permanent_mmap) {
+ 		__acpi_unmap_table(virt, size);
+@@ -416,26 +419,97 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ 	}
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup_virt(virt, size);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, defer))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
++}
++
++/**
++ * acpi_os_unmap_iomem - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and unmap it if there are no more active
++ * references to it.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine simply calls __acpi_unmap_table() to get the job done.  Since
++ * __acpi_unmap_table() is an __init function, the __ref annotation is needed
++ * here.
++ */
++void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++{
++	__acpi_os_unmap_iomem(virt, size, false);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
+ 
++/**
++ * acpi_os_unmap_memory - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and if there are no more active references
++ * to it, put it in the list of unused memory mappings.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine behaves like acpi_os_unmap_iomem().
++ */
+ void __ref acpi_os_unmap_memory(void *virt, acpi_size size)
+ {
+-	return acpi_os_unmap_iomem((void __iomem *)virt, size);
++	__acpi_os_unmap_iomem((void __iomem *)virt, size, true);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_memory);
+ 
++/**
++ * acpi_os_release_unused_mappings - Release unused ACPI memory mappings.
++ */
++void acpi_os_release_unused_mappings(void)
++{
++	struct list_head list;
++
++	INIT_LIST_HEAD(&list);
++
++	/*
++	 * First avoid looking at mappings that may be added to the "unused"
++	 * list while the synchronize_rcu() below is running.
++	 */
++	mutex_lock(&acpi_ioremap_lock);
++
++	list_splice_init(&unused_mappings, &list);
++
++	mutex_unlock(&acpi_ioremap_lock);
++
++	if (list_empty(&list))
++		return;
++
++	/*
++	 * Wait for the possible users of the mappings in the "unused" list to
++	 * stop using them.
++	 */
++	synchronize_rcu();
++
++	/* Release the unused mappings in the list. */
++	do {
++		struct acpi_ioremap *map;
++
++		map = list_entry(list.next, struct acpi_ioremap, track.gc);
++		list_del(&map->track.gc);
++		__acpi_os_map_cleanup(map);
++	} while (!list_empty(&list));
++}
++
+ int acpi_os_map_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+@@ -461,7 +535,6 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
+ 		return;
+@@ -472,16 +545,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ 		return;
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup(addr, gas->bit_width / 8);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, false))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
+@@ -1566,11 +1641,17 @@ static acpi_status acpi_deactivate_mem_region(acpi_handle handle, u32 level,
+ acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
+ 				u32 level)
+ {
++	acpi_status ret;
++
+ 	if (!(res->flags & IORESOURCE_MEM))
+ 		return AE_TYPE;
+ 
+-	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
++	ret = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+ 				   acpi_deactivate_mem_region, NULL, res, NULL);
++
++	acpi_os_release_unused_mappings();
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(acpi_release_memory);
+ 
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index 0e905c3d1645..939484a860a1 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -816,6 +816,8 @@ int __init acpi_table_init(void)
+ 		return -EINVAL;
+ 	acpi_table_initrd_scan();
+ 
++	acpi_os_release_unused_mappings();
++
+ 	check_multiple_madt();
+ 	return 0;
+ }
+diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+index 987e2af7c335..784e294dc74c 100644
+--- a/include/acpi/platform/aclinux.h
++++ b/include/acpi/platform/aclinux.h
+@@ -133,6 +133,7 @@
+ #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_delete_raw_lock
+ #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_acquire_raw_lock
+ #define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_release_raw_lock
++#define ACPI_USE_ALTERNATE_PROTOTYPE_acpi_os_release_unused_mappings
+ 
+ /*
+  * OSL interfaces used by debugger/disassembler
+diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
+index 04f88f2de781..ad6b905358c5 100644
+--- a/include/acpi/platform/aclinuxex.h
++++ b/include/acpi/platform/aclinuxex.h
+@@ -120,6 +120,8 @@ static inline void acpi_os_delete_raw_lock(acpi_raw_spinlock handle)
+ 	ACPI_FREE(handle);
+ }
+ 
++void acpi_os_release_unused_mappings(void);
++
+ static inline u8 acpi_os_readable(void *pointer, acpi_size length)
+ {
+ 	return TRUE;
+-- 
+2.26.2
 
-So patches [1-2/4] have been changed accordingly.
-
-> However, it turns out that the "fast-path" mapping is still useful on top of
-> the above to reduce the number of ioremap-iounmap cycles for the same address
-> range and so it is introduced by patches [3-4/4].
-
-Patches [3-4/4] still do what they did, but they have been simplified a bit
-after rebasing on top of the new [1-2/4].
-
-The below information is still valid, but it applies to the v3, of course.
-
-> For details, please refer to the patch changelogs.
-> 
-> The series is available from the git branch at
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->  acpica-osl
-> 
-> for easier testing.
-
-Also the series have been tested locally.
-
-Thanks,
-Rafael
 
 
 
