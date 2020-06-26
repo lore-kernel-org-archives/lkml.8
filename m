@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0522081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102882081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="YU+RBJh1"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Y61Myd8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgFZA4V (ORCPT
+        id S1726855AbgFZA41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:56:21 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45366 "EHLO vps.xff.cz"
+        Thu, 25 Jun 2020 20:56:27 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45452 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbgFZA4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726697AbgFZA4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 20:56:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132969; bh=N2+51FLSxUgYRTfkXppkmskKeBdxuh3L5G/ggCgw7IU=;
+        t=1593132970; bh=CV53Scvw2h1LR2Os390y4UoDhpbY0o57cfifO/wpX0Y=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=YU+RBJh1BuD/O0pZTuUclupCY0WwQbwCu7LwnIsZ9fPLnfxBKXxeNefY3Ju6DjE1f
-         +oomT5n3OGj1k/gML4Nobh8D0ib0BdJVSzYpLTkzf1P39N/lftJ5Kvy1VLx73X0paN
-         QohLdX6hy/qdRtXWDCD20Wew0lgTsbDK4+8s/zGA=
+        b=Y61Myd8uppaNKmaPViWrA75NNPXVceZ/llUkfYNWAbHsQZvCpfxwxbUAdXCPbEOlp
+         qn+55VKCzHwzKnj11Vw5VXNkmHWYVx4S3glIz6/7Ey6+wqWhQmR4SvwbLx+xItdJrB
+         eZzZF6Bz2dIqzbNfCfTbYOL3i2XXAsVo31ac6VEE=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -47,9 +47,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v5 11/13] drm/panel: st7703: Assert reset prior to powering down the regulators
-Date:   Fri, 26 Jun 2020 02:55:59 +0200
-Message-Id: <20200626005601.241022-12-megous@megous.com>
+Subject: [PATCH v5 13/13] arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+Date:   Fri, 26 Jun 2020 02:56:01 +0200
+Message-Id: <20200626005601.241022-14-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
@@ -59,26 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset pin is inverted, so if we don't assert reset, the actual gpio
-will be high and may keep driving the IO port of the panel.
+Pinephone has a Goodix GT917S capacitive touchscreen controller on
+I2C0 bus. Add support for it.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-index e771281eb547..92930e127559 100644
---- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-+++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-@@ -416,6 +416,7 @@ static int st7703_unprepare(struct drm_panel *panel)
- 	if (!ctx->prepared)
- 		return 0;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index 85a7aa5efd32..2d5694446d17 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -123,6 +123,25 @@ &ehci1 {
+ 	status = "okay";
+ };
  
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 	regulator_disable(ctx->iovcc);
- 	regulator_disable(ctx->vcc);
- 	ctx->prepared = false;
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt917s", "goodix,gt911";
++		reg = <0x5d>;
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++		AVDD28-supply = <&reg_ldo_io0>;
++		VDDIO-supply = <&reg_ldo_io0>;
++		touchscreen-size-x = <720>;
++		touchscreen-size-y = <1440>;
++	};
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 
 -- 
 2.27.0
 
