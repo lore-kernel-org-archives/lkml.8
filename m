@@ -2,284 +2,108 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6097C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AF52075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3255E2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DD5VeIcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFZQEn (ORCPT
+        id S1726676AbgFZQGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:04:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:34518 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgFZQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:04:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11B91FB;
-        Fri, 26 Jun 2020 09:04:41 -0700 (PDT)
-Received: from [10.57.13.97] (unknown [10.57.13.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D98A03F6CF;
-        Fri, 26 Jun 2020 09:04:36 -0700 (PDT)
-Subject: Re: [PATCH v3 02/14] iommu: Report domain nesting info
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Liu Yi L <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, peterx@redhat.com,
-        hao.wu@intel.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
- <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
- <20200626074738.GA2107508@myrica>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <069bcf66-4db3-b4f1-2e09-a79d255d0850@arm.com>
-Date:   Fri, 26 Jun 2020 17:04:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 12:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgFZQGb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 12:06:31 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDEEC03E979;
+        Fri, 26 Jun 2020 09:06:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q5so10007246wru.6;
+        Fri, 26 Jun 2020 09:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WH5+dX1OUYMG5MfmWXgbhnz+c2DUXoRRb3W1X97OIVA=;
+        b=DD5VeIcQIPBv7FMek3jmrC0DreNqtzJ8aADO7nZXveOL3C9lDL92WzIaRD8dnjn/4i
+         y/GDvHIXjuZ4IsZU3tBckuoxeXlm7z9zPccbHU6CLNomr2nbv6MZEBDO4SaS8m0r0M7A
+         PGtk4VLQB7nSQEYWQJgsS99DR/m5gOzhczylBXSl7QbqJ/WmXoPSjfqs4U/ZD5PN9XnG
+         HZdnwo97mMOuxCdgkzTuOMV4BYnqE1bz3pkiK74HmjdvqnIFOzJ7PbdqgT+0RektoWCw
+         Td80jt+/lbGUBYUOP5M1TwIznqg1iP1F5weKRndcePcP1IwK1esomGEWd0NT8EtrB5oJ
+         93vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WH5+dX1OUYMG5MfmWXgbhnz+c2DUXoRRb3W1X97OIVA=;
+        b=gXsqtzXRQuukvs12883qfWXXNDVE91rOI55Bi92D81HghAOna0aqzCWDd35f/zSae1
+         RaJC6GBVYmpkL9L1/c+5x3cUcgfa2GIKav4InIYmlPxulFgS1nBdMX4+H0tgnz9ConEP
+         n9ptO9OJbsMZGTTd358pPpQrlXwqgtid3Kk0rm5orpjjFdEk1fCmaTY5v+ILNSDJeM7L
+         P0PVaSe9Sy2sORryVy8CKeJ3Tgfv7SzIvvgZzNMRwp3viae6rlp79xrsgt2wGFLqLjuQ
+         4IVZL/8feP4Vv0cGDK4wbEkdKNJzutyatA1xckLdxmSMxrEFWTubrPf24ubteAd4jSxG
+         CckQ==
+X-Gm-Message-State: AOAM531mtKP2dUGzOH/OPgnwc6EKi2MCsSrPXAe6jUatKAqY2eEnJTXl
+        UmooQuWzIEZUV5FMINaWqgI=
+X-Google-Smtp-Source: ABdhPJwk2MJc9XFSCKBIPtk73r5Lq0FZ0WB2bHeQPb71Z515HiLDFpJysI5FwJ2CUFDrnkpPlV0CYg==
+X-Received: by 2002:adf:db4d:: with SMTP id f13mr4457200wrj.336.1593187589786;
+        Fri, 26 Jun 2020 09:06:29 -0700 (PDT)
+Received: from [10.230.189.192] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s10sm6945892wme.31.2020.06.26.09.06.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 09:06:29 -0700 (PDT)
+Subject: Re: [PATCH 5/6] net: phy: reset the PHY even if probe() is not
+ implemented
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200626155325.7021-1-brgl@bgdev.pl>
+ <20200626155325.7021-6-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <edd6806e-555e-3713-514d-6d21198cc609@gmail.com>
+Date:   Fri, 26 Jun 2020 09:06:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200626074738.GA2107508@myrica>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200626155325.7021-6-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-26 08:47, Jean-Philippe Brucker wrote:
-> On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
->> IOMMUs that support nesting translation needs report the capability info
->> to userspace, e.g. the format of first level/stage paging structures.
->>
->> This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
->> nesting info after setting DOMAIN_ATTR_NESTING.
->>
->> v2 -> v3:
->> *) remvoe cap/ecap_mask in iommu_nesting_info.
->> *) reuse DOMAIN_ATTR_NESTING to get nesting info.
->> *) return an empty iommu_nesting_info for SMMU drivers per Jean'
->>     suggestion.
->>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Alex Williamson <alex.williamson@redhat.com>
->> Cc: Eric Auger <eric.auger@redhat.com>
->> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Cc: Joerg Roedel <joro@8bytes.org>
->> Cc: Lu Baolu <baolu.lu@linux.intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> ---
->>   drivers/iommu/arm-smmu-v3.c | 29 ++++++++++++++++++++--
->>   drivers/iommu/arm-smmu.c    | 29 ++++++++++++++++++++--
+
+
+On 6/26/2020 8:53 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Looks reasonable to me. Please move the SMMU changes to a separate patch
-> and Cc the SMMU maintainers:
-
-Cheers Jean, I'll admit I've been skipping over a lot of these patches 
-lately :)
-
-A couple of comments below...
-
+> Currently we only call phy_device_reset() if the PHY driver implements
+> the probe() callback. This is not mandatory and many drivers (e.g.
+> realtek) don't need probe() for most devices but still can have reset
+> GPIOs defined. There's no reason to depend on the presence of probe()
+> here so pull the reset code out of the if clause.
 > 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> 
-> Thanks,
-> Jean
-> 
->>   include/uapi/linux/iommu.h  | 59 +++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 113 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->> index f578677..0c45d4d 100644
->> --- a/drivers/iommu/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm-smmu-v3.c
->> @@ -3019,6 +3019,32 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
->>   	return group;
->>   }
->>   
->> +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain *smmu_domain,
->> +					void *data)
->> +{
->> +	struct iommu_nesting_info *info = (struct iommu_nesting_info *) data;
->> +	u32 size;
->> +
->> +	if (!info || smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
->> +		return -ENODEV;
->> +
->> +	size = sizeof(struct iommu_nesting_info);
->> +
->> +	/*
->> +	 * if provided buffer size is not equal to the size, should
->> +	 * return 0 and also the expected buffer size to caller.
->> +	 */
->> +	if (info->size != size) {
->> +		info->size = size;
->> +		return 0;
->> +	}
->> +
->> +	/* report an empty iommu_nesting_info for now */
->> +	memset(info, 0x0, size);
->> +	info->size = size;
->> +	return 0;
->> +}
->> +
->>   static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->>   				    enum iommu_attr attr, void *data)
->>   {
->> @@ -3028,8 +3054,7 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->>   	case IOMMU_DOMAIN_UNMANAGED:
->>   		switch (attr) {
->>   		case DOMAIN_ATTR_NESTING:
->> -			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->> -			return 0;
->> +			return arm_smmu_domain_nesting_info(smmu_domain, data);
->>   		default:
->>   			return -ENODEV;
->>   		}
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index 243bc4c..908607d 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -1506,6 +1506,32 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
->>   	return group;
->>   }
->>   
->> +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain *smmu_domain,
->> +					void *data)
->> +{
->> +	struct iommu_nesting_info *info = (struct iommu_nesting_info *) data;
->> +	u32 size;
->> +
->> +	if (!info || smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
->> +		return -ENODEV;
->> +
->> +	size = sizeof(struct iommu_nesting_info);
->> +
->> +	/*
->> +	 * if provided buffer size is not equal to the size, should
->> +	 * return 0 and also the expected buffer size to caller.
->> +	 */
->> +	if (info->size != size) {
->> +		info->size = size;
->> +		return 0;
->> +	}
->> +
->> +	/* report an empty iommu_nesting_info for now */
->> +	memset(info, 0x0, size);
->> +	info->size = size;
->> +	return 0;
->> +}
->> +
->>   static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->>   				    enum iommu_attr attr, void *data)
->>   {
->> @@ -1515,8 +1541,7 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->>   	case IOMMU_DOMAIN_UNMANAGED:
->>   		switch (attr) {
->>   		case DOMAIN_ATTR_NESTING:
->> -			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->> -			return 0;
->> +			return arm_smmu_domain_nesting_info(smmu_domain, data);
->>   		default:
->>   			return -ENODEV;
->>   		}
->> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->> index 1afc661..898c99a 100644
->> --- a/include/uapi/linux/iommu.h
->> +++ b/include/uapi/linux/iommu.h
->> @@ -332,4 +332,63 @@ struct iommu_gpasid_bind_data {
->>   	} vendor;
->>   };
->>   
->> +/*
->> + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
->> + *				user space should check it before using
->> + *				nesting capability.
->> + *
->> + * @size:	size of the whole structure
->> + * @format:	PASID table entry format, the same definition with
->> + *		@format of struct iommu_gpasid_bind_data.
->> + * @features:	supported nesting features.
->> + * @flags:	currently reserved for future extension.
->> + * @data:	vendor specific cap info.
->> + *
->> + * +---------------+----------------------------------------------------+
->> + * | feature       |  Notes                                             |
->> + * +===============+====================================================+
->> + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used  |
->> + * |               |  in the system should be allocated by host kernel  |
->> + * +---------------+----------------------------------------------------+
->> + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could   |
->> + * |               |  either be a host PASID passed in bind request or  |
->> + * |               |  default PASIDs (e.g. default PASID of aux-domain) |
->> + * +---------------+----------------------------------------------------+
->> + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU       |
->> + * +---------------+----------------------------------------------------+
->> + *
->> + */
->> +struct iommu_nesting_info {
->> +	__u32	size;
->> +	__u32	format;
->> +	__u32	features;
->> +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
->> +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
->> +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
->> +	__u32	flags;
->> +	__u8	data[];
->> +};
->> +
->> +/*
->> + * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info
->> + *
->> + *
->> + * @flags:	VT-d specific flags. Currently reserved for future
->> + *		extension.
->> + * @addr_width:	The output addr width of first level/stage translation
->> + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
->> + *		support.
->> + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
->> + *		register.
->> + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
->> + *		extended capability register.
->> + */
->> +struct iommu_nesting_info_vtd {
->> +	__u32	flags;
->> +	__u16	addr_width;
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I think this might be worth promoting to a generic feature - Arm has the 
-same notion of intermediate address size, and I'd imagine that pretty 
-much any other two-stage translation system would as well (either 
-explicitly or implicitly). It also comes close to something the DPDK 
-folks raised where they wanted parity with a feature that currently 
-scrapes AGAW out of some VT-d-specific place, so abstracting it to 
-completely generic code, in a way that could eventually be generalised 
-to reporting info for non-nested domains too, would be really nice.
+OK we can always add support for letting PHY drivers manage their own
+reset line(s) during probe in a later changeset.
 
-What would also be cool is if the user was able to pass in a structure 
-with preferred values for the address size and other capabilities when 
-they request nesting in the first place. Right now we'll always set up 
-the maximum possible sized page table for any domain, but if we knew 
-ahead of time how many bits the user actually cared about then we could 
-potentially be more efficient (e.g. use fewer levels of pagetable or a 
-different translation granule).
-
-Robin.
-
->> +	__u16	pasid_bits;
->> +	__u64	cap_reg;
->> +	__u64	ecap_reg;
->> +};
->> +
->>   #endif /* _UAPI_IOMMU_H */
->> -- 
->> 2.7.4
->>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
