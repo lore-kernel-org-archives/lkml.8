@@ -2,83 +2,80 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68ED820C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BEB20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:59:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ec0yT0jW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgFZIx7 (ORCPT
+        id S1726113AbgFZI7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:53:59 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39133 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgFZIx7 (ORCPT
+        Fri, 26 Jun 2020 04:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbgFZI7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:53:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w17so6744487oie.6;
-        Fri, 26 Jun 2020 01:53:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SOfvc0ce26XYDR0QIn4GDa0avuT+rkiFokmRicRdgc0=;
-        b=Q2TPFOt0Pfl4rZP/RpPWaNJ88IR82WeyWk/93rPHRUV3wMYUaTHHxTImBLUV6u3g96
-         SIYGaqE0T8jW9cxYsb6whvXKRUqyHC/HohXkO47TUuYpAaKfvxlpQV6aMiV9EgoXsyZ2
-         /VJXDq3M7dGQLnXl2BFebBQGzqdH5cKu1VW2PrYIvfPnhaK14gGefOu3EZWwSqcD6tFt
-         dfDqq0sgetVgkiVyacEfWh4oPgm7cSJc6T0BFD3gJh5oNSJKGWkpUsxXOOSPnNS3T6Fs
-         Sdgky/0+K5YQ7k6ESWF2C9h3BxAABXpNnmQvbo9v+YPkiVxwHDEyw8Xj+ujV5bYGRyfn
-         iqEw==
-X-Gm-Message-State: AOAM533LQVfMqcY5tLnTjgmIjvSB0OXkxPRn5hUPWjIVU1wcwk1+KriO
-        3dxsXm00Y5wj7k/GDBR3WmeUBmemKX+M1pSlVzAaE1SI
-X-Google-Smtp-Source: ABdhPJxn+nXXK4OIQNsJIb4wQRkHI48WQrf/ZBX/bDqf+/lD9sgtVwduXlwAvitV3W+6Y0DhxsujVrC2gFo5A//dBVI=
-X-Received: by 2002:aca:849:: with SMTP id 70mr1499973oii.153.1593161638097;
- Fri, 26 Jun 2020 01:53:58 -0700 (PDT)
+        Fri, 26 Jun 2020 04:59:11 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22962C08C5C1;
+        Fri, 26 Jun 2020 01:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gW+E1Jv1j6enHoS9ci8iskFSPJ2rZo4CjUglSeffP7o=; b=ec0yT0jWfXYNE/yB3dPz5baX8B
+        7smSzXLFiuj9f0Ed4NKLekPpMe3/SiPIJja5Dct7nl3HgWRYIQXNMnHS6dpZPVOyL5xaG5iCqF9X0
+        CL3mCgMIilh6uQny45ec0cTru4ix75kp0Y/VoGHgARCzk12v4eRECmaoJuAJIQD0/Tp7bJ32ekvrI
+        YWqtMrFLoHgzk6rGoKlqFr+ht7kheor1fGdeZ/YN27RadZ0oDsErMMl00SvVyR2aEjChHMyYZlnWR
+        luo7btYT2RvswiLQ98qswiHpUXLJnF3hTV3xX9fg/ehbnNMRGmQTlrVE/fJQfHzp9COF8QB+Vrtm2
+        FLx1RVYg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jokC6-0007l8-Fb; Fri, 26 Jun 2020 08:58:46 +0000
+Date:   Fri, 26 Jun 2020 09:58:46 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        asml.silence@gmail.com, Damien.LeMoal@wdc.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        selvakuma.s1@samsung.com, nj.shetty@samsung.com,
+        javier.gonz@samsung.com, Arnav Dawn <a.dawn@samsung.com>
+Subject: Re: [PATCH v2 1/2] fs,block: Introduce RWF_ZONE_APPEND and handling
+ in direct IO path
+Message-ID: <20200626085846.GA24962@infradead.org>
+References: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85@epcas5p2.samsung.com>
+ <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
 MIME-Version: 1.0
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591736054-568-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 26 Jun 2020 10:53:46 +0200
-Message-ID: <CAMuHMdVkhztRO5HEUGhHsS4x4UmOMHjw3ZdpBKe0jwtsZXn9iw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7742: Add MSIOF[0123] support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 10:54 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add the DT nodes needed by MSIOF[0123] interfaces to the SoC dtsi.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+To restate my previous NAK:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+A low-level protocol detail like RWF_ZONE_APPEND has absolutely no
+business being exposed in the Linux file system interface.
 
-Gr{oetje,eeting}s,
+And as mentioned before I think the idea of returning the actual
+position written for O_APPEND writes totally makes sense, and actually
+is generalizable to all files.  Together with zonefs that gives you a
+perfect interface for zone append.
 
-                        Geert
+On Thu, Jun 25, 2020 at 10:45:48PM +0530, Kanchan Joshi wrote:
+> Introduce RWF_ZONE_APPEND flag to represent zone-append.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+And no one but us select few even know what zone append is, nevermind
+what the detailed semantics are.  If you add a userspace API you need
+to very clearly document the semantics inluding errors and corner cases.
