@@ -2,156 +2,130 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9705EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F78FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4B4206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGmQE5hi"
+	by mail.kernel.org (Postfix) with ESMTP id 27DFB20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbgFZUzv (ORCPT
+        id S1726036AbgFZU4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZUzu (ORCPT
+        Fri, 26 Jun 2020 16:56:30 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38071 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZU4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:55:50 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B427C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:55:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so10702930wrv.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uAlllSD0H23jj94tfkcSrouzVa4Y67ZwB5wkJp7uohc=;
-        b=LGmQE5hiXPBHZpB865RQ94Z/M0gae2D2z+IMKyfxZ9Sip8SC/SvEAAkBcC904QUsGV
-         Q0clkDZQXkeaSgrO1XdXEkKb9QGAF4C8FjWSSpUigcia1X6mSBwYh+WjSZ3RBKVDMtxl
-         lu8ucIvg5SebeG/+Xtrv4eNBreov22kHTdtElcrRjuAzn1IYsUzrtSYRUr4ZqB2PgVaU
-         HzYsWROlMldcFx8oUcWsGPrUmpb5jAyCalWh/KsdfjuH9swK5Uqu2SkKUyGxruy13GLA
-         QstXQ+6638aueWa5RGfBEt6Y4iNOLkY2y7r8MzE0Plu8UFdzeXBAHahEhB8bQYSDLHZR
-         ki8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uAlllSD0H23jj94tfkcSrouzVa4Y67ZwB5wkJp7uohc=;
-        b=U46njz5kjOBwZ2TF/gSGb6ItWB+3+WVmajvTqfQBL5fjOSLThy8NEiWY4RrdID7aHo
-         W1IwTFK8Iu+F9d9ism7J/DQJvGtYJOu+uOtHiTRBgE1VXcPBkiihFcbBHybbpURUjtdb
-         5DdbjxXyDwSZW0/iO1q/th0e5p8wfGYdALUlgCXJVvFXnHgfFl3JFeBJDUUFVox4PuTA
-         JUcDx/LwfNVVIL9j6QDokPkhlKaU5VOBo34DkoimcPwDHnNqF1pAySjrk2/lNXH6wgAR
-         VgWW1XZiCeiP/VTOCJ2BLO02mJpFqKxKBhrbG9tlNerlSN4xzkDMk8QAzuEGxyJJOsRc
-         JJ6A==
-X-Gm-Message-State: AOAM53153Cgu1TAQfPD84lPCKqIitpXVqG4OEs2+3Zx5eQq9dmhzIDGc
-        Vks9sNV147c0LeTiLu8X9DBd2vR1PHF76gryCWsrrQ==
-X-Google-Smtp-Source: ABdhPJy3aiZ1QgphJcN7AJpcF7aHVdpLfGGOz9/aK55uclLXWG6NpfQjhv7QFz9ZRI3xjvkWpL8q6H7J7OjEVQHg4os=
-X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr5413592wrt.119.1593204949089;
- Fri, 26 Jun 2020 13:55:49 -0700 (PDT)
+        Fri, 26 Jun 2020 16:56:30 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 69A9D20002;
+        Fri, 26 Jun 2020 20:56:27 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 22:56:27 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 08/10] mfd: atmel-smc: Silence comparison of unsigned
+ expression < 0 is always false warning (W=1)
+Message-ID: <20200626205627.GU131826@piout.net>
+References: <20200625064619.2775707-1-lee.jones@linaro.org>
+ <20200625064619.2775707-9-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-6-jolsa@kernel.org>
-In-Reply-To: <20200626194720.2915044-6-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jun 2020 13:55:37 -0700
-Message-ID: <CAP-5=fWKPRYJ3D264=qKVyRs15n-tNPqPfqv_dL2q15KGzTeaw@mail.gmail.com>
-Subject: Re: [PATCH 05/10] perf tools: Add expr__del_id function
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625064619.2775707-9-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding expr__del_id function to remove ID from hashmap.
-> It will save us few lines in following changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Hi,
+
+On 25/06/2020 07:46:17+0100, Lee Jones wrote:
+> GENMASK and it's callees conduct checking to ensure the passed
+> parameters are valid.  One of those checks is for '< 0'.  So if an
+> unsigned value is passed, in an invalid comparison takes place.
+> 
+> Judging from the current code, it looks as though 'unsigned int'
+> is the correct type to use, so simply cast these small values
+> with no chance of being false negative to signed int for
+> comparison/error checking purposes.
+> 
+
+I've been thinking about that one but shouldn't the proper fix be in
+GENMASK? My understanding is that this happens because l is 0 and I
+don't think GENMASK would ever expect negative number. What about simply
+checking that h != l when l is 0?
+
+> Squashes the following W=1 warnings:
+> 
+>  In file included from /home/lee/projects/linux/kernel/include/linux/bits.h:23,
+>  from /home/lee/projects/linux/kernel/include/linux/bitops.h:5,
+>  from /home/lee/projects/linux/kernel/include/linux/kernel.h:12,
+>  from /home/lee/projects/linux/kernel/include/linux/mfd/syscon/atmel-smc.h:14,
+>  from /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c:11:
+>  /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c: In function ‘atmel_smc_cs_encode_ncycles’:
+>  /home/lee/projects/linux/kernel/include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>  26 | __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>  | ^
+>  /home/lee/projects/linux/kernel/include/linux/build_bug.h:16:62: note: in definition of macro ‘BUILD_BUG_ON_ZERO’
+>  16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+>  | ^
+>  /home/lee/projects/linux/kernel/include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+>  39 | (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>  | ^~~~~~~~~~~~~~~~~~~
+>  /home/lee/projects/linux/kernel/drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro ‘GENMASK’
+>  49 | unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+>  | ^~~~~~~
+>  /home/lee/projects/linux/kernel/include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>  26 | __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>  | ^
+>  /home/lee/projects/linux/kernel/include/linux/build_bug.h:16:62: note: in definition of macro ‘BUILD_BUG_ON_ZERO’
+>  16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+>  | ^
+>  /home/lee/projects/linux/kernel/include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+>  39 | (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>  | ^~~~~~~~~~~~~~~~~~~
+> 
+> Cc: <stable@vger.kernel.org>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  tools/perf/util/expr.c | 21 +++++++++++++--------
->  tools/perf/util/expr.h |  1 +
->  2 files changed, 14 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 29cdef18849c..aa14c7111ecc 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -75,6 +75,17 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
->         return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
->  }
->
-> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
-> +{
-> +       struct expr_parse_data *old_val = NULL;
-> +       char *old_key = NULL;
-> +
-> +       hashmap__delete(&ctx->ids, id,
-> +                       (const void **)&old_key, (void **)&old_val);
-> +       free(old_key);
-> +       free(old_val);
-> +}
-> +
->  void expr__ctx_init(struct expr_parse_ctx *ctx)
+>  drivers/mfd/atmel-smc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/atmel-smc.c b/drivers/mfd/atmel-smc.c
+> index 1fa2ec950e7df..17bbe9d1fa740 100644
+> --- a/drivers/mfd/atmel-smc.c
+> +++ b/drivers/mfd/atmel-smc.c
+> @@ -46,8 +46,8 @@ static int atmel_smc_cs_encode_ncycles(unsigned int ncycles,
+>  				       unsigned int msbfactor,
+>  				       unsigned int *encodedval)
 >  {
->         hashmap__init(&ctx->ids, key_hash, key_equal, NULL);
-> @@ -132,16 +143,10 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->  int expr__find_other(const char *expr, const char *one,
->                      struct expr_parse_ctx *ctx, int runtime)
->  {
-> -       struct expr_parse_data *old_val = NULL;
-> -       char *old_key = NULL;
->         int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
->
-> -       if (one) {
-> -               hashmap__delete(&ctx->ids, one,
-> -                               (const void **)&old_key, (void **)&old_val);
-> -               free(old_key);
-> -               free(old_val);
-> -       }
-> +       if (one)
-> +               expr__del_id(ctx, one);
+> -	unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+> -	unsigned int msbmask = GENMASK(msbwidth - 1, 0);
+> +	unsigned int lsbmask = GENMASK((int)msbpos - 1, 0);
+> +	unsigned int msbmask = GENMASK((int)msbwidth - 1, 0);
+>  	unsigned int msb, lsb;
+>  	int ret = 0;
+>  
+> -- 
+> 2.25.1
+> 
 
-Nit, I always have to read the code to know why we have "one" as an
-argument. Could we remove it as an argument and have the caller use
-expr__del_id?
-
-Thanks,
-Ian
-
->         return ret;
->  }
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 0af5b887b6c7..1a76b002c576 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -26,6 +26,7 @@ struct expr_scanner_ctx {
->
->  void expr__ctx_init(struct expr_parse_ctx *ctx);
->  void expr__ctx_clear(struct expr_parse_ctx *ctx);
-> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
->  int expr__add_id(struct expr_parse_ctx *ctx, const char *name);
->  int expr__add_val(struct expr_parse_ctx *ctx, const char *id, double val);
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
-> --
-> 2.25.4
->
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
