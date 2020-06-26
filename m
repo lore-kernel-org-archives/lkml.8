@@ -2,154 +2,124 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBBD820768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pi6qOR8s"
+	by mail.kernel.org (Postfix) with ESMTP id 671A720768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgFZHxM (ORCPT
+        id S1728902AbgFZHzG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgFZHxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:53:09 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7936EC08C5C1;
-        Fri, 26 Jun 2020 00:53:09 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id c75so7675270ila.8;
-        Fri, 26 Jun 2020 00:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bny++tBIMk54Yvx2zfPmbf+0Ot1GMKL64TsxDOduJ60=;
-        b=pi6qOR8sPj7wZ3XcK4gDbT3e2yS9IRpuNkEBpAAyS6vV2vySKo5Vm4MZOHf5dN9/n6
-         rZDPHSot2GRbxX/1REKPttlo+Gzk75IZceDEaIfFmYI8QXZB1LQg8qHLSxJxDsLKnxml
-         l0cwdUTYDBeOKmNiN4Q4pARW90E2EoDrX3YkT0CSSeeqdi8A0SGs3Dqcl9ovEFyfi1Yx
-         sZGDoFNouIlleCmILazYchvNRfPX6sKs4K/xW6F/9FmIvA1+S+9jyKRggl7PqLJFkorf
-         Tag+SsZRh2Zu+9n87emt6epFAkp6mqih/EHD8iJ4U29ckOKIHgwgJgpsK2LVXpMVVvS2
-         lXRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bny++tBIMk54Yvx2zfPmbf+0Ot1GMKL64TsxDOduJ60=;
-        b=Hhzt0zP5r/Kxye18duo+JQp43ScS7S9zmfVj8CYLv81mF/Oj75InOTqI4fQ5WPSnXl
-         gKQ52UdqiVXlS8NXxGaajuHUdy0iMuDOMOzdG1Jcq/Yl/XzMn4cIBopypU/Yo0m82Ohp
-         UjL5okbooUnjFyurHENxkAKMCaStyDbOl22aUVBnDwd/Ben/d6+UpAD9qpFowwIzVZZA
-         xoCIEyQx2WCelSA3b7+STUeQOOCFVUtl3QNunMHOFD5qWIhq5W4/LQpgmzuB8OrlIWbi
-         ukJS5w3VWlxSJ6yW/HbU4/volUWiNFCKeCwDc1h3jWcqbPS27A7LDU8Ht3xrvFkInUwH
-         CAXA==
-X-Gm-Message-State: AOAM531t/dniUs/GEsQZWVQgy4sTo9EMXwgZhnBrQUkJ3AoPd7fAnEm/
-        s5mKrbAG+mDn4N9iowRq8Y6W5vgI6fjnwAUOybw=
-X-Google-Smtp-Source: ABdhPJxWukgYdKg85VYa/UxfpvGS2QookcbFIPNFv/QZkXY9QvIFnKJ30Qho5lEy3R+IADOlR2rMSdIe2qRRQsQNYrE=
-X-Received: by 2002:a92:5e17:: with SMTP id s23mr1766973ilb.149.1593157988638;
- Fri, 26 Jun 2020 00:53:08 -0700 (PDT)
+        Fri, 26 Jun 2020 03:55:06 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:57818 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728635AbgFZHzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:55:06 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 4A9A0319FB231A37A57C;
+        Fri, 26 Jun 2020 15:55:01 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
+ dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
+ Fri, 26 Jun 2020 15:54:50 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mahipal Challa" <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        "Dan Streetman" <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: RE: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Topic: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Index: AQHWS4ju6iURsG9yIk+EgvuPOVc69qjp91mAgACMbEA=
+Date:   Fri, 26 Jun 2020 07:54:49 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD25245A6@DGGEMI525-MBS.china.huawei.com>
+References: <20200626070903.27988-1-song.bao.hua@hisilicon.com>
+ <20200626072027.GA6153@gondor.apana.org.au>
+In-Reply-To: <20200626072027.GA6153@gondor.apana.org.au>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.200.84]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200626002710.110200-1-rajatja@google.com> <20200626002710.110200-2-rajatja@google.com>
-In-Reply-To: <20200626002710.110200-2-rajatja@google.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Fri, 26 Jun 2020 17:52:57 +1000
-Message-ID: <CAOSf1CHwj7qD6CdZ+AnY3s1JQXvO0eAG5CgoSHAUBGjtZ6+QfA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 10:27 AM Rajat Jain <rajatja@google.com> wrote:
->
-> Introduce a PCI parameter that disables the automatic attachment of
-> untrusted devices to their drivers.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> Context:
->
->   I set out to implement the approach outlined in
->     https://lkml.org/lkml/2020/6/9/1331
->     https://lkml.org/lkml/2020/6/15/1453
->
->   But to my surprise, I found that the new hotplugged PCI devices
->   were getting automatically attached to drivers even though
->   /sys/bus/pci/drivers_autoprobe was set to 0.
->
->   I realized that the device core's "drivers_autoprobe":
->
->   * only disables the *initial* probe of the device (i.e. from
->     device_add()). If a subsystem calls device_attach() explicitly
->     for its devices like PCI subsystem does, the drivers_autoprobe
->     setting does not matter. The core will attach device to the driver.
->     This looks like correct semantic behavior to me because PCI is
->     explicitly calling device_attach(), which is a way to explicitly
->     ask the core to find and attach a driver for a device.
 
-Right, but we're doing using device_attach() largely because the
-driver core doesn't provide any mechanism for deferring the initial
-probe. I didn't think there was any deeper reason for it, but while
-looking I noticed that the initial probe can be async and
-device_attach() forces probing to be synchronous. That has the side
-effect of serialising all PCI device probing which might be
-intentional to avoid device renaming due to the change in probe order.
-Userspace is better at dealing with device names changing now days,
-but you might still get some people mad at you for changing it.
 
->   2) Make the drivers_autoprobe property available to PCI to use
->      (currently it is private to device core). The PCI could use this
->      to determine whether or not to call device_attach(). This still
->      leaves the other problem (of not being able to set
->      drivers_autoprobe via command line open).
->
->   3) I found the pci_dev->match_driver, which seemed similar to what I
->      am trying to do, but can't be controlled from userspace. I considered
->      populating that field based on drivers_autoprobe (still need (2)).
->      But the problem is that there is the AMD IOMMU driver which is setting
->      this independently, so setting the match_driver based on
->      drivers_autoprobe may not be a good idea.
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org
+> [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Herbert Xu
+> Sent: Friday, June 26, 2020 7:20 PM
+> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+> Cc: akpm@linux-foundation.org; linux-mm@kvack.org;
+> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Luis Claudio
+> R . Goncalves <lgoncalv@redhat.com>; Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de>; David S . Miller <davem@davemloft.net>; Mahipal
+> Challa <mahipalreddy2006@gmail.com>; Seth Jennings
+> <sjenning@redhat.com>; Dan Streetman <ddstreet@ieee.org>; Vitaly Wool
+> <vitaly.wool@konsulko.com>; Wangzhou (B) <wangzhou1@hisilicon.com>;
+> Colin Ian King <colin.king@canonical.com>
+> Subject: Re: [PATCH v3] mm/zswap: move to use crypto_acomp API for
+> hardware acceleration
+> 
+> On Fri, Jun 26, 2020 at 07:09:03PM +1200, Barry Song wrote:
+> >
+> > +	mutex_lock(&acomp_ctx->mutex);
+> > +
+> > +	src = kmap(page);
+> > +	dst = acomp_ctx->dstmem;
+> > +	sg_init_one(&input, src, PAGE_SIZE);
+> > +	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
+> > +	sg_init_one(&output, dst, PAGE_SIZE * 2);
+> > +	acomp_request_set_params(acomp_ctx->req, &input, &output,
+> PAGE_SIZE, dlen);
+> > +	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req),
+> &acomp_ctx->wait);
+> > +	dlen = acomp_ctx->req->dlen;
+> > +	kunmap(page);
+> 
+> Waiting on an async request like this is just silly.  This defeats
+> the whole purpose of having a fallback.
 
-Huh, that's pretty weird. Even with that hack you should be able
-trigger the bug they're working around by removing the IOMMU device in
-sysfs and doing a rescan. I wouldn't worry much about making
-match_device user controllable since you would need to work pretty
-hard for it to be an issue.
+For this zswap case and for this moment, it is probably not.
+As for this case, there are no two parallel (de)compressions which can be done in parallel
+in a single (de)compressor instance.
+The original zswap code is doing all compression/decompression in atomic context.
+Right now, to use acomp api, the patch has moved to sleep-able context.
 
-Oliver
+However, compression/decompression can be done in parallel in different instances
+of acomp, also different cpus.
+
+If we want to do multiple (de)compressions simultaneously in one acomp instance
+by callbacks, it will ask a large changes in zswap.c not only using the new APIs. I think
+we can only achieve the ideal goal step by step.
+
+> 
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+-barry
+
