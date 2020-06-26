@@ -2,52 +2,51 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0709BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE8D6207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06200207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgFZRTU (ORCPT
+        id S1728239AbgFZRTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:19:20 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40692 "EHLO
+        Fri, 26 Jun 2020 13:19:32 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:39418 "EHLO
         mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgFZRTS (ORCPT
+        with ESMTP id S1725882AbgFZRTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:19:18 -0400
-Received: by mail-il1-f197.google.com with SMTP id m64so6916390ill.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:19:17 -0700 (PDT)
+        Fri, 26 Jun 2020 13:19:19 -0400
+Received: by mail-il1-f197.google.com with SMTP id f66so1354670ilh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:19:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bbHmjID3z59mmaaYvnIzGsPe6xV/k7aMo8icX2rKAtE=;
-        b=THymTofeGK9mjd5m1jEx6oP2I+VzbH6+EBbxb+Z/9KT30TVecP7x4z0fC529KDn34v
-         Uw4PGKlsed0oN0MvSAYYlJD+7+qJ7rH5iEQbIXNXtb6A4swiVKJFCmCiXFjpnJt9tXml
-         JsguhpULRnDMQUTDjCugmM350EBctQozWcv6xuaJ7u0a73Yc0Apu1PIOGSslasujExnS
-         kD9XImFHKAVnxTCKG5aaD7wGe/fUYHgSQPHx1jBtQvMLArQuaNeygcxBg+BFcqTXC3EO
-         HK8vPO/R9Oduz19iomLzb9Y4YO9QrNyP0lOQpOWZf4c99qzpC5T0eK3gs6zTtuTW2hgw
-         LTlw==
-X-Gm-Message-State: AOAM5324XIy23sR4HjHkY0jA0Ny+QRxhsFLtO+PO7/hRox7PXt9rzdhT
-        1WbPxOUU4gT4ITP+1iBMbQOPXHNYi+lwAGzFoyJqk0z5O7s/
-X-Google-Smtp-Source: ABdhPJxkkrhebP0jWRJ55XWNgRt409xaaBy67XJo9kPoUlXgPHJj6ft3nJo3haivvGDHnZc8cII1sctajZjj2x7025npqZFtj75S
+        bh=/kUK10ieELCUi5nx8WSCdTJbL7ZCzD7ZpVCtC/bhIJ0=;
+        b=gXw2Pp4aJgp9KTro0r4bDgmQGuOOVyhJmG3UsddpXqfg1indtKRGWTTP12vHaiAoNN
+         Xbl0jy/dJ3+D/I0RlWAGNlyF0xsUv/Zgk0G2F6Y+vKmQcWaydSckWuwmTs1ctPa0iQom
+         NKhKJfS77dYkxtNztY6LgIizZASMFn9YeikSlDsqF1C0IyINdQkiYE0rIHL0RFXYgf/p
+         41jgYGgqQIc4TkzTvzkrDJ2gONpBcqrTY5noxHzAGKImxQ79C8tt2xLhiujiw0cna7UE
+         iAGzxizcLkdMF0/8X2fpUsnvJ9QD1Pglq0Kk1YFsXfGnhyyvCoYYj7TAElS5b7y+Fs5o
+         qE0Q==
+X-Gm-Message-State: AOAM533g1aaF/A4nwhtjFeug+ksbciZK6V23T80he2psLr5r6i8q2xKu
+        xToh5QZwJoWeMx+x6V6HG0xVBxO8AxdtyC9K+d1NzLrfcLce
+X-Google-Smtp-Source: ABdhPJx3Z2RgDpnNjyz+jrFVunjC87B5X8/RuJd9TmZjzYqyDn/8qFBU12ccoeZ9iQhD/5cwbp0Xzsc5vyQzg6m6riOo4oq79tdS
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2fc1:: with SMTP id v1mr4466155iow.39.1593191957067;
- Fri, 26 Jun 2020 10:19:17 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 10:19:17 -0700
+X-Received: by 2002:a92:9f5c:: with SMTP id u89mr4072216ili.262.1593191958242;
+ Fri, 26 Jun 2020 10:19:18 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 10:19:18 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a9000405a8ffe8f1@google.com>
-Subject: KASAN: use-after-free Read in tipc_nl_node_dump_link
-From:   syzbot <syzbot+520f8704db2b68091d44@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+Message-ID: <000000000000baea3505a8ffe8bc@google.com>
+Subject: possible deadlock in team_device_event
+From:   syzbot <syzbot+e12b58247a69da14ecd2@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jiri@resnulli.us, kuba@kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,43 +57,82 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    4a21185c Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=131cc4e5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=520f8704db2b68091d44
+HEAD commit:    7a64135f libbpf: Adjust SEC short cut for expected attach ..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ed6439100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=e12b58247a69da14ecd2
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b1b023100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1181ecb1100000
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+520f8704db2b68091d44@syzkaller.appspotmail.com
+Reported-by: syzbot+e12b58247a69da14ecd2@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in nla_len include/net/netlink.h:1135 [inline]
-BUG: KASAN: use-after-free in nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
-BUG: KASAN: use-after-free in tipc_nl_node_dump_link+0xdd6/0xdf0 net/tipc/node.c:2591
-Read of size 2 at addr ffff88809ec28014 by task syz-executor491/6907
+============================================
+WARNING: possible recursive locking detected
+5.8.0-rc1-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor.1/17372 is trying to acquire lock:
+ffff888096a2ac38 (team->team_lock_key#4){+.+.}-{3:3}, at: team_port_change_check drivers/net/team/team.c:2969 [inline]
+ffff888096a2ac38 (team->team_lock_key#4){+.+.}-{3:3}, at: team_device_event+0x372/0xab6 drivers/net/team/team.c:2995
 
-CPU: 0 PID: 6907 Comm: syz-executor491 Not tainted 5.8.0-rc2-syzkaller #0
+but task is already holding lock:
+ffff888096a2ac38 (team->team_lock_key#4){+.+.}-{3:3}, at: team_add_slave+0x9f/0x1960 drivers/net/team/team.c:1966
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(team->team_lock_key#4);
+  lock(team->team_lock_key#4);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by syz-executor.1/17372:
+ #0: ffffffff8a7afda8 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a7afda8 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5457
+ #1: ffff888096a2ac38 (team->team_lock_key#4){+.+.}-{3:3}, at: team_add_slave+0x9f/0x1960 drivers/net/team/team.c:1966
+
+stack backtrace:
+CPU: 1 PID: 17372 Comm: syz-executor.1 Not tainted 5.8.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- nla_len include/net/netlink.h:1135 [inline]
- nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
- tipc_nl_node_dump_link+0xdd6/0xdf0 net/tipc/node.c:2591
- genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
- netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+ print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
+ check_deadlock kernel/locking/lockdep.c:2432 [inline]
+ validate_chain kernel/locking/lockdep.c:3202 [inline]
+ __lock_acquire.cold+0x178/0x3f8 kernel/locking/lockdep.c:4380
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+ __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+ __mutex_lock+0x134/0x10d0 kernel/locking/mutex.c:1103
+ team_port_change_check drivers/net/team/team.c:2969 [inline]
+ team_device_event+0x372/0xab6 drivers/net/team/team.c:2995
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ dev_close_many+0x30b/0x650 net/core/dev.c:1628
+ vlan_device_event+0x8ef/0x2010 net/8021q/vlan.c:450
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ dev_close_many+0x30b/0x650 net/core/dev.c:1628
+ dev_close net/core/dev.c:1650 [inline]
+ dev_close+0x173/0x220 net/core/dev.c:1644
+ team_port_add drivers/net/team/team.c:1305 [inline]
+ team_add_slave+0xf45/0x1960 drivers/net/team/team.c:1967
+ do_set_master+0x1c8/0x220 net/core/rtnetlink.c:2476
+ do_setlink+0x903/0x35c0 net/core/rtnetlink.c:2611
+ __rtnl_newlink+0xc21/0x1730 net/core/rtnetlink.c:3272
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3397
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
  netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
  netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
  netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
@@ -105,75 +143,14 @@ Call Trace:
  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4456f9
+RIP: 0033:0x45cb19
 Code: Bad RIP value.
-RSP: 002b:00007fff47fc7fe8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004456f9
-RDX: 0000000020004014 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 000000000000f82e R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402890
-R13: 0000000000402920 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 6908:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xae/0x550 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 6908:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- skb_free_head net/core/skbuff.c:590 [inline]
- skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb net/core/skbuff.c:678 [inline]
- consume_skb net/core/skbuff.c:837 [inline]
- consume_skb+0xc2/0x160 net/core/skbuff.c:831
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88809ec28000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 20 bytes inside of
- 1024-byte region [ffff88809ec28000, ffff88809ec28400)
-The buggy address belongs to the page:
-page:ffffea00027b0a00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000248d4c8 ffffea0002499b08 ffff8880aa000c40
-raw: 0000000000000000 ffff88809ec28000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809ec27f00: fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc
- ffff88809ec27f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88809ec28000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                         ^
- ffff88809ec28080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809ec28100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+RSP: 002b:00007fb1de059c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000502400 RCX: 000000000045cb19
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a38 R14: 00000000004cd1fc R15: 00007fb1de05a6d4
 
 
 ---
@@ -183,5 +160,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
