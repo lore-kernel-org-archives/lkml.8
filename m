@@ -2,198 +2,380 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2B362070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593205358;
-	bh=HEZBVtlHQxGYn7Bipu7rRk1VvjlZFYk1uNRxz+AhoJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tev2uYt2zytsOsh4ffU56r1cVnokm1YvdQUaW6Hc6aDQxJdy0PGeOF1NNUZ5i5GV9
-	 fuz0QEl+SEnNtwTF1/Zq4lW5dvx0PKqY76NlRfqrOPZwQxjJGdqhtCEz8iyU/RO+lu
-	 VDPvLz5RhCpPs9sgpvkHfRfWc7Msj/0JWBv3Si9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3876F2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="xTFOm6hM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgFZVCh (ORCPT
+        id S1726026AbgFZVDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:02:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44038 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgFZVCg (ORCPT
+        Fri, 26 Jun 2020 17:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgFZVDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:02:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r18so5446699pgk.11;
-        Fri, 26 Jun 2020 14:02:36 -0700 (PDT)
+        Fri, 26 Jun 2020 17:03:22 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC67C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:03:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so9990483wmj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vy/ATAOFX7hbrWnTtmOf9WcoxFFYxh+7iBRu7AfkTYw=;
+        b=xTFOm6hMZFZbuppmRkJTMHqPXMzmAubWeSMzxBy7lrBIXmkyL9a6JFdkYDAuC9nn/W
+         OgMTb/szyuAj+UEEJV6cLWlVf/IdSET9LEtaewKMpkCURkv7/4RAIzLBFmScn9JJW/9R
+         D0OGE5V3a7cOsP4Xt0zGQGf41zSNkKFQtICsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FPqpR3Q9MP7aTmsoIH+Dq2vjzFrcdsAUpPCgSp+MH9A=;
-        b=gqqlT2rumbSHxaO9ekHmOluqCZYFhxaTl0wMUpoucL32CNh3Q+9pWNNTY82lANUV5M
-         Y2nADrgkYmu6eNcuUJizVV+79r4yy3PiECiUyEajVdwAFJ4/UCujbze8f0cONOwjdbbp
-         wdnGC5WFpzUmnTi2ec027FIzJC6vk5A48qzEekx0dEmKqoyVnF0zykvfU8NkR8LfCOCh
-         caregKBa5EGk8TkkGNDsGvsiBoRKed+EB550ZArGT7PRja/SoKcNXuklTOCjk2JsGqzb
-         2JfLpoeTVAyvAigdKutLggLaoTokKfF059DZ3Ntu5etHe21ujSpG/Vv3Uu+/U0DX1O5d
-         xKNQ==
-X-Gm-Message-State: AOAM532Fit9/Eo8KG44vMZUPgGJmZtq0TMfLXhhnzvh7IF59jhEtWxOu
-        m+x4OpacU6RRlPgATCKnbVA=
-X-Google-Smtp-Source: ABdhPJzh5+RYjdzUEqWl80n7fPSBxcIVBClfzU74lEzoscgoLKgVGqc8PLvRupo60RCLYxaSwe31AA==
-X-Received: by 2002:a63:5a54:: with SMTP id k20mr568669pgm.226.1593205355679;
-        Fri, 26 Jun 2020 14:02:35 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id m20sm28646641pfk.52.2020.06.26.14.02.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vy/ATAOFX7hbrWnTtmOf9WcoxFFYxh+7iBRu7AfkTYw=;
+        b=L3R1rB9qr3H5fBJeE10N1BuaV7P8WPyyh5n2g1vVXVhz9nZnYniNfhF4FcM6YApRC3
+         NwHHejE2GNEd/1Ov5V2CM0relc8ClT2l8DMyWu5dSu4PvOqraKr0dLfDdWyGU17IlNP3
+         xjFDAA6kT8861rPBcMTDv0/8btBOSAqlfygFcdMuoMV1wNDfUUEFe3nSUIQVU+m9tL8Z
+         74RLHVfFMlZtE3LfGa7yLzUDVXKWVE98d8D0fLcF08fLsoPYV6r49tAVtXy33S6GY3Y8
+         mhgByFX9eS4EunRDwHb3YXEwn4kcJ4rQL51KqmlTnnFMEHpraRijSq2g28ywTDU9ZCzm
+         TQbg==
+X-Gm-Message-State: AOAM531zG/lEVnHEqhFJ7moFJvvmVUeB8ufYn0edIuYX24Yt+XGYsljd
+        VZJVU5yp8YrG/EvfH6ewNYRJtg==
+X-Google-Smtp-Source: ABdhPJxGkzKg+v+1VtCr3Q2WGSAzD+kLcRZYjMGgxMzklkxXqbllXB2rdz+l2+MTPnkb0ndF461zYQ==
+X-Received: by 2002:a1c:ac81:: with SMTP id v123mr5146884wme.159.1593205398177;
+        Fri, 26 Jun 2020 14:03:18 -0700 (PDT)
+Received: from localhost.localdomain (88-144-169-139.host.pobb.as13285.net. [88.144.169.139])
+        by smtp.gmail.com with ESMTPSA id 138sm20024203wma.23.2020.06.26.14.03.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 14:02:35 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:02:34 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v2 2/2] fpga manager: xilinx-spi: check INIT_B pin during
- write_init
-Message-ID: <20200626210234.GB2259@epycbox.lan>
-References: <20200622133723.23326-1-luca@lucaceresoli.net>
- <20200622133723.23326-2-luca@lucaceresoli.net>
+        Fri, 26 Jun 2020 14:03:17 -0700 (PDT)
+From:   Ignat Korchagin <ignat@cloudflare.com>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        dm-crypt@saout.de, linux-kernel@vger.kernel.org
+Cc:     Ignat Korchagin <ignat@cloudflare.com>, ebiggers@kernel.org,
+        Damien.LeMoal@wdc.com, mpatocka@redhat.com,
+        herbert@gondor.apana.org.au, kernel-team@cloudflare.com
+Subject: [PATCH v2] dm crypt: add flags to optionally bypass dm-crypt workqueues
+Date:   Fri, 26 Jun 2020 22:03:02 +0100
+Message-Id: <20200626210302.1813-1-ignat@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622133723.23326-2-luca@lucaceresoli.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:37:23PM +0200, Luca Ceresoli wrote:
-> The INIT_B pin reports the status during startup and after the end of the
-> programming process. However the current driver completely ignores it.
-> 
-> Check the pin status during startup to make sure programming is never
-> started too early and also to detect any hardware issues in the FPGA
-> connection.
-> 
-> This is optional for backward compatibility. If INIT_B is not passed by
-> device tree, just fallback to the old udelays.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> 
-> ---
-> 
-> Changes in v2:
->  - rename DT property init_b-gpios to init-b-gpios (Rob Herring suggested to
->    not use '_' in property names)
->  - improve wait_for_init_b() documentation and variable naming
-> ---
->  drivers/fpga/xilinx-spi.c | 55 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 799ae04301be..2967aa2a74e2 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -23,6 +23,7 @@
->  struct xilinx_spi_conf {
->  	struct spi_device *spi;
->  	struct gpio_desc *prog_b;
-> +	struct gpio_desc *init_b;
->  	struct gpio_desc *done;
->  };
->  
-> @@ -36,11 +37,45 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
->  	return FPGA_MGR_STATE_UNKNOWN;
->  }
->  
-> +/**
-> + * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-> + * a given delay if the pin is unavailable
-> + *
-> + * @mgr:        The FPGA manager object
-> + * @value:      Value INIT_B to wait for (1 = asserted = low)
-> + * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-> + *
-> + * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT if
-> + * too much time passed waiting for that. If no INIT_B GPIO is available
-> + * then always return 0.
-> + */
-> +static int wait_for_init_b(struct fpga_manager *mgr, int value,
-> +			   unsigned long alt_udelay)
-> +{
-> +	struct xilinx_spi_conf *conf = mgr->priv;
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-> +
-> +	if (conf->init_b) {
-> +		while (time_before(jiffies, timeout)) {
-> +			/* dump_state(conf, "wait for init_d .."); */
-> +			if (gpiod_get_value(conf->init_b) == value)
-> +				return 0;
-> +			usleep_range(100, 400);
-> +		}
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	udelay(alt_udelay);
-> +
-> +	return 0;
-> +}
-> +
->  static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  				 struct fpga_image_info *info,
->  				 const char *buf, size_t count)
->  {
->  	struct xilinx_spi_conf *conf = mgr->priv;
-> +	int err;
->  
->  	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->  		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> @@ -49,10 +84,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  
->  	gpiod_set_value(conf->prog_b, 1);
->  
-> -	udelay(1); /* min is 500 ns */
-> +	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-> +		gpiod_set_value(conf->prog_b, 0);
-> +		return err;
-> +	}
->  
->  	gpiod_set_value(conf->prog_b, 0);
->  
-> +	err = wait_for_init_b(mgr, 0, 0);
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-> +		return err;
-> +	}
-> +
->  	if (gpiod_get_value(conf->done)) {
->  		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
->  		return -EIO;
-> @@ -154,6 +200,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
->  		return PTR_ERR(conf->prog_b);
->  	}
->  
-> +	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init-b", GPIOD_IN);
-> +	if (IS_ERR(conf->init_b)) {
-> +		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-> +			PTR_ERR(conf->init_b));
-> +		return PTR_ERR(conf->init_b);
-> +	}
-> +
->  	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
->  	if (IS_ERR(conf->done)) {
->  		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-> -- 
-> 2.27.0
-> 
+This is a follow up from [1]. Consider the following script:
 
-Will apply to for-next,
+sudo modprobe brd rd_nr=1 rd_size=4194304
 
-Thanks!
+echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0' | \
+sudo dmsetup create eram0
+
+echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_write_workqueue' | \
+sudo dmsetup create eram0-inline-write
+
+echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_read_workqueue' | \
+sudo dmsetup create eram0-inline-read
+
+devices="/dev/ram0 /dev/mapper/eram0 /dev/mapper/eram0-inline-read "
+devices+="/dev/mapper/eram0-inline-write"
+
+for dev in $devices; do
+  echo "reading from $dev"
+  sudo fio --filename=$dev --readwrite=read --bs=4k --direct=1 \
+  --loops=1000000 --runtime=3m --name=plain | grep READ
+done
+
+for dev in $devices; do
+  echo "writing to $dev"
+  sudo fio --filename=$dev --readwrite=write --bs=4k --direct=1 \
+  --loops=1000000 --runtime=3m --name=plain | grep WRITE
+done
+
+This script creates a ramdisk (to eliminate hardware bias in the benchmark) and
+three dm-crypt instances on top. All dm-crypt instances use the NULL cipher
+to eliminate potentially expensive crypto bias (the NULL cipher just uses memcpy
+for "encyption"). The first instance is the current dm-crypt implementation from
+5.8-rc2, the two others have new optional flags enabled, which bypass kcryptd
+workqueues for reads and writes respectively and write sorting for writes. On
+my VM (Debian in VirtualBox with 4 cores on 2.8 GHz Quad-Core Intel Core i7) I
+get the following output (formatted for better readability):
+
+reading from /dev/ram0
+   READ: bw=508MiB/s (533MB/s), 508MiB/s-508MiB/s (533MB/s-533MB/s), io=89.3GiB (95.9GB), run=180000-180000msec
+
+reading from /dev/mapper/eram0
+   READ: bw=80.6MiB/s (84.5MB/s), 80.6MiB/s-80.6MiB/s (84.5MB/s-84.5MB/s), io=14.2GiB (15.2GB), run=180000-180000msec
+
+reading from /dev/mapper/eram0-inline-read
+   READ: bw=295MiB/s (309MB/s), 295MiB/s-295MiB/s (309MB/s-309MB/s), io=51.8GiB (55.6GB), run=180000-180000msec
+
+reading from /dev/mapper/eram0-inline-write
+   READ: bw=114MiB/s (120MB/s), 114MiB/s-114MiB/s (120MB/s-120MB/s), io=20.1GiB (21.5GB), run=180000-180000msec
+
+writing to /dev/ram0
+  WRITE: bw=516MiB/s (541MB/s), 516MiB/s-516MiB/s (541MB/s-541MB/s), io=90.7GiB (97.4GB), run=180001-180001msec
+
+writing to /dev/mapper/eram0
+  WRITE: bw=40.4MiB/s (42.4MB/s), 40.4MiB/s-40.4MiB/s (42.4MB/s-42.4MB/s), io=7271MiB (7624MB), run=180001-180001msec
+
+writing to /dev/mapper/eram0-inline-read
+  WRITE: bw=38.9MiB/s (40.8MB/s), 38.9MiB/s-38.9MiB/s (40.8MB/s-40.8MB/s), io=7000MiB (7340MB), run=180001-180001msec
+
+writing to /dev/mapper/eram0-inline-write
+  WRITE: bw=277MiB/s (290MB/s), 277MiB/s-277MiB/s (290MB/s-290MB/s), io=48.6GiB (52.2GB), run=180000-180000msec
+
+Current dm-crypt implementation creates a significant IO performance overhead
+(at least on small IO block sizes) for both latency and throughput. We suspect
+offloading IO request processing into workqueues and async threads is more
+harmful these days with the modern fast storage. I also did some digging into
+the dm-crypt git history and much of this async processing is not needed
+anymore, because the reasons it was added are mostly gone from the kernel. More
+details can be found in [2] (see "Git archeology" section).
+
+This change adds no_(read|write)_workqueue flags separately for read and write
+BIOs, which direct dm-crypt not to offload crypto operations into kcryptd
+workqueues and process everything inline. In addition, writes are not buffered
+to be sorted in the dm-crypt red-black tree, but dispatched immediately. For
+cases, where crypto operations cannot happen inline (hard interrupt context,
+for example the read path of some NVME drivers), we offload the work to a
+tasklet rather than a workqueue.
+
+These flags ensure inline BIO processing in the dm-crypt module only. It is
+worth noting that some Crypto API implementations may offload encryption into
+their own workqueues, which are independent of the dm-crypt and its
+configuration. However upon enabling no_(read|write)_workqueue flags dm-crypt
+will instruct Crypto API not to backlog crypto requests.
+
+[1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
+[2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
+
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+---
+ drivers/md/dm-crypt.c | 68 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 52 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 000ddfab5ba0..6924eb49b1df 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -69,6 +69,7 @@ struct dm_crypt_io {
+ 	u8 *integrity_metadata;
+ 	bool integrity_metadata_from_pool;
+ 	struct work_struct work;
++	struct tasklet_struct tasklet;
+ 
+ 	struct convert_context ctx;
+ 
+@@ -127,7 +128,8 @@ struct iv_elephant_private {
+  * and encrypts / decrypts at the same time.
+  */
+ enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,
+-	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD };
++	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD,
++	     DM_CRYPT_NO_READ_WORKQUEUE, DM_CRYPT_NO_WRITE_WORKQUEUE };
+ 
+ enum cipher_flags {
+ 	CRYPT_MODE_INTEGRITY_AEAD,	/* Use authenticated mode for cihper */
+@@ -1449,7 +1451,7 @@ static void kcryptd_async_done(struct crypto_async_request *async_req,
+ 			       int error);
+ 
+ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+-				     struct convert_context *ctx)
++				     struct convert_context *ctx, bool nobacklog)
+ {
+ 	unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
+ 
+@@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+ 	 * requests if driver request queue is full.
+ 	 */
+ 	skcipher_request_set_callback(ctx->r.req,
+-	    CRYPTO_TFM_REQ_MAY_BACKLOG,
++	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+ 	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));
+ }
+ 
+ static void crypt_alloc_req_aead(struct crypt_config *cc,
+-				 struct convert_context *ctx)
++				 struct convert_context *ctx, bool nobacklog)
+ {
+ 	if (!ctx->r.req_aead)
+ 		ctx->r.req_aead = mempool_alloc(&cc->req_pool, GFP_NOIO);
+@@ -1480,17 +1482,17 @@ static void crypt_alloc_req_aead(struct crypt_config *cc,
+ 	 * requests if driver request queue is full.
+ 	 */
+ 	aead_request_set_callback(ctx->r.req_aead,
+-	    CRYPTO_TFM_REQ_MAY_BACKLOG,
++	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+ 	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req_aead));
+ }
+ 
+ static void crypt_alloc_req(struct crypt_config *cc,
+-			    struct convert_context *ctx)
++			    struct convert_context *ctx, bool nobacklog)
+ {
+ 	if (crypt_integrity_aead(cc))
+-		crypt_alloc_req_aead(cc, ctx);
++		crypt_alloc_req_aead(cc, ctx, nobacklog);
+ 	else
+-		crypt_alloc_req_skcipher(cc, ctx);
++		crypt_alloc_req_skcipher(cc, ctx, nobacklog);
+ }
+ 
+ static void crypt_free_req_skcipher(struct crypt_config *cc,
+@@ -1523,7 +1525,7 @@ static void crypt_free_req(struct crypt_config *cc, void *req, struct bio *base_
+  * Encrypt / decrypt data from one bio to another one (can be the same one)
+  */
+ static blk_status_t crypt_convert(struct crypt_config *cc,
+-			 struct convert_context *ctx)
++			 struct convert_context *ctx, bool noresched)
+ {
+ 	unsigned int tag_offset = 0;
+ 	unsigned int sector_step = cc->sector_size >> SECTOR_SHIFT;
+@@ -1533,7 +1535,7 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+ 
+ 	while (ctx->iter_in.bi_size && ctx->iter_out.bi_size) {
+ 
+-		crypt_alloc_req(cc, ctx);
++		crypt_alloc_req(cc, ctx, noresched);
+ 		atomic_inc(&ctx->cc_pending);
+ 
+ 		if (crypt_integrity_aead(cc))
+@@ -1566,7 +1568,8 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+ 			atomic_dec(&ctx->cc_pending);
+ 			ctx->cc_sector += sector_step;
+ 			tag_offset++;
+-			cond_resched();
++			if (!noresched)
++				cond_resched();
+ 			continue;
+ 		/*
+ 		 * There was a data integrity error.
+@@ -1879,6 +1882,9 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+ 	unsigned long flags;
+ 	sector_t sector;
+ 	struct rb_node **rbp, *parent;
++	bool nosort =
++			(likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
++			test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+ 
+ 	if (unlikely(io->error)) {
+ 		crypt_free_buffer_pages(cc, clone);
+@@ -1892,7 +1898,7 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+ 
+ 	clone->bi_iter.bi_sector = cc->start + io->sector;
+ 
+-	if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {
++	if (nosort) {
+ 		generic_make_request(clone);
+ 		return;
+ 	}
+@@ -1941,7 +1947,7 @@ static void kcryptd_crypt_write_convert(struct dm_crypt_io *io)
+ 	sector += bio_sectors(clone);
+ 
+ 	crypt_inc_pending(io);
+-	r = crypt_convert(cc, &io->ctx);
++	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
+ 	if (r)
+ 		io->error = r;
+ 	crypt_finished = atomic_dec_and_test(&io->ctx.cc_pending);
+@@ -1971,7 +1977,7 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
+ 	crypt_convert_init(cc, &io->ctx, io->base_bio, io->base_bio,
+ 			   io->sector);
+ 
+-	r = crypt_convert(cc, &io->ctx);
++	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags));
+ 	if (r)
+ 		io->error = r;
+ 
+@@ -2031,9 +2037,29 @@ static void kcryptd_crypt(struct work_struct *work)
+ 		kcryptd_crypt_write_convert(io);
+ }
+ 
++static void kcryptd_crypt_tasklet(unsigned long work)
++{
++	kcryptd_crypt((struct work_struct *)work);
++}
++
+ static void kcryptd_queue_crypt(struct dm_crypt_io *io)
+ {
+ 	struct crypt_config *cc = io->cc;
++	bool noworkqueue =
++			(bio_data_dir(io->base_bio) == READ && test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags)) ||
++			(bio_data_dir(io->base_bio) == WRITE && test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
++
++	if (noworkqueue) {
++		if (in_irq()) {
++			/* Crypto API's "skcipher_walk_first() refuses to work in hard IRQ context */
++			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
++			tasklet_schedule(&io->tasklet);
++			return;
++		}
++
++		kcryptd_crypt(&io->work);
++		return;
++	}
+ 
+ 	INIT_WORK(&io->work, kcryptd_crypt);
+ 	queue_work(cc->crypt_queue, &io->work);
+@@ -2838,7 +2864,7 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+ 	struct crypt_config *cc = ti->private;
+ 	struct dm_arg_set as;
+ 	static const struct dm_arg _args[] = {
+-		{0, 6, "Invalid number of feature args"},
++		{0, 8, "Invalid number of feature args"},
+ 	};
+ 	unsigned int opt_params, val;
+ 	const char *opt_string, *sval;
+@@ -2868,6 +2894,10 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+ 
+ 		else if (!strcasecmp(opt_string, "submit_from_crypt_cpus"))
+ 			set_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
++		else if (!strcasecmp(opt_string, "no_read_workqueue"))
++			set_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
++		else if (!strcasecmp(opt_string, "no_write_workqueue"))
++			set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+ 		else if (sscanf(opt_string, "integrity:%u:", &val) == 1) {
+ 			if (val == 0 || val > MAX_TAG_SIZE) {
+ 				ti->error = "Invalid integrity arguments";
+@@ -3196,6 +3226,8 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+ 		num_feature_args += !!ti->num_discard_bios;
+ 		num_feature_args += test_bit(DM_CRYPT_SAME_CPU, &cc->flags);
+ 		num_feature_args += test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
++		num_feature_args += test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
++		num_feature_args += test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+ 		num_feature_args += cc->sector_size != (1 << SECTOR_SHIFT);
+ 		num_feature_args += test_bit(CRYPT_IV_LARGE_SECTORS, &cc->cipher_flags);
+ 		if (cc->on_disk_tag_size)
+@@ -3208,6 +3240,10 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+ 				DMEMIT(" same_cpu_crypt");
+ 			if (test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags))
+ 				DMEMIT(" submit_from_crypt_cpus");
++			if (test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags))
++				DMEMIT(" no_read_workqueue");
++			if (test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags))
++				DMEMIT(" no_write_workqueue");
+ 			if (cc->on_disk_tag_size)
+ 				DMEMIT(" integrity:%u:%s", cc->on_disk_tag_size, cc->cipher_auth);
+ 			if (cc->sector_size != (1 << SECTOR_SHIFT))
+@@ -3320,7 +3356,7 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
+ 
+ static struct target_type crypt_target = {
+ 	.name   = "crypt",
+-	.version = {1, 21, 0},
++	.version = {1, 22, 0},
+ 	.module = THIS_MODULE,
+ 	.ctr    = crypt_ctr,
+ 	.dtr    = crypt_dtr,
+-- 
+2.20.1
+
