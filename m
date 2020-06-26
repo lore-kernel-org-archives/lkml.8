@@ -2,115 +2,170 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA379C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5901D206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D246A206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgFZKGs (ORCPT
+        id S1727099AbgFZKG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:06:48 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725283AbgFZKGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:06:48 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 040B89BFDCAC94704736;
-        Fri, 26 Jun 2020 11:06:46 +0100 (IST)
-Received: from [127.0.0.1] (10.47.7.19) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 26 Jun
- 2020 11:06:44 +0100
-Subject: Re: [PATCH 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in
- arm_smmu_cmdq_issue_cmdlist()
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-CC:     Joerg Roedel <joro@8bytes.org>, kernel test robot <lkp@intel.com>,
-        <will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "trivial@kernel.org" <trivial@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, "maz@kernel.org" <maz@kernel.org>
-References: <1592846920-45338-5-git-send-email-john.garry@huawei.com>
- <202006230905.3HpPgtSC%lkp@intel.com>
- <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
- <CADRDgG4=uD3Ni6r7D3kHdSo=ketaXKGririHfFvPYq4qz8KjfQ@mail.gmail.com>
- <ee2d7a1e-3e22-f25a-ced9-82ccced28f8c@huawei.com>
- <CADRDgG5pOstGK=fm8s3Be_v8+vc-EyRYmpiMsTCeK-rMk2ZRQQ@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4f87e2e4-ec7d-49d1-037c-158e94f25ab6@huawei.com>
-Date:   Fri, 26 Jun 2020 11:05:13 +0100
+        Fri, 26 Jun 2020 06:06:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37722 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726740AbgFZKG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 06:06:58 -0400
+IronPort-SDR: xEINcCMnRLNZ9Bo/qOOmYOIJ2jdDF3O6WMA0iZNcmM7VbzKIgrmDcLDVgD6uQzghdHpEk6Rpkq
+ AiBZEpbh+P2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144354679"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="144354679"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 03:06:58 -0700
+IronPort-SDR: pd1ihpN8R/97XNixh/WG3gwIGZTJUULrvKUoVbWitmqsDlfRxFWjNBfqFy9HpdxpR8SIv6lJSV
+ ds3g2nAE09rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="479786372"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jun 2020 03:06:57 -0700
+Received: from [10.249.229.55] (abudanko-mobl.ccr.corp.intel.com [10.249.229.55])
+        by linux.intel.com (Postfix) with ESMTP id 35667580689;
+        Fri, 26 Jun 2020 03:06:53 -0700 (PDT)
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+ <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+ <20200625171405.GL2719003@krava>
+ <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
+ <20200626093745.GM2719003@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <6582201a-9570-709f-f6e9-5a644296f49d@linux.intel.com>
+Date:   Fri, 26 Jun 2020 13:06:51 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CADRDgG5pOstGK=fm8s3Be_v8+vc-EyRYmpiMsTCeK-rMk2ZRQQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200626093745.GM2719003@krava>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.7.19]
-X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 14:55, Rikard Falkeborn wrote:
-> Den tis 23 juni 2020 12:21John Garry <john.garry@huawei.com 
-> <mailto:john.garry@huawei.com>> skrev:
-> 
->     On 23/06/2020 10:35, Rikard Falkeborn wrote:
->      >
->      >     I'd say that GENMASK_INPUT_CHECK() should be able to handle a
->     l=0 and
->      >     h=unsigned value, so I doubt this warn.
->      >
->      >     Using GENMASK((int)cmdq->q.llq.max_n_shift, 0) resolves it,
->     but it
->      >     looks
->      >     like GENMASK_INPUT_CHECK() could be improved.
->      >
->      >
->      > Indeed it could, it is fixed in -next.
-> 
->     ok, thanks for the pointer, but I still see this on today's -next with
->     this patch:
-> 
->     make W=1 drivers/iommu/arm-smmu-v3.o
-> 
-> 
-> Oh, ok thanks for reporting. I guess different gcc versions have 
-> different behaviour. I guess we'll have to change the comparison to 
-> (!((h) == (l) || (h) > (l))) instead (not sure I got all parenthesis and 
-> logic correct but you get the idea).
-> 
 
-Yeah, so this looks to fix it:
+On 26.06.2020 12:37, Jiri Olsa wrote:
+> On Thu, Jun 25, 2020 at 10:32:29PM +0300, Alexey Budankov wrote:
+>>
+>> On 25.06.2020 20:14, Jiri Olsa wrote:
+>>> On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
+>>>>
+>>>> On 17.06.2020 11:35, Alexey Budankov wrote:
+>>>>>
+>>>>> Skip fds with zeroed revents field from count and avoid fds moving
+>>>>> at fdarray__filter() call so fds indices returned by fdarray__add()
+>>>>> call stay the same and can be used for direct access and processing
+>>>>> of fd revents status field at entries array of struct fdarray object.
+>>>>>
+>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>>> ---
+>>>>>  tools/lib/api/fd/array.c   | 11 +++++------
+>>>>>  tools/perf/tests/fdarray.c | 20 ++------------------
+>>>>>  2 files changed, 7 insertions(+), 24 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+>>>>> index 58d44d5eee31..97843a837370 100644
+>>>>> --- a/tools/lib/api/fd/array.c
+>>>>> +++ b/tools/lib/api/fd/array.c
+>>>>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>>>>>  		return 0;
+>>>>>  
+>>>>>  	for (fd = 0; fd < fda->nr; ++fd) {
+>>>>> +		if (!fda->entries[fd].revents)
+>>>>> +			continue;
+>>>>> +
+>>>>
+>>>> So it looks like this condition also filters out non signaling events fds, not only
+>>>> control and others fds, and this should be somehow avoided so such event related fds
+>>>> would be counted. Several options have been proposed so far:
+>>>>
+>>>> 1) Explicit typing of fds via API extension and filtering based on the types:
+>>>>    a) with separate fdarray__add_stat() call
+>>>>    b) with type arg of existing fdarray__add() call
+>>>>    c) various memory management design is possible
+>>>>
+>>>> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
+>>>>    - looks more like a hack than a designed solution
+>>>>
+>>>> 3) Rewrite of fdarray class to allocate separate object for every added fds
+>>>>    - can be replaced with nonscrewing of fds by __filter()
+>>>>
+>>>> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
+>>>>    - seems to have corner cases and thus not applicable
+>>>>
+>>>> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
+>>>>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
+>>>>
+>>>> 6) Rewrite of fdarray class on epoll() call basis
+>>>>    - introduces new scalability restrictions for Perf tool
+>>>
+>>> hum, how many fds for polling do you expect in your workloads?
+>>
+>> Currently it is several hundreds so default of 1K is easily hit and 
+>> "Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
+>> recommends:
+>>
+>> soft nofile 65535
+>> hard nofile 65535
+> 
+> I'm confused, are you talking about file descriptors limit now?
+> this wont be affected by epoll change.. what do I miss?
 
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -23,7 +23,8 @@
-#include <linux/build_bug.h>
-#define GENMASK_INPUT_CHECK(h, l) \
-        (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
--               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-+               __builtin_constant_p(!((h) == (l) ||(h) > (l))), !((h) 
-== (l) ||(h) > (l)), 0)))
-+
+Currently there is already uname -n limit on the amount of open file descriptors
+and Perf tool process is affected by that limit.
 
-We may be able to just use (h) == (l) as the const expr to make it more 
-concise, but that may be confusing.
+Moving to epoll() will impose one more max_user_watches limit and that can additionally
+confine Perf applicability even though default value on some machines currently
+is high enough.
 
-I only tested with my toolchain based on 7.5.0
+~Alexey
 
-Thanks,
-John
-
+> 
+> I thought your concern was fs.epoll.max_user_watches, which has
+> default value that seems to be enough:
+> 
+> 	$ cat /proc/sys/fs/epoll/max_user_watches
+> 	3169996
+> 
+> jirka
+> 
+> 
+>>
+>> for for /etc/security/limits.conf settings.
+>>
+>> ~Alexey
+>>
+>> [1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
+>>
+>>>
+>>> jirka
+>>>
+>>
+> 
