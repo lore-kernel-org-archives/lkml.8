@@ -3,103 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A884C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB025C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D3B20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8w7ucx1"
+	by mail.kernel.org (Postfix) with ESMTP id AF11420836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593158774;
+	bh=vbcgvmpN8mtNZ7AcbdJSHUksQQEIArilzClgSsT4SHg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yfQziisTsUFiyjFp2LFXwKpD/u6gHNHCkdt2r7tdOaQmZ6mYGQFpNjY0dYwD9VMe2
+	 1Pqa8Yn54nuXvL5cp+KlmVmjs0/4ucKg4Jcg52o8sacVvHUwIja3QmWxsoGl/Y5B/M
+	 nIBWKerTg+hJdKmxnm+pi/CVeFuIV/4f3QWmROZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgFZIGJ (ORCPT
+        id S1729237AbgFZIGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729183AbgFZIGG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729214AbgFZIGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jun 2020 04:06:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD2CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:06:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e9so4615907pgo.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 01:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Sui+aE36W22DqtS2fgsG54iRuVi4BhJkSmMBR5vkIvo=;
-        b=f8w7ucx1BwENgxJR/Rc1pSalVXftgwFc0KkcZbAs/TcppB9xRQDLPkJNPWLBHngmxf
-         +I/rAXJjvWJX37+ZaQHg0f1px3DVH8/oo6ANHkBcm9F3LrqCUIkTvKyMC78TcLHx02lB
-         YSwHRp+hLpwilQul5ijJegqktK8N6qIeJ+TPU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Sui+aE36W22DqtS2fgsG54iRuVi4BhJkSmMBR5vkIvo=;
-        b=hAxiKvhkWQdomk+fRJKETZKts2GNkFcahW/Vvr+jC4m96C+WgSXhA9DJ7QbU9JftvO
-         tqtLftZxCoLgKAkpFH+VwntDwbn/1VxNwXzn0Kte/K3esgAmmBPz9jyXP6Jj5g5AlGW4
-         umrwjdVrmp7anNWqgzL8YignDpsK346ETHjuEv1pilEMHMIMNwL0dGrmdw4DALQS3EQX
-         OackPByi1+5RgV67nC9EKLY6qOzwAj9eVTJc5TCccDI0bzQua3f8fNQWfSwCK8ebpn4O
-         JNseQWHx/KRBEEy5znJz++GenQ0X2kQx3LszRQD2dzOlg7uvOpjmh93aTMOHjtWBhcCP
-         uofA==
-X-Gm-Message-State: AOAM531cijg+YnRc/FDWHzAx9PxBeZ8JzqKjtqFvmVbxhtRk3gDy1CKO
-        D/wlDIzxZOWBFhFPAJbuH2jPgg==
-X-Google-Smtp-Source: ABdhPJzZ7MWGk9jvC+DPhRc7+KTbwzgKCEciabh8q+jgkASL1WbRsleAMj3y90vF2Ou1wTEbTB2X+Q==
-X-Received: by 2002:aa7:8dc1:: with SMTP id j1mr1625300pfr.194.1593158765373;
-        Fri, 26 Jun 2020 01:06:05 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
-        by smtp.gmail.com with ESMTPSA id 137sm21809843pgg.72.2020.06.26.01.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 01:06:04 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v2 11/18] media: mtk-vcodec: venc support MIN_OUTPUT_BUFFERS control
-Date:   Fri, 26 Jun 2020 17:04:35 +0900
-Message-Id: <20200626080442.292309-12-acourbot@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-In-Reply-To: <20200626080442.292309-1-acourbot@chromium.org>
-References: <20200626080442.292309-1-acourbot@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DDF8208C7;
+        Fri, 26 Jun 2020 08:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593158766;
+        bh=vbcgvmpN8mtNZ7AcbdJSHUksQQEIArilzClgSsT4SHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oqEFdhJJk6vWmD1EbZ+V063TGgP+vCQHAtgel9Cjtmo/KqjwLqVa1mSHX5zoNf8c5
+         DDWeF40krm+slzv5XeRrt2ET51y0tQws/T257b/DVfMHanxONR6INe6WsOpHZp6FhQ
+         /cS1EQkcWSnLHyGpk9+hzoknCr5invLJL3kurKIY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH] ARM: dts: socfpga: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 10:06:02 +0200
+Message-Id: <20200626080602.3733-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This control is required by v4l2-compliance for encoders. A value of 1
-should be suitable for all scenarios.
+Fix dtschema validator warnings like:
+    l2-cache@fffff000: $nodename:0:
+        'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/socfpga.dtsi         | 2 +-
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index f2ba19c32400..f833aee4a06f 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -1206,6 +1206,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index c2b54af417a2..78f3267d9cbf 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -726,7 +726,7 @@
+ 			};
+ 		};
  
- 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
+-		L2: l2-cache@fffef000 {
++		L2: cache-controller@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 3b8571b8b412..8f614c4b0e3e 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -636,7 +636,7 @@
+ 			reg = <0xffcfb100 0x80>;
+ 		};
  
-+	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
-+			  1, 1, 1, 1);
- 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
- 			  ctx->dev->venc_pdata->min_bitrate,
- 			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
+-		L2: l2-cache@fffff000 {
++		L2: cache-controller@fffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffff000 0x1000>;
+ 			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.17.1
 
