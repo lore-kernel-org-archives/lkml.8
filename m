@@ -6,68 +6,64 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA83AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E877C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333EE206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgFZOjq convert rfc822-to-8bit (ORCPT
+        id S1729330AbgFZOkP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:39:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:41619 "EHLO
+        Fri, 26 Jun 2020 10:40:15 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:50197 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgFZOjq (ORCPT
+        with ESMTP id S1725792AbgFZOkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:39:46 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MHoZS-1ja2Sc3t1q-00Ex1k for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
- 2020 16:39:45 +0200
-Received: by mail-qt1-f180.google.com with SMTP id u12so7582807qth.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:39:44 -0700 (PDT)
-X-Gm-Message-State: AOAM53190+Q2T/uvyQutMMNCq9iEf/WkY+gHY4O/Cp850Ec+ef4svr0U
-        Uxi8kb4NpgBADXBF5UC1cpztTQ02/h19sxiJ2rI=
-X-Google-Smtp-Source: ABdhPJxDO7M2i6RhrDHCfKCNv2dtPS9KcvP8Hcf8ZAFMYGALIa0pf6mu6Y+z8oE3gBIoefa5atPhLAjtgx1WlY//2zw=
-X-Received: by 2002:ac8:4ccb:: with SMTP id l11mr3062402qtv.18.1593182383879;
- Fri, 26 Jun 2020 07:39:43 -0700 (PDT)
+        Fri, 26 Jun 2020 10:40:14 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mq2vU-1j24eU2rnG-00n6WI for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
+ 2020 16:40:12 +0200
+Received: by mail-qv1-f52.google.com with SMTP id d12so4596215qvn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 07:40:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530mwZoKHdK0xsfGvygMeqOu2T9TVCEDAKD8YqKsoH/CBt+zx680
+        qjs3K0NuNGzJ9UkNWj4AaqhQDpRT9ZuIrn1tLRs=
+X-Google-Smtp-Source: ABdhPJzWw7W5nerM6QkZ6Df85H2usVwLruFgbmVXNNAb7BqmaTdDnguwMQ+3GzI21ff5jnaqtPk82CDQvXjkhL30oLw=
+X-Received: by 2002:a0c:ba0e:: with SMTP id w14mr3481578qvf.222.1593182411591;
+ Fri, 26 Jun 2020 07:40:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-8-lee.jones@linaro.org>
-In-Reply-To: <20200626130525.389469-8-lee.jones@linaro.org>
+References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-9-lee.jones@linaro.org>
+In-Reply-To: <20200626130525.389469-9-lee.jones@linaro.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jun 2020 16:39:27 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a38P1PGHkvTDqSQC6sBoDrfipbZzxUaJeV4q4At92g_bw@mail.gmail.com>
-Message-ID: <CAK8P3a38P1PGHkvTDqSQC6sBoDrfipbZzxUaJeV4q4At92g_bw@mail.gmail.com>
-Subject: Re: [PATCH 07/10] misc: mic: vop: vop_main: Remove set but unused
- variable 'ret'
+Date:   Fri, 26 Jun 2020 16:39:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3Pe9ToePzfRH2cwXVwtGMhw5Hy=y=TeknN93QmWnZmtQ@mail.gmail.com>
+Message-ID: <CAK8P3a3Pe9ToePzfRH2cwXVwtGMhw5Hy=y=TeknN93QmWnZmtQ@mail.gmail.com>
+Subject: Re: [PATCH 08/10] misc: cb710: sgbuf2: Add missing documentation for
+ cb710_sg_dwiter_write_next_block()'s 'data' arg
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     gregkh <gregkh@linuxfoundation.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:Sl59jVMntcv6rENXUiPFJhr8KBF14wfYMnXSOVToQBCssqMs2Vh
- Zbia7kduQnqeYwmMyNqQPfNf8KUe+8XhAowDr/GNmOmblffTQJVx8cf14MuPqa9wwFTayfi
- vsLc37jI3tYBmK7f1b982Fl3cIZpzAYfCEIeRtJpH26oT1bIgpCWtDFHnE+dxzSWELg2LOr
- M5/tFUbBTzzddT/cFZsNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TkRr0fZgNoA=:drKgHdLvRvM6OBccjDnT7M
- 0ETlPMyQC6g2ukckpC8sMGjDJOUYHK82nWgbC1+q9uRZpkUCFLjrDR0TnDKV8teBHIj3tOXst
- tgKYTm/Dr6x7AzuI/LcrirKiz9Cr11D5+/iQA6mnPOj1UgUSWsNbKWWFz2DtYN2/jz50WZTu+
- 3n3muWehSAbRMXZLdnNYlBle/qNtLzNJpszsZXibyzKJsZWtbfCw9zTzoDetl8iLc6QYn80E0
- 6v6tNUml66XVUBbhWGxntctIr8Lxs/ZS3NtjnBu4imOA2HGeezWaSv+uktwwD7yRl/c07vdqQ
- qDgOv0fDUwaiPgFn4TXN2hOfFlFRTD6umdlLsVt0rpJgtvL2a+iSPP1sM9A+uSbgxI2r0dmiw
- w/mlMMc9MhgiV9/YEXUooN5aJNScdjOM55kUsWBbLHQQWjcewh0fm1O4rW+ySYmSZunczrGeU
- mErK94NEC1iPZn5kZgyw9bc0b4tIbbwgY7+Vn0oratCTfaaV2uZJAS97Xor5Om5K6+F6lFOf3
- 3p+pIXNG/iRf1BdOVS79VzYAzbT2sgFETebP/+uicwfG/1WKaH7Pg3UngA2mm9WtJeA2TusMi
- k++rIE4rCrFHqP43rIDAiXKFbOfW6dtS2Eke7BgDtCE0/PjXdAPBpsNz5UmhPq+wzm5LaLRkI
- c/wfjaPD3ZI9rzZz2MheHnueWxDEMF+O3Gcw9FvDOt6hJwGy9d3noYiGj7xc0wPeWQS+wsRkS
- mZOA2s/gvgDvpUtyDzqRyImc6uU+1blc8bw4kDYsHmnGlCASXeDxEaqUNdON0vwjCJGfgQcWO
- aNSiPxNg2g5hnQmHhd1hURbSbvYPfGkVw4hgWQZxq8XZ5ce4e1flEmIDURe/hJaCeWi66AhZM
- 2dYG9fyBnaU/uh4CnYRWKYzPnNoPn29+SxVRDy5PQRLddJq7n2R19bDkyfUQqsjZRMwJKKICI
- QTD5SqWnYvTaVxd4PE/zYa7fc9R60PRirOKteA74sbVP2zZSmeZVA
+X-Provags-ID: V03:K1:S/fyCTWtqhcordAfyvl9VCW0r/xE93yoE27DJXD6DZKb9j0ffB+
+ u8rwDlnKc4A+m0UzAFetfmA4mvIc9O412OIcb80byFZpjUBPbT++BCZwfwgVlD6Tn58Mp6n
+ J76Gh8yH1EAiQuUXuHqLLeVrjzE9GOC+c6r/yDdgpzsnY9QPuYeVNpfS6sK2F+piXFsdGdN
+ whkyBt1/DRX/WFE0bpQ5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JeZ0GZAHmGU=:mLSv7pE6JAyA6G5njz6xIa
+ Oxhxxq5XE0Ea+dzzAnE4aDeDO+A1WFWvrdHWSJ+Ql703x8kn+NuXwduPXapoNJhUA9SkoyDDc
+ YFOj8IkaFiHrGlkt3lWd0BpWnLRv3IJAR8ttGTv52wCwmAPBq6iosB/PuFFX+TwQKxrOgbi97
+ NB6jCiqzaJ5MIWmk7qKQxNqF8VqZ+9ZCzHHPfSi/lA+b+r/tysz7dkhV1XTQVJT59QrNGZRLU
+ mMxZsr2iYdsO55PJg59Z0CVCr31E4+asXbAln2if15xQ27EytFhwo65hcALQzKfH0hBubmNLX
+ CVxvCvs3e+E8TWNJINQTM49HBUmmIXH5UWl8FnBhyRG/VZcAozjIEKHqQB5rwy2NYdyagAA7M
+ dD72TzI5X1Sf5u/O9dDMbFQrt/tE97Zdd9Zx1IXhaqOuyE1usTsxGSBDOCTRx5DpeQqmy4E0d
+ u/E5a2v4MksZS9umHujYDbBZ1p1Xn756VtByUFezHvGVT6NKg5sMRwmja5e9Dp9LcTHLUtaNE
+ BVbHureHMKfd1bosiCgm+ZAcbYH084HBFjYQd9iHnR4vNnB3fr/7o5wanMeFdlYUbcmOCFtKX
+ gdtI7E3WGEw4BsKBYOvOdZIZMEDxYepgfeEFguKGJwlqo4U9f0cIoABNtgZQGoBKANSxFQENN
+ fIhZKPt8uLolUIYhRb5n6uMfA7JWyJaL7xzmlg7TQANipEQXCEwjmxyGtB85f8maBoqLLqRqI
+ F0b2nhqDjf+EAUZqpYMrj5HmkcFU9oVRbr26C3/S+BC9yrCbJhr0WgIi2XsbqBGj5SLT19Uks
+ rVVPJQ5MWgPI/BRqawnCSZKzLfGCJII0FySR7OpbX8k2dZ+9ag=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,24 +71,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 3:05 PM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> Hasn't been checked since its conception 2 years ago.
+> An attempt was made to provide a proper kerneldoc header for
+> cb710_sg_dwiter_write_next_block(), but a description for it's 'data'
+> argument was missed.
 >
-> Squashes W=1 warning:
+> Squashes W=1 kernel build warning:
 >
->  drivers/misc/mic/vop/vop_main.c: In function ‘_vop_scan_devices’:
->  drivers/misc/mic/vop/vop_main.c:617:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->  617 | int ret;
->  | ^~~
+>  drivers/misc/cb710/sgbuf2.c:131: warning: Function parameter or member 'data' not described in 'cb710_sg_dwiter_write_next_block'
 >
-> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-This is a correct change, but I'd take it one step further and make the
-_vop_remove_device() function return 'void' if you don't mind
-respinning the patch.
-
-Either way
 
 Acked-by: Arnd Bergmann <arnd@arndb.de>
