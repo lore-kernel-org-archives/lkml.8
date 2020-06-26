@@ -2,113 +2,151 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12CD2207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FAB207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MtdrETYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgFZQlA (ORCPT
+        id S1727843AbgFZQl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:41:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:37200 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFZQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:41:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F2801FB;
-        Fri, 26 Jun 2020 09:40:58 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1AFF3F6CF;
-        Fri, 26 Jun 2020 09:40:56 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/2] arm64: kvm: Introduce MTE VCPU feature
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave P Martin <Dave.Martin@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200617123844.29960-1-steven.price@arm.com>
- <20200617123844.29960-3-steven.price@arm.com> <20200617143809.GF5388@gaia>
- <9d4ef6cf-2333-83b8-c555-e70b99b95b28@arm.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <c2883b2b-6c71-f5ee-74b7-4e4d08d2183c@arm.com>
-Date:   Fri, 26 Jun 2020 17:40:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 26 Jun 2020 12:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgFZQl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 12:41:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8ACC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:41:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so2838457pfu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=hFXLpE7iZLR8mWC/BJB98odAF50dNLGX6HXgsEqe10Y=;
+        b=MtdrETYCbYAe5Wae4JiMSgT8v/aaQbhefe1TDDgDkX0rdv2qi/wS1bKp3aLWHiVvC3
+         g09w57rMUfItPUBoMQ7xCj8Baw039IEF/l5NIDuUvp1NW3FkyTGxDvYlLT7zJcpfjXKo
+         XZw5t9jYxBZVDrcQRZQtVfV/abVPMpuabhbcE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=hFXLpE7iZLR8mWC/BJB98odAF50dNLGX6HXgsEqe10Y=;
+        b=tvuAnwDgpWiE3KAsmwx3WCFmLdQ33vVKIwL0dInlVJvqdyL1JFPBzlh12eVxnWsuVV
+         EVPCv9Y9P+HWJwgNAYM0tqP1M/tFCVFizSFM8wMw1r4tEYt6SWmMgj2OXTExhbiNJoPE
+         buYc9Cet1DlHU82+xujnIPX8K5cieGIoKznfN8SIEcIjUpIju7o8Fr8XUPDPYtNs/8Zi
+         /a9oTgUTva2RJC7V79UHEK6hTO3oer/xKUT+0dfFJBlYHFasjl2BsFIay3VtZLtThYN0
+         h8u17TvbbJPnWFG21zkAaLWI4eT3uAjX09OicM3Tf2Xf+cKTdizJ7uss5fE+qLa4pUYv
+         OKow==
+X-Gm-Message-State: AOAM532XCrfVMa7uuPj+leVKfrcsTqei3cxKNzoKe2bUPMB+BGPamqyM
+        USX5PdOKZh9Q5wUvDbTBapIulg==
+X-Google-Smtp-Source: ABdhPJxhdS9f8NXQEcBXWWzG7fn0fIgKDq2TpotTVnV0cuajw0/vGlhj1yQXPXDBJVMrNPPQmwDUJw==
+X-Received: by 2002:a62:1a0f:: with SMTP id a15mr3787231pfa.177.1593189686532;
+        Fri, 26 Jun 2020 09:41:26 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 125sm20738580pff.130.2020.06.26.09.41.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 09:41:25 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dts: bcm: Align L2 cache-controller nodename with
+ dtschema
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200626080646.4300-1-krzk@kernel.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <5a8802f2-d9bf-6a64-1a04-b490bbeb0475@broadcom.com>
+Date:   Fri, 26 Jun 2020 09:41:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <9d4ef6cf-2333-83b8-c555-e70b99b95b28@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626080646.4300-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Thanks for cleanup.
 
-On 17/06/2020 16:34, Steven Price wrote:
-> On 17/06/2020 15:38, Catalin Marinas wrote:
->> On Wed, Jun 17, 2020 at 01:38:44PM +0100, Steven Price wrote:
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index e3b9ee268823..040a7fffaa93 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -1783,6 +1783,17 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t
->>> fault_ipa,
->>>               vma_pagesize = PMD_SIZE;
->>>       }
->>>   +    if (system_supports_mte() && kvm->arch.vcpu_has_mte) {
->>> +        /*
->>> +         * VM will be able to see the page's tags, so we must ensure
->>> +         * they have been initialised.
->>> +         */
->>> +        struct page *page = pfn_to_page(pfn);
->>> +
->>> +        if (!test_and_set_bit(PG_mte_tagged, &page->flags))
->>> +            mte_clear_page_tags(page_address(page), page_size(page));
->>> +    }
->>
->> Are all the guest pages always mapped via a Stage 2 fault? It may be
->> better if we did that via kvm_set_spte_hva().
+On 2020-06-26 1:06 a.m., Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>      l2-cache@22000: $nodename:0:
+>          'l2-cache@22000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   arch/arm/boot/dts/bcm-cygnus.dtsi | 2 +-
+>   arch/arm/boot/dts/bcm-hr2.dtsi    | 2 +-
+>   arch/arm/boot/dts/bcm-nsp.dtsi    | 2 +-
+>   arch/arm/boot/dts/bcm21664.dtsi   | 2 +-
+>   4 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 1bc45cfd5453..35bdd0969f0a 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -91,7 +91,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
+> index 5e5f5ca3c86f..cbebed5f050e 100644
+> --- a/arch/arm/boot/dts/bcm-hr2.dtsi
+> +++ b/arch/arm/boot/dts/bcm-hr2.dtsi
+> @@ -104,7 +104,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index da6d70f09ef1..1c4a46e350e3 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -122,7 +122,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
+> index 3cf66faf3b56..58ec1b2f8ef6 100644
+> --- a/arch/arm/boot/dts/bcm21664.dtsi
+> +++ b/arch/arm/boot/dts/bcm21664.dtsi
+> @@ -90,7 +90,7 @@
+>   		reg-io-width = <4>;
+>   	};
+>   
+> -	L2: l2-cache@3ff20000 {
+> +	L2: cache-controller@3ff20000 {
+>   		compatible = "arm,pl310-cache";
+>   		reg = <0x3ff20000 0x1000>;
+>   		cache-unified;
 
-> I was under the impression that pages are always faulted into the stage 2, but I have to
-> admit I'm not 100% sure about that.
-
-I think there is only one case: VMA with VM_PFNMAP set will get pre-populated during
-kvm_arch_prepare_memory_region(), but they are always made device at stage2, so MTE isn't
-a concern there.
-
-
-> kvm_set_spte_hva() may be more appropriate, although on first look I don't understand how
-> that function deals with huge pages. Is it actually called for normal mappings or only for
-> changes due to the likes of KSM?
-
-It looks like its only called through set_pte_at_notify(), which is used by things like
-KSM/COW that change a mapping, and really don't want to fault it a second time. I guess
-they are only for PAGE_SIZE mappings.
-
-Other mapping sizes would get faulted in by user_mem_abort().
-
-
-I think this should happen in the same places as we clean new pages to PoC, as that is
-also an additional piece of maintenance KVM has to do that the host's stage 1 doesn't.
-
-You may be able to rename clean_dcache_guest_page() to encompass maintenance that we need
-when a page is accessible to a different EL1.
-
-
-Thanks,
-
-James
