@@ -2,140 +2,100 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD37C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D96C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 834D720775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593169206;
-	bh=NPMluDUS2B2Tb9RCJ567AWqohNWdAj5Y+Lfkbjs8aQY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Nvk9qZrN6kUCxG+1U+nMXcUU1s5632mYpR+YpZZpH+zKajWLWyAMKZ85xIYUJNwKj
-	 2h0iONK3OwrbtN9O0gilrM5HwurCLB2B8zaNT+sGNktgVIx+BePuvXReWZgCsq/Js9
-	 rKS96twD83VZxbK0DdCXswCaWp7oZvjm0g1fZBqw=
+	by mail.kernel.org (Postfix) with ESMTP id 6C1A620781
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:01:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f9MSj6Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgFZLAF (ORCPT
+        id S1728263AbgFZLBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:00:05 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:38116 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbgFZLAE (ORCPT
+        Fri, 26 Jun 2020 07:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbgFZLBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:00:04 -0400
-Received: by mail-ej1-f67.google.com with SMTP id w16so8943908ejj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=18aTf3KZmsRbEv2hKvnfZvOhTd+7S+HPU3hrOMCQTuE=;
-        b=KXmVHJEP5iB9y1QlXvw6xhMF9EBaMGou0C6uLbEhxlsRMRiUnPwmasWXQ7X9IbeJ3+
-         u5Qb134I9A7HO2AwdPBZVqmivLCwF0prZVxjvPlUdF8MuMQkJZ6u013G0qTxXGuPai8Y
-         /UxTg2JP8TsOlkF5I1cK0yxgI0jP5LZb6sNh6jAZRz/zG0YUQOLRVxuDUSIRjMKtuhX/
-         d8NCSFFPHfKPTPffW/YrNBoh3xqxTHUnmXGpZgJf5NrIr4P2Lp+9T+eR6+XNlrdwu+jc
-         mMgmK9p8WFx+E1np+RK3SnMCdLVCKkeyHanpI3iyjEf6EDpzg+UgDMQlBTtyuoVSUQ+S
-         uehw==
-X-Gm-Message-State: AOAM532Ym+Wjd8pynU0s6N9BdX2t4PErk+CwSoQ80FufzHbUntLniVX/
-        jXNYxLlYtFxqNYquJRoEN+oHA/Udn/4=
-X-Google-Smtp-Source: ABdhPJwcW4Hr4hmup9134Rg45L/IsR6JWotS/43dXtQHWjlls093+z752ZyemDZNCTkJglg5d3arhA==
-X-Received: by 2002:a17:906:7a46:: with SMTP id i6mr1922010ejo.475.1593169202670;
-        Fri, 26 Jun 2020 04:00:02 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id y2sm2524766eda.85.2020.06.26.04.00.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 04:00:01 -0700 (PDT)
-Subject: Re: [PATCH v0 5/5] Add Documentation for console mouse reporting
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1593155911.git.tammo.block@gmail.com>
- <1eb8c1220ad8315a05ed55a54c54e163029467f1.1593155911.git.tammo.block@gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <e315288d-0940-14fc-0de1-a827bf8aa3bd@kernel.org>
-Date:   Fri, 26 Jun 2020 13:00:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 07:01:14 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07385C08C5C1;
+        Fri, 26 Jun 2020 04:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yIua4md0cM89ux/q6VciAse47KIrRNpMAh8h5H0zSh8=; b=f9MSj6Q/rF3jSca9cRGwsnADUm
+        wJ/Uj46JkwvR6ptbyIwdQgYTUe+i/B619nkSKsjD2CLaHg+AnwlHtfHD+Kew2+6HY8EMYrHK0OAnr
+        0qf2QYmvEHXpQoXjFjdth90ycNbza0ZMEGwtH9Ve/MIX50o+9obpJwkHMCrxpcMRpbx8RdEjpFe1+
+        ivgJvC63B+/OlwoFG9mn1xWOEMeWN/gOQLy0HD6Xrb0OIJQvUaJ+L1JBlkdVqlJR9ng3y1rdgUOVc
+        B5xamG3XS8hpX/wQ50ybgTO8MOYXLSST5/hw5wmGGF2EbV7ydJYKu+db6uKsqhtOkXJjtORGSqD75
+        TJyk3dtg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jom6B-0004zJ-EE; Fri, 26 Jun 2020 11:00:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A6B9A301DFC;
+        Fri, 26 Jun 2020 13:00:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9A71829C4228A; Fri, 26 Jun 2020 13:00:46 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 13:00:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kernel-team@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org
+Subject: Re: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
+Message-ID: <20200626110046.GB4817@hirez.programming.kicks-ass.net>
+References: <20200626001332.1554603-1-songliubraving@fb.com>
+ <20200626001332.1554603-2-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <1eb8c1220ad8315a05ed55a54c54e163029467f1.1593155911.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626001332.1554603-2-songliubraving@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 06. 20, 9:23, Tammo Block wrote:
-> This patch adds a description of the kernel interface(s) used for mouse
-> reporting and compares the old and new bitmask layout.
+On Thu, Jun 25, 2020 at 05:13:29PM -0700, Song Liu wrote:
+> This would be used by bpf stack mapo.
 
-<irony>
-Documentation for the vt code? Phew.
-</irony>
+Would it make sense to sanitize the API a little before exposing it?
 
-Thanks for doing this.
-
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
-> ---
->  .../admin-guide/console-mouse-reporting.rst   | 82 +++++++++++++++++++
->  Documentation/admin-guide/index.rst           |  1 +
->  2 files changed, 83 insertions(+)
->  create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
-> 
-> diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
-> new file mode 100644
-> index 000000000000..799288295655
-> --- /dev/null
-> +++ b/Documentation/admin-guide/console-mouse-reporting.rst
-...
-> +SRG protocol
-> +++++++++++++
-> +
-> +For the SRG style protocol (xterm style, DECSET 1005 *is* set) the upper 11
-> +bits of sel_mode are used like this:
-> +
-> +- 6    : Always 1, identifies SRG protocol / TIOCL_SELSRGREPORT
-> +- 7    : Unused, should be 0. Ignored by kernel (future extensions)
-> +- 8    : Set on button release events / TIOCL_SELSRGRELEASE
-> +- 9-16 : The SRG byte, send to userspace as is / TIOCL_SELSRGMASK
-
-To me -- a non-native -- it looks like s/send/sent/?
-
-> +The SRG (upper) byte
-> +++++++++++++++++++++
-> +
-> +The layout of the *upper byte* ("SRG") is identical to the SRG data layout,
-> +for protocol "1005", as described in detail in the xterm [1]_ or
-> +terminalguide [2]_ home pages. Short summary:
-> +
-> + - 1,2 : Buttons, lower bits (see notes below)
-> + - 3-5 : Modifier keys (Shift, Alt and Ctrl)
-> + - 6   : Mouse movement only, no button status change
-> + - 7-8 : Buttons, upper bits (for buttons 4-15)
-> +
-> +Notes
-> ++++++
-> +
-> +Button numbers are encoded like this:
-> +
-> +- 0-2  : Left, middle and right button
-> +- 3    : No button pressed / Button release
-> +- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
-> +
-> +Please note that button releases should only be reported for buttons 0-2.
-> +
-> +Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
-> +syscall but one based for the escape sequences send by the kernel, so the
-
-again "sent".
-
-thanks,
--- 
-js
-suse labs
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 334d48b16c36..016894b0d2c2 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -159,8 +159,10 @@ static struct perf_callchain_entry *get_callchain_entry(int *rctx)
+ 		return NULL;
+ 
+ 	entries = rcu_dereference(callchain_cpus_entries);
+-	if (!entries)
++	if (!entries) {
++		put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
+ 		return NULL;
++	}
+ 
+ 	cpu = smp_processor_id();
+ 
+@@ -183,12 +185,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+ 	int rctx;
+ 
+ 	entry = get_callchain_entry(&rctx);
+-	if (rctx == -1)
++	if (!entry || rctx == -1)
+ 		return NULL;
+ 
+-	if (!entry)
+-		goto exit_put;
+-
+ 	ctx.entry     = entry;
+ 	ctx.max_stack = max_stack;
+ 	ctx.nr	      = entry->nr = init_nr;
