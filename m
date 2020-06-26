@@ -7,107 +7,127 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009BF20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7497920B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jebeIARZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nM6YJHrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFZVKX (ORCPT
+        id S1726552AbgFZVKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48664 "EHLO
+        Fri, 26 Jun 2020 17:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbgFZVJa (ORCPT
+        with ESMTP id S1725880AbgFZVKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:09:30 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEA3C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:30 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id z187so7442072pgd.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:09:30 -0700 (PDT)
+        Fri, 26 Jun 2020 17:10:40 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F52AC03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:10:40 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id v1so7235569qvx.8
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hiFp+uoptqOZ2rqi90LxI+MqGbDbXrg3yHQVzKDmQQ4=;
-        b=jebeIARZ4MbpC/qohszlae0SxIiUjfS+aHdsgRsyl+nDoZ13dCApmFMyUJeVDOsHAY
-         KIcGcHJ+1BS4bpjJljRbXhZa/cLiJQCxIz3INsZbN4Us+V8lP8TK5psKf814t/EGk6wE
-         pXdYgr4IlD1bc5vMRTxWpR8bW/X9rqzObf6oG1rnxRKPcgwcVlXdkP64PXWb7NSXT5a6
-         NEtpZlVx+hSr8lknL1TKy8c7BgSEPoFVGkkI3sTvx7LhXrKgu9GToCMGaLH+nZo8xo8H
-         YHmDwLXC56KXjbSBDnypaQ9i4502TKmtFeLoqT6X6hTKa14dhV4gfc4ThT1/79Jdq8SS
-         8zLQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=SqHQ9DZWlxsE7qIqsV85VvjMJJNMgqXueRXxvJ29fgI=;
+        b=nM6YJHrx8LdaSjUWSkIKwhAbVqGDbNri4NlhGXkImmnI6EUEOZO82ZVoGm8q/XELDm
+         bnNAzmNAhVPBIi0bVifIvUYvTS9zfYQfH2U/PU8U69Guzkxl10Tnjk06C3s4cW1NXqB4
+         Hh1g0qte6QgyiiXCKmxejoA2zfSAr76RNnDRQ58CCe7rmhv8oiwtfOuU0rb/0gg8Iitj
+         SNRupPbGmkO6jtdA/qNCs9wlmnQICBkZhbK2/+RZbA7EC3bAFwn3WrpjgKQ3Vc4K5W6c
+         1WWDqAc8BGw8QPd8UxZixp75Fvc3/xaI1GHAvRz+FlqtCZ0+uXv/dMuv2ctKZmdYc858
+         XnDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hiFp+uoptqOZ2rqi90LxI+MqGbDbXrg3yHQVzKDmQQ4=;
-        b=DnU2gHK61eW7Ba+MGERrMNjya5P85/zX5F3Tt71wtK/3onfwsnDFWfbQ3sF+4lpSTd
-         BRYzc5t5kK3nO1UqhEbsugScS1sJ7XdoH2TaBvMzmWSqyNK+VjU5kxzWcX1coT18Zq6h
-         7hegBqmStuugq/RsjBm7FlQ+OkDFL/55tIhSksI5Ph7YYaCXwxJNOIc3u3UdsDqzNETj
-         qGrKC52LgW1lj6joDRrm0YFtyFWyHHPbHG/XcxVCLfnyG31S8EIlGT12tgtuWpQC5Ism
-         FmZnHAJZ8gZpG2jncULkkseKBM9eJHtSAwGoiHKC5TPwVVgKkCBhI/qJAryRZpEF5BAN
-         fMtg==
-X-Gm-Message-State: AOAM530JaGwSQuU4YzQBRe6G6nQfcT4p+Ru2c3qYUVw+UWX/ZxjmDkhK
-        I+0RXycWjpUcSlR6p1honmxa/I/CI4E6oJPpjSC+Ng==
-X-Google-Smtp-Source: ABdhPJxSwQ68iEnNXkgolra98q2cg2bDfdpdwE62xg8GhSSGsb9iaN0w7iVXuEbw7sVWlA1D/tARVHhauyHs3D3fWH+8JQ==
-X-Received: by 2002:a17:90a:f206:: with SMTP id bs6mr5554851pjb.48.1593205769580;
- Fri, 26 Jun 2020 14:09:29 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:09:08 -0700
-In-Reply-To: <20200626210917.358969-1-brendanhiggins@google.com>
-Message-Id: <20200626210917.358969-4-brendanhiggins@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=SqHQ9DZWlxsE7qIqsV85VvjMJJNMgqXueRXxvJ29fgI=;
+        b=YEV0KR+7M+yof0wjZa06zu6F/1OdzAVqyvchYEFgW9HFrcMU9AtWGdbdCoj7YxNWIh
+         5aa9CQl+yhKWNsK3DUGF/w2ahjoVXgrSujgjF3yOuhw7B9ALItN8DHshXUx5lxQJxSNP
+         uJjn6sAessNVzX3waJb4Ba+WmqPlAjua35ee7ba6cU5Re1WQ2Wu/2vx9zqzynihQfQop
+         vUIuONFICq36anclA94mRrSRyQQ6YuUoQTYfNs9LbmZq4rF7hs/JBzLLVNO6tDWjJ4Oo
+         HHJAiHdCw35GlLSVoTQ7rFT99DossXCbOoKI1DjZYDsFromxotKZlPbGsMM+/vOS22t+
+         HwkA==
+X-Gm-Message-State: AOAM533jacS0cl7jg3v4fXvSv5tMHg2qCk3498V3JYPlx6BZsst4NkQw
+        e8yJoMinbaSRQKyMKFrDuM2+KBUX96kS
+X-Google-Smtp-Source: ABdhPJyeof3yYlB1yKI2mHu0xqNJs5O2CtfyPkQJNcaGC0exq/y2fajFvLM4uo+3CPWRUrsqOFT5/mmqDJbS
+X-Received: by 2002:a0c:bf47:: with SMTP id b7mr4962051qvj.167.1593205839758;
+ Fri, 26 Jun 2020 14:10:39 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:10:26 -0700
+Message-Id: <20200626211026.513520-1-furquan@google.com>
 Mime-Version: 1.0
-References: <20200626210917.358969-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v5 03/12] arch: microblaze: add linker section for KUnit test suites
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com,
-        frowand.list@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        monstr@monstr.eu, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, chris@zankel.net, jcmvbkbc@gmail.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, linux-um@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org,
-        Brendan Higgins <brendanhiggins@google.com>
+Subject: [PATCH] pinctrl: amd: Honor IRQ trigger type requested by the caller
+From:   Furquan Shaikh <furquan@google.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com, akshu.agrawal@amd.com,
+        adurbin@google.com, dtor@google.com,
+        Furquan Shaikh <furquan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker section to microblaze where KUnit can put references to its
-test suites. This patch is an early step in transitioning to dispatching
-all KUnit tests from a centralized executor rather than having each as
-its own separate late_initcall.
+This change drops the override in `amd_gpio_irq_set_type()` that
+ignores the IRQ trigger type settings from the caller. The device
+driver (caller) is in a better position to identify the right trigger
+type for the device based on the usage as well as the information
+exposed by the BIOS. There are instances where the device driver might
+want to configure the trigger type differently in different modes. An
+example of this is gpio-keys driver which configures IRQ type as
+trigger on both edges (to identify assert and deassert events) when in
+S0 and reconfigures the trigger type using the information provided by
+the BIOS when going into suspend to ensure that the wake happens on
+the required edge.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+This override in `amd_gpio_irq_set_type()` prevents the caller from
+being able to reconfigure trigger type once it is set either based on
+ACPI information or the type used by the first caller for IRQ on a
+given GPIO line.
+
+Without this change, pen-insert gpio key (used by garaged stylus on a
+Chromebook) works fine in S0 (i.e. insert and eject events are
+correctly identified), however, BIOS configuration for wake on only
+pen eject i.e. only-rising edge or only-falling edge is not honored.
+
+With this change, it was verified that pen-insert gpio key behavior is
+correct in both S0 and for wakeup from S3.
+
+Signed-off-by: Furquan Shaikh <furquan@google.com>
 ---
- arch/microblaze/kernel/vmlinux.lds.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/pinctrl-amd.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/arch/microblaze/kernel/vmlinux.lds.S b/arch/microblaze/kernel/vmlinux.lds.S
-index df07b3d06cd6b..4fc32f8979a60 100644
---- a/arch/microblaze/kernel/vmlinux.lds.S
-+++ b/arch/microblaze/kernel/vmlinux.lds.S
-@@ -128,6 +128,10 @@ SECTIONS {
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 1fe62a35bb12..c34e6a950b3f 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -417,22 +417,13 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	int ret = 0;
+ 	u32 pin_reg, pin_reg_irq_en, mask;
+-	unsigned long flags, irq_flags;
++	unsigned long flags;
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct amd_gpio *gpio_dev = gpiochip_get_data(gc);
  
- 	__init_end = .;
+ 	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 	pin_reg = readl(gpio_dev->base + (d->hwirq)*4);
  
-+	.kunit_test_suites : {
-+		KUNIT_TEST_SUITES
-+	}
-+
- 	.bss ALIGN (PAGE_SIZE) : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		/* page aligned when MMU used */
- 		__bss_start = . ;
+-	/* Ignore the settings coming from the client and
+-	 * read the values from the ACPI tables
+-	 * while setting the trigger type
+-	 */
+-
+-	irq_flags = irq_get_trigger_type(d->irq);
+-	if (irq_flags != IRQ_TYPE_NONE)
+-		type = irq_flags;
+-
+ 	switch (type & IRQ_TYPE_SENSE_MASK) {
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		pin_reg &= ~BIT(LEVEL_TRIG_OFF);
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
