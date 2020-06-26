@@ -2,110 +2,96 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97033C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E27C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71AF62089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593209041;
-	bh=WOQTvXobQ4W5JjaUMq7kWZE0jMQeOGk5MGW4rZFNYmQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ij0BfD3LkvA/mS2BvjvVY6RblW3ODqMqRTjo/k7LJJREbkgxvO3Sggnu+OesI4iSC
-	 yMugaUBmxnrSWLaPQ3xuiuGPnHW96XFNQh7vyDMNoma+bN7RdIzEIYfiixFKffBnoK
-	 QmAEFAUJYnMJid+kRbnAEg6Bbqp/72s7J6VbwumM=
+	by mail.kernel.org (Postfix) with ESMTP id EE49920FC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SzqF7WY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725976AbgFZWD7 (ORCPT
+        id S1725952AbgFZWJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:03:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbgFZWD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:03:59 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631B02089D;
-        Fri, 26 Jun 2020 22:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593209038;
-        bh=WOQTvXobQ4W5JjaUMq7kWZE0jMQeOGk5MGW4rZFNYmQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FJoUvBwf+2SSHz2fr5vxPYd6aoefwHL0tlm86G/9+r8GmMcp2ZfwG8v/QP7defuDT
-         D6lsId8SoNK8CT/QFVljdlp7a2LKRNtj3CK7eEWI766szCKWXBke3IKnvh4VpFJvxX
-         DKoi6BJrlVFKVMovm4nd8G3e0rQBjBfAenxKjkPE=
-Received: by mail-oi1-f179.google.com with SMTP id k4so9332362oik.2;
-        Fri, 26 Jun 2020 15:03:58 -0700 (PDT)
-X-Gm-Message-State: AOAM5308w1Yb/XT7UKtcwSKFIgbRW2pJ7IzRgfo6kYgCPCk6Xf5Ao4AX
-        UZGQBxQW5rAu8k34QGjVdAF9JQLu2NuQ3QcpBUg=
-X-Google-Smtp-Source: ABdhPJyA7RXVNdsucLUlBYRk00ByTmKYmzuM59N4650Dy8dEYBHPZ8+pPQ4fBTN9TdwDgfB6PHfzTHaYzf0UmhXyeYs=
-X-Received: by 2002:aca:ba03:: with SMTP id k3mr4145023oif.33.1593209037748;
- Fri, 26 Jun 2020 15:03:57 -0700 (PDT)
+        Fri, 26 Jun 2020 18:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgFZWJg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 18:09:36 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AF3C03E979;
+        Fri, 26 Jun 2020 15:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=7ItslY+2tZnH34AnvCzD4Nhf2IFkOH4VABumb9nnzMY=; b=SzqF7WY4VAjL+0alZFowiV+qcm
+        7czxSpcJw4zxoxv7fTg+JJQcdru+suTLjcqhuQrVhYmDSRzl0d5Xif2s9g+AcR69pGGMKDuMGPkWU
+        sAhYnwzzaKbri/0T22CP684gLPZICM63L1qmwF0Iexg26oWJ71f1UQgDqNCFbmar22df+L3NcuflU
+        RZ3giORw/uMQJugFrkRb3y0HGjpAd43ztQLiCiYrVAcIsRP3qlvSahWbmgeiukYOLdvyF3OU5B7o9
+        oAq3FAh3lhSsuNNsJtslo8Z0dDqt0rAJrmT+cCmn6Gqm/id3XV8TfR30U+DkVPQv9mXk+Jhkdw9i0
+        s2DH3uFg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jowX3-0005QC-Gg; Fri, 26 Jun 2020 22:09:15 +0000
+Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/memory-failure.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
+        Oscar Salvador <osalvador@suse.de>
+References: <20200626033744.URfGO%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <700cf5c7-6e8c-4c09-5ab6-5f946689b012@infradead.org>
+Date:   Fri, 26 Jun 2020 15:09:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
- <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de> <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
-In-Reply-To: <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 27 Jun 2020 00:03:46 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
-Message-ID: <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200626033744.URfGO%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 at 23:56, Atish Patra <atishp@atishpatra.org> wrote:
->
-> On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-> >
-> > On 6/26/20 1:45 AM, Atish Patra wrote:
-> > > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
-> > > a __umoddi3 error while building EFI for 32 bit.
-> > >
-> > > Use bitwise operations instead of modulo operations to fix the issue.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > ---
-> > >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
-> > > index cc89c4d6196f..1de9878ddd3a 100644
-> > > --- a/drivers/firmware/efi/libstub/alignedmem.c
-> > > +++ b/drivers/firmware/efi/libstub/alignedmem.c
-> > > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-> > >       *addr = ALIGN((unsigned long)alloc_addr, align);
-> > >
-> > >       if (slack > 0) {
-> > > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
-> > > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
-> >
-> > Here you rely on the compiler to silently convert the division by
-> > EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
-> > EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
-> >
-> > slack = (align >> EFI_PAGE_SHIFT) - 1;
-> > ...
-> > int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
-> >
->
-> Sure. I will update it in the next version. Thanks for the suggestion.
+On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
 
-Please don't. Dividing by EFI_PAGE_SIZE is perfectly fine, and is more readable.
+when CONFIG_MIGRATION is not set/enabled:
+
+../mm/memory-failure.c: In function ‘new_page’:
+../mm/memory-failure.c:1692:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
+  return alloc_migration_target(p, (unsigned long)&mtc);
+         ^~~~~~~~~~~~~~~~~~~~~~
+         alloc_migrate_target
+../mm/memory-failure.c:1692:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
+  return alloc_migration_target(p, (unsigned long)&mtc);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
