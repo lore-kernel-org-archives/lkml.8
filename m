@@ -2,554 +2,234 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3387C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0002053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60152053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593198334;
+	bh=G+I32GJKBOkXdaB1l41+A5Uglo3vLdyA9S8kRD/bFik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0Hv909tznReU7PCjtKN4y0kz6hvaLRd7F5N8lLkzSeGU3P6g4Il6o2LcTPIjou1O5
+	 SOox0v1JCOOCu2XilREWFf8rY8TOLObKPFZBbAWe/iFj+GZzNe5r+QMIk0TZ+2FpTx
+	 yPDLAgTbNrWgAxFOAf7Nz6q36rZ99bywQVQbj5ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725980AbgFZTF1 (ORCPT
+        id S1726007AbgFZTFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:05:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725275AbgFZTFZ (ORCPT
+        Fri, 26 Jun 2020 15:05:33 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:41698 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFZTFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 15:05:25 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QJ38ZD104352;
-        Fri, 26 Jun 2020 15:05:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31wn6x2at7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 15:05:13 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05QJ5CFv115218;
-        Fri, 26 Jun 2020 15:05:12 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31wn6x2as1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 15:05:12 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QJ0YvO009365;
-        Fri, 26 Jun 2020 19:05:10 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 31uusghmjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 19:05:09 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QJ56nZ10092710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 19:05:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B36AFA4053;
-        Fri, 26 Jun 2020 19:05:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BDF6A404D;
-        Fri, 26 Jun 2020 19:05:03 +0000 (GMT)
-Received: from hbathini.in.ibm.com (unknown [9.102.0.159])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Jun 2020 19:05:03 +0000 (GMT)
-Subject: [PATCH 03/11] powerpc/kexec_file: add helper functions for getting
- memory ranges
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Date:   Sat, 27 Jun 2020 00:35:02 +0530
-Message-ID: <159319830228.16351.4610549581603608533.stgit@hbathini.in.ibm.com>
-In-Reply-To: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 26 Jun 2020 15:05:31 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 05QJ5Bip001776;
+        Sat, 27 Jun 2020 04:05:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 05QJ5Bip001776
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593198312;
+        bh=56uNI+amkxePd1oit1BuTaMQPk7veFhZ8oX0g6cWc6Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GMlgw70eMLMCBgd/FVf6YhiClp9Tl3CLevUmuIFiE5hP2UeFGL7sihY5W4uD0Ghj1
+         fbfkImEjRTZNnSt0xhVg8rRS3uo3zYF2ajHOtoGFT5Uo0wyy3IgI+dWbB6ylnn2DqO
+         5rZXoH9hm5aOQ6VAPlsr0SYLMZmNghIb0E4mUdqpU9KNR5LOEW9Cz7Ef/8nkaj5tSd
+         4WL2xymdotP7L5EvE0dqWwnrYFjyxliCjTtiIFvIGu28RHbZkulgfikO8YtqWYVy56
+         sXy4IpnDHzMNpmnOcnAHXmjAuk0c5m+UF3pqEdinA2TJhhJ1hj+Spwq8Ogv1XRXK/M
+         OrtUILxnNNyUA==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id r5so6019911vso.11;
+        Fri, 26 Jun 2020 12:05:11 -0700 (PDT)
+X-Gm-Message-State: AOAM533GPgZOBPuvcYnUHV38HKd9erlK5eh+2l3JEcf2u9MQFppfN89Y
+        aPLivs9JRv+A5gmyuuBuNvc0uX7bmsAk904V9Ek=
+X-Google-Smtp-Source: ABdhPJxQsvEQ2+kZUIoBlFDRQKYf5TC7MP3yoZBVPXCf3DtOPUFccoI+9TTG4uDicXTgW8fLfGDFB3N9PSq+2Rv1goA=
+X-Received: by 2002:a67:6c84:: with SMTP id h126mr2316194vsc.181.1593198310376;
+ Fri, 26 Jun 2020 12:05:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_10:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- cotscore=-2147483648 malwarescore=0 impostorscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260134
+References: <202006221201.3641ED037E@keescook> <CAK7LNAQL=XF+xvsRNTEGXtY7J-fx5FJKpMuScoxLt8SDKGB3_Q@mail.gmail.com>
+ <202006222234.FBCEAD7F@keescook>
+In-Reply-To: <202006222234.FBCEAD7F@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 27 Jun 2020 04:04:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARRU7j_aSgZreuR-jyFYAipaJwZjUwzmE9RcohgKJvS8w@mail.gmail.com>
+Message-ID: <CAK7LNARRU7j_aSgZreuR-jyFYAipaJwZjUwzmE9RcohgKJvS8w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Provide way to actually disable stack protector
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kexec case, the kernel to be loaded uses the same memory layout as
-the running kernel. So, passing on the DT of the running kernel would
-be good enough.
+On Tue, Jun 23, 2020 at 2:37 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Jun 23, 2020 at 11:33:53AM +0900, Masahiro Yamada wrote:
+> > On Tue, Jun 23, 2020 at 4:02 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > Some builds of GCC enable stack protector by default. Simply removing
+> > > the arguments is not sufficient to disable stack protector, as the stack
+> > > protector for those GCC builds must be explicitly disabled. (Removing the
+> > > arguments is left as-is just to be sure there are no ordering problems. If
+> > > -fno-stack-protector ended up _before_ -fstack-protector, it would not
+> > > disable it: GCC uses whichever -f... comes last on the command line.)
+> > >
+> > > Fixes: 20355e5f73a7 ("x86/entry: Exclude low level entry code from sanitizing")
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  Makefile                          | 4 +++-
+> > >  arch/Kconfig                      | 3 ---
+> > >  arch/arm/boot/compressed/Makefile | 4 ++--
+> > >  arch/x86/entry/Makefile           | 3 +++
+> > >  4 files changed, 8 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index ac2c61c37a73..b46e91bf0b0e 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -762,7 +762,9 @@ ifneq ($(CONFIG_FRAME_WARN),0)
+> > >  KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
+> > >  endif
+> > >
+> > > -stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
+> > > +DISABLE_STACKPROTECTOR := $(call cc-option,-fno-stack-protector)
+> > > +export DISABLE_STACKPROTECTOR
+> > > +stackp-flags-y                                    := $(DISABLE_STACKPROTECTOR)
+> > >  stackp-flags-$(CONFIG_STACKPROTECTOR)             := -fstack-protector
+> > >  stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+> > >
+> > > diff --git a/arch/Kconfig b/arch/Kconfig
+> > > index 8cc35dc556c7..1ea61290900a 100644
+> > > --- a/arch/Kconfig
+> > > +++ b/arch/Kconfig
+> > > @@ -478,9 +478,6 @@ config HAVE_STACKPROTECTOR
+> > >           An arch should select this symbol if:
+> > >           - it has implemented a stack canary (e.g. __stack_chk_guard)
+> > >
+> > > -config CC_HAS_STACKPROTECTOR_NONE
+> > > -       def_bool $(cc-option,-fno-stack-protector)
+> > > -
+> > >  config STACKPROTECTOR
+> > >         bool "Stack Protector buffer overflow detection"
+> > >         depends on HAVE_STACKPROTECTOR
+> > > diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+> > > index 00602a6fba04..3693bac525d2 100644
+> > > --- a/arch/arm/boot/compressed/Makefile
+> > > +++ b/arch/arm/boot/compressed/Makefile
+> > > @@ -84,9 +84,9 @@ endif
+> > >
+> > >  # -fstack-protector-strong triggers protection checks in this code,
+> > >  # but it is being used too early to link to meaningful stack_chk logic.
+> > > -nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
+> > >  $(foreach o, $(libfdt_objs) atags_to_fdt.o, \
+> > > -       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
+> > > +       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt \
+> > > +                             $(DISABLE_STACKPROTECTOR)))
+> > >
+> > >  # These were previously generated C files. When you are building the kernel
+> > >  # with O=, make sure to remove the stale files in the output tree. Otherwise,
+> > > diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
+> > > index b7a5790d8d63..79902decc3d1 100644
+> > > --- a/arch/x86/entry/Makefile
+> > > +++ b/arch/x86/entry/Makefile
+> > > @@ -10,6 +10,9 @@ KCOV_INSTRUMENT := n
+> > >  CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> > >  CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> > >  CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> > > +CFLAGS_common.o += $(DISABLE_STACKPROTECTOR)
+> > > +CFLAGS_syscall_32.o += $(DISABLE_STACKPROTECTOR)
+> > > +CFLAGS_syscall_64.o += $(DISABLE_STACKPROTECTOR)
+> >
+> > There is one more c file in this directory.
+> >
+> > Is it OK to not patch syscall_x32.c ?
+>
+> Good question. Peter? (It seems all the syscall_*.c files are just a
+> table, not code -- why do they need any instrumentation changes?)
+>
+> >
+> >
+> > >
+> > >  CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
+> > >  CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
+> >
+> >
+> >
+> >
+> > This patch is ugly.
+> >
+> > I'd rather want to fix this by one-liner.
+>
+> Why not a global export to assist? This isn't the only place it's needed
+> (see the arm64 chunk...)
 
-But in case of kdump, different memory ranges are needed to manage
-loading the kdump kernel, booting into it and exporting the elfcore
-of the crashing kernel. The ranges are exlude memory ranges, usable
-memory ranges, reserved memory ranges and crash memory ranges.
 
-Exclude memory ranges specify the list of memory ranges to avoid while
-loading kdump segments. Usable memory ranges list the memory ranges
-that could be used for booting kdump kernel. Reserved memory ranges
-list the memory regions for the loading kernel's reserve map. Crash
-memory ranges list the memory ranges to be exported as the crashing
-kernel's elfcore.
+Is it useful when we know
+DISABLE_STACKPROTECTOR = -fno-stack-protector  ?
 
-Add helper functions for setting up the above mentioned memory ranges.
-This helpers facilitate in understanding the subsequent changes better
-and make it easy to setup the different memory ranges listed above, as
-and when appropriate.
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
- arch/powerpc/include/asm/kexec_ranges.h |   18 +
- arch/powerpc/kexec/Makefile             |    2 
- arch/powerpc/kexec/ranges.c             |  387 +++++++++++++++++++++++++++++++
- 3 files changed, 406 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/kexec/ranges.c
 
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
-new file mode 100644
-index 0000000..29eaa65
---- /dev/null
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _ARCH_POWERPC_KEXEC_RANGES_H
-+#define _ARCH_POWERPC_KEXEC_RANGES_H
-+
-+#define MEM_RANGE_CHUNK_SZ		2048	/* Memory ranges size chunk */
-+
-+struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
-+int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int add_tce_mem_ranges(struct crash_mem **mem_ranges);
-+int add_initrd_mem_range(struct crash_mem **mem_ranges);
-+int add_htab_mem_range(struct crash_mem **mem_ranges);
-+int add_kernel_mem_range(struct crash_mem **mem_ranges);
-+int add_rtas_mem_range(struct crash_mem **mem_ranges, bool within_crashkernel);
-+int add_opal_mem_range(struct crash_mem **mem_ranges, bool within_crashkernel);
-+int add_reserved_ranges(struct crash_mem **mem_ranges);
-+void sort_memory_ranges(struct crash_mem *mrngs);
-+
-+#endif /* _ARCH_POWERPC_KEXEC_RANGES_H */
-diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
-index 67c3553..4aff684 100644
---- a/arch/powerpc/kexec/Makefile
-+++ b/arch/powerpc/kexec/Makefile
-@@ -7,7 +7,7 @@ obj-y				+= core.o crash.o core_$(BITS).o
- 
- obj-$(CONFIG_PPC32)		+= relocate_32.o
- 
--obj-$(CONFIG_KEXEC_FILE)	+= file_load.o file_load_$(BITS).o elf_$(BITS).o
-+obj-$(CONFIG_KEXEC_FILE)	+= file_load.o ranges.o file_load_$(BITS).o elf_$(BITS).o
- 
- ifdef CONFIG_HAVE_IMA_KEXEC
- ifdef CONFIG_IMA
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-new file mode 100644
-index 0000000..f21ddea
---- /dev/null
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -0,0 +1,387 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * powerpc code to implement the kexec_file_load syscall
-+ *
-+ * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-+ * Copyright (C) 2004  IBM Corp.
-+ * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
-+ * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-+ * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-+ * Copyright (C) 2020  IBM Corporation
-+ *
-+ * Based on kexec-tools' kexec-ppc64.c, fs2dt.c.
-+ * Heavily modified for the kernel by
-+ * Hari Bathini <hbathini@linux.ibm.com>.
-+ */
-+
-+#include <linux/kexec.h>
-+#include <linux/of_device.h>
-+#include <linux/slab.h>
-+#include <asm/sections.h>
-+#include <asm/kexec_ranges.h>
-+
-+/**
-+ * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
-+ *                     could hold, given the size allocated for it.
-+ * @size:              Allocation size of crash_mem structure.
-+ *
-+ * Returns the maximum no. of ranges.
-+ */
-+static inline unsigned int get_max_nr_ranges(size_t size)
-+{
-+	return ((size - sizeof(struct crash_mem)) /
-+		sizeof(struct crash_mem_range));
-+}
-+
-+/**
-+ * get_mem_rngs_size - Get the allocated size of mrngs based on
-+ *                     max_nr_ranges and chunk size.
-+ * @mrngs:             Memory ranges.
-+ *
-+ * Returns the maximum no. of ranges.
-+ */
-+static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
-+{
-+	size_t size;
-+
-+	if (!mrngs)
-+		return 0;
-+
-+	size = (sizeof(struct crash_mem) +
-+		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
-+
-+	/*
-+	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
-+	 * So, align to get the actual length.
-+	 */
-+	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
-+}
-+
-+/**
-+ * __add_mem_range - add a memory range to memory ranges list.
-+ * @mem_ranges:      Range list to add the memory range to.
-+ * @base:            Base address of the range to add.
-+ * @size:            Size of the memory range to add.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
-+{
-+	struct crash_mem *mrngs = *mem_ranges;
-+
-+	if ((mrngs == NULL) || (mrngs->nr_ranges == mrngs->max_nr_ranges)) {
-+		mrngs = realloc_mem_ranges(mem_ranges);
-+		if (!mrngs)
-+			return -ENOMEM;
-+	}
-+
-+	mrngs->ranges[mrngs->nr_ranges].start = base;
-+	mrngs->ranges[mrngs->nr_ranges].end = base + size - 1;
-+	mrngs->nr_ranges++;
-+	return 0;
-+}
-+
-+/**
-+ * realloc_mem_ranges - reallocate mem_ranges with size incremented
-+ *                      by MEM_RANGE_CHUNK_SZ. Frees up the old memory,
-+ *                      if memory allocation fails.
-+ * @mem_ranges:         Memory ranges to reallocate.
-+ *
-+ * Returns pointer to reallocated memory on success, NULL otherwise.
-+ */
-+struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges)
-+{
-+	struct crash_mem *mrngs = *mem_ranges;
-+	unsigned int nr_ranges;
-+	size_t size;
-+
-+	size = get_mem_rngs_size(mrngs);
-+	nr_ranges = mrngs ? mrngs->nr_ranges : 0;
-+
-+	size += MEM_RANGE_CHUNK_SZ;
-+	mrngs = krealloc(*mem_ranges, size, GFP_KERNEL);
-+	if (!mrngs) {
-+		kfree(*mem_ranges);
-+		*mem_ranges = NULL;
-+		return NULL;
-+	}
-+
-+	mrngs->nr_ranges = nr_ranges;
-+	mrngs->max_nr_ranges = get_max_nr_ranges(size);
-+	*mem_ranges = mrngs;
-+
-+	return mrngs;
-+}
-+
-+/**
-+ * add_mem_range - Updates existing memory range, if there is an overlap.
-+ *                 Else, adds a new memory range.
-+ * @mem_ranges:    Range list to add the memory range to.
-+ * @base:          Base address of the range to add.
-+ * @size:          Size of the memory range to add.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
-+{
-+	struct crash_mem *mrngs = *mem_ranges;
-+	u64 mstart, mend, end;
-+	unsigned int i;
-+
-+	if (!size)
-+		return 0;
-+
-+	end = base + size - 1;
-+
-+	if ((mrngs == NULL) || (mrngs->nr_ranges == 0))
-+		return __add_mem_range(mem_ranges, base, size);
-+
-+	for (i = 0; i < mrngs->nr_ranges; i++) {
-+		mstart = mrngs->ranges[i].start;
-+		mend = mrngs->ranges[i].end;
-+		if (base < mend && end > mstart) {
-+			if (base < mstart)
-+				mrngs->ranges[i].start = base;
-+			if (end > mend)
-+				mrngs->ranges[i].end = end;
-+			return 0;
-+		}
-+	}
-+
-+	return __add_mem_range(mem_ranges, base, size);
-+}
-+
-+/**
-+ * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range(s) to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_tce_mem_ranges(struct crash_mem **mem_ranges)
-+{
-+	struct device_node *dn;
-+	int ret;
-+
-+	for_each_node_by_type(dn, "pci") {
-+		u64 base;
-+		u32 size;
-+
-+		ret = of_property_read_u64(dn, "linux,tce-base", &base);
-+		ret |= of_property_read_u32(dn, "linux,tce-size", &size);
-+		if (!ret)
-+			continue;
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
-+ *                        if the initrd was retained.
-+ * @mem_ranges:           Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_initrd_mem_range(struct crash_mem **mem_ranges)
-+{
-+	u64 base, end;
-+	int ret = 0;
-+	char *str;
-+
-+	/* This range means something only if initrd was retained */
-+	str = strstr(saved_command_line, "retain_initrd");
-+	if (!str)
-+		return 0;
-+
-+	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
-+	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
-+	if (!ret)
-+		ret = add_mem_range(mem_ranges, base, end - base + 1);
-+	return ret;
-+}
-+
-+/**
-+ * add_htab_mem_range - Adds htab range to the given memory ranges list,
-+ *                      if it exists
-+ * @mem_ranges:         Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_htab_mem_range(struct crash_mem **mem_ranges)
-+{
-+#ifdef CONFIG_PPC_BOOK3S_64
-+	int ret;
-+
-+	if (!htab_address)
-+		return 0;
-+
-+	ret = add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
-+	return ret;
-+#else
-+	return 0;
-+#endif
-+}
-+
-+/**
-+ * add_kernel_mem_range - Adds kernel text region to the given
-+ *                        memory ranges list.
-+ * @mem_ranges:           Range list to add the memory range to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_kernel_mem_range(struct crash_mem **mem_ranges)
-+{
-+	int ret;
-+
-+	ret = add_mem_range(mem_ranges, 0, __pa(_end));
-+	return ret;
-+}
-+
-+/**
-+ * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range to.
-+ * @within_crashkernel: If true, adds only the part of the region within
-+ *                      crashkernel range. Otherwise, all the region is added.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_rtas_mem_range(struct crash_mem **mem_ranges, bool within_crashkernel)
-+{
-+	struct device_node *dn;
-+	int ret = 0;
-+
-+	dn = of_find_node_by_path("/rtas");
-+	if (dn) {
-+		u32 base, size;
-+
-+		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
-+		ret |= of_property_read_u32(dn, "rtas-size", &size);
-+
-+		if (ret)
-+			return ret;
-+
-+		if (within_crashkernel) {
-+			if (overlaps_crashkernel(base, size)) {
-+				if (base < crashk_res.start)
-+					base = crashk_res.start;
-+				if (crashk_res.end < (base + size - 1))
-+					size = crashk_res.end - base + 1;
-+
-+				ret = add_mem_range(mem_ranges, base, size);
-+			}
-+		} else
-+			ret = add_mem_range(mem_ranges, base, size);
-+	}
-+	return ret;
-+}
-+
-+/**
-+ * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
-+ * @mem_ranges:         Range list to add the memory range to.
-+ * @within_crashkernel: If true, adds only the part of the region within
-+ *                      crashkernel range. Otherwise, all the region is added.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_opal_mem_range(struct crash_mem **mem_ranges, bool within_crashkernel)
-+{
-+	struct device_node *dn;
-+	int ret = 0;
-+
-+	dn = of_find_node_by_path("/ibm,opal");
-+	if (dn) {
-+		u64 base, size;
-+
-+		ret = of_property_read_u64(dn, "opal-base-address", &base);
-+		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
-+
-+		if (ret)
-+			return ret;
-+
-+		if (within_crashkernel) {
-+			if (overlaps_crashkernel(base, size)) {
-+				if (base < crashk_res.start)
-+					base = crashk_res.start;
-+				if (crashk_res.end < (base + size - 1))
-+					size = crashk_res.end - base + 1;
-+
-+				ret = add_mem_range(mem_ranges, base, size);
-+			}
-+		} else
-+			ret = add_mem_range(mem_ranges, base, size);
-+	}
-+	return ret;
-+}
-+
-+/**
-+ * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
-+ *                       to the given memory ranges list.
-+ * @mem_ranges:          Range list to add the memory ranges to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int add_reserved_ranges(struct crash_mem **mem_ranges)
-+{
-+	int i, len, ret = 0;
-+	const __be32 *prop;
-+
-+	prop = of_get_property(of_root, "reserved-ranges", &len);
-+	if (!prop)
-+		return 0;
-+
-+	/*
-+	 * Each reserved range is an (address,size) pair, 2 cells each,
-+	 * totalling 4 cells per range.
-+	 */
-+	for (i = 0; i < len / (sizeof(*prop) * 4); i++) {
-+		u64 base, size;
-+
-+		base = of_read_number(prop + (i * 4) + 0, 2);
-+		size = of_read_number(prop + (i * 4) + 2, 2);
-+
-+		ret = add_mem_range(mem_ranges, base, size);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * sort_memory_ranges - Sorts the given memory ranges list.
-+ * @mem_ranges:         Range list to sort.
-+ *
-+ * Returns nothing.
-+ */
-+void sort_memory_ranges(struct crash_mem *mrngs)
-+{
-+	struct crash_mem_range *rngs;
-+	struct crash_mem_range rng;
-+	int i, j, idx;
-+
-+	if (!mrngs)
-+		return;
-+
-+	/* Sort the ranges in-place */
-+	rngs = &mrngs->ranges[0];
-+	for (i = 0; i < mrngs->nr_ranges; i++) {
-+		idx = i;
-+		for (j = (i + 1); j < mrngs->nr_ranges; j++) {
-+			if (rngs[idx].start > rngs[j].start)
-+				idx = j;
-+		}
-+		if (idx != i) {
-+			rng = rngs[idx];
-+			rngs[idx] = rngs[i];
-+			rngs[i] = rng;
-+		}
-+	}
-+}
+I'd rather want to apply this patch
+https://patchwork.kernel.org/patch/11628493/
+and hard-code -fno-stack-protector where necessary.
 
+
+
+
+>
+> >
+> >
+> >
+> >
+> > diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
+> > index b7a5790d8d63..0d41eb91aaea 100644
+> > --- a/arch/x86/entry/Makefile
+> > +++ b/arch/x86/entry/Makefile
+> > @@ -11,6 +11,8 @@ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
+> > -fstack-protector -fstack-protector-
+> >  CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector
+> > -fstack-protector-strong
+> >  CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector
+> > -fstack-protector-strong
+> >
+> > +ccflags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) += -fno-stack-protector
+> > +
+>
+> Order matters here -- when is ccflags-y applied?
+
+
+cc-flags-y comes after KBUILD_CFLAGS
+so that -fno-stack-protector can negate -fstack-protector(-strong)
+
+
+
+>
+> >  CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
+> >  CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
+> >  obj-y                          := entry_$(BITS).o thunk_$(BITS).o
+> > syscall_$(BITS).o
+> >
+> >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+>
+> --
+> Kees Cook
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
