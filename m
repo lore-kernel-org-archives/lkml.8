@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E49C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4104BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F682065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182BE2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593192098;
-	bh=IsZUG4DWzvA5uLxr8FPqPjPY/G30t4PJ9fenQs+LjGI=;
+	s=default; t=1593192101;
+	bh=0KwVrB5+YxkjHmsd7hVC3maB/s6RvbQqHOXJg0RYmMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E71Z+AeCumVazQG/9IrH8Rh2sWkk4H8e8tK2usJZccVjWKD8L5He2K+Fir5j7Ju4f
-	 SJU++HFaZeSJMwCLvJkW1Xc/or07aWGLBhVbSTYgJ1VHjPYaPUQuVwrmatWufD5yZ7
-	 b75xzaItTkQ1pTFrLhH6i04YO9ineoZJunO6ed1Y=
+	b=hl9C8UGal1rpFzigb/OdvlODW26ieW5AYKi4Oz2ZOYAcVry+MJhE7WX+9LBjpSMVr
+	 z60zYngkhhvEy8zjhiKbMRy7lq2lrLwQ7IumBOShhMs4i3qrxhNReHGXAI2mb8bTNj
+	 jIE/NAMKX/HFMrCk+ZyVSnGBUI8Tv+wxe/8w+oHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgFZRVh (ORCPT
+        id S1727059AbgFZRVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39848 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 13:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbgFZRVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:21:22 -0400
+        id S1727020AbgFZRVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:21:25 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D074E2089D;
-        Fri, 26 Jun 2020 17:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417EB2088E;
+        Fri, 26 Jun 2020 17:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593192082;
-        bh=IsZUG4DWzvA5uLxr8FPqPjPY/G30t4PJ9fenQs+LjGI=;
+        s=default; t=1593192084;
+        bh=0KwVrB5+YxkjHmsd7hVC3maB/s6RvbQqHOXJg0RYmMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNevlYfKxY6uu/Gi8TBzCE+XdVn7T4ndq5e8PG6MZ1JZcGyH+KFUJidzhoRiEFFyA
-         1FTh6R0hLZFEDWjIodr7Gi7GPhdVRkX6rW/ZkwkQQpcldZroFSZy4bdbKaLxN0V/tt
-         PRMvw9o6LitoJQo3F5w2IZMseo9jF5Nv/gz7qhrk=
+        b=LxhaUmfUqHUyo1vrt2PKppNXpURYkC2hO8fY5LSyUKJuz2GjVTs3aj5/y9Ca1BJF4
+         Gq18t52t4XkUwmyeeRvlTO2HJwRclsWkBrtj8qK02PQDzFhVBrMf0f670UwM0qZIR3
+         uuSHLdAYGW8sUjLrgfO/NPNiS4Iv8BLxlbAeHiZU=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Andrew Cooper <andrew.cooper3@citrix.com>,
         Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH 3/6] x86/entry/64/compat: Fix Xen PV SYSENTER frame setup
-Date:   Fri, 26 Jun 2020 10:21:13 -0700
-Message-Id: <947880c41ade688ff4836f665d0c9fcaa9bd1201.1593191971.git.luto@kernel.org>
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 6/6] selftests/x86: Consolidate and fix get/set_eflags() helpers
+Date:   Fri, 26 Jun 2020 10:21:16 -0700
+Message-Id: <982ce58ae8dea2f1e57093ee894760e35267e751.1593191971.git.luto@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1593191971.git.luto@kernel.org>
 References: <cover.1593191971.git.luto@kernel.org>
@@ -61,70 +58,274 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SYSENTER frame setup was nonsense.  It worked by accident
-because the normal code into which the Xen asm jumped
-(entry_SYSENTER_32/compat) threw away SP without touching the stack.
-entry_SYSENTER_compat was recently modified such that it relied on
-having a valid stack pointer, so now the Xen asm needs to invoke it
-with a valid stack.
+We had several copies of get_eflags() and set_eflags() and they were
+all buggy.  Consolidate them and fix them.  The fixes are:
 
-Fix it up like SYSCALL: use the Xen-provided frame and skip the bare
-metal prologue.
+Add memory clobbers.  These are probably unnecessary but they make
+sure sure that the compiler doesn't move something past one of these
+calls when it shouldn't.
 
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Fixes: 1c3e5d3f60e2 ("x86/entry: Make entry_64_compat.S objtool clean")
+Respect the redzone on x86_64.  I haven't seen a failure related to
+this, but it's definitely a bug.
+
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/entry/entry_64_compat.S |  1 +
- arch/x86/xen/xen-asm_64.S        | 20 ++++++++++++++++----
- 2 files changed, 17 insertions(+), 4 deletions(-)
+ tools/testing/selftests/x86/Makefile          |  4 +-
+ tools/testing/selftests/x86/helpers.h         | 41 +++++++++++++++++++
+ .../selftests/x86/single_step_syscall.c       | 17 +-------
+ .../testing/selftests/x86/syscall_arg_fault.c | 21 +---------
+ tools/testing/selftests/x86/syscall_nt.c      | 20 +--------
+ tools/testing/selftests/x86/test_vsyscall.c   | 15 +------
+ tools/testing/selftests/x86/unwind_vdso.c     | 23 +----------
+ 7 files changed, 51 insertions(+), 90 deletions(-)
+ create mode 100644 tools/testing/selftests/x86/helpers.h
 
-diff --git a/arch/x86/entry/entry_64_compat.S b/arch/x86/entry/entry_64_compat.S
-index 7b9d8150f652..381a6de7de9c 100644
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -79,6 +79,7 @@ SYM_CODE_START(entry_SYSENTER_compat)
- 	pushfq				/* pt_regs->flags (except IF = 0) */
- 	pushq	$__USER32_CS		/* pt_regs->cs */
- 	pushq	$0			/* pt_regs->ip = 0 (placeholder) */
-+SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
- 	pushq	%rax			/* pt_regs->orig_ax */
- 	pushq	%rdi			/* pt_regs->di */
- 	pushq	%rsi			/* pt_regs->si */
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 5d252aaeade8..e1e1c7eafa60 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -161,10 +161,22 @@ SYM_FUNC_END(xen_syscall32_target)
+diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+index 3ff94575d02d..6703c7906b71 100644
+--- a/tools/testing/selftests/x86/Makefile
++++ b/tools/testing/selftests/x86/Makefile
+@@ -70,10 +70,10 @@ all_64: $(BINARIES_64)
  
- /* 32-bit compat sysenter target */
- SYM_FUNC_START(xen_sysenter_target)
--	mov 0*8(%rsp), %rcx
--	mov 1*8(%rsp), %r11
--	mov 5*8(%rsp), %rsp
--	jmp entry_SYSENTER_compat
-+	/*
-+	 * NB: Xen is polite and clears TF from EFLAGS for us.  This means
-+	 * that we don't need to guard against single step exceptions here.
-+	 */
-+	popq %rcx
-+	popq %r11
-+
-+	/*
-+	 * Neither Xen nor the kernel really knows what the old SS and
-+	 * CS were.  The kernel expects __USER32_DS and __USER32_CS, so
-+	 * report those values even though Xen will guess its own values.
-+	 */
-+	movq $__USER32_DS, 4*8(%rsp)
-+	movq $__USER32_CS, 1*8(%rsp)
-+
-+	jmp entry_SYSENTER_compat_after_hwframe
- SYM_FUNC_END(xen_sysenter_target)
+ EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
  
- #else /* !CONFIG_IA32_EMULATION */
+-$(BINARIES_32): $(OUTPUT)/%_32: %.c
++$(BINARIES_32): $(OUTPUT)/%_32: %.c helpers.h
+ 	$(CC) -m32 -o $@ $(CFLAGS) $(EXTRA_CFLAGS) $^ -lrt -ldl -lm
+ 
+-$(BINARIES_64): $(OUTPUT)/%_64: %.c
++$(BINARIES_64): $(OUTPUT)/%_64: %.c helpers.h
+ 	$(CC) -m64 -o $@ $(CFLAGS) $(EXTRA_CFLAGS) $^ -lrt -ldl
+ 
+ # x86_64 users should be encouraged to install 32-bit libraries
+diff --git a/tools/testing/selftests/x86/helpers.h b/tools/testing/selftests/x86/helpers.h
+new file mode 100644
+index 000000000000..f5ff2a2615df
+--- /dev/null
++++ b/tools/testing/selftests/x86/helpers.h
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#ifndef __SELFTESTS_X86_HELPERS_H
++#define __SELFTESTS_X86_HELPERS_H
++
++#include <asm/processor-flags.h>
++
++static inline unsigned long get_eflags(void)
++{
++	unsigned long eflags;
++
++	asm volatile (
++#ifdef __x86_64__
++		"subq $128, %%rsp\n\t"
++		"pushfq\n\t"
++		"popq %0\n\t"
++		"addq $128, %%rsp"
++#else
++		"pushfl\n\t"
++		"popl %0"
++#endif
++		: "=r" (eflags) :: "memory");
++
++	return eflags;
++}
++
++static inline void set_eflags(unsigned long eflags)
++{
++	asm volatile (
++#ifdef __x86_64__
++		"subq $128, %%rsp\n\t"
++		"pushq %0\n\t"
++		"popfq\n\t"
++		"addq $128, %%rsp"
++#else
++		"pushl %0\n\t"
++		"popfl"
++#endif
++		:: "r" (eflags) : "flags", "memory");
++}
++
++#endif /* __SELFTESTS_X86_HELPERS_H */
+diff --git a/tools/testing/selftests/x86/single_step_syscall.c b/tools/testing/selftests/x86/single_step_syscall.c
+index 1063328e275c..120ac741fe44 100644
+--- a/tools/testing/selftests/x86/single_step_syscall.c
++++ b/tools/testing/selftests/x86/single_step_syscall.c
+@@ -31,6 +31,8 @@
+ #include <sys/ptrace.h>
+ #include <sys/user.h>
+ 
++#include "helpers.h"
++
+ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
+ 		       int flags)
+ {
+@@ -67,21 +69,6 @@ static unsigned char altstack_data[SIGSTKSZ];
+ # define INT80_CLOBBERS
+ #endif
+ 
+-static unsigned long get_eflags(void)
+-{
+-	unsigned long eflags;
+-	asm volatile ("pushf" WIDTH "\n\tpop" WIDTH " %0" : "=rm" (eflags));
+-	return eflags;
+-}
+-
+-static void set_eflags(unsigned long eflags)
+-{
+-	asm volatile ("push" WIDTH " %0\n\tpopf" WIDTH
+-		      : : "rm" (eflags) : "flags");
+-}
+-
+-#define X86_EFLAGS_TF (1UL << 8)
+-
+ static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
+ {
+ 	ucontext_t *ctx = (ucontext_t*)ctx_void;
+diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
+index bc0ecc2e862e..5b7abebbcbb9 100644
+--- a/tools/testing/selftests/x86/syscall_arg_fault.c
++++ b/tools/testing/selftests/x86/syscall_arg_fault.c
+@@ -15,30 +15,11 @@
+ #include <setjmp.h>
+ #include <errno.h>
+ 
+-#ifdef __x86_64__
+-# define WIDTH "q"
+-#else
+-# define WIDTH "l"
+-#endif
++#include "helpers.h"
+ 
+ /* Our sigaltstack scratch space. */
+ static unsigned char altstack_data[SIGSTKSZ];
+ 
+-static unsigned long get_eflags(void)
+-{
+-	unsigned long eflags;
+-	asm volatile ("pushf" WIDTH "\n\tpop" WIDTH " %0" : "=rm" (eflags));
+-	return eflags;
+-}
+-
+-static void set_eflags(unsigned long eflags)
+-{
+-	asm volatile ("push" WIDTH " %0\n\tpopf" WIDTH
+-		      : : "rm" (eflags) : "flags");
+-}
+-
+-#define X86_EFLAGS_TF (1UL << 8)
+-
+ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
+ 		       int flags)
+ {
+diff --git a/tools/testing/selftests/x86/syscall_nt.c b/tools/testing/selftests/x86/syscall_nt.c
+index 5fc82b9cebed..970e5e14d96d 100644
+--- a/tools/testing/selftests/x86/syscall_nt.c
++++ b/tools/testing/selftests/x86/syscall_nt.c
+@@ -13,29 +13,11 @@
+ #include <signal.h>
+ #include <err.h>
+ #include <sys/syscall.h>
+-#include <asm/processor-flags.h>
+ 
+-#ifdef __x86_64__
+-# define WIDTH "q"
+-#else
+-# define WIDTH "l"
+-#endif
++#include "helpers.h"
+ 
+ static unsigned int nerrs;
+ 
+-static unsigned long get_eflags(void)
+-{
+-	unsigned long eflags;
+-	asm volatile ("pushf" WIDTH "\n\tpop" WIDTH " %0" : "=rm" (eflags));
+-	return eflags;
+-}
+-
+-static void set_eflags(unsigned long eflags)
+-{
+-	asm volatile ("push" WIDTH " %0\n\tpopf" WIDTH
+-		      : : "rm" (eflags) : "flags");
+-}
+-
+ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
+ 		       int flags)
+ {
+diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+index a4f4d4cf22c3..c41f24b517f4 100644
+--- a/tools/testing/selftests/x86/test_vsyscall.c
++++ b/tools/testing/selftests/x86/test_vsyscall.c
+@@ -20,6 +20,8 @@
+ #include <setjmp.h>
+ #include <sys/uio.h>
+ 
++#include "helpers.h"
++
+ #ifdef __x86_64__
+ # define VSYS(x) (x)
+ #else
+@@ -493,21 +495,8 @@ static int test_process_vm_readv(void)
+ }
+ 
+ #ifdef __x86_64__
+-#define X86_EFLAGS_TF (1UL << 8)
+ static volatile sig_atomic_t num_vsyscall_traps;
+ 
+-static unsigned long get_eflags(void)
+-{
+-	unsigned long eflags;
+-	asm volatile ("pushfq\n\tpopq %0" : "=rm" (eflags));
+-	return eflags;
+-}
+-
+-static void set_eflags(unsigned long eflags)
+-{
+-	asm volatile ("pushq %0\n\tpopfq" : : "rm" (eflags) : "flags");
+-}
+-
+ static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
+ {
+ 	ucontext_t *ctx = (ucontext_t *)ctx_void;
+diff --git a/tools/testing/selftests/x86/unwind_vdso.c b/tools/testing/selftests/x86/unwind_vdso.c
+index 0075ccd65407..4c311e1af4c7 100644
+--- a/tools/testing/selftests/x86/unwind_vdso.c
++++ b/tools/testing/selftests/x86/unwind_vdso.c
+@@ -11,6 +11,8 @@
+ #include <features.h>
+ #include <stdio.h>
+ 
++#include "helpers.h"
++
+ #if defined(__GLIBC__) && __GLIBC__ == 2 && __GLIBC_MINOR__ < 16
+ 
+ int main()
+@@ -53,27 +55,6 @@ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
+ 		err(1, "sigaction");
+ }
+ 
+-#ifdef __x86_64__
+-# define WIDTH "q"
+-#else
+-# define WIDTH "l"
+-#endif
+-
+-static unsigned long get_eflags(void)
+-{
+-	unsigned long eflags;
+-	asm volatile ("pushf" WIDTH "\n\tpop" WIDTH " %0" : "=rm" (eflags));
+-	return eflags;
+-}
+-
+-static void set_eflags(unsigned long eflags)
+-{
+-	asm volatile ("push" WIDTH " %0\n\tpopf" WIDTH
+-		      : : "rm" (eflags) : "flags");
+-}
+-
+-#define X86_EFLAGS_TF (1UL << 8)
+-
+ static volatile sig_atomic_t nerrs;
+ static unsigned long sysinfo;
+ static bool got_sysinfo = false;
 -- 
 2.25.4
 
