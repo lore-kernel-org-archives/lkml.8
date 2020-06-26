@@ -2,203 +2,106 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBC41206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FCA20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RAG4mK+V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oh/RiiCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgFZUCF (ORCPT
+        id S1725970AbgFZUC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        Fri, 26 Jun 2020 16:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgFZUCE (ORCPT
+        with ESMTP id S1725864AbgFZUC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:02:04 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC01C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so2537536wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:04 -0700 (PDT)
+        Fri, 26 Jun 2020 16:02:56 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926D5C03E97E
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id k1so4651735pls.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lbKE8B5Gu+f9N6+tuSxc/2z2J262A6WuLfgwyXskAFg=;
-        b=RAG4mK+VLbFsOfmcM5BVz/lAPGjg31YVjTeeHHlg9D4GqMQQarK3s47Ny3zIan/a6F
-         5gt4H/XK7yf+epxGBBBSNXJQdyGRD7VApQFyQfeK+AuXxp9brwX8PZF/J4lsMrYNeWIM
-         O0yMrYkGgm3a05MH8Yqks7VzgHafqxOTt1PGmzKLcE8DoYCcMgVxjNmRxi5XnCLYspO2
-         WolkCZDzdIF5NyW6BmzN1Vd0+xfsLbt1V9Pg3Hu9A4Wo+qpCP/4QR9UVwvWovEuhoHSl
-         xx4J8iNPdgAX8fWLlqK/CvgCRQBuiJSOxgVoo7sAhQAsAE4d6DK/SRK15sCJylZGvMXs
-         HyJA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HuJILZmXLURp/yn0oSueJPx2COyMJVkAtdj3c8sCa2A=;
+        b=Oh/RiiCDnbp34CVdzAILpR378u4/AQdViDFg7C7oW5dt1jDbyEeAjP90KAvvKhIr97
+         KwI71vJclhWb7o4mSkhCh2NOFbTtfJgpS+vox3O7+FvJkCsMl4urremmWYspWh28A0+Z
+         sV5HTCY7Nn86R70arsfIYUzY6CqZUi43QquRo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lbKE8B5Gu+f9N6+tuSxc/2z2J262A6WuLfgwyXskAFg=;
-        b=paPPmBF+AfJHiDiUkY9EXfdpLe7FZN12UtFKMF/x+f2SnKMomK21C+53/2joN0U7dc
-         DL6KbYf8m+V3eRmFNMK4wWnt0nS0isZoqz9isu6O1vDDbSEA4GtMRtSMNLHmr7HkOjVt
-         9mAwZ+pGc9F7ZH951scgZOx8fMylhr0aceU94dDUyW6ERlg+bTjn6YAN/CFy2BH/4uNV
-         MVHCI5fuXLlwvbXMhIBhodm55ywsqCudjKHp0tyiEymdriv9pJ0H3DY7E1kbwSutrnOx
-         5I8GuNaaU8CMpBe0qvNAf6hJx+d2vky34lNFkcC/rK11k465U6SLPcnwL9EGOohKLjKW
-         tCdA==
-X-Gm-Message-State: AOAM533VCy6LUNxSIlpfnFEpbwVsQmQryWLYN+jdqmuw/4QUkdizKbPy
-        XPBZTg6SVr16P150VjsQCQm4Rc5cyFUl2Qh3owzd4853
-X-Google-Smtp-Source: ABdhPJxBXadGeA9O1H6iaEWRMIAnt3FtaerOkfxcnmDo3BXt3h016i12Omzo70KEuPfQvXaYBwdqeL7Z5oC5E1iEsqo=
-X-Received: by 2002:adf:df03:: with SMTP id y3mr5143514wrl.376.1593201723167;
- Fri, 26 Jun 2020 13:02:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HuJILZmXLURp/yn0oSueJPx2COyMJVkAtdj3c8sCa2A=;
+        b=NZUqldZgERhQfmnZtCjWUujusRi465ZrHve5mikItlVF6q/LbGNWoRFxTQ/MAqS9YZ
+         q96m39z+4OkW22CQDvMHmc2WED1IgE0YZ6qU8BzMPWIshaF9JlvkqRrkxrQRDSLGGsBQ
+         pVwU08NsutX+vgUiS0wym4i/aD+H1FJMAWg7aP/ndtAxYP/+pfxgKlPmCyJWL1Sjj8e6
+         2/iIOcclo/TLxI5UR/qIVABz/sE5YDkyUjgdHF58bH+bR8Y8S1/p8zs7Oj40QRc/RIiz
+         svQ8H/Dji4b/8Fm+VFifbWkADAloxAxpcWTbpEJFRXB5XwqXcx8Y6WaXHWC3MZQoeD/m
+         JR5Q==
+X-Gm-Message-State: AOAM530L5klsXX3OH4JSLrl+ZTm+aY4toZ1mZepE+VC+Wbxvaf6D/gAB
+        BfNVXQdlwZcQADladl/UL0hhzQ==
+X-Google-Smtp-Source: ABdhPJw11xKQt6MwLhidUJ9gydREFfdw80oPEr/XN3WYlxPPeC/ryrLDoithYT16cWqdMGMaKZA/Bw==
+X-Received: by 2002:a17:90a:8a8e:: with SMTP id x14mr4810785pjn.169.1593201776002;
+        Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b14sm8925970pfb.186.2020.06.26.13.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 13:02:55 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 13:02:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
+Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/slab.c)
+Message-ID: <202006261302.13BB6AB703@keescook>
+References: <20200626033744.URfGO%akpm@linux-foundation.org>
+ <7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org>
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-2-jolsa@kernel.org>
-In-Reply-To: <20200626194720.2915044-2-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jun 2020 13:01:51 -0700
-Message-ID: <CAP-5=fV-i+fNj1v_6v4gnaZNoT9XSR1AOJr3cau2R0+MjJemkQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] perf tools: Rename expr__add_id to expr__add_val
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firstly, thanks for this work!
+On Fri, Jun 26, 2020 at 09:28:36AM -0700, Randy Dunlap wrote:
+> On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> 
+> 
+> when CONFIG_NUMA is not set/enabled:
+> 
+> ../mm/slab.c: In function ‘___cache_free’:
+> ../mm/slab.c:3471:2: error: implicit declaration of function ‘__free_one’; did you mean ‘__free_page’? [-Werror=implicit-function-declaration]
+>   __free_one(ac, objp);
+>   ^~~~~~~~~~
 
-On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Renaming expr__add_id to expr__add_val so we can use
-> expr__add_id to actually add just id in following changes.
+Eek! Thanks for catching that. I will send a fix patch.
 
-Perhaps clear up in the commit message that add id won't add an id and
-a value, just the id. I don't mind long intention revealing function
-names, so expr__add_id_with_val may most fully convey this change.
-
-Thanks,
-Ian
-
-> there's no functional change.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/tests/expr.c       | 4 ++--
->  tools/perf/tests/pmu-events.c | 4 ++--
->  tools/perf/util/expr.c        | 2 +-
->  tools/perf/util/expr.h        | 2 +-
->  tools/perf/util/expr.y        | 2 +-
->  tools/perf/util/stat-shadow.c | 4 ++--
->  6 files changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index b7e5ef3007fc..82aa32fcab64 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -24,8 +24,8 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->         struct expr_parse_ctx ctx;
->
->         expr__ctx_init(&ctx);
-> -       expr__add_id(&ctx, strdup("FOO"), 1);
-> -       expr__add_id(&ctx, strdup("BAR"), 2);
-> +       expr__add_val(&ctx, strdup("FOO"), 1);
-> +       expr__add_val(&ctx, strdup("BAR"), 2);
->
->         ret = test(&ctx, "1+1", 2);
->         ret |= test(&ctx, "FOO+BAR", 3);
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index b66b021476ec..b3b835982cab 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -492,7 +492,7 @@ static int test_parsing(void)
->                          */
->                         k = 1;
->                         hashmap__for_each_entry((&ctx.ids), cur, bkt)
-> -                               expr__add_id(&ctx, strdup(cur->key), k++);
-> +                               expr__add_val(&ctx, strdup(cur->key), k++);
->
->                         hashmap__for_each_entry((&ctx.ids), cur, bkt) {
->                                 if (check_parse_cpu(cur->key, map == cpus_map,
-> @@ -547,7 +547,7 @@ static int metric_parse_fake(const char *str)
->          */
->         i = 1;
->         hashmap__for_each_entry((&ctx.ids), cur, bkt)
-> -               expr__add_id(&ctx, strdup(cur->key), i++);
-> +               expr__add_val(&ctx, strdup(cur->key), i++);
->
->         hashmap__for_each_entry((&ctx.ids), cur, bkt) {
->                 if (check_parse_fake(cur->key)) {
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index e8f777830a23..a02937e5f3ac 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -33,7 +33,7 @@ static bool key_equal(const void *key1, const void *key2,
->  }
->
->  /* Caller must make sure id is allocated */
-> -int expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
-> +int expr__add_val(struct expr_parse_ctx *ctx, const char *name, double val)
->  {
->         double *val_ptr = NULL, *old_val = NULL;
->         char *old_key = NULL;
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 8a2c1074f90f..35bdc609cf55 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -22,7 +22,7 @@ struct expr_scanner_ctx {
->
->  void expr__ctx_init(struct expr_parse_ctx *ctx);
->  void expr__ctx_clear(struct expr_parse_ctx *ctx);
-> -int expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
-> +int expr__add_val(struct expr_parse_ctx *ctx, const char *id, double val);
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr);
->  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->                 const char *expr, int runtime);
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 5a6e8b43fb08..ff5e5f6e170d 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -71,7 +71,7 @@ all_other: all_other other
->
->  other: ID
->  {
-> -       expr__add_id(ctx, $1, 0.0);
-> +       expr__add_val(ctx, $1, 0.0);
->  }
->  |
->  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 8fdef47005e6..0a991016f848 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -773,9 +773,9 @@ static int prepare_metric(struct evsel **metric_events,
->                         *pn = 0;
->
->                 if (metric_total)
-> -                       expr__add_id(pctx, n, metric_total);
-> +                       expr__add_val(pctx, n, metric_total);
->                 else
-> -                       expr__add_id(pctx, n, avg_stats(stats)*scale);
-> +                       expr__add_val(pctx, n, avg_stats(stats)*scale);
->         }
->
->         return i;
-> --
-> 2.25.4
->
+-- 
+Kees Cook
