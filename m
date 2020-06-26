@@ -2,112 +2,172 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2279BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE384C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E8B20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65622073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuV68Sj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgFZXI6 (ORCPT
+        id S1726429AbgFZXMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:08:58 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:58755 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgFZXI6 (ORCPT
+        Fri, 26 Jun 2020 19:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFZXMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:08:58 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id E630E1A8BB7;
-        Sat, 27 Jun 2020 09:08:54 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1joxSh-0001Ar-Mw; Sat, 27 Jun 2020 09:08:47 +1000
-Date:   Sat, 27 Jun 2020 09:08:47 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
-Message-ID: <20200626230847.GI2005@dread.disaster.area>
-References: <20200625113122.7540-1-willy@infradead.org>
- <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com>
+        Fri, 26 Jun 2020 19:12:09 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA0AC03E979;
+        Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id j10so8735916qtq.11;
+        Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pTmR+y5xQvCfn7qLWQjIR68Juu6JdR5gHIQY84QdEd4=;
+        b=IuV68Sj0SKSJ8kJjMhRBv9rc+wRa/O+XtkXwVtnjm7MTGWGuJrVPQ+E/1xuhQFFzxt
+         Jst27nZ5ngYKEXFcNkh5sn4SzU1XaPQuvCbnIOAFFavbzQ4ZtH2L3Hypyu1nsdBnm3Fo
+         Xq4TrdiFvw1hMdh5eep5MK7hnVkfLopKDB8T1zgcTDgaOzNhJvImLfHDMLVNRUUMyH1u
+         ofMPXZrjNtIkZDcG7eTNxjr9TPWauKc8q1lUpsHfeAJIRG+lJ7MzKOF8PfAXx/CQy8tY
+         5oyXfEKd7mTGriQm2etbaS/uuJgmSnC1PC+moNrG/vDJDP+zC/pylnqEnKR9aEdeuykz
+         iBJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pTmR+y5xQvCfn7qLWQjIR68Juu6JdR5gHIQY84QdEd4=;
+        b=hjNuAkgxBuC6MU541v63JR4e/GkEbk9LarKwWIC3oCgJ6Nb6jpi/cL5PQEEItvYzXM
+         75YZYX8HtYVvN//r1SuGwREqQ7ItK8NQE/501Zw4Z+L6S0/cmUshg3+jBZxcrwqELMlX
+         47aRi7+T+rJ8HVN/q/UbPyjz1V/f3TikWerarKDbyV3zH3+CoOnFCZ26XGhL51dZdNBQ
+         IbGE907/X53HmXdve51QjTJIGSdowkG4RecnZAN9FSkWLqKfY2IpHVhclPVXWtxcQ2xk
+         wiX2BtmkUkokDwKuobHNlttFYQDv64f3z7RJux0ihSgr+z1usyx+3kg7XnEE58ypKSIv
+         sJ9Q==
+X-Gm-Message-State: AOAM530jfm9d3URqi25uXulcimCMlEVwAXDupD9RfQthc2V/VE7yKn7Y
+        TUY2vE2qSZrLUF5heeBc6tn8itwef76w/+ZqxxWUGBdu
+X-Google-Smtp-Source: ABdhPJxzIyclZTlu3aoGsOzhVwJsAXglRMI7FIJ4PJA2sz/uUtUXt8Zh+DhIqtUNNUK+mveDG+YVuDseREIBsP1ls1s=
+X-Received: by 2002:ac8:1991:: with SMTP id u17mr5099484qtj.93.1593213128220;
+ Fri, 26 Jun 2020 16:12:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=FVrTFY9nI9_O9HWt5mYA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200626001332.1554603-1-songliubraving@fb.com>
+ <20200626001332.1554603-5-songliubraving@fb.com> <CAEf4Bzb6H3a48S3L4WZtPTMSLZpAe4C5_2aFwJAnNDVLVWDTQA@mail.gmail.com>
+ <6B6E4195-BC5C-4A13-80A6-9493469D6A2E@fb.com>
+In-Reply-To: <6B6E4195-BC5C-4A13-80A6-9493469D6A2E@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 26 Jun 2020 16:11:57 -0700
+Message-ID: <CAEf4Bzb543EVJF+nU0X+1JNMaTehgiwx_0V=80W-frBYku0odA@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 4/4] selftests/bpf: add bpf_iter test with bpf_get_task_stack()
+To:     Song Liu <songliubraving@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:02:19AM -0400, Mikulas Patocka wrote:
-> Hi
-> 
-> I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
-> prevents both filesystem recursion and i/o recursion.
-> 
-> Note that any I/O can recurse into a filesystem via the loop device, thus 
-> it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
-> and PF_MEMALLOC_NOIO is not set.
+On Fri, Jun 26, 2020 at 4:05 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Jun 26, 2020, at 1:21 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Thu, Jun 25, 2020 at 5:15 PM Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >> The new test is similar to other bpf_iter tests.
+> >>
+> >> Signed-off-by: Song Liu <songliubraving@fb.com>
+> >> ---
+> >> .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++++
+> >> .../selftests/bpf/progs/bpf_iter_task_stack.c | 60 +++++++++++++++++++
+> >> 2 files changed, 77 insertions(+)
+> >> create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
+> >>
+> >> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
+> >> index 87c29dde1cf96..baa83328f810d 100644
+> >> --- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
+> >> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
+> >> @@ -5,6 +5,7 @@
+> >> #include "bpf_iter_netlink.skel.h"
+> >> #include "bpf_iter_bpf_map.skel.h"
+> >> #include "bpf_iter_task.skel.h"
+> >> +#include "bpf_iter_task_stack.skel.h"
+> >> #include "bpf_iter_task_file.skel.h"
+> >> #include "bpf_iter_test_kern1.skel.h"
+> >> #include "bpf_iter_test_kern2.skel.h"
+> >> @@ -106,6 +107,20 @@ static void test_task(void)
+> >>        bpf_iter_task__destroy(skel);
+> >> }
+> >>
+> >> +static void test_task_stack(void)
+> >> +{
+> >> +       struct bpf_iter_task_stack *skel;
+> >> +
+> >> +       skel = bpf_iter_task_stack__open_and_load();
+> >> +       if (CHECK(!skel, "bpf_iter_task_stack__open_and_load",
+> >> +                 "skeleton open_and_load failed\n"))
+> >> +               return;
+> >> +
+> >> +       do_dummy_read(skel->progs.dump_task_stack);
+> >> +
+> >> +       bpf_iter_task_stack__destroy(skel);
+> >> +}
+> >> +
+> >> static void test_task_file(void)
+> >> {
+> >>        struct bpf_iter_task_file *skel;
+> >> @@ -392,6 +407,8 @@ void test_bpf_iter(void)
+> >>                test_bpf_map();
+> >>        if (test__start_subtest("task"))
+> >>                test_task();
+> >> +       if (test__start_subtest("task_stack"))
+> >> +               test_task_stack();
+> >>        if (test__start_subtest("task_file"))
+> >>                test_task_file();
+> >>        if (test__start_subtest("anon"))
+> >> diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
+> >> new file mode 100644
+> >> index 0000000000000..83aca5b1a7965
+> >> --- /dev/null
+> >> +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
+> >> @@ -0,0 +1,60 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/* Copyright (c) 2020 Facebook */
+> >> +/* "undefine" structs in vmlinux.h, because we "override" them below */
+> >> +#define bpf_iter_meta bpf_iter_meta___not_used
+> >> +#define bpf_iter__task bpf_iter__task___not_used
+> >> +#include "vmlinux.h"
+> >> +#undef bpf_iter_meta
+> >> +#undef bpf_iter__task
+> >> +#include <bpf/bpf_helpers.h>
+> >> +#include <bpf/bpf_tracing.h>
+> >> +
+> >> +char _license[] SEC("license") = "GPL";
+> >> +
+> >> +/* bpf_get_task_stack needs a stackmap to work */
+> >
+> > no it doesn't anymore :) please drop
+>
+> We still need stack_map_alloc() to call get_callchain_buffers() in this
+> case. Without an active stack map, get_callchain_buffers() may fail.
 
-Correct me if I'm wrong, but I think that will prevent swapping from
-GFP_NOFS memory reclaim contexts. IOWs, this will substantially
-change the behaviour of the memory reclaim system under sustained
-GFP_NOFS memory pressure. Sustained GFP_NOFS memory pressure is
-quite common, so I really don't think we want to telling memory
-reclaim "you can't do IO at all" when all we are trying to do is
-prevent recursion back into the same filesystem.
+Oh... um... is it possible to do it some other way? It's extremely
+confusing dependency. Does bpf_get_stack() also require stackmap?
 
-Given that the loop device IO path already operates under
-memalloc_noio context, (i.e. the recursion restriction is applied in
-only the context that needs is) I see no reason for making that a
-global reclaim limitation....
-
-In reality, we need to be moving the other way with GFP_NOFS - to
-fine grained anti-recursion contexts, not more broad contexts.
-
-That is, GFP_NOFS prevents recursion into any filesystem, not just
-the one that we are actively operating on and needing to prevent
-recursion back into. We can safely have reclaim do relcaim work on
-other filesysetms without fear of recursion deadlocks, but the
-memory reclaim infrastructure does not provide that capability.(*)
-
-e.g. if memalloc_nofs_save() took a reclaim context structure that
-the filesystem put the superblock, the superblock's nesting depth
-(because layering on loop devices can create cross-filesystem
-recursion dependencies), and any other filesyetm private data the
-fs wanted to add, we could actually have reclaim only avoid reclaim
-from filesytsems where there is a deadlock possiblity. e.g:
-
-	- superblock nesting depth is different, apply GFP_NOFS
-	  reclaim unconditionally
-	- superblock different apply GFP_KERNEL reclaim
-	- superblock the same, pass context to filesystem to
-	  decide if reclaim from the sueprblock is safe.
-
-At this point, we get memory reclaim able to always be able to
-reclaim from filesystems that are not at risk of recursion
-deadlocks. Direct reclaim is much more likely to be able to make
-progress now because it is much less restricted in what it can
-reclaim. That's going to make direct relcaim faster and more
-efficient, and taht's the ultimate goal we are aiming to acheive
-here...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>
+> Thanks,
+> Song
