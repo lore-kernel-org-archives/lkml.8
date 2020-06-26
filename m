@@ -2,135 +2,185 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39035C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17FBA2088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068FF2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RthFPEqO"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Y1gXiaMS";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Rx9ibOEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgFZViB (ORCPT
+        id S1725937AbgFZVjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgFZViA (ORCPT
+        Fri, 26 Jun 2020 17:39:06 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36144 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbgFZVjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:38:00 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8E3C03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:59 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id m62so6255802vsd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=je2upLQiNvR0YfyZwqkhD75KKdpn0DZdcrHJes6BiIc=;
-        b=RthFPEqOul77xm5bP15m2z+OMgivB1Mb+BzePQWZ57fEQJvSG3Fkg3cCr5Me11XlqC
-         GURO9UDwDTHOKxcOHQkT/OprpV3A1IuPf6eh7TcHrZ/baw3UxLv7EZFzCgr+/TdAg6vx
-         RLikwq6ApS+HqQ3I/nbeo0DqT4sOsHQiaMKNA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=je2upLQiNvR0YfyZwqkhD75KKdpn0DZdcrHJes6BiIc=;
-        b=H0FbtCFa6NQZ7WsvoeplQfZbex2H4dEgF251V0Zmw86wh889CsVK444/Ahq0xoS6Mm
-         v2t63OzFvmiFLNjdWad/5tlBJrI94jtkXxpPifjTIytRLtf8DG0vHraxEJQehbtyP/p6
-         sFPmRZ2bI8ALXurKgCI+f/DlNK0kgsNcoR7Ya2A5GmbjVEKsdDs+MgLKbMBHFbL62YhZ
-         d3TFuJantDDK1MfBZBnHrsVaPdBe/b8O7p9kSMx+YpzgnOXLtD5wfVd7P4Fi5aMGHJhz
-         oSjt4CqwiY0gjFVe1iV6gw076T/o2Lusi+Wlf0jI1sYnjh6vWtPq9x2CBNrXhAMrW8N+
-         eWMA==
-X-Gm-Message-State: AOAM532ooit+tgLnQe+ldD/Zy0lG8IQjxcHhJt94oD4MmSdGJieQtQ2N
-        dDBBK3FMsj8FwJR3Awdziw46U60D/B8=
-X-Google-Smtp-Source: ABdhPJwCXtq8Sw274bM8W72PW0giO3qESw2S8HuIVeoBTozucrtpBUYBw2njrK/QItToF2HDVcjwdg==
-X-Received: by 2002:a05:6102:243b:: with SMTP id l27mr3954372vsi.173.1593207478911;
-        Fri, 26 Jun 2020 14:37:58 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id 75sm516648uai.10.2020.06.26.14.37.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 14:37:58 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id g44so3482799uae.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:37:57 -0700 (PDT)
-X-Received: by 2002:ab0:54cd:: with SMTP id q13mr3917857uaa.91.1593207477223;
- Fri, 26 Jun 2020 14:37:57 -0700 (PDT)
+        Fri, 26 Jun 2020 17:39:05 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QLZak8012229;
+        Fri, 26 Jun 2020 14:38:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
+ b=Y1gXiaMSK9Qnol8AR/sIWDq3YNuZcDPmvNwyfbcXPH1aOBVTzaaCPuqjUiPcNvYLVDaI
+ ZXxJSWSv83Ayt1oOGBnSS8NNWCn3MvBX2Qy7Iapnq19u5cGYPcR90KQa2shGQnu9z2sF
+ +xdjDJ1fAUt4Cu4eW7VopTbIAaSGBA3f/ao= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31ux0w7mms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 26 Jun 2020 14:38:45 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 26 Jun 2020 14:38:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XVFcncOIjVXlC6CymZQBh8opClXAwvzuBxVMAdYaXA39p5sRu7X1Rf6xoyyxF0/hfKXcvVl0K0Cb67sDDcxRG0iHuektw/dtFpghPtLHdWP0J7Fx3Y+wKC/TSax4lWw2s4arK7rYqmEg+81bM011X3esXkX0WlmGxX5upDZQcfKD2szlR2695KnTsbIOyQKLgnkkdBW3he9km72WLaH1Gh+3xYc6U9vh0YVNp2Mwu01HkNEBtUVid8/eaRv9DA+14z/DhmcAcgLiUYzXEOe9G9uuzqQlM1O61hJmaQ5dZ5TvtrN904WwfP7qT+sDgjJNf8nLKl9432QRR/9jArro7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
+ b=YPaP2RNsbo3Kao6oapdyVeu5vW+ENuymIQq8ScrjZiyyQLi/JnpMm/C3BlxD8Oy+O4BZ+zwvrnjlSI2VIqptgtNCIxFNJNaSWI2kyfekILYkKPhHlrwTP0uBPD8BLiDemUO+wBLz8xReNk/hLnWFGqN8Imuzk8dvkEAAhsEsktrzfFkkZwX0NuCbELvb7+MVV+baUUtTez9bA13Gk480YGHJCxx0MQbD3i87SzdWHjbqwlvT4v4/DSqzfAcjkYrNHUiNBsgsIhuYI8vsu5dqngeRnKNnE7lroM518jL1n1ZBfsD88TuOy/dQn6oDussRahLYvAiKjCkmzIGaYtYNew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=17ZlsX80hnSL3sieLssFH+DkG3R92yDfkOBBrO2w3ko=;
+ b=Rx9ibOEknqHYO9dnc5i3mstJVPh+SXXPp1ccjc7kg0GMbADloaXXO81oxw3HBRY3jSCo48ysTRvkNyx+IaXDxzP2OaGqEj9MzEbXsLx2xVfDNA/n6/RjeSr6BDvOqr7JtpqOWzgniviAHb8iB+U9tIn82yDLCXTnyDRwl3CpbsI=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB2727.namprd15.prod.outlook.com (2603:10b6:a03:15b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 26 Jun
+ 2020 21:38:42 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3109.027; Fri, 26 Jun 2020
+ 21:38:42 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     Peter Zijlstra <peterz@infradead.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        "john fastabend" <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Subject: Re: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
+Thread-Topic: [PATCH v2 bpf-next 1/4] perf: export get/put_chain_entry()
+Thread-Index: AQHWS06t5H2BZnsAuEuKRuZX7jQ17qjqu3gAgACYV4CAABnmAA==
+Date:   Fri, 26 Jun 2020 21:38:42 +0000
+Message-ID: <ED1F39FC-AE00-4243-8903-9B353DA42C8F@fb.com>
+References: <20200626001332.1554603-1-songliubraving@fb.com>
+ <20200626001332.1554603-2-songliubraving@fb.com>
+ <20200626110046.GB4817@hirez.programming.kicks-ass.net>
+ <CAEf4BzbgyBWpHdxe8LdHp+48fazS6JLEdaEd09p40s=+cy4Phw@mail.gmail.com>
+In-Reply-To: <CAEf4BzbgyBWpHdxe8LdHp+48fazS6JLEdaEd09p40s=+cy4Phw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:1a00]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c47e36f-190f-41a3-b3bf-08d81a194c2b
+x-ms-traffictypediagnostic: BYAPR15MB2727:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB2727CD88974DC8BA1802C7C4B3930@BYAPR15MB2727.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rBZysrHZ+HFYtuy9uqI32uQyByMYQ0ICZhl6HDcnIKC1A1mrLQ9I/SzNQyu3D9cTZYZpiPEcJkI0PLZ9+saGoF/vYZ3t5hm0clvtP1TkaWtVN7FgF8Qd1fWHT+uUBePukmy3hW8ZmeIakYU3FfFxWaVTcUnQGeQwXIHRPuQBz4cpAtd5ZoubYqUcmTDe8wTekfuAyUQP/NS4p2Pp+b92egw0r2tjfuRl7u3MIgNCP8pEuxmYOesVUqDmMVzarR7k03Pm1E/lx+uQbPFjdTo9wOMSDe4nOowS2dUY6DREgOAIhBYE1Dj7Bg271zgOap/hKIjjYdqNGpjc00S6hmsVFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(396003)(136003)(366004)(36756003)(86362001)(478600001)(8936002)(6506007)(66946007)(6916009)(71200400001)(6486002)(53546011)(33656002)(76116006)(8676002)(6512007)(66556008)(66476007)(64756008)(4326008)(66446008)(2906002)(2616005)(186003)(5660300002)(316002)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: odreYjE2Ol4NdoQT+BMLzTVD0I4WbWdFKmpEar27amWRDXq76O7SCSQRNOaeJzJAtTwlAllRc/xwZk8zTcwUdWo1TwHrEu5GI33VhCFmz0WjqdeonN/aA8OtNrluBqNFKYAmgrmT6eNOREc1WVvoUoFMmJns/GVyJ4z572gGuXIHdG+cd2vxpdLBP9rzx7yDTdYNCRvC65NIGf46GiprarGHPbJgoD403Y2750rkqfzHR8Ry4HTDnsC+eBB9eXsBU7QXvHx0HN+CupuvDPdrm0KbX9Y4ddKsN5Z8CG3sxFm8gA9tC9qaYiuXdgjjhaAKmxG3SRAvvtq+EvIYNnup+m2CHqjEzwqGO52BgFWk2ui6SWBt9NS2wgxuBv2pYL2GPfYCz1h7+pFGu/KIpd1vPnqRiktY+AICxyG69+aZQTdqpLwReBAZPeek3NltawQ0aqJzPoPq984J02/Wvb2eIx4IOVPeteZtgO1m4HIcCgYWeiNgvAQkOOZ5irymF+1y8SR4Hg6aAAeL4IoB0ErdTQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <61BE7CCF87B2AA47B834F32C6AD6D635@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Jun 2020 14:37:46 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V_ynwukeR92nbJXkuQ7OAW4mLaTjxko7fXt5aEfDUNhA@mail.gmail.com>
-Message-ID: <CAD=FV=V_ynwukeR92nbJXkuQ7OAW4mLaTjxko7fXt5aEfDUNhA@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: Add interrupt summary based CE processing
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c47e36f-190f-41a3-b3bf-08d81a194c2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 21:38:42.6592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g7SQ/EyXtf+0o2hgpaYJMQpL5Y0lw/Ukc90Aw3+9Y5o+T6FMQYrHAd2Ae4O5kIvRDZfvrxDDlzg5fQL/UBQ1Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2727
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ bulkscore=0 cotscore=-2147483648 mlxscore=0 suspectscore=0 adultscore=0
+ phishscore=0 clxscore=1015 spamscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006260151
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Jun 26, 2020 at 10:53 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
->
-> Currently the NAPI processing loops through all
-> the copy engines and processes a particular copy
-> engine is the copy completion is set for that copy
-> engine. The host driver is not supposed to access
-> any copy engine register after clearing the interrupt
-> status register.
->
-> This might result in kernel crash like the one below
-> [ 1159.220143] Call trace:
-> [ 1159.220170]  ath10k_snoc_read32+0x20/0x40 [ath10k_snoc]
-> [ 1159.220193]  ath10k_ce_per_engine_service_any+0x78/0x130 [ath10k_core]
-> [ 1159.220203]  ath10k_snoc_napi_poll+0x38/0x8c [ath10k_snoc]
-> [ 1159.220270]  net_rx_action+0x100/0x3b0
-> [ 1159.220312]  __do_softirq+0x164/0x30c
-> [ 1159.220345]  run_ksoftirqd+0x2c/0x64
-> [ 1159.220380]  smpboot_thread_fn+0x1b0/0x288
-> [ 1159.220405]  kthread+0x11c/0x12c
-> [ 1159.220423]  ret_from_fork+0x10/0x18
->
-> To avoid such a scenario, we generate an interrupt
-> summary by reading the copy completion for all the
-> copy engine before actually processing any of them.
-> This will avoid reading the interrupt status register
-> for any CE after the interrupt status is cleared.
->
-> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
->
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
->  drivers/net/wireless/ath/ath10k/ce.c | 63 ++++++++++++++++++++++--------------
->  drivers/net/wireless/ath/ath10k/ce.h |  5 +--
->  2 files changed, 42 insertions(+), 26 deletions(-)
-
-I'm not an expert on this driver, but your change seems sane to me.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-With your patch I can no longer find a place to put in a magic delay
-and reproduce the crash, thus:
-
-Tested-by: Douglas Anderson <dianders@chromium.org>
 
 
-If it matters, my WiFi firmware reports this:
+> On Jun 26, 2020, at 1:06 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> =
+wrote:
+>=20
+> On Fri, Jun 26, 2020 at 5:10 AM Peter Zijlstra <peterz@infradead.org> wro=
+te:
+>>=20
+>> On Thu, Jun 25, 2020 at 05:13:29PM -0700, Song Liu wrote:
+>>> This would be used by bpf stack mapo.
+>>=20
+>> Would it make sense to sanitize the API a little before exposing it?
+>>=20
+>> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+>> index 334d48b16c36..016894b0d2c2 100644
+>> --- a/kernel/events/callchain.c
+>> +++ b/kernel/events/callchain.c
+>> @@ -159,8 +159,10 @@ static struct perf_callchain_entry *get_callchain_e=
+ntry(int *rctx)
+>>                return NULL;
+>>=20
+>>        entries =3D rcu_dereference(callchain_cpus_entries);
+>> -       if (!entries)
+>> +       if (!entries) {
+>> +               put_recursion_context(this_cpu_ptr(callchain_recursion),=
+ rctx);
+>>                return NULL;
+>> +       }
+>>=20
+>>        cpu =3D smp_processor_id();
+>>=20
+>> @@ -183,12 +185,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
+r, bool kernel, bool user,
+>>        int rctx;
+>>=20
+>>        entry =3D get_callchain_entry(&rctx);
+>> -       if (rctx =3D=3D -1)
+>> +       if (!entry || rctx =3D=3D -1)
+>>                return NULL;
+>>=20
+>=20
+> isn't rctx =3D=3D -1 check here not necessary anymore? Seems like
+> get_callchain_entry() will always return NULL if rctx =3D=3D -1?
 
-WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
+Yes, looks like we only need to check entry.=20
 
-...and it should also be WCN3990.
+Thanks,
+Song
 
-
--Doug
