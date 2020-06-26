@@ -2,104 +2,109 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ABBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB15C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F972053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFBC2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8XrwDt6"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="kf4kOiJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgFZQEX (ORCPT
+        id S1726522AbgFZQEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgFZQEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:04:23 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D5EC03E979;
-        Fri, 26 Jun 2020 09:04:22 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id t194so9854974wmt.4;
-        Fri, 26 Jun 2020 09:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RKvVrW4+I8vfqAqgWj2YShWjcD2UoitOu6+ps0LkUIQ=;
-        b=X8XrwDt6WdyXemRfpr8apowQqE+vGA5WW9dFQ8NprQ1t+zJzW6PbcVtB7Eqw5q+9lT
-         RU1AmsL2inIwDmInItvdv8nHxpYBle1Sx0R9AxhYPFCkjekUPpo2vStOIYMx7S1QKpLW
-         GfohvOz0sDkcK9LhZ0jSbo04O5qTcLwRv1Lm/l4OoSGah38wKaUvZkSasW5oCNCkU/IE
-         0nPHn1AXWnBD9E/wmPwG26aaGic44z6CJtScghLQQE4nYfuQ+BKb47jRSJV5xxyABYhL
-         NNeGv5NSAoyJX01OpVLJJvH2m6fqDO1f+VMktOdP6J443RdfGBd36pdNEM6CVz4ebmpS
-         cUkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RKvVrW4+I8vfqAqgWj2YShWjcD2UoitOu6+ps0LkUIQ=;
-        b=FonVpsI0J7oeMDR1mq630nwlpUYcGAoLoGl4G785++heY301wRAgXT9iEAP8atQsR1
-         YSn/vbgLtknpKQc00UOA7hhsHw+uQ+fOhamZ/MrDklY23lSl5xhUtYKhtOafDTx7/IzK
-         O2CRAodEdhFPJ1zSynK8AQLrmqQ4p9mn2z4ppHrgIL5NmfivQs1u3SIUR+/t33YxI0vm
-         sZmwpDHdJzmaTNxRLx7eNv01qiFC8P71qrBnRH1x0tGpG5jHJvGHdjgtkUTiPcUwOtWT
-         Lc5yDesq8NH/1cTCM53NHrQTjICmYn1a+B5gDAe4aiCiElr1kWPPcV1L8BHpvWp6ugVS
-         xqRA==
-X-Gm-Message-State: AOAM532N4xhI6ajdow3cnsBN4MWwkw2LWnkENfoCoaVTCwzKHy0LGe81
-        aEZ57nQ0U+QqKgMEvCwsWhs=
-X-Google-Smtp-Source: ABdhPJwVCn6U/QSTgaHgCJKk89BT46wmdSiqls6NjyD3vJnLCLnzOOeG9yYCS2m5rNvvmwQRY+dYOw==
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr4103613wmc.176.1593187461630;
-        Fri, 26 Jun 2020 09:04:21 -0700 (PDT)
-Received: from [10.230.189.192] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r3sm6372771wmh.36.2020.06.26.09.04.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 09:04:20 -0700 (PDT)
-Subject: Re: [PATCH 4/6] net: mdio: add a forward declaration for
- reset_control to mdio.h
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200626155325.7021-1-brgl@bgdev.pl>
- <20200626155325.7021-5-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <e49f8c61-ed0e-fcad-1e5d-7e122d042bb4@gmail.com>
-Date:   Fri, 26 Jun 2020 09:04:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Fri, 26 Jun 2020 12:04:34 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:3260 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgFZQEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 12:04:34 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49thXR6fSNz8k;
+        Fri, 26 Jun 2020 18:04:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1593187471; bh=dRgqe4wiOWYz7rwvRwaf+FBl8AmPXPxGIWeTwHg9vd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kf4kOiJY2yMhVY3ZjN968hGBCaGmdNZCB69H58CTeQV8L+hdWjkhUDo1rUqEVetUh
+         rBYW5eKriEG1Hm5yFUT0H9XBHWndtFMukzgWxLUY3EdmL5EWFn9YyFUMpbymGSJcBC
+         tnKdm8MkdrXklEZfClJmT8yAhBxQK71RzUcqzNg0aMYihysNO3zI/m6lK6tYiIeo76
+         2Exqy8Lbl++kvojlQhe+pub53UiPU2Xemdif0kIAWnDnU8brV24xLY/W74ikj5igP4
+         SlRfgs3QQ0HAW9DStLd78/L+OlHB6xBDxPP6t/FVemPOYm5LjxQZsEO04HL4to6j3X
+         fyEAaaGAT+BWg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.3 at mail
+Date:   Fri, 26 Jun 2020 18:04:19 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v4 1/4] dt-bindings: arm: Add t194
+ ccplex compatible and bpmp property
+Message-ID: <20200626160419.GA9302@qmqm.qmqm.pl>
+References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
+ <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626155325.7021-5-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/26/2020 8:53 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Jun 26, 2020 at 09:13:53PM +0530, Sumit Gupta wrote:
+> To do frequency scaling on all CPUs within T194 CPU Complex, we need
+> to query BPMP for data on valid operating points. Document a compatible
+> string under 'cpus' node to represent the CPU Complex for binding drivers
+> like cpufreq which don't have their node or CPU Complex node to bind to.
+> Also, document a property to point to the BPMP device that can be queried
+> for all CPUs.
 > 
-> This header refers to struct reset_control but doesn't include any reset
-> header. The structure definition is probably somehow indirectly pulled in
-> since no warnings are reported but for the sake of correctness add the
-> forward declaration for struct reset_control.
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index a018147..737b55e 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -162,6 +162,7 @@ properties:
+>        - nvidia,tegra132-denver
+>        - nvidia,tegra186-denver
+>        - nvidia,tegra194-carmel
+> +      - nvidia,tegra194-ccplex
+>        - qcom,krait
+>        - qcom,kryo
+>        - qcom,kryo260
+> @@ -255,6 +256,14 @@ properties:
+>  
+>        where voltage is in V, frequency is in MHz.
+>  
+> +  nvidia,bpmp:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    descrption: |
+> +      Specifies the bpmp node that needs to be queried to get
+> +      operating point data for all CPUs.
+> +
+> +      Optional for NVIDIA Tegra194 Carmel CPUs
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Hi,
+
+The code (next patches) suggests, that the property is relevant for Tegra194
+only. If it is required for compatible=tegra194-ccplex, then maybe you can
+mark it so (there is already similar constraint described in the file, just
+before the example section).
+
+Best Regards,
+Micha³ Miros³aw
