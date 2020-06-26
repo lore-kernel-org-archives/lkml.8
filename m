@@ -2,49 +2,50 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48322C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE89C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275352053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE8B2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AE1QPYBd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rE6EDHG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgFZSzm (ORCPT
+        id S1726106AbgFZSzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:55:42 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53333 "EHLO
+        Fri, 26 Jun 2020 14:55:44 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11209 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbgFZSze (ORCPT
+        by vger.kernel.org with ESMTP id S1725970AbgFZSzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:55:34 -0400
+        Fri, 26 Jun 2020 14:55:40 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593197733; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=whbupFRIkpeTF/L3cGJyYouuxlPVBvaNdp4yZyqOh3U=; b=AE1QPYBdD0Thv+MtEyimsOWtKoQ/0+WXNiqYkX/ZXXDyamlLKK8Jwv/V1PoqYCdZdsC3qOSi
- qOyouF4pmWnNm/phE8XfsHXXj83fRXyZ+gAo0g7q7hjRJhkOOiwm0AYdXBDvUoZ2K9g841Oi
- mXOWdusGHWyIUMrPa63chXSGkM8=
+ s=smtp; t=1593197739; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=KJGXpVonylcpWiBUO80uB1GqHRSJ5XOxvspWz1W0FLg=; b=rE6EDHG36pET/Kvu8LKL/Hp/7JJtj7DaQPUBqiEjmhM1uM1uBl6XnvVgBaVgq+gcEXH+qCsu
+ Vc2eyiM8WHQBJpmKNBrRuy2sJkPXL/j7jZd8ZINx1JDUz1kAVKw9JLEpLzu4sVDKXBrshzvV
+ ncU9HJhrHggU9zmq/afdXsojGwk=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ef6449a0206ad41d16a6689 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:55:22
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ef6449cc76a4e7a2a79fb78 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:55:24
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6565DC43395; Fri, 26 Jun 2020 18:55:21 +0000 (UTC)
+        id 01EA7C4344E; Fri, 26 Jun 2020 18:55:23 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1176FC433C6;
-        Fri, 26 Jun 2020 18:55:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1176FC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6495C43391;
+        Fri, 26 Jun 2020 18:55:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6495C43391
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -56,10 +57,12 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         jackp@codeaurora.org, rdunlap@infradead.org,
         Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v4 0/6] Introduce PMIC based USB type C detection
-Date:   Fri, 26 Jun 2020 11:55:10 -0700
-Message-Id: <20200626185516.18018-1-wcheng@codeaurora.org>
+Subject: [PATCH v4 3/6] arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
+Date:   Fri, 26 Jun 2020 11:55:13 -0700
+Message-Id: <20200626185516.18018-4-wcheng@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200626185516.18018-1-wcheng@codeaurora.org>
+References: <20200626185516.18018-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,72 +70,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v4:
- - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
-   endpoint nodes underneath port@1, which is assigned to the SSUSB path
-   according to usb-connector
- - Added usb-connector reference to the typec dt-binding
- - Added tags to the usb type c and vbus nodes
- - Removed "qcom" tags from type c and vbus nodes
- - Modified Kconfig module name, and removed module alias from the typec driver
+The PM8150B has a dedicated USB type C block, which can be used for type C
+orientation and role detection.  Create the reference node to this type C
+block for further use.
+
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+index 322379d5c31f..91b870345dda 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+@@ -22,6 +22,13 @@ power-on@800 {
+ 			status = "disabled";
+ 		};
  
-Changes in v3:
- - Fix driver reference to match driver name in Kconfig for
-   qcom_usb_vbus-regulator.c
- - Utilize regulator bitmap helpers for enable, disable and is enabled calls in
-   qcom_usb_vbus-regulator.c
- - Use of_get_regulator_init_data() to initialize regulator init data, and to
-   set constraints in qcom_usb_vbus-regulator.c
- - Remove the need for a local device structure in the vbus regulator driver
- 
-Changes in v2:
- - Use devm_kzalloc() in qcom_pmic_typec_probe()
- - Add checks to make sure return value of typec_find_port_power_role() is
-   valid
- - Added a VBUS output regulator driver, which will be used by the PMIC USB
-   type c driver to enable/disable the source
- - Added logic to control vbus source from the PMIC type c driver when
-   UFP/DFP is detected
- - Added dt-binding for this new regulator driver
- - Fixed Kconfig typec notation to match others
- - Leave type C block disabled until enabled by a platform DTS
-
-Add the required drivers for implementing type C orientation and role
-detection using the Qualcomm PMIC.  Currently, PMICs such as the PM8150B
-have an integrated type C block, which can be utilized for this.  This
-series adds the dt-binding, PMIC type C driver, and DTS nodes.
-
-The PMIC type C driver will register itself as a type C port w/ a
-registered type C switch for orientation, and will fetch a USB role switch
-handle for the role notifications.  It will also have the ability to enable
-the VBUS output to any connected devices based on if the device is behaving
-as a UFP or DFP.
-
-Wesley Cheng (6):
-  usb: typec: Add QCOM PMIC typec detection driver
-  dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
-  arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
-  regulator: Add support for QCOM PMIC VBUS booster
-  dt-bindings: regulator: Add dt-binding for QCOM PMIC VBUS output
-    regulator
-  arm64: boot: dts: qcom: pm8150b: Add DTS node for PMIC VBUS booster
-
- .../regulator/qcom,usb-vbus-regulator.yaml    |  41 +++
- .../bindings/usb/qcom,pmic-typec.yaml         | 113 +++++++
- arch/arm64/boot/dts/qcom/pm8150b.dtsi         |  13 +
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |   4 +
- drivers/regulator/Kconfig                     |  10 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/qcom_usb_vbus-regulator.c   |  97 ++++++
- drivers/usb/typec/Kconfig                     |  12 +
- drivers/usb/typec/Makefile                    |   1 +
- drivers/usb/typec/qcom-pmic-typec.c           | 275 ++++++++++++++++++
- 10 files changed, 567 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
- create mode 100644 drivers/regulator/qcom_usb_vbus-regulator.c
- create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
-
++		pm8150b_typec: typec@1500 {
++			compatible = "qcom,pm8150b-usb-typec";
++			status = "disabled";
++			reg = <0x1500>;
++			interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
++		};
++
+ 		adc@3100 {
+ 			compatible = "qcom,spmi-adc5";
+ 			reg = <0x3100>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
