@@ -2,106 +2,226 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05660C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FCA20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A5B20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oh/RiiCD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eG6neB0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgFZUC6 (ORCPT
+        id S1725931AbgFZUEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFZUC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:02:56 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926D5C03E97E
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id k1so4651735pls.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HuJILZmXLURp/yn0oSueJPx2COyMJVkAtdj3c8sCa2A=;
-        b=Oh/RiiCDnbp34CVdzAILpR378u4/AQdViDFg7C7oW5dt1jDbyEeAjP90KAvvKhIr97
-         KwI71vJclhWb7o4mSkhCh2NOFbTtfJgpS+vox3O7+FvJkCsMl4urremmWYspWh28A0+Z
-         sV5HTCY7Nn86R70arsfIYUzY6CqZUi43QquRo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HuJILZmXLURp/yn0oSueJPx2COyMJVkAtdj3c8sCa2A=;
-        b=NZUqldZgERhQfmnZtCjWUujusRi465ZrHve5mikItlVF6q/LbGNWoRFxTQ/MAqS9YZ
-         q96m39z+4OkW22CQDvMHmc2WED1IgE0YZ6qU8BzMPWIshaF9JlvkqRrkxrQRDSLGGsBQ
-         pVwU08NsutX+vgUiS0wym4i/aD+H1FJMAWg7aP/ndtAxYP/+pfxgKlPmCyJWL1Sjj8e6
-         2/iIOcclo/TLxI5UR/qIVABz/sE5YDkyUjgdHF58bH+bR8Y8S1/p8zs7Oj40QRc/RIiz
-         svQ8H/Dji4b/8Fm+VFifbWkADAloxAxpcWTbpEJFRXB5XwqXcx8Y6WaXHWC3MZQoeD/m
-         JR5Q==
-X-Gm-Message-State: AOAM530L5klsXX3OH4JSLrl+ZTm+aY4toZ1mZepE+VC+Wbxvaf6D/gAB
-        BfNVXQdlwZcQADladl/UL0hhzQ==
-X-Google-Smtp-Source: ABdhPJw11xKQt6MwLhidUJ9gydREFfdw80oPEr/XN3WYlxPPeC/ryrLDoithYT16cWqdMGMaKZA/Bw==
-X-Received: by 2002:a17:90a:8a8e:: with SMTP id x14mr4810785pjn.169.1593201776002;
-        Fri, 26 Jun 2020 13:02:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b14sm8925970pfb.186.2020.06.26.13.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 13:02:55 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 13:02:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
-Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/slab.c)
-Message-ID: <202006261302.13BB6AB703@keescook>
-References: <20200626033744.URfGO%akpm@linux-foundation.org>
- <7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ff248c7-d447-340c-a8e2-8c02972aca70@infradead.org>
+        Fri, 26 Jun 2020 16:04:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22653 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgFZUEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:04:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593201885; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=D85sGJCwjjAQqj2vSMlo3N0ypP1ykjFcdiizwNh3ejQ=; b=eG6neB0FYd+Ob5K6bjXI/6X/BEELdUMmSDwRKUjkofTPtmpxBsoqRiB/Gw1g+o0iTIcIoX0Z
+ GSwO9fXdbvN+cMx6qwQdPEb3Km8zqTCjSgmM0Bml/roCuid9pyFv5yyZaMtauq5u5UkoW4/V
+ v7RIRX3/cG1GNh1Xi6g9tQCNG9E=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5ef654cfa3d8a447438e8eb9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:04:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 035E5C4344B; Fri, 26 Jun 2020 20:04:30 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5522C433A0;
+        Fri, 26 Jun 2020 20:04:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5522C433A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/6] drm/msm: Add support for address space instances
+Date:   Fri, 26 Jun 2020 14:04:13 -0600
+Message-Id: <20200626200414.14382-6-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200626200414.14382-1-jcrouse@codeaurora.org>
+References: <20200626200414.14382-1-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 09:28:36AM -0700, Randy Dunlap wrote:
-> On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> 
-> 
-> when CONFIG_NUMA is not set/enabled:
-> 
-> ../mm/slab.c: In function ‘___cache_free’:
-> ../mm/slab.c:3471:2: error: implicit declaration of function ‘__free_one’; did you mean ‘__free_page’? [-Werror=implicit-function-declaration]
->   __free_one(ac, objp);
->   ^~~~~~~~~~
+Add support for allocating an address space instance. Targets that support
+per-instance pagetables should implement their own function to allocate a
+new instance. The default will return the existing generic address space.
 
-Eek! Thanks for catching that. I will send a fix patch.
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
+ drivers/gpu/drm/msm/msm_drv.c     | 15 +++++++++------
+ drivers/gpu/drm/msm/msm_drv.h     |  4 ++++
+ drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
+ drivers/gpu/drm/msm/msm_gpu.c     | 17 +++++++++++++++++
+ drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
+ 5 files changed, 44 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 6c57cc72d627..092c49552ddd 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -588,7 +588,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 
+ 	msm_submitqueue_init(dev, ctx);
+ 
+-	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
++	ctx->aspace = msm_gpu_address_space_instance(priv->gpu);
+ 	file->driver_priv = ctx;
+ 
+ 	return 0;
+@@ -607,6 +607,8 @@ static int msm_open(struct drm_device *dev, struct drm_file *file)
+ static void context_close(struct msm_file_private *ctx)
+ {
+ 	msm_submitqueue_close(ctx);
++
++	msm_gem_address_space_put(ctx->aspace);
+ 	kfree(ctx);
+ }
+ 
+@@ -771,18 +773,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
+ }
+ 
+ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+-		struct drm_gem_object *obj, uint64_t *iova)
++		struct drm_file *file, struct drm_gem_object *obj,
++		uint64_t *iova)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_file_private *ctx = file->driver_priv;
+ 
+-	if (!priv->gpu)
++	if (!ctx->aspace)
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * Don't pin the memory here - just get an address so that userspace can
+ 	 * be productive
+ 	 */
+-	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
++	return msm_gem_get_iova(obj, ctx->aspace, iova);
+ }
+ 
+ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+@@ -821,7 +824,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+ 		args->value = msm_gem_mmap_offset(obj);
+ 		break;
+ 	case MSM_INFO_GET_IOVA:
+-		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
++		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
+ 		break;
+ 	case MSM_INFO_SET_NAME:
+ 		/* length check should leave room for terminating null: */
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index e2d6a6056418..983a8b7e5a74 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
+ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma);
+ 
++
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace);
++
+ void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+ 
+ struct msm_gem_address_space *
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 5f6a11211b64..29cc1305cf37 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
+ 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
+ }
+ 
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace)
++{
++	if (!IS_ERR_OR_NULL(aspace))
++		kref_get(&aspace->kref);
++
++	return aspace;
++}
++
+ /* Actually unmap memory for the vma */
+ void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 86a138641477..0fa614430799 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -821,6 +821,23 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+ 	return 0;
+ }
+ 
++/* Return a new address space instance */
++struct msm_gem_address_space *
++msm_gpu_address_space_instance(struct msm_gpu *gpu)
++{
++	if (!gpu)
++		return NULL;
++
++	/*
++	 * If the GPU doesn't support instanced address spaces return the
++	 * default address space
++	 */
++	if (!gpu->funcs->address_space_instance)
++		return msm_gem_address_space_get(gpu->aspace);
++
++	return gpu->funcs->address_space_instance(gpu);
++}
++
+ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 429cb40f7931..f1762b77bea8 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -64,6 +64,8 @@ struct msm_gpu_funcs {
+ 	void (*gpu_set_freq)(struct msm_gpu *gpu, unsigned long freq);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu, struct platform_device *pdev);
++	struct msm_gem_address_space *(*address_space_instance)
++		(struct msm_gpu *gpu);
+ };
+ 
+ struct msm_gpu {
+@@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config);
+ 
++struct msm_gem_address_space *
++msm_gpu_address_space_instance(struct msm_gpu *gpu);
++
+ void msm_gpu_cleanup(struct msm_gpu *gpu);
+ 
+ struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
 -- 
-Kees Cook
+2.17.1
+
