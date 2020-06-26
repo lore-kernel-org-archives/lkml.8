@@ -2,104 +2,168 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B52DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA614C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEF8C2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9331A20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TI8Zc7pt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkxXjwka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFZU7q (ORCPT
+        id S1725897AbgFZVCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
+        Fri, 26 Jun 2020 17:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZU7q (ORCPT
+        with ESMTP id S1725793AbgFZVB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:59:46 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB32FC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:59:45 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so5442698pgk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:59:45 -0700 (PDT)
+        Fri, 26 Jun 2020 17:01:59 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79840C03E97A
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:01:59 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id h28so7963306edz.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=vzE/LHOrs411ALZFAPX5s4XQ3VOyYMCpxKznqqbDvQ4=;
-        b=TI8Zc7pt4AdbPofHKO372L5Kta8OeeO3t3PXk/6qhNeAO+yCbS0Doy0WS9y2bVqgZ/
-         tI4T3y1zUN+TnjuQXTcXv8tWquNbcXAoocAEuAFcTaqkXpiPwLgebf3YagDWZMlxOhlz
-         4G0CXBgXdsf2kQOWXSTX3CW+pV7onm4JkG2bo=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LXYsPzxFqoIvncAosoNMRVHsqqhFjqQaZzr24JDv6GU=;
+        b=NkxXjwkadDehAxKBt5qCyqwJyMFjmm/tsHOXqKWLWtzcy08j6wps8G9hI84I2QbI7v
+         JmPlb/jN0cduge6+zra8/rgtL1+VK0S8hNlbMgSv++L1OXl007Qgil5l6t2HYzNs2Fjv
+         lKOEST9O7PwzOnyo7s1M+grpXcRcpYNaK8HJO7Xn+IyE4sfdot72A0q4TtrtOOs1eJpa
+         Cu6xnc0AxSAzv0OVXC58pW5Z1HP/B7EKMvEiujSD7ZDggQool5FV/RdZ+HoKFrL67X39
+         Hzmubt8ojRcl4Cbv3nsfwA7ejoobNmg3XQtNNJakalPzYE9PWqShM/bJsqWa3kA8g07d
+         XqyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=vzE/LHOrs411ALZFAPX5s4XQ3VOyYMCpxKznqqbDvQ4=;
-        b=TfIPwUwQBx4VA8mzuK15FA78xvdf83Qmrf3sSKqC/sSGui7k6gr+t6E+mTgUmawQJ8
-         8VbDJ4l9PRzDe8v/YEy6dhN9Q/hvPad5B7tX8p1ut4XwstfftWotKuAHMUbOK5Tqx78j
-         ZKrS0/WuPOZGHs9nV7qaBqin52ybPD4an6F8G0NvQyGBOBWHZSI4N3bo+nUvXkmqVPU1
-         FF3wL2dirsWgguQ/9BXTBUbY3XG6H5jgIa1CaJPwzpZG4Ao5zcIRQzJMspc1fnM/vpvc
-         G3yHfzuembpK7NcLAUhG1agPRZlqrdPU6A7DhmBQpTCrJ0ccvdVuLVmO7lK6ky9kH1Gm
-         Btqw==
-X-Gm-Message-State: AOAM532n5ondUtp7DpTcoBoDSHlRjC/Sy+tQNOdUxAio5N9vg4538z7J
-        irHotLG3k30ZtsH8KZuKXUrRKw==
-X-Google-Smtp-Source: ABdhPJy9ZcI5XAF6R6FENmskB+t4X3sgpFeAprNtq3GGr6iredh9lEzDpleAFN9acuLpA/roa4lVGA==
-X-Received: by 2002:a63:c44b:: with SMTP id m11mr522600pgg.404.1593205185366;
-        Fri, 26 Jun 2020 13:59:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b4sm5673856pfr.149.2020.06.26.13.59.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 13:59:44 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 13:59:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/lkdtm: Use "comm" instead of "diff" for dmesg
-Message-ID: <202006261358.3E8AA623A9@keescook>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LXYsPzxFqoIvncAosoNMRVHsqqhFjqQaZzr24JDv6GU=;
+        b=BfGfoI18/l3W1zz5QCNUa4+BxGYH8dmAPFHtbRwjKSaodgfsvtP++Ep4eWRgYo6MdK
+         MuRSK9tMQmO/v3EEK69KyE9h9CnDlFt6jOFlD/Fe5jxIqJ7O+oI2C5wnG3ypLUCQNULm
+         /Uqtmf36NDQf4Fet9d6ATUKPy0vImOu8UkC7lAYe1HfK5aYbI+b6Npu2Xt6pjsz5InhX
+         RRFo4G2lksygqGlpcDkQ1gmwgn7/dC3ywdcmOQPt2x6mstQtc1v8xXcWM5n5YJyAVR2R
+         Buc/ny2AiYdINuxtXdrptdiTrBhoH+xfKqKf7GVlvoPWol2++5UiLapF5ovDVCsCXbeN
+         ZdrQ==
+X-Gm-Message-State: AOAM531prkrs3lrhT3vbpj5yoDi3bvquWrwOdEOcfJgggW9hzykkjVx1
+        7CevYMd/r2LQk84OUt5/608uGUtfuj78Eg==
+X-Google-Smtp-Source: ABdhPJz4VyPgTDG4D3ybw9iMwdqQtilkEccK+e+ObiNd3vOfbKOSHwpWfeZklQ7XDUsrmMUMFhiOUQ==
+X-Received: by 2002:a50:a721:: with SMTP id h30mr5397597edc.153.1593205317868;
+        Fri, 26 Jun 2020 14:01:57 -0700 (PDT)
+Received: from [192.168.1.4] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
+        by smtp.googlemail.com with ESMTPSA id u19sm13890982edd.62.2020.06.26.14.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 14:01:57 -0700 (PDT)
+Subject: Re: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance in
+ venus_probe
+To:     dinghao.liu@zju.edu.cn
+Cc:     kjlu@umn.edu, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
+ <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
+ <35c749cf.28af7.172ee1e4ac3.Coremail.dinghao.liu@zju.edu.cn>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <f49040ee-a5c5-c106-2b51-cd48646306b0@linaro.org>
+Date:   Sat, 27 Jun 2020 00:01:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <35c749cf.28af7.172ee1e4ac3.Coremail.dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of full GNU diff (which smaller boot environments may not have),
-use "comm" which is more available.
+Hi,
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Link: https://lore.kernel.org/lkml/CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com
-Fixes: f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running tests")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/lkdtm/run.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 6/26/20 3:54 AM, dinghao.liu@zju.edu.cn wrote:
+> 
+>> Hi Dinghao,
+>>
+>> On 6/24/20 9:30 AM, Dinghao Liu wrote:
+>>> pm_runtime_get_sync() increments the runtime PM usage counter even
+>>> when it returns an error code. Thus a pairing decrement is needed on
+>>> the error handling path to keep the counter balanced. For other error
+>>> paths after this call, things are the same.
+>>>
+>>> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v2: - Add pm_runtime_get_noresume() on failure of
+>>>       pm_runtime_put_sync() to balance PM counter instead of
+>>>       releasing everything here.
 
-diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-index 8383eb89d88a..5fe23009ae13 100755
---- a/tools/testing/selftests/lkdtm/run.sh
-+++ b/tools/testing/selftests/lkdtm/run.sh
-@@ -82,7 +82,7 @@ dmesg > "$DMESG"
- ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
- 
- # Record and dump the results
--dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
-+dmesg | comm -13 "$DMESG" - > "$LOG" || true
- 
- cat "$LOG"
- # Check for expected output
+Could you reword this and add it to the patch description.
+
+>>
+>> You are adding pm_runtime_get_noresume in pm_runtime_put_sync error path
+>> but the patch description is referring to pm_runtime_get_sync. I'm confused.
+>>
+> 
+> When pm_runtime_put_sync failed, the control flow will jump to 
+> err_dev_unregister, where has already been a pm_runtime_put_noidle. 
+> If we don't add an extra pm_runtime_get_noresume here, we will 
+> decrease PM usage counter twice.
+> 
+> Anyway, this may seem a little strange. Do you have a better
+> strategy to reorder the labels?
+
+No, it looks fine. With above addition to patch description:
+
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
+> 
+> Regards,
+> Dinghao
+> 
+>>> ---
+>>>  drivers/media/platform/qcom/venus/core.c | 5 ++++-
+>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+>>> index 203c6538044f..b0b932bf8c02 100644
+>>> --- a/drivers/media/platform/qcom/venus/core.c
+>>> +++ b/drivers/media/platform/qcom/venus/core.c
+>>> @@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
+>>>  		goto err_core_deinit;
+>>>  
+>>>  	ret = pm_runtime_put_sync(dev);
+>>> -	if (ret)
+>>> +	if (ret) {
+>>> +		pm_runtime_get_noresume(dev);
+>>>  		goto err_dev_unregister;
+>>> +	}
+>>>  
+>>>  	return 0;
+>>>  
+>>> @@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
+>>>  err_venus_shutdown:
+>>>  	venus_shutdown(core);
+>>>  err_runtime_disable:
+>>> +	pm_runtime_put_noidle(dev);
+>>>  	pm_runtime_set_suspended(dev);
+>>>  	pm_runtime_disable(dev);
+>>>  	hfi_destroy(core);
+>>>
+>>
+>> -- 
+>> regards,
+>> Stan
+
 -- 
-2.25.1
-
-
--- 
-Kees Cook
+regards,
+Stan
