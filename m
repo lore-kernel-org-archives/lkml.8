@@ -2,131 +2,161 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35018C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D684C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1526B2088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFCD2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YEN4h/JS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PuYNfoCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgFZVfq (ORCPT
+        id S1725861AbgFZVg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52882 "EHLO
+        Fri, 26 Jun 2020 17:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgFZVfp (ORCPT
+        with ESMTP id S1725816AbgFZVg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:35:45 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66DFC03E97B
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:35:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 67so1100826pfg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:35:45 -0700 (PDT)
+        Fri, 26 Jun 2020 17:36:57 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE16C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:36:57 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e9so5483768pgo.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 14:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DqOaaV58EjOIY1VepCG+GQtVeu6B1YTzNiLFMCCxxtU=;
-        b=YEN4h/JS6rsbM2TA8UohIHdNyG9IbIr7SJGjr/bFVHhrG/Xom9uuW4VVJlxpjCalyc
-         VzYDhmbP8IO2Aln4UuRyuqd6Tgy9Qku2VWWKJ3oZdsqEk7RJQDbYUlIcQKhd+fpKbBRk
-         cijP8DnapIIWZQIeC0Y6ZFYLszmtMLfDZQXr0=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nOBEqR855rhbveUnTuLRVA8ObPjWG2Dhr4Uq2zMSwAY=;
+        b=PuYNfoCyPSJ5Ee12cr1CtUbfE7ZlRGryAVARIshAUVXzmAnVWRFHzikYNNfSyo7a7F
+         a06g/eRMdwxj9OXD7QRHNxSF7eKxvk1j1lPH9PmdRDDg6kx4ZLd+rlLkMX+stfkvFRSo
+         3uYlvf2dcAbiq0b0Zur+XdSPJAOs7pyrko97x1g/OZZE5SAbKoR5//4HR0kMgybCUEcJ
+         qH5fO1qNpQUu5shtcqTXZ6i3vFopLDbDxc6vz9okSZ89qSoU9m5SXNS+uZg1J+VAhXel
+         mr1ancCaFIkK6ML+TUbpPKLFTOYu+NWJSaza3sWtRul6uvMdRWqHryQVHiXRHQ42JOKB
+         D6sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DqOaaV58EjOIY1VepCG+GQtVeu6B1YTzNiLFMCCxxtU=;
-        b=Q/ggecLsWm0wpIQYq6ROri3YlB4tnINWJhO7ReimxRny/ZodQkw9L3TS+ZwacbWmxH
-         9ttA3rq5Ku5nD7XLFx4yQG3nWU1wWIAeP+X5jfc6p3z2CoWA+SfyyO25RIwLGWiqxMZ7
-         LUMam9W62sjdjugJAwSJMXYiTYSk8sV5zbNoVgyOIbE10aZLM0WWA6p7kmLZDd9dBnTJ
-         H571KheOqEQjy5cdbMQYz9OvxDj383ggzIAeUf9BzInkIl/kYKwX0OGNxu49bNbW2ql5
-         WDrC2XQd7BQQ55P7UR+NgulR3mrzpZy/qYnEjkQu7DER0pinSXLamvq6oSKp8n5hX3Rl
-         cxag==
-X-Gm-Message-State: AOAM533YKntLwWZkBELkRhP8GT6LT5xRK3mrv87WlaZjlKSesmjhIn1C
-        08BdqftASPAjKRdbsBifAwOIoQ==
-X-Google-Smtp-Source: ABdhPJzxc7cz1MJJ6rNuO5CPPtEcoMO4+f1C1i4DCl9wrVYJnO0GAsRDswfDPhhwjkUn/N4AdYEJaA==
-X-Received: by 2002:a63:371c:: with SMTP id e28mr692197pga.114.1593207345125;
-        Fri, 26 Jun 2020 14:35:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w135sm7739381pfc.106.2020.06.26.14.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 14:35:43 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:35:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, skhan@linuxfoundation.org, alan.maguire@oracle.com,
-        yzaikin@google.com, davidgow@google.com, akpm@linux-foundation.org,
-        rppt@linux.ibm.com, frowand.list@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, monstr@monstr.eu,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        chris@zankel.net, jcmvbkbc@gmail.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, logang@deltatee.com, mcgrof@kernel.org,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org
-Subject: Re: [PATCH v5 09/12] kunit: test: add test plan to KUnit TAP format
-Message-ID: <202006261434.119AE33DBB@keescook>
-References: <20200626210917.358969-1-brendanhiggins@google.com>
- <20200626210917.358969-10-brendanhiggins@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nOBEqR855rhbveUnTuLRVA8ObPjWG2Dhr4Uq2zMSwAY=;
+        b=EZfWuCI78RcWgnsMLvUk9vxb+R1tRznRke6aXUDQZ4fKZnbQ/q0lADejGSB1C8z8tD
+         riY8GmTwi6jFMuUoi4ilTtpBw3HuAj/coyuOeFe9SFrl2OJVTYq99YvC1GQSUz7239R7
+         ctvp6wLYFBCFReWAm2p5Vxu9sx0LIzo8mH1VwcRGAC182eU2x7Lmvziv172nFg7fwvZH
+         jYVLYZ1UvjkI6vmMrPjXiYB1GZ/AONq9sD0ztfCcIRM5GVa67/9sWvhudpsQl6QbTu5w
+         /2pmZkyo6kDiEqL43A3CdMe5Hs/8bdGTPsg1ZNNYQ92YE4X1xoJtrItyTZn2tQwKN1T1
+         zHjA==
+X-Gm-Message-State: AOAM5338ZZXlrOTvZBNXSNfVWJ8Y+qyF8c/mQ5gbFzF8fY577s/HhZnt
+        Mh6jYQW3cCqIWBVCEg4GUUI9WhAGCAr+Tu9UPgk7NQ==
+X-Google-Smtp-Source: ABdhPJzhTb+JgbH2pUdHbU3Lcn5mzANDYeWl9ZkkpeEFXuFi9qIgBYbbGiM0JwDKX1RI84GCkYbTlow0BnrH3GGtPow=
+X-Received: by 2002:a62:7e95:: with SMTP id z143mr4569412pfc.108.1593207416783;
+ Fri, 26 Jun 2020 14:36:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626210917.358969-10-brendanhiggins@google.com>
+References: <20200622204915.2987555-1-keescook@chromium.org>
+ <20200622204915.2987555-2-keescook@chromium.org> <CAKwvOdmYa6V=W2eupEmHcuF8+479F8XHxm1NAo0s2N=sawbKAw@mail.gmail.com>
+In-Reply-To: <CAKwvOdmYa6V=W2eupEmHcuF8+479F8XHxm1NAo0s2N=sawbKAw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 26 Jun 2020 14:36:44 -0700
+Message-ID: <CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm/build: Warn on orphan section placement
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Eli Friedman <efriedma@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 02:09:14PM -0700, Brendan Higgins wrote:
-> TAP 14 allows an optional test plan to be emitted before the start of
-> the start of testing[1]; this is valuable because it makes it possible
-> for a test harness to detect whether the number of tests run matches the
-> number of tests expected to be run, ensuring that no tests silently
-> failed.
-> 
-> Link[1]: https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+On Tue, Jun 23, 2020 at 5:03 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Mon, Jun 22, 2020 at 1:49 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > --- a/arch/arm/kernel/vmlinux.lds.h
+> > +++ b/arch/arm/include/asm/vmlinux.lds.h
+> > @@ -1,4 +1,5 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> > +#include <asm-generic/vmlinux.lds.h>
+> >
+> >  #ifdef CONFIG_HOTPLUG_CPU
+> >  #define ARM_CPU_DISCARD(x)
+> > @@ -37,6 +38,13 @@
+> >                 *(.idmap.text)                                          \
+> >                 __idmap_text_end = .;                                   \
+> >
+> > +#define ARM_COMMON_DISCARD                                             \
+> > +               *(.ARM.attributes)                                      \
+>
+> I could have sworn that someone (Eli?) once told me that this section
+> (.ARM.attributes) is used for disambiguating which ARM version or
+> which optional extensions were used when compiling, and that without
+> this section, one would not be able to disassemble 32b ARM precisely.
+> If that's the case, we might not want to discard it?
 
-Look good, except...
+Yep, looks like ELFObjectFileBase::getARMFeatures() in
+llvm/lib/Object/ELFObjectFile.cpp does exactly that and more.
+https://github.com/llvm/llvm-project/blob/8808574e7438c8768b78ae7dd0f029385c6df01d/llvm/lib/Object/ELFObjectFile.cpp#L359-L441
+https://github.com/llvm/llvm-project/blob/8808574e7438c8768b78ae7dd0f029385c6df01d/llvm/lib/Object/ELFObjectFile.cpp#L159-L287
 
-> diff --git a/tools/testing/kunit/test_data/test_is_test_passed-all_passed.log b/tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
-> index 62ebc0288355c4b122ccc18ae2505f971efa57bc..bc0dc8fe35b760b1feb74ec419818dbfae1adb5c 100644
-> GIT binary patch
-> delta 28
-> jcmbQmGoME|#4$jjEVZaOGe1wk(1goSPtRy09}gP<dC~`u
-> 
-> delta 23
-> ecmbQwGmD2W#4$jjEVZaOGe1wk&}5@94;uhhkp{*9
-> 
-> diff --git a/tools/testing/kunit/test_data/test_is_test_passed-crash.log b/tools/testing/kunit/test_data/test_is_test_passed-crash.log
-> index 0b249870c8be417a5865bd40a24c8597bb7f5ab1..4d97f6708c4a5ad5bb2ac879e12afca6e816d83d 100644
-> GIT binary patch
-> delta 15
-> WcmX>hepY;fFN>j`p3z318g2k9Uj*m?
-> 
-> delta 10
-> RcmX>renNbL@5Z2NZU7lr1S$Xk
-> 
-> diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure.log b/tools/testing/kunit/test_data/test_is_test_passed-failure.log
-> index 9e89d32d5667a59d137f8adacf3a88fdb7f88baf..7a416497e3bec044eefc1535f7d84ee85703ba97 100644
-> GIT binary patch
-> delta 28
-> jcmZ3&yOLKp#4$jjEVZaOGe1wk(1goSPtRy0-!wJ=eKrU$
-> 
-> delta 23
-> ecmZ3<yM&i7#4$jjEVZaOGe1wk&}5_VG&TTPhX-Z=
+As a test, let's do:
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71 defconfig
+(so armv7)
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
+(then pick any random object file)
+$ llvm-readelf -S arch/arm/kernel/bugs.o | grep attri
+  [15] .ARM.attributes   ARM_ATTRIBUTES  00000000 0000f7 000037 00      0   0  1
+$ llvm-readelf --arch-specific arch/arm/kernel/bugs.o | grep -A 2 CPU_arch
+        TagName: CPU_arch
+        Description: ARM v7
+      }
+And let's see if this actually has a difference on the disassembly.
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
+(full build, since we're talking about linker script changes for vmlinux)
+$ llvm-objdump -d vmlinux > prepatch.txt
+(apply your patch)
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71 clean
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make LLVM=1 -j71
+$ llvm-objdump -d vmlinux > postpatch.txt
+$ diff -u prepatch.txt postpatch.txt | less
 
-What is happening here?? Those logs appear as text to me. Why did git
-freak out?
+No difference. Eh. Checking again with arm-linux-gnueabihf-objdump, it
+seems some constants are slightly different for `movw`'s though.  Not
+sure what's that about.
 
--- 
-Kees Cook
+If I enable CONFIG_THUMB2_KERNEL=y, is where things become
+interesting. llvm-objdump produces wildly different disassembly before
+vs after removing .ARM.attributes.  There's also lots of decode errors
+in the disassembly.
+
+Repeating the thumb2 test with GNU objdump, I only see slight
+differences in constants values for operands to `movw`.  So it looks
+like GNU objdump doesn't rely on .ARM.attributes to disambiguate
+between ARM vs THUMB2 instructions like llvm-objdump does.  We can
+probably improve llvm-objdump, but I'd rather not discard this section
+for now.
+
+(also, I didn't test armv6, v5, etc, but those might be interesting
+tests, too, should we want to discard this section.  Also, I think we
+can explicitly specify --triple=thumbv7-linux-gnueabihf to
+llvm-objdump, but I'd prefer it if my disassembler did the work for
+me, since I'm lazy)
+
+(oh man, the bytes are printed with different endianness between
+arm-linux-gnueabihf-objdump and llvm-objdump...guessing that's a bug
+in llvm).
+
+--
+Thanks,
+~Nick Desaulniers
