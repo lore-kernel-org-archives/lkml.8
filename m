@@ -2,154 +2,145 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9282C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8826120775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000E920775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 12:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgFZMOe convert rfc822-to-8bit (ORCPT
+        id S1728232AbgFZMQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgFZMOe (ORCPT
+        Fri, 26 Jun 2020 08:16:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32648 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727977AbgFZMQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:14:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BD6C08C5DB
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 05:14:33 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jonFV-0002V8-Fz; Fri, 26 Jun 2020 14:14:29 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jonFU-0007ub-Ah; Fri, 26 Jun 2020 14:14:28 +0200
-Message-ID: <485fda739c9ebd157b1552ac3d114f38b702328e.camel@pengutronix.de>
-Subject: Re: [PATCH v2 4/6] dt-bindings: reset: Add binding constants for
- Actions S500 RMU
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Date:   Fri, 26 Jun 2020 14:14:28 +0200
-In-Reply-To: <924885629e2797e332ae8ff9c077937d44379722.1592941257.git.cristian.ciocaltea@gmail.com>
-References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
-         <924885629e2797e332ae8ff9c077937d44379722.1592941257.git.cristian.ciocaltea@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 26 Jun 2020 08:16:55 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QC2nkZ111790;
+        Fri, 26 Jun 2020 08:16:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31w3a3xp6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 08:16:47 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05QC3203113248;
+        Fri, 26 Jun 2020 08:16:47 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31w3a3xp65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 08:16:47 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05QCAAGp011560;
+        Fri, 26 Jun 2020 12:16:46 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03dal.us.ibm.com with ESMTP id 31wa24u44m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jun 2020 12:16:46 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05QCGj3x48038384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jun 2020 12:16:45 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AFCFC112062;
+        Fri, 26 Jun 2020 12:16:45 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BDC2112061;
+        Fri, 26 Jun 2020 12:16:45 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Jun 2020 12:16:45 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+ <8d19d5e2-91bc-09ad-6b94-d51a7aad6376@linux.ibm.com>
+ <20200625212556.GC20341@linux.intel.com>
+ <031020b9-dc0a-3c2f-32e4-4bb2db4b5a2b@linux.ibm.com>
+ <20200626114815.GA5847@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <5d786bca-6a0f-0c7f-e856-04dac2f280f6@linux.ibm.com>
+Date:   Fri, 26 Jun 2020 08:16:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200626114815.GA5847@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_06:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006260084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-24 at 20:47 +0300, Cristian Ciocaltea wrote:
-> Add device tree binding constants for Actions Semi S500 SoC Reset
-> Management Unit (RMU).
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+On 6/26/20 7:48 AM, Jarkko Sakkinen wrote:
+> On Thu, Jun 25, 2020 at 05:27:50PM -0400, Stefan Berger wrote:
+>> On 6/25/20 5:25 PM, Jarkko Sakkinen wrote:
+>>> On Thu, Jun 25, 2020 at 08:41:18AM -0400, Stefan Berger wrote:
+>>>> On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
+>>>>> Re-allocate context and session buffers when needed. Scale them in page
+>>>>> increments so that the reallocation is only seldomly required, and thus
+>>>>> causes minimal stress to the system. Add a static maximum limit of four
+>>>>> pages for buffer sizes.
+>>>>>
+>>>>> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+>>>>> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+>>>>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>> You don't want to try a fixes tag? None of the previous versions of this
+>>>> code will work with newer versions of the TPM 2 then...
+>>> It's not a regression.
+>> Ok, so distros will have to backport it.
+> Now that you mentioned PPC64 in some other email that would make this a
+> regression since x86 provides less space for keys than PPC64.
+>
+> I studied PPC64 a bit and it actually allows max 256 kB page size, which
+> is too much for us, given that there is no accounting implemented for
+> TPM spaces (so far, should be done eventually).
+>
+> So to summarize: 0 the idea would decrease the limit on PPC64 and
+> increase it on ther arch's.  `
+>
+> Dynamic scaling is over to top for fixing the issue, which means that I
+> will just define static size of 16 kB for the buffer. We can reconsider
+> it if we hit the roof again.
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+16kb is plenty of space for years to come. Maybe just enlarge the buffer 
+for the regression and then do dynamic allocation as the final solution 
+for the tip. I can try to test compile it on one or two long term stable 
+kernels. Hopefully it applies cleanly. Simple test just in case you had 
+a setup with a VM and libtpms master:
 
-to be merged through the clock tree, required by the following patch:
-"clk: actions: Add Actions S500 SoC Reset Management Unit support".
+# echo hi | clevis encrypt tpm2 '{"key":"rsa"}' | clevis decrypt
+hi
 
-regards
-Philipp
+This only works once patched, gets stuck in the decrypt step otherwise.
 
-> ---
->  .../dt-bindings/reset/actions,s500-reset.h    | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
-> 
-> diff --git a/include/dt-bindings/reset/actions,s500-reset.h b/include/dt-bindings/reset/actions,s500-reset.h
-> new file mode 100644
-> index 000000000000..f5d94176d10b
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/actions,s500-reset.h
-> @@ -0,0 +1,67 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Device Tree binding constants for Actions Semi S500 Reset Management Unit
-> + *
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_ACTIONS_S500_RESET_H
-> +#define __DT_BINDINGS_ACTIONS_S500_RESET_H
-> +
-> +#define RESET_DMAC				0
-> +#define RESET_NORIF				1
-> +#define RESET_DDR				2
-> +#define RESET_NANDC				3
-> +#define RESET_SD0				4
-> +#define RESET_SD1				5
-> +#define RESET_PCM1				6
-> +#define RESET_DE				7
-> +#define RESET_LCD				8
-> +#define RESET_SD2				9
-> +#define RESET_DSI				10
-> +#define RESET_CSI				11
-> +#define RESET_BISP				12
-> +#define RESET_KEY				13
-> +#define RESET_GPIO				14
-> +#define RESET_AUDIO				15
-> +#define RESET_PCM0				16
-> +#define RESET_VDE				17
-> +#define RESET_VCE				18
-> +#define RESET_GPU3D				19
-> +#define RESET_NIC301				20
-> +#define RESET_LENS				21
-> +#define RESET_PERIPHRESET			22
-> +#define RESET_USB2_0				23
-> +#define RESET_TVOUT				24
-> +#define RESET_HDMI				25
-> +#define RESET_HDCP2TX				26
-> +#define RESET_UART6				27
-> +#define RESET_UART0				28
-> +#define RESET_UART1				29
-> +#define RESET_UART2				30
-> +#define RESET_SPI0				31
-> +#define RESET_SPI1				32
-> +#define RESET_SPI2				33
-> +#define RESET_SPI3				34
-> +#define RESET_I2C0				35
-> +#define RESET_I2C1				36
-> +#define RESET_USB3				37
-> +#define RESET_UART3				38
-> +#define RESET_UART4				39
-> +#define RESET_UART5				40
-> +#define RESET_I2C2				41
-> +#define RESET_I2C3				42
-> +#define RESET_ETHERNET				43
-> +#define RESET_CHIPID				44
-> +#define RESET_USB2_1				45
-> +#define RESET_WD0RESET				46
-> +#define RESET_WD1RESET				47
-> +#define RESET_WD2RESET				48
-> +#define RESET_WD3RESET				49
-> +#define RESET_DBG0RESET				50
-> +#define RESET_DBG1RESET				51
-> +#define RESET_DBG2RESET				52
-> +#define RESET_DBG3RESET				53
-> +
-> +#endif /* __DT_BINDINGS_ACTIONS_S500_RESET_H */
+
+    Stefan
+
+
+>
+> /Jarkko
+
+
