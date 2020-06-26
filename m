@@ -2,150 +2,268 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E603DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7FC92053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WNYit8mG"
+	by mail.kernel.org (Postfix) with ESMTP id C870020773
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 16:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgFZQBG (ORCPT
+        id S1726065AbgFZQBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgFZQBF (ORCPT
+        Fri, 26 Jun 2020 12:01:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51418 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgFZQBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:01:05 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F75AC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 09:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6rTnIjYBWSFaXSKyt5x//x/3Hp9oYrcMIr20sDCEQRM=; b=WNYit8mGWuNlSFXor5FgejX45+
-        LeJOqjhkAWrSc6Vcrimsb8JkalVAZpDRgSY3YHyCbLLD0Fyx3s393+fT/AqXmVQ1ssdywjHfieC5r
-        uzcfL0ohu2W9Bs42NlLPKcn1OkVPibcoTiIw4GI1CYc7i9JrVX0+G3X5KsRTR+OYyw948ObdxIT/D
-        2l/547ycLFsAcLoFMMyN1vX860/eiBB+Kh/fJHVPsxxZ206Xk7QYIUuU64QVhQncuS0D716bakWYv
-        YT0e01fxtgyQ6Awx6yZdzLSN/MKly3luN0XavygYCQkI0J1SgJLOHgH/b1H2/JT497OmL195ecXIQ
-        7Vf3AThQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joqm4-0006no-RN; Fri, 26 Jun 2020 16:00:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A519301DFC;
-        Fri, 26 Jun 2020 18:00:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 476F32B0AEC81; Fri, 26 Jun 2020 18:00:17 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 18:00:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joelaf@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        paulmck <paulmck@kernel.org>, Julien Desfossez <ju@klipix.org>
-Subject: Re: [RFC PATCH v2] sched_pair_cpu: Introduce scheduler task pairing
- system call
-Message-ID: <20200626160017.GJ4817@hirez.programming.kicks-ass.net>
-References: <20200619202516.7109-1-mathieu.desnoyers@efficios.com>
- <20200624121136.GF4800@hirez.programming.kicks-ass.net>
- <269292405.11607.1593023493676.JavaMail.zimbra@efficios.com>
- <20200624195030.GG4800@hirez.programming.kicks-ass.net>
- <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
+        Fri, 26 Jun 2020 12:01:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id DBD412A5DA0
+Subject: Re: [PATCH v7 3/3] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+ <20200626130700.2453-4-kgupta@es.iitr.ac.in>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <1409b37e-f03d-cca8-c4a7-e1454f1da910@collabora.com>
+Date:   Fri, 26 Jun 2020 13:01:03 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200626130700.2453-4-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:56:35AM -0400, Mathieu Desnoyers wrote:
-> ----- On Jun 24, 2020, at 3:50 PM, Peter Zijlstra peterz@infradead.org wrote:
+Hi Kaaira,
 
-I'll try and read the earlier bit later, I can't think today.
-
-> > That's exactly what that signal would do. It would send SIGIO when the
-> > state changes.
-> > 
-> > So you want to access CPU-n's data, you open that file, register a
-> > signal and read it's state, if offline, you good, do the rseq. If it
-> > suddenly decides to come back online, you're guaranteed that SIGIO
-> > before it reaches userspace.
-> >
-> > The nice thing is that it's all R/O so available to normal users, you
-> > don't have to write to the file.
+On 6/26/20 10:07 AM, Kaaira Gupta wrote:
+> Add a control in VIMC to display information such as the correct order of
+> colors for a given test pattern, brightness, hue, saturation, contrast,
+> width and height at sensor over test image.
 > 
-> So let's say you have two threads trying to access (offline) CPU-n's data
-> with that algorithm concurrently. How are they serialized with each other ?
-
-Also implement F_SETLK or something :-)
-
-> >> We do not want to override the affinity restricted by cgroups because
-> >> we don't want to hurt performance characteristics of another partition
-> >> of the system.
-> >> 
-> >> The sched_pair_cpu approach has the benefit of allowing us to touch
-> >> per-cpu data of a given CPU without requiring to run on that CPU, which
-> >> ensures that we do not thrash the cpu cache of cpus on which a thread
-> >> is not allowed to run. It takes care of issues caused by both cgroup
-> >> cpusets and cpu hotplug.
-> > 
-> > But now I worry that your thing allows escaping the cgroup contraints,
-> > you can perturb random CPUs you're not allowed on. That's a really bad
-> > 'feature'.
-> > 
-> > Offline cpus are okay, because you don't actually need to do anything as
-> > long as they're offline, but restricted CPUs we really should not be
-> > touching, not even a little.
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+>  drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
+>  4 files changed, 83 insertions(+)
 > 
-> With sched_pair_cpu, the paired task never needs to run on the target CPU.
-> The kworker thread runs on the target CPU in the same way other existing
-> worker threads run today, e.g. the ones handling RCU callbacks. AFAIK the
-> priority of those threads can be configured by a system administrator.
+> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> index 4068a67585f9..da4b2ad6e40c 100644
+> --- a/drivers/media/test-drivers/vimc/Kconfig
+> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> @@ -2,6 +2,8 @@
+>  config VIDEO_VIMC
+>  	tristate "Virtual Media Controller Driver (VIMC)"
+>  	depends on VIDEO_DEV && VIDEO_V4L2
+> +	select FONT_SUPPORT
+> +	select FONT_8x16
+>  	select MEDIA_CONTROLLER
+>  	select VIDEO_V4L2_SUBDEV_API
+>  	select VIDEOBUF2_VMALLOC
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> index ae163dec2459..a289434e75ba 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> @@ -20,6 +20,7 @@
+>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+> +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
+>  
+>  #define VIMC_FRAME_MAX_WIDTH 4096
+>  #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+> index 11210aaa2551..4b0ae6f51d76 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+> @@ -5,10 +5,12 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> +#include <linux/font.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <media/media-device.h>
+> +#include <media/tpg/v4l2-tpg.h>
+>  #include <media/v4l2-device.h>
+>  
+>  #include "vimc-common.h"
+> @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
+>  
+>  static int vimc_probe(struct platform_device *pdev)
+>  {
+> +	const struct font_desc *font = find_font("VGA8x16");
+>  	struct vimc_device *vimc;
+>  	int ret;
+>  
+>  	dev_dbg(&pdev->dev, "probe");
+>  
+> +	if (!font) {
+> +		dev_err(&pdev->dev, "could not find font\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	tpg_set_font(font->data);
+> +
+>  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+>  	if (!vimc)
+>  		return -ENOMEM;
+> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> index a2f09ac9a360..9e4fb3f4d60d 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> @@ -19,6 +19,8 @@ struct vimc_sen_device {
+>  	struct v4l2_subdev sd;
+>  	struct tpg_data tpg;
+>  	u8 *frame;
+> +	unsigned int osd_mode;
 
-Ah, but the critical difference is that all those are only ever ran if
-the initial work was initialized on _that_ CPU to begin with. Consider
-an isolated CPU that's spinning in userspace, it would _never_ get any
-kthreads running.
+If you declare the enum outside the below function, this could be type osd_mode instead of unsigned int, what do you think?
 
-Except now you can, and you even want this system call to be unpriv.
+> +	u64 start_stream_ts;
+>  	/* The active format */
+>  	struct v4l2_mbus_framefmt mbus_format;
+>  	struct v4l2_ctrl_handler hdl;
+> @@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>  {
+>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>  						    ved);
+> +	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
+> +	const unsigned int line_height = 16;
+> +	u8 *basep[TPG_MAX_PLANES][2];
+> +	unsigned int line = 1;
+> +	char str[100];
+>  
+>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> +	switch (vsen->osd_mode) {
+> +	case OSD_SHOW_ALL:
+> +		{
 
-It utterly and completely wrecks NOHZ_FULL.
+Usually we don't use this curly braces in a case statement, please, check other examples in the code,
 
-> Are there additional steps we should take to minimize the impact of this
-> worker thread ? In the same way "no rcu callbacks" CPU can be configured
-> at boot time, we could have "no sched pair cpu" configured at boot, which
-> would prevent sched_pair_cpu system calls from targeting that CPU entirely,
-> and not spawn any kworker on that cpu.
+> +			const char *order = tpg_g_color_order(&vsen->tpg);
 
-No, no, no! "at boot time" is an utter trainwreck. I've been trying to
-get NOHZ_FULL runtime configurable. This means that your cpuset can
-change at runtime and the CPU you tought you had now is a NOHZ_FULL CPU.
+You also don't need this level of identation.
 
-We must not allow pears on it.
+> +
+> +			tpg_gen_text(&vsen->tpg, basep,
+> +				     line++ * line_height, 16, order);
+> +			snprintf(str, sizeof(str),
+> +				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
+> +				 vsen->tpg.brightness,
+> +				 vsen->tpg.contrast,
+> +				 vsen->tpg.saturation,
+> +				 vsen->tpg.hue);
+> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+> +				     16, str);
+> +			snprintf(str, sizeof(str), "sensor size: %dx%d",
+> +				 vsen->mbus_format.width,
+> +				 vsen->mbus_format.height);
+> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+> +				     16, str);
+> +		}
+> +	case OSD_SHOW_COUNTERS:
 
-I'm thinking that the best option might be to treat CPUs outside of your
-cpuset the same as offline CPUs. That more-or-less requires that tasks
-outside of your cpuset partition don't have access to your shared
-memory, but that isn't an entirely insane assumption.
+Checkpatch gives this error:
 
-If you want to share memory across cpuset partitions, you get to keep
-the pieces.
+WARNING: Possible switch case/default not preceded by break or fallthrough comment
 
-And the nice thing about offline, is that you don't actually need to run
-anything. You only need some exclusion thing (and using a spin-loop on a
-random other CPU for that is bloody insane).
+You need to add a fallthrough comment (grep for fallthrough to find other examples)
+
+> +		{
+> +			unsigned int ms;
+> +
+> +			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
+> +			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
+> +				 (ms / (60 * 60 * 1000)) % 24,
+> +				 (ms / (60 * 1000)) % 60,
+> +				 (ms / 1000) % 60,
+> +				 ms % 1000);
+> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+> +				     16, str);
+> +			break;
+> +		}
+> +	case OSD_SHOW_NONE:
+
+No need this case statement if you have the default below.
+
+Regards,
+Helen
+
+> +	default:
+> +		break;
+> +	}
+> +
+>  	return vsen->frame;
+>  }
+>  
+> @@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+> +		vsen->start_stream_ts = ktime_get_ns();
+> +
+>  		/* Calculate the frame size */
+>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>  		frame_size = vsen->mbus_format.width * vpix->bpp *
+> @@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_SATURATION:
+>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>  		break;
+> +	case VIMC_CID_OSD_TEXT_MODE:
+> +		vsen->osd_mode = ctrl->val;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>  	.qmenu = tpg_pattern_strings,
+>  };
+>  
+> +static const char * const vimc_ctrl_osd_mode_strings[] = {
+> +	"All",
+> +	"Counters Only",
+> +	"None",
+> +	NULL,
+> +};
+> +
+> +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
+> +	.ops = &vimc_sen_ctrl_ops,
+> +	.id = VIMC_CID_OSD_TEXT_MODE,
+> +	.name = "Show Information",
+> +	.type = V4L2_CTRL_TYPE_MENU,
+> +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
+> +	.qmenu = vimc_ctrl_osd_mode_strings,
+> +};
+> +
+>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  					    const char *vcfg_name)
+>  {
+> @@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> 
