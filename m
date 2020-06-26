@@ -2,272 +2,89 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C02220775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZZyHlMJ4"
+	by mail.kernel.org (Postfix) with ESMTP id 614482080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593182850;
+	bh=eMZncK8eiSRxgmFvB1YKwD/xSxVgTemsMnIedQb9Ih0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Imhb+0DrvN+xaIQ2qjzVPrHe+MplcJmi/zEYcGewNnIQIEG5istnIv3NmGAVlYNg
+	 QgFBOZyVgNLjA0F8hZkOEGcKKWxX6azw+XthC4ldoJ/in0CJILOowDDF9J84kQr57a
+	 5j+w4KTkJmyToUb5SGC+Nd07L4XOM/1jTe2ZlPIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbgFZOrW (ORCPT
+        id S1729416AbgFZOr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:47:22 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26022 "EHLO m43-7.mailgun.net"
+        Fri, 26 Jun 2020 10:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729359AbgFZOrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:47:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593182838; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=7uG15OZbR8iHbdbzqO2RJ2yNEv46krb5ANoHDAwOyLI=; b=ZZyHlMJ45ugYSsBTBz+PSINCUygkfOMN5qGn4DK0YfpPhdyUMpKGztf6VX2D6wrYR+yntCKz
- GS/nyndpsCcb8/DVHhJTaClFXovllFe9rAFZORt0u+557ZaEMteJP97kQe/7bf4UwqDHBy/p
- NTM5pmTQqaxxySCayMsLuqtTVRI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5ef60a76567385e8e706bd2a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 14:47:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F26DFC433CB; Fri, 26 Jun 2020 14:47:17 +0000 (UTC)
-Received: from deesin-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1729359AbgFZOrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:47:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6064C433C6;
-        Fri, 26 Jun 2020 14:47:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B6064C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
-From:   Deepak Kumar Singh <deesin@codeaurora.org>
-To:     bjorn.andersson@linaro.org, clew@codeaurora.org,
-        mathieu.poirier@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Deepak Kumar Singh <deesin@codeaurora.org>
-Subject: [PATCH V6 2/4] rpmsg: glink: Add support to handle signals command
-Date:   Fri, 26 Jun 2020 20:16:57 +0530
-Message-Id: <1593182819-30747-3-git-send-email-deesin@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
-References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E7B2053B;
+        Fri, 26 Jun 2020 14:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593182842;
+        bh=eMZncK8eiSRxgmFvB1YKwD/xSxVgTemsMnIedQb9Ih0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b7zVpiO7xA2FIw9s2Y9fXIg1W1kqkRQm6qRWswguknf+BUEytKGJxeqgOpOmaAtSq
+         gJyQWn7DUUN+ECerxBdtKvsW7bP61hbkmePT5VDaIR/WQcMai5/anJ6PrcWnPiWzkQ
+         5eiwu/OKpXbweTTO5ABPvMtfb0P2x/aCVrUQv7vw=
+Date:   Fri, 26 Jun 2020 16:47:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
+ before ',' (ctx:WxW)
+Message-ID: <20200626144718.GA1218319@kroah.com>
+References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
+ <a9efda13-4425-8cb0-5854-8421f6c14181@xs4all.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9efda13-4425-8cb0-5854-8421f6c14181@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+On Fri, Jun 26, 2020 at 04:36:52PM +0200, Hans Verkuil wrote:
+> On 26/06/2020 16:32, B K Karthik wrote:
+> > fixing ERROR: space prohibited before that ',' (ctx:WxW)
+> > 
+> > Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> 
+> usbvision is another driver that is scheduled for removal by the end of the year,
+> so I won't apply this patch.
+> 
+> > ---
+> >  drivers/staging/media/usbvision/usbvision-i2c.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/usbvision/usbvision-i2c.c b/drivers/staging/media/usbvision/usbvision-i2c.c
+> > index 6e4df3335b1b..010ad03c6ec1 100644
+> > --- a/drivers/staging/media/usbvision/usbvision-i2c.c
+> > +++ b/drivers/staging/media/usbvision/usbvision-i2c.c
+> > @@ -32,7 +32,7 @@ MODULE_PARM_DESC(i2c_debug, "enable debug messages [i2c]");
+> >  #define PDEBUG(level, fmt, args...) { \
+> >  		if (i2c_debug & (level)) \
+> >  			printk(KERN_INFO KBUILD_MODNAME ":[%s:%d] " fmt, \
+> > -				__func__, __LINE__ , ## args); \
+> > +				__func__, __LINE__, ## args); \
+> 
+> Actually, older (buggy) gcc compiler needed a space there, if memory serves.
 
-Remote peripherals send signal notifications over glink with commandID 15.
-
-Add support to send and receive the signal command and convert the signals
-from NATIVE to TIOCM while receiving and vice versa while sending.
-
-Signed-off-by: Chris Lew <clew@codeaurora.org>
-Signed-off-by: Deepak Kumar Singh <deesin@codeaurora.org>
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
----
- drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
-
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 0e8a28c0..1bf3235 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -17,6 +17,7 @@
- #include <linux/rpmsg.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <linux/termios.h>
- #include <linux/workqueue.h>
- #include <linux/mailbox_client.h>
- 
-@@ -150,6 +151,8 @@ enum {
-  * @intent_req_lock: Synchronises multiple intent requests
-  * @intent_req_result: Result of intent request
-  * @intent_req_comp: Completion for intent_req signalling
-+ * @lsigs:	local side signals
-+ * @rsigs:	remote side signals
-  */
- struct glink_channel {
- 	struct rpmsg_endpoint ept;
-@@ -181,6 +184,10 @@ struct glink_channel {
- 	struct mutex intent_req_lock;
- 	bool intent_req_result;
- 	struct completion intent_req_comp;
-+
-+	unsigned int lsigs;
-+	unsigned int rsigs;
-+
- };
- 
- #define to_glink_channel(_ept) container_of(_ept, struct glink_channel, ept)
-@@ -201,9 +208,15 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops;
- #define RPM_CMD_TX_DATA_CONT		12
- #define RPM_CMD_READ_NOTIF		13
- #define RPM_CMD_RX_DONE_W_REUSE		14
-+#define RPM_CMD_SIGNALS			15
- 
- #define GLINK_FEATURE_INTENTLESS	BIT(1)
- 
-+#define NATIVE_DTR_SIG			BIT(31)
-+#define NATIVE_CTS_SIG			BIT(30)
-+#define NATIVE_CD_SIG			BIT(29)
-+#define NATIVE_RI_SIG			BIT(28)
-+
- static void qcom_glink_rx_done_work(struct work_struct *work);
- 
- static struct glink_channel *qcom_glink_alloc_channel(struct qcom_glink *glink,
-@@ -975,6 +988,76 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
- 	return 0;
- }
- 
-+/**
-+ * qcom_glink_send_signals() - convert a signal cmd to wire format and transmit
-+ * @glink:	The transport to transmit on.
-+ * @channel:	The glink channel
-+ * @sigs:	The signals to encode.
-+ *
-+ * Return: 0 on success or standard Linux error code.
-+ */
-+static int qcom_glink_send_signals(struct qcom_glink *glink,
-+				   struct glink_channel *channel,
-+				   u32 sigs)
-+{
-+	struct glink_msg msg;
-+
-+	/* convert signals from TIOCM to NATIVE */
-+	sigs &= 0x0fff;
-+	if (sigs & TIOCM_DTR)
-+		sigs |= NATIVE_DTR_SIG;
-+	if (sigs & TIOCM_RTS)
-+		sigs |= NATIVE_CTS_SIG;
-+	if (sigs & TIOCM_CD)
-+		sigs |= NATIVE_CD_SIG;
-+	if (sigs & TIOCM_RI)
-+		sigs |= NATIVE_RI_SIG;
-+
-+	msg.cmd = cpu_to_le16(RPM_CMD_SIGNALS);
-+	msg.param1 = cpu_to_le16(channel->lcid);
-+	msg.param2 = cpu_to_le32(sigs);
-+
-+	return qcom_glink_tx(glink, &msg, sizeof(msg), NULL, 0, true);
-+}
-+
-+static int qcom_glink_handle_signals(struct qcom_glink *glink,
-+				     unsigned int rcid, unsigned int signals)
-+{
-+	struct glink_channel *channel;
-+	unsigned long flags;
-+	u32 old;
-+
-+	spin_lock_irqsave(&glink->idr_lock, flags);
-+	channel = idr_find(&glink->rcids, rcid);
-+	spin_unlock_irqrestore(&glink->idr_lock, flags);
-+	if (!channel) {
-+		dev_err(glink->dev, "signal for non-existing channel\n");
-+		return -EINVAL;
-+	}
-+
-+	old = channel->rsigs;
-+
-+	/* convert signals from NATIVE to TIOCM */
-+	if (signals & NATIVE_DTR_SIG)
-+		signals |= TIOCM_DSR;
-+	if (signals & NATIVE_CTS_SIG)
-+		signals |= TIOCM_CTS;
-+	if (signals & NATIVE_CD_SIG)
-+		signals |= TIOCM_CD;
-+	if (signals & NATIVE_RI_SIG)
-+		signals |= TIOCM_RI;
-+	signals &= 0x0fff;
-+
-+	channel->rsigs = signals;
-+
-+	if (channel->ept.sig_cb) {
-+		channel->ept.sig_cb(channel->ept.rpdev, channel->ept.priv,
-+				    old, channel->rsigs);
-+	}
-+
-+	return 0;
-+}
-+
- static irqreturn_t qcom_glink_native_intr(int irq, void *data)
- {
- 	struct qcom_glink *glink = data;
-@@ -1036,6 +1119,10 @@ static irqreturn_t qcom_glink_native_intr(int irq, void *data)
- 			qcom_glink_handle_intent_req_ack(glink, param1, param2);
- 			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
- 			break;
-+		case RPM_CMD_SIGNALS:
-+			qcom_glink_handle_signals(glink, param1, param2);
-+			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
-+			break;
- 		default:
- 			dev_err(glink->dev, "unhandled rx cmd: %d\n", cmd);
- 			ret = -EINVAL;
-@@ -1332,6 +1419,42 @@ static int qcom_glink_trysend(struct rpmsg_endpoint *ept, void *data, int len)
- 	return __qcom_glink_send(channel, data, len, false);
- }
- 
-+static int qcom_glink_get_sigs(struct rpmsg_endpoint *ept)
-+{
-+	struct glink_channel *channel = to_glink_channel(ept);
-+
-+	return channel->rsigs;
-+}
-+
-+static int qcom_glink_set_sigs(struct rpmsg_endpoint *ept, u32 set, u32 clear)
-+{
-+	struct glink_channel *channel = to_glink_channel(ept);
-+	struct qcom_glink *glink = channel->glink;
-+	u32 sigs = channel->lsigs;
-+
-+	if (set & TIOCM_DTR)
-+		sigs |= TIOCM_DTR;
-+	if (set & TIOCM_RTS)
-+		sigs |= TIOCM_RTS;
-+	if (set & TIOCM_CD)
-+		sigs |= TIOCM_CD;
-+	if (set & TIOCM_RI)
-+		sigs |= TIOCM_RI;
-+
-+	if (clear & TIOCM_DTR)
-+		sigs &= ~TIOCM_DTR;
-+	if (clear & TIOCM_RTS)
-+		sigs &= ~TIOCM_RTS;
-+	if (clear & TIOCM_CD)
-+		sigs &= ~TIOCM_CD;
-+	if (clear & TIOCM_RI)
-+		sigs &= ~TIOCM_RI;
-+
-+	channel->lsigs = sigs;
-+
-+	return qcom_glink_send_signals(glink, channel, sigs);
-+}
-+
- /*
-  * Finds the device_node for the glink child interested in this channel.
-  */
-@@ -1365,6 +1488,8 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops = {
- 	.destroy_ept = qcom_glink_destroy_ept,
- 	.send = qcom_glink_send,
- 	.trysend = qcom_glink_trysend,
-+	.get_signals = qcom_glink_get_sigs,
-+	.set_signals = qcom_glink_set_sigs,
- };
- 
- static void qcom_glink_rpdev_release(struct device *dev)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Yes, that will break on old versions of gcc.  crazy...
 
