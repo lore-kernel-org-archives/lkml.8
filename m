@@ -2,112 +2,104 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB409C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF98A207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D25207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mASX7545"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgFZRq7 (ORCPT
+        id S1726726AbgFZRrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:46:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36360 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgFZRq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:46:58 -0400
-IronPort-SDR: fjVVEEmjpsaycc64h2hBVENdASby/JvVgeeqLUQ6rdmerqu35+yveRNKS+HeyNpxavrzVBDI+S
- sGOspIFVQR/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="230187434"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="230187434"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 10:46:57 -0700
-IronPort-SDR: dnPWY4aOQAmu8Y6pAJbPOH/Hk96PNW7P7QOcQa0yYdaa6APHNk53F15krq6a+lPzZyPMkZT+fG
- QTxKxYtipmfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="312385857"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jun 2020 10:46:57 -0700
-Date:   Fri, 26 Jun 2020 10:46:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200626174657.GF6583@linux.intel.com>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
- <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
- <20200625162540.GC3437@linux.intel.com>
- <df859fb0-a665-a82a-0cf1-8db95179cb74@redhat.com>
- <20200626155657.GC6583@linux.intel.com>
- <20200626173750.GA175520@xz-x1>
+        Fri, 26 Jun 2020 13:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgFZRrA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:47:00 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0456BC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:47:00 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so9540648qkc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 10:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=fkFi+jmw2zi2Bpb13lGdSVxVK1RDggY+07lZfXdmWkw=;
+        b=mASX7545832fQHYswKaLcmSKvWG5sESxf8V/lKsnex7qxLNKrW8ChdM8EzbqHrMlzJ
+         CZVhYF5Xm5uH7Ltj6RnzV+tAdkYpjTZ0wjvgtQ9aiSeP5EtObCl4mP0+UojhavKQFHPD
+         0qDzZXnQ7iFoeUQJV+aPX9aEnx+jRrHjJbeh8MxIf0XqkdQJgTKab9jA0cQ1p2uPc3Eo
+         Z/XxvYy3pmPmreCjt0eucNJQJ+MwtnSPKSZQg53Ella+BGjUXW4TMXQPvL85q+OQbzDR
+         s+jFiL5cmZzL41LWRGuDtVX0B1q7DdTqoUeBRtcinH3WPAcL4OTX4u66uZP14vcUc5nd
+         5G5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=fkFi+jmw2zi2Bpb13lGdSVxVK1RDggY+07lZfXdmWkw=;
+        b=ZO1sKUKwXXMO8u4V0ONdB/X+ZrBoQKrNzPZLnrf0cOHEJbdLvB/oA8HZ7n5jRskdVU
+         plzORjPKpTqReKGjoXvOueX5qmqEsd8HGkDnm1RM4HtcLDLQwvjtLBB4cIbJW6KPYJ2M
+         ERccfU3qTbS43SpaFyZW8m1m74ikEp4OPnb5JPFWQLZomOZGieAYTGEIrE+FbUKaPO59
+         r9v24WahzryUDMsUxLw4wlNtmQuHjuFQrjbpRe4WHxkDc6Ji9UJxeUe40XqqMl9/zwNY
+         Tihj4NcmNSu96pozeURMGCy22W3/rcFHt4fviYDPen4V+i8yUug/Q8zBFoa2kP8UlB4z
+         +AAg==
+X-Gm-Message-State: AOAM530zYvlf4XfJHa9iqCqzIS9m9xNR8BsUlLJ075ie01iCA8jV2cAs
+        s8aXRrF77VACu7UVJOOY1hk=
+X-Google-Smtp-Source: ABdhPJzcWnNjR5+QzFD4mqwuojguwT3Xh2XT9wLDkREZn6Pv2pYj8gK8Nj52Eq9rql3WnO3X5yPBpw==
+X-Received: by 2002:a37:3d4:: with SMTP id 203mr3705422qkd.420.1593193619293;
+        Fri, 26 Jun 2020 10:46:59 -0700 (PDT)
+Received: from LeoBras (200-236-242-115.dynamic.desktop.com.br. [200.236.242.115])
+        by smtp.gmail.com with ESMTPSA id h185sm8257482qkf.85.2020.06.26.10.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 10:46:58 -0700 (PDT)
+Message-ID: <1069466fa3a373e92d9db18957674b1d9c6e9cf2.camel@gmail.com>
+Subject: Re: [PATCH v2 6/6] powerpc/pseries/iommu: Avoid errors when DDW
+ starts at 0x00
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Fri, 26 Jun 2020 14:46:46 -0300
+In-Reply-To: <20200624062411.367796-7-leobras.c@gmail.com>
+References: <20200624062411.367796-1-leobras.c@gmail.com>
+         <20200624062411.367796-7-leobras.c@gmail.com>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626173750.GA175520@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:37:50PM -0400, Peter Xu wrote:
-> On Fri, Jun 26, 2020 at 08:56:57AM -0700, Sean Christopherson wrote:
-> > Not really?  It's solving a problem that doesn't exist in the current code
-> > base (assuming TSC_CTRL is fixed), and IMO solving it in an ugly fashion.
-> > 
-> > I would much prefer that, _if_ we want to support blind KVM-internal MSR
-> > accesses, we end up with code like:
-> > 
-> > 	if (msr_info->kvm_internal) {
-> > 		return 1;
-> > 	} else if (!ignore_msrs) {
-> > 		vcpu_debug_ratelimited(vcpu, "unhandled wrmsr: 0x%x data 0x%llx\n",
-> > 			    msr, data);
-> > 		return 1;
-> > 	} else {
-> > 		if (report_ignored_msrs)
-> > 			vcpu_unimpl(vcpu,
-> > 				"ignored wrmsr: 0x%x data 0x%llx\n",
-> > 				msr, data);
-> > 		break;
-> > 	}
-> > 
-> > But I'm still not convinced that there is a legimiate scenario for setting
-> > kvm_internal=true.
+On Wed, 2020-06-24 at 03:24 -0300, Leonardo Bras wrote:
+> As of today, enable_ddw() will return a non-null DMA address if the
+> created DDW maps the whole partition. If the address is valid,
+> iommu_bypass_supported_pSeriesLP() will consider iommu bypass enabled.
 > 
-> Actually this really looks like my initial version when I was discussing this
-> with Paolo before this version, but Paolo suggested what I implemented last.  I
-> think I agree with Paolo that it's an improvement to have a way to get/set real
-> msr value so that we don't need to further think about effects being taken with
-> the two tricky msr knobs (report_ignored_msrs, ignore_msrs).  These knobs are
-> even trickier to me when they're hidden deep, because they are not easily
-> expected when seeing the name of the functions (e.g. __kvm_set_msr, rather than
-> __kvm_set_msr_retval_fixed).
+> This can cause some trouble if the DDW happens to start at 0x00.
+> 
+> Instead if checking if the address is non-null, check directly if
+> the DDW maps the whole partition, so it can bypass iommu.
+> 
+> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 
-My argument is that it's a KVM bug if we ever encounter do the wrong thing
-based on a KVM-internal MSR access.  The proposed change would actually make
-it _harder_ to find the bug that prompted this patch, as the bogus
-__kvm_get_msr() in kvm_cpuid() would silently fail.
+This patch has a bug in it. I will rework it soon.
+Please keep reviewing patches 1-5.
 
-If anything, I would argue for something like:
+Best regards,
+Leonardo
 
-	if (WARN_ON_ONCE(msr_info->kvm_internal)) {
-		return 1;
-	} else if (!ignore_msrs) {
-		...
-	} else {
-		...
-	}
-
-I.e. KVM-internal accesses should always pre-validate the existence of the
-MSR, if not the validity of the MSR from the guest's perspective.
