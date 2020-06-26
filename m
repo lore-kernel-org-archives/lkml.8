@@ -2,121 +2,112 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC57C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F669C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C75220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UmowHKu8"
+	by mail.kernel.org (Postfix) with ESMTP id 63FBF2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgFZH7C (ORCPT
+        id S1728942AbgFZH7E convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
+        Fri, 26 Jun 2020 03:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgFZH67 (ORCPT
+        with ESMTP id S1728898AbgFZH7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:58:59 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986A9C08C5DB;
-        Fri, 26 Jun 2020 00:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=JhVBSga62gHEgz4HGi54NKYgqov3EJL/ffRCuH+2YLw=; b=UmowHKu8q4WVgCjF8Ze08+GvJg
-        pgP8MuO77AOQSlGhimYAgA3nuE1UuBWOjyaue8DEQLcH8hwwkvYmDfmIc+Qdd/xtj6K6sr5gh7PBS
-        MKYioGH1Pmx/dTR9N8PsiBGV52JEEUzOzoXdhvnAZiOWRcvpe9mupj9qHZ2TU/ErUk/mX5Jltyt6n
-        dvlh+SUAgiHQn2FKvRP+c8AEp9RHR0/36vKNRGlWuzgCykK99OeeIG0C94F0j1n+C/D0UOpAC4Ajm
-        vMkanOFeZu5IF5twzA8jGM/nu0XVA9DB+t+XjJeBEDzMBNCwRK+I3eWv5kg3+yxPp8KMxFzubeTAG
-        s6s571SQ==;
-Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jojFv-0006yc-W9; Fri, 26 Jun 2020 07:58:40 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/9] fs: refactor new_sync_read
-Date:   Fri, 26 Jun 2020 09:58:28 +0200
-Message-Id: <20200626075836.1998185-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
-References: <20200626075836.1998185-1-hch@lst.de>
+        Fri, 26 Jun 2020 03:59:00 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0837FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:59:00 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jojGD-0004Vx-5t; Fri, 26 Jun 2020 09:58:57 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jojGC-0005Dc-MH; Fri, 26 Jun 2020 09:58:56 +0200
+Message-ID: <5d18057b7bc686eeb470810acd3ab63f9b4bf224.camel@pengutronix.de>
+Subject: Re: [PATCH 3/6] hantro: Rework how encoder and decoder are
+ identified
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
+Date:   Fri, 26 Jun 2020 09:58:56 +0200
+In-Reply-To: <20200625163525.5119-4-ezequiel@collabora.com>
+References: <20200625163525.5119-1-ezequiel@collabora.com>
+         <20200625163525.5119-4-ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the read_iter method as a parameter and mark the function
-non-static.  This allows reusing it for additional callsites e.g.
-in procfs.
+Hi Ezequiel,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/read_write.c    | 8 +++++---
- include/linux/fs.h | 2 ++
- 2 files changed, 7 insertions(+), 3 deletions(-)
+On Thu, 2020-06-25 at 13:35 -0300, Ezequiel Garcia wrote:
+> So far we've been using the .buf_finish hook to distinguish
+> decoder from encoder. This is unnecessarily obfuscated.
+> 
+> Moreover, we want to move the buf_finish, so use a cleaner
+> scheme to distinguish the driver decoder/encoder type.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  drivers/staging/media/hantro/hantro.h     | 2 ++
+>  drivers/staging/media/hantro/hantro_drv.c | 4 +++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+> index 3005207fc6fb..028b788ad50f 100644
+> --- a/drivers/staging/media/hantro/hantro.h
+> +++ b/drivers/staging/media/hantro/hantro.h
+> @@ -199,6 +199,7 @@ struct hantro_dev {
+>   *
+>   * @dev:		VPU driver data to which the context belongs.
+>   * @fh:			V4L2 file handler.
+> + * @is_encoder:		Decoder or encoder context?
+>   *
+>   * @sequence_cap:       Sequence counter for capture queue
+>   * @sequence_out:       Sequence counter for output queue
+> @@ -223,6 +224,7 @@ struct hantro_dev {
+>  struct hantro_ctx {
+>  	struct hantro_dev *dev;
+>  	struct v4l2_fh fh;
+> +	bool is_encoder;
+>  
+>  	u32 sequence_cap;
+>  	u32 sequence_out;
+> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> index 0db8ad455160..112ed556eb90 100644
+> --- a/drivers/staging/media/hantro/hantro_drv.c
+> +++ b/drivers/staging/media/hantro/hantro_drv.c
+> @@ -197,7 +197,7 @@ static void device_run(void *priv)
+>  
+>  bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx)
+>  {
+> -	return ctx->buf_finish == hantro_enc_buf_finish;
+> +	return ctx->is_encoder;
+>  }
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index e7f36b15683049..e765c95ff3440d 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -401,7 +401,8 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
- 				read_write == READ ? MAY_READ : MAY_WRITE);
- }
- 
--static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter))
- {
- 	struct iovec iov = { .iov_base = buf, .iov_len = len };
- 	struct kiocb kiocb;
-@@ -412,7 +413,7 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
- 	kiocb.ki_pos = (ppos ? *ppos : 0);
- 	iov_iter_init(&iter, READ, &iov, 1, len);
- 
--	ret = call_read_iter(filp, &kiocb, &iter);
-+	ret = cb(&kiocb, &iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
- 	if (ppos)
- 		*ppos = kiocb.ki_pos;
-@@ -488,7 +489,8 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
- 	if (file->f_op->read)
- 		ret = file->f_op->read(file, buf, count, pos);
- 	else if (file->f_op->read_iter)
--		ret = new_sync_read(file, buf, count, pos);
-+		ret = iter_read(file, buf, count, pos,
-+				file->f_op->read_iter);
- 	else
- 		ret = -EINVAL;
- 	if (ret > 0) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index fac6aead402a98..b9b2ee31ef9bf1 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1916,6 +1916,8 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 			      unsigned long nr_segs, unsigned long fast_segs,
- 			      struct iovec *fast_pointer,
- 			      struct iovec **ret_pointer);
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter));
- 
- extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
- extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
--- 
-2.26.2
+Now this function feels a little superfluous. Why not replace
+  hantro_is_encoder_ctx(ctx)
+with
+  ctx->is_encoder
+everywhere?
 
+regards
+Philipp
