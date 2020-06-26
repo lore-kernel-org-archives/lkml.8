@@ -2,146 +2,233 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64051C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65157C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A254207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 362442080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dzj8ZOUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgFZH73 (ORCPT
+        id S1729055AbgFZH7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:59:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33634 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgFZH7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:59:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 87026AE25;
-        Fri, 26 Jun 2020 07:59:19 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 09:59:18 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        tobin@kernel.org, cl@linux.com, akpm@linux-foundation.org,
-        stable@kernel.org
-Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
-Message-ID: <20200626075918.dj6ioaon5iuhtg6k@beryllium.lan>
-References: <20200626003459.D8E015CA@viggo.jf.intel.com>
+        Fri, 26 Jun 2020 03:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgFZH7E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:59:04 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39920C08C5DD;
+        Fri, 26 Jun 2020 00:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=TyROtKbkl/S72kKI7NWbc07Mk35NEfDXXPiptw56KLM=; b=Dzj8ZOUaqaAXhqkLKGWlY0NjCF
+        kQq+ASDC8tmPb+CZSAMDq0cTXACs2X88pQCHnJ9SMGKj/1ZVMv/3Kpeyb9dBKYcAZPJVOpbDgClgp
+        OtxGz6+CL/sVv9wFlrmTsqRpzeOd3cW+BNlqA1AifUpTy+qlXrqj7Y/+zPCQrJELTXAe+4Mj07aFO
+        hIABMonISYKdX6afWVB7qL0DkBf1DlEWSuYJZNcrTGqB3iy0/RCvk0+H9Tr6uyS1iOm25Chh+8seq
+        AYOm+mur/djO3gawBbPmugm57dmK4yTYsjoj26asr4AvE97GGbZeAVaGbO5qcannlKaUugUHKR9CS
+        ZkGS7BEg==;
+Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jojG5-00071o-Op; Fri, 26 Jun 2020 07:58:49 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 9/9] fs: don't allow splice read/write without explicit ops
+Date:   Fri, 26 Jun 2020 09:58:36 +0200
+Message-Id: <20200626075836.1998185-10-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
+References: <20200626075836.1998185-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626003459.D8E015CA@viggo.jf.intel.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave
+Don't allow calling ->read or ->write with set_fs as a preparation for
+killing off set_fs.  While I've not triggered any of these cases in my
+setups as all the usual suspect (file systems, pipes, sockets, block
+devices, system character devices) use the iter ops this is almost
+going to be guaranteed to eventuall break something, so print a detailed
+error message helping to debug such cases.  The fix will be to switch the
+affected driver to use the iter ops.
 
-On Thu, Jun 25, 2020 at 05:34:59PM -0700, Dave Hansen wrote:
-> 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
-> sysctl.  Like a good kernel developer, I also went to go update the
-> documentation.  I noticed that the bits in the documentation didn't
-> match the bits in the #defines.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/splice.c | 117 +++++++++++-----------------------------------------
+ 1 file changed, 24 insertions(+), 93 deletions(-)
 
-Drop the this paragraph from the commit message. It doesn't add
-any necessart information.
+diff --git a/fs/splice.c b/fs/splice.c
+index d1efc53875bd93..f93bbfc131d5ec 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -342,66 +342,6 @@ const struct pipe_buf_operations nosteal_pipe_buf_ops = {
+ };
+ EXPORT_SYMBOL(nosteal_pipe_buf_ops);
+ 
+-static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+-				 struct pipe_inode_info *pipe, size_t len,
+-				 unsigned int flags)
+-{
+-	struct iov_iter to;
+-	struct page **pages;
+-	unsigned int nr_pages;
+-	unsigned int mask;
+-	size_t offset, base, copied = 0;
+-	loff_t pos;
+-	ssize_t res;
+-	int i;
+-
+-	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
+-		return -EAGAIN;
+-
+-	res = rw_verify_area(READ, in, ppos, len);
+-	if (res < 0)
+-		return res;
+-
+-	/*
+-	 * Try to keep page boundaries matching to source pagecache ones -
+-	 * it probably won't be much help, but...
+-	 */
+-	offset = *ppos & ~PAGE_MASK;
+-
+-	iov_iter_pipe(&to, READ, pipe, len + offset);
+-
+-	res = iov_iter_get_pages_alloc(&to, &pages, len + offset, &base);
+-	if (res <= 0)
+-		return -ENOMEM;
+-
+-	mask = pipe->ring_size - 1;
+-	pipe->bufs[to.head & mask].offset = offset;
+-	pipe->bufs[to.head & mask].len -= offset;
+-
+-	nr_pages = DIV_ROUND_UP(res + base, PAGE_SIZE);
+-
+-	pos = *ppos;
+-	for (i = 0; i < nr_pages; i++) {
+-		size_t this_len = min_t(size_t, len, PAGE_SIZE - offset);
+-
+-		res = __kernel_read(in, page_address(pages[i]) + offset,
+-				this_len, &pos);
+-		if (res < 0)
+-			goto out;
+-		len -= this_len;
+-		offset = 0;
+-	}
+-	copied = pos - *ppos;
+-	*ppos = pos;
+-
+-out:
+-	for (i = 0; i < nr_pages; i++)
+-		put_page(pages[i]);
+-	kvfree(pages);
+-	iov_iter_advance(&to, copied);	/* truncates and discards */
+-	return res;
+-}
+-
+ /*
+  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
+  * using sendpage(). Return the number of bytes sent.
+@@ -765,33 +705,6 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 
+ EXPORT_SYMBOL(iter_file_splice_write);
+ 
+-static int write_pipe_buf(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
+-			  struct splice_desc *sd)
+-{
+-	int ret;
+-	void *data;
+-	loff_t tmp = sd->pos;
+-
+-	data = kmap(buf->page);
+-	ret = __kernel_write(sd->u.file, data + buf->offset, sd->len, &tmp);
+-	kunmap(buf->page);
+-
+-	return ret;
+-}
+-
+-static ssize_t default_file_splice_write(struct pipe_inode_info *pipe,
+-					 struct file *out, loff_t *ppos,
+-					 size_t len, unsigned int flags)
+-{
+-	ssize_t ret;
+-
+-	ret = splice_from_pipe(pipe, out, ppos, len, flags, write_pipe_buf);
+-	if (ret > 0)
+-		*ppos += ret;
+-
+-	return ret;
+-}
+-
+ /**
+  * generic_splice_sendpage - splice data from a pipe to a socket
+  * @pipe:	pipe to splice from
+@@ -813,15 +726,30 @@ ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe, struct file *out,
+ 
+ EXPORT_SYMBOL(generic_splice_sendpage);
+ 
++static void warn_unsupported(struct file *file, const char *op)
++{
++	char pathname[128], *path;
++
++	path = file_path(file, pathname, sizeof(pathname));
++	if (IS_ERR(path))
++		path = "(unknown)";
++	pr_warn_ratelimited(
++		"splice %s not supported for file %s (pid: %d comm: %.20s)\n",
++		op, path, current->pid, current->comm);
++}
++
+ /*
+  * Attempt to initiate a splice from pipe to file.
+  */
+ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			   loff_t *ppos, size_t len, unsigned int flags)
+ {
+-	if (out->f_op->splice_write)
+-		return out->f_op->splice_write(pipe, out, ppos, len, flags);
+-	return default_file_splice_write(pipe, out, ppos, len, flags);
++	if (!out->f_op->splice_write) {
++		warn_unsupported(out, "write");
++		return -EINVAL;
++	}
++
++	return out->f_op->splice_write(pipe, out, ppos, len, flags);
+ }
+ 
+ /*
+@@ -843,9 +771,12 @@ static long do_splice_to(struct file *in, loff_t *ppos,
+ 	if (unlikely(len > MAX_RW_COUNT))
+ 		len = MAX_RW_COUNT;
+ 
+-	if (in->f_op->splice_read)
+-		return in->f_op->splice_read(in, ppos, pipe, len, flags);
+-	return default_file_splice_read(in, ppos, pipe, len, flags);
++	if (!in->f_op->splice_read) {
++		warn_unsupported(in, "read");
++		return -EINVAL;
++	}
++
++	return in->f_op->splice_read(in, ppos, pipe, len, flags);
+ }
+ 
+ /**
+-- 
+2.26.2
 
-Please have a look at
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
-
-> The VM evidently stopped caring about RECLAIM_ZONE at some point (or
-> never cared) and the #define itself was later removed as a cleanup.
-> Those things by themselves are fine.
-> 
-> But, the _other_ bit locations also got changed.  That's not OK because
-> the bit values are documented to mean one specific thing and users
-> surely rely on them meaning that one thing and not changing from
-> kernel to kernel.  The end result is that if someone had a script
-> that did:
-> 
-> 	sysctl vm.zone_reclaim_mode=1
-> 
-> That script went from doing nothing to writing out pages during
-> node reclaim after the commit in question.  That's not great.
-> 
-> Put the bits back the way they were and add a comment so something
-> like this is a bit harder to do again.  Update the documentation to
-> make it clear that the first bit is ignored.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Fixes: commit 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
-> Acked-by: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Daniel Wagner <dwagner@suse.de>
-> Cc: "Tobin C. Harding" <tobin@kernel.org>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: stable@kernel.org
-> ---
-> 
->  b/Documentation/admin-guide/sysctl/vm.rst |   12 ++++++------
->  b/mm/vmscan.c                             |    9 +++++++--
->  2 files changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff -puN mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi mm/vmscan.c
-> --- a/mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-06-25 17:32:11.559165912 -0700
-> +++ b/mm/vmscan.c	2020-06-25 17:32:11.572165912 -0700
-> @@ -4090,8 +4090,13 @@ module_init(kswapd_init)
->   */
->  int node_reclaim_mode __read_mostly;
->  
-> -#define RECLAIM_WRITE (1<<0)	/* Writeout pages during reclaim */
-> -#define RECLAIM_UNMAP (1<<1)	/* Unmap pages during reclaim */
-> +/*
-> + * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
-> + * ABI.  New bits are OK, but existing bits can never change.
-> + */
-> +#define RECLAIM_RSVD  (1<<0)	/* (currently ignored/unused) */
-> +#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
-> +#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
->  
->  /*
->   * Priority for NODE_RECLAIM. This determines the fraction of pages
-> diff -puN Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi Documentation/admin-guide/sysctl/vm.rst
-> --- a/Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-06-25 17:32:11.562165912 -0700
-> +++ b/Documentation/admin-guide/sysctl/vm.rst	2020-06-25 17:32:11.572165912 -0700
-> @@ -938,7 +938,7 @@ in the system.
->  This is value OR'ed together of
->  
->  =	===================================
-> -1	Zone reclaim on
-> +1	(bit currently ignored)
->  2	Zone reclaim writes dirty pages out
->  4	Zone reclaim swaps pages
->  =	===================================
-> @@ -948,11 +948,11 @@ that benefit from having their data cach
->  left disabled as the caching effect is likely to be more important than
->  data locality.
->  
-> -zone_reclaim may be enabled if it's known that the workload is partitioned
-> -such that each partition fits within a NUMA node and that accessing remote
-> -memory would cause a measurable performance reduction.  The page allocator
-> -will then reclaim easily reusable pages (those page cache pages that are
-> -currently not used) before allocating off node pages.
-> +Consider enabling one or more zone_reclaim mode bits if it's known that the
-> +workload is partitioned such that each partition fits within a NUMA node
-> +and that accessing remote memory would cause a measurable performance
-> +reduction.  The page allocator will take additional actions before
-> +allocating off node pages.
-
-I think the documentation update should not be part of this patch.
-This makes the back porting to stable more difficult.
-
-Thanks,
-Daniel
