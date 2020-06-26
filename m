@@ -2,88 +2,108 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E308C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33AF0206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F30F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CY4xQpCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgFZSij (ORCPT
+        id S1725824AbgFZSkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:38:39 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:42911 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFZSii (ORCPT
+        Fri, 26 Jun 2020 14:40:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40314 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFZSkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:38:38 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MjjGX-1j906h3rrP-00lAps for <linux-kernel@vger.kernel.org>; Fri, 26 Jun
- 2020 20:38:37 +0200
-Received: by mail-qk1-f170.google.com with SMTP id j80so9711800qke.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:38:36 -0700 (PDT)
-X-Gm-Message-State: AOAM531RW2l60g66nOHwpdj8/oCcGM6dO5bWX5KvZdjO8G/L5w/32xG3
-        hiTVvh97BLvbue2WitZdSkbZQ5wSoLWdGhSHDtI=
-X-Google-Smtp-Source: ABdhPJyNQfXE0ruJoQ05uf8LqIW97WW2kUX2cNf9ib85ESLuPO2ZW8kSwf5CGuEtUuAzBjEMbkNjuKHwJyc+D9Q5Vtc=
-X-Received: by 2002:a37:4ed2:: with SMTP id c201mr4102478qkb.138.1593196715831;
- Fri, 26 Jun 2020 11:38:35 -0700 (PDT)
+        Fri, 26 Jun 2020 14:40:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QIeBJ9089649;
+        Fri, 26 Jun 2020 13:40:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593196811;
+        bh=CrDkOC+fm85LpHYK++eBWVeyOv6G39lapXPJvPYrvPk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CY4xQpCcbxd6OahseU8z5KqUtOt+oJsJdGZeqwj0IBX6wZpA+17LsWqT0nbBY/CXS
+         a2XKfcCNnpKgi38W4wqvkptuQAsB0GfZkzaW6PON1fOxq3gIMyYe/W4AcNscTfcQV0
+         qegQutFtoreejwN4dZqr2d6sGiqWgNZj8lc/aobM=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QIe67R091726
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 13:40:11 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
+ Jun 2020 13:40:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 26 Jun 2020 13:40:07 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QIe6W2021586;
+        Fri, 26 Jun 2020 13:40:07 -0500
+Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j721e-main: rename smmu node to
+ iommu
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
+References: <20200626183532.23436-1-grygorii.strashko@ti.com>
+ <88041e5c-b96d-5d92-d951-eb3356a519e2@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <438e0ec4-c6e0-8f9d-1608-b810b30295e0@ti.com>
+Date:   Fri, 26 Jun 2020 13:40:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-8-lee.jones@linaro.org>
- <CAK8P3a38P1PGHkvTDqSQC6sBoDrfipbZzxUaJeV4q4At92g_bw@mail.gmail.com> <20200626152923.GB177734@dell>
-In-Reply-To: <20200626152923.GB177734@dell>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jun 2020 20:38:19 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0paVJoQmqOB95mp1gQJKZTg-X8jK9b5ZnCqnnSKeCCQw@mail.gmail.com>
-Message-ID: <CAK8P3a0paVJoQmqOB95mp1gQJKZTg-X8jK9b5ZnCqnnSKeCCQw@mail.gmail.com>
-Subject: Re: [PATCH 07/10] misc: mic: vop: vop_main: Remove set but unused
- variable 'ret'
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:hZRcRcvEfEYlm10qGT7ZSxJqZGkz+vXIDWi9+z5cpSDC9+NhNQ4
- Np3FLrwEr8YnhnTjh53/d7GVSJoii2Jy6/m3ZE0xW1q0/Ul0IamqxDCYncc+Nc0VgQ4XTIT
- AMFLXKppXo6ObePR42fjVVayHgRP6yz6dpJ/vTxO/DumP2L8aXvRZbnDotUso5kap/T+eqp
- h3Su4K4pzOP//yrIpCWKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wo/zRie9ZbU=:/MFnA9ossBRL66oA+OVrwR
- 6PyIArypKceFUj5QpTEeg7Q5kUK5nk1lED7hfhhMK8vzLkFhBeffPMpvtC6vDFJNL9rLi55Xu
- GcjcjAXPH9JVuiJiwA9/sGFMeLrCm2K9i1+9+Eln2R7QJLWutkgJVvOE/Pw8SuH7DseGZJXoZ
- CO6WM5Z41VfLC44tJxrknebiToO14LWndHknQQAQIa326NcqvpWAsaCGD67XefyDodRWxyaQs
- n1NrobH0lmLj0cSysfUofiVD8wphgP9NiYl3VD2Zyf6Nhv7UPW0YdZ+R2dmibykzkgR/hchwO
- xhFMOrfAfAWMG59u/boXSQTJLhDO0D8RnyMJW9a4172epS5tfMaVyUjIetnd2quGVAE+onTTU
- IWRsKCReyAtLUQKjlwZX4AAh/vDko7vSIx4rFqEyM+p5lXxtlq0S8VqKhVe7o9LRSFMyfSbwr
- a7yI6WCnaYuyFm0krOzqNt9Rg1XfeXozBME/ZUmpOLvo1eAsx5JBY9htWHSM6bN1xfpw0GHo/
- saZCvGt6AMMZD+YoeGqNbnjl/1MSzL2jY/H7QPSlLl3amclxyG00Zqt6TJkkd/vi2JaT/s2fV
- iLiwf2TZjDcnJbE/Hcq0kKkJPIa2k/5hZlhE6hIBKfAv6yMXoKLX6nRCrVnJp6BidVVQhV7fR
- cobZ9Cu6UIz6AMLQPnXB0IgEBrse5uv4Htwrv8lLv+9EtW63V6Cv31TURrg4Zdgi/80Tdjdul
- KI+IyWyyct8kKPnuEVLs0DoSxjZHN19Elk/Rkixw7ACGGRgDj143TEEgCeCFy/WMcYMkY/R7J
- u44NjB3t58ZevsDO9/7h5QgASYfYGq58GnqZqWCnTmrsd5SzQI=
+In-Reply-To: <88041e5c-b96d-5d92-d951-eb3356a519e2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 5:29 PM Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 26 Jun 2020, Arnd Bergmann wrote:
-> > On Fri, Jun 26, 2020 at 3:05 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > This is a correct change, but I'd take it one step further and make the
-> > _vop_remove_device() function return 'void' if you don't mind
-> > respinning the patch.
-> >
-> > Either way
-> >
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> Do you mind if I handle your request as a subsequent patch?
+On 6/26/20 1:36 PM, Grygorii Strashko wrote:
+> 
+> 
+> On 26/06/2020 21:35, Grygorii Strashko wrote:
+>> Rename smmu node to iommu to fix dtbs_check warning:
+>>   k3-j721e-common-proc-board.dt.yaml: smmu@36600000: $nodename:0: 
+>> 'smmu@36600000' does not match '^iommu@[0-9a-f]*'
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-That also works for me, thanks!
+Acked-by: Suman Anna <s-anna@ti.com>
 
-      Arnd
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi 
+>> b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> index 5d82de4097bb..0ac23c4414a2 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> @@ -95,7 +95,7 @@
+>>               interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>>           };
+>> -        smmu0: smmu@36600000 {
+>> +        smmu0: iommu@36600000 {
+>>               compatible = "arm,smmu-v3";
+>>               reg = <0x0 0x36600000 0x0 0x100000>;
+>>               interrupt-parent = <&gic500>;
+>>
+> 
+> Pls, ignore "3/3" in subj.
+> 
+
