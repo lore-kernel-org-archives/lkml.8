@@ -4,135 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59539C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1817BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A212088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE095207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gArX9VJJ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WGHo01Ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbgFZSNw (ORCPT
+        id S1726175AbgFZSP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:13:52 -0400
-Received: from mail.efficios.com ([167.114.26.124]:53942 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgFZSNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:13:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9113D2D5694;
-        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gxkVJe4uPr3p; Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3527C2D5784;
-        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3527C2D5784
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593195230;
-        bh=rgfmzezlHQeSavW8v52bXi4Rbl6TKxnTNKh4BFHPNto=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=gArX9VJJ022LDc57LKnaPQmJcjpzWEc6t2Jsu+V3hki16L8ucIEmvWA4/UG/fPVQT
-         IGg00zIFG59B/96dlYc6X1wROwc4K9vp78jvbSbwrTnFVJnHFUNQYoZILGouonv4au
-         lDkOyYQoAeO30Lf5ApPXux+pjO98cKVw0DcGSGf5Usph9eXIET/SvhKoiBYFWbMP3I
-         DKvaIU6f+eZt14R/UBVUq/blJvtQIeAVZM2ZaNcSlewHKdSlYmp+oX8IoeMFwaUKkO
-         jcjJhaEuoCKuc3KD/mooOh+HTn5kbUp9GMHP+Xpgu7dtPvNtrmC7otzkyhrPtcRpIS
-         RuVKb2HnMRNVg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2-55afNXm-uG; Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1F75F2D5783;
-        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-Date:   Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 26 Jun 2020 14:15:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43220 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgFZSP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:15:58 -0400
+Received: from zn.tnic (p200300ec2f0d1400d99b017616e7d256.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1400:d99b:176:16e7:d256])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B3DFC1EC0136;
+        Fri, 26 Jun 2020 20:15:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1593195355;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=K2CJIk9iowgPaK93YLqKtsoeAarMKRZRNRyX9xlsHGw=;
+        b=WGHo01Ni5a9EIBQZ8DoOJEDy11rUkc5B8Y8CS9BQdGp+nQRYe0awSHaWwqqB53p0mxhFJM
+        Lsu/rM53eHDAw34OJQ2FJBVzuq+UQ08aKNwsMIH3mQ8f4RCdkPuxMLHiDGSh0WFqFtYYT6
+        HOzMGAZzedykl06V0+IwBKAKwAbZLu8=
+Date:   Fri, 26 Jun 2020 20:15:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Message-ID: <304619857.14491.1593195230002.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200626095801.14cfa8a3@oasis.local.home>
-References: <20200625094454.732790f7@oasis.local.home> <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com> <20200625143525.2f3a2902@oasis.local.home> <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com> <20200625223611.1dbb3b35@oasis.local.home> <20200625233552.2c8a0d1e@oasis.local.home> <20200626095801.14cfa8a3@oasis.local.home>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradeed.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v4 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200626181550.GF27151@zn.tnic>
+References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+ <1593116242-31507-13-git-send-email-fenghua.yu@intel.com>
+ <20200626094450.GJ4800@hirez.programming.kicks-ass.net>
+ <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: ring-buffer: Have nested events still record running time stamp
-Thread-Index: rFPgR5ao+c3L9lmc87zzrz2jETjodg==
+Content-Disposition: inline
+In-Reply-To: <20200626181000.GA22833@agluck-desk2.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 26, 2020, at 9:58 AM, rostedt rostedt@goodmis.org wrote:
+On Fri, Jun 26, 2020 at 11:10:00AM -0700, Luck, Tony wrote:
+> Do we have a standard way of coding for a feature that depends on multiple
+> other features?  For this case the system needs to both suport the ENQCMD
+> instruction, and also have kernel code that programs the IOMMU.
 
-> On Thu, 25 Jun 2020 23:35:52 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> I have to think about this more, as I think there's a flaw in this
->> cmpxchg algorithm.
-> 
-> Bah, that was all wrong. I need to incorporate the seq counter into the
-> time stamp. Luckily I only use 59 bits for a full time stamp (gives me
-> 18 years of nanoseconds), which gives me 5 bits to pay with, and all I
-> need is 4 (2 for top and 2 for bottom). Now I can make the timestamp 60
-> bits with 30 bits from the top and 30 from the bottom, and using two
-> bits in each of those as a sequence counter.
-> 
-> If after reading top and bottom, if the seq bits match, then the two
-> match and can be put together as a valid number. Now I have this:
+Yes, you need both. Consider distros enabling everything so that they
+can ship a single kernel image.
 
-[...]
-> 
-> static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
-> {
->	unsigned long top, bottom;
-> 
->	top = local_read(&t->top);
->	bottom = local_read(&t->bottom);
-> 
->	*cnt = rb_time_cnt(top);
-> 
->	if (*cnt != rb_time_cnt(bottom))
->		return false;
-> 
->	*ret = rb_time_val(top, bottom);
->	return true;
-> }
+> And/or guidance on when to use each of the very somewhat simlar looking
+> 	boot_cpu_has()
+> 	static_cpu_has()
 
-If __rb_time_read or rb_time_cmpxchg are used in an interrupt over
-rb_time_set (between setting top and bottom), those will never succeed.
+See the comment over _static_cpu_has() in arch/x86/include/asm/cpufeature.h
 
-How is this case handled ?
+In the exception path you should use the static_ variant.
 
-Thanks,
+> 	IS_ENABLED()
 
-Mathieu
+This is testing CONFIG_ settings, i.e., build time.
+
+> 	cpu_feature_enabled()
+
+This too, indirectly. See
+
+arch/x86/include/asm/disabled-features.h
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
