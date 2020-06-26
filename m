@@ -2,118 +2,129 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE88C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D2A20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CAA207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593185944;
-	bh=tJdrNVyZTjt+Jl53IUXKMd//e+fCcD81uGNOBdOFq10=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=HDQBVKhciOZPMVu1y9pVuYxHE64jfBWoXSajH/zvKWI2so8KgOo5p3dK6mv4P1nOs
-	 D2C5ApsbQsyscNd1fzcBlQaUJItwjfiuHR9kZ6OultuvFkr2YrvoIIlxVFlkrwL+rR
-	 u41c434RiOkiIvRM1udqnU/cBWXlQlbxdwWpDSs4=
+	s=default; t=1593185951;
+	bh=wZ7OWTnSecrf7D07hrerdFH+pIDkkrkHI6TyZ43C4OY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=u1MueWSYWTn/fRo01/eTih6nTsTV0WfHjuGGsgez1ymsAhKx3tk3B/T6ehIYs8HHF
+	 AEUFK5KY6ygGDR05irgZ/FwcNfsd2anfhryiZT/F0jtTimu5ldU+2Qxt1GLd/kq5rx
+	 nsp2dFpxfxQ0EeICumlRVM9MALua8cPJDFdJSyXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbgFZPjD (ORCPT
+        id S1729683AbgFZPjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:39:03 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37250 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgFZPjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:39:02 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 12so1914072oir.4;
-        Fri, 26 Jun 2020 08:39:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=uw6SWLZZccFhEMxqcHMfobQGTjxadNTu6Bwdli5yUE4=;
-        b=a3J/nr/ORspM80r6/0HSg/EKaebjX1umBQfwT4Y/u9/MkApqjzhipKdamQ87g009dy
-         U2edAQuibbSBJ6458pjCGa+gQQ3qwal4chVH9Dxs3zdbHzsMBq9uOToeDrbdpJljssPp
-         qTIszKuQVdG5a7Wu5b8+8Z3ffigdTnPlN3irCYxU/ICIl1O2rTQjDXwiT+hEihOm1l2p
-         P5b+nocc3dZfPzmWgg5dzh3gZc0KRazjeir3XmdvPkMJCEc62ouxvHz92bgMwOONc4y4
-         gMBTMlky6GRm3ixXlzPxzXObcKlaQbR/E/U9XMRxdMkoX0apHVHT+1+D+eYrZO3AK7L8
-         gU7Q==
-X-Gm-Message-State: AOAM533m6Z6p9Q6Laa3mC8jz2ELXZK5KQEtjEkxXOPnVYtpT9K6ad30a
-        yEhvoa1TIlxRKkAZJ+xGTdwLzcLKBYScDK0zg4sK4eUO
-X-Google-Smtp-Source: ABdhPJys2qJb9EttkZI5K9Y9m83unxshzaUmbUkamjQUq7/Vx+q6R0OEFjSX99jkll5NGNon3c1lZDFDWbpiFRV3BXc=
-X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2834944oic.68.1593185941879;
- Fri, 26 Jun 2020 08:39:01 -0700 (PDT)
+        Fri, 26 Jun 2020 11:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726613AbgFZPjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 11:39:08 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 301B720773;
+        Fri, 26 Jun 2020 15:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593185948;
+        bh=wZ7OWTnSecrf7D07hrerdFH+pIDkkrkHI6TyZ43C4OY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g+vts0eFjefmiqi5onoMJ/9l7FfnI3aXem80MtyFtg3iWBMJ9Pxzbs+jX51NtgM1d
+         lDmnxfa0+90uxMSnkCRI7WY1RQX10VnnsNMFX772+BALvhnuJ/QUoHrzS/1jK+ejmS
+         zW9ol5x3OCMJmeDo2ax7nCIXEZUKlV8kq98qK4u0=
+Date:   Fri, 26 Jun 2020 10:39:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com
+Subject: Re: [PATCH 1/2] pci: Add pci device even if the driver failed to
+ attach
+Message-ID: <20200626153906.GA2897118@bjorn-Precision-5520>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 26 Jun 2020 17:38:50 +0200
-Message-ID: <CAJZ5v0gV3VCoJxuSZcngA2H1Nwqz2mHLtJAd2NoQE3ht9FVTHg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.8-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626002710.110200-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Nit: when you update these patches, can you run "git log --oneline
+drivers/pci/bus.c" and make your subject lines match the convention?
+E.g.,
 
-Please pull from the tag
+  PCI: Add device even if driver attach failed
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.8-rc3
+On Thu, Jun 25, 2020 at 05:27:09PM -0700, Rajat Jain wrote:
+> device_attach() returning failure indicates a driver error
+> while trying to probe the device. In such a scenario, the PCI
+> device should still be added in the system and be visible to
+> the user.
 
-with top-most commit 0e3fb2a128d81bc5baee76dddcc8ddbc8ccae95c
+Nit: please wrap logs to fill 75 characters.  "git log" adds 4 spaces
+at the beginning, so 75+4 still fits nicely in 80 columns without
+wrapping.
 
- Merge branches 'pm-cpufreq' and 'pm-cpuidle'
+> This patch partially reverts:
+> commit ab1a187bba5c ("PCI: Check device_attach() return value always")
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/pci/bus.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 8e40b3e6da77d..3cef835b375fd 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+>  
+>  	dev->match_driver = true;
+>  	retval = device_attach(&dev->dev);
+> -	if (retval < 0 && retval != -EPROBE_DEFER) {
+> +	if (retval < 0 && retval != -EPROBE_DEFER)
+>  		pci_warn(dev, "device attach failed (%d)\n", retval);
+> -		pci_proc_detach_device(dev);
+> -		pci_remove_sysfs_dev_files(dev);
 
-on top of commit 48778464bb7d346b47157d21ffde2af6b2d39110
+Thanks for catching my bug!
 
- Linux 5.8-rc2
-
-to receive power management fixes for 5.8-rc3.
-
-These fix a recent regression that broke suspend-to-idle on some
-x86 systems, fix the intel_pstate driver to correctly let the
-platform firmware control CPU performance in some cases and
-add __init annotations to a couple of functions.
-
-Specifics:
-
- - Make sure that the _TIF_POLLING_NRFLAG is clear before entering
-   the last phase of suspend-to-idle to avoid wakeup issues on some
-   x86 systems (Chen Yu, Rafael Wysocki).
-
- - Cover one more case in which the intel_pstate driver should let
-   the platform firmware control the CPU frequency and refuse to
-   load (Srinivas Pandruvada).
-
- - Add __init annotations to 2 functions in the power management
-   core (Christophe JAILLET).
-
-Thanks!
-
-
----------------
-
-Chen Yu (1):
-      PM: s2idle: Clear _TIF_POLLING_NRFLAG before suspend to idle
-
-Christophe JAILLET (1):
-      PM: sleep: core: mark 2 functions as __init to save some memory
-
-Rafael J. Wysocki (1):
-      cpuidle: Rearrange s2idle-specific idle state entry code
-
-Srinivas Pandruvada (1):
-      cpufreq: intel_pstate: Add one more OOB control bit
-
----------------
-
- drivers/base/power/trace.c     |  4 ++--
- drivers/cpufreq/intel_pstate.c |  7 +++++--
- drivers/cpuidle/cpuidle.c      |  5 +++--
- kernel/sched/idle.c            | 15 +++++++++++----
- 4 files changed, 21 insertions(+), 10 deletions(-)
+> -		return;
+> -	}
+>  
+>  	pci_dev_assign_added(dev, true);
+>  }
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
