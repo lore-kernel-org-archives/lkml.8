@@ -2,254 +2,135 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CADDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C265206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CE8206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S4PDTMbj"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="N4DXkoXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgFZLWo (ORCPT
+        id S1728467AbgFZL0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:22:44 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57380 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgFZLWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:22:43 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200626112241euoutp013ef3ded67574a01d46bfd6b0ef0ed524~cFC86AEaL1131711317euoutp01T
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 11:22:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200626112241euoutp013ef3ded67574a01d46bfd6b0ef0ed524~cFC86AEaL1131711317euoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593170561;
-        bh=oYAxSME9rGr+KdmCubJZndLweXdUns26lunyy7YRftc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=S4PDTMbjPkbp5Zkm8uVkE0wUDlSRG15QWfidONIFSUCoeWYB/dPRoAPqTxBvZyfDz
-         E786sB8o6yDUd1i4xet+Ogss9lP2PQIkl7G44VRjVTGGsnC1ZRcHEx5Tu1PD2DjUyt
-         lZZWQsNXyeFBvo3OlA4q2NpBJT0f0U7jc/VbWPwE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200626112240eucas1p223ac51a4c3c2d2d7abc6dbdd9f8cb921~cFC8lkAZp1651616516eucas1p2h;
-        Fri, 26 Jun 2020 11:22:40 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6A.98.06318.08AD5FE5; Fri, 26
-        Jun 2020 12:22:40 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200626112240eucas1p137a7bda25922a02faec6ee6f3c5b5c4f~cFC8NmtFs1960819608eucas1p1g;
-        Fri, 26 Jun 2020 11:22:40 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200626112240eusmtrp1c2d7840e1fc2b85a059df1d67667114f~cFC8MyUO71855018550eusmtrp1i;
-        Fri, 26 Jun 2020 11:22:40 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-18-5ef5da806ee3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 86.F1.06017.08AD5FE5; Fri, 26
-        Jun 2020 12:22:40 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200626112239eusmtip1541fce56f819f0cfa8cd94a4a9d15e6b~cFC7qffwH1044410444eusmtip1K;
-        Fri, 26 Jun 2020 11:22:39 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Lukasz Luba <lukasz.luba@arm.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <ad4e1a73-6de3-68ee-e3b3-b30bc315bd31@samsung.com>
-Date:   Fri, 26 Jun 2020 13:22:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 26 Jun 2020 07:26:18 -0400
+Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:51685
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728381AbgFZL0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 07:26:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HKwCxU/1woeI+MCy3hQ36El6ByV6bWEdO+HHwo3D7S7t6i7JYygH9OrOuXo0dIgSTggdUtjCrQmYg6Qz4eYSdsBJ0uj2lVoFsG/DIilP7c1HojIXSELeA4A+zSCEA0gDKy9ugS+M54i0+XoL+1yOmk5/tDWJSXXvOyUiP6QeYyAZLCuZ1CmnqP1zIYp+FDPbo9vfcKlma2aq8S8z1U2/wWLITEK32RFINkSiX8jptGlW6yCXFwE88Crg6JNDHXoAyj6IAsV7jHo4Y8Q+6yFJLoKhmpCOjqAa6kLdcKY3DPeogMB6zb+AAthppJ2ZOsliFFpWkLW1BVLjQMxTv+rqTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0F7mIbZslTotpvzQxELAO/e4JCXtaEtUXdUu+vYoyg=;
+ b=OWcwUrfDk848yBl4fBUNGWb0cyD6ICmuSsCiBj01CsdrR6gooNeWjsEirrzMlmXjiJjX3NRymmrG0OkcMfk0QVFwVpb43fXMY3Ud+QFLsLkbta+V/B3YUmMTYz7vPRGHFPl2jRVh+HCgpAb1soOe5m0BHjSPxejyvV2NJA4ZjbIIM8VVb3ftJpPp1AfWT+axgx78LRnCQe/PVqbcNoNNxVyGZ5XQy6gw0vRWf4KKbyOMUGcP9nua2x7ECIJkbXRGVf434C7shGlBpb2LbelUrYesHtV1P8TWPVb2n3bNUn23pXgxvVL+zOLlgd0bOvYfC4EU4TNY64V9S3+vCGvd4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0F7mIbZslTotpvzQxELAO/e4JCXtaEtUXdUu+vYoyg=;
+ b=N4DXkoXkJ4Y5G7uh6zzkNc4SMLyOTtOoOh6ko48ENUIAgOQ5rdSIuS2x1h2hBMc3S30sxIiQviv3V+/UPg1y8fHJUlFmL9SM+3UHdr/+yAbfAUtkVwSHKRe5R4Xr/D7k1sBkimcqB5KghK695DgP1H4KTWqVWCAHXeUEmMBncPo=
+Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=oss.nxp.com;
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (2603:10a6:803:5a::12)
+ by VI1PR0402MB3919.eurprd04.prod.outlook.com (2603:10a6:803:22::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Fri, 26 Jun
+ 2020 11:26:10 +0000
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e]) by VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e%3]) with mapi id 15.20.3131.021; Fri, 26 Jun 2020
+ 11:26:10 +0000
+From:   Vabhav Sharma <vabhav.sharma@oss.nxp.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     v.sethi@nxp.com, Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: [PATCH v2] tty: serial: fsl_lpuart: minimum baud rate support
+Date:   Fri, 26 Jun 2020 16:50:34 +0530
+Message-Id: <1593170434-13524-1-git-send-email-vabhav.sharma@oss.nxp.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR06CA0220.apcprd06.prod.outlook.com
+ (2603:1096:4:68::28) To VI1PR04MB4800.eurprd04.prod.outlook.com
+ (2603:10a6:803:5a::12)
 MIME-Version: 1.0
-In-Reply-To: <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfSyUcRzf756753nI6XHId3rbbmXrjYq1ZzTRoptq+aeojbryhLzuzkuy
-        SjQkClfhJm8zL5dhl3mrLjs5IW8zMrQJJXIxR9RkuXtY/vt8ft/P5/P9frYfiQm6eNZkYGgE
-        IwkVBwtxY26t5nfXobihRd/D43MO9KeFSR5dMJ/No5+M/8Do7u5qgu6MnyFo5fgAj+5rzMVp
-        Xdp7RGd3qzh0YfwDgh6+X4bTzTNJPPrXhzHkwhdV5FUgUYP8MyFSKh7iolfF90SPaxRIpFPu
-        8sQvGx/3Y4IDoxiJnfNV4wD10ggRPm97ayIjDcUhlU0KMiKBcoDy+iyUgoxJAVWGIHm6EWPJ
-        AoKcF73rRIdgsvQlZ8PSK1sm2EEpgsTB1xyWaBG0ZrcQepU55Qz5A408PbagzsAjdZzBgVE6
-        DHSFzYYonHKEjCQF0mP+mkHWXIvrMZfaC1+etxmCLClvmB9t5rEaM2jLmeDqsRF1AlQNRQY9
-        RlnB0EQ+h8W7oU6ba7gbqCkCNB39a0HkGjkFb/JM2ArmMN1aQ7B4B3TIUrmsvhLB3+Tv6+Y6
-        BKWyVZxVOcFI1x9cH4RR+6Cq0Y59dgWtZgZj801hUGvG3mAKmbVZ6898SE4UsGobqC6pxjfW
-        pjSUY+lIKN/UTL6pjXxTG/n/vQWIq0BWTKQ0xJ+R2ocy0bZScYg0MtTf9npYiBKt/bKO1dbF
-        eqRauaZGFImEJvymjAVfAU8cJY0JUSMgMaEF/2Rnh6+A7yeOuc1Iwq5IIoMZqRptJ7lCK759
-        0ZSPgPIXRzBBDBPOSDamHNLIOg65cCsL7t7oaYem9lEji1SnQa3lMMeuWDOr8TrfM58gc9y5
-        7LNV9q3KY0vJWbuWFOG5oFzvgZ/RfZfczKxFS+61gqKvBxXiO5E3LQLcZ98+uyDnS7a92zPn
-        mreYrmkZE2bn1lUXj3AyV5aPeczVlHgeFXklzD09MNF/MdatO/a0/0chVxogPrIfk0jF/wBc
-        eMSgYQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xu7oNt77GGZy4IWNx/ctzVosFn2aw
-        WvQ/fs1scf78BnaLs01v2C02Pb7GanF51xw2i8+9RxgtZpzfx2SxsKmF3eJ24wo2i8Nv2lkt
-        vp14xOjA67Fm3hpGj52z7rJ7bFrVyeaxeUm9R9+WVYwenzfJBbBF6dkU5ZeWpCpk5BeX2CpF
-        G1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GUc+n6HveCTXsWTib2MDYz71LoY
-        OTkkBEwkLk7+wd7FyMUhJLCUUeLzi2NADgdQQkbi+PoyiBphiT/Xutggal4zSuw/eY8FJCEs
-        YCcx/9ouVhBbRMBbovtQA9ggZoGfzBKf585jBkkICaxhkfjzqR7EZhOwkpjYvooRxOYFap58
-        eBsbiM0ioCrxcNpJdhBbVCBC4vCOWVA1ghInZz4BW8YpYC+xb+cisHpmAXWJP/MuMUPY4hK3
-        nsxngrDlJba/ncM8gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95Pzc
-        TYzAyN127OeWHYxd74IPMQpwMCrx8B6Y+CVOiDWxrLgy9xCjBAezkgiv09nTcUK8KYmVValF
-        +fFFpTmpxYcYTYGem8gsJZqcD0wqeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
-        Uotg+pg4OKUaGIVrvjLt95z1asGc1nQn71ierkOTbD5Uh3G+Y64x+Pdx88+SRYv8HzMvzC5Z
-        K+ekwhJ4sej5Uw3lHDuuwvWPP579lP/vs4jenA1sZdXlatN3iEovXbfk5bmjEr4ljseWWn9m
-        2rZazjRAX0xS6ayHOX/lbrmy40JG7nf0rFoKT698ZLr/NY/nJiWW4oxEQy3mouJEAE/eSVvy
-        AgAA
-X-CMS-MailID: 20200626112240eucas1p137a7bda25922a02faec6ee6f3c5b5c4f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-        <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-        <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
-        <4c3b01af-2337-1eba-4675-6488105144c8@samsung.com>
-        <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
-        <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from uefi-OptiPlex-790.ap.freescale.net (92.120.0.71) by SG2PR06CA0220.apcprd06.prod.outlook.com (2603:1096:4:68::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.23 via Frontend Transport; Fri, 26 Jun 2020 11:26:08 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [92.120.0.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a2ea0ad5-963e-4dcf-11b9-08d819c3ba16
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3919:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3919E3C333B9DD62A0837F22B2930@VI1PR0402MB3919.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0446F0FCE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 64cyEayee3Fnnykd/Ammn6H0f27sKLusTewBtnjDgVoZVEkuT5jeoL0TYkdm1cx+CUJYoCgQkgRe/GvYlesI2xeSgI9Ir4oJYoK4AvygaLIRzfGkZWljpT+wrZKx0LVzkC++R7gPI6W+TUXoFysULJi4WnhoF/4qrveKY9AbcVfKMUnE0O+bEBHeszlvXe4VDnygkwqhRtAqgynUfNNr5JlURQjak6XuU1zycHPRJy/5mdi6ijgzz8PCPYVCMi0x1mSYDynGOnU8hd6ZbElss/+DIiCh1xRWkwxH4MaM7fvrNW4u1bqkpO7IAQGS0WZc
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4800.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(4744005)(83380400001)(316002)(5660300002)(66476007)(16526019)(186003)(86362001)(26005)(66946007)(6512007)(66556008)(2906002)(8676002)(6486002)(478600001)(6506007)(8936002)(52116002)(956004)(44832011)(2616005)(4326008)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: upLKRB/a3Sl9t1Ue/M+ml/K2q7RuGXRx1mxbDP4t6G4ldVmZBbTH+2eU5asaU5qml+Hg07JzSBvD1CNSyU3+Pqa4OpshW4y/f1B3zJqCENNAkpB0ez2hSd1NseYwgd7XHU8mNFN7lZPMRw9+uD86Ei73Hp8DQo0a6+RKxILfS1lOvIaA0e43PLTaB5o7HHQ1ZDldgMHAQ2VBNJIuN14cT7Od1JGQ9V9VRpHO0xqBevsm+hj7tGi9646uZvNwIXTDqhRKhhlv2jmyldu8h5+gNnnYnccy5tFeiSG6wQKEADoDb+lOEQYibSm+dAsxksUPIgX9TLaOS2eJqU1LrweTJ2Cps5yhJ9+GQ4RhiIswfYxiHsNVDXc5ZnJR5yqdqCLJmZTrsKRTNHyH5Tbo7TUhTEjtrzTBVBVyb3OlfaGSQU3wZte0N+JfIspdM0Rhxixp4EQUOSIbWvrITqetg+QqkrcuKFiMV2KdcCzJ68R2qHA=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2ea0ad5-963e-4dcf-11b9-08d819c3ba16
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4800.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2020 11:26:10.7069
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 66xXmHhZUAI/lvf0KmzDSolS0ajbhDcBPkvpfyLT3lzJ8NCf1EEt3UQRIWWPykrqeVwDuTk2WyEiECj2uXUn8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3919
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
 
-On 6/25/20 2:12 PM, Kamil Konieczny wrote:
-> On 25.06.2020 14:02, Lukasz Luba wrote:
->>
->>
->> On 6/25/20 12:30 PM, Kamil Konieczny wrote:
->>> Hi Lukasz,
->>>
->>> On 25.06.2020 12:02, Lukasz Luba wrote:
->>>> Hi Sylwester,
->>>>
->>>> On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
->>>>> Hi All,
->>>>>
->>>>> On 24.06.2020 12:32, Lukasz Luba wrote:
->>>>>> I had issues with devfreq governor which wasn't called by devfreq
->>>>>> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
->>>>>> for it [1]. If the CPU which scheduled the next work went idle, the
->>>>>> devfreq workqueue will not be kicked and devfreq governor won't check
->>>>>> DMC status and will not decide to decrease the frequency based on low
->>>>>> busy_time.
->>>>>> The same applies for going up with the frequency. They both are
->>>>>> done by the governor but the workqueue must be scheduled periodically.
->>>>>
->>>>> As I have been working on resolving the video mixer IOMMU fault issue
->>>>> described here: https://patchwork.kernel.org/patch/10861757
->>>>> I did some investigation of the devfreq operation, mostly on Odroid U3.
->>>>>
->>>>> My conclusions are similar to what Lukasz says above. I would like to add
->>>>> that broken scheduling of the performance counters read and the devfreq
->>>>> updates seems to have one more serious implication. In each call, which
->>>>> normally should happen periodically with fixed interval we stop the counters,
->>>>> read counter values and start the counters again. But if period between
->>>>> calls becomes long enough to let any of the counters overflow, we will
->>>>> get wrong performance measurement results. My observations are that
->>>>> the workqueue job can be suspended for several seconds and conditions for
->>>>> the counter overflow occur sooner or later, depending among others
->>>>> on the CPUs load.
->>>>> Wrong bus load measurement can lead to setting too low interconnect bus
->>>>> clock frequency and then bad things happen in peripheral devices.
->>>>>
->>>>> I agree the workqueue issue needs to be fixed. I have some WIP code to use
->>>>> the performance counters overflow interrupts instead of SW polling and with
->>>>> that the interconnect bus clock control seems to work much better.
->>>>>
->>>>
->>>> Thank you for sharing your use case and investigation results. I think
->>>> we are reaching a decent number of developers to maybe address this
->>>> issue: 'workqueue issue needs to be fixed'.
->>>> I have been facing this devfreq workqueue issue ~5 times in different
->>>> platforms.
->>>>
->>>> Regarding the 'performance counters overflow interrupts' there is one
->>>> thing worth to keep in mind: variable utilization and frequency.
->>>> For example, in order to make a conclusion in algorithm deciding that
->>>> the device should increase or decrease the frequency, we fix the period
->>>> of observation, i.e. to 500ms. That can cause the long delay if the
->>>> utilization of the device suddenly drops. For example we set an
->>>> overflow threshold to value i.e. 1000 and we know that at 1000MHz
->>>> and full utilization (100%) the counter will reach that threshold
->>>> after 500ms (which we want, because we don't want too many interrupts
->>>> per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
->>>> to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
->>>> threshold after 50*500ms = 25s. It is impossible just for the counters
->>>> to predict next utilization and adjust the threshold. [...]
->>>
->>> irq triggers for underflow and overflow, so driver can adjust freq
->>>
->>
->> Probably possible on some platforms, depends on how many PMU registers
->> are available, what information can be can assign to them and type of
->> interrupt. A lot of hassle and still - platform and device specific.
->> Also, drivers should not adjust the freq, governors (different types
->> of them with different settings that they can handle) should do it.
->>
->> What the framework can do is to take this responsibility and provide
->> generic way to monitor the devices (or stop if they are suspended).
->> That should work nicely with the governors, which try to predict the
->> next best frequency. From my experience the more fluctuating intervals
->> the governors are called, the more odd decisions they make.
->> That's why I think having a predictable interval i.e. 100ms is something
->> desirable. Tuning the governors is easier in this case, statistics
->> are easier to trace and interpret, solution is not to platform specific,
->> etc.
->>
->> Kamil do you have plans to refresh and push your next version of the
->> workqueue solution?
-> 
-> I do not, as Bartek takes over my work,
-> +CC Bartek
+The formula for the baud rate is
+baud rate = "baud clock / ((OSR+1) × SBR)
 
-Hi Lukasz,
+Algorithm used in function lpuart32_serial_setbrg() only changes
+the SBR. Even with maxmum value put in, OSR stays at 0x7 and the
+lowest baud rate would be ~ 2600 bps
 
-As you remember in January Chanwoo has proposed another idea (to allow
-selecting workqueue type by devfreq device driver):
+Update the algorithm to allow driver operation at 1200,2400 or 600 bps
 
-"I'm developing the RFC patch and then I'll send it as soon as possible."
-(https://lore.kernel.org/linux-pm/6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com/)
+Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+---
+V2:
+ - Incorporated review comment from Greg
+---
+ drivers/tty/serial/fsl_lpuart.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-"After posting my suggestion, we can discuss it"
-(https://lore.kernel.org/linux-pm/f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com/)
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 90298c4..7ca6422 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1925,6 +1925,9 @@ static void __lpuart32_serial_setbrg(struct uart_port *port,
+ 			tmp_sbr++;
+ 		}
+ 
++		if (tmp_sbr > UARTBAUD_SBR_MASK)
++			continue;
++
+ 		if (tmp_diff <= baud_diff) {
+ 			baud_diff = tmp_diff;
+ 			osr = tmp_osr;
+-- 
+2.7.4
 
-so we have been waiting on the patch to be posted..
-
-Similarly we have been waiting on (any) feedback for exynos-bus/nocp
-fixes for Exynos5422 support (which have been posted by Kamil also in
-January):
-
-https://lore.kernel.org/linux-pm/8f82d8d5-927b-afb4-272f-45c16b5a23b9@samsung.com/
-
-Considering the above and how hard it has been to push the changes
-through review/merge process last year we are near giving up when it
-comes to upstream devfreq contributions. Sylwester is still working on
-exynos-bus & interconnect integration (continuation of Artur Swigon's
-work from last year) & related issues (IRQ support for PPMU)  but
-I'm seriously considering putting it all on-hold..
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
