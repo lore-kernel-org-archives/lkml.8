@@ -2,81 +2,394 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF20C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02057C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E81C420768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgSqKNJD"
+	by mail.kernel.org (Postfix) with ESMTP id CE25120768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgFZHKY (ORCPT
+        id S1728253AbgFZHK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgFZHKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:10:24 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2409C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:10:23 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id cy7so6108700edb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=qpZpuiya5CROhmtNObER2gnYx/Sa3Svm9oWXZ7DP6Qk=;
-        b=jgSqKNJDsf8B1b0WX1oxZ+L2v9c22xYY2gJ1DEQDwj1e438xUkK5yPpdXYHD/XEuKh
-         7r3WHewZl3ENYtsXVa1ZSShy6ifTZCnNDmNCE+KcY2gDtQs+uSGVEkK8V257JfE5+xzK
-         PXWb0ktWxx5S5hSrXj4VwZKq8csTAkQ4PpN0rt5cQrfX/caY4xVuOFcqydQDX+x5nJ3i
-         WKbpaX/akV9t52JCGpPn9AP/9rI9LTi7Y8CM4rOsWX+pgR4PJPaigMTCigeqBRQNSmkq
-         KjiI6S6HFGXUYJfallyX3JXAKfbnfvvO6ygMOROsFuFKva8uYJGjv6sufx7wVejnrDQD
-         tV0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=qpZpuiya5CROhmtNObER2gnYx/Sa3Svm9oWXZ7DP6Qk=;
-        b=I/HngMK6GdHpeLjr5zF5wV/kIpLHZ+ucA2t33c39EgMoXgIXLMygAgMUx9NiTsejXa
-         jmzYbaYZSs9HMCc7HUYU7ezdJbzkp14BwaHR4e8tM1mCI95buIRwl0h2YoNIgJfJF+eA
-         JrbKzpRuNCUud5qGEs8rsgho5c//lSn2+pAIheYMB4Xj7b/KgjpxE8qv03s4mj28ycHe
-         0kF8MiRcCr2MJd4+IA/YaxTyz+v1RfG3crNQ15StKd+Vi/eLQFnnjx9FNH4DDdil0ZqE
-         oXa0Wr144LMQk68hKq/yBEYd64X9wkazmO+xcepPVCFW9ZueSxXdUe5KhQPV5SnUQyQ7
-         kPUQ==
-X-Gm-Message-State: AOAM533xUiPlmM6my5A9tTd++goQb9PdDBq0XyLimXZpR60gtvljRj+W
-        MKyHlHVhqBsFe3qAe+YIt36Ya0bpCBMPCSE2WVHaHW0gbLah
-X-Google-Smtp-Source: ABdhPJzaENxoEuSgSLC1vX/6lIib4fLfF3GFQu1g6qti9Z5Q79ZuyXMJGBviyhwtp5ej5Wbi1Flv9TL3ks8LNMEiO4c=
-X-Received: by 2002:aa7:d7d0:: with SMTP id e16mr1357037eds.10.1593155422168;
- Fri, 26 Jun 2020 00:10:22 -0700 (PDT)
+        Fri, 26 Jun 2020 03:10:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6828 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728145AbgFZHK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 03:10:58 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C3743B90A9A25EF6118C;
+        Fri, 26 Jun 2020 15:10:54 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.200.84) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 26 Jun 2020 15:10:43 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH v3] mm/zswap: move to use crypto_acomp API for hardware acceleration
+Date:   Fri, 26 Jun 2020 19:09:03 +1200
+Message-ID: <20200626070903.27988-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-From:   Mahmood Naderan <mahmood.nt@gmail.com>
-Date:   Fri, 26 Jun 2020 11:40:10 +0430
-Message-ID: <CADa2P2W=tiDrZ1Uj2zgs1npywHtvQiv_1KFzB-EbN5gG4tCHpg@mail.gmail.com>
-Subject: Question regarding brstack
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.200.84]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-I used "brstack" in the perf command and see the following entries
+right now, all new ZIP drivers are using crypto_acomp APIs rather than
+legacy crypto_comp APIs. But zswap.c is still using the old APIs. That
+means zswap won't be able to use any new zip drivers in kernel.
 
-0xffffffffb220bda7/0xffffffffb2209890/P/-/-/0
-0x40053a/0x400530/P/-/-/0
+This patch moves to use cryto_acomp APIs to fix the problem. On the
+other hand, tradiontal compressors like lz4,lzo etc have been wrapped
+into acomp via scomp backend. So platforms without async compressors
+can fallback to use acomp via scomp backend.
 
-The first and seconds are said to be the branch instruction
-and target addresses.
+Cc: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
+Cc: Seth Jennings <sjenning@redhat.com>
+Cc: Dan Streetman <ddstreet@ieee.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>
+Cc: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v3: fix resource leak in error handle path;
+ remove redundant assignment according to Colin King, thanks!
 
-However, it is not written in the manual if that is a virtual or
-physical address?
-Any explanation for this?
+ mm/zswap.c | 160 +++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 117 insertions(+), 43 deletions(-)
 
-Regards,
-Mahmood
+diff --git a/mm/zswap.c b/mm/zswap.c
+index fbb782924ccc..d170ef06c693 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -24,8 +24,10 @@
+ #include <linux/rbtree.h>
+ #include <linux/swap.h>
+ #include <linux/crypto.h>
++#include <linux/scatterlist.h>
+ #include <linux/mempool.h>
+ #include <linux/zpool.h>
++#include <crypto/acompress.h>
+ 
+ #include <linux/mm_types.h>
+ #include <linux/page-flags.h>
+@@ -127,9 +129,17 @@ module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
+ * data structures
+ **********************************/
+ 
++struct crypto_acomp_ctx {
++	struct crypto_acomp *acomp;
++	struct acomp_req *req;
++	struct crypto_wait wait;
++	u8 *dstmem;
++	struct mutex mutex;
++};
++
+ struct zswap_pool {
+ 	struct zpool *zpool;
+-	struct crypto_comp * __percpu *tfm;
++	struct crypto_acomp_ctx * __percpu *acomp_ctx;
+ 	struct kref kref;
+ 	struct list_head list;
+ 	struct work_struct release_work;
+@@ -415,30 +425,68 @@ static int zswap_dstmem_dead(unsigned int cpu)
+ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+ {
+ 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_comp *tfm;
++	struct crypto_acomp *acomp;
++	struct acomp_req *req;
++	struct crypto_acomp_ctx *acomp_ctx;
++	int ret;
+ 
+-	if (WARN_ON(*per_cpu_ptr(pool->tfm, cpu)))
++	if (WARN_ON(*per_cpu_ptr(pool->acomp_ctx, cpu)))
+ 		return 0;
+ 
+-	tfm = crypto_alloc_comp(pool->tfm_name, 0, 0);
+-	if (IS_ERR_OR_NULL(tfm)) {
+-		pr_err("could not alloc crypto comp %s : %ld\n",
+-		       pool->tfm_name, PTR_ERR(tfm));
++	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
++	if (!acomp_ctx)
+ 		return -ENOMEM;
++
++	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
++	if (IS_ERR(acomp)) {
++		pr_err("could not alloc crypto acomp %s : %ld\n",
++				pool->tfm_name, PTR_ERR(acomp));
++		ret = PTR_ERR(acomp);
++		goto free_ctx;
++	}
++	acomp_ctx->acomp = acomp;
++
++	req = acomp_request_alloc(acomp_ctx->acomp);
++	if (!req) {
++		pr_err("could not alloc crypto acomp_request %s\n",
++		       pool->tfm_name);
++		ret = -ENOMEM;
++		goto free_acomp;
+ 	}
+-	*per_cpu_ptr(pool->tfm, cpu) = tfm;
++	acomp_ctx->req = req;
++
++	mutex_init(&acomp_ctx->mutex);
++	crypto_init_wait(&acomp_ctx->wait);
++	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				   crypto_req_done, &acomp_ctx->wait);
++
++	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
++	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
++
+ 	return 0;
++
++free_acomp:
++	crypto_free_acomp(acomp_ctx->acomp);
++free_ctx:
++	kfree(acomp_ctx);
++	return ret;
+ }
+ 
+ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
+ {
+ 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_comp *tfm;
++	struct crypto_acomp_ctx *acomp_ctx;
++
++	acomp_ctx = *per_cpu_ptr(pool->acomp_ctx, cpu);
++	if (!IS_ERR_OR_NULL(acomp_ctx)) {
++		if (!IS_ERR_OR_NULL(acomp_ctx->req))
++			acomp_request_free(acomp_ctx->req);
++		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
++			crypto_free_acomp(acomp_ctx->acomp);
++		kfree(acomp_ctx);
++	}
++	*per_cpu_ptr(pool->acomp_ctx, cpu) = NULL;
+ 
+-	tfm = *per_cpu_ptr(pool->tfm, cpu);
+-	if (!IS_ERR_OR_NULL(tfm))
+-		crypto_free_comp(tfm);
+-	*per_cpu_ptr(pool->tfm, cpu) = NULL;
+ 	return 0;
+ }
+ 
+@@ -561,8 +609,9 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ 	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
+ 
+ 	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
+-	pool->tfm = alloc_percpu(struct crypto_comp *);
+-	if (!pool->tfm) {
++
++	pool->acomp_ctx = alloc_percpu(struct crypto_acomp_ctx *);
++	if (!pool->acomp_ctx) {
+ 		pr_err("percpu alloc failed\n");
+ 		goto error;
+ 	}
+@@ -585,7 +634,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ 	return pool;
+ 
+ error:
+-	free_percpu(pool->tfm);
++	free_percpu(pool->acomp_ctx);
+ 	if (pool->zpool)
+ 		zpool_destroy_pool(pool->zpool);
+ 	kfree(pool);
+@@ -596,14 +645,14 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
+ {
+ 	bool has_comp, has_zpool;
+ 
+-	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
++	has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
+ 	if (!has_comp && strcmp(zswap_compressor,
+ 				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
+ 		pr_err("compressor %s not available, using default %s\n",
+ 		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
+ 		param_free_charp(&zswap_compressor);
+ 		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
+-		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
++		has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
+ 	}
+ 	if (!has_comp) {
+ 		pr_err("default compressor %s not available\n",
+@@ -639,7 +688,7 @@ static void zswap_pool_destroy(struct zswap_pool *pool)
+ 	zswap_pool_debug("destroying", pool);
+ 
+ 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
+-	free_percpu(pool->tfm);
++	free_percpu(pool->acomp_ctx);
+ 	zpool_destroy_pool(pool->zpool);
+ 	kfree(pool);
+ }
+@@ -723,7 +772,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
+ 		}
+ 		type = s;
+ 	} else if (!compressor) {
+-		if (!crypto_has_comp(s, 0, 0)) {
++		if (!crypto_has_acomp(s, 0, 0)) {
+ 			pr_err("compressor %s not available\n", s);
+ 			return -ENOENT;
+ 		}
+@@ -774,7 +823,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
+ 		 * failed, maybe both compressor and zpool params were bad.
+ 		 * Allow changing this param, so pool creation will succeed
+ 		 * when the other param is changed. We already verified this
+-		 * param is ok in the zpool_has_pool() or crypto_has_comp()
++		 * param is ok in the zpool_has_pool() or crypto_has_acomp()
+ 		 * checks above.
+ 		 */
+ 		ret = param_set_charp(s, kp);
+@@ -876,7 +925,9 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 	pgoff_t offset;
+ 	struct zswap_entry *entry;
+ 	struct page *page;
+-	struct crypto_comp *tfm;
++	struct scatterlist input, output;
++	struct crypto_acomp_ctx *acomp_ctx;
++
+ 	u8 *src, *dst;
+ 	unsigned int dlen;
+ 	int ret;
+@@ -916,14 +967,21 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 
+ 	case ZSWAP_SWAPCACHE_NEW: /* page is locked */
+ 		/* decompress */
++		acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
++
+ 		dlen = PAGE_SIZE;
+ 		src = (u8 *)zhdr + sizeof(struct zswap_header);
+-		dst = kmap_atomic(page);
+-		tfm = *get_cpu_ptr(entry->pool->tfm);
+-		ret = crypto_comp_decompress(tfm, src, entry->length,
+-					     dst, &dlen);
+-		put_cpu_ptr(entry->pool->tfm);
+-		kunmap_atomic(dst);
++		dst = kmap(page);
++
++		mutex_lock(&acomp_ctx->mutex);
++		sg_init_one(&input, src, entry->length);
++		sg_init_one(&output, dst, dlen);
++		acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
++		ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
++		dlen = acomp_ctx->req->dlen;
++		mutex_unlock(&acomp_ctx->mutex);
++
++		kunmap(page);
+ 		BUG_ON(ret);
+ 		BUG_ON(dlen != PAGE_SIZE);
+ 
+@@ -1004,7 +1062,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ {
+ 	struct zswap_tree *tree = zswap_trees[type];
+ 	struct zswap_entry *entry, *dupentry;
+-	struct crypto_comp *tfm;
++	struct scatterlist input, output;
++	struct crypto_acomp_ctx *acomp_ctx;
+ 	int ret;
+ 	unsigned int hlen, dlen = PAGE_SIZE;
+ 	unsigned long handle, value;
+@@ -1074,12 +1133,20 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	}
+ 
+ 	/* compress */
+-	dst = get_cpu_var(zswap_dstmem);
+-	tfm = *get_cpu_ptr(entry->pool->tfm);
+-	src = kmap_atomic(page);
+-	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
+-	kunmap_atomic(src);
+-	put_cpu_ptr(entry->pool->tfm);
++	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
++
++	mutex_lock(&acomp_ctx->mutex);
++
++	src = kmap(page);
++	dst = acomp_ctx->dstmem;
++	sg_init_one(&input, src, PAGE_SIZE);
++	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
++	sg_init_one(&output, dst, PAGE_SIZE * 2);
++	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
++	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
++	dlen = acomp_ctx->req->dlen;
++	kunmap(page);
++
+ 	if (ret) {
+ 		ret = -EINVAL;
+ 		goto put_dstmem;
+@@ -1103,7 +1170,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	memcpy(buf, &zhdr, hlen);
+ 	memcpy(buf + hlen, dst, dlen);
+ 	zpool_unmap_handle(entry->pool->zpool, handle);
+-	put_cpu_var(zswap_dstmem);
++	mutex_unlock(&acomp_ctx->mutex);
+ 
+ 	/* populate entry */
+ 	entry->offset = offset;
+@@ -1131,7 +1198,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	return 0;
+ 
+ put_dstmem:
+-	put_cpu_var(zswap_dstmem);
++	mutex_unlock(&acomp_ctx->mutex);
+ 	zswap_pool_put(entry->pool);
+ freepage:
+ 	zswap_entry_cache_free(entry);
+@@ -1148,7 +1215,8 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
+ {
+ 	struct zswap_tree *tree = zswap_trees[type];
+ 	struct zswap_entry *entry;
+-	struct crypto_comp *tfm;
++	struct scatterlist input, output;
++	struct crypto_acomp_ctx *acomp_ctx;
+ 	u8 *src, *dst;
+ 	unsigned int dlen;
+ 	int ret;
+@@ -1175,11 +1243,17 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
+ 	src = zpool_map_handle(entry->pool->zpool, entry->handle, ZPOOL_MM_RO);
+ 	if (zpool_evictable(entry->pool->zpool))
+ 		src += sizeof(struct zswap_header);
+-	dst = kmap_atomic(page);
+-	tfm = *get_cpu_ptr(entry->pool->tfm);
+-	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
+-	put_cpu_ptr(entry->pool->tfm);
+-	kunmap_atomic(dst);
++	dst = kmap(page);
++
++	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
++	mutex_lock(&acomp_ctx->mutex);
++	sg_init_one(&input, src, entry->length);
++	sg_init_one(&output, dst, dlen);
++	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
++	ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
++	mutex_unlock(&acomp_ctx->mutex);
++
++	kunmap(page);
+ 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
+ 	BUG_ON(ret);
+ 
+-- 
+2.27.0
+
+
