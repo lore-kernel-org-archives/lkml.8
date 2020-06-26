@@ -2,114 +2,315 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D2C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B90BC433E0
 	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2379920773
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCA920706
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 15:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="itVozhVZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s34jC1RX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgFZPoF (ORCPT
+        id S1729900AbgFZPnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:44:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12431 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgFZPoE (ORCPT
+        Fri, 26 Jun 2020 11:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbgFZPnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 11:44:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef617950000>; Fri, 26 Jun 2020 08:43:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 26 Jun 2020 08:44:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 08:44:04 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
- 2020 15:44:03 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 26 Jun 2020 15:44:03 +0000
-Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ef617bf0001>; Fri, 26 Jun 2020 08:44:03 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
-Subject: [TEGRA194_CPUFREQ PATCH v4 0/4] Add cpufreq driver for Tegra194
-Date:   Fri, 26 Jun 2020 21:13:52 +0530
-Message-ID: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 26 Jun 2020 11:43:50 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0FAC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 08:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=I9uowJrxVb6GhLBF/C43HzVtSBG25Vcjc2ER4uZdVfw=; b=s34jC1RXKo2o9D5TX36keEXiLT
+        ubdiMGZ9FinvTpxl4gzVXsXiAX9pltcU+rFx1yYKUSVSIZiYdoXGjoicO/TT6mdOJ+XnucLTTKOPZ
+        Od7v1aZ0i+NO4YjsL2wRX7ERHCC3rt+hMhLzt2m+G4oE2Gw5UxHzadIelYl6UaxkCQHLxLKM/WcAU
+        +adb8hp6xlZjqYRVQXeua5AsTeT0NsIzvbpNbbayqQi1TjxIXjD6uk9ECoi2o1e4Djklctu/P9OTt
+        CfHTatahsWXYULGJ30mfX75EDQp5ipWS4TSkj2Gl2Ts7thJs/MFtCZPPfwECz5vdVFGXZFBbqYpUs
+        mzAdajhQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joqVZ-00022p-Ix; Fri, 26 Jun 2020 15:43:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1BC5730280D;
+        Fri, 26 Jun 2020 17:43:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0D6FD2B0AEC81; Fri, 26 Jun 2020 17:43:13 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 17:43:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Nick Piggin <npiggin@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>, Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
+ wakeup?
+Message-ID: <20200626154313.GI4817@hirez.programming.kicks-ass.net>
+References: <20200624161142.GA12184@redhat.com>
+ <20200624162042.GA12238@redhat.com>
+ <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593186197; bh=UM5Bbd0/GCwYfLhn/DGNjOUA+9lJK2yysJtZ6vuKT3w=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=itVozhVZE0HqUPYrUE3m9zs4S5isSIaSDKgdblwqwDxbYUjQqWeR6Ocizr8a6ENYD
-         eAe5ebcN6juo8UFkShxVOomHAq8+j8AvyJg37XPJYIvwfZxZX2bRtH/pPXs93dfD1+
-         L+PHJ5dO870vMQo5GnDLv+51Sx5UVMfYHrXmC66xGPxcr93hTv24tyEyPNtaF36x2N
-         olV0DzDAA1aLQ8Sl55fiQaRH7K6s/VX7s+5GB2mT29KAWgodPLNcnO37j28sQ0O7tI
-         XPEcoSmZsP37G8ww2zMsBLF+23B6GcmhrT0XVJDFm7cZtX1ESYDfKmq0wm20//s4nP
-         qZol7eI/JzlaA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch series adds cpufreq driver for Tegra194 SOC.
-Incorporated the feedback on previous version patchset.
-Please consider this patch series for merging in 5.9.
+On Wed, Jun 24, 2020 at 09:36:54AM -0700, Linus Torvalds wrote:
+> But I think the bug still exists.
+> 
+> So the requirement is:
+> 
+>  - bit_is_set returns false so we don't call io_schedule: we're still
+> TASK_KILLABLE
+> 
+>  - somebody else gets the lock, so the test_and_set_bit_lock() fails
+> 
+>  - that somebody else releases the lock almost immediately, and wakes
+> us up because we're still on the wait-queue (and still TASK_KILLABLE,
+> not TASK_RUNNING)
+> 
+>  - another party sends us a SIGKILL
+> 
+>  - we see the signal_pending_state() and exit
+> 
+>  - we've now been woken up, but didn't wake anybody else up, and the
+> lock is released but there may be waiters who came in at the same time
+> and never saw the wakeup.
+> 
+> I think this is basically impossible to hit in practice, but it does
+> look like a real bug.
+> 
+> Maybe I'm missing something. This code is subtle.
 
-v3[3] -> v4
-- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
-- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
-- Remove flush_workqueue from free_resources[Viresh]
+I ended up with something like the below.. but it is too warm to think
+properly.
 
-v2[2] -> v3
-- Set same policy for all cpus in a cluster[Viresh].
-- Add compatible string for CPU Complex under cpus node[Thierry].
-- Add reference to bpmp node under cpus node[Thierry].
-- Bind cpufreq driver to CPU Complex compatible string[Thierry].
-- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
+I don't particularly like WQ_FLAG_PAGEWAITERS, but I liked open-coding
+all that even less.
 
-v1[1] -> v2:
-- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
-- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
-- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
-- Rename opp_table to freq_table [Viresh].
+---
+ include/linux/wait.h | 16 +++++++++++--
+ kernel/sched/wait.c  | 12 ++++++++++
+ mm/filemap.c         | 68 ++++++++++++++++++----------------------------------
+ 3 files changed, 49 insertions(+), 47 deletions(-)
 
-Sumit Gupta (4):
-  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
-  arm64: tegra: Add t194 ccplex compatible and bpmp property
-  cpufreq: Add Tegra194 cpufreq driver
-  arm64: defconfig: Enable CONFIG_ARM_TEGRA194_CPUFREQ
-
- Documentation/devicetree/bindings/arm/cpus.yaml |   9 +
- arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
- arch/arm64/configs/defconfig                    |   1 +
- drivers/cpufreq/Kconfig.arm                     |   6 +
- drivers/cpufreq/Makefile                        |   1 +
- drivers/cpufreq/tegra194-cpufreq.c              | 396 ++++++++++++++++++++++++
- 6 files changed, 415 insertions(+)
- create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
-
-[1] https://marc.info/?t=157539452300001&r=1&w=2
-[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
-[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
--- 
-2.7.4
-
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index 898c890fc153..760d0a6e10e8 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -11,7 +11,7 @@
+ #include <asm/current.h>
+ #include <uapi/linux/wait.h>
+ 
+-typedef struct wait_queue_entry wait_queue_entry_t;
++struct wait_queue_entry;
+ 
+ typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
+ int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
+@@ -20,7 +20,8 @@ int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int
+ #define WQ_FLAG_EXCLUSIVE	0x01
+ #define WQ_FLAG_WOKEN		0x02
+ #define WQ_FLAG_BOOKMARK	0x04
+-#define WQ_FLAG_CUSTOM		0x08
++#define WQ_FLAG_PAGEWAITERS	0x08
++#define WQ_FLAG_CUSTOM		0x10
+ 
+ /*
+  * A single wait-queue entry structure:
+@@ -31,6 +32,17 @@ struct wait_queue_entry {
+ 	wait_queue_func_t	func;
+ 	struct list_head	entry;
+ };
++typedef struct wait_queue_entry wait_queue_entry_t;
++
++
++/*
++ * See mm/filemap.c:wait_on_page_bit_common()
++ */
++struct wait_page_queue {
++	wait_queue_entry_t	wait;
++	struct page		*page;
++	int			bit_nr;
++};
+ 
+ struct wait_queue_head {
+ 	spinlock_t		lock;
+diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+index ba059fbfc53a..9e814cdf704f 100644
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -299,6 +299,12 @@ long prepare_to_wait_event(struct wait_queue_head *wq_head, struct wait_queue_en
+ 				__add_wait_queue_entry_tail(wq_head, wq_entry);
+ 			else
+ 				__add_wait_queue(wq_head, wq_entry);
++
++			if (wq_entry->flags & WQ_FLAG_PAGEWAITERS) {
++				struct wait_page_queue *wpq =
++					container_of(wq_entry, struct wait_page_queue, wait);
++				SetPageWaiters(wpq->page);
++			}
+ 		}
+ 		set_current_state(state);
+ 	}
+@@ -379,6 +385,12 @@ void finish_wait(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_en
+ 	if (!list_empty_careful(&wq_entry->entry)) {
+ 		spin_lock_irqsave(&wq_head->lock, flags);
+ 		list_del_init(&wq_entry->entry);
++
++		if (wq_entry->flags & WQ_FLAG_PAGEWAITERS) {
++			struct wait_page_queue *wpq =
++				container_of(wq_entry, struct wait_page_queue, wait);
++			ClearPageWaiters(wpq->page);
++		}
+ 		spin_unlock_irqrestore(&wq_head->lock, flags);
+ 	}
+ }
+diff --git a/mm/filemap.c b/mm/filemap.c
+index f0ae9a6308cb..6d03d51f2d92 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -994,12 +994,6 @@ struct wait_page_key {
+ 	int page_match;
+ };
+ 
+-struct wait_page_queue {
+-	struct page *page;
+-	int bit_nr;
+-	wait_queue_entry_t wait;
+-};
+-
+ static int wake_page_function(wait_queue_entry_t *wait, unsigned mode, int sync, void *arg)
+ {
+ 	struct wait_page_key *key = arg;
+@@ -1089,9 +1083,9 @@ static void wake_up_page(struct page *page, int bit)
+ }
+ 
+ /*
+- * A choice of three behaviors for wait_on_page_bit_common():
++ * A choice of three behaviours for wait_on_page_bit_common():
+  */
+-enum behavior {
++enum behaviour {
+ 	EXCLUSIVE,	/* Hold ref to page and take the bit when woken, like
+ 			 * __lock_page() waiting on then setting PG_locked.
+ 			 */
+@@ -1103,12 +1097,12 @@ enum behavior {
+ 			 */
+ };
+ 
+-static inline int wait_on_page_bit_common(wait_queue_head_t *q,
+-	struct page *page, int bit_nr, int state, enum behavior behavior)
++static __always_inline int
++wait_on_page_bit_common(wait_queue_head_t *q, struct page *page, int bit_nr,
++			int state, enum behaviour behaviour)
+ {
+ 	struct wait_page_queue wait_page;
+ 	wait_queue_entry_t *wait = &wait_page.wait;
+-	bool bit_is_set;
+ 	bool thrashing = false;
+ 	bool delayacct = false;
+ 	unsigned long pflags;
+@@ -1125,71 +1119,55 @@ static inline int wait_on_page_bit_common(wait_queue_head_t *q,
+ 	}
+ 
+ 	init_wait(wait);
+-	wait->flags = behavior == EXCLUSIVE ? WQ_FLAG_EXCLUSIVE : 0;
++	wait->flags = WQ_FLAG_PAGEWAITERS |
++		      WQ_FLAG_EXCLUSIVE * (behaviour == EXCLUSIVE);
+ 	wait->func = wake_page_function;
+ 	wait_page.page = page;
+ 	wait_page.bit_nr = bit_nr;
+ 
++	/* ___wait_event() */
+ 	for (;;) {
+-		spin_lock_irq(&q->lock);
+-
+-		if (likely(list_empty(&wait->entry))) {
+-			__add_wait_queue_entry_tail(q, wait);
+-			SetPageWaiters(page);
+-		}
+-
+-		set_current_state(state);
+-
+-		spin_unlock_irq(&q->lock);
+-
+-		bit_is_set = test_bit(bit_nr, &page->flags);
+-		if (behavior == DROP)
+-			put_page(page);
++		int intr = prepare_to_wait_event(q, wait, state);
+ 
+-		if (likely(bit_is_set))
+-			io_schedule();
+-
+-		if (behavior == EXCLUSIVE) {
++		/* @cond */
++		if (behaviour == EXCLUSIVE) {
+ 			if (!test_and_set_bit_lock(bit_nr, &page->flags))
+ 				break;
+-		} else if (behavior == SHARED) {
++		} else if (behaviour == SHARED) {
+ 			if (!test_bit(bit_nr, &page->flags))
+ 				break;
++		} else if (behaviour == DROP) {
++			put_page(page);
+ 		}
+ 
+-		if (signal_pending_state(state, current)) {
+-			ret = -EINTR;
+-			break;
++		if (___wait_is_interruptible(state) && intr) {
++			ret = intr;
++			goto out;
+ 		}
+ 
+-		if (behavior == DROP) {
++		/* @cmd */
++		io_schedule();
++
++		if (behaviour == DROP) {
+ 			/*
+ 			 * We can no longer safely access page->flags:
+ 			 * even if CONFIG_MEMORY_HOTREMOVE is not enabled,
+ 			 * there is a risk of waiting forever on a page reused
+ 			 * for something that keeps it locked indefinitely.
+-			 * But best check for -EINTR above before breaking.
+ 			 */
++			wait->flags &= ~WQ_FLAG_PAGEWAITERS;
+ 			break;
+ 		}
+ 	}
+-
+ 	finish_wait(q, wait);
+ 
++out:
+ 	if (thrashing) {
+ 		if (delayacct)
+ 			delayacct_thrashing_end();
+ 		psi_memstall_leave(&pflags);
+ 	}
+ 
+-	/*
+-	 * A signal could leave PageWaiters set. Clearing it here if
+-	 * !waitqueue_active would be possible (by open-coding finish_wait),
+-	 * but still fail to catch it in the case of wait hash collision. We
+-	 * already can fail to clear wait hash collision cases, so don't
+-	 * bother with signals either.
+-	 */
+-
+ 	return ret;
+ }
+ 
