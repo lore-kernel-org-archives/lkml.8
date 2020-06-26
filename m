@@ -2,180 +2,218 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0011C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB7A20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD97A206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 17:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iegxD2Xb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WtfMOq8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgFZRue (ORCPT
+        id S1726642AbgFZRxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:50:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49190 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgFZRud (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 13:50:33 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200626175031euoutp0141fdc59473e718a95891e6d2b6e449c8~cKVkwKfQ02515025150euoutp01Z
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 17:50:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200626175031euoutp0141fdc59473e718a95891e6d2b6e449c8~cKVkwKfQ02515025150euoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593193831;
-        bh=xSiB+0bcJ6gqaHQQW/JlglYx4ltOHCmHixD8o+J+bJ4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=iegxD2XbOSUIk9KYF3h0+50BUjoFJJnNv1u0uTPkv9+qvTYRlNS0H6al+dIJtw6hV
-         Y3XsskLnRo7WswEy1A9As4n9j7kp5gpXZzTtTRpGGj5Z7qlvAUTA1PPGTp3HNShHeD
-         LNU+DqBOUBvOJKvmCjNmm5qFM4GBHHSTW/2REsR8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200626175030eucas1p20d63917468dd11dad46e3915ba694847~cKVkBDO9X0495504955eucas1p2e;
-        Fri, 26 Jun 2020 17:50:30 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 63.03.06456.66536FE5; Fri, 26
-        Jun 2020 18:50:30 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200626175029eucas1p131a223f6371e01f88c9bc245e10d2699~cKVjmFJlh2464324643eucas1p1-;
-        Fri, 26 Jun 2020 17:50:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200626175029eusmtrp201557a4ce0eeccc9b477761d8452c616~cKVjlbZe_1801118011eusmtrp2q;
-        Fri, 26 Jun 2020 17:50:29 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-11-5ef635662503
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 82.CA.06017.56536FE5; Fri, 26
-        Jun 2020 18:50:29 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200626175028eusmtip1faefa4680763a54bc73309bdb88ce92e~cKVicMkDa2150821508eusmtip1e;
-        Fri, 26 Jun 2020 17:50:28 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <708feba7-6b11-4943-1073-a1b5e54b6283@samsung.com>
-Date:   Fri, 26 Jun 2020 19:50:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCKsWRmVeSWpSXmKPExsWy7djP87pppt/iDE5uF7K4/uU5q0X/49fM
-        FufPb2C3ONv0ht1i0+NrrBaXd81hs/jce4TRYsb5fUwWC5ta2C1uN65gs/h24hGjA7fHmnlr
-        GD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfAFsVlk5Kak1mWWqRvl8CV0XfxN1vBdomK3T95
-        GxhfCHcxcnJICJhI3HjwhL2LkYtDSGAFo8TrJX9YIZwvjBKnb21ig3A+M0osWtbFCtMy/9k3
-        ZojEckaJF60ToVo+Mkoc2nGKHaRKWMBOYv61XWAdIgKqEtcu3GUBKWIWOMgssffLGWaQBJuA
-        oUTv0T5GEJsXqOHOnglgzSxADQfeHQdrFhWIlehbuoANokZQ4uTMJywgNqeAtcTLq2fA4swC
-        4hK3nsxngrDlJba/nQN2noTALXaJO5eusEHc7SIx78cGqB+EJV4d38IOYctI/N8J0gzS0Mwo
-        0bP7NjuEM4FR4v7xBYwQVdYSd879AprEAbRCU2L9Ln2IsKPE22NvmEHCEgJ8EjfeCkIcwScx
-        adt0qDCvREebEES1isTvVdOZIGwpie4n/1kmMCrNQvLaLCTvzELyziyEvQsYWVYxiqeWFuem
-        pxYb5qWW6xUn5haX5qXrJefnbmIEpq3T/45/2sH49VLSIUYBDkYlHt4XD77GCbEmlhVX5h5i
-        lOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQozQHi5I4r/Gil7FCAumJJanZqakFqUUwWSYO
-        TqkGxt27q7RuLWCvnZfCNONM4IRJk/xmHZ09VZFTUHTqgicPSviWLpBXPfc0+JMHW9yul53u
-        y5c1V4k4Rbp7PCkxtqlct6/U1jIrVmZ+kslCvrmrBWzN1rQcebe184K75OnpuvUWBgXxpXvs
-        e0SMq7tvS0sIdB277Deb6YHgPi9be68Z5vHnXSWSlViKMxINtZiLihMBVqHxulcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsVy+t/xu7qppt/iDO6cMLe4/uU5q0X/49fM
-        FufPb2C3ONv0ht1i0+NrrBaXd81hs/jce4TRYsb5fUwWC5ta2C1uN65gs/h24hGjA7fHmnlr
-        GD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfAFqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2Ri
-        qWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX0XfxN1vBdomK3T95GxhfCHcxcnJICJhIzH/2jbmL
-        kYtDSGApo0T7811sXYwcQAkpifktShA1whJ/rnWxQdS8Z5SYdPcfE0hCWMBOYv61XawgtoiA
-        qsS1C3dZQIqYBQ4zSxw7dZgVomMis8SD1ntsIFVsAoYSvUf7GEFsXqDuO3smsIPYLEDdB94d
-        B5skKhAr8e3eFjaIGkGJkzOfsIDYnALWEi+vngGLMwuoS/yZd4kZwhaXuPVkPhOELS+x/e0c
-        5gmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBEbptmM/t+xg
-        7HoXfIhRgINRiYf3xYOvcUKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK
-        9NxEZinR5HxgAskriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cC4
-        j/2K/XZdlhI//SMmPx/suHboVq7gzJJTkoqLfTxf3jzNaH4ryjkpgDn2pfA8Rs41O7dKJGxS
-        8Haw13etVdfvPSzkqK28Te5w8f5PumqTnmoGJBW3hJlcXv87WXmL6b8kt7U3PzkKNPV1VZf6
-        VWfMUnJcP2njr98aYv1/VK0uZevdzvKqvqDEUpyRaKjFXFScCAASuzkY6AIAAA==
-X-CMS-MailID: 20200626175029eucas1p131a223f6371e01f88c9bc245e10d2699
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-        <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-        <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
+        Fri, 26 Jun 2020 13:53:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22938 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbgFZRxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 13:53:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593193980; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=M4/z7Iy1EOU+9x5PhIFOztWGXMqQ//hsEw96CNbfFnc=; b=WtfMOq8hJu61SLid5PwUO3N+HBQyG9Xj0QE55ypYll+nn6Bck8HQ+tQilW/Ceuc+owK4KYft
+ za3LpASj32l0oVSyq7zjRWrJu5YzCNuaURh4CxtI2JRqENB8u76n/oStc0aKqHziY9DKZ9El
+ Yp974hvX/5jqOj0FNAV1HBV5aX0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5ef635fbbfb34e631cdab8f2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 17:52:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F13F3C433C8; Fri, 26 Jun 2020 17:52:58 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8B28C433C6;
+        Fri, 26 Jun 2020 17:52:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8B28C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH] ath10k: Add interrupt summary based CE processing
+Date:   Fri, 26 Jun 2020 23:22:47 +0530
+Message-Id: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+Currently the NAPI processing loops through all
+the copy engines and processes a particular copy
+engine is the copy completion is set for that copy
+engine. The host driver is not supposed to access
+any copy engine register after clearing the interrupt
+status register.
 
-On 25.06.2020 12:02, Lukasz Luba wrote:
-> Regarding the 'performance counters overflow interrupts' there is one
-> thing worth to keep in mind: variable utilization and frequency.
-> For example, in order to make a conclusion in algorithm deciding that
-> the device should increase or decrease the frequency, we fix the period
-> of observation, i.e. to 500ms. That can cause the long delay if the
-> utilization of the device suddenly drops. For example we set an
-> overflow threshold to value i.e. 1000 and we know that at 1000MHz
-> and full utilization (100%) the counter will reach that threshold
-> after 500ms (which we want, because we don't want too many interrupts
-> per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
-> to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
-> threshold after 50*500ms = 25s. It is impossible just for the counters
-> to predict next utilization and adjust the threshold.
+This might result in kernel crash like the one below
+[ 1159.220143] Call trace:
+[ 1159.220170]  ath10k_snoc_read32+0x20/0x40 [ath10k_snoc]
+[ 1159.220193]  ath10k_ce_per_engine_service_any+0x78/0x130 [ath10k_core]
+[ 1159.220203]  ath10k_snoc_napi_poll+0x38/0x8c [ath10k_snoc]
+[ 1159.220270]  net_rx_action+0x100/0x3b0
+[ 1159.220312]  __do_softirq+0x164/0x30c
+[ 1159.220345]  run_ksoftirqd+0x2c/0x64
+[ 1159.220380]  smpboot_thread_fn+0x1b0/0x288
+[ 1159.220405]  kthread+0x11c/0x12c
+[ 1159.220423]  ret_from_fork+0x10/0x18
 
-Agreed, that's in case when we use just the performance counter (PMCNT)
-overflow interrupts. In my experiments I used the (total) cycle counter
-(CCNT) overflow interrupts. As that counter is clocked with fixed rate
-between devfreq updates it can be used as a timer by pre-loading it with 
-initial value depending on current bus frequency. But we could as well 
-use some reliable system timer mechanism to generate periodic events. 
-I was hoping to use the cycle counter to generate low frequency monitor 
-events and the actual performance counters overflow interrupts to detect 
-any sudden changes of utilization. However, it seems it cannot be done 
-with as simple performance counters HW architecture as on Exynos4412.
-It looks like on Exynos5422 we have all what is needed, there is more 
-flexibility in selecting the counter source signal, e.g. each counter
-can be a clock cycle counter or can count various bus events related to 
-actual utilization. Moreover, we could configure the counter gating period 
-and alarm interrupts are available for when the counter value drops below 
-configured MIN threshold or exceeds configured MAX value.
+To avoid such a scenario, we generate an interrupt
+summary by reading the copy completion for all the
+copy engine before actually processing any of them.
+This will avoid reading the interrupt status register
+for any CE after the interrupt status is cleared.
 
-So it should be possible to configure the HW to generate the utilization 
-monitoring events without excessive continuous CPU intervention.
-But I'm rather not going to work on the Exynos5422 SoC support at the moment.
+Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
 
-> To address that, we still need to have another mechanism (like watchdog)
-> which will be triggered just to check if the threshold needs adjustment.
-> This mechanism can be a local timer in the driver or a framework
-> timer running kind of 'for loop' on all this type of devices (like
-> the scheduled workqueue). In both cases in the system there will be
-> interrupts, timers (even at workqueues) and scheduling.
-> The approach to force developers to implement their local watchdog
-> timers (or workqueues) in drivers is IMHO wrong and that's why we have
-> frameworks.
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+ drivers/net/wireless/ath/ath10k/ce.c | 63 ++++++++++++++++++++++--------------
+ drivers/net/wireless/ath/ath10k/ce.h |  5 +--
+ 2 files changed, 42 insertions(+), 26 deletions(-)
 
-Yes, it should be also possible in the framework to use the counter alarm
-events where the hardware is advanced enough, in order to avoid excessive 
-SW polling.
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index ffdd4b9..1e16f26 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -481,15 +481,38 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+ }
+ 
+-static inline bool ath10k_ce_engine_int_status_check(struct ath10k *ar,
+-						     u32 ce_ctrl_addr,
+-						     unsigned int mask)
++static bool ath10k_ce_engine_int_status_check(struct ath10k *ar, u32 ce_ctrl_addr,
++					      unsigned int mask)
+ {
+ 	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 
+ 	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
+ }
+ 
++u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar)
++{
++	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
++	struct ath10k_ce_pipe *ce_state;
++	struct ath10k_ce *ce;
++	u32 irq_summary = 0;
++	u32 ctrl_addr;
++	u32 ce_id;
++
++	ce = ath10k_ce_priv(ar);
++
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
++		ce_state = &ce->ce_states[ce_id];
++		ctrl_addr = ce_state->ctrl_addr;
++		if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
++						      wm_regs->cc_mask)) {
++			irq_summary |= BIT(ce_id);
++		}
++	}
++
++	return irq_summary;
++}
++EXPORT_SYMBOL(ath10k_ce_gen_interrupt_summary);
++
+ /*
+  * Guts of ath10k_ce_send.
+  * The caller takes responsibility for any needed locking.
+@@ -1308,32 +1331,24 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
+ 	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 	u32 ctrl_addr = ce_state->ctrl_addr;
+ 
+-	spin_lock_bh(&ce->ce_lock);
+-
+-	if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
+-					      wm_regs->cc_mask)) {
+-		/* Clear before handling */
+-		ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
+-						  wm_regs->cc_mask);
+-
+-		spin_unlock_bh(&ce->ce_lock);
+-
+-		if (ce_state->recv_cb)
+-			ce_state->recv_cb(ce_state);
+-
+-		if (ce_state->send_cb)
+-			ce_state->send_cb(ce_state);
+-
+-		spin_lock_bh(&ce->ce_lock);
+-	}
+-
+ 	/*
++	 * Clear before handling
++	 *
+ 	 * Misc CE interrupts are not being handled, but still need
+ 	 * to be cleared.
++	 *
++	 * NOTE: When the last copy engine interrupt is cleared the
++	 * hardware will go to sleep.  Once this happens any access to
++	 * the CE registers can cause a hardware fault.
+ 	 */
+-	ath10k_ce_engine_int_status_clear(ar, ctrl_addr, wm_regs->wm_mask);
++	ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
++					  wm_regs->cc_mask | wm_regs->wm_mask);
+ 
+-	spin_unlock_bh(&ce->ce_lock);
++	if (ce_state->recv_cb)
++		ce_state->recv_cb(ce_state);
++
++	if (ce_state->send_cb)
++		ce_state->send_cb(ce_state);
+ }
+ EXPORT_SYMBOL(ath10k_ce_per_engine_service);
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index 75df79d..a440aaf 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -259,6 +259,8 @@ int ath10k_ce_disable_interrupts(struct ath10k *ar);
+ void ath10k_ce_enable_interrupts(struct ath10k *ar);
+ void ath10k_ce_dump_registers(struct ath10k *ar,
+ 			      struct ath10k_fw_crash_data *crash_data);
++
++u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar);
+ void ath10k_ce_alloc_rri(struct ath10k *ar);
+ void ath10k_ce_free_rri(struct ath10k *ar);
+ 
+@@ -369,7 +371,6 @@ static inline u32 ath10k_ce_base_address(struct ath10k *ar, unsigned int ce_id)
+ 	(((x) & CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_MASK) >> \
+ 		CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_LSB)
+ #define CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS			0x0000
+-#define CE_INTERRUPT_SUMMARY		(GENMASK(CE_COUNT_MAX - 1, 0))
+ 
+ static inline u32 ath10k_ce_interrupt_summary(struct ath10k *ar)
+ {
+@@ -380,7 +381,7 @@ static inline u32 ath10k_ce_interrupt_summary(struct ath10k *ar)
+ 			ce->bus_ops->read32((ar), CE_WRAPPER_BASE_ADDRESS +
+ 			CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS));
+ 	else
+-		return CE_INTERRUPT_SUMMARY;
++		return ath10k_ce_gen_interrupt_summary(ar);
+ }
+ 
+ /* Host software's Copy Engine configuration. */
+-- 
+2.7.4
 
---
-Regards,
-Sylwester
