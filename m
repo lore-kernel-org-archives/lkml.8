@@ -2,99 +2,123 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95939C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95A120CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593144758;
-	bh=mH3fgegvAMw88KIXqT9GoWN67oTIoBSRBIWsIiPCOXI=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=WMbbZoR2rZq7USxMjDvrtKZQM8jECI59UtG1z3eIWN7wnZqz/RPPpDjLje5wGBFvq
-	 SblBqgz5/WTTBzwlG9jzP/RH1TjpmXbFqBEDLpB9soOpP/p/VMMjxbFoQ75cYBc1D0
-	 YXz6y0K5p5IB3qVPpqXJvcITT+qDY0Hnp61JhEus=
+	by mail.kernel.org (Postfix) with ESMTP id 6BFA320775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:15:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xl8bCjfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgFZEMd (ORCPT
+        id S1726589AbgFZEPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgFZEMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:12:33 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEF2920767;
-        Fri, 26 Jun 2020 04:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593144753;
-        bh=mH3fgegvAMw88KIXqT9GoWN67oTIoBSRBIWsIiPCOXI=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=oRA1sQ2M/IlPQMQjhu7uqq1gDrDoXQ/ZOv0I3w+Rk2Mq7zcoBn/rbU2wyrm4Gd/vD
-         XZew+OupN+c8tZd0fC1u5KZMtKP1KCDCooey6WLgIOladrhtdBUW1hmwzrz1hkIR4i
-         qr8xnxZinLvIPxpHcbbtKWu+4+86cYOzLqZ0mn7Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D342B3523611; Thu, 25 Jun 2020 21:12:32 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 21:12:32 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org, tglx@linutronix.de
-Cc:     peterz@infradead.org, x86@kernel.org, elver@google.com,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: [GIT RFC PULL rcu/urgent] Fix noinstr warnings for KCSAN
-Message-ID: <20200626041232.GA10544@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Fri, 26 Jun 2020 00:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbgFZEPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 00:15:22 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0560FC08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 21:15:21 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l12so7999558ejn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 21:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5dyXISEFPO4zN8NJzbUQLcaTnJQH628lZUaCtOB5NIs=;
+        b=Xl8bCjfJJjilv9lKWhwjcP/+CuLRgyomgZeuj1L9+0F71WtVlIZsKDDYLnnfAIarMr
+         q3sw2+60tHQzQSf6tqxEsyV/Pd/bOkOw1SRi2uXmDjiYwz4o4Nf7CqCbjd/WD+r2KRSH
+         u0O6wDAKMG/bDNOxopybeMC7eSoFxhfAFLV9Vv7KadH/iYG9jVWjEd/CX/9CIGGMbMqq
+         y52eXj8jaAZ18IH4ffNzHyelT3PwwJwKqLRWMtuw2OJ2c9SE6CoFAUDJDkL13xz8C2wD
+         I5RKKBwaeedhmeg43keuqZQDlnA6T+aoLzjWeVwlTQ9tcPw7qRfltesEVVvB6LhoBYz6
+         TA0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5dyXISEFPO4zN8NJzbUQLcaTnJQH628lZUaCtOB5NIs=;
+        b=PUhvfXa0+ByVVacYhlU6+B01UiGJqEX9RVq0UZgVCTzZ6WBnasrPLJ+Hgb+M0ihUak
+         kcr7U++RB1H26Iw6dRavoASpRbU2a1RUFTCOSPAuqmphcmHHzk3sywhZv/jxuHRFb1Wm
+         FLQuWqtaOKg4+HHvRyPI77ZdZxWv8Dnll1AxqxaQm/4llIsZXCScwV8Ca7oMiiOxp87L
+         D8YhVXTE6llye4HzuCzEiiNPyTTAfK4iV2ItU42hNHYTy1MB40ZvoS00KMRQp4kTwDIR
+         e1sBoUjjXBI6mYR+POeOoPMZM4MsiUuP2H2C/TFJFlqF509UkAH+Bd+jGb2pIbmMbYsS
+         Zb7w==
+X-Gm-Message-State: AOAM5318ni4VkRUgI0Qt63GwLAUymgyhYsLARtAJ7g6C1lTMfq2Vahy5
+        by6sb4TQs8oVdpUtuXfv8Dz9B4xpmoVhsj2EaLKGAA==
+X-Google-Smtp-Source: ABdhPJw0Us/srclnotYnN/IE0ZDFwhVMn6cHekEEslbon23FeASyGg8wDxOW25Da/DrocSRcVJ/O1k6YKAzCIz5PbXM=
+X-Received: by 2002:a17:906:d204:: with SMTP id w4mr898177ejz.117.1593144920242;
+ Thu, 25 Jun 2020 21:15:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200625064614.101183-1-wvw@google.com> <20200625102305.gu3xo4ovcqyd35vd@vireshk-i7>
+ <CAGXk5yrA=oXZs9KAaELsO7+ex7xCggEwdWSC_KXrUWQnvKEpWQ@mail.gmail.com>
+ <20200626021428.tnecyy3wt42slvik@vireshk-i7> <20200626023219.wvhzomwzlw24bzrv@vireshk-i7>
+In-Reply-To: <20200626023219.wvhzomwzlw24bzrv@vireshk-i7>
+From:   Wei Wang <wvw@google.com>
+Date:   Thu, 25 Jun 2020 21:15:09 -0700
+Message-ID: <CAGXk5yqsj+YTv3=Dj-NZY=sBb=g9DUfVmxcO-CeE3jjipA9Osw@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: force frequency update when limits change
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>, dsmythies@telus.net,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Thu, Jun 25, 2020 at 7:32 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 26-06-20, 07:44, Viresh Kumar wrote:
+> > On 25-06-20, 13:47, Wei Wang wrote:
+> > > On Thu, Jun 25, 2020 at 3:23 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > I am sorry but I am not fully sure of what the problem is. Can you
+> > > > describe that by giving an example with some random frequency, and
+> > > > tell the expected and actual behavior ?
+> > > >
+> > > The problem is sugov thought next_freq already updated (but actually
+> > > skipped by the rate limit thing) and all following updates will be
+> > > skipped.
+>
+> The rate-limiting thing is specific to android and not present in
+> mainline. Even in android I see next_freq getting updated only after
+> rate-limiting is verified.
+>
+> I think you maybe trying to fix an android only problem in mainline,
+> which may not be required at all. And I am not sure if Android has a
+> problem as well :)
+>
+Yes, that is Android specific, I added you to the Gerrit already.
 
-This pull request contains a single commit that uses "arch_" atomic
-operations to avoid the instrumentation that comes with the non-"arch_"
-versions.  In preparation for that commit, it also has another commit
-that makes these "arch_" atomic operations available to generic code.
+Thanks!
+-Wei
 
-Without these commits, KCSAN uses can see pointless errors.
-
-This pull request is currently RFC pending ongoing -next testing.
-This was not entirely free of drama, with Stephen needing to handle
-a merge conflict:
-
-https://lore.kernel.org/lkml/20200626131425.73ee4e27@canb.auug.org.au/
-
-However, the resolution looks straightforward to me.  In addition,
-these two commits pass rcutorture testing and associated KCSAN testing.
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git rcu/urgent
-
-for you to fetch changes up to b58e733fd774f3f4b49d9e7640d172a57e35200e:
-
-  rcu: Fixup noinstr warnings (2020-06-25 08:24:32 -0700)
-
-----------------------------------------------------------------
-Peter Zijlstra (2):
-      locking/atomics: Provide the arch_atomic_ interface to generic code
-      rcu: Fixup noinstr warnings
-
- include/linux/atomic-fallback.h       | 236 +++++++++++++++++++++++++++++++++-
- include/linux/compiler.h              |   2 +-
- kernel/rcu/tree.c                     |  32 ++++-
- scripts/atomic/gen-atomic-fallback.sh |  31 +++++
- 4 files changed, 292 insertions(+), 9 deletions(-)
+> > I am sorry, can you please give a detailed example with existing
+> > frequency and limits, then the limits changed to new values, then what
+> > exactly happens ?
+> >
+> > > Actually this is specifically for Android common kernel 4.19's issue
+> > > which has sugov_up_down_rate_limit in sugov_update_next_freq, let's
+> > > continue discussion there.
+> >
+> > If it is a mainline problem, we will surely get it fixed here. Just
+> > that I am not able to understand the problem yet. Sorry about that.
+>
+> --
+> viresh
