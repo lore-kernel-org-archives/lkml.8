@@ -2,91 +2,129 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C13C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6552C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1ECC207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6D4207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mgOrXJYk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V1+QvbzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgFZUbe (ORCPT
+        id S1725836AbgFZUe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42778 "EHLO
+        Fri, 26 Jun 2020 16:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUbe (ORCPT
+        with ESMTP id S1725780AbgFZUe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:31:34 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13531C03E979;
-        Fri, 26 Jun 2020 13:31:34 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n24so10597901ejd.0;
-        Fri, 26 Jun 2020 13:31:34 -0700 (PDT)
+        Fri, 26 Jun 2020 16:34:28 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FEDC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:34:28 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so5395195pjc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GHskhK5zJYDmbrTDrhLsCeFDGpbooMe1GlCaRqXte2c=;
-        b=mgOrXJYknIP41R6HpllvCjRTYl8geQlQG1XCOfdcqDUyoH/ViuScQo+rOpl3apvTyp
-         Iy3tGV1Pl+z9gn5wLmJsR5Z8/2wmsBISF63UU82+G1qxkzfg8iEMw8kmKAJ9h0Bn8+wc
-         US5Pw3A/gtlN8np8Sdzt32rJSE00QCljY53f8XGDl9qhvlKAmGrXpydxBjQZNM+Aw25d
-         fOD3BzBDwqnlCuESSETovlzXhlHC1+nP5L012hGQGlgMKBD02NYj630P9Tz9sfpmirnF
-         yvENJS9pqNMO0Dw1qxM+0yjudtRqfb0UIIxheifVXW0o300Th4g0/Wx3qf4HUVLc2hz4
-         hISw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=BIox9/QXM98eZxjkWVOWgYUVhYwZS0Exqz5rkKqCo9o=;
+        b=V1+QvbzD6RsSp7YX1TrReV0/M3cz6EXYAUBl9ZOtIvRJKuAnG+NemgbbMbRcIJL7l3
+         Aux+V79eMCvM8uN98nIn66sTit5+PMbxgUuaT+E4kSaB7BbuvrN5JAtcHguv8uzZOWf6
+         RwJzz4vexyIEDaM2DLCiCAU/c0yawzxUWw9lU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GHskhK5zJYDmbrTDrhLsCeFDGpbooMe1GlCaRqXte2c=;
-        b=tYodHoBns5AbnChhnqF+y3D5QIQIW2GYmOcYL2dja0geyvx969d9Q7TXElxzKWhJgu
-         Sydxw9hwhi/CXxldPpUFrpQfqCzAIYeEHrXBgRpTpuYt8HJ46qds26CPEk/DkQuMFVLL
-         RutjWVrMYAT9qkv13YG1mc4i0szCG19XjAMak/N65SWaMJwdQU7oUJOpGyE4pUf71Z5S
-         NnsDdhM07nB+ziRgY1CoX73tzCRAbVY+iHzrc433HR/n4rHjoCyau84ufIzH55n2RXzG
-         OnLoICb3i1LjbAIIZ3YwhZA3lvBJ6rUlYIDnDipvYDvWAjZJFqNxJ8Y6vLOaFT1vYKRC
-         ZZ9g==
-X-Gm-Message-State: AOAM532a9zfGEwLd/j/i25pkDAMV2p6HqvBBLLeZlFkwM5SL3pUH0Cm+
-        MfqUMImHwsrxhcO9gY4c/8RQ0jOUIE3VBYKGgl7wk6nd
-X-Google-Smtp-Source: ABdhPJx5ZIx7dwJXxETKotyYevsiB5MFzMoyXAVoKNNps4L45zbMI4CMKkdQs99fhN4iRy0pnR2HoLfzr1r89Wss2GQ=
-X-Received: by 2002:a17:906:35cd:: with SMTP id p13mr4178063ejb.172.1593203492761;
- Fri, 26 Jun 2020 13:31:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=BIox9/QXM98eZxjkWVOWgYUVhYwZS0Exqz5rkKqCo9o=;
+        b=Ftf0xZb7U3VN+2lNCZYNtxyP+ad1m1D/k6eAAyviGzEjYI3SqWRFGjFxUzKHKjzCcD
+         /d/FMzj65n74Nb17+LY/Ol0ntJOyNRr6JqlhVaOI1QIIU3OiC2FplBwluQUtR09aq6UY
+         jxjE7++laW60Jfu8k/bkT+xOHR3AqJhgQcGd2vXWYqWmNo2GVam0czR1f8JF85l+6GV6
+         7HK2dUL5cd5dcx0AfxOnmUtvvnNwJbb3409lZGJPOdU38jFV9eatfGnebgNHJSbQAiT3
+         sJ5n15f6b790qBubdpDa9WGgdEufkzuKvlldcPlN7xT99zXzNzTCvG3sXZx8ll15J4oJ
+         6v6w==
+X-Gm-Message-State: AOAM533SDboGzOzZnuBWq5VAQkJwWmeuERgoqL4lw47VP7hkKrrb8+Mi
+        2cSIhDqjHQcbkWYHTTM4ENQ6NQs+xqk=
+X-Google-Smtp-Source: ABdhPJxOGRtzLC8iSOTv73ksZgqpMB2QfKhEIDFraskWuwRPaqcPMcajZ1bUrXxTo3KsPhsmEU5K4w==
+X-Received: by 2002:a17:902:aa92:: with SMTP id d18mr4092904plr.210.1593203667481;
+        Fri, 26 Jun 2020 13:34:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i3sm23649403pgj.52.2020.06.26.13.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 13:34:26 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 13:34:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/asm/entry: Actually disable stack protector
+Message-ID: <202006261333.585319CA6B@keescook>
 MIME-Version: 1.0
-References: <20200626080626.4080-1-krzk@kernel.org>
-In-Reply-To: <20200626080626.4080-1-krzk@kernel.org>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 26 Jun 2020 22:31:22 +0200
-Message-ID: <CAFBinCCKm44c2k2w2R1MG2f7OFytpk0DOShuxNKDbFoiPreTTg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: meson: Align L2 cache-controller nodename with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Some builds of GCC enable stack protector by default. Simply removing
+the arguments is not sufficient to disable stack protector, as the stack
+protector for those GCC builds must be explicitly disabled. Remove the
+argument removals and add -fno-stack-protector. Additionally include
+missed x32 argument updates, and adjust whitespace for readability.
 
-thank you for this patch!
+Fixes: 20355e5f73a7 ("x86/entry: Exclude low level entry code from sanitizing")
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+RESEND (missed lkml)...
+---
+ arch/x86/entry/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-On Fri, Jun 26, 2020 at 1:59 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Fix dtschema validator warnings like:
->      l2-cache-controller@c4200000: $nodename:0:
->          'l2-cache-controller@c4200000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
+index b7a5790d8d63..08bf95dbc911 100644
+--- a/arch/x86/entry/Makefile
++++ b/arch/x86/entry/Makefile
+@@ -7,12 +7,20 @@ KASAN_SANITIZE := n
+ UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
+ 
+-CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+-CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+-CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
++CFLAGS_REMOVE_common.o		= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_64.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_32.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_x32.o	= $(CC_FLAGS_FTRACE)
++
++CFLAGS_common.o			+= -fno-stack-protector
++CFLAGS_syscall_64.o		+= -fno-stack-protector
++CFLAGS_syscall_32.o		+= -fno-stack-protector
++CFLAGS_syscall_x32.o		+= -fno-stack-protector
+ 
+ CFLAGS_syscall_64.o		+= $(call cc-option,-Wno-override-init,)
+ CFLAGS_syscall_32.o		+= $(call cc-option,-Wno-override-init,)
++CFLAGS_syscall_x32.o		+= $(call cc-option,-Wno-override-init,)
++
+ obj-y				:= entry_$(BITS).o thunk_$(BITS).o syscall_$(BITS).o
+ obj-y				+= common.o
+ 
+-- 
+2.25.1
 
 
-Best regards,
-Martin
+-- 
+Kees Cook
