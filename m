@@ -2,58 +2,118 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C8E2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ePU86+1e"
+	by mail.kernel.org (Postfix) with ESMTP id 46F912080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 08:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgFZICQ (ORCPT
+        id S1729124AbgFZIC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728817AbgFZICP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:02:15 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E998EC08C5C1;
-        Fri, 26 Jun 2020 01:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=evLhQUDqGn1MyI0vCZBcL2D9Su9YcVfh2zXK+rFpq50=; b=ePU86+1eGaB4Eb42we8BRUWkzy
-        vf1oca8hIWNAvr7X5ke8sNR8wyRln6ZQFY1JIhIebBV1bwSiOKIP4pf/a3+k0Nhd4isbYF2wWIqGY
-        e4J2/spxMcirpebuRwfbyS9FsMkNIqycXDudhnH5NifHPtG60wxHJkjH+l54AOgkp8P9uJBSX7o7H
-        UBYSXp6tbMW51QmB1desCemBRGT/J4bhgsh2UrpCfAraHzzfDSWFlZ8JenQ/j6GfMuxwlHTeU8++E
-        3hn6dH3WMFI8Sv9KCKF+gc5uwo8LPMVb8Q/MixzDBHGkP5qgtt987islj5Sgim/5kgW2YPgGrB+M9
-        0z605/oQ==;
-Received: from [2001:4bb8:184:76e3:2b32:1123:bea8:6121] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jojJ9-0007U2-Cm; Fri, 26 Jun 2020 08:01:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: remove not needed fields from struct block_device
-Date:   Fri, 26 Jun 2020 10:01:51 +0200
-Message-Id: <20200626080158.1998621-1-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
+        Fri, 26 Jun 2020 04:02:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37434 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728988AbgFZICy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:02:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 530B5ABE2;
+        Fri, 26 Jun 2020 08:02:52 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 10:02:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        Justin Cook <justin.cook@linaro.org>,
+        lkft-triage@lists.linaro.org, Miroslav Benes <mbenes@suse.cz>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] selftests/lkdtm: Don't clear dmesg when running tests
+Message-ID: <20200626080252.GL8444@alley>
+References: <20200508065356.2493343-1-mpe@ellerman.id.au>
+ <CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com>
+ <c5b77970-ecaf-24ad-c34d-134acc1a6063@redhat.com>
+ <20200624083955.GF8444@alley>
+ <20200624201247.GA25319@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624201247.GA25319@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+On Wed 2020-06-24 16:12:47, Joe Lawrence wrote:
+> On Wed, Jun 24, 2020 at 10:39:55AM +0200, Petr Mladek wrote:
+> > On Tue 2020-06-23 23:48:36, Joe Lawrence wrote:
+> > > On 6/22/20 4:51 AM, Naresh Kamboju wrote:
+> > > > On Fri, 8 May 2020 at 12:23, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > > > > 
+> > > > > It is Very Rude to clear dmesg in test scripts. That's because the
+> > > > > script may be part of a larger test run, and clearing dmesg
+> > > > > potentially destroys the output of other tests.
+> > > > > 
+> > > > > We can avoid using dmesg -c by saving the content of dmesg before the
+> > > > > test, and then using diff to compare that to the dmesg afterward,
+> > > > > producing a log with just the added lines.
+> > > > >
+> > > > > > > > diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+> > > > > index dadf819148a4..0b409e187c7b 100755
+> > > > > --- a/tools/testing/selftests/lkdtm/run.sh
+> > > > > +++ b/tools/testing/selftests/lkdtm/run.sh
+> > > > >   # Record and dump the results
+> > > > > -dmesg -c >"$LOG"
+> > > > > +dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
+> > > > 
+> > > > We are facing problems with the diff `=%>` part of the option.
+> > > > This report is from the OpenEmbedded environment.
+> > > > We have the same problem from livepatch_testcases.
+> > > > 
+> > > > # selftests lkdtm BUG.sh
+> > > > lkdtm: BUG.sh_ #
+> > > > # diff unrecognized option '--changed-group-format=%>'
+> > > > unrecognized: option_'--changed-group-format=%>' #
+> > > > # BusyBox v1.27.2 (2020-03-30 164108 UTC) multi-call binary.
+> > > > v1.27.2: (2020-03-30_164108 #
 
-this series put struct block_device on a bit of a diet by removing
-fields that are unused or rather pointless.
+> I did a bit more hacking to work that awk script into the livepatching
+> tests.  The changes aren't too bad and coding it ourselves lets us drop
+> the temporary dmesg file business.  If this looks good, I can send out
+> as a real patch, but then that raises a few questions:
+
+The patch worked and I agree that it is not that bad.
+
+Well, what about using "comm" as proposed by Michael in the other
+mail? It seems to be part of coreutils and should be everywhere.
+
+I guess that many people, including me, are not fluent in awk.
+So, I am slightly in favor of the "comm" approach ;-)
+
+
+>   1 - f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running
+>       tests") has already merged, updating that file doesn't look too
+>       difficult, but will need a Fixes tag and should probably go
+>       through Shuah's tree.
+
+Yup.
+
+>   2 - We haven't actually merged the livepatch copy yet.  I can roll
+>       another version of that patchset, substituting a fix for the
+>       problematic patch, or we could just tack this one on at the end.
+>       In fine with either approach.
+
+I prefer the followup patch to avoid rebase.
+
+Best Regards,
+Petr
