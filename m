@@ -2,179 +2,556 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C15C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD689C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6382088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C8B2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIF9V2ne"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="P9WRQ6Vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFZWvV (ORCPT
+        id S1726013AbgFZWxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFZWvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:51:20 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821F7C03E979;
-        Fri, 26 Jun 2020 15:51:20 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id h23so8769276qtr.0;
-        Fri, 26 Jun 2020 15:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8HWO0SS+0P6uz8QKcTGg5GM74omnlEcycJKWzTuQqgw=;
-        b=JIF9V2neAo3LDYaCCpQHM7tlzFYnCVM6vrrwKOwdygR9cYlw9fFpc1I+ByHQ7ggp1h
-         wOxdl5nacpcSjF9pEmq7bohWDFU6y4iO2mY7OVe0vmmdXzht2Mc82LD8/g+5YwqJtVxi
-         +xQ5TzaQDkEzOLHLjD/eISW23FIoftXnaueWUrJJ5g8pO36wlOjoc8jAJR3ToOVDlWra
-         OBGfbY7vxOZAhaGoPnPkTki3lsaw8JPkFxqLEuKsOys93f0KupsXHS4KFFIKVfM5knYX
-         GCia7wp7cLOAa71CK+GTY2RjEXJgQ4tutKVD4H5DRxhCMGMOF3Jr9ViS9dFXHTDtwho0
-         BYwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8HWO0SS+0P6uz8QKcTGg5GM74omnlEcycJKWzTuQqgw=;
-        b=dR1L4InE+E7pqYtVAIF53O4gON3PUqS7ON6DIeJ0wIzCGIFnp64VmnJbtacEowOMez
-         yy+ShEv9LpZNeoHQr3aicnRI4kzs3zJYJsJrJ55mAz+MDqeQAMTUxWJgoT8r7qSTzj3G
-         NCfXcOGkNDTWJzFt2FzgUBeruu2LihntoV4w7EdRa8rKualllm+12C0j2DWcGfX8lw1Z
-         62xaNCDBAFSO4q2XLqVmEhZ8ja4zJytGytpAHo8ItUEpeh/tmQnT+q8PsTWa+Blg0F0Z
-         uUxzj5qrxWkJrCL8OrZua21o8D+WoiN7CyijHbG6UXHAwbUu5zipXWUf7/8jdwHsHaT2
-         Qfig==
-X-Gm-Message-State: AOAM530KGxC1dQ8Hskk/zgTlOUY+DH/+jxG9/85jWUDd/4VXl1Gh0SVx
-        HG1GwZrqKVp2JYOO2Dr1+01ySWCSxtdY9svMeGA=
-X-Google-Smtp-Source: ABdhPJzC8dhF/xlo983MA3Zz0/1x7CyKxQWxuD3XyPOv8m23hLlCFcNZQTPGDbdHzFhjd2XIXe4k1f4jPnLztokYdeM=
-X-Received: by 2002:ac8:1991:: with SMTP id u17mr5021097qtj.93.1593211879622;
- Fri, 26 Jun 2020 15:51:19 -0700 (PDT)
+        Fri, 26 Jun 2020 18:53:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61308 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725931AbgFZWxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 18:53:50 -0400
+IronPort-SDR: NQ05gIgoJG7uK7hSNb6QyO2mu9PcWAeSdKv3YH5b53vJPGX4V7kw0e5CrJBadXqPAIyrWB2g9M
+ twHz/fqIpF/Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143013207"
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="143013207"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 15:53:45 -0700
+IronPort-SDR: 08xkWBPQ18acCBCIbmj9OyunyA0yxY9fdwGs0m+VA2a8sUaLMc+tWO7+syvVM5Ypup8z2ZsmAl
+ Pw6clghuQuzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="479968307"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jun 2020 15:53:45 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 26 Jun 2020 15:53:32 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 26 Jun 2020 15:53:31 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 26 Jun 2020 15:53:31 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Fri, 26 Jun 2020 15:53:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KjJ5k98eJ8UukbmuClxTkFMXb8D4QjaGmYXhaXYM2jvdOrUqtoiib00Rbwl5b0Uzvgbod2kDI/i6ztlLlzVI6isEF9gJRf3YZ4aVdHzgO3Xj7eXA+OjJwOC9Vwq3c2A2yzJWDLizyhNSRGrJyIKnCfzXkN5Ae6++QrGep7Rug6MfFDBodOao1DRDAc/dJn/o5JbXusGH1nUfsi6EqsbhYJWeBeTY12QnEHeDEAves+52xpw+oRncYA2ZIA89EV/pUxgqlOedCozRw29MscpJaO5gcF/uuyLrZ+v0tYpsdmxsFwv/AcDsGkRaXQG4TJ/3f52BZOfCAaMl/e1QlpqkAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lR6b9RgL5F3V2gH8jEGombZyMQdFMTvnWcvO/zF04vc=;
+ b=lw+flt4pcdW1ercsmFUKN1JAZ4gijMr6ldzM9z8cVoWUhnaD8K+vQC5NA+km2wKWqeiNN9dT7PlQvgiPbdK99ZdQI9+hg4jxmsK67TgoPIEft+LiEcQ4SKzQ0fq6kf8/C/Vf5yaS1OIaMsFusNXqX0Yy87cOri441+b8bIqz/OtneaIAOosZKYq5utCc8+1HXkAAXauX0sGOE1lkwjRps30shBbWuBqUf7JHEVmBA3l2OBsPH/krnJoFL5OT2w2ZZHVUIN/fTvjSpc6klHkFz6nuPw/+VHj2WuUeaEiJSc4pefRegF7Jvaxsvfd6NG1mXKmrFvtJZY8I6cNbc7ENaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lR6b9RgL5F3V2gH8jEGombZyMQdFMTvnWcvO/zF04vc=;
+ b=P9WRQ6VjqXNIZm/NQBxTKQgC6vXtRwTBfp7sV08OW6s8oOewUy8gmUpaLDPQjte9aTUCnFdRqJRTpj3s+ESpEYV+uCTdEVH1bvle4+EcajqIDfJW0CC/OKJ86pFHyifN/iLPLHZZqC0ey/MIlZEjuulzaiOtliR+LpAFwvq5YTU=
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16)
+ by MWHPR11MB1295.namprd11.prod.outlook.com (2603:10b6:300:2b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 26 Jun
+ 2020 22:53:27 +0000
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::deb:2fe:1d84:a19f]) by MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::deb:2fe:1d84:a19f%11]) with mapi id 15.20.3131.025; Fri, 26 Jun 2020
+ 22:53:27 +0000
+From:   "Kaneda, Erik" <erik.kaneda@intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Moore, Robert" <robert.moore@intel.com>
+CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: RE: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings if
+ supported by OS
+Thread-Topic: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings if
+ supported by OS
+Thread-Index: AQHWSJ3r9KMXSpAH80ik4s+HK21kMKjrgw4Q
+Date:   Fri, 26 Jun 2020 22:53:27 +0000
+Message-ID: <MWHPR11MB1599FBA57730E5C74B9B4588F0930@MWHPR11MB1599.namprd11.prod.outlook.com>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <2713141.s8EVnczdoM@kreacher> <13749323.0m2ImmhSHx@kreacher>
+In-Reply-To: <13749323.0m2ImmhSHx@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: rjwysocki.net; dkim=none (message not signed)
+ header.d=none;rjwysocki.net; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [50.39.104.236]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 540bc442-6129-4e2b-6da8-08d81a23bd3e
+x-ms-traffictypediagnostic: MWHPR11MB1295:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB129567DBA81D292D3D5DEF51F0930@MWHPR11MB1295.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0446F0FCE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9BnIAXr1fynaDRsoaKVl1xRSdOoH/0pATGGThCWLAu0T/tSJzFxBFjJGbkNJxFkWp8ie0+d1fJzoq2mXUT3+dkpCSAy1miaX2O0dMGTt9TfBvIQImYAM61IyX2S6U1zbMU70uoThz7RHoQt+ybPWVyKAOYt+485UK9KiwR7aJtUWTiahL54T1Xb/gWWzX+6bp8+MEJ3Niff9LIUjQMKqA6hpPqECaRK2HIc6d5fUVjonvSnY+ZTisgf0VHNXK6asUrRqs5KRhWxMJrfCes1S8AQKdaUaugXIcrZE+W18+SGxelVnIkWwMlUWKSngyBkhBewHdHsp9YPkeVTy7eehHw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1599.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(346002)(39860400002)(136003)(54906003)(66556008)(26005)(110136005)(66446008)(64756008)(76116006)(71200400001)(52536014)(33656002)(6636002)(66946007)(316002)(66476007)(186003)(7696005)(30864003)(8676002)(2906002)(6506007)(83380400001)(55016002)(86362001)(8936002)(7416002)(5660300002)(53546011)(478600001)(9686003)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: E3ijdBQ+CmQ9pHZWq8Tu6Rlt1p+lTyW6mGT1p3Z07O1S1+8Rb34sJG74PXlN5TgBvKPw0T0CHbWwT7NfIXKmdYKvNCHaU1m/QQtT+LnlN+g68b7VtxwgUTYmPWMq+kUUdWfG8UFjc8068dd0OLIUfYv4kPv4j1E5hmf9KaYUXPgdXIdaYZxd5SyelBC3royGyRBDPJH5HR3ywB7097bDa7CP7i4DXhVXwzIf2U04Khpd9P5COF8jc3SroHaxQq0d0G10D0D836kllsKwMqN2fKaanSCc/0GNSdlegUMwYVGivBO3dFPmacxDesHSK8msN22ENpVo/ueBf8gAxtrOcgAsic7cpmldUrdUkxMLPK9XBHqrEej35MOGYlD8ZOoE3TOzPaa6zDDA16Cub5Kxqt5SbDJhyqDA4AezLMzHi5KhIXAyGo4qtW0xSd0dFdRQvbY+9MaMgvV3FiGNPfjCZhh7ocBoy4ac5jIK07UCLkE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-3-songliubraving@fb.com> <CAEf4BzZ6-s-vqp+bLiCAVgS2kmp09a1WdaSvaL_jJySx7s7inA@mail.gmail.com>
- <C3B6DD3E-1B69-4D0C-8A55-4EB81C21C619@fb.com>
-In-Reply-To: <C3B6DD3E-1B69-4D0C-8A55-4EB81C21C619@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 26 Jun 2020 15:51:08 -0700
-Message-ID: <CAEf4BzaC1Dqn3PXBJmczPRaUmjKc7pcg6_mjyKymBek-sDKv7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 2/4] bpf: introduce helper bpf_get_task_stak()
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1599.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 540bc442-6129-4e2b-6da8-08d81a23bd3e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 22:53:27.2618
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DlZ9VCJerGmJEFIbItvoA0Rm4lWzDBJeBgaHs/NYF+oVR+3ESfY1hjz2O6iINEkXvo3aUo/3XTZxkihQsf3ZHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1295
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 3:45 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jun 26, 2020, at 1:17 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Jun 25, 2020 at 5:14 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> Introduce helper bpf_get_task_stack(), which dumps stack trace of given
-> >> task. This is different to bpf_get_stack(), which gets stack track of
-> >> current task. One potential use case of bpf_get_task_stack() is to call
-> >> it from bpf_iter__task and dump all /proc/<pid>/stack to a seq_file.
-> >>
-> >> bpf_get_task_stack() uses stack_trace_save_tsk() instead of
-> >> get_perf_callchain() for kernel stack. The benefit of this choice is that
-> >> stack_trace_save_tsk() doesn't require changes in arch/. The downside of
-> >> using stack_trace_save_tsk() is that stack_trace_save_tsk() dumps the
-> >> stack trace to unsigned long array. For 32-bit systems, we need to
-> >> translate it to u64 array.
-> >>
-> >> Signed-off-by: Song Liu <songliubraving@fb.com>
-> >> ---
-> >
-> > Looks great, I just think that there are cases where user doesn't
-> > necessarily has valid task_struct pointer, just pid, so would be nice
-> > to not artificially restrict such cases by having extra helper.
-> >
-> > Acked-by: Andrii Nakryiko <andriin@fb.com>
->
-> Thanks!
->
-> >
-> >> include/linux/bpf.h            |  1 +
-> >> include/uapi/linux/bpf.h       | 35 ++++++++++++++-
-> >> kernel/bpf/stackmap.c          | 79 ++++++++++++++++++++++++++++++++--
-> >> kernel/trace/bpf_trace.c       |  2 +
-> >> scripts/bpf_helpers_doc.py     |  2 +
-> >> tools/include/uapi/linux/bpf.h | 35 ++++++++++++++-
-> >> 6 files changed, 149 insertions(+), 5 deletions(-)
-> >>
-> >
-> > [...]
-> >
-> >> +       /* stack_trace_save_tsk() works on unsigned long array, while
-> >> +        * perf_callchain_entry uses u64 array. For 32-bit systems, it is
-> >> +        * necessary to fix this mismatch.
-> >> +        */
-> >> +       if (__BITS_PER_LONG != 64) {
-> >> +               unsigned long *from = (unsigned long *) entry->ip;
-> >> +               u64 *to = entry->ip;
-> >> +               int i;
-> >> +
-> >> +               /* copy data from the end to avoid using extra buffer */
-> >> +               for (i = entry->nr - 1; i >= (int)init_nr; i--)
-> >> +                       to[i] = (u64)(from[i]);
-> >
-> > doing this forward would be just fine as well, no? First iteration
-> > will cast and overwrite low 32-bits, all the subsequent iterations
-> > won't even overlap.
->
-> I think first iteration will write zeros to higher 32 bits, no?
 
-Oh, wait, I completely misread what this is doing. It up-converts from
-32-bit to 64-bit, sorry. Yeah, ignore me on this :)
 
-But then I have another question. How do you know that entry->ip has
-enough space to keep the same number of 2x bigger entries?
+> -----Original Message-----
+> From: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Sent: Monday, June 22, 2020 7:02 AM
+> To: Williams, Dan J <dan.j.williams@intel.com>; Kaneda, Erik
+> <erik.kaneda@intel.com>
+> Cc: Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Len Brown
+> <lenb@kernel.org>; Borislav Petkov <bp@alien8.de>; Weiny, Ira
+> <ira.weiny@intel.com>; James Morse <james.morse@arm.com>; Myron
+> Stowe <myron.stowe@redhat.com>; Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com>; linux-kernel@vger.kernel.org; linux-
+> acpi@vger.kernel.org; linux-nvdimm@lists.01.org; Moore, Robert
+> <robert.moore@intel.com>
+> Subject: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings
+> if supported by OS
+>=20
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>=20
+> The ACPICA's strategy with respect to the handling of memory mappings
+> associated with memory operation regions is to avoid mapping the
+> entire region at once which may be problematic at least in principle
+> (for example, it may lead to conflicts with overlapping mappings
+> having different attributes created by drivers).  It may also be
+> wasteful, because memory opregions on some systems take up vast
+> chunks of address space while the fields in those regions actually
+> accessed by AML are sparsely distributed.
+>=20
+> For this reason, a one-page "window" is mapped for a given opregion
+> on the first memory access through it and if that "window" does not
+> cover an address range accessed through that opregion subsequently,
+> it is unmapped and a new "window" is mapped to replace it.  Next,
+> if the new "window" is not sufficient to access memory through the
+> opregion in question in the future, it will be replaced with yet
+> another "window" and so on.  That may lead to a suboptimal sequence
+> of memory mapping and unmapping operations, for example if two fields
+> in one opregion separated from each other by a sufficiently wide
+> chunk of unused address space are accessed in an alternating pattern.
+>=20
+> The situation may still be suboptimal if the deferred unmapping
+> introduced previously is supported by the OS layer.  For instance,
+> the alternating memory access pattern mentioned above may produce
+> a relatively long list of mappings to release with substantial
+> duplication among the entries in it, which could be avoided if
+> acpi_ex_system_memory_space_handler() did not release the mapping
+> used by it previously as soon as the current access was not covered
+> by it.
+>=20
+> In order to improve that, modify acpi_ex_system_memory_space_handler()
+> to take advantage of the memory mappings reference counting at the OS
+> level if a suitable interface is provided.
+>=20
+Hi,
 
->
-> >
-> >> +       }
-> >> +
-> >> +exit_put:
-> >> +       put_callchain_entry(rctx);
-> >> +
-> >> +       return entry;
-> >> +}
-> >> +
-> >
-> > [...]
-> >
-> >> +BPF_CALL_4(bpf_get_task_stack, struct task_struct *, task, void *, buf,
-> >> +          u32, size, u64, flags)
-> >> +{
-> >> +       struct pt_regs *regs = task_pt_regs(task);
-> >> +
-> >> +       return __bpf_get_stack(regs, task, buf, size, flags);
-> >> +}
-> >
-> >
-> > So this takes advantage of BTF and having a direct task_struct
-> > pointer. But for kprobes/tracepoint I think it would also be extremely
-> > helpful to be able to request stack trace by PID. How about one more
-> > helper which will wrap this one with get/put task by PID, e.g.,
-> > bpf_get_pid_stack(int pid, void *buf, u32 size, u64 flags)? Would that
-> > be a problem?
->
-> That should work. Let me add that in a follow up patch.
->
+> Namely, if ACPI_USE_FAST_PATH_MAPPING is set, the OS is expected to
+> implement acpi_os_map_memory_fast_path() that will return NULL if
+> there is no mapping covering the given address range known to it.
+> If such a mapping is there, however, its reference counter will be
+> incremented and a pointer representing the requested virtual address
+> will be returned right away without any additional consequences.
+
+I do not fully understand why this is under a #ifdef. Is this to support op=
+erating systems that might not want to add support for this behavior?
+
+Also, instead of using the terminology fast_path, I think it would be easie=
+r to use terminology that describes the mechanism..
+It might be easier for other Operating systems to understand something like=
+ acpi_os_map_preserved_memory or acpi_os_map_sysmem_opregion_memory.
+
+Thanks,
+Erik
+>=20
+> That allows acpi_ex_system_memory_space_handler() to acquire
+> additional references to all new memory mappings with the help
+> of acpi_os_map_memory_fast_path() so as to retain them until the
+> memory opregions associated with them go away.  The function will
+> still use a new "window" mapping if the current one does not
+> cover the address range at hand, but it will avoid unmapping the
+> current one right away by adding it to a list of "known" mappings
+> associated with the given memory opregion which will be deleted at
+> the opregion deactivation time.  The mappings in that list can be
+> used every time a "new window" is needed so as to avoid overhead
+> related to the mapping and unmapping of memory.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/acpica/acinterp.h |   4 +
+>  drivers/acpi/acpica/evrgnini.c |   7 +-
+>  drivers/acpi/acpica/exregion.c | 159
+> ++++++++++++++++++++++++++++++++-
+>  3 files changed, 162 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/acpi/acpica/acinterp.h b/drivers/acpi/acpica/acinter=
+p.h
+> index 1f1026fb06e9..db9c279baa2e 100644
+> --- a/drivers/acpi/acpica/acinterp.h
+> +++ b/drivers/acpi/acpica/acinterp.h
+> @@ -479,8 +479,12 @@ void acpi_ex_pci_cls_to_string(char *dest, u8
+> class_code[3]);
+>=20
+>  u8 acpi_is_valid_space_id(u8 space_id);
+>=20
+> +struct acpi_mem_space_context
+> *acpi_ex_alloc_mem_space_context(void);
+> +
+>  void acpi_ex_unmap_region_memory(struct acpi_mem_space_context
+> *mem_info);
+>=20
+> +void acpi_ex_unmap_all_region_mappings(struct
+> acpi_mem_space_context *mem_info);
+> +
+>  /*
+>   * exregion - default op_region handlers
+>   */
+> diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnin=
+i.c
+> index 9f33114a74ca..f6c5feea10bc 100644
+> --- a/drivers/acpi/acpica/evrgnini.c
+> +++ b/drivers/acpi/acpica/evrgnini.c
+> @@ -46,10 +46,10 @@ acpi_ev_system_memory_region_setup(acpi_handle
+> handle,
+>  			local_region_context =3D
+>  			    (struct acpi_mem_space_context
+> *)*region_context;
+>=20
+> -			/* Delete a cached mapping if present */
+> +			/* Delete memory mappings if present */
+>=20
+>  			if (local_region_context->mapped_length) {
+> -
+> 	acpi_ex_unmap_region_memory(local_region_context);
+> +
+> 	acpi_ex_unmap_all_region_mappings(local_region_context);
+>  			}
+>  			ACPI_FREE(local_region_context);
+>  			*region_context =3D NULL;
+> @@ -59,8 +59,7 @@ acpi_ev_system_memory_region_setup(acpi_handle
+> handle,
+>=20
+>  	/* Create a new context */
+>=20
+> -	local_region_context =3D
+> -	    ACPI_ALLOCATE_ZEROED(sizeof(struct
+> acpi_mem_space_context));
+> +	local_region_context =3D acpi_ex_alloc_mem_space_context();
+>  	if (!(local_region_context)) {
+>  		return_ACPI_STATUS(AE_NO_MEMORY);
+>  	}
+> diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregio=
+n.c
+> index af777b7fccb0..9d97b6a67074 100644
+> --- a/drivers/acpi/acpica/exregion.c
+> +++ b/drivers/acpi/acpica/exregion.c
+> @@ -14,6 +14,40 @@
+>  #define _COMPONENT          ACPI_EXECUTER
+>  ACPI_MODULE_NAME("exregion")
+>=20
+> +struct acpi_mem_mapping {
+> +	acpi_physical_address physical_address;
+> +	u8 *logical_address;
+> +	acpi_size length;
+> +	struct acpi_mem_mapping *next_mm;
+> +};
+> +
+> +struct acpi_mm_context {
+> +	struct acpi_mem_space_context mem_info;
+> +	struct acpi_mem_mapping *first_mm;
+> +};
+> +
+> +/*********************************************************
+> ********************
+> + *
+> + * FUNCTION:    acpi_ex_alloc_mem_space_context
+> + *
+> + * PARAMETERS:  None
+> + *
+> + * RETURN:      Pointer to a new region context object.
+> + *
+> + * DESCRIPTION: Allocate memory for memory operation region
+> representation.
+> + *
+> +
+> **********************************************************
+> ******************/
+> +struct acpi_mem_space_context
+> *acpi_ex_alloc_mem_space_context(void)
+> +{
+> +	ACPI_FUNCTION_TRACE(acpi_ex_alloc_mem_space_context);
+> +
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +	return ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_mm_context));
+> +#else
+> +	return ACPI_ALLOCATE_ZEROED(sizeof(struct
+> acpi_mem_space_context));
+> +#endif
+> +}
+> +
+>=20
+> /**********************************************************
+> *******************
+>   *
+>   * FUNCTION:    acpi_ex_unmap_region_memory
+> @@ -40,6 +74,44 @@ void acpi_ex_unmap_region_memory(struct
+> acpi_mem_space_context *mem_info)
+>  	return_VOID;
+>  }
+>=20
+> +/*********************************************************
+> ********************
+> + *
+> + * FUNCTION:    acpi_ex_unmap_all_region_mappings
+> + *
+> + * PARAMETERS:  mem_info            - Region specific context
+> + *
+> + * RETURN:      None
+> + *
+> + * DESCRIPTION: Unmap all mappings associated with a memory operation
+> region.
+> + *
+> +
+> **********************************************************
+> ******************/
+> +void acpi_ex_unmap_all_region_mappings(struct
+> acpi_mem_space_context *mem_info)
+> +{
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +	struct acpi_mm_context *mm_context =3D (struct acpi_mm_context
+> *)mem_info;
+> +	struct acpi_mem_mapping *mm;
+> +#endif
+> +
+> +	ACPI_FUNCTION_TRACE(acpi_ex_unmap_all_region_mappings);
+> +
+> +	acpi_ex_unmap_region_memory(mem_info);
+> +
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +	while (mm_context->first_mm) {
+> +		mm =3D mm_context->first_mm;
+> +		mm_context->first_mm =3D mm->next_mm;
+> +#ifdef ACPI_USE_DEFERRED_UNMAPPING
+> +		acpi_os_unmap_deferred(mm->logical_address, mm-
+> >length);
+> +#else
+> +		acpi_os_unmap_memory(mm->logical_address, mm-
+> >length);
+> +#endif
+> +		ACPI_FREE(mm);
+> +	}
+> +#endif /* ACPI_USE_FAST_PATH_MAPPING */
+> +
+> +	return_VOID;
+> +}
+> +
+>=20
+> /**********************************************************
+> *********************
+>   *
+>   * FUNCTION:    acpi_ex_system_memory_space_handler
+> @@ -70,6 +142,10 @@ acpi_ex_system_memory_space_handler(u32
+> function,
+>  	u32 length;
+>  	acpi_size map_length;
+>  	acpi_size page_boundary_map_length;
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +	struct acpi_mm_context *mm_context =3D (struct acpi_mm_context
+> *)mem_info;
+> +	struct acpi_mem_mapping *mm;
+> +#endif
+>  #ifdef ACPI_MISALIGNMENT_NOT_SUPPORTED
+>  	u32 remainder;
+>  #endif
+> @@ -128,7 +204,7 @@ acpi_ex_system_memory_space_handler(u32
+> function,
+>  					 mem_info->mapped_length))) {
+>  		/*
+>  		 * The request cannot be resolved by the current memory
+> mapping;
+> -		 * Delete the existing mapping and create a new one.
+> +		 * Delete the current cached mapping and get a new one.
+>  		 */
+>  		if (mem_info->mapped_length) {
+>=20
+> @@ -137,6 +213,36 @@ acpi_ex_system_memory_space_handler(u32
+> function,
+>  			acpi_ex_unmap_region_memory(mem_info);
+>  		}
+>=20
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +		/*
+> +		 * Look for an existing saved mapping matching the address
+> range
+> +		 * at hand.  If found, make the OS layer bump up the
+> reference
+> +		 * counter of that mapping, cache it and carry out the access.
+> +		 */
+> +		for (mm =3D mm_context->first_mm; mm; mm =3D mm-
+> >next_mm) {
+> +			if (address < mm->physical_address)
+> +				continue;
+> +
+> +			if ((u64)address + length >
+> +					(u64)mm->physical_address + mm-
+> >length)
+> +				continue;
+> +
+> +			/*
+> +			 * When called on a known-existing memory mapping,
+> +			 * acpi_os_map_memory_fast_path() must return
+> the same
+> +			 * logical address as before or NULL.
+> +			 */
+> +			if (!acpi_os_map_memory_fast_path(mm-
+> >physical_address,
+> +							  mm->length))
+> +				continue;
+> +
+> +			mem_info->mapped_logical_address =3D mm-
+> >logical_address;
+> +			mem_info->mapped_physical_address =3D mm-
+> >physical_address;
+> +			mem_info->mapped_length =3D mm->length;
+> +			goto access;
+> +		}
+> +#endif /* ACPI_USE_FAST_PATH_MAPPING */
+> +
+>  		/*
+>  		 * October 2009: Attempt to map from the requested
+> address to the
+>  		 * end of the region. However, we will never map more than
+> one
+> @@ -168,9 +274,8 @@ acpi_ex_system_memory_space_handler(u32
+> function,
+>=20
+>  		/* Create a new mapping starting at the address given */
+>=20
+> -		mem_info->mapped_logical_address =3D
+> -		    acpi_os_map_memory(address, map_length);
+> -		if (!mem_info->mapped_logical_address) {
+> +		logical_addr_ptr =3D acpi_os_map_memory(address,
+> map_length);
+> +		if (!logical_addr_ptr) {
+>  			ACPI_ERROR((AE_INFO,
+>  				    "Could not map memory at 0x%8.8X%8.8X,
+> size %u",
+>  				    ACPI_FORMAT_UINT64(address),
+> @@ -181,10 +286,56 @@ acpi_ex_system_memory_space_handler(u32
+> function,
+>=20
+>  		/* Save the physical address and mapping size */
+>=20
+> +		mem_info->mapped_logical_address =3D logical_addr_ptr;
+>  		mem_info->mapped_physical_address =3D address;
+>  		mem_info->mapped_length =3D map_length;
+> +
+> +#ifdef ACPI_USE_FAST_PATH_MAPPING
+> +		/*
+> +		 * Create a new mm list entry to save the new mapping for
+> +		 * removal at the operation region deactivation time.
+> +		 */
+> +		mm =3D ACPI_ALLOCATE_ZEROED(sizeof(*mm));
+> +		if (!mm) {
+> +			/*
+> +			 * No room to save the new mapping, but this is not
+> +			 * critical.  Just log the error and carry out the
+> +			 * access as requested.
+> +			 */
+> +			ACPI_ERROR((AE_INFO,
+> +				    "Not enough memory to save memory
+> mapping at 0x%8.8X%8.8X, size %u",
+> +				    ACPI_FORMAT_UINT64(address),
+> +				    (u32)map_length));
+> +			goto access;
+> +		}
+> +		/*
+> +		 * Bump up the new mapping's reference counter in the OS
+> layer
+> +		 * to prevent it from getting dropped prematurely.
+> +		 */
+> +		if (!acpi_os_map_memory_fast_path(address, map_length))
+> {
+> +			/*
+> +			 * Something has gone wrong, but this is not critical.
+> +			 * Log the error, free the mm list entry that won't be
+> +			 * used and carry out the access as requested.
+> +			 */
+> +			ACPI_ERROR((AE_INFO,
+> +				    "Unable to save memory mapping at
+> 0x%8.8X%8.8X, size %u",
+> +				    ACPI_FORMAT_UINT64(address),
+> +				    (u32)map_length));
+> +			ACPI_FREE(mm);
+> +			goto access;
+> +		}
+> +		mm->physical_address =3D address;
+> +		mm->logical_address =3D logical_addr_ptr;
+> +		mm->length =3D map_length;
+> +		mm->next_mm =3D mm_context->first_mm;
+> +		mm_context->first_mm =3D mm;
+>  	}
+>=20
+> +access:
+> +#else /* !ACPI_USE_FAST_PATH_MAPPING */
+> +	}
+> +#endif /* !ACPI_USE_FAST_PATH_MAPPING */
+>  	/*
+>  	 * Generate a logical pointer corresponding to the address we want
+> to
+>  	 * access
+> --
+> 2.26.2
+>=20
+>=20
+>=20
+
