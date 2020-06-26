@@ -2,169 +2,137 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD11C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59539C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA5A2088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A212088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 18:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QT1DvGLR"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gArX9VJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgFZSMJ (ORCPT
+        id S1726158AbgFZSNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 14:12:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20220 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbgFZSMG (ORCPT
+        Fri, 26 Jun 2020 14:13:52 -0400
+Received: from mail.efficios.com ([167.114.26.124]:53942 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgFZSNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:12:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593195125; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=wWEYH6xcY9h3fWHDnDKjrVGb7RSYhmw5vEqQxd2Pc3E=; b=QT1DvGLRM+HZAJKUzECDvNC/aAmGvUom+/f6r2GlwzuGNFrsm0gUEPYXYD+s/yPXEJ17w8YN
- qO1mECvHvh2IGUAQjxNC38R5U6XcY7A5XuS1GR5pXthUkqkD66KsfvnUydgqDpBhoqd3k0j1
- LRthdRBkr6Mv44ZTwn0Zxporgjw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5ef63a6da3d8a4474359f2d7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 18:11:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 74342C433C8; Fri, 26 Jun 2020 18:11:56 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82D32C43391;
-        Fri, 26 Jun 2020 18:11:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 82D32C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH 2/2] ath10k: Skip wait for delete response if firmware is down
-Date:   Fri, 26 Jun 2020 23:41:40 +0530
-Message-Id: <1593195100-24654-3-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593195100-24654-1-git-send-email-pillair@codeaurora.org>
-References: <1593195100-24654-1-git-send-email-pillair@codeaurora.org>
+        Fri, 26 Jun 2020 14:13:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9113D2D5694;
+        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gxkVJe4uPr3p; Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3527C2D5784;
+        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3527C2D5784
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593195230;
+        bh=rgfmzezlHQeSavW8v52bXi4Rbl6TKxnTNKh4BFHPNto=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=gArX9VJJ022LDc57LKnaPQmJcjpzWEc6t2Jsu+V3hki16L8ucIEmvWA4/UG/fPVQT
+         IGg00zIFG59B/96dlYc6X1wROwc4K9vp78jvbSbwrTnFVJnHFUNQYoZILGouonv4au
+         lDkOyYQoAeO30Lf5ApPXux+pjO98cKVw0DcGSGf5Usph9eXIET/SvhKoiBYFWbMP3I
+         DKvaIU6f+eZt14R/UBVUq/blJvtQIeAVZM2ZaNcSlewHKdSlYmp+oX8IoeMFwaUKkO
+         jcjJhaEuoCKuc3KD/mooOh+HTn5kbUp9GMHP+Xpgu7dtPvNtrmC7otzkyhrPtcRpIS
+         RuVKb2HnMRNVg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2-55afNXm-uG; Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 1F75F2D5783;
+        Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+Date:   Fri, 26 Jun 2020 14:13:50 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Message-ID: <304619857.14491.1593195230002.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200626095801.14cfa8a3@oasis.local.home>
+References: <20200625094454.732790f7@oasis.local.home> <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com> <20200625143525.2f3a2902@oasis.local.home> <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com> <20200625223611.1dbb3b35@oasis.local.home> <20200625233552.2c8a0d1e@oasis.local.home> <20200626095801.14cfa8a3@oasis.local.home>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: ring-buffer: Have nested events still record running time stamp
+Thread-Index: rFPgR5ao+c3L9lmc87zzrz2jETjodg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver waits for response from the
-firmware for all the delete cmds, eg: vdev_delete,
-peer delete. If the firmware is down, these wait
-will always timeout and return an error.
+----- On Jun 26, 2020, at 9:58 AM, rostedt rostedt@goodmis.org wrote:
 
-Also during subsytems recovery, any attempt to
-send a WMI cmd to the FW will return the -ESHUTDOWN
-status, which when returned to mac80211, can cause
-unnecessary warnings to be printed on to the console,
-as shown below
+> On Thu, 25 Jun 2020 23:35:52 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>> I have to think about this more, as I think there's a flaw in this
+>> cmpxchg algorithm.
+> 
+> Bah, that was all wrong. I need to incorporate the seq counter into the
+> time stamp. Luckily I only use 59 bits for a full time stamp (gives me
+> 18 years of nanoseconds), which gives me 5 bits to pay with, and all I
+> need is 4 (2 for top and 2 for bottom). Now I can make the timestamp 60
+> bits with 30 bits from the top and 30 from the bottom, and using two
+> bits in each of those as a sequence counter.
+> 
+> If after reading top and bottom, if the seq bits match, then the two
+> match and can be put together as a valid number. Now I have this:
 
-[ 2559.529565] Call trace:
-[ 2559.532214]  __sta_info_destroy_part2+0x160/0x168 [mac80211]
-[ 2559.538157]  __sta_info_flush+0x124/0x180 [mac80211]
-[ 2559.543402]  ieee80211_set_disassoc+0x130/0x2c0 [mac80211]
-[ 2559.549172]  ieee80211_mgd_deauth+0x238/0x25c [mac80211]
-[ 2559.554764]  ieee80211_deauth+0x24/0x30 [mac80211]
-[ 2559.559860]  cfg80211_mlme_deauth+0x258/0x2b0 [cfg80211]
-[ 2559.565446]  nl80211_deauthenticate+0xe4/0x110 [cfg80211]
-[ 2559.571064]  genl_rcv_msg+0x3a0/0x440
-[ 2559.574888]  netlink_rcv_skb+0xb4/0x11c
-[ 2559.578877]  genl_rcv+0x34/0x48
-[ 2559.582162]  netlink_unicast+0x14c/0x1e4
-[ 2559.586235]  netlink_sendmsg+0x2f0/0x360
-[ 2559.590317]  sock_sendmsg+0x44/0x5c
-[ 2559.593951]  ____sys_sendmsg+0x1c8/0x290
-[ 2559.598029]  ___sys_sendmsg+0xa8/0xfc
-[ 2559.601840]  __sys_sendmsg+0x8c/0xd0
-[ 2559.605572]  __arm64_compat_sys_sendmsg+0x2c/0x38
-[ 2559.610468]  el0_svc_common+0xa8/0x160
-[ 2559.614372]  el0_svc_compat_handler+0x2c/0x38
-[ 2559.618905]  el0_svc_compat+0x8/0x10
+[...]
+> 
+> static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
+> {
+>	unsigned long top, bottom;
+> 
+>	top = local_read(&t->top);
+>	bottom = local_read(&t->bottom);
+> 
+>	*cnt = rb_time_cnt(top);
+> 
+>	if (*cnt != rb_time_cnt(bottom))
+>		return false;
+> 
+>	*ret = rb_time_val(top, bottom);
+>	return true;
+> }
 
-Skip the wait for delete response from the
-firmware if the firmware is down. Also return
-success to the mac80211 calls when the peer delete
-cmd fails with return status -ESHUTDOWN.
+If __rb_time_read or rb_time_cmpxchg are used in an interrupt over
+rb_time_set (between setting top and bottom), those will never succeed.
 
-Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+How is this case handled ?
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index dc7befc..7ac6549 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -701,7 +701,8 @@ static void ath10k_wait_for_peer_delete_done(struct ath10k *ar, u32 vdev_id,
- 	unsigned long time_left;
- 	int ret;
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		ret = ath10k_wait_for_peer_deleted(ar, vdev_id, addr);
- 		if (ret) {
- 			ath10k_warn(ar, "failed wait for peer deleted");
-@@ -841,7 +842,8 @@ static int ath10k_peer_delete(struct ath10k *ar, u32 vdev_id, const u8 *addr)
- 	if (ret)
- 		return ret;
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		unsigned long time_left;
- 
- 		time_left = wait_for_completion_timeout
-@@ -5673,7 +5675,8 @@ static void ath10k_remove_interface(struct ieee80211_hw *hw,
- 		ath10k_warn(ar, "failed to delete WMI vdev %i: %d\n",
- 			    arvif->vdev_id, ret);
- 
--	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map)) {
-+	if (test_bit(WMI_SERVICE_SYNC_DELETE_CMDS, ar->wmi.svc_map) &&
-+	    test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		time_left = wait_for_completion_timeout(&ar->vdev_delete_done,
- 							ATH10K_VDEV_DELETE_TIMEOUT_HZ);
- 		if (time_left == 0) {
-@@ -6110,6 +6113,11 @@ static int ath10k_hw_scan(struct ieee80211_hw *hw,
- 		goto exit;
- 	}
- 
-+	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
-+		ret = -ESHUTDOWN;
-+		goto exit;
-+	}
-+
- 	spin_lock_bh(&ar->data_lock);
- 	switch (ar->scan.state) {
- 	case ATH10K_SCAN_IDLE:
-@@ -6758,7 +6766,9 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
- 		}
- 
- 		ret = ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
--		if (ret)
-+		if (ret == -ESHUTDOWN)
-+			ret = 0;
-+		else if (ret)
- 			ath10k_warn(ar, "failed to delete peer %pM for vdev %d: %i\n",
- 				    sta->addr, arvif->vdev_id, ret);
- 
+Mathieu
+
 -- 
-2.7.4
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
