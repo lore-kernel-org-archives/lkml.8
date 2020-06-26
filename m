@@ -4,60 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD21C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4963120767
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2A220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gsWwDuEW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="paDQtPIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgFZA1R (ORCPT
+        id S1726158AbgFZA1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
+        Thu, 25 Jun 2020 20:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFZA1Q (ORCPT
+        with ESMTP id S1726012AbgFZA1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:27:16 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900B4C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:16 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id l9so7125013ybm.20
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:16 -0700 (PDT)
+        Thu, 25 Jun 2020 20:27:20 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E267C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:20 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id l62so5398440pje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=iv7sfYwPBb+T3sh9Tm/gYiOZsGJSNCHeo7sHuB/mAjU=;
-        b=gsWwDuEWxxXpafc13YiTJ2OicmolQf5h7KB/1owTbiu6Ee1j93pn2eUyAh2einvluw
-         E8nZ02G/7r07CFhIK5dPv0ZlK2iUzky20NJwNJzL3BmkInHkfTJUi0whj4v7SeoBFp3g
-         L/3uvCEgLYksFm2o4W1T7X4v2l1c/6dVt1wvCZUbCr3HPRrMHD/Wx73XJpbZlJYqrhpV
-         KaBzdZ96OBEfsKzgIwFT42MUz/2ka3sVvK4ATXx/XlaVPmoIodvUZOQza8cC5ubLjNIz
-         E74HpampI/OVzg9d/tQFsKbYUOV6dBx9FZXpN2zmmaEvoJ5q72zzytovyjewoIGXtbDl
-         naBQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=EfF/SDXieMxdBzzRNR3vjXRP9ELsApXSIPoFiYsV8L8=;
+        b=paDQtPIbzZ2WSuFquOtQehWbSHMmSB+a126xQsSFdnJ+LWvXx9zh3xoaXaxtDIWPS1
+         aj+RavY/oV4sdZMGj+JxuTxWLKrxKs/vuctrDwS3ssgObe36pmdICn64FKPmAyRHjxwe
+         XtehEjQ0v87qVFGKmNVDHwVMoI5Pn9GxvrlDvItnji8r2/359JdayOqIPyCmWStKA9+v
+         5bmemCJMXczy9khjne/ZecgDVafiUFo3pgwAosZuPIctUt449NK/rI3VYJ1hM3BWMdSf
+         CUP5JOLmNVSWSZ/xqN/vEyuLzjYjfWCuHZX6swe8v49YWnPDTEIbd5ny/cAj9qxjVpkU
+         YbuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=iv7sfYwPBb+T3sh9Tm/gYiOZsGJSNCHeo7sHuB/mAjU=;
-        b=Ue9+dyuIvTkGCVbxNHbvCTfduFvnf1q/Ai9bblni80h2LRJnE23BZQuGe0nS4QAPdT
-         R8QpSV2s1bbiiZyV5fgjOxJqhJXjrwx4sGcb/16BSxqLkRUDjIGpqKgYEgFI8yF23SWE
-         EQCIgbByAQsudYEvMFKmNhFBfetWcr5ZZxdQ+7jSS6UQ+jxIxa2Y1fz5csfYDk2nkTv6
-         r3zt4jlVuTbgGpuXps4TihnYKaDenpNIsAor54cttK4eJB/x0ZMMepudaP8BFn84xIsY
-         irMvkKDbbD3MZqmZIz1jY6YM2ZuZ9MN4WfQ3uEVyYVBpm+G7v97JaHHSJ+TG9N7l/bQO
-         CMAQ==
-X-Gm-Message-State: AOAM532rwQXdMEDIUGhRt7ZAbaSf91GmR8aoMDGcnjJ9EbNj4Eb1AIdk
-        6zaAK1qgd+lyknudlAULmjPfuib0fFfF
-X-Google-Smtp-Source: ABdhPJyJZ32y84BWOCzPlXnj6DBPie+kwwNvt36mcjomQYjcSGXpCQX3nGJKpsx74v22jf/R8UEafr0WqCf3
-X-Received: by 2002:a25:aaa9:: with SMTP id t38mr763977ybi.312.1593131235516;
- Thu, 25 Jun 2020 17:27:15 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 17:27:09 -0700
-Message-Id: <20200626002710.110200-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EfF/SDXieMxdBzzRNR3vjXRP9ELsApXSIPoFiYsV8L8=;
+        b=dWStTuv3n1GBtQJqeUFZU6o1VoBYYsp5gXJt2dhq9BbK3mGI6QMc9Zw7yRBYwdPepA
+         afS1bwrEq+Hei7g4HG8DbObXqGSKjQQjeIKAgOW3QffN5pSVTNPyYB75DEQWLr/QxsfX
+         B81GxpurAJT6KB8cKvz09beVvnmCnWHBCyqz7usHDudseUBSYXZ8e+UtlG/iaQODbEPo
+         gpLVn4LRTTDZS5fIE7/6DGNj/fc+iykl0v/LSj98WvzHlFWDPBLbwOXHA1ijKNmfmQ4D
+         hnSz11jd/azPwZCIKKeWabkU5DIFHhIyjuCyyC/J7O8EiftmyLC2Wrx70ww151viPk1O
+         ze4g==
+X-Gm-Message-State: AOAM532axoqIDA9W1nR6DMW2OUP9GqICbI790UPTjqXPoA3T5lTmPHVX
+        +cEMSGAlNMCzM7G8HkRFUEvALl0yeQCv
+X-Google-Smtp-Source: ABdhPJyg+Tx781kWCf0f1ygzfZiFbsIs8XO5OHEWZ3G9zVxZL03LpMQELqZK3FRDzjGcWC5sc5IvuWvWCLEp
+X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr611640pjs.196.1593131239458;
+ Thu, 25 Jun 2020 17:27:19 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 17:27:10 -0700
+In-Reply-To: <20200626002710.110200-1-rajatja@google.com>
+Message-Id: <20200626002710.110200-2-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200626002710.110200-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 1/2] pci: Add pci device even if the driver failed to attach
+Subject: [PATCH 2/2] pci: Add parameter to disable attaching untrusted devices
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -93,37 +98,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_attach() returning failure indicates a driver error
-while trying to probe the device. In such a scenario, the PCI
-device should still be added in the system and be visible to
-the user.
-
-This patch partially reverts:
-commit ab1a187bba5c ("PCI: Check device_attach() return value always")
+Introduce a PCI parameter that disables the automatic attachment of
+untrusted devices to their drivers.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- drivers/pci/bus.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Context:
+
+  I set out to implement the approach outlined in
+    https://lkml.org/lkml/2020/6/9/1331
+    https://lkml.org/lkml/2020/6/15/1453
+
+  But to my surprise, I found that the new hotplugged PCI devices
+  were getting automatically attached to drivers even though
+  /sys/bus/pci/drivers_autoprobe was set to 0.
+
+  I realized that the device core's "drivers_autoprobe":
+
+  * only disables the *initial* probe of the device (i.e. from
+    device_add()). If a subsystem calls device_attach() explicitly
+    for its devices like PCI subsystem does, the drivers_autoprobe
+    setting does not matter. The core will attach device to the driver.
+    This looks like correct semantic behavior to me because PCI is
+    explicitly calling device_attach(), which is a way to explicitly
+    ask the core to find and attach a driver for a device.
+
+  * "drivers_autoprobe" cannot be controlled at boot time (to restrict
+    any drivers before userspace comes up).
+
+  The options I considered were:
+
+  1) Change device_attach() so that it takes into consideration the
+     drivers_autoprobe property. Not sure if this is semantically correct
+     thing to do though. If I do this, then the only way a driver can
+     be attached to the drivers would be via userspace
+     (/sys/bus/pci/drivers/bind) (Good for our use case though!).
+
+  2) Make the drivers_autoprobe property available to PCI to use
+     (currently it is private to device core). The PCI could use this
+     to determine whether or not to call device_attach(). This still
+     leaves the other problem (of not being able to set
+     drivers_autoprobe via command line open).
+
+  3) I found the pci_dev->match_driver, which seemed similar to what I
+     am trying to do, but can't be controlled from userspace. I considered
+     populating that field based on drivers_autoprobe (still need (2)).
+     But the problem is that there is the AMD IOMMU driver which is setting
+     this independently, so setting the match_driver based on
+     drivers_autoprobe may not be a good idea. May be we can populate it
+     for untrusted devicesi, based on the parameter that I'm introducing?
+
+  4) This patch was my option 4 that helps fix both the problems for me.
+
+ drivers/pci/bus.c | 11 ++++++++---
+ drivers/pci/pci.c |  9 +++++++++
+ drivers/pci/pci.h |  1 +
+ 3 files changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 8e40b3e6da77d..3cef835b375fd 100644
+index 3cef835b375fd..336aeeb4c4ebf 100644
 --- a/drivers/pci/bus.c
 +++ b/drivers/pci/bus.c
-@@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+@@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 	pci_bridge_d3_update(dev);
  
  	dev->match_driver = true;
- 	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER) {
-+	if (retval < 0 && retval != -EPROBE_DEFER)
- 		pci_warn(dev, "device attach failed (%d)\n", retval);
--		pci_proc_detach_device(dev);
--		pci_remove_sysfs_dev_files(dev);
--		return;
--	}
+-	retval = device_attach(&dev->dev);
+-	if (retval < 0 && retval != -EPROBE_DEFER)
+-		pci_warn(dev, "device attach failed (%d)\n", retval);
++
++	if (dev->untrusted && pci_dont_attach_untrusted_devs) {
++		pci_info(dev, "not attaching untrusted device\n");
++	} else {
++		retval = device_attach(&dev->dev);
++		if (retval < 0 && retval != -EPROBE_DEFER)
++			pci_warn(dev, "device attach failed (%d)\n", retval);
++	}
  
  	pci_dev_assign_added(dev, true);
  }
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b1..dec1f9ef27d71 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -127,6 +127,13 @@ static bool pcie_ats_disabled;
+ /* If set, the PCI config space of each device is printed during boot. */
+ bool pci_early_dump;
+ 
++/*
++ * If set, the devices with "untrusted" flag shall not be attached automatically
++ * Userspace will need to attach them manually:
++ * echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
++ */
++bool pci_dont_attach_untrusted_devs;
++
+ bool pci_ats_disabled(void)
+ {
+ 	return pcie_ats_disabled;
+@@ -6522,6 +6529,8 @@ static int __init pci_setup(char *str)
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+ 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+ 				disable_acs_redir_param = str + 18;
++			} else if (!strcmp(str, "dont_attach_untrusted_devs")) {
++				pci_dont_attach_untrusted_devs = true;
+ 			} else {
+ 				pr_err("PCI: Unknown option `%s'\n", str);
+ 			}
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6d3f758671064..30ffad047d926 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -13,6 +13,7 @@
+ 
+ extern const unsigned char pcie_link_speed[];
+ extern bool pci_early_dump;
++extern bool pci_dont_attach_untrusted_devs;
+ 
+ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
