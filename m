@@ -2,380 +2,166 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0577AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28492084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3939E2088E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="D9LBXStY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgFZCgQ (ORCPT
+        id S1728158AbgFZCnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 22:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33158 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 22:43:17 -0400
+Received: from mout.gmx.net ([212.227.17.20]:42843 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgFZCgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 22:36:16 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53E020773;
-        Fri, 26 Jun 2020 02:36:12 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 22:36:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200625223611.1dbb3b35@oasis.local.home>
-In-Reply-To: <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
-References: <20200625094454.732790f7@oasis.local.home>
-        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-        <20200625143525.2f3a2902@oasis.local.home>
-        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728132AbgFZCnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 22:43:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593139375;
+        bh=DYtHPfwpCJJKc0GqD63QONboqwpuMFw48ADI1vGBkfE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=D9LBXStYT0ZyOfJPe078AUotHpvpwhf8u7T6/090nYLo4zv/t/yvuIaeB41sDEtHM
+         0X+58800Hz9TC1rg8vLQaLnznYmYYvELcnQEiXPqHOdIZ7MG6pfJQIVUbgUDRC7343
+         a8esRG8AVQ4orrqYxfty0FmLC0OBva/o8Ps0QObY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.123.51] ([88.152.145.75]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N7zBb-1ikz0u2xTH-0153gH; Fri, 26
+ Jun 2020 04:42:55 +0200
+Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit
+ builds
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200625234516.31406-1-atish.patra@wdc.com>
+ <20200625234516.31406-2-atish.patra@wdc.com>
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+Autocrypt: addr=xypron.glpk@gmx.de; prefer-encrypt=mutual; keydata=
+ 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 Eg==
+Message-ID: <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de>
+Date:   Fri, 26 Jun 2020 04:42:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200625234516.31406-2-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DNir3hMAMYmQ87pJwppxYJqIekpH3I3jRR832mYeUNJrc23wAOp
+ HbPxmf10cNMzuii472N+t3Kj5r64eOm1lManQ01GefmPRkEx7/gDJlewZnR5XaDAczcFIVz
+ pm2bNrbsZi9EavGXOCyDSgh5bazavfd3XZzPTIl+JGPvZYuS6sV2SmHuQlnjXp7dXXAlgZ7
+ xpCbkt+5XAP2NRv/Zvb5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xq8K61p4ypI=:fU2r66EwJMt+drFGGv2Ny/
+ IocZxyE6K6ZixZ0rXD2jNMSWjOaS6hNqvRaeQpXiCBiWUA6ZxoTdhRBzJq/gO8xaOefbNDXjS
+ 7evuYkpsRxnc5iJe31Qvr256OHjR85Lg0/dnar70YVNHt6GJl7YeB6Sui8mTlvzy9Y7ydb5l2
+ g3PCW5HcKaNKgJdYo7MTxefe7NCiZjWadhO06t86x/XzSSLsU5gD67GzC5MDzX+hF1PMFbucP
+ /B+iSJA2ylOMcOJ17KlQuSf0JJMYD1QpsmeGrq3rn8vruKqkh8CDPaYP6yBgAwDBnFpXOkrDw
+ LK1TYKkLgsHV9ZKKMN8wxJgErkYGBB8EwPMe8diWGigebHsy1+VkCBatnA9ROs2r0cQZnA4sX
+ uxygkKJROdXLW0nGaJuQywT6qIVlaHuirlFUI7sGAddCpVBV9Rk+VlASaMpRKbR6208hG/VTU
+ NIdmSn9paIcZbJuTzfv+drOZ/jmysT6VzBxvEEloVcpDz5uFDAMvT4s43Yo091LuGS1AQu8oh
+ sEK51ZQCdZQ2JSljiXPXsHwTl9O58QLze/yTILrhOp4GbXLNxyUlOkRe5Zyq6xdr25RhiML5J
+ lxXXNZjlYaikX73NHIaDA3dupY7kakXf62qfzDlLlW17VQ/hZxu4QHhz0pgjQvLaRoFSJ/C+b
+ mf6sGNRjXuZGip71whdUIsdarm7sohO2z2VBZaF3OJwJmEAFNl3rfH9r+BxqEuL7WF4auSOo/
+ OvI6LUXXqUMFwoHowoLodsqpOT03EWgIZaeYS7ff/V97wI/w5I8R+SNjoSkK2X2UNHyzMT7Sr
+ vl6qJLuF7wHXJMQEf1BxCmglTY344dxSG3n3ukjS7Jyz23SLdPioD+0rq2GAoXkij2HG+Q4fe
+ +y9MfnO5oI2V7L1zhlIx41WQtfAbRo+p2mKSHHQEWWKEovokPVuYFeoxR2jIaxpnX0L4/WNtH
+ hjOiwirrdy+v6irBzPhxy3ICQbgypxEoNvBY8KeNtAG8jZYOdePMJBr1jINcdSBJTOeEDV4FB
+ iMiOe+mChG3fzIPp0Qf/bHyRleQgKl6e6ZDZdF2uZvrgrwl/YKJxS6FqHR/2LkHT7wZxaBQLU
+ I4D5PfIiafYWcsn9UIKKsUqUjs27tIw51IVE3tak/ebB3Z8opl64OTvGbNxTFri2WL+C8lYxw
+ 0T6Ht2YljGNLkPxKktXuUhfV4vZDZa4j8idoWlJcAMrHEC7lgwW+8PAp7BfEOI9XwHxIkJ4b+
+ p1NBpPev7YIBV4/KK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 15:35:02 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 6/26/20 1:45 AM, Atish Patra wrote:
+> 32bit gcc doesn't support modulo operation on 64 bit data. It results in
+> a __umoddi3 error while building EFI for 32 bit.
+>
+> Use bitwise operations instead of modulo operations to fix the issue.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmwar=
+e/efi/libstub/alignedmem.c
+> index cc89c4d6196f..1de9878ddd3a 100644
+> --- a/drivers/firmware/efi/libstub/alignedmem.c
+> +++ b/drivers/firmware/efi/libstub/alignedmem.c
+> @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long =
+size, unsigned long *addr,
+>  	*addr =3D ALIGN((unsigned long)alloc_addr, align);
+>
+>  	if (slack > 0) {
+> -		int l =3D (alloc_addr % align) / EFI_PAGE_SIZE;
+> +		int l =3D (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
 
-> Those performance and reentrancy concerns are why I always stick to local_t
-> (long), and never use a full 64-bit type for anything that has to
-> do with concurrent store/load between execution contexts in lttng.
+Here you rely on the compiler to silently convert the division by
+EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
+EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
 
-Although the adding of this patch slows the recording down by around 7
-nanoseconds (average 55ns brought to 62ns), but I can wrap it so that
-it stays local64_t for 64 bit and use this for 32 bit.
+slack =3D (align >> EFI_PAGE_SHIFT) - 1;
+...
+int l =3D (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
 
-I added three primitives:
+Best regards
 
- bool rb_time_read(rb_time_t *t, u64 *val)
+Heinrich
 
-It loads val with t if t wasn't being updated at the time. If it is, it
-returns false and val is not touched, otherwise it returns true and val
-has a real value (either before, or updated by an interrupt).
+>
+>  		if (l) {
+>  			efi_bs_call(free_pages, alloc_addr, slack - l + 1);
+>
 
- void rb_time_set(rb_time_t *t, u64 val)
-
-This will update t with val, and wont return until it has done so. It
-will overwrite any update that interrupted the process.
-
- bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set);
-
-This will attempt to do a cmpxchg on t, if it matches "expect" it will
-write "set". If it gets interrupted, then it will detect that, and return
-false. Otherwise it will return true if it fully changed the value.
-
-
-This is all I need, and is rather trivial to implement. The trick is
-the order of rb_time_t is always written from:
-
-  start_cnt
-  top
-  bottom
-  end_cnt
-
-This means that end_cnt will never be greater than start_cnt. If we see
-that it is, it means that the process was interrupted with another
-update. That process that interrupted a write, would complete its write.
-
-I don't plan on applying this, but if it turns out that local64_t is a
-problem on 32 bit archs (and I hear complaints), I add this (and but
-still use local64_t on 64 bit archs).
-
--- Steve
-
-Index: linux-trace.git/kernel/trace/ring_buffer.c
-===================================================================
---- linux-trace.git.orig/kernel/trace/ring_buffer.c
-+++ linux-trace.git/kernel/trace/ring_buffer.c
-@@ -446,6 +446,22 @@ enum {
- 	RB_CTX_MAX
- };
- 
-+struct rb_time_struct {
-+	local_t		start_cnt;
-+	local_t		top;
-+	local_t		bottom;
-+	local_t		end_cnt;
-+};
-+
-+struct rb_time_read {
-+	unsigned long	start_cnt;
-+	unsigned long	top;
-+	unsigned long	bottom;
-+	unsigned long	end_cnt;
-+};
-+
-+typedef struct rb_time_struct rb_time_t;
-+
- /*
-  * head_page == tail_page && head == tail then buffer is empty.
-  */
-@@ -482,8 +498,8 @@ struct ring_buffer_per_cpu {
- 	unsigned long			read;
- 	unsigned long			read_bytes;
- 	unsigned long			next_write;
--	local64_t			write_stamp;
--	local64_t			before_stamp;
-+	rb_time_t			write_stamp;
-+	rb_time_t			before_stamp;
- 	u64				read_stamp;
- 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
- 	long				nr_pages_to_update;
-@@ -526,6 +542,78 @@ struct ring_buffer_iter {
- 	int				missed_events;
- };
- 
-+static bool rb_time_read(rb_time_t *t, u64 *ret)
-+{
-+	struct rb_time_read r;
-+	u64 val;
-+
-+	do {
-+		r.start_cnt = local_read(&t->start_cnt);
-+		r.top = local_read(&t->top);
-+		r.bottom = local_read(&t->bottom);
-+		r.end_cnt = local_read(&t->end_cnt);
-+	} while (r.start_cnt < r.end_cnt);
-+
-+	if (r.start_cnt != r.end_cnt)
-+		return false;
-+
-+	val = r.top;
-+	val <<= 32;
-+	val |= r.bottom;
-+	*ret = val;
-+	return true;
-+}
-+
-+static inline void rb_time_read_set(struct rb_time_read *r, u64 val)
-+{
-+	r->top = (unsigned long)(val >> 32);
-+	r->bottom = (unsigned long)(val & ((1ULL << 32) - 1));
-+}
-+
-+static void rb_time_set(rb_time_t *t, u64 val)
-+{
-+	struct rb_time_read r;
-+
-+	rb_time_read_set(&r, val);
-+
-+	do {
-+		r.start_cnt = local_inc_return(&t->start_cnt);
-+		local_set(&t->top, r.top);
-+		local_set(&t->bottom, r.bottom);
-+		local_set(&t->end_cnt, r.start_cnt);
-+	} while (r.start_cnt != local_read(&t->start_cnt));
-+}
-+
-+static bool rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
-+{
-+	unsigned long ret;
-+
-+	ret = local_cmpxchg(l, expect, set);
-+	return ret == expect;
-+}
-+
-+static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-+{
-+	struct rb_time_read e, s;
-+
-+	rb_time_read_set(&e, expect);
-+	rb_time_read_set(&s, set);
-+
-+	e.start_cnt = local_read(&t->start_cnt);
-+	e.end_cnt = local_read(&t->end_cnt);
-+
-+	s.start_cnt = e.start_cnt + 1;
-+	s.end_cnt = e.start_cnt;
-+
-+	if (!rb_time_read_cmpxchg(&t->start_cnt, e.start_cnt, s.start_cnt))
-+		return false;
-+	if (!rb_time_read_cmpxchg(&t->top, e.top, s.top))
-+		return false;
-+	if (!rb_time_read_cmpxchg(&t->bottom, e.bottom, s.bottom))
-+		return false;
-+	return rb_time_read_cmpxchg(&t->end_cnt, e.end_cnt, s.end_cnt);
-+}
-+
- /**
-  * ring_buffer_nr_pages - get the number of buffer pages in the ring buffer
-  * @buffer: The ring_buffer to get the number of pages from
-@@ -2543,7 +2631,8 @@ rb_try_to_discard(struct ring_buffer_per
- 
- 	delta = rb_time_delta(event);
- 
--	write_stamp = local64_read(&cpu_buffer->write_stamp);
-+	if (!rb_time_read(&cpu_buffer->write_stamp, &write_stamp))
-+		return 0;
- 
- 	/* Make sure the write stamp is read before testing the location */
- 	barrier();
-@@ -2552,11 +2641,10 @@ rb_try_to_discard(struct ring_buffer_per
- 		unsigned long write_mask =
- 			local_read(&bpage->write) & ~RB_WRITE_MASK;
- 		unsigned long event_length = rb_event_length(event);
--		u64 ret;
- 
--		ret = local64_cmpxchg(&cpu_buffer->write_stamp, write_stamp, write_stamp - delta);
- 		/* Something came in, can't discard */
--		if (ret != write_stamp)
-+		if (!rb_time_cmpxchg(&cpu_buffer->write_stamp,
-+				     write_stamp, write_stamp - delta))
- 			return 0;
- 
- 		/*
-@@ -2887,11 +2975,13 @@ static noinline void
- rb_handle_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		    struct rb_event_info *info)
- {
-+	u64 write_stamp;
-+
- 	WARN_ONCE(info->delta > (1ULL << 59),
- 		  KERN_WARNING "Delta way too big! %llu ts=%llu write stamp = %llu\n%s",
- 		  (unsigned long long)info->delta,
- 		  (unsigned long long)info->ts,
--		  (unsigned long long)local64_read(&cpu_buffer->write_stamp),
-+		  (unsigned long long)(rb_time_read(&cpu_buffer->write_stamp, &write_stamp) ? write_stamp : 0),
- 		  sched_clock_stable() ? "" :
- 		  "If you just came from a suspend/resume,\n"
- 		  "please switch to the trace global clock:\n"
-@@ -2909,14 +2999,16 @@ __rb_reserve_next(struct ring_buffer_per
- 	unsigned long tail, write, w, next;
- 	u64 delta, before, after;
- 	bool abs = false;
-+	bool a_ok;
-+	bool b_ok;
- 
- 	/* Don't let the compiler play games with cpu_buffer->tail_page */
- 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
- 
-  /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
- 	barrier();
--	before = local64_read(&cpu_buffer->before_stamp);
--	after = local64_read(&cpu_buffer->write_stamp);
-+	b_ok = rb_time_read(&cpu_buffer->before_stamp, &before);
-+	a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
- 	barrier();
- 	info->ts = rb_time_stamp(cpu_buffer->buffer);
- 
-@@ -2934,7 +3026,7 @@ __rb_reserve_next(struct ring_buffer_per
- 	 * If interrupting an event time update, we may need an absolute timestamp.
- 	 * Don't bother if this is the start of a new page (w == 0).
- 	 */
--	if (unlikely(before != after && w))
-+	if (unlikely(!a_ok || !b_ok || (before != after && w)))
- 		info->add_timestamp = RB_ADD_STAMP_FORCE;
- 	/*
- 	 * If the time delta since the last event is too big to
-@@ -2947,7 +3039,7 @@ __rb_reserve_next(struct ring_buffer_per
- 	next = READ_ONCE(cpu_buffer->next_write);
- 	WRITE_ONCE(cpu_buffer->next_write, w + info->length);
- 
-- /*B*/	local64_set(&cpu_buffer->before_stamp, info->ts);
-+ /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
- 
-  /*C*/	write = local_add_return(info->length, &tail_page->write);
- 
-@@ -2960,21 +3052,23 @@ __rb_reserve_next(struct ring_buffer_per
- 	if (unlikely(write > BUF_PAGE_SIZE)) {
- 		if (tail != w) {
- 			/* before and after may now different, fix it up*/
--			before = local64_read(&cpu_buffer->before_stamp);
--			after = local64_read(&cpu_buffer->write_stamp);
--			if (before != after)
--				(void)local64_cmpxchg(&cpu_buffer->before_stamp, before, after);
-+			b_ok = rb_time_read(&cpu_buffer->before_stamp, &before);
-+			a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
-+			if (a_ok && b_ok && before != after)
-+				(void)rb_time_cmpxchg(&cpu_buffer->before_stamp, before, after);
- 		}
- 		return rb_move_tail(cpu_buffer, tail, info);
- 	}
- 
- 	if (likely(tail == w)) {
- 		u64 save_before;
-+		bool s_ok;
- 
- 		/* Nothing interrupted us between A and C */
-- /*D*/		local64_set(&cpu_buffer->write_stamp, info->ts);
-+ /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
- 		barrier();
-- /*E*/		save_before = local64_read(&cpu_buffer->before_stamp);
-+ /*E*/		s_ok = rb_time_read(&cpu_buffer->before_stamp, &save_before);
-+		RB_WARN_ON(cpu_buffer, !s_ok);
- 		if (likely(info->add_timestamp != RB_ADD_STAMP_FORCE))
- 			/* This did not interrupt any time update */
- 			info->delta = info->ts - after;
-@@ -2985,27 +3079,29 @@ __rb_reserve_next(struct ring_buffer_per
- 		if (unlikely(info->ts != save_before)) {
- 			/* SLOW PATH - Interrupted between C and E */
- 
--			after = local64_read(&cpu_buffer->write_stamp);
-+			a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
-+			RB_WARN_ON(cpu_buffer, !a_ok);
-+
- 			/* Write stamp must only go forward */
- 			if (save_before > after) {
- 				/*
- 				 * We do not care about the result, only that
- 				 * it gets updated atomically.
- 				 */
--				(void)local64_cmpxchg(&cpu_buffer->write_stamp, after, save_before);
-+				(void)rb_time_cmpxchg(&cpu_buffer->write_stamp, after, save_before);
- 			}
- 		}
- 	} else {
- 		u64 ts;
- 		/* SLOW PATH - Interrupted between A and C */
--		after = local64_read(&cpu_buffer->write_stamp);
-+		a_ok = rb_time_read(&cpu_buffer->write_stamp, &after);
- 		ts = rb_time_stamp(cpu_buffer->buffer);
- 		barrier();
-  /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
- 		    after < ts) {
- 			/* Nothing came after this event between C and E */
- 			info->delta = ts - after;
--			(void)local64_cmpxchg(&cpu_buffer->write_stamp, after, info->ts);
-+			(void)rb_time_cmpxchg(&cpu_buffer->write_stamp, after, info->ts);
- 			info->ts = ts;
- 		} else {
- 			/*
-@@ -4567,8 +4663,8 @@ rb_reset_cpu(struct ring_buffer_per_cpu
- 	cpu_buffer->read = 0;
- 	cpu_buffer->read_bytes = 0;
- 
--	local64_set(&cpu_buffer->write_stamp, 0);
--	local64_set(&cpu_buffer->before_stamp, 0);
-+	rb_time_set(&cpu_buffer->write_stamp, 0);
-+	rb_time_set(&cpu_buffer->before_stamp, 0);
- 	cpu_buffer->next_write = 0;
- 
- 	cpu_buffer->lost_events = 0;
