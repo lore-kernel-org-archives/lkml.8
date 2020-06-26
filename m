@@ -2,201 +2,357 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C826C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC91207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E819920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 20:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvUBVP6P"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TtEzEQ2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgFZUFB (ORCPT
+        id S1726126AbgFZUFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgFZUEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:04:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486EBC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:04:54 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so10584679wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 13:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h9iScij+INx6Ii2zxgR7WLn6FdOxcA8dMusmQA4u5sY=;
-        b=tvUBVP6PjUWl2uLBtAteWs3IWlbQDnwNilBs3dQXP+1lqrHxkD2lWaaujiQT5GZH4j
-         zAtTK982aiVxeuauy2bEb8jQdCp+8asaSvTwDml4dcVMEcgqe4zHBp9WyrwSM1BuBMwV
-         Y+edcZxacethaLifNJWB5dzd6UTU70zvd9jEdj6c7T7ZmChPCFDAihhonloAGfYmJ0r6
-         jdz4nXnwGQbS1H3porL7kVhAI0UxDSBpVh8xrlYCPG4R7v4/vcT60dcYvmfJcgnD1L/R
-         VFfoX7yZBf/CJzpupnr+8TPEotfvlIq4PKXY1diZquRDphcAH04MdXloX4iKK73hP5IW
-         jU8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h9iScij+INx6Ii2zxgR7WLn6FdOxcA8dMusmQA4u5sY=;
-        b=XrLw2iJ9eWqhS3dI7RKDJk70JS1sG4mbyDiG4yE06xapsFWvZ7fgTcGv3HwYtpWoSK
-         v7L2fpZAoGgcyVbLp6jNy68fld16TjwccjWUyuxH3MIu/eV2xmQ6si9gachp/eITrInv
-         AVF9ha36EGskoa6DBpA4k/o9sEWcHPA45ZFPyeslMkq+UMYoj9zojwkjPiY1JDcZHoHa
-         Uy89Klj7+FjFuDcE/2fKs37y2OTEoLb+3T8Epm9pBlhJ+8UM1mUaxjuAZPCyxeroPZRt
-         /zwdmm7UxjWgz7WRH7oMhSNKXX0V4Z324TF/VvI51yta+K2VPhaq541QyRQDGjBZHrUG
-         ADUw==
-X-Gm-Message-State: AOAM530ZHep+GXnsiFX8FzFWhitqF1GoXaASUlQBv+p1WBvkltpoHnkh
-        AphRpz6S06daX0hTEP+7owZwmvk70fJgFSALupQ/wA==
-X-Google-Smtp-Source: ABdhPJxO7soteTM7ffFtdAKnmVUUhboe1pbuWLx/y99If5suXZDvykjYXHADm8fTdew4IV9jzvdapb7V2dWjWeC2Di4=
-X-Received: by 2002:adf:e5d0:: with SMTP id a16mr5240030wrn.48.1593201892707;
- Fri, 26 Jun 2020 13:04:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-3-jolsa@kernel.org>
-In-Reply-To: <20200626194720.2915044-3-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jun 2020 13:04:41 -0700
-Message-ID: <CAP-5=fVdSmPEYMqGqCEwZXfj=-wg6sJLQ=kuPTLaPdKiAiqTvg@mail.gmail.com>
-Subject: Re: [PATCH 02/10] perf tools: Add struct expr_parse_data to keep expr value
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 26 Jun 2020 16:05:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27813 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbgFZUEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:04:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593201888; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=MYgenQyiQdZQEyqFDQ5odU+4+VgfI1wyx+54cF7dHG0=; b=TtEzEQ2i72iX3iKI/4nIu3KURCfz+7vq1Jdem8OVoD+O4/COfDXEZ/rrQKLLvPsusdw+vtAa
+ MRDWyr3Ncr57PYN1PKFn4f89yO58DsMMP8zoIA7cWOC3Wt855LpOtOFEZokqT3acEuR/BVWI
+ XOjZpa0y2KOLdqRCU8wcz8tMAdE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5ef654ce356bcc26abeca3c6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:04:30
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 32472C433C8; Fri, 26 Jun 2020 20:04:29 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2270CC4339C;
+        Fri, 26 Jun 2020 20:04:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2270CC4339C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/6] drm/msm: Add support to create a local pagetable
+Date:   Fri, 26 Jun 2020 14:04:12 -0600
+Message-Id: <20200626200414.14382-5-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200626200414.14382-1-jcrouse@codeaurora.org>
+References: <20200626200414.14382-1-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding struct expr_parse_data to keep expr value
-> instead of just simple double pointer, so we can
-> store more data for ID in following changes.
+Add support to create a io-pgtable for use by targets that support
+per-instance pagetables.  In order to support per-instance pagetables the
+GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
+split pagetables and auxiliary domains need to be supported and enabled.
 
-Nit, expr_parse_data sounds a bit like data that is created just at
-parse time. Perhaps id_data, for data associated with an id?
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-Thanks,
-Ian
+ drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c  | 180 ++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
+ 3 files changed, 195 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/tests/expr.c       |  3 ++-
->  tools/perf/util/expr.c        | 20 ++++++++++----------
->  tools/perf/util/expr.h        |  4 ++++
->  tools/perf/util/metricgroup.c |  2 +-
->  4 files changed, 17 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index 82aa32fcab64..e64461f1a24c 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -18,8 +18,9 @@ static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
->
->  int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  {
-> +       struct expr_parse_data *val_ptr;
->         const char *p;
-> -       double val, *val_ptr;
-> +       double val;
->         int ret;
->         struct expr_parse_ctx ctx;
->
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index a02937e5f3ac..7573b21e73df 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -35,30 +35,30 @@ static bool key_equal(const void *key1, const void *key2,
->  /* Caller must make sure id is allocated */
->  int expr__add_val(struct expr_parse_ctx *ctx, const char *name, double val)
->  {
-> -       double *val_ptr = NULL, *old_val = NULL;
-> +       struct expr_parse_data *data_ptr = NULL, *old_data = NULL;
->         char *old_key = NULL;
->         int ret;
->
->         if (val != 0.0) {
-> -               val_ptr = malloc(sizeof(double));
-> -               if (!val_ptr)
-> +               data_ptr = malloc(sizeof(*data_ptr));
-> +               if (!data_ptr)
->                         return -ENOMEM;
-> -               *val_ptr = val;
-> +               data_ptr->val = val;
->         }
-> -       ret = hashmap__set(&ctx->ids, name, val_ptr,
-> -                          (const void **)&old_key, (void **)&old_val);
-> +       ret = hashmap__set(&ctx->ids, name, data_ptr,
-> +                          (const void **)&old_key, (void **)&old_data);
->         free(old_key);
-> -       free(old_val);
-> +       free(old_data);
->         return ret;
->  }
->
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr)
->  {
-> -       double *data;
-> +       struct expr_parse_data *data;
->
->         if (!hashmap__find(&ctx->ids, id, (void **)&data))
->                 return -1;
-> -       *val_ptr = (data == NULL) ?  0.0 : *data;
-> +       *val_ptr = (data == NULL) ?  0.0 : data->val;
->         return 0;
->  }
->
-> @@ -119,7 +119,7 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->  int expr__find_other(const char *expr, const char *one,
->                      struct expr_parse_ctx *ctx, int runtime)
->  {
-> -       double *old_val = NULL;
-> +       struct expr_parse_data *old_val = NULL;
->         char *old_key = NULL;
->         int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
->
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 35bdc609cf55..f9f16efe76bc 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -15,6 +15,10 @@ struct expr_parse_ctx {
->         struct hashmap ids;
->  };
->
-> +struct expr_parse_data {
-> +       double  val;
-> +};
-> +
->  struct expr_scanner_ctx {
->         int start_token;
->         int runtime;
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 82fecb5a302d..85e7fa2e2707 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -138,7 +138,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->                                       unsigned long *evlist_used)
->  {
->         struct evsel *ev, *current_leader = NULL;
-> -       double *val_ptr;
-> +       struct expr_parse_data *val_ptr;
->         int i = 0, matched_events = 0, events_to_match;
->         const int idnum = (int)hashmap__size(&pctx->ids);
->
-> --
-> 2.25.4
->
+diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+index 310a31b05faa..aab121f4beb7 100644
+--- a/drivers/gpu/drm/msm/msm_gpummu.c
++++ b/drivers/gpu/drm/msm/msm_gpummu.c
+@@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
+ 	}
+ 
+ 	gpummu->gpu = gpu;
+-	msm_mmu_init(&gpummu->base, dev, &funcs);
++	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
+ 
+ 	return &gpummu->base;
+ }
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 1b6635504069..f455c597f76d 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -4,15 +4,192 @@
+  * Author: Rob Clark <robdclark@gmail.com>
+  */
+ 
++#include <linux/io-pgtable.h>
+ #include "msm_drv.h"
+ #include "msm_mmu.h"
+ 
+ struct msm_iommu {
+ 	struct msm_mmu base;
+ 	struct iommu_domain *domain;
++	struct iommu_domain *aux_domain;
+ };
++
+ #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+ 
++struct msm_iommu_pagetable {
++	struct msm_mmu base;
++	struct msm_mmu *parent;
++	struct io_pgtable_ops *pgtbl_ops;
++	phys_addr_t ttbr;
++	u32 asid;
++};
++
++static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
++{
++	return container_of(mmu, struct msm_iommu_pagetable, base);
++}
++
++static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
++		size_t size)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	size_t unmapped = 0;
++
++	/* Unmap the block one page at a time */
++	while (size) {
++		unmapped += ops->unmap(ops, iova, 4096, NULL);
++		iova += 4096;
++		size -= 4096;
++	}
++
++	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
++
++	return (unmapped == size) ? 0 : -EINVAL;
++}
++
++static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
++		struct sg_table *sgt, size_t len, int prot)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	struct scatterlist *sg;
++	size_t mapped = 0;
++	u64 addr = iova;
++	unsigned int i;
++
++	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++		size_t size = sg->length;
++		phys_addr_t phys = sg_phys(sg);
++
++		/* Map the block one page at a time */
++		while (size) {
++			if (ops->map(ops, addr, phys, 4096, prot)) {
++				msm_iommu_pagetable_unmap(mmu, iova, mapped);
++				return -EINVAL;
++			}
++
++			phys += 4096;
++			addr += 4096;
++			size -= 4096;
++			mapped += 4096;
++		}
++	}
++
++	return 0;
++}
++
++static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++
++	free_io_pgtable_ops(pagetable->pgtbl_ops);
++	kfree(pagetable);
++}
++
++/*
++ * Given a parent device, create and return an aux domain. This will enable the
++ * TTBR0 region
++ */
++static struct iommu_domain *msm_iommu_get_aux_domain(struct msm_mmu *parent)
++{
++	struct msm_iommu *iommu = to_msm_iommu(parent);
++	struct iommu_domain *domain;
++	int ret;
++
++	if (iommu->aux_domain)
++		return iommu->aux_domain;
++
++	if (!iommu_dev_has_feature(parent->dev, IOMMU_DEV_FEAT_AUX))
++		return ERR_PTR(-ENODEV);
++
++	domain = iommu_domain_alloc(&platform_bus_type);
++	if (!domain)
++		return ERR_PTR(-ENODEV);
++
++	ret = iommu_aux_attach_device(domain, parent->dev);
++	if (ret) {
++		iommu_domain_free(domain);
++		return ERR_PTR(ret);
++	}
++
++	iommu->aux_domain = domain;
++	return domain;
++}
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu,
++		phys_addr_t *ttbr, int *asid)
++{
++	struct msm_iommu_pagetable *pagetable;
++
++	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
++		return -EINVAL;
++
++	pagetable = to_pagetable(mmu);
++
++	if (ttbr)
++		*ttbr = pagetable->ttbr;
++
++	if (asid)
++		*asid = pagetable->asid;
++
++	return 0;
++}
++
++static const struct msm_mmu_funcs pagetable_funcs = {
++		.map = msm_iommu_pagetable_map,
++		.unmap = msm_iommu_pagetable_unmap,
++		.destroy = msm_iommu_pagetable_destroy,
++};
++
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
++{
++	static int next_asid = 16;
++	struct msm_iommu_pagetable *pagetable;
++	struct iommu_domain *aux_domain;
++	struct io_pgtable_cfg cfg;
++	int ret;
++
++	/* Make sure that the parent has a aux domain attached */
++	aux_domain = msm_iommu_get_aux_domain(parent);
++	if (IS_ERR(aux_domain))
++		return ERR_CAST(aux_domain);
++
++	/* Get the pagetable configuration from the aux domain */
++	ret = iommu_domain_get_attr(aux_domain, DOMAIN_ATTR_PGTABLE_CFG, &cfg);
++	if (ret)
++		return ERR_PTR(ret);
++
++	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
++	if (!pagetable)
++		return ERR_PTR(-ENOMEM);
++
++	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
++		MSM_MMU_IOMMU_PAGETABLE);
++
++	cfg.tlb = NULL;
++
++	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
++		&cfg, aux_domain);
++
++	if (!pagetable->pgtbl_ops) {
++		kfree(pagetable);
++		return ERR_PTR(-ENOMEM);
++	}
++
++
++	/* Needed later for TLB flush */
++	pagetable->parent = parent;
++	pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
++
++	pagetable->asid = next_asid;
++	next_asid = (next_asid + 1)  % 255;
++	if (next_asid < 16)
++		next_asid = 16;
++
++	return &pagetable->base;
++}
++
+ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+ 		unsigned long iova, int flags, void *arg)
+ {
+@@ -40,6 +217,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+ 	if (iova & BIT_ULL(48))
+ 		iova |= GENMASK_ULL(63, 49);
+ 
++
+ 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+ 	WARN_ON(!ret);
+ 
+@@ -85,7 +263,7 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	iommu->domain = domain;
+-	msm_mmu_init(&iommu->base, dev, &funcs);
++	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
+ 	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+ 
+ 	ret = iommu_attach_device(iommu->domain, dev);
+diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+index 3a534ee59bf6..61ade89d9e48 100644
+--- a/drivers/gpu/drm/msm/msm_mmu.h
++++ b/drivers/gpu/drm/msm/msm_mmu.h
+@@ -17,18 +17,26 @@ struct msm_mmu_funcs {
+ 	void (*destroy)(struct msm_mmu *mmu);
+ };
+ 
++enum msm_mmu_type {
++	MSM_MMU_GPUMMU,
++	MSM_MMU_IOMMU,
++	MSM_MMU_IOMMU_PAGETABLE,
++};
++
+ struct msm_mmu {
+ 	const struct msm_mmu_funcs *funcs;
+ 	struct device *dev;
+ 	int (*handler)(void *arg, unsigned long iova, int flags);
+ 	void *arg;
++	enum msm_mmu_type type;
+ };
+ 
+ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
+-		const struct msm_mmu_funcs *funcs)
++		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
+ {
+ 	mmu->dev = dev;
+ 	mmu->funcs = funcs;
++	mmu->type = type;
+ }
+ 
+ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+@@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
+ 	mmu->handler = handler;
+ }
+ 
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
++
+ void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
+ 		dma_addr_t *tran_error);
+ 
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
++		int *asid);
++
+ #endif /* __MSM_MMU_H__ */
+-- 
+2.17.1
+
