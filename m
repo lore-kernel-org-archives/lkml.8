@@ -2,163 +2,152 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0F1207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BB620775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 05:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rb8Q+1dS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRZemnxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgFZF1F (ORCPT
+        id S1728037AbgFZF1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 01:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
+        Fri, 26 Jun 2020 01:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgFZF1E (ORCPT
+        with ESMTP id S1726082AbgFZF1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 01:27:04 -0400
+        Fri, 26 Jun 2020 01:27:07 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C5CC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:04 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b25so5383131ljp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981ECC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:06 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s1so9016324ljo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 22:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jWSmhFAjgCJ/4MERZDdmV3HHdWRMsmmhbC6NHwQFBlg=;
-        b=rb8Q+1dSzwKbczJC5klufjbDjum1q93zdZOH735pHh1ahl0p0Wjlgwz7/o0lxO2jxs
-         Qf2E5FdecXLm4csarrYSzG97tKlHAZAwikBjrkkB8JyAte0JamXRvT3iIZ/QaXOEN8+x
-         ar+vbtnyb4fgUOCQLQtZ5pcMBOIK9XkrfdELE5kUxx42alUIBef2Ny0mFjlNGcqncndB
-         Y5yCF2b6L6Vany4DXOCVDwXSr/8xuxxXOY9RZRJ++3YlmBaBGq3YmB/enn7n9/NSlBU1
-         tBsRWmOpKPWCoabOLlsc4uDNLq5+ESq6j6476gVUQHGaUFF937Q3kgzUzwGQGXVsYfUa
-         azyg==
+        bh=VuCEJOiQoqa0Rytop5ZoclTGnejYAU1zTtQWpgV+XJk=;
+        b=tRZemnxbVY6+6epMlhA+YSEtiuBGPEfAgB7O3fyn6uOiRsNkYm8inikyYy99XChNgC
+         IjyB5mPxS+WDnHZLaTELQk0or68E/i08k+5eQ3qHN3hKJ1lSGExWo7fLmnSljN8CSPZs
+         3aotvq09CnSbdrOE4Qao5qky74s3HwM8Lhtc8h6mzIfbma4aaEyH8/pfiNoqDA0cMX7m
+         Hua8P47pfUW94Ms5WNu2oeE2qYHV5+np7uwKMXTbrBkfI6BepiAUIbwVtsafO2aWaVhP
+         ZEYnQCUjJEmgnL+8WiH40CxOdIE5lltvkb7bOjS9g6lRMmYGAfsqdBfeGs60h3rO6SNw
+         RTrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jWSmhFAjgCJ/4MERZDdmV3HHdWRMsmmhbC6NHwQFBlg=;
-        b=SSkepc9TGnHPcOE0Sv95v+NIljBQV2CJUX0v8fW2WSuCAM26ZZcmgHbDSN7xqk0wSC
-         bMMaEHUervdmImn27ew8wVirt8Ev7Cv2KnuWcKAp/BAy+Axo3eWgMZDI8qfEIswamgbX
-         7OOPgU5pESsyjenT0PJoB4KpIkfiw2udl3CTRmgaMwFpL2eZfqEkf/SgBoy12T1DLqVN
-         SQv0zLnpCldkNn9VZyE2U4P/halFsmbMAvEoUOsf1JY1PxEvCKKBKl26fPHo9TyhXnv0
-         cOht70TZTtVp3ccVkn5u+AnOLHg4CADAn1gWl99R/7rejXdfv0xopbaqb4Oz6CEk28UG
-         U0og==
-X-Gm-Message-State: AOAM5331sf6wn5f2bnAJHH7NdDcOrOqqG5SCZy2Qec97k/z8C0tOv3a+
-        uA5pooUyF4DFYy3GJfYdtqnLuQgu5ZsXahvnJ2ZEgQ==
-X-Google-Smtp-Source: ABdhPJxkDD58JMKImt/kwvHSRCvi2eSoQBTY2+Uvb1xPAxHBhkNbqSdrTW0Xrq6J8pZ/kHZwkeOyw/4CAJReOUqaXu8=
-X-Received: by 2002:a2e:b04c:: with SMTP id d12mr511914ljl.256.1593149222348;
- Thu, 25 Jun 2020 22:27:02 -0700 (PDT)
+        bh=VuCEJOiQoqa0Rytop5ZoclTGnejYAU1zTtQWpgV+XJk=;
+        b=mTM8/hKmqdgbI4vwBnuvYKVJn7+sp9j7A7OzYP5fKH5huOgz69286RYuFi+VBo/fI0
+         xMzTj8X8jueLHZoIDgoI71hRQWskujeKErBcxTcn0L07pcQ1KYWyyDUNSt/NjgGRS/P6
+         LpyRKWiE7WB3iCsnGB4k/K3rDeZNmVvvNuADUgraGe+DEeVwuQoKlYeGKpXVbF7EYQEz
+         b4n95/dCmYv8dW/V7UJ7dm3N3htDKzL/Oxn66jP/JgSvaEHr1VcSl2X+R8ADoegJfjpT
+         QY/jB23oX4bFDK/xexiq5P9Kl7mFIsZ+pGEp0ZMWRIzIvRxVjOQ8gYuairoHYewXENgz
+         bWuA==
+X-Gm-Message-State: AOAM532VWpc+gjllk8auEREyxlSlynfVJf8PCNm34KBXfo9ge122YOP0
+        /FGGLm2UqMeeHsgiO1IlKmQo9/je73cm11xcsNk=
+X-Google-Smtp-Source: ABdhPJympWOSvfCz5C0Bh0T+ZGbmTwsB4TIChwXQNXDAd0cIBhtJwVxJLh3CgynI4lIIQS2Vw2jHrcfucD0IFOhz1vE=
+X-Received: by 2002:a2e:b704:: with SMTP id j4mr593539ljo.458.1593149225080;
+ Thu, 25 Jun 2020 22:27:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
- <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
- <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
- <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
- <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
- <1593012069.28403.11.camel@HansenPartnership.com> <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
- <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
-In-Reply-To: <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 26 Jun 2020 10:56:50 +0530
-Message-ID: <CAFA6WYPUzSNYjrktSPdzLDsKeO8Tipi6CuSjjN-MgdsvU2KzOA@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Jerome Forissier <jerome@forissier.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+References: <1593054160-12628-1-git-send-email-jrdr.linux@gmail.com>
+ <1593054160-12628-2-git-send-email-jrdr.linux@gmail.com> <59afe2fe-3718-85aa-f3b5-83ca0b9df577@nvidia.com>
+In-Reply-To: <59afe2fe-3718-85aa-f3b5-83ca0b9df577@nvidia.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 26 Jun 2020 10:56:53 +0530
+Message-ID: <CAFqt6zZdq_OMZ3EBDGC+Bn4uPBEhDGOYF=jB4B16z7rY6hpZ7g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Paul Durrant <xadimgnik@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 at 18:22, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+On Thu, Jun 25, 2020 at 11:19 AM John Hubbard <jhubbard@nvidia.com> wrote:
 >
-> On Wed, 24 Jun 2020 at 18:44, Jerome Forissier <jerome@forissier.org> wrote:
+> On 2020-06-24 20:02, Souptick Joarder wrote:
+> > In 2019, we introduced pin_user_pages*() and now we are converting
+> > get_user_pages*() to the new API as appropriate. [1] & [2] could
+> > be referred for more information. This is case 5 as per document [1].
 > >
+> > [1] Documentation/core-api/pin_user_pages.rst
 > >
+> > [2] "Explicit pinning of user-space pages":
+> >          https://lwn.net/Articles/807108/
 > >
-> > On 6/24/20 5:21 PM, James Bottomley wrote:
-> > > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
-> > >> Apologies for delay in my reply as I was busy with some other stuff.
-> > >>
-> > >> On Fri, 19 Jun 2020 at 20:30, James Bottomley
-> > >> <James.Bottomley@hansenpartnership.com> wrote:
-> > > [...]
-> > >>> it's about consistency with what the kernel types mean.  When some
-> > >>> checker detects your using little endian operations on a big endian
-> > >>> structure (like in the prink for instance) they're going to keep
-> > >>> emailing you about it.
-> > >>
-> > >> As mentioned above, using different terminology is meant to cause
-> > >> more confusion than just difference in endianness which is manageable
-> > >> inside TEE.
-> > >>
-> > >> And I think it's safe to say that the kernel implements UUID in big
-> > >> endian format and thus uses %pUb whereas OP-TEE implements UUID in
-> > >> little endian format and thus uses %pUl.
-> > >
-> > > So what I think you're saying is that if we still had uuid_be and
-> > > uuid_le you'd use uuid_le, because that's exactly the structure
-> > > described in the docs.  But because we renamed
-> > >
-> > > uuid_be -> uuid_t
-> > > uuid_le -> guid_t
-> > >
-> > > You can't use guid_t as a kernel type because it has the wrong name?
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Paul Durrant <xadimgnik@gmail.com>
+> > ---
+> > Hi,
 > >
-> > Let me try to clear the confusion that I introduce myself I believe :-/
-> > IMO:
+> > I'm compile tested this, but unable to run-time test, so any testing
+> > help is much appriciated.
 > >
-> > - optee_register_device(const uuid_t *device_uuid) *is* the correct
-> > prototype.
-> > - device_uuid is *guaranteed* to be BE because OP-TEE makes this
-> > guarantee (it converts from its internal LE representation to BE when
-> > enumerating the devices, but it doesn't matter to the kernel).
-> > - Therefore %pUb is the correct format.
+> >   drivers/xen/privcmd.c | 10 ++--------
+> >   1 file changed, 2 insertions(+), 8 deletions(-)
 > >
-> > I'm sorry for doubting the BE order initially. I am so used to OP-TEE
-> > using LE internally, that I missed the fact that we have an explicit
-> > conversion...
+> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> > index 0da417c..eb05254 100644
+> > --- a/drivers/xen/privcmd.c
+> > +++ b/drivers/xen/privcmd.c
+> > @@ -595,7 +595,7 @@ static int lock_pages(
+> >               if (requested > nr_pages)
+> >                       return -ENOSPC;
 > >
-> > Does this sound good?
+> > -             page_count = get_user_pages_fast(
+> > +             page_count = pin_user_pages_fast(
+> >                       (unsigned long) kbufs[i].uptr,
+> >                       requested, FOLL_WRITE, pages);
+> >               if (page_count < 0) {
+> > @@ -612,13 +612,7 @@ static int lock_pages(
 > >
-> > Thanks,
-> > --
-> > Jerome
+> >   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+> >   {
+> > -     unsigned int i;
+> > -
+> > -     for (i = 0; i < nr_pages; i++) {
+> > -             if (!PageDirty(page))
+> > -                     set_page_dirty_lock(page);
+> > -             put_page(pages[i]);
+> > -     }
+> > +     unpin_user_pages_dirty_lock(pages, nr_pages, 1);
 >
-> I think your description is correct. But I think this problem  would
-> be solved outside of the current patchset.
-> All places should use one single format (LE):
-> -  internal optee representation;
-> -  device enumeration pta;
-> -  this kernel driver which creates sysfs entry and sets
-> uid_copy(&optee_device->id.uuid, device_uuid);
-> -  matching function;
-> -  drivers use UUID_INIT();
->
-> In that way everything will be consistent. But it will require
-> changing other pieces, not just the kernel. While
-> these patches add functionality to support current device enumeration
-> in optee os.
-> So I think this version is ok to be applied.
+> "true", not "1", is the correct way to call that function.
 
-I guess here you meant v9 patch-set. If yes then it's fine with me as well.
-
--Sumit
+Ok.
 
 >
-> Regards,
-> Maxim.
+> Also, this approach changes the behavior slightly, but I think it's
+> reasonable to just set_page_dirty_lock() on the whole range--hard to
+> see much benefit in checking PageDirty first.
+
+unpin_user_pages_dirty_lock() internally will do the same check after
+patch [2/2]
+So I thought to keep old and new code in sync. Shall we avoid this check ?
+
+
+>
+>
+> >   }
+> >
+> >   static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+> >
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
