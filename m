@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 431A52073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9197720B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgFZXM4 (ORCPT
+        id S1726448AbgFZXNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:12:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23790 "EHLO mga11.intel.com"
+        Fri, 26 Jun 2020 19:13:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63827 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgFZXM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:12:56 -0400
-IronPort-SDR: sn8SNQlocs8xTww8B7yfhGYa2ouIX7AVw5xTNKhIs+pfhB4cTf7/KkRUDb+jO7DVb6J1LHO6WU
- CiXczVPObtWw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143741522"
+        id S1725883AbgFZXM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 19:12:59 -0400
+IronPort-SDR: sg/FZrN6nMjl2EfaJHiPjoGPnE8pgzX+z48S4zmjp9Og9QNWOrvsqsaFyCZPiLpZo2vGSl48Or
+ daGU0s2bgyIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="230283584"
 X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="143741522"
+   d="scan'208";a="230283584"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 16:12:55 -0700
-IronPort-SDR: Va5ZRa0qpOSA5N1rQk0ZKyQL9s3OULIRGENZ57+mbfdJefh56TjqJke7WGE3HfnXxkkzdA6q54
- Ol32c9J7JKOw==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 16:12:58 -0700
+IronPort-SDR: yKNspqYYLyhbORYtimly3++MqNeMbn4k6zkL64qHu3YpvHsGSOuhf+q4k7Z54VyH4JzzSLdYDE
+ GqfcbHw+vrQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
-   d="scan'208";a="294329406"
+   d="scan'208";a="354910983"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2020 16:12:54 -0700
+  by orsmga001.jf.intel.com with ESMTP; 26 Jun 2020 16:12:56 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1joxWf-0002VI-SA; Fri, 26 Jun 2020 23:12:53 +0000
-Date:   Sat, 27 Jun 2020 07:12:29 +0800
+        id 1joxWi-0002VL-9k; Fri, 26 Jun 2020 23:12:56 +0000
+Date:   Sat, 27 Jun 2020 07:12:33 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- 2c92d787cc9fad57d05c96bd117782183768258a
-Message-ID: <5ef680dd.S4+0TLpJgZ3CVYcy%lkp@intel.com>
+Subject: [tip:master] BUILD SUCCESS
+ 64c3af02c52e2f67b237d1848b0c27008b4f9158
+Message-ID: <5ef680e1.gthO96+bc1UZdRON%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,8 +54,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
-branch HEAD: 2c92d787cc9fad57d05c96bd117782183768258a  Merge branch 'linus' into x86/entry, to resolve conflicts
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 64c3af02c52e2f67b237d1848b0c27008b4f9158  Merge branch 'WIP.fixes'
 
 elapsed time: 722m
 
@@ -133,9 +133,9 @@ parisc                           allyesconfig
 parisc                           allmodconfig
 powerpc                             defconfig
 powerpc                          allyesconfig
-powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+powerpc                          rhel-kconfig
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
