@@ -2,113 +2,111 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0379FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A682070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23472070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qC41cWrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgFZVEA (ORCPT
+        id S1726158AbgFZVEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:04:00 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:40659 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgFZVEA (ORCPT
+        Fri, 26 Jun 2020 17:04:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8995 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgFZVEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:04:00 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4CC30FF804;
-        Fri, 26 Jun 2020 21:03:57 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 23:03:57 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        linux-kernel@vger.kernel.org, mturquette@linaro.org,
-        bbrezillon@kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] clk: at91: main: do not continue if oscillators
- already prepared
-Message-ID: <20200626210357.GX131826@piout.net>
-References: <1593079768-9349-1-git-send-email-claudiu.beznea@microchip.com>
- <1593079768-9349-2-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 26 Jun 2020 17:04:01 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef662610004>; Fri, 26 Jun 2020 14:02:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 26 Jun 2020 14:04:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 26 Jun 2020 14:04:00 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
+ 2020 21:03:50 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 26 Jun 2020 21:03:50 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ef662b50003>; Fri, 26 Jun 2020 14:03:50 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] nouveau: fix page fault on device private memory
+Date:   Fri, 26 Jun 2020 14:03:37 -0700
+Message-ID: <20200626210337.20089-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593079768-9349-2-git-send-email-claudiu.beznea@microchip.com>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593205345; bh=mwwOsKu36dXm+0p8ULHDS3ICUwuV7kITaXbla/zbTUs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=qC41cWrlv5PLn22RgQchoeWC/KvVD5wmV1a7t8JeJOo6zUvnssFr7pXleVBMzGzm6
+         FmE7WXJdhKnagu2W3vJaEbwnaYKvp+evh3PvFFUSEuXaRrXW58v49YhOzW1S2in/Q6
+         pcw6AA8JaGpFUey4GJIfrQqElaCvMqoVTrb4teax6DZII/+Y//8gSCSnZvxPgWNv2M
+         sOBKATauOQGiSYnaUcngMLMGiKH4Df1aFOvKhLzJf9DxgNXnTjhAgCsbf+15jptEnX
+         rfsXBPuSNzmPuRuK+Wxpe7HFDGIDwOoQ/HEfCfzOHkD6BBuqBdTpP6xOVpmO1OPdDk
+         X4ZvL2s4Rj0rA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2020 13:09:28+0300, Claudiu Beznea wrote:
-> Return in clk_main_osc_prepare()/clk_main_rc_osc_prepare() if
-> oscillators are already enabled.
-> 
-> Fixes: 27cb1c2083373 ("clk: at91: rework main clk implementation")
-> Fixes: 1bdf02326b71e ("clk: at91: make use of syscon/regmap internally")
+If system memory is migrated to device private memory and no GPU MMU
+page table entry exists, the GPU will fault and call hmm_range_fault()
+to get the PFN for the page. Since the .dev_private_owner pointer in
+struct hmm_range is not set, hmm_range_fault returns an error which
+results in the GPU program stopping with a fatal fault.
+Fix this by setting .dev_private_owner appropriately.
 
-Is this really a fix? What is the observed issue?
+Fixes: 08ddddda667b ("mm/hmm: check the device private page owner in hmm_ra=
+nge_fault()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+---
 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/clk/at91/clk-main.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-> index 37c22667e831..46b4d2131989 100644
-> --- a/drivers/clk/at91/clk-main.c
-> +++ b/drivers/clk/at91/clk-main.c
-> @@ -74,13 +74,11 @@ static int clk_main_osc_prepare(struct clk_hw *hw)
->  	regmap_read(regmap, AT91_CKGR_MOR, &tmp);
->  	tmp &= ~MOR_KEY_MASK;
->  
-> -	if (tmp & AT91_PMC_OSCBYPASS)
-> +	if (tmp & (AT91_PMC_OSCBYPASS | AT91_PMC_MOSCEN))
->  		return 0;
+This is based on Linux-5.8.0-rc2 and is for Ben Skeggs nouveau tree.
+It doesn't depend on any of the other nouveau/HMM changes I have
+recently posted.
 
-While this seems like a good optimization, it is also not correct.
-Having AT91_PMC_MOSCEN set doesn't mean that the clock is ready, you
-need to at least check MOSCS once.
+Resending to include stable@vger.org and adding Jason's reviewed-by.
 
->  
-> -	if (!(tmp & AT91_PMC_MOSCEN)) {
-> -		tmp |= AT91_PMC_MOSCEN | AT91_PMC_KEY;
-> -		regmap_write(regmap, AT91_CKGR_MOR, tmp);
-> -	}
-> +	tmp |= AT91_PMC_MOSCEN | AT91_PMC_KEY;
-> +	regmap_write(regmap, AT91_CKGR_MOR, tmp);
->  
->  	while (!clk_main_osc_ready(regmap))
->  		cpu_relax();
-> @@ -186,10 +184,12 @@ static int clk_main_rc_osc_prepare(struct clk_hw *hw)
->  
->  	regmap_read(regmap, AT91_CKGR_MOR, &mor);
->  
-> -	if (!(mor & AT91_PMC_MOSCRCEN))
-> -		regmap_update_bits(regmap, AT91_CKGR_MOR,
-> -				   MOR_KEY_MASK | AT91_PMC_MOSCRCEN,
-> -				   AT91_PMC_MOSCRCEN | AT91_PMC_KEY);
-> +	if (mor & AT91_PMC_MOSCRCEN)
-> +		return 0;
-> +
-> +	regmap_update_bits(regmap, AT91_CKGR_MOR,
-> +			   MOR_KEY_MASK | AT91_PMC_MOSCRCEN,
-> +			   AT91_PMC_MOSCRCEN | AT91_PMC_KEY);
->  
->  	while (!clk_main_rc_osc_ready(regmap))
->  		cpu_relax();
-> -- 
-> 2.7.4
-> 
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
+u/nouveau_svm.c
+index ba9f9359c30e..6586d9d39874 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -562,6 +562,7 @@ static int nouveau_range_fault(struct nouveau_svmm *svm=
+m,
+ 		.end =3D notifier->notifier.interval_tree.last + 1,
+ 		.pfn_flags_mask =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
+ 		.hmm_pfns =3D hmm_pfns,
++		.dev_private_owner =3D drm->dev,
+ 	};
+ 	struct mm_struct *mm =3D notifier->notifier.mm;
+ 	int ret;
+--=20
+2.20.1
+
