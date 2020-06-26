@@ -2,102 +2,103 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D27206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WKXqV58o"
+	by mail.kernel.org (Postfix) with ESMTP id 91F592082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 10:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgFZKm6 (ORCPT
+        id S1728056AbgFZKnT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:42:58 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:4336 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgFZKm6 (ORCPT
+        Fri, 26 Jun 2020 06:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgFZKnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 06:42:58 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05QAgYo7026581;
-        Fri, 26 Jun 2020 05:42:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=HIdZGRZV343sE1uUrGswag+c34TD4R/gDRthwL74GiM=;
- b=WKXqV58oPwAAMoft7eE5qG5JWBc+28sFKh893C3era7iHH10fbtzFT8OVOKCmqatKsor
- Ql+03xTnHtQfLe7GZBVF7MEIrHAmdYc4eAJasdNyveTxbIQ9BCm4nRAKnmB8laQ6RWA4
- ctxO9Ccx+xyHMV0CNevC8nsHMAcKcDF4H3WXvb7tpULB9rlgJJ9dIGNPL4i+5shCw80m
- oC2BpkTteUTfqm/xqJ6/x3FNf3pXx9gaRW/NFkMe4qvMFSZcfzrtXDKLkqzrD3qYmnWp
- twHtbig+49dGHpiOlPtupCaoxinL9wUIa8DsJBRG54qSG7iBd9v4OTrU7+RuFWL4FB4v fQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 31uuqsc53k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 26 Jun 2020 05:42:38 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 26 Jun
- 2020 11:42:36 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 26 Jun 2020 11:42:36 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CC18D2AB;
-        Fri, 26 Jun 2020 10:42:36 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 10:42:36 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [RESEND 06/10] regulator: wm8350-regulator: Repair odd
- formatting in documentation
-Message-ID: <20200626104236.GC71940@ediswmail.ad.cirrus.com>
-References: <20200625191708.4014533-1-lee.jones@linaro.org>
- <20200625191708.4014533-7-lee.jones@linaro.org>
+        Fri, 26 Jun 2020 06:43:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BCB4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 03:43:19 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jolp7-0005bM-Ek; Fri, 26 Jun 2020 12:43:09 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jolp5-0000zL-9u; Fri, 26 Jun 2020 12:43:07 +0200
+Message-ID: <6ddaf69d4f5ad188864f62dcdbfbbe32acef9820.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/9] reset: Add Raspberry Pi 4 firmware reset
+ controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com
+Date:   Fri, 26 Jun 2020 12:43:07 +0200
+In-Reply-To: <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+         <20200612171334.26385-3-nsaenzjulienne@suse.de>
+         <c1ccb77ef0bc56b96a8ad991f8345d0ffbd76fc2.camel@pengutronix.de>
+         <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200625191708.4014533-7-lee.jones@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxlogscore=724 suspectscore=0 bulkscore=0 priorityscore=1501
- cotscore=-2147483648 clxscore=1015 mlxscore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006260077
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:17:04PM +0100, Lee Jones wrote:
-> Kerneldoc expects function arguments to be in the format '@.*:'.  If
-> this format is not followed the kerneldoc tooling/parsers/validators
-> get confused.
+On Wed, 2020-06-17 at 12:44 +0200, Nicolas Saenz Julienne wrote:
+> On Wed, 2020-06-17 at 12:02 +0200, Philipp Zabel wrote:
+> > Hi Nicolas,
+> > 
+> > On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
+> > > Raspberry Pi 4's co-processor controls some of the board's HW
+> > > initialization process, but it's up to Linux to trigger it when
+> > > relevant. Introduce a reset controller capable of interfacing with
+> > > RPi4's co-processor that models these firmware initialization routines as
+> > > reset lines.
+> > > 
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > 
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 > 
-> Fixes the following W=1 warning(s):
+> Thanks!
 > 
->  drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'wm8350' not described in 'wm8350_register_led'
->  drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'lednum' not described in 'wm8350_register_led'
->  drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'dcdc' not described in 'wm8350_register_led'
->  drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'isink' not described in 'wm8350_register_led'
->  drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'pdata' not described in 'wm8350_register_led'
+> > If there is a good reason for the single DT specified reset id, I can
+> > pick up patches 1 and 2.
 > 
-> Cc: patches@opensource.cirrus.com
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
+> The idea here is to make sure we're reasonably covered against further changes
+> in firmware. If we define constraints too narrow it can be a pain to support
+> new features without breaking backwards compatibility in dt.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Ok.
 
-Thanks,
-Charles
+> > If you change the dts patch 4 to use a number instead of the reset id
+> > define for now, there wouldn't even be a dependency between these reset
+> > and dts patches.
+> 
+> I was under the impression that having an explicit definition was nice to have.
+> What's troubling about creating the dependency?
+
+Just that the last patch has to wait for the reset patches to be merged
+before it can be applied.
+
+regards
+Philipp
