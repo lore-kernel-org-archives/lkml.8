@@ -2,296 +2,143 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C6220DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593180333;
-	bh=DulXIO7OVijQT9iXYkLptfwGhAen/VGK7uaBhVTomuU=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=Ks41evCbwAHeI0/YMzrmqJJfrq/fcToMp+kfUQ9nldQx/9o5EZlu9g2ZCxiH0rBT4
-	 V09lp1FSEKv7RK73eIacMO/k76kAVMf5cA+T4yXJBXUpncHDnhea8ige/7IR8E/qtr
-	 WdYGeQSYnPziPMK3w0EPhgXwAz8m50/VUehrQenU=
+	by mail.kernel.org (Postfix) with ESMTP id 56694207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgFZOFV (ORCPT
+        id S1729152AbgFZOGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 10:06:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39350 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbgFZOFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:05:03 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96CD208C9;
-        Fri, 26 Jun 2020 14:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593180302;
-        bh=DulXIO7OVijQT9iXYkLptfwGhAen/VGK7uaBhVTomuU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjGvi2oXfV55cyazhVkwPU1UBg9evShT8u24o43XL4eoMpDWZOqCUmEfIttABsGNP
-         u82gukeor7BIMhb1uYAEAzug3CcMPRUgNCUU8O3K9nIrx+FjmQO4kEZ+f9U3EEs3GX
-         YdklDm9LyRryDlSPK2bmMOFddiTDBbhpKKG625EE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jooyS-00HKw5-1I; Fri, 26 Jun 2020 16:05:00 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] media: atomisp: reorganize the code under gmin_subdev_add()
-Date:   Fri, 26 Jun 2020 16:04:53 +0200
-Message-Id: <f6f8cfa8d2c942c51cda5d3c1d0b97c2692a6392.1593180146.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593180146.git.mchehab+huawei@kernel.org>
-References: <cover.1593180146.git.mchehab+huawei@kernel.org>
+        id S1728751AbgFZOGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:06:05 -0400
+IronPort-SDR: sTj+j+7cQnkWxJNt9jUPvxMtZclLkPiaHi6Sjdh9XlC1UjPUiIpkHxM5zsLMhNWeBquQ68VOio
+ rgUQUgsVCPUQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="143570443"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="143570443"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 07:06:04 -0700
+IronPort-SDR: a03YRrCYW3qc/CtofInwNcdVlYUn2W5j+ZlrCKhYIymrXsxMYL7AtpRIhd2ASyU0cbYu2mMpl5
+ OSU0zSEf4qKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="320011601"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 26 Jun 2020 07:06:01 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 26 Jun 2020 17:06:00 +0300
+Date:   Fri, 26 Jun 2020 17:06:00 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Luis Henriques <lhenriques@suse.de>, Lyude <lyude@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: Warning triggered in drm_dp_delayed_destroy_work workqueue
+Message-ID: <20200626140600.GA6112@intel.com>
+References: <20200625102221.GA66817@suse.de>
+ <CAKMK7uECFfCTZc2wihY4ztZ0WiKR6foUEv2ScbJ79bqt6YQELQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CAKMK7uECFfCTZc2wihY4ztZ0WiKR6foUEv2ScbJ79bqt6YQELQ@mail.gmail.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gmin_subdev_add() currently doesn't use ACPI device
-power management. In order to prepare for adding support
-for it, let's shift some things, placing the PM-related
-stuff at the end of the probing logic.
+On Fri, Jun 26, 2020 at 03:40:20PM +0200, Daniel Vetter wrote:
+> Adding Lyude, she's been revamping all the lifetime refcouting in the
+> dp code last few kernel releases. At a glance I don't even have an
+> idea what's going wrong here ...
 
-Let's also store the current gs on a temporary var, in
-order to simplify the source code.
+Already fixed by Imre I believe.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/atomisp/pci/atomisp_gmin_platform.c | 146 +++++++++---------
- 1 file changed, 73 insertions(+), 73 deletions(-)
+7d11507605a7 ("drm/dp_mst: Fix the DDC I2C device unregistration of an MST port")
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 4aebc7cd22d9..74331c4467bd 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -447,6 +447,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- {
- 	struct i2c_client *power = NULL, *client = v4l2_get_subdevdata(subdev);
- 	struct acpi_device *adev;
-+	struct gmin_subdev *gs;
- 	acpi_handle handle;
- 	struct device *dev;
- 	int i, ret, clock_num;
-@@ -457,16 +458,52 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	dev = &client->dev;
- 
- 	handle = ACPI_HANDLE(dev);
--
--	// FIXME: may need to release resources allocated by acpi_bus_get_device()
--	if (!handle || acpi_bus_get_device(handle, &adev)) {
--		dev_err(dev, "Error could not get ACPI device\n");
--		return NULL;
--	}
-+	adev = ACPI_COMPANION(&client->dev);
- 
- 	dev_info(&client->dev, "%s: ACPI detected it on bus ID=%s, HID=%s\n",
- 		__func__, acpi_device_bid(adev), acpi_device_hid(adev));
- 
-+	for (i = 0; i < MAX_SUBDEVS && gmin_subdevs[i].subdev; i++)
-+		;
-+	if (i >= MAX_SUBDEVS)
-+		return NULL;
-+
-+	gs = &gmin_subdevs[i];
-+	gs->subdev = subdev;
-+
-+	/*
-+	 * FIXME:
-+	 * 	WA:CHT requires XTAL clock as PLL is not stable.
-+	 *
-+	 * However, such data doesn't seem to be present at the _DSM
-+	 * table under the GUID dc2f6c4f-045b-4f1d-97b9-882a6860a4be.
-+	 * So, let's change the default according with the ISP version,
-+	 * but allowing it to be overridden by BIOS or by DMI match tables.
-+	 */
-+	if (IS_ISP2401)
-+		gs->clock_src = VLV2_CLK_XTAL_25_0MHz;
-+	else
-+		gs->clock_src = VLV2_CLK_PLL_19P2MHZ;
-+
-+	gs->clock_src = gmin_get_var_int(dev, false, "ClkSrc",
-+					 gs->clock_src);
-+
-+	gs->csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
-+	gs->csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
-+
-+	gs->gpio0 = gpiod_get_index(dev, NULL, 0, GPIOD_OUT_LOW);
-+	if (IS_ERR(gs->gpio0))
-+		gs->gpio0 = NULL;
-+
-+	gs->gpio1 = gpiod_get_index(dev, NULL, 1, GPIOD_OUT_LOW);
-+	if (IS_ERR(gs->gpio1))
-+		gs->gpio1 = NULL;
-+
-+	/*
-+	 * FIXME: the code below doesn't rely on ACPI device_pm.c code to
-+	 * set clocks and do power management.
-+	 */
-+
- 	if (!pmic_id) {
- 		if (gmin_i2c_dev_exists(dev, PMIC_ACPI_TI, &power))
- 			pmic_id = PMIC_TI;
-@@ -478,13 +515,8 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 			pmic_id = PMIC_REGULATOR;
- 	}
- 
--	for (i = 0; i < MAX_SUBDEVS && gmin_subdevs[i].subdev; i++)
--		;
--	if (i >= MAX_SUBDEVS)
--		return NULL;
--
- 	if (power) {
--		gmin_subdevs[i].pwm_i2c_addr = power->addr;
-+		gs->pwm_i2c_addr = power->addr;
- 		dev_info(dev,
- 			 "gmin: power management provided via %s (i2c addr 0x%02x)\n",
- 			 pmic_name[pmic_id], power->addr);
-@@ -493,31 +525,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 			 pmic_name[pmic_id]);
- 	}
- 
--	gmin_subdevs[i].subdev = subdev;
--
- 	/*
--	 * FIXME:
--	 * 	WA:CHT requires XTAL clock as PLL is not stable.
--	 *
--	 * However, such data doesn't seem to be present at the _DSM
--	 * table under the GUID dc2f6c4f-045b-4f1d-97b9-882a6860a4be.
--	 * So, let's change the default according with the ISP version,
--	 * but allowing it to be overridden by BIOS or by DMI match tables.
--	 */
--	if (IS_ISP2401)
--		gmin_subdevs[i].clock_src = VLV2_CLK_XTAL_25_0MHz;
--	else
--		gmin_subdevs[i].clock_src = VLV2_CLK_PLL_19P2MHZ;
--
--	gmin_subdevs[i].clock_src = gmin_get_var_int(dev, false, "ClkSrc",
--						     gmin_subdevs[i].clock_src);
--
--	gmin_subdevs[i].csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
--	gmin_subdevs[i].csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
--
--	/*
--	 * FIXME:
--	 *
- 	 * According with :
- 	 *   https://github.com/projectceladon/hardware-intel-kernelflinger/blob/master/doc/fastboot.md
- 	 *
-@@ -540,9 +548,9 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	snprintf(gmin_pmc_clk_name, sizeof(gmin_pmc_clk_name),
- 		 "%s_%d", "pmc_plt_clk", clock_num);
- 
--	gmin_subdevs[i].pmc_clk = devm_clk_get(dev, gmin_pmc_clk_name);
--	if (IS_ERR(gmin_subdevs[i].pmc_clk)) {
--		ret = PTR_ERR(gmin_subdevs[i].pmc_clk);
-+	gs->pmc_clk = devm_clk_get(dev, gmin_pmc_clk_name);
-+	if (IS_ERR(gs->pmc_clk)) {
-+		ret = PTR_ERR(gs->pmc_clk);
- 
- 		dev_err(dev,
- 			"Failed to get clk from %s : %d\n",
-@@ -563,25 +571,17 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	 * to disable a clock that has not been enabled,
- 	 * we need to enable the clock first.
- 	 */
--	ret = clk_prepare_enable(gmin_subdevs[i].pmc_clk);
-+	ret = clk_prepare_enable(gs->pmc_clk);
- 	if (!ret)
--		clk_disable_unprepare(gmin_subdevs[i].pmc_clk);
--
--	gmin_subdevs[i].gpio0 = gpiod_get_index(dev, NULL, 0, GPIOD_OUT_LOW);
--	if (IS_ERR(gmin_subdevs[i].gpio0))
--		gmin_subdevs[i].gpio0 = NULL;
--
--	gmin_subdevs[i].gpio1 = gpiod_get_index(dev, NULL, 1, GPIOD_OUT_LOW);
--	if (IS_ERR(gmin_subdevs[i].gpio1))
--		gmin_subdevs[i].gpio1 = NULL;
-+		clk_disable_unprepare(gs->pmc_clk);
- 
- 	switch (pmic_id) {
- 	case PMIC_REGULATOR:
--		gmin_subdevs[i].v1p8_reg = regulator_get(dev, "V1P8SX");
--		gmin_subdevs[i].v2p8_reg = regulator_get(dev, "V2P8SX");
-+		gs->v1p8_reg = regulator_get(dev, "V1P8SX");
-+		gs->v2p8_reg = regulator_get(dev, "V2P8SX");
- 
--		gmin_subdevs[i].v1p2_reg = regulator_get(dev, "V1P2A");
--		gmin_subdevs[i].v2p8_vcm_reg = regulator_get(dev, "VPROG4B");
-+		gs->v1p2_reg = regulator_get(dev, "V1P2A");
-+		gs->v2p8_vcm_reg = regulator_get(dev, "VPROG4B");
- 
- 		/* Note: ideally we would initialize v[12]p8_on to the
- 		 * output of regulator_is_enabled(), but sadly that
-@@ -593,32 +593,32 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 		break;
- 
- 	case PMIC_AXP:
--		gmin_subdevs[i].eldo1_1p8v = gmin_get_var_int(dev, false,
--							      "eldo1_1p8v",
--							      ELDO1_1P8V);
--		gmin_subdevs[i].eldo1_sel_reg = gmin_get_var_int(dev, false,
--								 "eldo1_sel_reg",
--								 ELDO1_SEL_REG);
--		gmin_subdevs[i].eldo1_ctrl_shift = gmin_get_var_int(dev, false,
--								    "eldo1_ctrl_shift",
--								    ELDO1_CTRL_SHIFT);
--		gmin_subdevs[i].eldo2_1p8v = gmin_get_var_int(dev, false,
--							      "eldo2_1p8v",
--							      ELDO2_1P8V);
--		gmin_subdevs[i].eldo2_sel_reg = gmin_get_var_int(dev, false,
--								 "eldo2_sel_reg",
--								 ELDO2_SEL_REG);
--		gmin_subdevs[i].eldo2_ctrl_shift = gmin_get_var_int(dev, false,
--								    "eldo2_ctrl_shift",
--								    ELDO2_CTRL_SHIFT);
--		gmin_subdevs[i].pwm_i2c_addr = power->addr;
-+		gs->eldo1_1p8v = gmin_get_var_int(dev, false,
-+						  "eldo1_1p8v",
-+						  ELDO1_1P8V);
-+		gs->eldo1_sel_reg = gmin_get_var_int(dev, false,
-+						     "eldo1_sel_reg",
-+						     ELDO1_SEL_REG);
-+		gs->eldo1_ctrl_shift = gmin_get_var_int(dev, false,
-+							"eldo1_ctrl_shift",
-+							ELDO1_CTRL_SHIFT);
-+		gs->eldo2_1p8v = gmin_get_var_int(dev, false,
-+						  "eldo2_1p8v",
-+						  ELDO2_1P8V);
-+		gs->eldo2_sel_reg = gmin_get_var_int(dev, false,
-+						     "eldo2_sel_reg",
-+						     ELDO2_SEL_REG);
-+		gs->eldo2_ctrl_shift = gmin_get_var_int(dev, false,
-+							"eldo2_ctrl_shift",
-+							ELDO2_CTRL_SHIFT);
-+		gs->pwm_i2c_addr = power->addr;
- 		break;
- 
- 	default:
- 		break;
- 	}
- 
--	return &gmin_subdevs[i];
-+	return gs;
- }
- 
- static struct gmin_subdev *find_gmin_subdev(struct v4l2_subdev *subdev)
+> -Daniel
+> 
+> On Thu, Jun 25, 2020 at 12:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+> >
+> > Hi!
+> >
+> > I've been seeing this warning occasionally, not sure if it has been
+> > reported yet.  It's not a regression as I remember seeing it in, at least,
+> > 5.7.
+> >
+> > Anyway, here it is:
+> >
+> > ------------[ cut here ]------------
+> > sysfs group 'power' not found for kobject 'i2c-7'
+> > WARNING: CPU: 1 PID: 17996 at fs/sysfs/group.c:279 sysfs_remove_group+0x74/0x80
+> > Modules linked in: ccm(E) dell_rbtn(E) iwlmvm(E) mei_wdt(E) mac80211(E) libarc4(E) uvcvideo(E) dell_laptop(E) videobuf2_vmalloc(E) intel_rapl_>
+> >  soundcore(E) intel_soc_dts_iosf(E) rng_core(E) battery(E) acpi_pad(E) sparse_keymap(E) acpi_thermal_rel(E) intel_pch_thermal(E) int3402_therm>
+> >  sysfillrect(E) intel_lpss(E) sysimgblt(E) fb_sys_fops(E) idma64(E) scsi_mod(E) virt_dma(E) mfd_core(E) drm(E) fan(E) thermal(E) i2c_hid(E) hi>
+> > CPU: 1 PID: 17996 Comm: kworker/1:1 Tainted: G            E     5.8.0-rc2+ #36
+> > Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
+> > Workqueue: events drm_dp_delayed_destroy_work [drm_kms_helper]
+> > RIP: 0010:sysfs_remove_group+0x74/0x80
+> > Code: ff 5b 48 89 ef 5d 41 5c e9 79 bc ff ff 48 89 ef e8 01 b8 ff ff eb cc 49 8b 14 24 48 8b 33 48 c7 c7 90 ac 8b 93 e8 de b1 d4 ff <0f> 0b 5b>
+> > RSP: 0000:ffffb12d40c13c38 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: ffffffff936e6a60 RCX: 0000000000000027
+> > RDX: 0000000000000027 RSI: 0000000000000086 RDI: ffff8e37de097b68
+> > RBP: 0000000000000000 R08: ffff8e37de097b60 R09: ffffffff93fb4624
+> > R10: 0000000000000904 R11: 000000000001002c R12: ffff8e37d3081c18
+> > R13: ffff8e375f1450a8 R14: 0000000000000000 R15: ffff8e375f145410
+> > FS:  0000000000000000(0000) GS:ffff8e37de080000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000000000000000 CR3: 00000004ab20a001 CR4: 00000000003606e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  device_del+0x97/0x3f0
+> >  cdev_device_del+0x15/0x30
+> >  put_i2c_dev+0x7b/0x90 [i2c_dev]
+> >  i2cdev_detach_adapter+0x33/0x60 [i2c_dev]
+> >  notifier_call_chain+0x47/0x70
+> >  blocking_notifier_call_chain+0x3d/0x60
+> >  device_del+0x8f/0x3f0
+> >  device_unregister+0x16/0x60
+> >  i2c_del_adapter+0x247/0x300
+> >  drm_dp_port_set_pdt+0x90/0x2c0 [drm_kms_helper]
+> >  drm_dp_delayed_destroy_work+0x2be/0x340 [drm_kms_helper]
+> >  process_one_work+0x1ae/0x370
+> >  worker_thread+0x50/0x3a0
+> >  ? process_one_work+0x370/0x370
+> >  kthread+0x11b/0x140
+> >  ? kthread_associate_blkcg+0x90/0x90
+> >  ret_from_fork+0x22/0x30
+> > ---[ end trace 16486ad3c2627482 ]---
+> > ------------[ cut here ]------------
+> >
+> > Cheers,
+> > --
+> > Luis
+> 
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.26.2
-
+Ville Syrjälä
+Intel
