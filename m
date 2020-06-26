@@ -2,233 +2,143 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B57AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2177C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39832214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BA020E65
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgFZOQa (ORCPT
+        id S1729063AbgFZORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:16:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14483 "EHLO mga05.intel.com"
+        Fri, 26 Jun 2020 10:17:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36628 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgFZOQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:16:29 -0400
-IronPort-SDR: YRwsVwL0ruWTPZ6elDOP23iJzdXR84/WRXhorMZ5nRrQvn+aj+lgn8HIgXq6oVifw8Yj1+c+tN
- n2HHCMWbdgOg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="230107487"
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="230107487"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 07:16:27 -0700
-IronPort-SDR: M/vl6mS8rTsyZgRPKK3iGcThRIh0acsLSNoZJDRQefHw7EwhRQsy8xXji0oCS3FQvh5duKTBFP
- o5xut424moSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
-   d="scan'208";a="294209872"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2020 07:16:27 -0700
-Date:   Fri, 26 Jun 2020 07:16:27 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200626141627.GA6583@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200626091419.GB27151@zn.tnic>
+        id S1728489AbgFZORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:17:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E9DD5AAE8;
+        Fri, 26 Jun 2020 14:16:59 +0000 (UTC)
+Received: from localhost (webern.olymp [local])
+        by webern.olymp (OpenSMTPD) with ESMTPA id 986dd79c;
+        Fri, 26 Jun 2020 15:16:58 +0100 (WEST)
+Date:   Fri, 26 Jun 2020 15:16:58 +0100
+From:   Luis Henriques <lhenriques@suse.de>
+To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Lyude <lyude@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: Warning triggered in drm_dp_delayed_destroy_work workqueue
+Message-ID: <20200626141658.GA23513@suse.de>
+References: <20200625102221.GA66817@suse.de>
+ <CAKMK7uECFfCTZc2wihY4ztZ0WiKR6foUEv2ScbJ79bqt6YQELQ@mail.gmail.com>
+ <20200626140600.GA6112@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200626091419.GB27151@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626140600.GA6112@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:14:19AM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> > +static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
-> > +{
-> > +	unsigned long encl_size = secs->size + PAGE_SIZE;
+On Fri, Jun 26, 2020 at 05:06:00PM +0300, Ville Syrjälä wrote:
+> On Fri, Jun 26, 2020 at 03:40:20PM +0200, Daniel Vetter wrote:
+> > Adding Lyude, she's been revamping all the lifetime refcouting in the
+> > dp code last few kernel releases. At a glance I don't even have an
+> > idea what's going wrong here ...
 > 
-> Wait, you just copied @secs from user memory in sgx_ioc_enclave_create()
-> and now use ->size unverified? You're kidding, right?
+> Already fixed by Imre I believe.
+> 
+> 7d11507605a7 ("drm/dp_mst: Fix the DDC I2C device unregistration of an MST port")
+> 
 
-The size of the enclave is checked in sgx_validate_secs() before it is used
-to configure the shmem backing.
- 
-> > +	struct sgx_epc_page *secs_epc;
-> > +	unsigned long ssaframesize;
-> > +	struct sgx_pageinfo pginfo;
-> > +	struct sgx_secinfo secinfo;
-> > +	struct file *backing;
-> > +	long ret;
-> > +
-> > +	if (atomic_read(&encl->flags) & SGX_ENCL_CREATED)
-> > +		return -EINVAL;
-> > +
-> > +	ssaframesize = sgx_calc_ssaframesize(secs->miscselect, secs->xfrm);
-> 
-> So this is using more un-validated user input to do further calculations.
-> What can possibly go wrong?
+Ah!  It does seems to be the same issue indeed!  Thanks a lot for pointing
+me at this commit.  Hopefully this fix can be included in 5.8.  Not that
+I'm seeing this WARNING frequently, but frequent enough to annoy me :-)
 
-ssaframesize is also validated below, and the computations on miscselect and
-xfm in sgx_calc_ssaframesize() are bounded such that bad input won't send
-the kernel into the weeds.
+Cheers,
+--
+Luis
 
-That being said, I agree that it would be safer to move sgx_calc_ssaframesize()
-inside sgx_validate_secs() and only compute encl_size after the secs is
-validated.
-
-> I sure hope *I* am wrong and am missing something here.
-> 
-> If not, please, for the next version, audit all your user input and
-> validate it before using it. Srsly.
-> 
-> > +	if (sgx_validate_secs(secs, ssaframesize)) {
-> > +		pr_debug("invalid SECS\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	backing = shmem_file_setup("SGX backing", encl_size + (encl_size >> 5),
-> > +				   VM_NORESERVE);
-> > +	if (IS_ERR(backing))
-> > +		return PTR_ERR(backing);
-> > +
-> > +	encl->backing = backing;
-> > +
-> > +	secs_epc = __sgx_alloc_epc_page();
-> > +	if (IS_ERR(secs_epc)) {
-> > +		ret = PTR_ERR(secs_epc);
-> > +		goto err_out_backing;
-> > +	}
-> > +
-> > +	encl->secs.epc_page = secs_epc;
-> > +
-> > +	pginfo.addr = 0;
-> > +	pginfo.contents = (unsigned long)secs;
-> > +	pginfo.metadata = (unsigned long)&secinfo;
-> > +	pginfo.secs = 0;
-> > +	memset(&secinfo, 0, sizeof(secinfo));
-> > +
-> > +	ret = __ecreate((void *)&pginfo, sgx_get_epc_addr(secs_epc));
-> > +	if (ret) {
-> > +		pr_debug("ECREATE returned %ld\n", ret);
-> > +		goto err_out;
-> > +	}
-> > +
-> > +	if (secs->attributes & SGX_ATTR_DEBUG)
-> > +		atomic_or(SGX_ENCL_DEBUG, &encl->flags);
-> > +
-> > +	encl->secs.encl = encl;
-> > +	encl->secs_attributes = secs->attributes;
-> > +	encl->allowed_attributes |= SGX_ATTR_ALLOWED_MASK;
-> > +	encl->base = secs->base;
-> > +	encl->size = secs->size;
-> > +	encl->ssaframesize = secs->ssa_frame_size;
-> > +
-> > +	/*
-> > +	 * Set SGX_ENCL_CREATED only after the enclave is fully prepped.  This
-> > +	 * allows setting and checking enclave creation without having to take
-> > +	 * encl->lock.
-> > +	 */
-> > +	atomic_or(SGX_ENCL_CREATED, &encl->flags);
-> > +
-> > +	return 0;
-> > +
-> > +err_out:
-> > +	sgx_free_epc_page(encl->secs.epc_page);
-> > +	encl->secs.epc_page = NULL;
-> > +
-> > +err_out_backing:
-> > +	fput(encl->backing);
-> > +	encl->backing = NULL;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * sgx_ioc_enclave_create - handler for %SGX_IOC_ENCLAVE_CREATE
-> > + * @filep:	open file to /dev/sgx
-> 
-> That's
-> 
-> @encl: enclave pointer
-> 
-> or so.
-> 
-> > + * @arg:	userspace pointer to a struct sgx_enclave_create instance
-> > + *
-> > + * Allocate kernel data structures for a new enclave and execute ECREATE after
-> > + * verifying the correctness of the provided SECS.
-> > + *
-> > + * Note, enforcement of restricted and disallowed attributes is deferred until
-> > + * sgx_ioc_enclave_init(), only the architectural correctness of the SECS is
-> > + * checked by sgx_ioc_enclave_create().
-> 
-> Well, I don't see that checking. Where is it?
-> 
-> > + *
-> > + * Return:
-> > + *   0 on success,
-> > + *   -errno otherwise
-> > + */
-> > +static long sgx_ioc_enclave_create(struct sgx_encl *encl, void __user *arg)
-> > +{
-> > +	struct sgx_enclave_create ecreate;
-> > +	struct page *secs_page;
-> > +	struct sgx_secs *secs;
-> > +	int ret;
-> > +
-> > +	if (copy_from_user(&ecreate, arg, sizeof(ecreate)))
-> > +		return -EFAULT;
-> > +
-> > +	secs_page = alloc_page(GFP_KERNEL);
-> > +	if (!secs_page)
-> > +		return -ENOMEM;
-> > +
-> > +	secs = kmap(secs_page);
-> > +	if (copy_from_user(secs, (void __user *)ecreate.src, sizeof(*secs))) {
-> > +		ret = -EFAULT;
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = sgx_encl_create(encl, secs);
-> > +
-> > +out:
-> > +	kunmap(secs_page);
-> > +	__free_page(secs_page);
-> > +	return ret;
-> > +}
+> > -Daniel
+> > 
+> > On Thu, Jun 25, 2020 at 12:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+> > >
+> > > Hi!
+> > >
+> > > I've been seeing this warning occasionally, not sure if it has been
+> > > reported yet.  It's not a regression as I remember seeing it in, at least,
+> > > 5.7.
+> > >
+> > > Anyway, here it is:
+> > >
+> > > ------------[ cut here ]------------
+> > > sysfs group 'power' not found for kobject 'i2c-7'
+> > > WARNING: CPU: 1 PID: 17996 at fs/sysfs/group.c:279 sysfs_remove_group+0x74/0x80
+> > > Modules linked in: ccm(E) dell_rbtn(E) iwlmvm(E) mei_wdt(E) mac80211(E) libarc4(E) uvcvideo(E) dell_laptop(E) videobuf2_vmalloc(E) intel_rapl_>
+> > >  soundcore(E) intel_soc_dts_iosf(E) rng_core(E) battery(E) acpi_pad(E) sparse_keymap(E) acpi_thermal_rel(E) intel_pch_thermal(E) int3402_therm>
+> > >  sysfillrect(E) intel_lpss(E) sysimgblt(E) fb_sys_fops(E) idma64(E) scsi_mod(E) virt_dma(E) mfd_core(E) drm(E) fan(E) thermal(E) i2c_hid(E) hi>
+> > > CPU: 1 PID: 17996 Comm: kworker/1:1 Tainted: G            E     5.8.0-rc2+ #36
+> > > Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
+> > > Workqueue: events drm_dp_delayed_destroy_work [drm_kms_helper]
+> > > RIP: 0010:sysfs_remove_group+0x74/0x80
+> > > Code: ff 5b 48 89 ef 5d 41 5c e9 79 bc ff ff 48 89 ef e8 01 b8 ff ff eb cc 49 8b 14 24 48 8b 33 48 c7 c7 90 ac 8b 93 e8 de b1 d4 ff <0f> 0b 5b>
+> > > RSP: 0000:ffffb12d40c13c38 EFLAGS: 00010282
+> > > RAX: 0000000000000000 RBX: ffffffff936e6a60 RCX: 0000000000000027
+> > > RDX: 0000000000000027 RSI: 0000000000000086 RDI: ffff8e37de097b68
+> > > RBP: 0000000000000000 R08: ffff8e37de097b60 R09: ffffffff93fb4624
+> > > R10: 0000000000000904 R11: 000000000001002c R12: ffff8e37d3081c18
+> > > R13: ffff8e375f1450a8 R14: 0000000000000000 R15: ffff8e375f145410
+> > > FS:  0000000000000000(0000) GS:ffff8e37de080000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 0000000000000000 CR3: 00000004ab20a001 CR4: 00000000003606e0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > Call Trace:
+> > >  device_del+0x97/0x3f0
+> > >  cdev_device_del+0x15/0x30
+> > >  put_i2c_dev+0x7b/0x90 [i2c_dev]
+> > >  i2cdev_detach_adapter+0x33/0x60 [i2c_dev]
+> > >  notifier_call_chain+0x47/0x70
+> > >  blocking_notifier_call_chain+0x3d/0x60
+> > >  device_del+0x8f/0x3f0
+> > >  device_unregister+0x16/0x60
+> > >  i2c_del_adapter+0x247/0x300
+> > >  drm_dp_port_set_pdt+0x90/0x2c0 [drm_kms_helper]
+> > >  drm_dp_delayed_destroy_work+0x2be/0x340 [drm_kms_helper]
+> > >  process_one_work+0x1ae/0x370
+> > >  worker_thread+0x50/0x3a0
+> > >  ? process_one_work+0x370/0x370
+> > >  kthread+0x11b/0x140
+> > >  ? kthread_associate_blkcg+0x90/0x90
+> > >  ret_from_fork+0x22/0x30
+> > > ---[ end trace 16486ad3c2627482 ]---
+> > > ------------[ cut here ]------------
+> > >
+> > > Cheers,
+> > > --
+> > > Luis
+> > 
+> > 
+> > 
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 > 
 > -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> Ville Syrjälä
+> Intel
+
