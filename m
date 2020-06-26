@@ -2,72 +2,53 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FC62088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3vJvMHt"
+	by mail.kernel.org (Postfix) with ESMTP id 86B82206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 22:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgFZWUW (ORCPT
+        id S1726080AbgFZWUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 18:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgFZWUW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 18:20:22 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C9F8C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:20:22 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e8so5559933pgc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 15:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yVcpaUniYerIlCyx1vTQeFNCOepnPAPlvIx24HtK4yw=;
-        b=Y3vJvMHtv5KZ2rxBZK3vacMhwJm2BUw4M6OpjYw7DFuo+buW2y6YZOxS9VLsWsK3Br
-         spHitLO/QOTPyHk30J3sevum2LgoiFO60eyouWi/LhOQ7fVk+Fmdte6Us2I3UjXnXnic
-         I2tKu6dMKjjZYxO2a9POgMdGv+hK+y3glrgMo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yVcpaUniYerIlCyx1vTQeFNCOepnPAPlvIx24HtK4yw=;
-        b=atm3jRXP4izIM8VZcUrI3PBvQBdVViopkgF9TSEkWbiN6nh0ggBvYUXO+KyWkEoSJJ
-         KRLlq/aycEd7nzrHC82yhO2mPnscca5RalyRVTEaIzU6x/bbHR5PHnA5MiuKeuPL+jdy
-         nv70N9+SphRR8YZsWvSCM+BUTm5HcMfRjx+tRA7jjdkmd0qlRRpeg7025Ym3CGlyNfYs
-         uMyAmSd/VF+FkhbJD0Jx0ZpJ6MJRRGcAMpMfvR6AzPMqFAYKsCPG06bCBHCkuqF7HdIB
-         FJ1gEEF6RM9ivTcFuEuztnGq3KWEjM1y00i2NNS2/54G2LT3jC60cs/jXlbgGn8aKNBU
-         lilQ==
-X-Gm-Message-State: AOAM533OD25cWzSIyQnNGKnm18FyrtyV0STNYDLr2H2OkOxvXCEuQgrm
-        BkByUViY0G9Y2xlygkJt/uFhWw==
-X-Google-Smtp-Source: ABdhPJwJjzabhmueOPoNL5/wqZZOUQ+pyL+hA+NLvUlCg08OPdl1PBt92nCnlkxyWWtqpBO1KOiGhA==
-X-Received: by 2002:a63:778c:: with SMTP id s134mr767729pgc.273.1593210021506;
-        Fri, 26 Jun 2020 15:20:21 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id h9sm9001635pfk.155.2020.06.26.15.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 15:20:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Dilip Kota <dkota@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH] spi: spi-geni-qcom: Don't set the cs if it was already right
-Date:   Fri, 26 Jun 2020 15:19:50 -0700
-Message-Id: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+        Fri, 26 Jun 2020 18:20:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46061 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgFZWUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 18:20:51 -0400
+IronPort-SDR: jQuPlaECrNA3bIteYV6oN5kYssEgq/b2bTZlx6atXOXS3CDblyzDPOvzXglLcINDHpVcW5BfbO
+ gs0lBW4B80dQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="207009036"
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="207009036"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 15:20:50 -0700
+IronPort-SDR: ZRK/Scww/abTcQTZCtwAphfFzhtSJkBRgtZAxUb2dx6iS2Om0bFchbahkgMl53kPUpZvPDt6/8
+ HI26odnZzifw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,285,1589266800"; 
+   d="scan'208";a="480143426"
+Received: from skl-02.jf.intel.com ([10.54.74.28])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2020 15:20:50 -0700
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.cz>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ying Huang <ying.huang@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch] mm: Increase pagevec size on large system
+Date:   Fri, 26 Jun 2020 14:23:03 -0700
+Message-Id: <d1cc9f12a8ad6c2a52cb600d93b06b064f2bbc57.1593205965.git.tim.c.chen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,48 +56,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting the chip select on the Qualcomm geni SPI controller isn't
-exactly cheap.  Let's cache the current setting and avoid setting the
-chip select if it's already right.
+Pages to be added to a LRU are first cached in pagevec before being
+added to LRU in a batch via pagevec_lru_move_fn.  By adding the pages
+in a batch with pagevec, the contention on LRU lock is mitigated.
+Currently the pagevec size is defined to be 15.
 
-Using "flashrom" to read or write the EC firmware on a Chromebook
-shows roughly a 25% reduction in interrupts and a 15% speedup.
+We found during testing on a large SMT system with 2 sockets, 48 cores
+and 96 CPU threads, the pagevec size of 15 is too small for workload
+that caused frequent page additions to LRU.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+With pmbench, 8.9% of the CPU cycles are spent contending
+for the LRU lock.
+
+   12.92%  pmbench          [kernel.kallsyms]         [k] queued_spin_lock_slowpath
+            |
+             --12.92%--0x5555555582f2
+                       |
+                        --12.92%--page_fault
+                                  do_page_fault
+                                  __do_page_fault
+                                  handle_mm_fault
+                                  __handle_mm_fault
+                                  |
+                                  |--8.90%--__lru_cache_add
+                                  |          pagevec_lru_move_fn
+                                  |          |
+                                  |           --8.90%--_raw_spin_lock_irqsave
+                                  |                     queued_spin_lock_slowpat
+
+Enlarge the pagevec size to 31 to reduce LRU lock contention for
+large systems.
+
+The LRU lock contention is reduced from 8.9% of total CPU cycles
+to 2.2% of CPU cyles.  And the pmbench throughput increases
+from 88.8 Mpages/sec to 95.1 Mpages/sec.
+
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
+ include/linux/pagevec.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- drivers/spi/spi-geni-qcom.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 5b1dca1fff79..e99a9d57449f 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -79,6 +79,7 @@ struct spi_geni_master {
- 	unsigned int oversampling;
- 	spinlock_t lock;
- 	int irq;
-+	bool cs_flag;
- };
+diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+index 081d934eda64..466ebcdd190d 100644
+--- a/include/linux/pagevec.h
++++ b/include/linux/pagevec.h
+@@ -11,8 +11,16 @@
  
- static int get_spi_clk_cfg(unsigned int speed_hz,
-@@ -146,10 +147,15 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
- 	struct geni_se *se = &mas->se;
- 	unsigned long time_left;
+ #include <linux/xarray.h>
  
--	pm_runtime_get_sync(mas->dev);
- 	if (!(slv->mode & SPI_CS_HIGH))
- 		set_flag = !set_flag;
++#if CONFIG_NR_CPUS > 64
++/*
++ * Use larger size to reduce lru lock contention on large system.
++ * 31 pointers + header align the pagevec structure to a power of two
++ */
++#define PAGEVEC_SIZE	31
++#else
+ /* 15 pointers + header align the pagevec structure to a power of two */
+ #define PAGEVEC_SIZE	15
++#endif
  
-+	if (set_flag == mas->cs_flag)
-+		return;
-+
-+	mas->cs_flag = set_flag;
-+
-+	pm_runtime_get_sync(mas->dev);
- 	spin_lock_irq(&mas->lock);
- 	reinit_completion(&mas->cs_done);
- 	if (set_flag)
+ struct page;
+ struct address_space;
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.20.1
 
