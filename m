@@ -2,443 +2,81 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5109C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF20C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D3E20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81C420768
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 07:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgSqKNJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgFZHJv convert rfc822-to-8bit (ORCPT
+        id S1728204AbgFZHKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:09:51 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42253 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgFZHJu (ORCPT
+        Fri, 26 Jun 2020 03:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgFZHKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:09:50 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 628BE1C0004;
-        Fri, 26 Jun 2020 07:09:41 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 09:09:40 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [RESEND, v11 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200626090940.4d55bf9d@xps13>
-In-Reply-To: <20200616093332.53927-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200616093332.53927-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200616093332.53927-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Jun 2020 03:10:24 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2409C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:10:23 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id cy7so6108700edb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 00:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=qpZpuiya5CROhmtNObER2gnYx/Sa3Svm9oWXZ7DP6Qk=;
+        b=jgSqKNJDsf8B1b0WX1oxZ+L2v9c22xYY2gJ1DEQDwj1e438xUkK5yPpdXYHD/XEuKh
+         7r3WHewZl3ENYtsXVa1ZSShy6ifTZCnNDmNCE+KcY2gDtQs+uSGVEkK8V257JfE5+xzK
+         PXWb0ktWxx5S5hSrXj4VwZKq8csTAkQ4PpN0rt5cQrfX/caY4xVuOFcqydQDX+x5nJ3i
+         WKbpaX/akV9t52JCGpPn9AP/9rI9LTi7Y8CM4rOsWX+pgR4PJPaigMTCigeqBRQNSmkq
+         KjiI6S6HFGXUYJfallyX3JXAKfbnfvvO6ygMOROsFuFKva8uYJGjv6sufx7wVejnrDQD
+         tV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=qpZpuiya5CROhmtNObER2gnYx/Sa3Svm9oWXZ7DP6Qk=;
+        b=I/HngMK6GdHpeLjr5zF5wV/kIpLHZ+ucA2t33c39EgMoXgIXLMygAgMUx9NiTsejXa
+         jmzYbaYZSs9HMCc7HUYU7ezdJbzkp14BwaHR4e8tM1mCI95buIRwl0h2YoNIgJfJF+eA
+         JrbKzpRuNCUud5qGEs8rsgho5c//lSn2+pAIheYMB4Xj7b/KgjpxE8qv03s4mj28ycHe
+         0kF8MiRcCr2MJd4+IA/YaxTyz+v1RfG3crNQ15StKd+Vi/eLQFnnjx9FNH4DDdil0ZqE
+         oXa0Wr144LMQk68hKq/yBEYd64X9wkazmO+xcepPVCFW9ZueSxXdUe5KhQPV5SnUQyQ7
+         kPUQ==
+X-Gm-Message-State: AOAM533xUiPlmM6my5A9tTd++goQb9PdDBq0XyLimXZpR60gtvljRj+W
+        MKyHlHVhqBsFe3qAe+YIt36Ya0bpCBMPCSE2WVHaHW0gbLah
+X-Google-Smtp-Source: ABdhPJzaENxoEuSgSLC1vX/6lIib4fLfF3GFQu1g6qti9Z5Q79ZuyXMJGBviyhwtp5ej5Wbi1Flv9TL3ks8LNMEiO4c=
+X-Received: by 2002:aa7:d7d0:: with SMTP id e16mr1357037eds.10.1593155422168;
+ Fri, 26 Jun 2020 00:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From:   Mahmood Naderan <mahmood.nt@gmail.com>
+Date:   Fri, 26 Jun 2020 11:40:10 +0430
+Message-ID: <CADa2P2W=tiDrZ1Uj2zgs1npywHtvQiv_1KFzB-EbN5gG4tCHpg@mail.gmail.com>
+Subject: Question regarding brstack
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello
+I used "brstack" in the perf command and see the following entries
 
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 16 Jun 2020
-17:33:32 +0800:
+0xffffffffb220bda7/0xffffffffb2209890/P/-/-/0
+0x40053a/0x400530/P/-/-/0
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> This patch adds the new IP of Nand Flash Controller(NFC) support
-> on Intel's Lightning Mountain(LGM) SoC.
-> 
-> DMA is used for burst data transfer operation, also DMA HW supports
-> aligned 32bit memory address and aligned data access by default.
-> DMA burst of 8 supported. Data register used to support the read/write
-> operation from/to device.
-> 
-> NAND controller driver implements ->exec_op() to replace legacy hooks,
-> these specific call-back method to execute NAND operations.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
+The first and seconds are said to be the branch instruction
+and target addresses.
 
-[...]
+However, it is not written in the manual if that is a virtual or
+physical address?
+Any explanation for this?
 
-> +static int ebu_nand_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
-> +				     int oob_required, int page)
-> +{
-> +	struct mtd_info *mtd = nand_to_mtd(chip);
-> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-> +	void __iomem *int_sta = ebu_host->hsnand + HSNAND_INT_STA;
-> +	int ret, val, x;
-> +	u32 reg;
-> +
-> +	ebu_nand_trigger(ebu_host, page, NAND_CMD_SEQIN);
-> +
-> +	ret = ebu_dma_start(ebu_host, DMA_MEM_TO_DEV, buf, mtd->writesize);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (oob_required) {
-> +		reg = (chip->oob_poi[3] << 24) | (chip->oob_poi[2] << 16) |
-> +			(chip->oob_poi[1] << 8) | chip->oob_poi[0];
-> +
-> +		writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
-> +
-> +		reg = (chip->oob_poi[7] << 24) | (chip->oob_poi[6] << 16) |
-> +			(chip->oob_poi[5] << 8) | chip->oob_poi[4];
-> +
-> +		writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
-> +	}
-> +
-> +	ret = readl_poll_timeout_atomic(int_sta, val,
-> +					!(val & HSNAND_INT_STA_WR_C), 10, 1000);
-> +	if (ret)
-> +		return -EIO;
-> +
-> +	x = readl(ebu_host->hsnand + HSNAND_CTL);
-> +	x &= ~HSNAND_CTL_GO;
-> +	writel(x, ebu_host->hsnand + HSNAND_CTL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const u8 ecc_strength[] = { 1, 1, 4, 8, 24, 32, 40, 60, };
-> +
-> +static int ebu_nand_attach_chip(struct nand_chip *chip)
-> +{
-> +	struct mtd_info *mtd = nand_to_mtd(chip);
-> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-> +	u32 eccsize, eccsteps, eccbytes, ecctotal, pagesize, pg_per_blk;
-> +	u32 eccstrength = chip->ecc.strength;
-> +	u32 writesize = mtd->writesize;
-> +	u32 blocksize = mtd->erasesize;
-> +	int start, val, i;
-> +
-> +	if (chip->ecc.mode != NAND_ECC_HW)
-> +		return 0;
-> +
-> +	/* Check whether eccsize is 0x0 or wrong. assign eccsize = 512 if YES */
-
-	/* Default to an ECC size of 512 */
-
-> +	if (!chip->ecc.size)
-> +		chip->ecc.size = 512;
-> +	eccsize = chip->ecc.size;
-> +
-> +	switch (eccsize) {
-> +	case 512:
-> +		start = 1;
-> +		if (!eccstrength)
-> +			eccstrength = 4;
-> +		break;
-> +	case 1024:
-> +		start = 4;
-> +		if (!eccstrength)
-
-You might want to look at other drivers and check the ecc_strength_ds
-property.
-
-> +			eccstrength = 32;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	i = round_up(start + 1, 4);
-> +	for (val = start; val < i; val++) {
-> +		if (eccstrength == ecc_strength[val])
-> +			break;
-> +	}
-
-A comment to explain what is this would be nice.
-
-Also "i" is not meaningful at all.
-
-> +	if (val == i)
-> +		return -EINVAL;
-> +
-> +	if (eccstrength == 8)
-> +		eccbytes = 14;
-> +	else
-> +		eccbytes = DIV_ROUND_UP(eccstrength * fls(8 * eccsize), 8);
-
-Does this formula works for eccstrength == 8 too?
-
-> +
-> +	eccsteps = writesize / eccsize;
-> +	ecctotal = eccsteps * eccbytes;
-> +	if ((ecctotal + 8) > mtd->oobsize)
-> +		return -ERANGE;
-> +
-> +	chip->ecc.total = ecctotal;
-> +	pagesize = fls(writesize >> 11);
-> +	if (pagesize > HSNAND_PARA0_PAGE_V8192)
-> +		return -ERANGE;
-> +
-> +	pg_per_blk = fls((blocksize / writesize) >> 6) << 4;
-> +	if (pg_per_blk > HSNAND_PARA0_PIB_V256)
-> +		return -ERANGE;
-> +
-> +	ebu_host->nd_para0 = pagesize | pg_per_blk | HSNAND_PARA0_BYP_EN_NP |
-> +			     HSNAND_PARA0_BYP_DEC_NP | HSNAND_PARA0_ADEP_EN |
-> +			     HSNAND_PARA0_TYPE_ONFI | (val << 29);
-> +
-> +	mtd_set_ooblayout(mtd, &ebu_nand_ooblayout_ops);
-> +	chip->ecc.read_page = ebu_nand_read_page_hwecc;
-> +	chip->ecc.write_page = ebu_nand_write_page_hwecc;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ebu_nand_exec_op(struct nand_chip *chip,
-> +			    const struct nand_operation *op, bool check_only)
-
-You don't handle the check_only parameter. This will fail with recent
-versions of the core.
-
-> +{
-> +	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
-> +	const struct nand_op_instr *instr = NULL;
-> +	unsigned int op_id;
-> +	int i, time_out, ret = 0;
-> +	u32 stat;
-> +
-> +	ebu_select_chip(chip);
-> +
-> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
-> +		instr = &op->instrs[op_id];
-> +
-> +		switch (instr->type) {
-> +		case NAND_OP_CMD_INSTR:
-> +			ebu_nand_writeb(chip, HSNAND_CLE_OFFS | HSNAND_CS_OFFS,
-> +					instr->ctx.cmd.opcode);
-> +			break;
-> +
-> +		case NAND_OP_ADDR_INSTR:
-> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
-> +				ebu_nand_writeb(chip,
-> +						HSNAND_ALE_OFFS | HSNAND_CS_OFFS,
-> +						instr->ctx.addr.addrs[i]);
-> +			break;
-> +
-> +		case NAND_OP_DATA_IN_INSTR:
-> +			ebu_read_buf(chip, instr->ctx.data.buf.in,
-> +				     instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_DATA_OUT_INSTR:
-> +			ebu_write_buf(chip, instr->ctx.data.buf.out,
-> +				      instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_WAITRDY_INSTR:
-> +			time_out = instr->ctx.waitrdy.timeout_ms * 1000;
-> +			ret = readl_poll_timeout(ctrl->ebu + EBU_WAIT,
-> +						 stat, stat & EBU_WAIT_RDBY,
-> +						 20, time_out);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct nand_controller_ops ebu_nand_controller_ops = {
-> +	.attach_chip = ebu_nand_attach_chip,
-> +	.exec_op = ebu_nand_exec_op,
-> +	.setup_data_interface = ebu_nand_setup_data_interface,
-> +};
-> +
-> +static void ebu_dma_cleanup(struct ebu_nand_controller *ebu_host)
-> +{
-> +	if (ebu_host->dma_rx)
-> +		dma_release_channel(ebu_host->dma_rx);
-> +
-> +	if (ebu_host->dma_tx)
-> +		dma_release_channel(ebu_host->dma_tx);
-> +}
-> +
-> +static int ebu_nand_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ebu_nand_controller *ebu_host;
-> +	struct nand_chip *nand;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	char *resname;
-> +	int ret, i;
-> +	u32 reg;
-> +
-> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> +	if (!ebu_host)
-> +		return -ENOMEM;
-> +
-> +	ebu_host->dev = dev;
-> +	nand_controller_init(&ebu_host->controller);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(ebu_host->ebu))
-> +		return PTR_ERR(ebu_host->ebu);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(ebu_host->hsnand))
-> +		return PTR_ERR(ebu_host->hsnand);
-> +
-> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get chip select: %d\n", ret);
-> +		return ret;
-> +	}
-> +	ebu_host->cs_num = reg;
-> +
-> +	for (i = 0; i < MAX_CS; i++) {
-> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
-> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   resname);
-> +		if (!res)
-> +			return -EINVAL;
-> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
-> +		ebu_host->cs[i].nand_pa = res->start;
-> +		if (IS_ERR(ebu_host->cs[i].chipaddr))
-> +			return PTR_ERR(ebu_host->cs[i].chipaddr);
-> +	}
-> +
-> +	ebu_host->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(ebu_host->clk)) {
-> +		ret = PTR_ERR(ebu_host->clk);
-> +		dev_err(dev, "failed to get clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(ebu_host->clk);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +	ebu_host->clk_rate = clk_get_rate(ebu_host->clk);
-> +
-> +	ebu_host->dma_tx = dma_request_chan(dev, "tx");
-> +	if (IS_ERR(ebu_host->dma_tx)) {
-> +		ret = PTR_ERR(ebu_host->dma_tx);
-> +		dev_err(dev, "DMA tx channel request fail!.\n");
-> +		goto err_cleanup_dma;
-> +	}
-> +
-> +	ebu_host->dma_rx = dma_request_chan(dev, "rx");
-> +	if (IS_ERR(ebu_host->dma_rx)) {
-> +		ret = PTR_ERR(ebu_host->dma_rx);
-> +		dev_err(dev, "DMA rx channel request fail!.\n");
-> +		goto err_cleanup_dma;
-> +	}
-> +
-> +	for (i = 0; i < MAX_CS; i++) {
-> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
-> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   resname);
-> +		if (!res)
-> +			return -EINVAL;
-
-New line
-
-> +		ebu_host->cs[i].addr_sel = res->start;
-> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
-> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
-> +	}
-> +
-> +	nand_set_flash_node(&ebu_host->chip, dev->of_node);
-
-You probably want to verify that mtd->name is set after
-nand_set_flash_node, to validate the presence of the mandatory 'label'
-DT property.
-
-> +	mtd = nand_to_mtd(&ebu_host->chip);
-> +	mtd->dev.parent = dev;
-> +	ebu_host->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, ebu_host);
-> +	nand_set_controller_data(&ebu_host->chip, ebu_host);
-> +
-> +	nand = &ebu_host->chip;
-> +	nand->controller = &ebu_host->controller;
-> +	nand->controller->ops = &ebu_nand_controller_ops;
-> +
-> +	/* Scan to find existence of the device */
-> +	ret = nand_scan(&ebu_host->chip, 1);
-> +	if (ret)
-> +		goto err_cleanup_dma;
-> +
-> +	ret = mtd_device_register(mtd, NULL, 0);
-> +	if (ret)
-> +		goto err_clean_nand;
-> +
-> +	return 0;
-> +
-> +err_clean_nand:
-> +	nand_cleanup(&ebu_host->chip);
-> +err_cleanup_dma:
-> +	ebu_dma_cleanup(ebu_host);
-> +	clk_disable_unprepare(ebu_host->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ebu_nand_remove(struct platform_device *pdev)
-> +{
-> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
-> +
-> +	mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
-
-ret = mtd_device...
-WARN_ON(ret);
-
-> +	nand_cleanup(&ebu_host->chip);
-> +	ebu_nand_disable(&ebu_host->chip);
-> +	ebu_dma_cleanup(ebu_host);
-> +	clk_disable_unprepare(ebu_host->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ebu_nand_match[] = {
-> +	{ .compatible = "intel,nand-controller", },
-
-Any version to append to the compatible?
-
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ebu_nand_match);
-> +
-> +static struct platform_driver ebu_nand_driver = {
-> +	.probe = ebu_nand_probe,
-> +	.remove = ebu_nand_remove,
-> +	.driver = {
-> +		.name = "intel-nand-controller",
-> +		.of_match_table = ebu_nand_match,
-> +	},
-> +
-> +};
-> +module_platform_driver(ebu_nand_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
-> +MODULE_DESCRIPTION("Intel's LGM External Bus NAND Controller driver");
-
-
-Thanks,
-Miquèl
+Regards,
+Mahmood
