@@ -2,148 +2,100 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5816C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D60820702
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ocallahan-org.20150623.gappssmtp.com header.i=@ocallahan-org.20150623.gappssmtp.com header.b="CfAfFgam"
+	by mail.kernel.org (Postfix) with ESMTP id BA43920767
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgFZBEC (ORCPT
+        id S1726978AbgFZBGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 21:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgFZBEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 21:04:02 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB696C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:04:01 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id m26so4223001lfo.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ocallahan-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=BUreYomgUbX9Tt5pj2+xiYdz91/CVVJ43t+n5EJKCsM=;
-        b=CfAfFgam99/Iow2RlQsd1BJLYuErz2ltAuBZCpzF8RDA+NcWxNjo6qUtLMl+dgbgtc
-         w3xwP/BkCd9uknj1M4S30mVcnko+CPY/MNr26b3MFueqoPnd8e9+ly209HXj1VpGr1+d
-         +KyPnCdp/L5ezR4tSLpgvXsPPGCIiginPqEquCUiakR0KOfnWcKa5F08P55RK24re8Ah
-         ScB88LWlvvEVNCG8ZEdeae4/kI1VQM0clBzCZu8NHuJbA0HrqnVtDLmfGGsDSJUIVkEm
-         08Zvp0VbNnAEvpnOhEhbTWSnhojvGeZMK2EdwTrKLKeiyg+rkF0TEYnDOYXwaDuSGTDN
-         9EEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=BUreYomgUbX9Tt5pj2+xiYdz91/CVVJ43t+n5EJKCsM=;
-        b=byifkSmdO2ENjQS4y7oN4UnaIktxH65G0vTe+uzQVeHEj6Mu14wVpQR07oIm/osJAC
-         CR0F9QqoGc3M6F5FpQaNvhz/FD2BgezVBb5l6Gs1Mlxj8FYhPpZ6caqcy/6EmbX9PB10
-         gicxMqySMWx+8cJ/Fg9ZhgTQDjPJyca6ERUGOK/2+I/JJ2O3faIWSbKWIUkHaR6ZMvmP
-         akk/Z7L03clbR9QLhRYKXG7Oyq+H9JT07J0qVqNZxMv5FGzE2DK5oTYuxiU62nXu3Zia
-         a4VwsuAdSF160FOZ4iMC8bqOJUvfq5tAOKKlmv0pbIc7J0KZPefIMKDmgqbyUrwB7/It
-         o4/Q==
-X-Gm-Message-State: AOAM533QNqsRndp7cTGOa3BjdeX0rGgcEwCaInAUEeaOIM51cRsr9WO/
-        gg/lsDXSceLelEMOPX3G7rtrhvZLof8k7eE6jrE=
-X-Google-Smtp-Source: ABdhPJzFA9NylCGxqWkjjzIRnvOWcTLbn5FmMP3h4ZKQYIOTkbDxLPTSPuIFfBrsMcmJ04yj7THUz2ViDS9O4aliaGI=
-X-Received: by 2002:a19:c8a:: with SMTP id 132mr387175lfm.23.1593133440043;
- Thu, 25 Jun 2020 18:04:00 -0700 (PDT)
+        Thu, 25 Jun 2020 21:06:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:16108 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgFZBGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 21:06:07 -0400
+IronPort-SDR: 0Q0q3AHZ6qQoFR8dX8iIc4le0fORJy5OYbglYfgAwPgVT9s53L1A+QfHHxl4kKmASs8hXEZ6W3
+ OYH0unDkrRJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229884387"
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="229884387"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 18:06:05 -0700
+IronPort-SDR: eMKqNd7ps268Mv92AG3KCTkH6vtUFOk49SDyQWHAbB/uppL/oaiRtt2HIbyLiDwH/3dsDLMDpN
+ 4EJi8PbqEPSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="311272783"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2020 18:06:04 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jocoe-0001vU-9x; Fri, 26 Jun 2020 01:06:04 +0000
+Date:   Fri, 26 Jun 2020 09:05:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     kbuild-all@lists.01.org,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: mscc: fix ptr_ret.cocci warnings
+Message-ID: <20200626010518.GA6037@890dc296aae1>
+References: <202006260959.QkSmCdSE%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200530055953.817666-1-krisman@collabora.com>
- <AF65147C-15DB-4BA4-A08B-55676B489BA5@amacapital.net> <85367hkl06.fsf@collabora.com>
- <CAOp6jLazKdQ4U8Zyuqf3Zj8DgBnq0QGCbpk3f46dnyLDr69upg@mail.gmail.com> <877dvuemfp.fsf@collabora.com>
-In-Reply-To: <877dvuemfp.fsf@collabora.com>
-Reply-To: robert@ocallahan.org
-From:   "Robert O'Callahan" <robert@ocallahan.org>
-Date:   Fri, 26 Jun 2020 13:03:47 +1200
-Message-ID: <CAOp6jLZrzmKh34L5f=RFOW7kNKraqer7M0cuQPv-aeUNc+AcpA@mail.gmail.com>
-Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>, kernel@collabora.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Gofman <gofmanp@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006260959.QkSmCdSE%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:49 AM Gabriel Krisman Bertazi
-<krisman@collabora.com> wrote:
-> We couldn't patch Windows code because of the aforementioned DRM and
-> anti-cheat mechanisms, but I suppose this limitation doesn't apply to
-> Wine/native code, and if this assumption is correct, this approach could
-> work.
->
-> One complexity might be the consistent model for the syscall live
-> patching.  I don't know how much of the problem is diminished from the
-> original userspace live-patching problem, but I believe at least part of
-> it applies.  And fencing every thread to patch would kill performance.
-> Also, we cannot just patch everything at the beginning.  How does rr
-> handle that?
+From: kernel test robot <lkp@intel.com>
 
-That's a good point. rr only allows one tracee thread to run at a time
-for other reasons, so when we consider patching a syscall instruction,
-we inspect all thread states to see if the patch would interfere with
-any other thread, and skip patching it in that unlikely case. (We'll
-try to patch it again next time that instruction is executed.) Wine
-would need some other solution, but indeed that could be a
-showstopper.
+drivers/net/phy/mscc/mscc_ptp.c:1496:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
-> Another problem is that we will want to support i386 and other
-> architectures.  For int 0x80, it is trickier to encode a branch to
-> another region, given the limited instruction space, and the patching
-> might not be possible in hot paths.
 
-This is no worse than for x86-64 `syscall`, which is also two bytes.
-We have pretty much always been able to patch the frequently executed
-syscalls by replacing both the syscall instruction and an instruction
-before or after the syscall with a five-byte jump, and folding the
-extra instruction into the stub.
+ Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
 
->I did port libsyscall-intercept to
-> x86-32 once and I could correctly patch glibc, but it's not guaranteed
-> that an updated libc or something else won't break it.
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
 
-We haven't found this to be much of a problem in rr. From time to time
-we have to add new patch patterns. The good news is that if things
-change so a syscall can't be patched, the result is degraded
-performance, not functional breakage.
+Fixes: 7d272e63e097 ("net: phy: mscc: timestamping and PHC support")
+CC: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
 
-> I'm not sure the benefit of not needing enhanced kernel support
-> justifies the complexity and performance cost required to make this work
-> reliably, in particular since the semantics for a kernel implementation
-> that we are discussing doesn't seem overly intrusive and might have
-> other applications like in the generic filter Andy mentioned.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   3f9437c6234d95d96967f1b438a4fb71b6be254d
+commit: 7d272e63e0979d38a6256108adbe462d621c26c5 [3775/3988] net: phy: mscc: timestamping and PHC support
 
-That's fair --- our solution is complex. (But worth it --- for us,
-it's valuable that rr works on quite old Linux kernels.)
+ mscc_ptp.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-As for performance, it performs well for us. I think we'd prefer our
-current approach to Andy's hypothetical PR_SET_SYSCALL_THUNK because
-the latter would have higher overhead (two trips into the kernel per
-syscall). We definitely don't want to require CAP_SYS_ADMIN so that
-rules out any eBPF-based alternative too. I would love to see a
-low-overhead unprivileged syscall interception mechanism that would
-obsolete our patching approach --- preferably one that's also
-stackable so rr can record and replay processes that use the new
-mechanism --- but I don't think any of the proposals here are that,
-yet, unfortunately.
-
-Rob
--- 
-Su ot deraeppa sah dna Rehtaf eht htiw saw hcihw, efil lanrete eht uoy
-ot mialcorp ew dna, ti ot yfitset dna ti nees evah ew; deraeppa efil
-eht. Efil fo Drow eht gninrecnoc mialcorp ew siht - dehcuot evah sdnah
-ruo dna ta dekool evah ew hcihw, seye ruo htiw nees evah ew hcihw,
-draeh evah ew hcihw, gninnigeb eht morf saw hcihw taht.
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -1493,10 +1493,7 @@ static int __vsc8584_init_ptp(struct phy
+ 
+ 	vsc8531->ptp->ptp_clock = ptp_clock_register(&vsc8531->ptp->caps,
+ 						     &phydev->mdio.dev);
+-	if (IS_ERR(vsc8531->ptp->ptp_clock))
+-		return PTR_ERR(vsc8531->ptp->ptp_clock);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(vsc8531->ptp->ptp_clock);
+ }
+ 
+ void vsc8584_config_ts_intr(struct phy_device *phydev)
