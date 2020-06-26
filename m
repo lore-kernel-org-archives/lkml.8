@@ -2,128 +2,130 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B710920775
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593152286;
-	bh=HhbgNh0VWxwhtAwR5xzwKGA29quozQ9QedjKPo8kvPs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LhsjHXK2+OC0eKxspOB8emj/mHDjWEx+DNmpz39NIxZXabJjr+5RSjpCVMo/taQ9o
-	 jyYBL853UAER9QYoQpDWnmYS7VkaFKNhUZS8zt7VdXaf7zrpPg7Ltk8AKql/v/E+gC
-	 hIrQuzuihheVzEJ0S8Zo6UZ22p3+W2OGtcCvTFYo=
+	by mail.kernel.org (Postfix) with ESMTP id 34FBD20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 06:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFZGSF (ORCPT
+        id S1728338AbgFZGTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:18:05 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:57237 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbgFZGSE (ORCPT
+        Fri, 26 Jun 2020 02:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgFZGTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:18:04 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 05Q6HZEj004759;
-        Fri, 26 Jun 2020 15:17:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 05Q6HZEj004759
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593152256;
-        bh=023J8ksJ4vmuxcmwbZnNX00KqhCMhimoOjFSUNv0M5Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F8YgbYv9uTVGtt06nJM2nCq42dJung2LLDOuj78Ijy2qco6BInAItLqPWW0CSMdw2
-         1f/rPNtemf1ASQOJhrkW5V/grtfkHpfOgxcFAcWQbA7vPfsNZTntT/Q2TEU4kFGJQo
-         AEmWXMqviw/aFLqtNqwoh25Gi8z89cLOYRwZYILq5tFItGUAxAIOXV8YdzYanhxxtA
-         UEum9d3reI4KVOrI/wNeybhXnFEv01RiZC9OF32A/vqB6pH8WpdmbJGywK424RwR3Y
-         Ggpca2Hbq3OMA4+Va7Xt/T4QwRjWoDl+d6Tfm/kXqkhP/awlRgUp6U+Yy2cxny9Roc
-         ZJwAwmx4jd8jQ==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id o15so4876522vsp.12;
-        Thu, 25 Jun 2020 23:17:36 -0700 (PDT)
-X-Gm-Message-State: AOAM531R+dX2xvGHN8VNEQcYqWDrYDBS4C/yFEVPGk1NgFfjield2ANY
-        rfv81pbnb5XrHCMRBio8OGByEVoJ0xnSSMwuAcY=
-X-Google-Smtp-Source: ABdhPJz23K/w9un4HtxmAZ4Lo6s5Frji+9Mn/0mD/OCvddq/ZO+vzwKm1nRNdz+EKc50XVPLdcyaFhuBo1f6KbCCaYA=
-X-Received: by 2002:a67:22c7:: with SMTP id i190mr1265479vsi.179.1593152255223;
- Thu, 25 Jun 2020 23:17:35 -0700 (PDT)
+        Fri, 26 Jun 2020 02:19:10 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C096C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 23:19:10 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1johhR-0001r4-L1; Fri, 26 Jun 2020 08:18:57 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1johhN-00015J-AA; Fri, 26 Jun 2020 08:18:53 +0200
+Date:   Fri, 26 Jun 2020 08:18:53 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v14 3/3] Input: new da7280 haptic driver
+Message-ID: <20200626061853.hyb7dwta6ths2qo2@taurus.defre.kleine-koenig.org>
+References: <cover.1593017969.git.Roy.Im@diasemi.com>
+ <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
 MIME-Version: 1.0
-References: <5ef50e52.1c69fb81.b6cbd.bd8e@mx.google.com>
-In-Reply-To: <5ef50e52.1c69fb81.b6cbd.bd8e@mx.google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 26 Jun 2020 15:16:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
-Message-ID: <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: buildtar: add arm64 dtbs support
-To:     Domenico Andreoli <domenico.andreoli@linux.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="l5lbv7flvyngebwk"
+Content-Disposition: inline
+In-Reply-To: <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 5:51 AM Domenico Andreoli
-<domenico.andreoli@linux.com> wrote:
->
-> From: Domenico Andreoli <domenico.andreoli@linux.com>
->
-> Make 'make tar-pkg' install dtbs on arm64.
->
-> Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
->
-> v2:
->  - Destination path includes the kernel version, as expected
->
-> ---
->  scripts/package/buildtar |    9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> Index: b/scripts/package/buildtar
-> ===================================================================
-> --- a/scripts/package/buildtar
-> +++ b/scripts/package/buildtar
-> @@ -125,6 +125,15 @@ case "${ARCH}" in
->                 ;;
->  esac
->
-> +#
-> +# Install dtbs
-> +#
-> +case "${ARCH}" in
 
-Instead of checking ${ARCH},
-can you you do
+--l5lbv7flvyngebwk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-     if grep -q '^CONFIG_OF_EARLY_FLATTREE=y' include/config/auto.conf; then
+Hello,
 
-?
+=66rom the PWM POV I'm happy now. Just a few minor comments that I noticed
+while checking the PWM details.
 
-This is what the deb package build does:
-https://github.com/masahir0y/linux/blob/v5.7/scripts/package/builddeb#L145
+On Thu, Jun 25, 2020 at 01:59:29AM +0900, Roy Im wrote:
+> +		val =3D haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
+> +			haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
 
+If you write this as:
 
-> +       arm64)
-> +               make ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
-> +               ;;
-> +esac
+	val =3D FIELD_PREP(DA7280_PS_SEQ_ID_MASK, haptics->ps_seq_id) |
+		FIELD_PREP(DA7280_PS_SEQ_LOOP_MASK, haptics->ps_seq_loop);
+
+you get some additional checks for free and can drop all defines for ..._SH=
+IFT .
+
+> +static u8 da7280_haptic_of_gpi_pol_str(struct device *dev,
+> +				       const char *str)
+> +{
+> +	if (!strcmp(str, "Rising-edge"))
+> +		return 0;
+> +	else if (!strcmp(str, "Falling-edge"))
+> +		return 1;
+> +	else if (!strcmp(str, "Both-edge"))
+> +		return 2;
 > +
+> +	dev_warn(dev, "Invalid string - set to default\n");
 
+Maybe mention "Rising-edge" being the default?
 
-Or, you can use INSTALL_PATH="${tmpdir}/boot"
-to make it shorter.
+> +	return 0;
+> +}
 
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--l5lbv7flvyngebwk
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Best Regards
-Masahiro Yamada
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl71k0oACgkQwfwUeK3K
+7AkjFwgAldH3KRBxt3eudCHkipnw7VuyQf7SQOeIBpqehW+F0UEblbR8l96xgv/G
+8wzR4sL28wQuPpDxs7zvvqaN3H6JakX+BIL/9yIAtBh1LCGca01s8peLC9EhuYac
+zFtc97/+fEmhjqjMmeyThz8s+uy3C7mO3rjaQODNsW9ZhD8XmmFuvwyI4//0uF55
+uVEn36SrwI7Osmy16vKWluKpuk+d1b8otenjJq9uLJW6ACSQrCv+YTZzrmVBqTyY
+OCPVLOXtYhSUlQLNkwa95ENVA4h/ZzRG5qs139nfo9H3aqDaz62dJ5iYbdrdri0U
+0B/l+NTYigDURR4k4KErR4u3aQfMVw==
+=zSqA
+-----END PGP SIGNATURE-----
+
+--l5lbv7flvyngebwk--
