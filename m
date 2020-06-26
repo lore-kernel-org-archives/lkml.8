@@ -2,128 +2,88 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E93C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5BD206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3AFE206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKPvNBBe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSRN2jOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgFZVVD (ORCPT
+        id S1726034AbgFZVVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        Fri, 26 Jun 2020 17:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgFZVVB (ORCPT
+        with ESMTP id S1725793AbgFZVVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 17:21:01 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A821C03E979;
-        Fri, 26 Jun 2020 14:21:01 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id h28so7995479edz.0;
-        Fri, 26 Jun 2020 14:21:01 -0700 (PDT)
+        Fri, 26 Jun 2020 17:21:54 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30E2C03E979;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so5485200pgc.5;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :mime-version:content-disposition:user-agent;
-        bh=lFptft2lFlGgH6Ls5S7552RJmoH/AEQDRgWhsRsHtUE=;
-        b=nKPvNBBeTfgW8XKWlK6PPtRA6K+ZMGEPx8hxN8Cncw+i0usEnRaAp8urMZy2m3ScTc
-         fE3GpcISVMrBM1L1IfcSxg8uBTj4sw340qYS3A72FSC1YVOHeXkBeaFsT76/C05C6mdx
-         lkJfONrK5eECqod0Yex48il7pnVPT6CSijmamHtEYZ9xCo03S4tk1psYPu4kco7ne79q
-         xCLmCvQ2d0xfP9LnkBPnp8zwaekVmzfXy5Zt1LbNiAwS0np4MWPUe/2sGDvWqqMhvcGg
-         fpRHJ2XF7wrEAjsqD5O6HgginW2dObkUQaiOiOIZ2BsXHAAKo9ctXh47suKIFqfS2CHW
-         spcA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zKO0HF618ZHvLKGIwJNOq5Dl9WwME35XliCSQ1Uc5Ro=;
+        b=CSRN2jOn4g0YRarsVgt4RWGUl40iKy1BDylDXh4amhYCihwzANY+M48aV0pvxFyxzV
+         miyKNHZq60jSOZkqHqVLq6iMFA4OCmu/yVAZ/TpQ0FK5rN2/ynnbumNicgcaRK7G6gpM
+         KXxkiTa+WKx7CGdncYX+VbFJ3z68SDQKaV4WMBUeittBAYlPN+YOPPPugDXYN5IEzBe4
+         pIfSjBHFZpOIRr0QBa44b8ytsvht7FPoqNIik5Sb7/Y6gN01lpIceUbP4+vP5pC6KY/y
+         Lh9OH+pZAGSxeQaI848EYTmKO7fIaByOyMrPWkO5ddxYzHA8VqHysNJiLeekZUy+q8pQ
+         WO8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=lFptft2lFlGgH6Ls5S7552RJmoH/AEQDRgWhsRsHtUE=;
-        b=ppsQWYYhcUGVBmx46f8lU7mNbIBjKXFpxcs3VsY7qrKs9gwavxmkozmvBX99uUffqd
-         rF7q5yKwRFBqNZunaB641xbEmFFwSGHajhWCE1JV1clnf5KhxgfS7+t3d+SJlnjYLVx7
-         SULLmQoTqrN5748BpBSbjThfyHjiWpX7qfasDAo4HLSUtAjXVsUa6za4oIUdSsMOJO7K
-         xzIPIBt2ZUnoK6lZMaoOoM0CjkmXUK6mHxMwWFybDZbD6lc6IHp8sEHLU1NFdhY8DXP9
-         xDjZoj+dOoPk0+7Lq/W8LdG7nyXltOTbYvQ4SYfHNqxTu7/6F8PADPddJ8isMA6PMUA9
-         ePLg==
-X-Gm-Message-State: AOAM5332pPELwvw8ZCJ2xUNBJf4WedSgum16lOpkeI2+YQQd1Ptks55u
-        CFvhLEPcnsN512t+xoNi2CA/5qy0jpM=
-X-Google-Smtp-Source: ABdhPJx4ebV6dX3wrvLlYT2vl15qIO6y7j6T7jEUaS7hHoa0turcJ862VRbr3mXYrH8UxENn1/89eA==
-X-Received: by 2002:aa7:cc19:: with SMTP id q25mr5396146edt.26.1593206460170;
-        Fri, 26 Jun 2020 14:21:00 -0700 (PDT)
-Received: from dumbo ([2a0b:f4c1::6])
-        by smtp.gmail.com with ESMTPSA id b4sm5853484edx.96.2020.06.26.14.20.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zKO0HF618ZHvLKGIwJNOq5Dl9WwME35XliCSQ1Uc5Ro=;
+        b=V4vA6MhEFypRwycFj31nDg8lwv2MxuRjtWADymGhnwgYzFYqlV2BZNRKPDMmMNqPgC
+         LrOreLGklT4sBwV5RXvcRX5+Wb6nzrzP5lNYh7kZAee6merBS01JkNndhu2Z23hGSvjB
+         T098odmcXvLkGf38GxHZ3dYV/R7KTwg4IKgxRKZDe/uTzoz4l8Fd9iiKRvdAPiXVphO1
+         ZDwcHJicVSXBluKxHsL6tWhPV30tRHTloYsn1fjc+VSfxM1p9un5f+0R6sm7nGJCTJo3
+         +VSEMQS54xsZy+iRev2TX/0ETfvg57dlq/XdjA/pxKjNvRgrS/5ruaD7awhUTgwi056X
+         EZEw==
+X-Gm-Message-State: AOAM5332dCAvJbceS7oGqOo+yTGGazh0qSwgSHte5kPkO22yBbSa4l3y
+        HNdxURDPE7U4MGgdOckRX5E=
+X-Google-Smtp-Source: ABdhPJzixwu5xAFDCZEZc11/c1jGK/QvttplfhOdsg6t+UXwn5MqDPN+ctnD9WJO0MAdiMSX5vS0CA==
+X-Received: by 2002:a63:5d04:: with SMTP id r4mr636309pgb.15.1593206513519;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id oc6sm13741216pjb.43.2020.06.26.14.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 14:20:58 -0700 (PDT)
-Received: from cavok by dumbo with local (Exim 4.92)
-        (envelope-from <cavok@dumbo>)
-        id 1jovmK-0006pd-8X; Fri, 26 Jun 2020 23:20:56 +0200
-Date:   Fri, 26 Jun 2020 23:20:56 +0200
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v3] kbuild: buildtar: add dtbs support
-Message-ID: <20200626212056.GA25753@dumbo>
-Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>, Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 26 Jun 2020 14:21:52 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: bcm: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 14:21:51 -0700
+Message-Id: <20200626212151.12654-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200626080646.4300-1-krzk@kernel.org>
+References: <20200626080646.4300-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Domenico Andreoli <domenico.andreoli@linux.com>
+On Fri, 26 Jun 2020 10:06:46 +0200, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache@22000: $nodename:0:
+>         'l2-cache@22000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-Make 'make tar-pkg' install dtbs.
-
-v3:
- - Check CONFIG_OF_EARLY_FLATTREE=y instead of ARCH before installing dtbs
-
-v2:
- - Destination path includes the kernel version, as expected
-
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-
----
- scripts/package/buildtar |    7 +++++++
- 1 file changed, 7 insertions(+)
-
-Index: b/scripts/package/buildtar
-===================================================================
---- a/scripts/package/buildtar
-+++ b/scripts/package/buildtar
-@@ -125,6 +125,13 @@ case "${ARCH}" in
- 		;;
- esac
- 
-+#
-+# Install dtbs
-+#
-+if grep -q '^CONFIG_OF_EARLY_FLATTREE=y' include/config/auto.conf; then
-+	$MAKE ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
-+fi
-+
- if [ "${1}" = dir-pkg ]; then
- 	echo "Kernel tree successfully created in $tmpdir"
- 	exit 0
-
--- 
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+Applied to devicetree/next, thanks!
+--
+Florian
