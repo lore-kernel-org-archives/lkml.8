@@ -2,178 +2,169 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D11C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B82C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B14720767
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32BC207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 01:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="grSCHd6G"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hCTUZM6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgFZBM4 (ORCPT
+        id S1727000AbgFZBNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 21:12:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46868 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgFZBM4 (ORCPT
+        Thu, 25 Jun 2020 21:13:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgFZBNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 21:12:56 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 13A1D595;
-        Fri, 26 Jun 2020 03:12:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593133973;
-        bh=OGnn3Du3CGaosILghe0jhZN8MxKh5aDNKLaqOQFHkps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=grSCHd6GQJkQiVjtsiow7VRDaWX/2mg+YJHmhO/Csv4kPpErwiM+AktRcwgZ3cd0g
-         jXSdHvuy6gISYKdgEueXpt1KLlyWRJuroN3lkRP6oOKevlD4Y6ZtQRlvJNtKNzSebq
-         e0ecGJsBTkMQqVxxKmFvlSyIZlCRAAtlJFu+QIDc=
-Date:   Fri, 26 Jun 2020 04:12:51 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Steve Longerbeam <steve_longerbeam@mentor.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200626011251.GP5865@pendragon.ideasonboard.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
+        Thu, 25 Jun 2020 21:13:14 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D16C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:13:12 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y13so4241625lfe.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 18:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=awA+aJfmww2/ao85b7H7RA9mG8f4CnoPqX5UUEk/kak=;
+        b=hCTUZM6Ox/OvQ/JlyZz8Suae/jeQnSvAiK8yyi8MhvucZxipYA1+1KVp9Z4H28F5r/
+         oFI7lN/vhXdgyScwRCqTZTX5p9QjEcai4GEW009ru/kVfwEVvZby1d1/rbTsC4JvkgIG
+         AAUWxi2snR0VIT41gDC/cSVmrV1LvEpce5IzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=awA+aJfmww2/ao85b7H7RA9mG8f4CnoPqX5UUEk/kak=;
+        b=H1XQ9O2CoeQP6/C+Pdz8Lrn+0OXt7RRmzQ9xyooOcJoihavj1DEyk3ico72xibUF7c
+         y76v9Nt+ijjj/EakW85+JHAUBQvzteHj4NkGM5sFESypXgUQftQlhY2EjDe/uJ2ToWiO
+         F/i5zelYPCHlNMYSgA1UzrnrNLfMEoBFnB6j4txWsH7jMcaTwwBD1N6TS43FjGEJeZaV
+         AwT71fNcJ8GWVPFOL8OMntlI/H8P3AE7Ge8dL1z9ZrNZ8cX+4kQfBaDBoJ+YkPJFafWg
+         OF71D0kxHrL8vFufYo2IOgei+GPRgWPR24E6uJjsz5xMXTOx/XJA8H7HezDaV28JAUYg
+         7B+A==
+X-Gm-Message-State: AOAM530McwV5D2Cg7dv2Rv0UnQQhX9caFfBqnDQYUCwQXGtoVm4yrIxp
+        PZDyYDMipmcpo78mO+4BAqowLEVw9Cgd/zvrlhC20w==
+X-Google-Smtp-Source: ABdhPJwZCTMBJV8xuYwi09a06rapO6vlykG3STqzwWAy7jky+t7DKQ1dMepMyJh5nLNleaSot9l2JcmKUk7gcBd9bAg=
+X-Received: by 2002:a05:6512:328d:: with SMTP id p13mr383775lfe.139.1593133990435;
+ Thu, 25 Jun 2020 18:13:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
+References: <20200612164632.25648-1-nsaenzjulienne@suse.de>
+ <20200612164632.25648-5-nsaenzjulienne@suse.de> <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
+ <d3346d7cb9655eb111b4126d72a08499c6254fef.camel@suse.de> <CAPnjgZ3PwTWBQ2Vi4=Sc7JB699TrSxr=PAJupL_3POhJ00qSsA@mail.gmail.com>
+ <954083bf13bd7c24c31c9673269ea0eedb925f43.camel@suse.de>
+In-Reply-To: <954083bf13bd7c24c31c9673269ea0eedb925f43.camel@suse.de>
+From:   Simon Glass <sjg@chromium.org>
+Date:   Thu, 25 Jun 2020 19:12:02 -0600
+Message-ID: <CAPnjgZ3CuidKZpTzBiH_F5WhEO3RzEcmHGMyJN9ynu2eOirkUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] dm: pci: Assign controller device node to root bridge
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Matthias Brugger <mbrugger@suse.com>,
+        U-Boot Mailing List <u-boot@lists.denx.de>,
+        Bin Meng <bmeng.cn@gmail.com>, Marek Vasut <marex@denx.de>,
+        lk <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Hi Nicolas,
 
-On Thu, Jun 25, 2020 at 10:41:09AM -0700, Steve Longerbeam wrote:
-> On 6/24/20 7:01 PM, Laurent Pinchart wrote:
-> > On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> >> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> >>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>   +Niklas, +Laurent
-> >>
-> >> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> > I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> > idea either :-) Routing doesn't go through the subdev [gs]_input
-> > operations in MC-based drivers. It should be configured through link
-> > setup instead. This patch goes in the wrong direction, sorry Steve.
-> 
-> That's OK! :) I didn't submit this patch, and as stated in the commit 
-> header, I never recommended this patch be submitted to upstream in the 
-> first place.
-> 
-> Selecting inputs at a subdev should normally make use of media link 
-> setup. But for selecting analog signal inputs, such as the ADV748x AFE 
-> standard definition inputs, that would  mean there would need to exist 
-> source "analog" subdevs that connect to the AFE inputs, if only for the 
-> purpose of selecting those inputs, which seems silly IMHO. The ADV748x 
-> AFE subdev defines these inputs as media pads, but have no connections, 
-> so link setup API can't be used to select those inputs.
-> 
-> So a new subdev pad API is clearly needed, not just to get input status 
-> at a subdev pad, but to select/make active such analog inputs without 
-> requiring link setup API.
+On Wed, 17 Jun 2020 at 13:15, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Tue, 2020-06-16 at 17:31 -0600, Simon Glass wrote:
+> > Hi Nicolas,
+> >
+> > On Tue, 16 Jun 2020 at 08:09, Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > On Tue, 2020-06-16 at 07:43 -0600, Simon Glass wrote:
+> > > > Hi Nicolas,
+> > > >
+> > > > On Fri, 12 Jun 2020 at 10:47, Nicolas Saenz Julienne
+> > > > <nsaenzjulienne@suse.de> wrote:
+> > > > > There is no distinction in DT between the PCI controller device and the
+> > > > > root bridge, whereas such distinction exists from dm's perspective. Make
+> > > > > sure the root bridge ofnode is assigned to the controller's platform
+> > > > > device node.
+> > > > >
+> > > > > This permits setups like this to work correctly:
+> > > > >
+> > > > >         pcie {
+> > > > >                 compatible = "...";
+> > > > >                 ...
+> > > > >                 dev {
+> > > > >                         reg = <0 0 0 0 0>;
+> > > > >                         ...
+> > > > >                 };
+> > > > >         };
+> > > > >
+> > > > > Without this the dev node is assigned to the root bridge and the
+> > > > > actual device search starts one level lower than expected.
+> > > > >
+> > > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > > > ---
+> > > > >  drivers/pci/pci-uclass.c | 15 ++++++++++++++-
+> > > > >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > > >
+> > > > Can you update the tests to handle this case please?
+> > >
+> > > I'd be glad to, but I'm not familiar with the test FW in u-booy, coud give
+> > > me
+> > > some pointers on where/how to test this?
+> > >
+> >
+> > Yes it is at test/dm/pci.c and the device tree is test.dts
+> >
+> > 'make qcheck' to run all tests. To run one test, build for sandbox and
+> > then something like
+> >
+> > u-boot -T -c "ut dm pci_swapcase"
+> >
+> > for example.
+> >
+> > You can perhaps use an existing PCI controller in test.dts but feel
+> > free to add one more if you need it for your test. Make sure that you
+> > don't break other tests.
+>
+> Thanks for the info.
+>
+> Actually adding the tests made me doubleguess myself, and now I'm pretty sure
+> that what I shoudl've done in DT is the following:
+>
+>         &pcie0 {
+>                pci@0 {
+>                        #address-cells = <3>;
+>                        #size-cells = <2>;
+>                        ranges;
+>
+>                        reg = <0 0 0 0 0>;
+>
+>                        usb@1,0 {
+>                                reg = <0x10000 0 0 0 0>;
+>                                resets = <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
+>                        };
+>                };
+>         };
+>
+>
+> (with "lspci -tv": [0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Controller)
+>
+> With this the patch above isn't needed, which is great.
+>
+> I'll send this to upstream Linux just to get a confirmation this is correct,
+> although if you have any comments it'll be appreciated.
 
-There was an attempt to create a subdev ioctl to configure internal
-routing. See "[PATCH v4 19/31] media: Documentation: Add GS_ROUTING
-documentation" ([1]) and the related patches in the series.
+Yes it looks OK to me. U-Boot allows PCI and USB devices to be
+represented in the device tree.
 
-[1] https://lore.kernel.org/linux-media/20190328200608.9463-20-jacopo+renesas@jmondi.org/
-
-> >>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> >>> ioctls for use via v4l2 subdevice node.
-> >>>
-> >>> This commit should probably not be pushed upstream, because the (old)
-> >>> idea of video inputs conflicts with the newer concept of establishing
-> >>> media links between src->sink pads.
-> >>>
-> >>> However it might make sense for some subdevices to support enum/get/set
-> >>> inputs. One example would be the analog front end subdevice for the
-> >>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> >>> can be done without requiring the implementation of media entities that
-> >>> would define the analog source for which to establish a media link.
-> >>>
-> >>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>> ---
-> >>>   drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> >>>   include/media/v4l2-subdev.h           | 11 +++++++++++
-> >>>   2 files changed, 20 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>> index 6b989fe..73fbfe9 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> >>>   			return -ENOTTY;
-> >>>   		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> >>>
-> >>> +	case VIDIOC_ENUMINPUT:
-> >>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> >>> +
-> >>> +	case VIDIOC_G_INPUT:
-> >>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> >>> +
-> >>> +	case VIDIOC_S_INPUT:
-> >>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> >>> +
-> >>>   	case VIDIOC_G_CTRL:
-> >>>   		if (!vfh->ctrl_handler)
-> >>>   			return -ENOTTY;
-> >>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> >>> index f7fe78a..6e1a9cd 100644
-> >>> --- a/include/media/v4l2-subdev.h
-> >>> +++ b/include/media/v4l2-subdev.h
-> >>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> >>>    * @g_input_status: get input status. Same as the status field in the
-> >>>    *	&struct &v4l2_input
-> >>>    *
-> >>> + * @enuminput: enumerate inputs. Should return the same input status as
-> >>> + *      @g_input_status if the passed input index is the currently active
-> >>> + *      input.
-> >>> + *
-> >>> + * @g_input: returns the currently active input index.
-> >>> + *
-> >>> + * @s_input: set the active input.
-> >>> + *
-> >>>    * @s_stream: used to notify the driver that a video stream will start or has
-> >>>    *	stopped.
-> >>>    *
-> >>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> >>>   	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>   	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>   	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> >>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> >>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> >>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> >>>   	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> >>>   	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> >>>   	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> 
-
--- 
 Regards,
-
-Laurent Pinchart
+Simon
