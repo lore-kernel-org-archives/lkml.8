@@ -2,103 +2,188 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD9420675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF4820675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgFZJLD (ORCPT
+        id S1726448AbgFZJMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:11:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47084 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgFZJLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:11:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E58372A59CA
-Subject: Re: [PATCH 1/2] platform/chrome: cros_ec_typec: Add TBT pd_ctrl
- fields
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Yicheng Li <yichengli@chromium.org>
-References: <20200624080926.165107-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <26f8dac0-36a0-65ba-a219-8c1d65f1799f@collabora.com>
-Date:   Fri, 26 Jun 2020 11:10:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 05:12:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48042 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgFZJMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 05:12:09 -0400
+IronPort-SDR: h8j71x7kOJIlek4t+ELMXfOeJE7/CQ7EStk4+MomaloZC8QifADgSih9CKtU87BZM2apjLzr7V
+ eG4U49D1WMAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="206764587"
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="206764587"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 02:12:08 -0700
+IronPort-SDR: 6JI1Y+OUl0Mv4tevFg34eQwL8z5VY5MRahJcc5e5veIPJbS0AD3r0sZuwgmu1wVHs49GHySfU0
+ QgIH+fTy9u8Q==
+X-IronPort-AV: E=Sophos;i="5.75,283,1589266800"; 
+   d="scan'208";a="311360439"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.252.133.102])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 02:12:08 -0700
+Message-ID: <d273532c9d32f0f88ebab37dd820f601ab0a37a3.camel@linux.intel.com>
+Subject: Re: [UPDATE][PATCH v3 1/2] cpufreq: intel_pstate: Allow
+ enable/disable energy efficiency
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org,
+        dsmythies@telus.net, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, peterz@infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Date:   Fri, 26 Jun 2020 02:12:08 -0700
+In-Reply-To: <20200626084903.GA27151@zn.tnic>
+References: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
+         <20200626084903.GA27151@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200624080926.165107-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
-
-On 24/6/20 10:09, Prashant Malani wrote:
-> To support Thunderbolt compatibility mode, synchronize
-> ec_response_usb_pd_control_v2 with the Chrome EC version, so that
-> we get the Thunderbolt related control fields and macros.
+On Fri, 2020-06-26 at 10:49 +0200, Borislav Petkov wrote:
+> On Thu, Jun 25, 2020 at 03:49:31PM -0700, Srinivas Pandruvada wrote:
+> > By default intel_pstate driver disables energy efficiency by
+> > setting
+> > MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP
+> > mode.
+> > This CPU model is also shared by Coffee Lake desktop CPUs. This
+> > allows
+> > these systems to reach maximum possible frequency. But this adds
+> > power
+> > penalty, which some customers don't want. They want some way to
+> > enable/
+> > disable dynamically.
+> > 
+> > So, add an additional attribute "energy_efficiency_enable" under
+> > /sys/devices/system/cpu/intel_pstate/ for these CPU models. This
+> > allows
+> > to read and write bit 19 ("Disable Energy Efficiency Optimization")
+> > in
+> > the MSR IA32_POWER_CTL.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-
-Applied both patches for 5.9
-
-> ---
->  .../linux/platform_data/cros_ec_commands.h    | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-> index a7b0fc440c35..b808570bdd04 100644
-> --- a/include/linux/platform_data/cros_ec_commands.h
-> +++ b/include/linux/platform_data/cros_ec_commands.h
-> @@ -4917,15 +4917,26 @@ struct ec_response_usb_pd_control_v1 {
->  #define USBC_PD_CC_UFP_ATTACHED	4 /* UFP attached to usbc */
->  #define USBC_PD_CC_DFP_ATTACHED	5 /* DPF attached to usbc */
->  
-> +/* Active/Passive Cable */
-> +#define USB_PD_CTRL_ACTIVE_CABLE        BIT(0)
-> +/* Optical/Non-optical cable */
-> +#define USB_PD_CTRL_OPTICAL_CABLE       BIT(1)
-> +/* 3rd Gen TBT device (or AMA)/2nd gen tbt Adapter */
-> +#define USB_PD_CTRL_TBT_LEGACY_ADAPTER  BIT(2)
-> +/* Active Link Uni-Direction */
-> +#define USB_PD_CTRL_ACTIVE_LINK_UNIDIR  BIT(3)
-> +
->  struct ec_response_usb_pd_control_v2 {
->  	uint8_t enabled;
->  	uint8_t role;
->  	uint8_t polarity;
->  	char state[32];
-> -	uint8_t cc_state; /* USBC_PD_CC_*Encoded cc state */
-> -	uint8_t dp_mode;  /* Current DP pin mode (MODE_DP_PIN_[A-E]) */
-> -	/* CL:1500994 Current cable type */
-> -	uint8_t reserved_cable_type;
-> +	uint8_t cc_state;	/* enum pd_cc_states representing cc state */
-> +	uint8_t dp_mode;	/* Current DP pin mode (MODE_DP_PIN_[A-E]) */
-> +	uint8_t reserved;	/* Reserved for future use */
-> +	uint8_t control_flags;	/* USB_PD_CTRL_*flags */
-> +	uint8_t cable_speed;	/* TBT_SS_* cable speed */
-> +	uint8_t cable_gen;	/* TBT_GEN3_* cable rounded support */
->  } __ec_align1;
->  
->  #define EC_CMD_USB_PD_PORTS 0x0102
+
+[...]
+
+> > +``energy_efficiency_enable``
+> > +	This attribute is only present on platforms, which has CPUs
+> > matching
 > 
+> 						which have
+> 
+Thanks, I will fix that.
+
+> > +	Kaby Lake or Coffee Lake desktop CPU model. By default
+> > +	"energy_efficiency" is disabled on these CPU models in HWP mode
+> > by this
+> > +	driver. Enabling energy efficiency may limit maximum operating
+> > +	frequency in both HWP and non HWP mode. In non HWP mode, this
+> > attribute
+> > +	has an effect in turbo range only. But in HWP mode, this
+> > attribute also
+> > +	has an effect in non turbo range.
+> 
+> Those last two sentences could be simplified - read strange.
+I will try to address this.
+
+[...]
+
+> > @@ -254,6 +254,7 @@
+> >  #define MSR_PEBS_FRONTEND		0x000003f7
+> >  
+> >  #define MSR_IA32_POWER_CTL		0x000001fc
+> > +#define MSR_IA32_POWER_CTL_BIT_EE	19
+> 
+> Sort that MSR in - I know, the rest is not sorted either but we can
+> start somewhere. So pls put it...
+> 
+I will.
+
+> #define MSR_LBR_SELECT                  0x000001c8
+> #define MSR_LBR_TOS                     0x000001c9
+> 
+> <--- here.
+> 
+> 
+
+[...]
+
+> > +
+> > +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
+> > +	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >>
+> > MSR_IA32_POWER_CTL_BIT_EE;
+> 
+> So you can simplify to:
+> 
+> 	enable = !!(power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE));
+> 
+> methinks.
+> 
+Better.
+
+> > +	return sprintf(buf, "%d\n", !enable);
+> 
+> If this bit is called
+> 
+> 	"Disable Energy Efficiency Optimization"
+> 
+> why do you call your function and sysfs file "enable"? This is making
+> it
+> more confusing.
+> 
+> Why don't you call it simply: "energy_efficiency" and have it
+> intuitive:
+> 
+> 1 - enabled
+> 0 - disabled
+> 
+I think your suggestion is good. The one other attributes under this
+directory has similar style. I will get rid of "_enable".
+
+> ?
+> 
+> > +static ssize_t store_energy_efficiency_enable(struct kobject *a,
+> > +					      struct kobj_attribute *b,
+> > +					      const char *buf, size_t
+> > count)
+> > +{
+> > +	u64 power_ctl;
+> > +	u32 input;
+> > +	int ret;
+> > +
+> > +	ret = kstrtouint(buf, 10, &input);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_lock(&intel_pstate_driver_lock);
+> > +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
+> > +	if (input)
+> 
+> This is too lax - it will be enabled for any !0 value. Please accept
+> only 0 and 1.
+> 
+OK.
+
+
+Thanks for the review.
+
+
+- Srinivas
+
+
