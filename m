@@ -2,186 +2,154 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4440C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 03:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5E77207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 02:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593140056;
-	bh=mWL3kIl5yBo1zZlMyTyFfEH9Ya9dKsxrnwiBrBseFbs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AT8zvhmZqXDu6mtx6zKXSjUoN5d6mGTyRS8NayKApvgmZDhTr1l/1sEr7Y5cVDdfP
-	 dtib7KiOLfOSwco45XZj9Kaww+Y53AUFvmwZQOgc1Hkt5IvZBPi6BfUuWtCFvSj3QI
-	 8OZQi/ikkdLDP+CZOnPp3fPSv7AwysW4I8f5b/2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7CB3120709
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 03:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B+D8ULdL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgFZCyP (ORCPT
+        id S1728249AbgFZDAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 22:54:15 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36077 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728169AbgFZCyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 22:54:14 -0400
-Received: by mail-pj1-f67.google.com with SMTP id h22so4335891pjf.1;
-        Thu, 25 Jun 2020 19:54:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bd0tbnV2l+YFNxwEQU+UFTSpztM9BxdQCKFAYWQxEMA=;
-        b=dGc1/SWdtEW2TIj5R6wz1AFNxhpob5ySnkkpUBhFRfiY4kLUotgettOuNsPsW68niw
-         yPm6U5XCo/EZpk36WpF6W6lzxlqioLfsJiiJfNYG+grNOn4WIO3EbpeQBDQKqj64NRUp
-         IH6WjzVnvyBputkk7F+M/qmkOdIqeQxbppFSn3Moh+39kq5rIpkLua+YIGBeIRkujJF1
-         E0br92DuqrQMXRVMsWtw2f+35UY7VMuuelHDPXQJ98rgbix2BedUGmpNfe/xsmpOcVJ7
-         aNZzJESYjpo7f5D2SLxYOMrvlV1MDk+zvNpdo8Capt5QXn0qXaO6yhdbZ93S3AjqQKXs
-         IAFQ==
-X-Gm-Message-State: AOAM533XcWrbtfQkSeQL9WUOrp2oTY+0Pq9I/EZx8ljd5WL9caNVtKuP
-        vHWn+XjZFkA7If2t5obgZ6k=
-X-Google-Smtp-Source: ABdhPJxHaLH/4n3uZFgLSBrdqLXbfEfRi9bTdaJAv9rYuDwTXW57R9muWUsfk5iNFsxMlxVPGbK2vg==
-X-Received: by 2002:a17:902:162:: with SMTP id 89mr183989plb.211.1593140053280;
-        Thu, 25 Jun 2020 19:54:13 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t9sm9409782pjs.16.2020.06.25.19.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 19:54:11 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BC43340430; Fri, 26 Jun 2020 02:54:10 +0000 (UTC)
-Date:   Fri, 26 Jun 2020 02:54:10 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200626025410.GJ4332@42.do-not-panic.com>
-References: <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624144311.GA5839@infradead.org>
- <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+        Thu, 25 Jun 2020 23:00:37 -0400
+Received: from mout.gmx.net ([212.227.17.20]:54461 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728169AbgFZDAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 23:00:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593140426;
+        bh=kBlVHxyUp3+0RDOPOn69M6zoqhE1t52hPzBx23SEtCg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=B+D8ULdLAfyQIFdlt4F+q9ObaZkMv4A78fPemKtrGI2mupPwU/Qsxwq8n8yZjP5DG
+         27TOG+kUm85JT9QCT18m/PpCE8TYJdddpRuCDNItTTnFZjwAOkaXq6fSyK97+hc3tS
+         3B1u0jJA0H1ZW44Q6vfiU6lPPDc56UBkq51xVtZQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.123.51] ([88.152.145.75]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MvsEx-1ix6D726FT-00sz8i; Fri, 26
+ Jun 2020 05:00:26 +0200
+Subject: Re: [RFC PATCH 10/11] efi: Rename arm-init to efi-init common for all
+ arch
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200625234516.31406-1-atish.patra@wdc.com>
+ <20200625234516.31406-11-atish.patra@wdc.com>
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+Autocrypt: addr=xypron.glpk@gmx.de; prefer-encrypt=mutual; keydata=
+ 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 Eg==
+Message-ID: <8b71b663-8a68-26f3-c806-a2873a6d8923@gmx.de>
+Date:   Fri, 26 Jun 2020 05:00:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+In-Reply-To: <20200625234516.31406-11-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:d8YfDH5rm/aIO6ZblpSCJcfvrT+bctc+tiI1/6xHvAvdC/Sqc1F
+ CuIXhmT2IwP7hla2TlaR62Jkuwsy6iQUrdBHhxAuf/Mb56aUi2l5xLdZhjhj546j9XTNHkf
+ YIIBM3rUjvH7ebu2Yf5c1k1ScTqK+9rPiLMIyn9DIL7cFoaZ9wq9UBug2b1vCk8izySugFa
+ NV4bwY2mL1LKS2rI4zD9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+uf1dLeMudA=:zKokUI9878ek4/6pUBVw92
+ XI0JiV1GrkEaEbdT9qlI1glRS+mCpqlhi/CFgWzvdErXxbJZX0GewtoCR/H/b038f4ZO4q4iW
+ Uc4P1lk6tYpV8Mnoqt+qXC8wT9tT1JvwUDxII8tdQeV9I6J7emJW5wrBIqHUuYlG/8B0ZP57W
+ zAm4t0sqwr8fd2HWw56z0wkFjuiKwzkPgTel3PjqUJyp3t/3KmBwpyJQ221fFly2m3GrfHLA/
+ YuVnAdwWqqFdIfeTPmFjqU3d/YlUT9UR1cPIFl2uO3P9RxZScPmblzL1iq/HYgva2ssn5WzIa
+ 9fcxhfSdw2RRQ6tzO23wB6ds+WtaNKmhGFJ+yo6RYDXaHoE5XT5I/fImiQGIKOOkoa37Exgqj
+ gq5IsVoZy2kZtvgDKYJm9QUe/CwV+Q9+2VRJPS7GsHFjmL5e7fkxUYH9hxssitPJND3HSDPcp
+ Y2w3knc3z3w+fTGAoa39eyNfXJkDBWwk4cKPoWoa0Gxd8fTEnl8AQ04WzgpZP8NTTXP+qtT4A
+ C7OMuzLzs3lB4Gy7a9E4GklmU2XA5K15mVHyWs7tWSGihP6DPFZLxpXokeXX2e3roZgGT+OZA
+ 2R8ers1efV52j3evrX6d6FrvILRXvh91DaakypZ1nH2WI9FhjoN8EGtdJd17VnZQDjtHkf9K4
+ L/UlBY2mPtzn073t25mkyvO+7a6E3xdVrnBI6Sof/9hEGmdCJVCFxesLfkkXx782K50LW8nbX
+ CThv/x4bmPS8t2En1AdLxgP5YWZt2HSnAt2wu0ppNEtL+ZeRyZlrQ14ramXkG1R8drFcPaj0O
+ zqjcvoCqb064E3E4grvkkbhku+4NWDWkLaNzx+W5ifFWy6+bNHy/gyAlYfckwjVmQPIAM2VLE
+ 1mE2dIP0juXXH2JN4AYknISVvUewkxnd6krvPpHzZeyQdd4kIuaKY3aw872MLIFpkb5yySMQU
+ 2mUXlLiZJAO29qtLPMvRN36kBUt/F+e3qctD4R5dxB2o3hORn/SkoJLgenU5iiyZ7aFY2KglE
+ jaks5iC3OKlKo5tnZnabXYPHSVD4LnbARX8vHJxeTsi3qCm7KaYuYDxMe7fJJmMIlpu4CZ20h
+ Bk6S7nAjeqFReSf5cX3JZTRPxJXG8t0l+DsEwJre39F2+jcupQlWsJO/HwE/76Xv1paY+pnkJ
+ 6HesQRttpG+njtO+m3GrUMcbWBnZEAP7xDKL7JevCDuLPGyarlTJIb/QIQ2wOIM8B2J5g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:37:55PM +0200, Christian Borntraeger wrote:
-> 
-> 
-> On 24.06.20 20:32, Christian Borntraeger wrote:
-> [...]> 
-> > So the translations look correct. But your change is actually a sematic change
-> > if(ret) will only trigger if there is an error
-> > if (KWIFEXITED(ret)) will always trigger when the process ends. So we will always overwrite -ECHILD
-> > and we did not do it before. 
-> > 
-> 
-> So the right fix is
-> 
-> diff --git a/kernel/umh.c b/kernel/umh.c
-> index f81e8698e36e..a3a3196e84d1 100644
-> --- a/kernel/umh.c
-> +++ b/kernel/umh.c
-> @@ -154,7 +154,7 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->                  * the real error code is already in sub_info->retval or
->                  * sub_info->retval is 0 anyway, so don't mess with it then.
->                  */
-> -               if (KWIFEXITED(ret))
-> +               if (KWEXITSTATUS(ret))
->                         sub_info->retval = KWEXITSTATUS(ret);
->         }
->  
-> I think.
+On 6/26/20 1:45 AM, Atish Patra wrote:
+> arm-init is responsible for setting up efi runtime and doesn't actually
+> do any ARM specific stuff. RISC-V can use the same source code as it is.
+>
+> Rename it to efi-init so that RISC-V can use it.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  drivers/firmware/efi/{arm-init.c =3D> efi-init.c} | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename drivers/firmware/efi/{arm-init.c =3D> efi-init.c} (100%)
+>
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/efi-=
+init.c
+> similarity index 100%
+> rename from drivers/firmware/efi/arm-init.c
+> rename to drivers/firmware/efi/efi-init.c
+>
 
-Nope, the right form is to check for WIFEXITED() before using WEXITSTATUS().
-I'm not able to reproduce this on x86 with a bridge. What type of bridge
-are you using on a guest, or did you mean using KVM so that the *host*
-can spawn kvm guests?
+After each patch we should have code that builds. This helps when
+bisecting. Therefore I would have expected an adjustment of
+drivers/firmware/efi/Makefile in this patch and not in patch 11/11:
 
-It would be good if you can try to add a bridge manually and see where
-things fail. Can you do something like this:
+-arm-obj-$(CONFIG_EFI)			:=3D arm-init.o arm-runtime.o
++arm-obj-$(CONFIG_EFI)			:=3D efi-init.o arm-runtime.o
 
-brctl addbr br0
-brctl addif br0 ens6 
-ip link set dev br0 up
+Best regards
 
-Note that most callers are for modprobe. I'd be curious to see which
-umh is failing which breaks bridge for you. Can you trut this so we can
-see which umh call is failing?
-
-diff --git a/kernel/umh.c b/kernel/umh.c
-index f81e8698e36e..5ad74bc301d8 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -2,6 +2,9 @@
- /*
-  * umh - the kernel usermode helper
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/sched/task.h>
-@@ -154,8 +157,12 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
- 		 * the real error code is already in sub_info->retval or
- 		 * sub_info->retval is 0 anyway, so don't mess with it then.
- 		 */
--		if (KWIFEXITED(ret))
-+		printk("== ret: %02x\n", ret);
-+		printk("== KWIFEXITED(ret): %02x\n", KWIFEXITED(ret));
-+		if (KWIFEXITED(ret)) {
-+			printk("KWEXITSTATUS(ret): %d\n", KWEXITSTATUS(ret));
- 			sub_info->retval = KWEXITSTATUS(ret);
-+		}
- 	}
- 
- 	/* Restore default kernel sig handler */
-@@ -383,6 +390,7 @@ struct subprocess_info *call_usermodehelper_setup(const char *path, char **argv,
- 		void *data)
- {
- 	struct subprocess_info *sub_info;
-+	unsigned int i = 0;
- 	sub_info = kzalloc(sizeof(struct subprocess_info), gfp_mask);
- 	if (!sub_info)
- 		goto out;
-@@ -394,6 +402,11 @@ struct subprocess_info *call_usermodehelper_setup(const char *path, char **argv,
- #else
- 	sub_info->path = path;
- #endif
-+	pr_info("sub_info->path: %s\n", sub_info->path);
-+	while (argv[i])
-+		printk(KERN_INFO "%s ", argv[i++]);
-+	printk(KERN_INFO  "\n");
-+
- 	sub_info->argv = argv;
- 	sub_info->envp = envp;
- 
+Heinrich
 
