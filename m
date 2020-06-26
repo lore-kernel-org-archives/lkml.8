@@ -2,230 +2,199 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C63C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C6A206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593170852;
-	bh=HMQZ2gONB7nhi+LufmPkRPnv6T8Qn6r9O3UhnDR81JY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nWA4Iqm8pDkKVuX/F8Ria02ZUrkhpJjKNYV2nGcDzclcBUPLSj0+yRe8JRvDti6SJ
-	 PBYxz8YMDyKxvinnkad0Px+Xzs3vi+xnVcseEFE8CFgdkplJevAVumNhOmpJLYAxol
-	 UGv5vKafYgnfb5FzCz4AXH6fySGgGxVB3JL1csp0=
+	by mail.kernel.org (Postfix) with ESMTP id 92FA9206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 11:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNOietCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgFZL1a (ORCPT
+        id S1728584AbgFZL3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:27:30 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44101 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgFZL1a (ORCPT
+        Fri, 26 Jun 2020 07:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgFZL3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 07:27:30 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 5so6274475oty.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:27:29 -0700 (PDT)
+        Fri, 26 Jun 2020 07:29:31 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1981CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:29:31 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t194so9042796wmt.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 04:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qhe/uDr1Hk5CjlOdQmxKxf2Wv1kV6ipt5MgKjBIph/M=;
+        b=GNOietCVMKeCVo/Qdy1JQJRM0YoqGv+rwYJBEke6bUxjkyGghV5CMz/nKi/iV2MqmR
+         hPsVqEy9rcCrMjSDKq7UQP5ii96XCsZDbSJ0sVkXK8YsBhLJFT7VLOGLCg3g2+B68NK7
+         OfVQuO0cQCoW8MVJ1Iy+Bb6O+xmeArfv7rcpSKznrWvq8iP2HdQuFiDf03ZnwPXqdtMh
+         lCHfgoHEDiZW+E0l0N4QmawdVk/FCTkz8Rl+DtSU53DAWd1U4QFoXjAzZWsvDF7Gdtna
+         Y7cTSOJ+vuqdBkoi7L52Iwg0IIgDtqcqqvlV/C6yBZiUBDNo5/ceXotxD3rhpfeI94ii
+         TOyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VJM2YZ8FuB0rwJc0eaWFy+gB1ZVxh+nnW2v11JuJigs=;
-        b=sOcVLSYwgwsINQR8L3YmWn/K7P/tH95/Au1zVIT/uEJjfzTQCPjNA1pryh75eR7EZE
-         U27fUqUf2JlXgj5YPFk3uTYBdGxXGxYiW6XnWmxXrQAjqjxiXENt++ZqmKrGgzbMrmHG
-         UQmfUhesvfXN0qz3cDWwI038+80IXYs05Iu+LXGsYQvoIU87Ou7uj1C30zH+9/fnbfDq
-         NLG2x79w+QnJUdR8qDhBtsSaq49Qv2hzlRP4zdmCKwwGIucZu/YixVDf8h//m4V7JL0I
-         HOJHObxeDFcdUa5B9f7Z6RYjhs01HAT2ueu/OLNzFe//HdEr1omVuF8lm1leyFHsFj7z
-         9cUA==
-X-Gm-Message-State: AOAM531ZrA2MFQTkXXJBnhZbAYSQOEwd+JglZ7/M59wMKKNA2kdyoPMp
-        G7HzmSDdIV6wZ1lgAZYRLSfopTc0ULmUWSYB9Pw=
-X-Google-Smtp-Source: ABdhPJxDX1lu2+r+a+EBqy+HFWSZUNRAf+shnClf9EZMJDFqYdcyEOdpgXKlQUcakicgERZrpzUaZymkhyeV3g4kfNA=
-X-Received: by 2002:a4a:3e48:: with SMTP id t69mr2012267oot.38.1593170848703;
- Fri, 26 Jun 2020 04:27:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625032430.152447-1-saravanak@google.com> <CAJZ5v0h1JHLK2PA45ZfNBeQrRoH+UkEi6-vRR-=HLz7AAnC1vA@mail.gmail.com>
- <CAGETcx8AQPZ92vKKwq6-U8fbToCWtHvu4OT4hXzOGiCUst15fw@mail.gmail.com>
- <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
- <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
- <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
- <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com>
- <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com> <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
-In-Reply-To: <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 26 Jun 2020 13:27:16 +0200
-Message-ID: <CAJZ5v0ju58LxvRckv2T=H0D=aDooGUoGfqFze5zWQ1ARAAJcag@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
- deferred probe
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qhe/uDr1Hk5CjlOdQmxKxf2Wv1kV6ipt5MgKjBIph/M=;
+        b=golAuVuGSd8/PmmDMw/GeQzmLFxsJYTh931SUWQF7iyKQcuMl4eBJtmAbK1VUmBfeB
+         yNDXjosUzh1sxTavw2RcdQmFGocCKGOstUqk9hwpPtTbVjkElmTJt+Qt0Xr93mzIPtpO
+         wqL1KB7nkLYBLqOAN+Y0TPAuPZ29oBajAlRFw1CCXy/kbNT4HkfA6MIkAj4UbcHb2fer
+         D+V32B88butsHsiHb9cjOQYwiTBq/fvZUTQT0iJDx9jpL8n+QkXNztSqosG2JkibwuRe
+         Xp9ieJXzeW5e+k7WDAjYUsExDlDlBH+4h0QkG6XVhJUVmSiuLaT5glO8KaR6QLhaX+uR
+         EYNg==
+X-Gm-Message-State: AOAM531dKpvzrWVpfDvLtEiVE5dQ+GZIQyo9ECuYzzCCjtTDnOxDyi7f
+        sGI0vrWzWFWxeMl3SvcLC28pww==
+X-Google-Smtp-Source: ABdhPJxg7zKMcEEthem7yjq1WKE+1gImsA/C/MvGn15YCPYMW3Pbia+IEy2X0GWhjmFqLgScPL33/A==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr2828166wmi.148.1593170969745;
+        Fri, 26 Jun 2020 04:29:29 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a4sm28930843wrg.80.2020.06.26.04.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 04:29:28 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 12:29:27 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jerome Forissier <jerome@forissier.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+Message-ID: <20200626112927.vfffwdhzdjf6ndmb@holly.lan>
+References: <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com>
+ <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com>
+ <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com>
+ <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
+ <1593127902.13253.11.camel@HansenPartnership.com>
+ <CAFA6WYMPtLtv=cWppU=-LZp6FD_3KYymrLgVP+-KQd_N_GcT_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYMPtLtv=cWppU=-LZp6FD_3KYymrLgVP+-KQd_N_GcT_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 7:52 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Fri, Jun 26, 2020 at 10:40:41AM +0530, Sumit Garg wrote:
+> On Fri, 26 Jun 2020 at 05:01, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
 > >
-> > On Thu, Jun 25, 2020 at 7:09 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > On Thu, Jun 25, 2020 at 10:03 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > On Thu, 2020-06-25 at 19:54 +0530, Sumit Garg wrote:
+> > > On Wed, 24 Jun 2020 at 20:51, James Bottomley
+> > > <James.Bottomley@hansenpartnership.com> wrote:
 > > > >
-> > > > On Thu, Jun 25, 2020 at 7:01 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> > > > > Apologies for delay in my reply as I was busy with some other
+> > > > > stuff.
 > > > > >
-> > > > > On Thu, Jun 25, 2020 at 9:58 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > >
-> > > > > > On Thu, Jun 25, 2020 at 6:49 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > >
-> > > > > > > Dropping Feng Kan <fkan@apm.com> and Toan Le <toanle@apm.com> because
-> > > > > > > their mails are bouncing.
-> > > > > > >
-> > > > > > > On Thu, Jun 25, 2020 at 8:19 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Jun 25, 2020 at 5:24 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > > > >
-> > > > > > > > > Under the following conditions:
-> > > > > > > > > - driver A is built in and can probe device-A
-> > > > > > > > > - driver B is a module and can probe device-B
-> > > > > > > > > - device-A is supplier of device-B
-> > > > > > > > >
-> > > > > > > > > Without this patch:
-> > > > > > > > > 1. device-A is added.
-> > > > > > > > > 2. device-B is added.
-> > > > > > > > > 3. dpm_list is now [device-A, device-B].
-> > > > > > > > > 4. driver-A defers probe of device-A.
-> > > > > > > > > 5. deferred probe of device-A is reattempted
-> > > > > > > > > 6. device-A is moved to end of dpm_list.
-> > > > > > > > > 6. dpm_list is now [device-B, device-A].
-> > > > > > > > > 7. driver-B is loaded and probes device-B.
-> > > > > > > > > 8. dpm_list stays as [device-B, device-A].
-> > > > > > > > >
-> > > > > > > > > Suspend (which goes in the reverse order of dpm_list) fails because
-> > > > > > > > > device-A (supplier) is suspended before device-B (consumer).
-> > > > > > > > >
-> > > > > > > > > With this patch:
-> > > > > > > > > 1. device-A is added.
-> > > > > > > > > 2. device-B is added.
-> > > > > > > > > 3. dpm_list is now [device-A, device-B].
-> > > > > > > > > 4. driver-A defers probe of device-A.
-> > > > > > > > > 5. deferred probe of device-A is reattempted later.
-> > > > > > > > > 6. dpm_list is now [device-B, device-A].
-> > > > > > > > > 7. driver-B is loaded and probes device-B.
-> > > > > > > > > 8. dpm_list is now [device-A, device-B].
-> > > > > > > > >
-> > > > > > > > > Suspend works because device-B (consumer) is suspended before device-A
-> > > > > > > > > (supplier).
-> > > > > > > > >
-> > > > > > > > > Fixes: 494fd7b7ad10 ("PM / core: fix deferred probe breaking suspend resume order")
-> > > > > > > > > Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
-> > > > > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/base/dd.c | 16 ++++++++++++++++
-> > > > > > > > >  1 file changed, 16 insertions(+)
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > > > > > > > > index 9a1d940342ac..52b2148c7983 100644
-> > > > > > > > > --- a/drivers/base/dd.c
-> > > > > > > > > +++ b/drivers/base/dd.c
-> > > > > > > > > @@ -109,6 +109,8 @@ static void deferred_probe_work_func(struct work_struct *work)
-> > > > > > > > >                  * probe makes that very unsafe.
-> > > > > > > > >                  */
-> > > > > > > > >                 device_pm_move_to_tail(dev);
-> > > > > > > > > +               /* Greg/Rafael: SHOULD I DELETE THIS? ^^ I think I should, but
-> > > > > > > > > +                * I'm worried if it'll have some unintended consequeneces. */
-> > > > > > > >
-> > > > > > > > Yes, this needs to go away if you make the other change.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > >                 dev_dbg(dev, "Retrying from deferred list\n");
-> > > > > > > > >                 bus_probe_device(dev);
-> > > > > > > > > @@ -557,6 +559,20 @@ static int really_probe(struct device *dev, struct device_driver *drv)
-> > > > > > > > >                 goto re_probe;
-> > > > > > > > >         }
-> > > > > > > > >
-> > > > > > > > > +       /*
-> > > > > > > > > +        * The devices are added to the dpm_list (resume/suspend (reverse
-> > > > > > > > > +        * order) list) as they are registered with the driver core. But the
-> > > > > > > > > +        * order the devices are added doesn't necessarily match the real
-> > > > > > > > > +        * dependency order.
-> > > > > > > > > +        *
-> > > > > > > > > +        * The successful probe order is a much better signal. If a device just
-> > > > > > > > > +        * probed successfully, then we know for sure that all the devices that
-> > > > > > > > > +        * probed before it don't depend on the device. So, we can safely move
-> > > > > > > > > +        * the device to the end of the dpm_list. As more devices probe,
-> > > > > > > > > +        * they'll automatically get ordered correctly.
-> > > > > > > > > +        */
-> > > > > > > > > +       device_pm_move_to_tail(dev);
-> > > > > > > >
-> > > > > > > > But it would be good to somehow limit this to the devices affected by
-> > > > > > > > deferred probing or we'll end up reordering dpm_list unnecessarily for
-> > > > > > > > many times in the actual majority of cases.
-> > > > > > >
-> > > > > > > Yes, lots of unnecessary reordering, but doing it only for deferred
-> > > > > > > probes IS the problem. In the example I gave, the consumer is never
-> > > > > > > deferred probe because the supplier happens to finish probing before
-> > > > > > > the consumer probe is even attempted.
-> > > > > >
-> > > > > > But why would the supplier be moved to the end of dpm_list without
-> > > > > > moving the consumer along with it?
+> > > > > On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> > > > > <James.Bottomley@hansenpartnership.com> wrote:
+> > > >
+> > > > [...]
+> > > > > > it's about consistency with what the kernel types mean.  When
+> > > > > > some checker detects your using little endian operations on a
+> > > > > > big endian structure (like in the prink for instance) they're
+> > > > > > going to keep emailing you about it.
 > > > > >
-> > > > > There is no device link between the supplier/consumer in this case.
+> > > > > As mentioned above, using different terminology is meant to cause
+> > > > > more confusion than just difference in endianness which is
+> > > > > manageable inside TEE.
+> > > > >
+> > > > > And I think it's safe to say that the kernel implements UUID in
+> > > > > big endian format and thus uses %pUb whereas OP-TEE implements
+> > > > > UUID in little endian format and thus uses %pUl.
 > > > >
-> > > > So this is the real problem, isn't it?
+> > > > So what I think you're saying is that if we still had uuid_be and
+> > > > uuid_le you'd use uuid_le, because that's exactly the structure
+> > > > described in the docs.  But because we renamed
 > > > >
-> > > > > Sadly there are plenty of cases where device links aren't present to
-> > > > > capture supplier/consumer dependencies.
+> > > > uuid_be -> uuid_t
+> > > > uuid_le -> guid_t
 > > > >
-> > > > And so that's why you want to add a ton of overhead to driver probing
-> > > > in all of the cases in which that is not an issue?
+> > > > You can't use guid_t as a kernel type because it has the wrong
+> > > > name?
 > > >
-> > > Well, until all/most of the frameworks add device links or
-> > > fw_devlink=on by default, it doesn't hurt to have suspend/resume work
-> > > in more platforms.
+> > > Isn't the rename commit description [1] pretty clear about which is
+> > > the true UUID type from Linux point of view?
 > >
-> > In the presence of deferred probing, that is.
+> > I don't think the kernel code takes a position on eternal verity, just
+> > on logical or arithmetic truth.  We just have to deal with both LE and
+> > BE UUIDs so we have appropriate types for them and the LE type is now
+> > named guid_t.  They're both equally correct to use provided the use
+> > case matches the designed one. So does the name really matter?
+> 
+> Yes it does. I guess I have provided enough reasoning for that. Also,
+> the rename commit itself illustrates its importance and clarifies the
+> use case for which they are meant to be used.
+> 
+> > If we
+> > did
 > >
-> > Note that deferred probing gets in the way here and so the problem is
-> > related to it.
->
-> I mean, we officially support deferred probing. Shouldn't we fix it so
-> that it doesn't break suspend/resume?
-
-Yes, we should fix deferred probing.
-
-> Also, it's pretty easy to have
-> cases where one module probes multiple device instances and loading it
-> in one order would break dpm_list order for one device and loading it
-> in another order would break it for another device. And there would be
-> no "proper" order to load modules (because module order != device
-> order).
-
-I'm not saying that the current code is perfect.  I'm saying that the
-fix as proposed adds too much cost for everybody who may not care IMO.
-
->
-> > > What about the option of not adding to dpm_list until a device is
-> > > probed? Is it DOA?
+> > #define uuid_le_t guid_t
 > >
-> > Yes, it is, I'm afraid.  There are devices without drivers. :-)
->
-> Devices that still suspend/resume without drivers?! I didn't know that
-> was possible.
+> > would you be happy? (not that the kernel cares about karmic emotional
+> > states either ...)
+> 
+> It's not about me being happy but more about confusion and
+> inconsistency it will bring.
+> 
+> IMO, either kernel should be opinionated about UUID endianness like
+> currently it is:
+> 
+> uuid_t and its corresponding helpers (eg. UUID_INIT) follows BE format.
+> 
+> or support both endianness for UUID (no common type: uuid_t) like we
+> had earlier prior to rename commit:
+> 
+> uuid_be_t and its corresponding helpers (eg. UUID_BE_INIT) follow BE format.
+> uuid_le_t and its corresponding helpers (eg. UUID_LE_INIT) follow LE format.
+> 
+> But even if we consider later case as well, I am still not sure if we
+> can switch to uuid_le_t as it's been part of TEE core ABI
+> (open_session) where UUID is passed in BE format (see LE to BE
+> conversion in TEE client [1] and vice-versa in OP-TEE OS [2]) and
+> won't be a backwards compatible change.
+> 
+> [1] https://github.com/OP-TEE/optee_client/blob/master/libteec/src/tee_client_api.c#L595
+> [2] https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/ree_fs_ta.c#L92
 
-There are "class" devices, "type" devices and devices that simply have
-no drivers, but the bus type code may still want to touch them during
-system-wide suspend/resume.
+I'm struck that all references here are to code that does not run in
+kernel space. Frankly on LKML I don't know if we should even *care* what
+format UUIDs are stored in other address spaces.
 
-Modules may still not be loaded when the system is suspended for the
-first time etc.
+We care about is the endianness of the UUID on the interface boundaries
+into and out of the kernel[1] and we care that we use the correct kernel
+type to describe it.
+
+I understood from Jerome's post that the UUID that the kernel
+manipulates are, in fact, big endian and that they should be called
+uuid_t.
+
+Is there more going on here or is that it?
+
+
+Daniel.
+
+
+[1] I guess we'd also like those interface boundaries to be reasonably
+    sane but if they already exist and are the interface is consistent
+    about endianness then I find it hard to see no reason for a
+    gratuitous endianness change.
