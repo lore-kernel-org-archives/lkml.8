@@ -2,118 +2,76 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB79B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBYtwHmO"
+	by mail.kernel.org (Postfix) with ESMTP id 04D47206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 04:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgFZECy (ORCPT
+        id S1726406AbgFZEF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 00:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFZECx (ORCPT
+        Fri, 26 Jun 2020 00:05:57 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:56192 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgFZEF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 00:02:53 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E48C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 21:02:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id a14so3933591qvq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 21:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tZ10wzKAlun9ezjnRJ6vAT4r5GZ70Nwas5NbwCUvzuo=;
-        b=EBYtwHmORFxtCoCvv7YQq+Qs5V4daAv5+kVh3p/R+NpJlM6vO9JhKGny298bG/WkTc
-         EXD25rwUZd7ArQD/PK0WUbwXdB1Aaf8R+CjkI+X3LzsjilJrZ7K2pfH725FpvDbN8RY3
-         NWbH7Gbsh5aRDUGlNp7+iO6iQfCpIq+UBpQ1V4/x8at4cvHpYcBRHSsvQ/9qiIEAxSGn
-         JRtp/iFsbb+YVA6PcrTkNLf/OHF9I2SEksiOpns8x5Bu+heDBLlqt6Yj4CkSDZjb72fx
-         LBLOWc0NHD6rTcPRQSIlIuu/hkI7OxfittbAtcG5j+rV0ECIMdaiHGBNA8A20pEiPrp0
-         4ilA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tZ10wzKAlun9ezjnRJ6vAT4r5GZ70Nwas5NbwCUvzuo=;
-        b=dyGYdjULDSdz6wwiOkYRZDqw+PgHrvgaL/2Yi/6TqXy7bP8s4U81ggsSh1z3IYTKLF
-         N7DiJSD9pXUMZb/UNSOHIkuh1KXgExxW4IP9aG30d3BmOUUFwatNf2Bx6Vt4DFYSQ5+a
-         kg0Ah/3DMa2ebuTUfT4mMmhB9od/MgBXjipUAVKiLYaO2wD00IQ8TgUtINsGneXvqCqT
-         YK4Ai+eBsTQB38CEFt9ON5YAQoiePPPbCYgTTqTfzrmEhxZ40mTVXZDFq/VN182lSU4z
-         Abpw8CIlCoa1IIeuVEcP+0dn4Ab1qYr+UFmYy71ScNLE/4W3VtFjQzZTTnqyx1FlKe7c
-         M3hw==
-X-Gm-Message-State: AOAM530qN19WK9hudKT4unUfxiFqnaANSiIR0+HWvUuM4KprhPm1Zhm0
-        Cf6RbutBRLJgRPp6CNc+eyyHGTAEyYtAFwmuV74=
-X-Google-Smtp-Source: ABdhPJykweMvMY4T5KvPqNSo3+8We/c7WLmalDrZyaVbtMocvbX085rJvJtf7OhGXD5vI/iKmGXhSEWFHIYYiTmyyH8=
-X-Received: by 2002:a0c:b48e:: with SMTP id c14mr1358186qve.66.1593144172503;
- Thu, 25 Jun 2020 21:02:52 -0700 (PDT)
+        Fri, 26 Jun 2020 00:05:56 -0400
+Received: from localhost.localdomain ([92.148.198.76])
+        by mwinf5d16 with ME
+        id vg5u2200F1fPLi403g5vwo; Fri, 26 Jun 2020 06:05:55 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 26 Jun 2020 06:05:55 +0200
+X-ME-IP: 92.148.198.76
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     linux@armlinux.org.uk, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH V2] scsi: eesox: Fix different dev_id between 'request_irq()' and 'free_irq()'
+Date:   Fri, 26 Jun 2020 06:05:53 +0200
+Message-Id: <20200626040553.944352-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <26d388f5-be67-b643-c76c-b9fe52f111f7@wanadoo.fr>
+References: <26d388f5-be67-b643-c76c-b9fe52f111f7@wanadoo.fr>
 MIME-Version: 1.0
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-4-git-send-email-iamjoonsoo.kim@lge.com> <20200625112625.GD1320@dhcp22.suse.cz>
-In-Reply-To: <20200625112625.GD1320@dhcp22.suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 26 Jun 2020 13:02:41 +0900
-Message-ID: <CAAmzW4N646-xYWosMwwnOgjAB+Z_eoZO4rs58ab+gYbHXmydJA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] mm/hugetlb: unify migration callbacks
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 8:26, M=
-ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Tue 23-06-20 15:13:43, Joonsoo Kim wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > There is no difference between two migration callback functions,
-> > alloc_huge_page_node() and alloc_huge_page_nodemask(), except
-> > __GFP_THISNODE handling. This patch adds an argument, gfp_mask, on
-> > alloc_huge_page_nodemask() and replace the callsite for
-> > alloc_huge_page_node() with the call to
-> > alloc_huge_page_nodemask(..., __GFP_THISNODE).
-> >
-> > It's safe to remove a node id check in alloc_huge_page_node() since
-> > there is no caller passing NUMA_NO_NODE as a node id.
->
-> Yes this is indeed safe. alloc_huge_page_node used to be called from
-> other internal hugetlb allocation layer and that allowed NUMA_NO_NODE as
-> well. Now it is called only from the mempolicy migration callback and
-> that always specifies a node and want to stick with that node.
->
-> But I have to say I really dislike the gfp semantic because it is
-> different from any other allocation function I can think of. It
-> specifies what to be added rather than what should be used.
->
-> Removing the function is ok but please use the full gfp mask instead
-> or if that is impractical for some reason (wich shouldn't be the case
-> as htlb_alloc_mask should be trivial to make static inline) make it
-> explicit that this is not a gfp_mask but a gfp modifier and explicitly
-> state which modifiers are allowed.
+The dev_id used in 'request_irq()' and 'free_irq()' should match.
+So use 'info' in both cases.
 
-Okay. I will try to solve your concern. Concrete solution is not yet prepar=
-ed
-but perhaps I will use full gfp_mask by using htlb_alloc_mask() in caller s=
-ites.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+V2: update free_irq instead of request_irq in order not to obviously break
+    code
+---
+ drivers/scsi/arm/eesox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index 6e204a2e0c8d..591ae2a6dd74 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -571,7 +571,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_remove:
+ 	fas216_remove(host);
+-- 
+2.25.1
+
