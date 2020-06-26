@@ -2,121 +2,101 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD68C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BE6207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffgz/EKA"
+	by mail.kernel.org (Postfix) with ESMTP id 465B520836
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 14:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593180720;
+	bh=AcfcmxTEwMLpCjHwrcUyTxMAtd9c6cjebHh5Zyo//Cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ScbW2RIqGzETSNbgVIA+Y++nX8tDcb6xJxno/oR4uJnzgCpZ12CknPzQbOOJ8GKWq
+	 W7+gHUCXL+bF5vKLqLeLvpJjkFMucYIFJjaU8HAVeHNlxsDnVVnrLGhCzH0cBJORBn
+	 rlk6jrOX0xhysyTXi/IlbeVhtmxpyvLV1hAdsz5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgFZOJ1 (ORCPT
+        id S1728947AbgFZOL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 10:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728920AbgFZOJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 10:09:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 287C6C03E979;
-        Fri, 26 Jun 2020 07:09:26 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x8so3426759plm.10;
-        Fri, 26 Jun 2020 07:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nVcE6JZwaiOpCfvw6QaISNFoFXQ9vpyfQxkKFtpxiO8=;
-        b=ffgz/EKAhIoZtQe8N/0D1lqGXGbAsbyaCVw3ZpHgmelpr+8gITxZFC3lbbeUOr6KBG
-         PefAdZxl571J9LzZ/3pciLZkIX9dGehHSGAJ2sZKzzdBI0GLTb1ObZ1blBOoMgsWLQws
-         u8tgY8DC8eSLOqj5aa7vGR52VT5VeTpzVmDLT3sYuG3f+eB6dqexQBwgSeiUGuWoLhyA
-         pz9XnlPL3RtbfQZjsOE391pTetqfX6tw4bPteve039ub00BGm3wRa0/jjTHERToZC8WV
-         4wGywfJFGTHIl3mgLDQfXMd5vRqamN5TAL2prs+9vJKLEt4Ye60SA13YFlATatLgD8tA
-         ymiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nVcE6JZwaiOpCfvw6QaISNFoFXQ9vpyfQxkKFtpxiO8=;
-        b=b2lnFS5+zcGnWFckxl4WS5LlIVZjYt0YV0dwY/YhZtcROxd+LRgNHxLOXPt3xuGCQV
-         JagKU8nz4zwl+RlvZbUi7yA7+AuSfUNyqMeX4gemZCtwe5q3+I8Ttf+jgppLJWV65lI/
-         jw7YM4f2Wv7bhwV37UZzqEJl01Yi/+QO4kVsVB5GuFUUYI+KE2QZ7tMkMRcn9JoS++bZ
-         ym8SJWMJuvh/a5CyZtfrhYQ6zet2ngnc6fNI5H5E1zr8JRgbbW9ac7LV1Iv6+4t9knqI
-         ThrKjuSUkXvluUDTuLYHsEy1ZLiLCG7zMseBBLXE8Bp6hw5HwcE5sXCz522IapW0pv1n
-         HFGw==
-X-Gm-Message-State: AOAM530pWq0wNcKE0KEaAKVhPonDWk6zz+tMwzmaJyNYzhoDjPybVWwc
-        aOzWh4erQB1iM74kaBKKgoUwbRumEXPH69IxFHg=
-X-Google-Smtp-Source: ABdhPJxOcrGuBrjFXG3Y82onEudQH4jwuXE0m2thhCpRMKDr2i7mImfOitw8ws6EFZQqF17S/O2k0uErcLUJsYNyygY=
-X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr3869185pje.129.1593180565616;
- Fri, 26 Jun 2020 07:09:25 -0700 (PDT)
+        Fri, 26 Jun 2020 10:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728820AbgFZOL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 10:11:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFE32207D8;
+        Fri, 26 Jun 2020 14:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593180717;
+        bh=AcfcmxTEwMLpCjHwrcUyTxMAtd9c6cjebHh5Zyo//Cw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F1psbawtvBUFIcq1/KN23kw74uk42iRCdrj+GSqtH9rVDrsSmfdgDOTe9e01JxX+/
+         rlMIh7sp0HQ2bvwST1H18rhLtCilWibJ2ccrspRUxGiMZsrCZJfHfSD0+OrqDAYKWa
+         0/9C+PHOCYG2k+PfxniePDC8py6FyRR54nHYs7so=
+Date:   Fri, 26 Jun 2020 16:11:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+Message-ID: <20200626141152.GB4140284@kroah.com>
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+ <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
+ <20200626043358.GB175080@kroah.com>
+ <6eafe066-ce79-4fad-7a91-c75a564e6663@collabora.com>
 MIME-Version: 1.0
-References: <20200625202807.b630829d6fa55388148bee7d@linux-foundation.org>
- <20200626032946._LJ_E6G66%akpm@linux-foundation.org> <CAHk-=wiZrhVUq3N17=GVzMQNQUKi65x=-djTM2A+fz8UdQxgEg@mail.gmail.com>
- <CADRDgG6SXwngT5gS2EY1Y0xnPdYth-FicQyTnPyqiwpmw52eQg@mail.gmail.com>
- <CAHp75Ve2x9dEqaHSue5UAftsJw+U3n8K9YEXBy5QFGJHgkQ3DA@mail.gmail.com> <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-In-Reply-To: <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 26 Jun 2020 17:09:12 +0300
-Message-ID: <CAHp75Vfr8sFydbH=G7U+wXoUftT9RnsfSSLi4RXNyR-3sApR3w@mail.gmail.com>
-Subject: Re: [patch 10/32] linux/bits.h: fix unsigned less than zero warnings
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>,
-        mm-commits@vger.kernel.org,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6eafe066-ce79-4fad-7a91-c75a564e6663@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 5:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Fri, Jun 26, 2020 at 3:24 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Jun 26, 2020 at 2:37 PM Rikard Falkeborn
-> > <rikard.falkeborn@gmail.com> wrote:
-> > > Den fre 26 juni 2020 08:32Linus Torvalds <torvalds@linux-foundation.org> skrev:
-> >
-> > ...
-> >
-> > > I'll just say no and point to this email next time someone complains instead.
-> >
-> > "No" is not constructive here. People can be annoyed with warning
-> > messages, but the real issue here are the various CI systems which
-> > send a lot of spam because of that. As a maintainer I would need to
-> > drop CI in order to see a good patch. If Linus considers that warning
-> > useless, then probably you can change your patch to do what he
-> > proposed.
->
-> How about moving that warning from W=1 to W=2? Generally speaking
-> I'd expect W=1 warnings to be in a category of "it's generally better to
-> address this in the code, but we can't turn it on by default because the
-> output gets too noisy", as opposed to W=2 meaning "this sometimes
-> finds a real problem, but fixing the warning often makes code worse."
+On Fri, Jun 26, 2020 at 10:32:55AM +0200, Enric Balletbo i Serra wrote:
+> Hi,
+> 
+> On 26/6/20 6:33, Greg Kroah-Hartman wrote:
+> > On Thu, Jun 25, 2020 at 10:06:03PM +0300, Andy Shevchenko wrote:
+> >> On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> >> <enric.balletbo@collabora.com> wrote:
+> >>>
+> >>> Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> >>> tag.
+> >>
+> >> Is there any? Last time IIRC Greg told me that in the kernel the old
+> >> and new variants are okay.
+> > 
+> > They are just fine, leave it alone, the in-kernel LICENSES/ files show
+> > the valid SPDX tags that the kernel allows at this point in time.
+> > 
+> 
+> I guess my confusion comes from seeing patch series doing this change in the ML
+> instead of really reading the documentation. If it's clear, and as per in-kernel
+> docs, it is, that a GPL-2.0 tag is a GPL-2.0 only license, that's fine with me.
 
-It would work for me if it had been
-a) documented (I didn't check if it had been already done, though);
-b) understood by all CIs in the same way (see a) as well :-).
+It is clear, no churn needed, thanks!
 
-That said, I like any compromise that will reduce unneeded spam for
-submitted patches from CIs and, as a bonus, get rid of warnings in my
-local compilations (yes, I usually do W=1).
-
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
