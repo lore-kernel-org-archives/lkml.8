@@ -2,145 +2,160 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F8021531
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7280021531
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 09:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ILs95nAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgFZJhh (ORCPT
+        id S1726384AbgFZJhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 05:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFZJhh (ORCPT
+        Fri, 26 Jun 2020 05:37:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57496 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725280AbgFZJhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 05:37:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19726C08C5C1;
-        Fri, 26 Jun 2020 02:37:37 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id EE0602A04F6
-Subject: Re: [PATCH v2 0/2] Refactor MDP driver and add dummy component driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Eizan Miyamoto <eizan@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-References: <20200506084039.249977-1-eizan@chromium.org>
- <25cbac25-035f-9c2b-24ec-f59403b56424@xs4all.nl>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <177292b5-ebe9-6e10-c93e-0106e312ba83@collabora.com>
-Date:   Fri, 26 Jun 2020 11:37:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 26 Jun 2020 05:37:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593164272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mIo8l5VfRJsWL8p3RKk3Ay5PZgeekc+3GNjG0us+Ooc=;
+        b=ILs95nAVhRQH7ELpHIkTND5ogcGK4pcmiVQnQuFBVyVrYM16qWjj0kdnPkXr83BkmqN6Ho
+        HkFK8K4T50ADI6tIIvk+g5nruXJuVdXxtJ/loNaAVIYUzphg1e3Rvrwvq+M/tayJ8aol81
+        q9tuoPNVxKQtBjeTTo7PplF+2NjKpHo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-6j3q-ILdMjyG6UIQWFjEOw-1; Fri, 26 Jun 2020 05:37:49 -0400
+X-MC-Unique: 6j3q-ILdMjyG6UIQWFjEOw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3FB8800C64;
+        Fri, 26 Jun 2020 09:37:47 +0000 (UTC)
+Received: from krava (unknown [10.40.193.90])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 235AD60E1C;
+        Fri, 26 Jun 2020 09:37:45 +0000 (UTC)
+Date:   Fri, 26 Jun 2020 11:37:45 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+Message-ID: <20200626093745.GM2719003@krava>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+ <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+ <20200625171405.GL2719003@krava>
+ <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <25cbac25-035f-9c2b-24ec-f59403b56424@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eizan and Hans,
-
-On 24/6/20 16:05, Hans Verkuil wrote:
-> On 06/05/2020 10:40, Eizan Miyamoto wrote:
->>
->> This series depends on all changes in the series:
->> https://patchwork.kernel.org/patch/11530275/
+On Thu, Jun 25, 2020 at 10:32:29PM +0300, Alexey Budankov wrote:
 > 
-> I plan on merging the v3 of this series.
+> On 25.06.2020 20:14, Jiri Olsa wrote:
+> > On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
+> >>
+> >> On 17.06.2020 11:35, Alexey Budankov wrote:
+> >>>
+> >>> Skip fds with zeroed revents field from count and avoid fds moving
+> >>> at fdarray__filter() call so fds indices returned by fdarray__add()
+> >>> call stay the same and can be used for direct access and processing
+> >>> of fd revents status field at entries array of struct fdarray object.
+> >>>
+> >>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> >>> ---
+> >>>  tools/lib/api/fd/array.c   | 11 +++++------
+> >>>  tools/perf/tests/fdarray.c | 20 ++------------------
+> >>>  2 files changed, 7 insertions(+), 24 deletions(-)
+> >>>
+> >>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> >>> index 58d44d5eee31..97843a837370 100644
+> >>> --- a/tools/lib/api/fd/array.c
+> >>> +++ b/tools/lib/api/fd/array.c
+> >>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
+> >>>  		return 0;
+> >>>  
+> >>>  	for (fd = 0; fd < fda->nr; ++fd) {
+> >>> +		if (!fda->entries[fd].revents)
+> >>> +			continue;
+> >>> +
+> >>
+> >> So it looks like this condition also filters out non signaling events fds, not only
+> >> control and others fds, and this should be somehow avoided so such event related fds
+> >> would be counted. Several options have been proposed so far:
+> >>
+> >> 1) Explicit typing of fds via API extension and filtering based on the types:
+> >>    a) with separate fdarray__add_stat() call
+> >>    b) with type arg of existing fdarray__add() call
+> >>    c) various memory management design is possible
+> >>
+> >> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
+> >>    - looks more like a hack than a designed solution
+> >>
+> >> 3) Rewrite of fdarray class to allocate separate object for every added fds
+> >>    - can be replaced with nonscrewing of fds by __filter()
+> >>
+> >> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
+> >>    - seems to have corner cases and thus not applicable
+> >>
+> >> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
+> >>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
+> >>
+> >> 6) Rewrite of fdarray class on epoll() call basis
+> >>    - introduces new scalability restrictions for Perf tool
+> > 
+> > hum, how many fds for polling do you expect in your workloads?
 > 
->>
->> We are adding a dummy MDP component driver so that all the components
->> are properly configured with IOMMUs and LARBs. This is required for
->> us to get hardware video decode working in 4.19, and possibly newer
->> kernels.
+> Currently it is several hundreds so default of 1K is easily hit and 
+> "Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
+> recommends:
 > 
-> What is the status of this series?
+> soft nofile 65535
+> hard nofile 65535
+
+I'm confused, are you talking about file descriptors limit now?
+this wont be affected by epoll change.. what do I miss?
+
+I thought your concern was fs.epoll.max_user_watches, which has
+default value that seems to be enough:
+
+	$ cat /proc/sys/fs/epoll/max_user_watches
+	3169996
+
+jirka
+
+
+> 
+> for for /etc/security/limits.conf settings.
+> 
+> ~Alexey
+> 
+> [1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
+> 
+> > 
+> > jirka
+> > 
 > 
 
-First of all, sorry, I should have had answer before but for some reason I
-missed the track of this patchset.
-
-> There was some discussion with Enric, but that didn't come to a conclusion,
-> I think.
-> 
-
-Yes, my main concern is how this driver is instantiated, it is using one of the
-rdma nodes, see the rdma0 node vs rdma1, to instantiate the driver,
-
-       mdp_rdma0: rdma@14001000 {
-                compatible = "mediatek,mt8173-mdp-rdma";
-                             "mediatek,mt8173-mdp";
-                reg = <0 0x14001000 0 0x1000>;
-                clocks = <&mmsys CLK_MM_MDP_RDMA0>,
-                         <&mmsys CLK_MM_MUTEX_32K>;
-                power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-                iommus = <&iommu M4U_PORT_MDP_RDMA0>;
-                mediatek,larb = <&larb0>;
-                mediatek,vpu = <&vpu>;
-        };
-
-
-        mdp_rdma1: rdma@14002000 {
-
-                compatible = "mediatek,mt8173-mdp-rdma";
-                reg = <0 0x14002000 0 0x1000>;
-                clocks = <&mmsys CLK_MM_MDP_RDMA1>,
-                         <&mmsys CLK_MM_MUTEX_32K>;
-                power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-                iommus = <&iommu M4U_PORT_MDP_RDMA1>;
-                mediatek,larb = <&larb4>;
-        };
-
-
-My point is that DT is to describe hardware not a trick to instantiate drivers,
-so the "mediatek,mt8173-mdp" is completely unnecessary. We had the same issue
-with the MMSYS driver and the mediatek DRM driver, and we solved by having the
-mmsys driver instantiating the drm driver. I think we should apply the same
-solution here, see [1] for reference. If you want to continue the discussion
-maybe would be better
-
-
-Thanks,
- Enric
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/soc/mediatek/mtk-mmsys.c?id=667c769246b01c53ad0925d603d2a2531abd3ef2
-
-> Regards,
-> 
-> 	Hans
-> 
->>
->> Changes in v2:
->> - remove empty mtk_mdp_comp_init
->> - update documentation for enum mtk_mdp_comp_type
->> - remove comma after last element of mtk_mdp_comp_driver_dt_match
->>
->> Eizan Miyamoto (2):
->>   [media] mtk-mdp: add driver to probe mdp components
->>   [media] mtk-mdp: use pm_runtime in MDP component driver
->>
->>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 172 ++++++++++++++---
->>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  32 +--
->>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 182 ++++++++++++------
->>  drivers/media/platform/mtk-mdp/mtk_mdp_core.h |   1 +
->>  4 files changed, 286 insertions(+), 101 deletions(-)
->>
-> 
