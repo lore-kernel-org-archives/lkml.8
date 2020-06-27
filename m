@@ -2,574 +2,177 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7D520707
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J2BvF1Cq"
+	by mail.kernel.org (Postfix) with ESMTP id 83CB620707
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgF0GXT (ORCPT
+        id S1726010AbgF0Ga0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 02:23:19 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38923 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725861AbgF0GXS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 02:23:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593238996; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=3B8DtFpbDD8QiQPmG4elCiyFJXgpzM3e2d8vy0b5vTs=; b=J2BvF1Cqlq6eSgaona9jFeuwNDjGOgS95ddlqb7ozhTuzrpZMG724XGA039UjNqfT5YUWsET
- qMqi5gCdRBYVRKgCQ+49356jw77OsSG6pTdhSFErNOoWI8oD8jV020uFM86iEPVIK90B3ISA
- 88sC8D01LWVLsX1z9JhIuvRwMgQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ef6e5c8117610c7ff1009e5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 27 Jun 2020 06:23:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E884BC433CA; Sat, 27 Jun 2020 06:23:03 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0D07C433C6;
-        Sat, 27 Jun 2020 06:23:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0D07C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH] ath10k: Add history for tracking certain events
-Date:   Sat, 27 Jun 2020 11:52:53 +0530
-Message-Id: <1593238973-23237-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Sat, 27 Jun 2020 02:30:26 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:63218 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgF0GaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 02:30:25 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49v3ld5TcGz9v021;
+        Sat, 27 Jun 2020 08:30:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tCD-gMIER6eu; Sat, 27 Jun 2020 08:30:21 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49v3ld3tDjz9v01x;
+        Sat, 27 Jun 2020 08:30:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 89E108B772;
+        Sat, 27 Jun 2020 08:30:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id XpRoYDrHEWkv; Sat, 27 Jun 2020 08:30:22 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 688C18B75B;
+        Sat, 27 Jun 2020 08:30:21 +0200 (CEST)
+Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
+To:     Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <9a976370-caef-1beb-d172-bcb0b17e9b78@csgroup.eu>
+Date:   Sat, 27 Jun 2020 08:30:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For debugging many issues, a history of the
-below mentioned events can help get an idea
-of what exactly was going on just before any
-issue occurred in the system. These event
-history will be collected only when the host
-driver is run in debug mode (i.e. with the
-config ATH10K_DEBUG enabled).
 
-Add history for tracking the below events
-- register read
-- register write
-- IRQ trigger
-- IRQ Enable
-- IRQ Disable
-- NAPI poll
-- CE service
-- WMI cmd
-- WMI event
-- WMI tx completion
 
-This will help in debugging any crash or any
-improper behaviour.
+Le 26/06/2020 à 21:04, Hari Bathini a écrit :
+> Some archs can have special memory regions, within the given memory
+> range, which can't be used for the buffer in a kexec segment. As
+> kexec_add_buffer() function is being called from generic code as well,
+> add weak arch_kexec_add_buffer definition for archs to override & take
+> care of special regions before trying to locate a memory hole.
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+>   include/linux/kexec.h |    5 +++++
+>   kernel/kexec_file.c   |   37 +++++++++++++++++++++++++++++++++----
+>   2 files changed, 38 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 1776eb2..1237682 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -195,6 +195,11 @@ int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
+>   					const Elf_Shdr *relsec,
+>   					const Elf_Shdr *symtab);
+>   
+> +extern int arch_kexec_add_buffer(struct kexec_buf *kbuf);
+> +
 
-Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+extern keywork is useless here, please remove (checkpatch also complains 
+about it usually).
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/ce.c      |   2 +
- drivers/net/wireless/ath/ath10k/core.h    |  77 +++++++++++++++++
- drivers/net/wireless/ath/ath10k/debug.c   | 134 ++++++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath10k/debug.h   |  74 +++++++++++++++++
- drivers/net/wireless/ath/ath10k/snoc.c    |  17 ++++
- drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
- drivers/net/wireless/ath/ath10k/wmi.c     |  10 +++
- 7 files changed, 315 insertions(+)
+> +/* arch_kexec_add_buffer calls this when it is ready */
+> +extern int __kexec_add_buffer(struct kexec_buf *kbuf);
+> +
 
-diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
-index 1e16f26..ddf2765 100644
---- a/drivers/net/wireless/ath/ath10k/ce.c
-+++ b/drivers/net/wireless/ath/ath10k/ce.c
-@@ -509,6 +509,7 @@ u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar)
- 		}
- 	}
- 
-+	ath10k_record_ce_event(ar, ATH10K_IRQ_SUMMARY, irq_summary);
- 	return irq_summary;
- }
- EXPORT_SYMBOL(ath10k_ce_gen_interrupt_summary);
-@@ -1331,6 +1332,7 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
- 	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
- 	u32 ctrl_addr = ce_state->ctrl_addr;
- 
-+	ath10k_record_ce_event(ar, ATH10K_CE_SERVICE, ce_id);
- 	/*
- 	 * Clear before handling
- 	 *
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 040053a..eecb5cc 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -971,6 +971,78 @@ struct ath10k_bus_params {
- 	bool hl_msdu_ids;
- };
- 
-+#define ATH10K_REG_ACCESS_HISTORY_MAX	512
-+#define ATH10K_CE_EVENT_HISTORY_MAX	1024
-+#define ATH10K_WMI_EVENT_HISTORY_MAX	512
-+#define ATH10K_WMI_CMD_HISTORY_MAX	256
-+
-+#define ATH10K_WMI_DATA_LEN	16
-+
-+enum ath10k_ce_event {
-+	ATH10K_IRQ_ENTRY,
-+	ATH10K_IRQ_EXIT,
-+	ATH10K_IRQ_ENABLE,
-+	ATH10K_IRQ_DISABLE,
-+	ATH10K_NAPI_POLL,
-+	ATH10K_CE_SERVICE,
-+	ATH10K_NAPI_COMPLETE,
-+	ATH10K_NAPI_RESCHED,
-+	ATH10K_IRQ_SUMMARY,
-+};
-+
-+enum ath10k_wmi_type {
-+	ATH10K_WMI_EVENT,
-+	ATH10K_WMI_CMD,
-+	ATH10K_WMI_TX_COMPL,
-+};
-+
-+struct ath10k_reg_access_entry {
-+	bool write;
-+	u32 cpu_id;
-+	u32 offset;
-+	u32 val;
-+	u64 timestamp;
-+};
-+
-+struct ath10k_wmi_event_entry {
-+	enum ath10k_wmi_type type;
-+	u32 cpu_id;
-+	u32 id;
-+	u64 timestamp;
-+	unsigned char data[ATH10K_WMI_DATA_LEN];
-+};
-+
-+struct ath10k_ce_event_entry {
-+	enum ath10k_ce_event event_type;
-+	u32 cpu_id;
-+	u32 ce_id;
-+	u64 timestamp;
-+};
-+
-+struct ath10k_wmi_event_history {
-+	struct ath10k_wmi_event_entry *record;
-+	u32 max_entries;
-+	atomic_t index;
-+	/* lock for accessing wmi event history */
-+	spinlock_t hist_lock;
-+};
-+
-+struct ath10k_ce_event_history {
-+	struct ath10k_ce_event_entry *record;
-+	u32 max_entries;
-+	atomic_t index;
-+	/* lock for accessing ce event history */
-+	spinlock_t hist_lock;
-+};
-+
-+struct ath10k_reg_access_history {
-+	struct ath10k_reg_access_entry *record;
-+	u32 max_entries;
-+	atomic_t index;
-+	/* lock for accessing register access history */
-+	spinlock_t hist_lock;
-+};
-+
- struct ath10k {
- 	struct ath_common ath_common;
- 	struct ieee80211_hw *hw;
-@@ -1263,6 +1335,11 @@ struct ath10k {
- 	bool coex_support;
- 	int coex_gpio_pin;
- 
-+	struct ath10k_reg_access_history reg_access_history;
-+	struct ath10k_ce_event_history ce_event_history;
-+	struct ath10k_wmi_event_history wmi_event_history;
-+	struct ath10k_wmi_event_history wmi_cmd_history;
-+
- 	/* must be last */
- 	u8 drv_priv[] __aligned(sizeof(void *));
- };
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index e8250a6..1be4883 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -2722,4 +2722,138 @@ void ath10k_dbg_dump(struct ath10k *ar,
- }
- EXPORT_SYMBOL(ath10k_dbg_dump);
- 
-+int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries)
-+{
-+	ar->reg_access_history.record = vzalloc(max_entries *
-+						sizeof(struct ath10k_reg_access_entry));
-+	if (!ar->reg_access_history.record)
-+		return -ENOMEM;
-+
-+	ar->reg_access_history.max_entries = max_entries;
-+	atomic_set(&ar->reg_access_history.index, 0);
-+	spin_lock_init(&ar->reg_access_history.hist_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ath10k_core_reg_access_history_init);
-+
-+int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries)
-+{
-+	ar->wmi_cmd_history.record = vzalloc(max_entries *
-+					     sizeof(struct ath10k_wmi_event_entry));
-+	if (!ar->wmi_cmd_history.record)
-+		return -ENOMEM;
-+
-+	ar->wmi_cmd_history.max_entries = max_entries;
-+	atomic_set(&ar->wmi_cmd_history.index, 0);
-+	spin_lock_init(&ar->wmi_cmd_history.hist_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ath10k_core_wmi_cmd_history_init);
-+
-+int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries)
-+{
-+	ar->wmi_event_history.record = vzalloc(max_entries *
-+					       sizeof(struct ath10k_wmi_event_entry));
-+	if (!ar->wmi_event_history.record)
-+		return -ENOMEM;
-+
-+	ar->wmi_event_history.max_entries = max_entries;
-+	atomic_set(&ar->wmi_event_history.index, 0);
-+	spin_lock_init(&ar->wmi_event_history.hist_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ath10k_core_wmi_event_history_init);
-+
-+int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries)
-+{
-+	ar->ce_event_history.record = vzalloc(max_entries *
-+					      sizeof(struct ath10k_ce_event_entry));
-+	if (!ar->ce_event_history.record)
-+		return -ENOMEM;
-+
-+	ar->ce_event_history.max_entries = max_entries;
-+	atomic_set(&ar->ce_event_history.index, 0);
-+	spin_lock_init(&ar->ce_event_history.hist_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ath10k_core_ce_event_history_init);
-+
-+void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val, bool write)
-+{
-+	struct ath10k_reg_access_entry *entry;
-+	u32 idx;
-+
-+	if (!ar->reg_access_history.record)
-+		return;
-+
-+	idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
-+				       ar->reg_access_history.max_entries);
-+	entry = &ar->reg_access_history.record[idx];
-+
-+	entry->timestamp = ath10k_core_get_timestamp();
-+	entry->cpu_id = smp_processor_id();
-+	entry->write = write;
-+	entry->offset = offset;
-+	entry->val = val;
-+}
-+EXPORT_SYMBOL(ath10k_record_reg_access);
-+
-+void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
-+			     u32 id, unsigned char *data)
-+{
-+	struct ath10k_wmi_event_entry *entry;
-+	u32 idx;
-+
-+	if (type == ATH10K_WMI_EVENT) {
-+		if (!ar->wmi_event_history.record)
-+			return;
-+
-+		spin_lock_bh(&ar->wmi_event_history.hist_lock);
-+		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
-+					       ar->wmi_event_history.max_entries);
-+		entry = &ar->wmi_event_history.record[idx];
-+		spin_unlock_bh(&ar->wmi_event_history.hist_lock);
-+	} else {
-+		if (!ar->wmi_cmd_history.record)
-+			return;
-+
-+		spin_lock_bh(&ar->wmi_cmd_history.hist_lock);
-+		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
-+					       ar->wmi_cmd_history.max_entries);
-+		entry = &ar->wmi_cmd_history.record[idx];
-+		spin_unlock_bh(&ar->wmi_cmd_history.hist_lock);
-+	}
-+
-+	entry->timestamp = ath10k_core_get_timestamp();
-+	entry->cpu_id = smp_processor_id();
-+	entry->type = type;
-+	entry->id = id;
-+	memcpy(&entry->data, data + 4, ATH10K_WMI_DATA_LEN);
-+}
-+EXPORT_SYMBOL(ath10k_record_wmi_event);
-+
-+void ath10k_record_ce_event(struct ath10k *ar, enum ath10k_ce_event event_type,
-+			    int ce_id)
-+{
-+	struct ath10k_ce_event_entry *entry;
-+	u32 idx;
-+
-+	if (!ar->ce_event_history.record)
-+		return;
-+
-+	idx = ath10k_core_get_next_idx(&ar->ce_event_history.index,
-+				       ar->ce_event_history.max_entries);
-+	entry = &ar->ce_event_history.record[idx];
-+
-+	entry->timestamp = ath10k_core_get_timestamp();
-+	entry->cpu_id = smp_processor_id();
-+	entry->event_type = event_type;
-+	entry->ce_id = ce_id;
-+}
-+EXPORT_SYMBOL(ath10k_record_ce_event);
-+
- #endif /* CONFIG_ATH10K_DEBUG */
-diff --git a/drivers/net/wireless/ath/ath10k/debug.h b/drivers/net/wireless/ath/ath10k/debug.h
-index 997c1c8..c28aeb1 100644
---- a/drivers/net/wireless/ath/ath10k/debug.h
-+++ b/drivers/net/wireless/ath/ath10k/debug.h
-@@ -258,6 +258,38 @@ void ath10k_dbg_dump(struct ath10k *ar,
- 		     enum ath10k_debug_mask mask,
- 		     const char *msg, const char *prefix,
- 		     const void *buf, size_t len);
-+
-+/* ========== History init APIs =========== */
-+int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries);
-+int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries);
-+int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries);
-+int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries);
-+
-+/* ========== History record APIs =========== */
-+void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val,
-+			      bool write);
-+void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
-+			     u32 id, unsigned char *data);
-+void ath10k_record_ce_event(struct ath10k *ar,
-+			    enum ath10k_ce_event event_type,
-+			    int ce_id);
-+
-+static inline u64 ath10k_core_get_timestamp(void)
-+{
-+	struct timespec64 ts;
-+
-+	ktime_get_real_ts64(&ts);
-+	return ((u64)ts.tv_sec * 1000000) + (ts.tv_nsec / 1000);
-+}
-+
-+static inline int ath10k_core_get_next_idx(atomic_t *index, u32 max_entries)
-+{
-+	u32 curr_idx;
-+
-+	curr_idx = atomic_fetch_inc(index);
-+	return (curr_idx & (max_entries - 1));
-+}
-+
- #else /* CONFIG_ATH10K_DEBUG */
- 
- static inline int __ath10k_dbg(struct ath10k *ar,
-@@ -273,6 +305,48 @@ static inline void ath10k_dbg_dump(struct ath10k *ar,
- 				   const void *buf, size_t len)
- {
- }
-+
-+static inline int ath10k_core_reg_access_history_init(struct ath10k *ar,
-+						      u32 max_entries)
-+{
-+	return 0;
-+}
-+
-+static inline int ath10k_core_wmi_cmd_history_init(struct ath10k *ar,
-+						   u32 max_entries)
-+{
-+	return 0;
-+}
-+
-+static inline int ath10k_core_wmi_event_history_init(struct ath10k *ar,
-+						     u32 max_entries)
-+{
-+	return 0;
-+}
-+
-+static inline int ath10k_core_ce_event_history_init(struct ath10k *ar,
-+						    u32 max_entries)
-+{
-+	return 0;
-+}
-+
-+static inline void ath10k_record_reg_access(struct ath10k *ar, u32 offset,
-+					    u32 val, bool write)
-+{
-+}
-+
-+static inline void ath10k_record_wmi_event(struct ath10k *ar,
-+					   enum ath10k_wmi_type type,
-+					   u32 id, unsigned char *data)
-+{
-+}
-+
-+static inline void ath10k_record_ce_event(struct ath10k *ar,
-+					  enum ath10k_ce_event event_type,
-+					  int ce_id)
-+{
-+}
-+
- #endif /* CONFIG_ATH10K_DEBUG */
- 
- /* Avoid calling __ath10k_dbg() if debug_mask is not set and tracing
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index 8440e64..cfc0ae2 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -474,6 +474,7 @@ static void ath10k_snoc_write32(struct ath10k *ar, u32 offset, u32 value)
- {
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 
-+	ath10k_record_reg_access(ar, offset, value, true);
- 	iowrite32(value, ar_snoc->mem + offset);
- }
- 
-@@ -482,7 +483,9 @@ static u32 ath10k_snoc_read32(struct ath10k *ar, u32 offset)
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 	u32 val;
- 
-+	ath10k_record_reg_access(ar, offset, 0, false);
- 	val = ioread32(ar_snoc->mem + offset);
-+	ath10k_record_reg_access(ar, offset, val, false);
- 
- 	return val;
- }
-@@ -828,11 +831,13 @@ static void ath10k_snoc_hif_get_default_pipe(struct ath10k *ar,
- static inline void ath10k_snoc_irq_disable(struct ath10k *ar)
- {
- 	ath10k_ce_disable_interrupts(ar);
-+	ath10k_record_ce_event(ar, ATH10K_IRQ_DISABLE, 0);
- }
- 
- static inline void ath10k_snoc_irq_enable(struct ath10k *ar)
- {
- 	ath10k_ce_enable_interrupts(ar);
-+	ath10k_record_ce_event(ar, ATH10K_IRQ_ENABLE, 0);
- }
- 
- static void ath10k_snoc_rx_pipe_cleanup(struct ath10k_snoc_pipe *snoc_pipe)
-@@ -1154,7 +1159,9 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 	int ce_id = ath10k_snoc_get_ce_id_from_irq(ar, irq);
- 
-+	ath10k_record_ce_event(ar, ATH10K_IRQ_ENTRY, ce_id);
- 	if (ce_id < 0 || ce_id >= ARRAY_SIZE(ar_snoc->pipe_info)) {
-+		ath10k_record_ce_event(ar, ATH10K_IRQ_EXIT, ce_id);
- 		ath10k_warn(ar, "unexpected/invalid irq %d ce_id %d\n", irq,
- 			    ce_id);
- 		return IRQ_HANDLED;
-@@ -1163,6 +1170,7 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
- 	ath10k_snoc_irq_disable(ar);
- 	napi_schedule(&ar->napi);
- 
-+	ath10k_record_ce_event(ar, ATH10K_IRQ_EXIT, ce_id);
- 	return IRQ_HANDLED;
- }
- 
-@@ -1171,6 +1179,7 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
- 	struct ath10k *ar = container_of(ctx, struct ath10k, napi);
- 	int done = 0;
- 
-+	ath10k_record_ce_event(ar, ATH10K_NAPI_POLL, 0);
- 	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
- 		napi_complete(ctx);
- 		return done;
-@@ -1182,6 +1191,9 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
- 	if (done < budget) {
- 		napi_complete(ctx);
- 		ath10k_snoc_irq_enable(ar);
-+		ath10k_record_ce_event(ar, ATH10K_NAPI_COMPLETE, 0);
-+	} else {
-+		ath10k_record_ce_event(ar, ATH10K_NAPI_RESCHED, 0);
- 	}
- 
- 	return done;
-@@ -1655,6 +1667,11 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
- 	ar->ce_priv = &ar_snoc->ce;
- 	msa_size = drv_data->msa_size;
- 
-+	ath10k_core_reg_access_history_init(ar, ATH10K_REG_ACCESS_HISTORY_MAX);
-+	ath10k_core_wmi_event_history_init(ar, ATH10K_WMI_EVENT_HISTORY_MAX);
-+	ath10k_core_wmi_cmd_history_init(ar, ATH10K_WMI_CMD_HISTORY_MAX);
-+	ath10k_core_ce_event_history_init(ar, ATH10K_CE_EVENT_HISTORY_MAX);
-+
- 	ath10k_snoc_quirks_init(ar);
- 
- 	ret = ath10k_snoc_resource_init(ar);
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index 932266d..9df5748 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -627,6 +627,7 @@ static void ath10k_wmi_tlv_op_rx(struct ath10k *ar, struct sk_buff *skb)
- 	if (skb_pull(skb, sizeof(struct wmi_cmd_hdr)) == NULL)
- 		goto out;
- 
-+	ath10k_record_wmi_event(ar, ATH10K_WMI_EVENT, id, skb->data);
- 	trace_ath10k_wmi_event(ar, id, skb->data, skb->len);
- 
- 	consumed = ath10k_tm_event_wmi(ar, id, skb);
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index a81a1ab..8ebd05c 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -1802,6 +1802,15 @@ struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
- 
- static void ath10k_wmi_htc_tx_complete(struct ath10k *ar, struct sk_buff *skb)
- {
-+	struct wmi_cmd_hdr *cmd_hdr;
-+	enum wmi_tlv_event_id id;
-+
-+	cmd_hdr = (struct wmi_cmd_hdr *)skb->data;
-+	id = MS(__le32_to_cpu(cmd_hdr->cmd_id), WMI_CMD_HDR_CMD_ID);
-+
-+	ath10k_record_wmi_event(ar, ATH10K_WMI_TX_COMPL, id,
-+				skb->data + sizeof(struct wmi_cmd_hdr));
-+
- 	dev_kfree_skb(skb);
- }
- 
-@@ -1912,6 +1921,7 @@ int ath10k_wmi_cmd_send(struct ath10k *ar, struct sk_buff *skb, u32 cmd_id)
- 
- 	might_sleep();
- 
-+	ath10k_record_wmi_event(ar, ATH10K_WMI_CMD, cmd_id, skb->data);
- 	if (cmd_id == WMI_CMD_UNSUPPORTED) {
- 		ath10k_warn(ar, "wmi command %d is not supported by firmware\n",
- 			    cmd_id);
--- 
-2.7.4
+same
 
+>   extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>   int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>   
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index bb05fd5..a0b4f7f 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -669,10 +669,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>    */
+>   int kexec_add_buffer(struct kexec_buf *kbuf)
+>   {
+> -
+> -	struct kexec_segment *ksegment;
+> -	int ret;
+> -
+>   	/* Currently adding segment this way is allowed only in file mode */
+>   	if (!kbuf->image->file_mode)
+>   		return -EINVAL;
+> @@ -696,6 +692,25 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>   	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+>   	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+>   
+> +	return arch_kexec_add_buffer(kbuf);
+> +}
+> +
+> +/**
+> + * __kexec_add_buffer - arch_kexec_add_buffer would call this function after
+> + *                      updating kbuf, to place a buffer in a kexec segment.
+> + * @kbuf:               Buffer contents and memory parameters.
+> + *
+> + * This function assumes that kexec_mutex is held.
+> + * On successful return, @kbuf->mem will have the physical address of
+> + * the buffer in memory.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +int __kexec_add_buffer(struct kexec_buf *kbuf)
+> +{
+> +	struct kexec_segment *ksegment;
+> +	int ret;
+> +
+>   	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+>   	ret = kexec_locate_mem_hole(kbuf);
+>   	if (ret)
+> @@ -711,6 +726,20 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>   	return 0;
+>   }
+>   
+> +/**
+> + * arch_kexec_add_buffer - Some archs have memory regions within the given
+> + *                         range that can't be used to place a kexec segment.
+> + *                         Such archs can override this function to take care
+> + *                         of them before trying to locate the memory hole.
+> + * @kbuf:                  Buffer contents and memory parameters.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +int __weak arch_kexec_add_buffer(struct kexec_buf *kbuf)
+> +{
+> +	return __kexec_add_buffer(kbuf);
+> +}
+> +
+>   /* Calculate and store the digest of segments */
+>   static int kexec_calculate_store_digests(struct kimage *image)
+>   {
+> 
+
+Christophe
