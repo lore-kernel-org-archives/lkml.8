@@ -2,110 +2,109 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1442168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593265446;
-	bh=zNHHbv8yZG7Tr/13VLMjcj16QvLBa4eunXcfuBB0iI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aIa2r0pa/k7Rqqt5WI1+4k5dV5kTKtzsJA1dTStBjTViG6KcaN1mkKhiYGxwg/lii
-	 k4diFZGZ98JxjCfz6kNHc15kJXNQLS38h8iXmgYa2c7oKVAlGIIQ+wqGwz9DIyxaO2
-	 0/ooL7NQx3eRH88JURGX89qHtgKNvjClefHLeNPg=
+	by mail.kernel.org (Postfix) with ESMTP id 6220021655
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="U5oGykqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgF0NoF (ORCPT
+        id S1726673AbgF0NpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:44:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41456 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 09:45:07 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41645 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0NoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:44:04 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E060E21655;
-        Sat, 27 Jun 2020 13:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593265444;
-        bh=zNHHbv8yZG7Tr/13VLMjcj16QvLBa4eunXcfuBB0iI8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SngmTcfUOfo9kUTKtkZ3J4MycHrDGJ5ImkJB9EBQ1IrspYuPSHyFVfzkJ3On5wm2v
-         cN8vJFfFXl+/+5eNmJNgyeZE06A6wTAqihdNYv9CEHKUIEpP0B7rZk9c82D5a8eTHV
-         SpLGbuzqidSTTuAGnUL39HkoyzQO5VkbhWlQW7a8=
-Date:   Sat, 27 Jun 2020 14:43:59 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: bmc150_magn: Document and fix
- missing compatibles
-Message-ID: <20200627144359.1ae30bb0@archlinux>
-In-Reply-To: <20200622060110.23192-1-krzk@kernel.org>
-References: <20200622060110.23192-1-krzk@kernel.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725850AbgF0NpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593265462;
+        bh=lFWXqdePd4DyXgNpm31xytWm1F1ZN/XcJboKFJ2akTc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=U5oGykqjhCeWQ6VOBTNmh03M6XCAm+pD09uH4+T7DrDwY1SKQhxbtOL/ABnStEa/S
+         PfoTVIE0VA04JG9UkzA1YktiDtrzAYLz9JeFpb2MCwwMNzeA6fREx2Q9KuzMHPOy5C
+         4OSneFLG1uqkqFNYxcRHmqoVLVQnPbxaES8rt2oI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N7zBR-1ikTo63WZH-014y1o; Sat, 27 Jun 2020 15:44:21 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>
+Cc:     kernel-hardening@lists.openwall.com, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH] parisc/kernel/ftrace: Remove function callback casts
+Date:   Sat, 27 Jun 2020 15:43:48 +0200
+Message-Id: <20200627134348.30601-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wIA4UEOVrMPBixJrC6vud+7JWju+3dUuA9dgRmOulVfkomqN98k
+ J686MFh0NZuXx/c979VCYvyYbzDfk2va4O6y6reWPq02BtPDMcl5z718wLB3jUZSdt51xSI
+ VxifaDCeidc4XqZTDBYctS5uThXMfngzbm8w6w59pLFMUNO6WB8X1mfgGPi47RxiOthkzqE
+ rZnnXYY3g3OktLNANK8Fw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+bxAtbELlTU=:AIVXJGBmVMIT65YrALMuS8
+ SKARVtgwT6z9XLB+mawgeRIbj0E7ldANgLcChrGyzj7rIenKH5VEMbIqOWLIesYkeOxXquZoD
+ 7jer8nKfPuNEl3mQpi6UPgJZs9b9K8uO9sxL/nSGS82dhTHNlKy+z46COcerbravGzKPjtJM7
+ 89Rpwj3GU6l+JY/oJ7HK4AUnsddckYU7s0I5lZXrmK9reSioubHrIIO7/0WN748hLzKL5YtRq
+ 6tyrG3k6QTxD+v7nwV2sFp8mf+2o8d3ETUFnELAnw8y0W6l7pkbUdpfnIl7b1ooUTcDdPbjdT
+ P8OvyCur47xAO6eBfQV4OBN2FZvUtOQj38hgdKUy1WWDbyR2mx6hjkBxvY8FFFCXabH/B16FQ
+ 4h40iXu+afncRyB6XQoH0bhmn7wG+lGUQFgbTojkE8Qr8ydlIipAm3nzpCzbIr32c+JXkutff
+ +n5ArbwBkHUv15tEGZwK4kkaYUtN7MPARtWLpw4S9h6zst3sH765BSAOgyI7BPTvmYrdCQA5u
+ bC1J9DW+kIbIt+wHB8YfMqYLGDo7SVApVDQrbFRA3DSicRi95alGCJaVy/XSwOIGg1s7Up0J/
+ iVgjv+i4wpCNO1sAAp2VGSI0ja8osyzgFJEJ8fETrTXcqFtl82wopajFFGW8aaHatA7q27p65
+ fkyskIbY6OktGhl8B2JqDpc69rw9WsXLkCLDsyCn+D/UQA6xoGMhyDPIthUFjaOyFZ102rDfB
+ oKIRs4OlYx6RFyTUms9ymo2+WoPTxoEFpCI+EyDKg8MZ4xxftdnBLs411Gscofwg+pPnwDfXU
+ uZZHF1PoGAUHVUOuJCrR2Qwsmzl3CSENblP8VXcsNeVSB/dOtoyOR7Vgqn1OdaBKLD+5J5kdA
+ rydtWW7LkBtpkC5fMukERaKfFqOSQ4z3qVsOaPRUMCsMd2JxCU2hR4oVEGQtZScgJCJJOTyZ/
+ lzFYO/7KLg9UqjyPjJ332wL1ljFooR48m108euwoN6m4p+idHtFxvIYv05FgXUVNQMhA15mMu
+ 3Gl27uha8kIgM3Za3URdV9riEUBMI5UwFXQ4VrZi/KcXzOcYqdKsN5avw3RkLEeNbPzt8hin9
+ Dy6RfQ/N6f4GYSWT00QPU7q5Y38jp1NSJ8pK4uVD+4aHPnmxcth4UPKZjcDURYLTMswkgDudk
+ J694lY5ivXx4PHgJyHnev0QFBLuTRfCx5tvzmmxelBg6RVcRkc9oEMrCQph63Zc/QjBLYXq2n
+ Q4KjZA5K9R7yBeJXC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 08:01:09 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, remove all the function callback
+casts.
 
-> The driver supports also BMC156B and BMM150B but these compatibles had
-> redundant suffix "_magn".  Add existing compatibles marking them
-> deprecated along with adding a new, proper one for this family of
-> devices.
-Thanks for tidying this up.
+To do this remove the cast to a function pointer type in the comparison
+statement and add to the right and left operand a cast to unsigned long
+type. This can be done since the comparison is against function address
+(these operands are not function calls).
 
-The BMC156B is a dual magnetometer and accelerometer chip
-so for that one the _magn postfix probably is needed.
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ arch/parisc/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Or am I missing something?
+diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
+index 1df0f67ed667..86b49a5fc049 100644
+=2D-- a/arch/parisc/kernel/ftrace.c
++++ b/arch/parisc/kernel/ftrace.c
+@@ -64,7 +64,7 @@ void notrace __hot ftrace_function_trampoline(unsigned l=
+ong parent,
+ 				function_trace_op, regs);
 
-The way this does SPI is rather odd but seems to be the same as the bmc150
-(two chips with non overlapping register maps).
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+-	if (ftrace_graph_return !=3D (trace_func_graph_ret_t) ftrace_stub ||
++	if ((unsigned long)ftrace_graph_return !=3D (unsigned long)ftrace_stub |=
+|
+ 	    ftrace_graph_entry !=3D ftrace_graph_entry_stub) {
+ 		unsigned long *parent_rp;
 
-Jonathan
-
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Mark old compatibles as deprecated, add new one.
-> ---
->  .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt    | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> index fd5fca90fb39..efeda055be6a 100644
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
-> @@ -4,7 +4,11 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS00
->  
->  Required properties:
->  
-> -  - compatible : should be "bosch,bmc150_magn"
-> +  - compatible : should be one of:
-> +                 "bosch,bmc150_magn"
-> +                 "bosch,bmc156"
-> +                 "bosch,bmc156_magn" (DEPRECATED, use bosch,bmc156)
-> +                 "bosch,bmm150_magn" (DEPRECATED, use bosch,bmc156)
->    - reg : the I2C address of the magnetometer
->  
->  Optional properties:
+=2D-
+2.20.1
 
