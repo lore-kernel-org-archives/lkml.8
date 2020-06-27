@@ -2,327 +2,169 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E816C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD8F206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593277551;
-	bh=IICWfEXWY/u7oTx8asfzklBhrwnhQUGVc141zpJDLL8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Az9bJI/2iEDVNElKywbMoiyJWyGrf+84C49lH3PnA+IEOdKSczTYbieP3JaqtWDNB
-	 k29E/ZXIK65nrN1FZUh+XzBldwjpOjB5yE55nNHua6IYqZjpGMGnCsbkXS0mrFM/Nr
-	 FBj0vwCm5Wwiu1RXNbHNBOg51bbGPxQN2UbBnKiM=
+	by mail.kernel.org (Postfix) with ESMTP id 1EA43206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pX4PYXsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgF0RFP (ORCPT
+        id S1726444AbgF0RJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 13:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbgF0RFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 13:05:14 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A8120760;
-        Sat, 27 Jun 2020 17:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593277512;
-        bh=IICWfEXWY/u7oTx8asfzklBhrwnhQUGVc141zpJDLL8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=joLeWMw/REb03SQKMmGkCzh4f/aDRyDv2QZAnMAjZe9wx2F9s1XnJVqj5tSQWNIHU
-         goEKJE917yKgP3rXxkUFGMetTVEt5n37nKMkvRHH2575CcjFEO7x84QF5HhXObrEyT
-         ybR92SXEDJG8gS5KTxHtmO8VygFPZlLLtrvQ+T+k=
-Date:   Sat, 27 Jun 2020 18:05:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <knaack.h@gmx.de>
-Subject: Re: [PATCH v3 7/7] iio: core: move event interface on the opaque
- struct
-Message-ID: <20200627180508.14e4ceab@archlinux>
-In-Reply-To: <20200621123345.2469-8-alexandru.ardelean@analog.com>
-References: <20200621123345.2469-1-alexandru.ardelean@analog.com>
-        <20200621123345.2469-8-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jun 2020 13:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgF0RJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 13:09:47 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0DBAC061794;
+        Sat, 27 Jun 2020 10:09:46 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g20so9068954edm.4;
+        Sat, 27 Jun 2020 10:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z0GB5ATaLVK7sa/BJElOVWK3jMO1+UU+ndSjuuUCcDQ=;
+        b=pX4PYXsppnxXZN7ARLZ6bjdBU2pMX3kilpUbKpoWOtgZKWmf8/wMcA6r45s1eT1j+3
+         Q0iC3VRsfVa6m5TFuXkLsfNfbH9XuunFjREtlhltY1yfCePuN2HUKqqK7cx8gCb7k+Al
+         0q8vyljKd8lDzL5L5eutyvNDkKPGTwn2dhIWcyhYmGZmee0URrqMAiqyeCwcUHskwVLL
+         ShUToGP2iVq74Wdb3/W1JIidW/eKcuLPorOeGfIHZrYi+lh09k97F7DpvelDii5kGBKX
+         2PtY+YcVCOyJwWNspB6hQobVqqKQXI077a/UZtWNIcSw7YEZcu4j5qbwzTYZWXm9sfIb
+         qMKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z0GB5ATaLVK7sa/BJElOVWK3jMO1+UU+ndSjuuUCcDQ=;
+        b=RjM4zB1lTTDNAGxxBDRTF2VAWNbiWE335PJnV4r9Wluhrdmsfz30jB/7nn8Mu0MMy6
+         yZrUZ0wcKlzBdbsm3uhf5+cWAPEM++sY79/8+/OgAl0G+WBFqIDszRkCGoQThtmjzHaY
+         YCOupvwGu/o6/yNOo1YBhx4SIdKkArmmd2PsaTPhMM2q22HX6Mie/c7J0AnpsnTRqxPk
+         E+hacOmIMF77Fm9BITnA5r/rZ9fwFaAa3nSajyIJui+sqROK5Y1+72jh3sHCMz9Arjl4
+         kmaxKdQsZGsiMJi6WFXeNvDxADgxgpJwMxgAVt1gqIeGwIdBShV4smUQdPZ6aNmD5kkE
+         Xi+Q==
+X-Gm-Message-State: AOAM5312Tnd0s0iBfMXRuCj8ByZwc2XIC2by5WsK364GstuKlCiGUfLq
+        hqAehVKI1cegNHUNRn5ISOhLJqL4RPNQ7fKl2aA=
+X-Google-Smtp-Source: ABdhPJwuv8UKuJB24fZa+J6oFLwClzsveXOv9mXx9mOerBaR5o787gw6Sa0+gP5ZKeJAif51Vmu6nLs4OdCSklFPULE=
+X-Received: by 2002:a05:6402:1512:: with SMTP id f18mr9553573edw.101.1593277785336;
+ Sat, 27 Jun 2020 10:09:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200626200042.13713-1-jcrouse@codeaurora.org> <20200626200042.13713-7-jcrouse@codeaurora.org>
+In-Reply-To: <20200626200042.13713-7-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 27 Jun 2020 10:10:14 -0700
+Message-ID: <CAF6AEGuNSAYNMG6CH6VMuyjiz5dfRoLWQ9OAFxPJrFmBrHe+Wg@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v9 6/7] drm/msm: Set the global virtual
+ address range from the IOMMU domain
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Masney <masneyb@onstation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 15:33:45 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> Same as with other private fields, this moves the event interface reference
-> to the opaque IIO device object, to be invisible to drivers.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Whole series applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it and see what we missed.
-
-Thanks,
-
-Jonathan
-
+On Fri, Jun 26, 2020 at 1:01 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Use the aperture settings from the IOMMU domain to set up the virtual
+> address range for the GPU. This allows us to transparently deal with
+> IOMMU side features (like split pagetables).
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  drivers/iio/industrialio-core.c  |  5 ++-
->  drivers/iio/industrialio-event.c | 68 +++++++++++++++++++-------------
->  include/linux/iio/iio-opaque.h   |  2 +
->  include/linux/iio/iio.h          |  3 --
->  4 files changed, 45 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 051cb05a8da7..12550f59caa4 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -205,7 +205,8 @@ EXPORT_SYMBOL(iio_read_const_attr);
->  int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id)
->  {
->  	int ret;
-> -	const struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	const struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  
->  	ret = mutex_lock_interruptible(&indio_dev->mlock);
->  	if (ret)
-> @@ -1436,7 +1437,7 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
->  			attrcount += ret;
->  		}
->  
-> -	if (indio_dev->event_interface)
-> +	if (iio_dev_opaque->event_interface)
->  		clk = &dev_attr_current_timestamp_clock.attr;
->  
->  	if (indio_dev->name)
-> diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-> index 5b17c92d3b50..2ab4d4c44427 100644
-> --- a/drivers/iio/industrialio-event.c
-> +++ b/drivers/iio/industrialio-event.c
-> @@ -18,6 +18,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/wait.h>
->  #include <linux/iio/iio.h>
-> +#include <linux/iio/iio-opaque.h>
->  #include "iio_core.h"
->  #include <linux/iio/sysfs.h>
->  #include <linux/iio/events.h>
-> @@ -62,7 +63,8 @@ bool iio_event_enabled(const struct iio_event_interface *ev_int)
->   **/
->  int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp)
->  {
-> -	struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  	struct iio_event_data ev;
->  	int copied;
->  
-> @@ -96,7 +98,8 @@ static __poll_t iio_event_poll(struct file *filep,
->  			     struct poll_table_struct *wait)
->  {
->  	struct iio_dev *indio_dev = filep->private_data;
-> -	struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  	__poll_t events = 0;
->  
->  	if (!indio_dev->info)
-> @@ -116,7 +119,8 @@ static ssize_t iio_event_chrdev_read(struct file *filep,
->  				     loff_t *f_ps)
->  {
->  	struct iio_dev *indio_dev = filep->private_data;
-> -	struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  	unsigned int copied;
->  	int ret;
->  
-> @@ -165,7 +169,8 @@ static ssize_t iio_event_chrdev_read(struct file *filep,
->  static int iio_event_chrdev_release(struct inode *inode, struct file *filep)
->  {
->  	struct iio_dev *indio_dev = filep->private_data;
-> -	struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  
->  	clear_bit(IIO_BUSY_BIT_POS, &ev_int->flags);
->  
-> @@ -184,7 +189,8 @@ static const struct file_operations iio_event_chrdev_fileops = {
->  
->  int iio_event_getfd(struct iio_dev *indio_dev)
->  {
-> -	struct iio_event_interface *ev_int = indio_dev->event_interface;
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	struct iio_event_interface *ev_int = iio_dev_opaque->event_interface;
->  	int fd;
->  
->  	if (ev_int == NULL)
-> @@ -343,6 +349,7 @@ static int iio_device_add_event(struct iio_dev *indio_dev,
->  	enum iio_event_type type, enum iio_event_direction dir,
->  	enum iio_shared_by shared_by, const unsigned long *mask)
->  {
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
->  	ssize_t (*show)(struct device *, struct device_attribute *, char *);
->  	ssize_t (*store)(struct device *, struct device_attribute *,
->  		const char *, size_t);
-> @@ -376,7 +383,7 @@ static int iio_device_add_event(struct iio_dev *indio_dev,
->  
->  		ret = __iio_add_chan_devattr(postfix, chan, show, store,
->  			 (i << 16) | spec_index, shared_by, &indio_dev->dev,
-> -			&indio_dev->event_interface->dev_attr_list);
-> +			&iio_dev_opaque->event_interface->dev_attr_list);
->  		kfree(postfix);
->  
->  		if ((ret == -EBUSY) && (shared_by != IIO_SEPARATE))
-> @@ -469,6 +476,7 @@ static void iio_setup_ev_int(struct iio_event_interface *ev_int)
->  static const char *iio_event_group_name = "events";
->  int iio_device_register_eventset(struct iio_dev *indio_dev)
->  {
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
->  	struct iio_dev_attr *p;
->  	int ret = 0, attrcount_orig = 0, attrcount, attrn;
->  	struct attribute **attr;
-> @@ -477,14 +485,14 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
->  	      iio_check_for_dynamic_events(indio_dev)))
->  		return 0;
->  
-> -	indio_dev->event_interface =
-> +	iio_dev_opaque->event_interface =
->  		kzalloc(sizeof(struct iio_event_interface), GFP_KERNEL);
-> -	if (indio_dev->event_interface == NULL)
-> +	if (iio_dev_opaque->event_interface == NULL)
->  		return -ENOMEM;
->  
-> -	INIT_LIST_HEAD(&indio_dev->event_interface->dev_attr_list);
-> +	INIT_LIST_HEAD(&iio_dev_opaque->event_interface->dev_attr_list);
->  
-> -	iio_setup_ev_int(indio_dev->event_interface);
-> +	iio_setup_ev_int(iio_dev_opaque->event_interface);
->  	if (indio_dev->info->event_attrs != NULL) {
->  		attr = indio_dev->info->event_attrs->attrs;
->  		while (*attr++ != NULL)
-> @@ -498,35 +506,35 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
->  		attrcount += ret;
->  	}
->  
-> -	indio_dev->event_interface->group.name = iio_event_group_name;
-> -	indio_dev->event_interface->group.attrs = kcalloc(attrcount + 1,
-> -							  sizeof(indio_dev->event_interface->group.attrs[0]),
-> +	iio_dev_opaque->event_interface->group.name = iio_event_group_name;
-> +	iio_dev_opaque->event_interface->group.attrs = kcalloc(attrcount + 1,
-> +							  sizeof(iio_dev_opaque->event_interface->group.attrs[0]),
->  							  GFP_KERNEL);
-> -	if (indio_dev->event_interface->group.attrs == NULL) {
-> +	if (iio_dev_opaque->event_interface->group.attrs == NULL) {
->  		ret = -ENOMEM;
->  		goto error_free_setup_event_lines;
->  	}
->  	if (indio_dev->info->event_attrs)
-> -		memcpy(indio_dev->event_interface->group.attrs,
-> +		memcpy(iio_dev_opaque->event_interface->group.attrs,
->  		       indio_dev->info->event_attrs->attrs,
-> -		       sizeof(indio_dev->event_interface->group.attrs[0])
-> +		       sizeof(iio_dev_opaque->event_interface->group.attrs[0])
->  		       *attrcount_orig);
->  	attrn = attrcount_orig;
->  	/* Add all elements from the list. */
->  	list_for_each_entry(p,
-> -			    &indio_dev->event_interface->dev_attr_list,
-> +			    &iio_dev_opaque->event_interface->dev_attr_list,
->  			    l)
-> -		indio_dev->event_interface->group.attrs[attrn++] =
-> +		iio_dev_opaque->event_interface->group.attrs[attrn++] =
->  			&p->dev_attr.attr;
->  	indio_dev->groups[indio_dev->groupcounter++] =
-> -		&indio_dev->event_interface->group;
-> +		&iio_dev_opaque->event_interface->group;
->  
->  	return 0;
->  
->  error_free_setup_event_lines:
-> -	iio_free_chan_devattr_list(&indio_dev->event_interface->dev_attr_list);
-> -	kfree(indio_dev->event_interface);
-> -	indio_dev->event_interface = NULL;
-> +	iio_free_chan_devattr_list(&iio_dev_opaque->event_interface->dev_attr_list);
-> +	kfree(iio_dev_opaque->event_interface);
-> +	iio_dev_opaque->event_interface = NULL;
->  	return ret;
->  }
->  
-> @@ -539,16 +547,20 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
->   */
->  void iio_device_wakeup_eventset(struct iio_dev *indio_dev)
->  {
-> -	if (indio_dev->event_interface == NULL)
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+>
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
+>  drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
+>  2 files changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 5db06b590943..3e717c1ebb7f 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+>         struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
+>         struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
+>         struct msm_gem_address_space *aspace;
+> +       u64 start, size;
+>
+> -       aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+> -               0xffffffff - SZ_16M);
+> +       /*
+> +        * Use the aperture start or SZ_16M, whichever is greater. This will
+> +        * ensure that we align with the allocated pagetable range while still
+> +        * allowing room in the lower 32 bits for GMEM and whatnot
+> +        */
+> +       start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
+> +       size = iommu->geometry.aperture_end - start + 1;
 > +
-> +	if (iio_dev_opaque->event_interface == NULL)
->  		return;
-> -	wake_up(&indio_dev->event_interface->wait);
-> +	wake_up(&iio_dev_opaque->event_interface->wait);
->  }
->  
->  void iio_device_unregister_eventset(struct iio_dev *indio_dev)
->  {
-> -	if (indio_dev->event_interface == NULL)
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +
-> +	if (iio_dev_opaque->event_interface == NULL)
->  		return;
-> -	iio_free_chan_devattr_list(&indio_dev->event_interface->dev_attr_list);
-> -	kfree(indio_dev->event_interface->group.attrs);
-> -	kfree(indio_dev->event_interface);
-> +	iio_free_chan_devattr_list(&iio_dev_opaque->event_interface->dev_attr_list);
-> +	kfree(iio_dev_opaque->event_interface->group.attrs);
-> +	kfree(iio_dev_opaque->event_interface);
->  }
-> diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
-> index af6c69a40169..f2e94196d31f 100644
-> --- a/include/linux/iio/iio-opaque.h
-> +++ b/include/linux/iio/iio-opaque.h
-> @@ -6,6 +6,7 @@
->  /**
->   * struct iio_dev_opaque - industrial I/O device opaque information
->   * @indio_dev:			public industrial I/O device information
-> + * @event_interface:		event chrdevs associated with interrupt lines
->   * @buffer_list:		list of all buffers currently attached
->   * @channel_attr_list:		keep track of automatically created channel
->   *				attributes
-> @@ -17,6 +18,7 @@
->   */
->  struct iio_dev_opaque {
->  	struct iio_dev			indio_dev;
-> +	struct iio_event_interface	*event_interface;
->  	struct list_head		buffer_list;
->  	struct list_head		channel_attr_list;
->  	struct attribute_group		chan_attr_group;
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 219847f6f5c6..e2df67a3b9ab 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -488,7 +488,6 @@ struct iio_buffer_setup_ops {
->   * @currentmode:	[DRIVER] current operating mode
->   * @dev:		[DRIVER] device structure, should be assigned a parent
->   *			and owner
-> - * @event_interface:	[INTERN] event chrdevs associated with interrupt lines
->   * @buffer:		[DRIVER] any buffer present
->   * @scan_bytes:		[INTERN] num bytes captured to be fed to buffer demux
->   * @mlock:		[INTERN] lock used to prevent simultaneous device state
-> @@ -527,8 +526,6 @@ struct iio_dev {
->  	int				currentmode;
->  	struct device			dev;
->  
-> -	struct iio_event_interface	*event_interface;
-> -
->  	struct iio_buffer		*buffer;
->  	int				scan_bytes;
->  	struct mutex			mlock;
+> +       aspace = msm_gem_address_space_create(mmu, "gpu",
+> +               start & GENMASK(48, 0), size);
 
+hmm, I kinda think this isn't going to play well for the 32b gpus
+(pre-a5xx).. possibly we should add address space size to 'struct
+adreno_info'?
+
+Or I guess it is always going to be the same for all devices within a
+generation?  So it could just be passed in to adreno_gpu_init()
+
+Hopefully that makes things smoother if we someday had more than 48bits..
+
+BR,
+-R
+
+>
+>         if (IS_ERR(aspace) && !IS_ERR(mmu))
+>                 mmu->funcs->destroy(mmu);
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index 3a381a9674c9..1b6635504069 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+>         struct msm_iommu *iommu = to_msm_iommu(mmu);
+>         size_t ret;
+>
+> +       /* The arm-smmu driver expects the addresses to be sign extended */
+> +       if (iova & BIT_ULL(48))
+> +               iova |= GENMASK_ULL(63, 49);
+> +
+>         ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+>         WARN_ON(!ret);
+>
+> @@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
+>  {
+>         struct msm_iommu *iommu = to_msm_iommu(mmu);
+>
+> +       if (iova & BIT_ULL(48))
+> +               iova |= GENMASK_ULL(63, 49);
+> +
+>         iommu_unmap(iommu->domain, iova, len);
+>
+>         return 0;
+> --
+> 2.17.1
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
