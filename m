@@ -2,149 +2,400 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F368C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1685C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2B421556
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BhQ0r5PE"
+	by mail.kernel.org (Postfix) with ESMTP id B1CB0217D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgF0M3O (ORCPT
+        id S1726592AbgF0Mbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 08:29:14 -0400
-Received: from mout.web.de ([212.227.17.11]:39915 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgF0M3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 08:29:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593260932;
-        bh=q62EpVbWJx/C5CeZjvOTrIDq+9P24N4wnNIK589Smok=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=BhQ0r5PEmJTuvxGMhQm086sTDUF0SNY3Z+6a1+k6qCnaoLPaGnvhPAO9+kT9VZaQX
-         P/dAO+8hSRO2Nr2WDDeInZaprSucBL4hrJF9rojUxLHEuSRcGB21Dq8ZreyhEIfK9v
-         EGVDHTykkqTUl3MYv84fOFYkmWHUSzkMGfetZPs4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.65.31]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzK61-1il2gM3vPN-014UaH; Sat, 27
- Jun 2020 14:28:52 +0200
-To:     linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: =?UTF-8?Q?usb=3a_mtu3=3a_Checking_initialisation_of_the_variable_?=
- =?UTF-8?B?4oCcbWVw4oCdIGluIHR3byBmdW5jdGlvbnM=?=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <8efdb7aa-1188-e94a-3075-ab1dd30768bb@web.de>
-Date:   Sat, 27 Jun 2020 14:28:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 27 Jun 2020 08:31:51 -0400
+Received: from mailgate-2.ics.forth.gr ([139.91.1.5]:45010 "EHLO
+        mailgate-2.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgF0Mbu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 08:31:50 -0400
+Received: from av3.ics.forth.gr (av3in [139.91.1.77])
+        by mailgate-2.ics.forth.gr (8.14.4/ICS-FORTH/V10-1.8-GATE) with ESMTP id 05RCUpCS027643;
+        Sat, 27 Jun 2020 12:30:53 GMT
+X-AuditID: 8b5b014d-241ff700000045c5-8d-5ef73bfbceb5
+Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.151.35])
+        by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id C9.81.17861.BFB37FE5; Sat, 27 Jun 2020 15:30:51 +0300 (EEST)
+X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7OCPy2SUdBcSv+8Mxzo/aqtRU6s4oCsiraPxPzp2IeYy+h8LBLu
- qITYLg3yidz7IaYHotwH6v8kRkea9+B1hs+uE4JrmK6nbIkKEwL9FexTN3oGOxS7JKw9w6/
- kFWv0FZYOEoLpBF/2vz/eLzN8/6rxV2Vc7n+xZJ1AlD9ChFotrZ32WZFD3aqOuil3Yi2+KY
- xJjXsU0I/JlYXffQx5QRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P5C09fY/Evc=:HsOwc16QAcSGGv0Oz6DxOE
- 3JCVhTiTIUjkWalHu3U24o2RvMCm397xO3AT7MFHthWc9yabvoxzmfGUoZt3bKanMhTKlTHQC
- 6ldte0d8QOJHRMNtsHZDd2U0Q7ylrxhU4cW7TvsfzgREuVIbudmaFpnPkwudc/iFjd2cxob8U
- TmW+f1QKwDYgbt07GYaqePqRj9ixi/w2YRxFEQN0izjKaECIMu4HyDgB2i83NLm4ayGTSBiLC
- +cwkA1S76RM/WBwq+4dN1klIHr3amDPX08XkgNw7H5W87uoPLrq8pptOTTJr1gaSyZ5TBu1xn
- /17dlzJVcJdmM1s4S6VrNjCu+IlDoCiV6wP3J+A3FReKNOxPa/ks3Elj5IieW9SfhKc/0ZFZg
- K+bz0cwtm3u6MePg7+sLWPEAidU7xn9713mAluibYrU+i6/ieMqW/KJBrxAs4Gds4KDqONupI
- Zei7/N2ABlL7Qtw0sEd13ssNBqE8fIkRiDcV8ffQhEvnyyzbgtWhabq9t55Jjye7Adl4ijesg
- N9v3BjP6bSACb0tsjhC6hxPTLyZv9XUmFsezzsqdX2rwCWfXWn/eX2r7AwLmXJ1alp5hQ5EXr
- If33YeTVNmzUI/17mxddt6U1TBEdTj0FLUuwRoqMQk/zaHx53qChdwiB77W57IvDai081O7yJ
- 1jtBaK6jFyU/JL7wuz8pw1cG0ky4cIKzoz8gJ7uZkJt7GHjyohryfPkp0+hDTUSjv9XNYxrbs
- UI26fRKO/sLB0BKQ6fGt579wpTjI7vPLN2kTgIVPq18+E8BNuZSRii7n+PksRfObnx0v5AFQB
- Ha5AUIZSC1B+/qtUw9+MFad6Kd85d8ig8DM9dF8pfKm09gu4FCjEyohpFhuU4SUXaHBAQfFSI
- XaXSvJgglFdihOqL2pPTKAZ9m0mUxnSv0FE8vJWV+CEj2bkJjN6hd14fJdhbLJkB/ovmoltsa
- meXsPfDTBtch53hkk5zf3y8Z5qMQ4vDRQSRfwnOqYqwNWa9D9/5JiBEGUFe3OJdrOfCEvaRJc
- UwttMqHG1eDVRKoPuZGDplknFMjMLzgs/lqXefIy7oR8sJ60M/xkY0oDRD12bomvZYMWzukYQ
- 1Pi2MINu8RwgBsk8XUZC3+KIl7WEJCjHIG0R2EpOHnAy/fvshAlyzHZvq728JODAQuXPM6Yz1
- s1wvLWkOhPvSU5TY8lvsSSUs6hOwtCyg+j3SRkEnAU+USDIEzLLrh3nWCqZOYPI1HhBx+rgWN
- tCfr2kgU7pPGpLxTcvg5u4GzoBherTKCZyUweDw==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 27 Jun 2020 15:30:50 +0300
+From:   Nick Kossifidis <mick@ics.forth.gr>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Zong Li <zong.li@sifive.com>, Anup Patel <anup@brainfault.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] riscv: Implement sv48 support
+Organization: FORTH
+In-Reply-To: <20200603081104.14004-6-alex@ghiti.fr>
+References: <20200603081104.14004-1-alex@ghiti.fr>
+ <20200603081104.14004-6-alex@ghiti.fr>
+Message-ID: <74a770fcf00980281b60bb3f6274419d@mailhost.ics.forth.gr>
+X-Sender: mick@mailhost.ics.forth.gr
+User-Agent: Roundcube Webmail/1.3.9
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsXSHT1dWfe39fc4g3Nv1Cye3fnKatHy4R2r
+        xcrVR5ksLu+aw2ax7XMLm8XLyz3MFm2z+C0+3J3N5sDhMfX3GRaPNy9fsnjcOzGN1WPzknqP
+        3Tcb2DwuNV9n9/i8SS6APYrLJiU1J7MstUjfLoEr42LzevaCHYEVi19vZ2lgvO/QxcjBISFg
+        IvH7rX0XIxeHkMBRRolnp+awdzFyAsVNJWbv7WQEsXkFBCVOznzCAmIzC1hITL2ynxHClpdo
+        3jqbGcRmEVCV2NhyC6yXTUBTYv6lgywg80UElCV2HlEGmc8s0M8k0bznKViNsIClxMLf55lA
+        bH4BYYlPdy+ygticAsYS71v6wGqEBKIlTsz+wwgyh1fAReJAexzEaSoSH34/ACsRBRp/8/Bz
+        9gmMgrOQXDoLyaWzkFy6gJF5FaNAYpmxXmZysV5aflFJhl560SZGcCQw+u5gvL35rd4hRiYO
+        xkOMEhzMSiK8n62/xQnxpiRWVqUW5ccXleakFh9ilOZgURLnzeNeHiskkJ5YkpqdmlqQWgST
+        ZeLglGpgSpZk8pd4Jbdq4rv3l2doL1I+/uRu1eNrX/zKzjNs+ePJUZa97v3LEoVvkxSjDjxW
+        augT0Njl2HkplOdU7OTQ6UEplmbapT1KPasfZCwqfLIjf/Xdf4mfDocueLdptejryJQTXF9a
+        ojpzG0UkcmfcmWPXdsYwSfmJrsGFP4Ip96tFXV0fnDAMiz98hfG7xp2Cdf5Hr5steaLAEBLv
+        yFNrqLxr8sZykxdPbnxYsTSOPezj8hOJar3SO894WLEeEBI0ttmse+u1rxOT8/q9B+P+dk/I
+        5uLerf9DZUN8yt7yuf4CPc/1n+UtaWPWkd1dXFe631K7YVev+vqM3qtnHkwsS/fcJe4rs/+k
+        qWUXDw+jEktxRqKhFnNRcSIAFlZWlfMCAAA=
+X-Greylist: inspected by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Sat, 27 Jun 2020 12:30:53 +0000 (GMT) for IP:'139.91.1.77' DOMAIN:'av3in' HELO:'av3.ics.forth.gr' FROM:'mick@ics.forth.gr' RCPT:''
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Sat, 27 Jun 2020 12:30:53 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Στις 2020-06-03 11:11, Alexandre Ghiti έγραψε:
+> By adding a new 4th level of page table, give the possibility to 64bit
+> kernel to address 2^48 bytes of virtual address: in practice, that 
+> roughly
+> offers ~160TB of virtual address space to userspace and allows up to 
+> 64TB
+> of physical memory.
+> 
+> If the underlying hardware does not support sv48, we will automatically
+> fallback to a standard 3-level page table by folding the new PUD level 
+> into
+> PGDIR level. In order to detect HW capabilities at runtime, we
+> use SATP feature that ignores writes with an unsupported mode.
+> 
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> ---
+>  arch/riscv/Kconfig                  |   6 +-
+>  arch/riscv/include/asm/csr.h        |   3 +-
+>  arch/riscv/include/asm/fixmap.h     |   1 +
+>  arch/riscv/include/asm/page.h       |  15 +++
+>  arch/riscv/include/asm/pgalloc.h    |  36 +++++++
+>  arch/riscv/include/asm/pgtable-64.h |  97 ++++++++++++++++-
+>  arch/riscv/include/asm/pgtable.h    |  10 +-
+>  arch/riscv/kernel/head.S            |   3 +-
+>  arch/riscv/mm/context.c             |   2 +-
+>  arch/riscv/mm/init.c                | 158 +++++++++++++++++++++++++---
+>  10 files changed, 307 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index e167f16131f4..3f73f60e9732 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -68,6 +68,7 @@ config RISCV
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select HAVE_COPY_THREAD_TLS
+>  	select HAVE_ARCH_KASAN if MMU && 64BIT
+> +	select RELOCATABLE if 64BIT
+> 
+>  config ARCH_MMAP_RND_BITS_MIN
+>  	default 18 if 64BIT
+> @@ -106,7 +107,7 @@ config PAGE_OFFSET
+>  	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+>  	default 0x80000000 if 64BIT && !MMU
+>  	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+> -	default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
+> +	default 0xffffc00000000000 if 64BIT && !MAXPHYSMEM_2GB
+> 
+>  config ARCH_FLATMEM_ENABLE
+>  	def_bool y
+> @@ -155,8 +156,11 @@ config GENERIC_HWEIGHT
+>  config FIX_EARLYCON_MEM
+>  	def_bool MMU
+> 
+> +# On a 64BIT relocatable kernel, the 4-level page table is at runtime 
+> folded
+> +# on a 3-level page table when sv48 is not supported.
+>  config PGTABLE_LEVELS
+>  	int
+> +	default 4 if 64BIT && RELOCATABLE
+>  	default 3 if 64BIT
+>  	default 2
+> 
+> diff --git a/arch/riscv/include/asm/csr.h 
+> b/arch/riscv/include/asm/csr.h
+> index cec462e198ce..d41536c3f8d4 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -40,11 +40,10 @@
+>  #ifndef CONFIG_64BIT
+>  #define SATP_PPN	_AC(0x003FFFFF, UL)
+>  #define SATP_MODE_32	_AC(0x80000000, UL)
+> -#define SATP_MODE	SATP_MODE_32
+>  #else
+>  #define SATP_PPN	_AC(0x00000FFFFFFFFFFF, UL)
+>  #define SATP_MODE_39	_AC(0x8000000000000000, UL)
+> -#define SATP_MODE	SATP_MODE_39
+> +#define SATP_MODE_48	_AC(0x9000000000000000, UL)
+>  #endif
+> 
+>  /* Exception cause high bit - is an interrupt if set */
+> diff --git a/arch/riscv/include/asm/fixmap.h 
+> b/arch/riscv/include/asm/fixmap.h
+> index 2368d49eb4ef..d891cf9c73c5 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -27,6 +27,7 @@ enum fixed_addresses {
+>  	FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+>  	FIX_PTE,
+>  	FIX_PMD,
+> +	FIX_PUD,
+>  	FIX_TEXT_POKE1,
+>  	FIX_TEXT_POKE0,
+>  	FIX_EARLYCON_MEM_BASE,
+> diff --git a/arch/riscv/include/asm/page.h 
+> b/arch/riscv/include/asm/page.h
+> index 48bb09b6a9b7..5e77fe7f0d6d 100644
+> --- a/arch/riscv/include/asm/page.h
+> +++ b/arch/riscv/include/asm/page.h
+> @@ -31,7 +31,19 @@
+>   * When not using MMU this corresponds to the first free page in
+>   * physical memory (aligned on a page boundary).
+>   */
+> +#ifdef CONFIG_RELOCATABLE
+> +#define PAGE_OFFSET		__page_offset
+> +
+> +#ifdef CONFIG_64BIT
+> +/*
+> + * By default, CONFIG_PAGE_OFFSET value corresponds to SV48 address 
+> space so
+> + * define the PAGE_OFFSET value for SV39.
+> + */
+> +#define PAGE_OFFSET_L3		0xffffffe000000000
+> +#endif /* CONFIG_64BIT */
+> +#else
+>  #define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
+> +#endif /* CONFIG_RELOCATABLE */
+> 
+>  #define KERN_VIRT_SIZE (-PAGE_OFFSET)
+> 
+> @@ -102,6 +114,9 @@ extern unsigned long pfn_base;
+>  extern unsigned long max_low_pfn;
+>  extern unsigned long min_low_pfn;
+>  extern unsigned long kernel_virt_addr;
+> +#ifdef CONFIG_RELOCATABLE
+> +extern unsigned long __page_offset;
+> +#endif
+> 
+>  #define __pa_to_va_nodebug(x)	((void *)((unsigned long) (x) + 
+> va_pa_offset))
+>  #define linear_mapping_va_to_pa(x)	((unsigned long)(x) - va_pa_offset)
+> diff --git a/arch/riscv/include/asm/pgalloc.h 
+> b/arch/riscv/include/asm/pgalloc.h
+> index 3f601ee8233f..540eaa5a8658 100644
+> --- a/arch/riscv/include/asm/pgalloc.h
+> +++ b/arch/riscv/include/asm/pgalloc.h
+> @@ -36,6 +36,42 @@ static inline void pud_populate(struct mm_struct
+> *mm, pud_t *pud, pmd_t *pmd)
+> 
+>  	set_pud(pud, __pud((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+>  }
+> +
+> +static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4d, 
+> pud_t *pud)
+> +{
+> +	if (pgtable_l4_enabled) {
+> +		unsigned long pfn = virt_to_pfn(pud);
+> +
+> +		set_p4d(p4d, __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+> +	}
+> +}
+> +
+> +static inline void p4d_populate_safe(struct mm_struct *mm, p4d_t *p4d,
+> +				     pud_t *pud)
+> +{
+> +	if (pgtable_l4_enabled) {
+> +		unsigned long pfn = virt_to_pfn(pud);
+> +
+> +		set_p4d_safe(p4d,
+> +			     __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
+> +	}
+> +}
+> +
+> +static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long 
+> addr)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return (pud_t *)__get_free_page(
+> +				GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+> +	return NULL;
+> +}
+> +
+> +static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		free_page((unsigned long)pud);
+> +}
+> +
+> +#define __pud_free_tlb(tlb, pud, addr)  pud_free((tlb)->mm, pud)
+>  #endif /* __PAGETABLE_PMD_FOLDED */
+> 
+>  #define pmd_pgtable(pmd)	pmd_page(pmd)
+> diff --git a/arch/riscv/include/asm/pgtable-64.h
+> b/arch/riscv/include/asm/pgtable-64.h
+> index b15f70a1fdfa..c84c31fbf8da 100644
+> --- a/arch/riscv/include/asm/pgtable-64.h
+> +++ b/arch/riscv/include/asm/pgtable-64.h
+> @@ -8,16 +8,32 @@
+> 
+>  #include <linux/const.h>
+> 
+> -#define PGDIR_SHIFT     30
+> +extern bool pgtable_l4_enabled;
+> +
+> +#define PGDIR_SHIFT     (pgtable_l4_enabled ? 39 : 30)
+>  /* Size of region mapped by a page global directory */
+>  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+>  #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
+> 
+> +/* pud is folded into pgd in case of 3-level page table */
+> +#define PUD_SHIFT	30
+> +#define PUD_SIZE	(_AC(1, UL) << PUD_SHIFT)
+> +#define PUD_MASK	(~(PUD_SIZE - 1))
+> +
+>  #define PMD_SHIFT       21
+>  /* Size of region mapped by a page middle directory */
+>  #define PMD_SIZE        (_AC(1, UL) << PMD_SHIFT)
+>  #define PMD_MASK        (~(PMD_SIZE - 1))
+> 
+> +/* Page Upper Directory entry */
+> +typedef struct {
+> +	unsigned long pud;
+> +} pud_t;
+> +
+> +#define pud_val(x)      ((x).pud)
+> +#define __pud(x)        ((pud_t) { (x) })
+> +#define PTRS_PER_PUD    (PAGE_SIZE / sizeof(pud_t))
+> +
+>  /* Page Middle Directory entry */
+>  typedef struct {
+>  	unsigned long pmd;
+> @@ -60,6 +76,16 @@ static inline void pud_clear(pud_t *pudp)
+>  	set_pud(pudp, __pud(0));
+>  }
+> 
+> +static inline pud_t pfn_pud(unsigned long pfn, pgprot_t prot)
+> +{
+> +	return __pud((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
+> +}
+> +
+> +static inline unsigned long _pud_pfn(pud_t pud)
+> +{
+> +	return pud_val(pud) >> _PAGE_PFN_SHIFT;
+> +}
+> +
+>  static inline unsigned long pud_page_vaddr(pud_t pud)
+>  {
+>  	return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
+> @@ -70,6 +96,15 @@ static inline struct page *pud_page(pud_t pud)
+>  	return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
+>  }
+> 
+> +#define mm_pud_folded	mm_pud_folded
+> +static inline bool mm_pud_folded(struct mm_struct *mm)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+> 
+>  static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
+> @@ -90,4 +125,64 @@ static inline unsigned long _pmd_pfn(pmd_t pmd)
+>  #define pmd_ERROR(e) \
+>  	pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
+> 
+> +#define pud_ERROR(e)	\
+> +	pr_err("%s:%d: bad pud %016lx.\n", __FILE__, __LINE__, pud_val(e))
+> +
+> +static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		*p4dp = p4d;
+> +	else
+> +		set_pud((pud_t *)p4dp, (pud_t){ p4d_val(p4d) });
+> +}
+> +
+> +static inline int p4d_none(p4d_t p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return (p4d_val(p4d) == 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int p4d_present(p4d_t p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return (p4d_val(p4d) & _PAGE_PRESENT);
+> +
+> +	return 1;
+> +}
+> +
+> +static inline int p4d_bad(p4d_t p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return !p4d_present(p4d);
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void p4d_clear(p4d_t *p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		set_p4d(p4d, __p4d(0));
+> +}
+> +
+> +static inline unsigned long p4d_page_vaddr(p4d_t p4d)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return (unsigned long)pfn_to_virt(
+> +				p4d_val(p4d) >> _PAGE_PFN_SHIFT);
+> +
+> +	return pud_page_vaddr((pud_t) { p4d_val(p4d) });
+> +}
+> +
+> +#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+> +
+> +static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+> +{
+> +	if (pgtable_l4_enabled)
+> +		return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+> +
+> +	return (pud_t *)p4d;
+> +}
+> +
 
-A source code analysis approach by the means of the semantic patch languag=
-e
-(Coccinelle software) pointed an implementation detail out for further
-development considerations.
+In my test I had to put
+#define pud_offset pud_offset
+here or else I got a compilation error due to pud_offset being redefined 
+on include/linux/pgtable.h:
 
-The functions =E2=80=9Cmtu3_gadget_ep_set_halt=E2=80=9D and =E2=80=9Cmtu3_=
-gadget_ep_set_wedge=E2=80=9D check
-at the beginning if the input parameter =E2=80=9Cep=E2=80=9D is a null poi=
-nter.
-The error code =E2=80=9C-EINVAL=E2=80=9D will be returned then.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/usb/mtu3/mtu3_gadget.c?id=3D1590a2e1c681b0991bd42c992cabfd380e0338f2=
-#n371
-https://elixir.bootlin.com/linux/v5.7.2/source/drivers/usb/mtu3/mtu3_gadge=
-t.c#L371
-
-Can it be nicer to assign the variable =E2=80=9Cmep=E2=80=9D only after a =
-successful check
-instead of an initialisation before?
-
-Regards,
-Markus
+#ifndef pud_offset
+static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+{
+         return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+}
+#define pud_offset pud_offset
+#endif
