@@ -6,94 +6,90 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9788C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD9C20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516B42081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593229313;
-	bh=Ali5IZNLTIW8llvxQDSSeqrZ636VTDReJzcRNiixCTI=;
+	s=default; t=1593229627;
+	bh=7M/aFJ4oCOEcKIXVhUAL7PKvd2xl0X++eFKfo6b95LY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UWo8c7rjKUsxYthn8e+jH1UyTnszwPvwWAG2zNyR4d3CRdZCgVeXsFAMFjP9YlwV/
-	 WXbrwcrSWi/tduSI3DtiX8R8Pa610hTzzUU8PA5bAB/LdRAjG8rRcvFjPSUfOvu5Qt
-	 KNAJQniuxUe34qzIGYKdPF6ZoHJPNTMYmyttLoPM=
+	b=oJKIjXiPX1DILR3UDFsYum39nhp2Mpk2egzVCbUbkTv63yYcQ0+RJ6P04L7u+yJAG
+	 14kgBqcBwrqpDJ2leN2pUzSRqhu+PNcFhXakJGTyVRyzyMBcF+B/rrtRKAO2/i3ed4
+	 rHIkd7dUHy52DHAXqg9WTQL/z5w211bn32VGSrkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgF0Dlw (ORCPT
+        id S1725921AbgF0DrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 23:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46520 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 23:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgF0Dlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 23:41:51 -0400
+        id S1725828AbgF0DrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 23:47:05 -0400
 Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 679D520857;
-        Sat, 27 Jun 2020 03:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E39712073E;
+        Sat, 27 Jun 2020 03:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593229310;
-        bh=Ali5IZNLTIW8llvxQDSSeqrZ636VTDReJzcRNiixCTI=;
+        s=default; t=1593229625;
+        bh=7M/aFJ4oCOEcKIXVhUAL7PKvd2xl0X++eFKfo6b95LY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aYgiC1Cmppmj+lWV8ausXHZpLkIb+IgodES53DwyIvVVnwsgutwPqyuqj1OU0f6Av
-         Ft7CT76o3C9myEmF/idXHzZk0aN9LpIc+UD86qfFy32f5YEnrjx30YBIoE8Iw3nEb0
-         /FEvX8jGyVucATfpIHWtMsBVvO9AhBEurlojSejM=
-Date:   Fri, 26 Jun 2020 20:41:48 -0700
+        b=bUr8sMsxHrVrBaccYyd85cCqLAtEnJmUNoxmm8PZWhwZHcc1jK7BN4eRWytH9bhos
+         OmlGTTxNjjajBsmYLsSq7wQIeFy3Q+XzmFVun188tt8rZHUzX0XziHzXUHD6TPRkYX
+         9Lv0CH1dAtiKWACeliqstPy+PlbMQcAC2ldm8GnQ=
+Date:   Fri, 26 Jun 2020 20:47:04 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: mmotm 2020-06-25-20-36 uploaded (mm/memory-failure.c)
-Message-Id: <20200626204148.6c8c3c359e8baa310ecb744f@linux-foundation.org>
-In-Reply-To: <700cf5c7-6e8c-4c09-5ab6-5f946689b012@infradead.org>
-References: <20200626033744.URfGO%akpm@linux-foundation.org>
-        <700cf5c7-6e8c-4c09-5ab6-5f946689b012@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Vladimir Davydov <vdavydov@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ying Huang <ying.huang@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch] mm: Increase pagevec size on large system
+Message-Id: <20200626204704.f023988699421db00e9bdab7@linux-foundation.org>
+In-Reply-To: <20200627031304.GC25039@casper.infradead.org>
+References: <d1cc9f12a8ad6c2a52cb600d93b06b064f2bbc57.1593205965.git.tim.c.chen@linux.intel.com>
+        <20200627031304.GC25039@casper.infradead.org>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 15:09:08 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+On Sat, 27 Jun 2020 04:13:04 +0100 Matthew Wilcox <willy@infradead.org> wrote:
 
-> On 6/25/20 8:37 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-06-25-20-36 has been uploaded to
+> On Fri, Jun 26, 2020 at 02:23:03PM -0700, Tim Chen wrote:
+> > Enlarge the pagevec size to 31 to reduce LRU lock contention for
+> > large systems.
 > > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> > 
+> > The LRU lock contention is reduced from 8.9% of total CPU cycles
+> > to 2.2% of CPU cyles.  And the pmbench throughput increases
+> > from 88.8 Mpages/sec to 95.1 Mpages/sec.
 > 
-> when CONFIG_MIGRATION is not set/enabled:
+> The downside here is that pagevecs are often stored on the stack (eg
+> truncate_inode_pages_range()) as well as being used for the LRU list.
+> On a 64-bit system, this increases the stack usage from 128 to 256 bytes
+> for this array.
 > 
-> ../mm/memory-failure.c: In function ‘new_page’:
-> ../mm/memory-failure.c:1692:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
->   return alloc_migration_target(p, (unsigned long)&mtc);
->          ^~~~~~~~~~~~~~~~~~~~~~
->          alloc_migrate_target
-> ../mm/memory-failure.c:1692:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
->   return alloc_migration_target(p, (unsigned long)&mtc);
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> I wonder if we could do something where we transform the ones on the
+> stack to DECLARE_STACK_PAGEVEC(pvec), and similarly DECLARE_LRU_PAGEVEC
+> the ones used for the LRUs.  There's plenty of space in the header to
+> add an unsigned char sz, delete PAGEVEC_SIZE and make it an variable
+> length struct.
+> 
+> Or maybe our stacks are now big enough that we just don't care.
+> What do you think?
 
-Thanks.
+And I wonder how useful CONFIG_NR_CPUS is for making this decision. 
+Presumably a lot of general-purpose kernel builds have CONFIG_NR_CPUS
+much larger than the actual number of CPUs.
 
-Appears to be due to Joonsoo Kim's "mm/migrate: make a standard
-migration target allocation function".
+I can't think of much of a fix for this, apart from making it larger on
+all kernels, Is there a downside to this?
 
