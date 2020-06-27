@@ -2,129 +2,184 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA574C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D592184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2692089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cMqLOo14"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYwbbD/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgF0MzJ (ORCPT
+        id S1726661AbgF0M4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 08:55:09 -0400
-Received: from mout.gmx.net ([212.227.17.22]:52029 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgF0MzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 08:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593262492;
-        bh=OZFz73ODcG4HFVet5IxLP7LoD5Tul3KsEAIISgKqlEA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=cMqLOo14qDy43kwqRC5RunQ9/8+1rZmrsf0EuKYO6Mm+jhcMb74jiRjlsSJu0NbWJ
-         j9xto0rcAQ/usNU4tZMeNS5pJUoGyssE19JrqoLbJuYX4UwasjtPv+05JXMffVlMJX
-         XEFSGlXuHddcgz7xuYOC5hL1aLL4vGG5x+zoci4E=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1N3siG-1ipfml3n96-00zoC5; Sat, 27 Jun 2020 14:54:52 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH] drivers/s390/char/tty3270: Remove function callback casts
-Date:   Sat, 27 Jun 2020 14:54:17 +0200
-Message-Id: <20200627125417.18887-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 27 Jun 2020 08:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgF0M4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 08:56:03 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D5CC03E979;
+        Sat, 27 Jun 2020 05:56:03 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i4so6087878pjd.0;
+        Sat, 27 Jun 2020 05:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OGvZib8pdw3S5tlf2fLr9MTmZjnf+euhMJXGijUwvfw=;
+        b=aYwbbD/J1SI38fp02GDl82/GSSX9R02Ewea3Re0BXnrbRfsdZqIo/UtgbmebQMNKxs
+         guZtJS/EMfpLcYhwjQtnkDF63ioRJeB8aW2icRTjzyJdkfv9ytIj5uS7JpL1aYZG7Rwo
+         l0CtetgR3mdslTKD8MyQsrvHwhIu+NL69PUSajfJKBwOdK5PsFOFFRY7l6rp+kM6wqZ3
+         5HKs6ULkpo5XQxFXoZAIkrCPPNdUJef6uMnzTL85FZhM4J2L1J0fuPejiRl9v4mN/HHy
+         71Avk3D5c6C1y0Wh27LbkSOnzhVJe9W744JI3YG++0m3uwKRY2PSvRV2QS4gbvQzK3A8
+         RHdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OGvZib8pdw3S5tlf2fLr9MTmZjnf+euhMJXGijUwvfw=;
+        b=pxJyxNdVpQCWD9oM42z8fHzGg9Rl24/eZbStYcFFWFZyIjlEww+zmw7ZtNxLi6Ru5z
+         CB7TnFRermaIssqG8oobL9DmRpRNaFTkd0K1reqn8AVdDCySYsvXuRaYHWXDHTP7jOwQ
+         ZlmPkSLIvouV0eepIKPOGGV7MoqN4rzMbo63CPBw1FQrlaKqVIc83GpeHOQNsB2yvvhy
+         LeLO+IJJ3eOQcjehq64kgm4a7X4aDxkSOEtufZ6zyDb95cRT69Ccc2/CTudX1ileOury
+         NtOm97NcLVAZA0eZPUTuVY7q+8QAtccZtOtgBCgsI9Z3p2dI1PYEilPwU11EUdw3BKq1
+         6eGg==
+X-Gm-Message-State: AOAM533o6WUVitefA8xz7BTAY/eq+wjBP+tj/oIv7tAIGdi2tlljN6zP
+        +9ak/WNkeIyMY+u4+9k6WTquglHJfDgjHw==
+X-Google-Smtp-Source: ABdhPJzLmyVikN5w48/X6MhRGaWzTPhpgXGppM+9aXL0CyTAu7JOQk/LEbxCUKt6DQ7oSuA38j1o0w==
+X-Received: by 2002:a17:90b:a11:: with SMTP id gg17mr8499048pjb.74.1593262562502;
+        Sat, 27 Jun 2020 05:56:02 -0700 (PDT)
+Received: from localhost.localdomain ([211.195.169.54])
+        by smtp.gmail.com with ESMTPSA id o1sm13873552pjp.37.2020.06.27.05.56.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 05:56:02 -0700 (PDT)
+From:   Park Ju Hyung <qkrwngud825@gmail.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Park Ju Hyung <qkrwngud825@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] exfat: implement "quiet" option for setattr
+Date:   Sat, 27 Jun 2020 21:55:09 +0900
+Message-Id: <20200627125509.142393-1-qkrwngud825@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WuLVlRTrugTdMXef4+/XXVnc8C9knOmuEp8gUSwkWy9Toq23Y5B
- MyN5hAU4IiecdUDVIvl+O1g8No+219xwL53VlaOGWjTVLPgWWpIzZ7kaoJvi/BdIrDmhNq2
- zjh0RnLOgL1kUHJy1cXOEJtsSGnIwBtBIgnoQ0jmyeeyWRTav0zTNhYDOLih8KfHTDf858h
- bn0dcKhtppCqNkjsUwTZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HUfvtbJHxCU=:wVnHHWAAYZzyqtb6vmVCxL
- woNLDkTI0KAiNyG/mbSv1JTsnjv09BojAkwDuw/ytyOYrjDteKWh6gmRnOQWTv+SqCFveXZTG
- vZcsBYf6lR5pvngUEiamQYCHj+f6t2HgyUKFV8RlGIuRkh2EVhLflig21KSC8GYX+HBTORehW
- Twxwm8ppmQ7Shjv7tAniEhhy9ZC2dzA4tiEFaRwfZ8PgqFWzHMcxDDSG7KB5Mbco8NB8/1/ei
- 0laH8IvM2AtcFCLMtlU0ZCc+zmbq9gDdybmjwfIroi4lhi0RV5LLi0b1dG6SF6U9NxtryRw5O
- hYE+luzPT58uie5fdVd0RBfDV0wqQDmGxmycCRD1BQJMrqjrXfhGikWD7FGrxMsR90WolEoXL
- PkzuFNxh9xFVrGKJPWvqs5U0PGT1UlChCmlZ3qWnhYJQubNe9T1hIk57hvk9cdDxxSsW7NCxQ
- fSXr2O/GR0TLX1uSSoPmZkiTl5O6KzgQh1ib4i6omTOrXI3u2f8qBZ/UQ85usA1qat2abnmez
- vYkCZYobxnRJNgPeDFq5mLn7TEtAU5h4fX3ttu+N8EDDblCg/7fFEKgKcAs3EzFNnlAdMg3tm
- g0Tg7RQpxP8k/JTGv7h/2ijofU7NEBRNr4QaQAuKKl7yjKcE7InawrIjghaRRhMB0KR7Svyt/
- /+HJcs6gnbkPEsykDU+7FnDcjXu5J1zs3Uij6QOcZ1Ms07rLHX7ZXI1dhN9iWer/jhoNfiTKG
- yp5QqTdCt8EgzbBn59h66Hxr0EWYepfURo/pv3yIT3G28yF5tghjsFsJgMdfxD6+XPnsSflwH
- jpb26ZOx6bPcQsIFk7fYin8dlRJtf11J72vDFa/NjES2p6FFwptPRf1oNTjJNHZPAww9f1XST
- 8ssOWMRWLGdq5whMhYt7XJqTqmAeQFV4DyCiN4J/uHXrtZ0nlVK3y+0p2Ayz6kBZ4HYClSMrP
- UpvkMzdFb4KmkSDuySzuKD9F3uAec/fBYk1j6Bdbxf5zRFEji4mmolm0QDDFYMuGEmTrLexmc
- 9pWJZWkYbdnI+c9McaavZYduNGXOpLVi8RTgxlP4oON8fMkkD17cwYLpup56Yg/2REgXPC1TH
- 5NvZF6vkVIsx/Jpwrhf0VL2PO1+6fbJpTIa/B1+0YqHxlnRO/IQdL/rX/NcBQojl3MNHnnsBK
- zGopnAW8+Br3XkJ+90uUI1jDU+j9oLlDYp1AlcI1/vb0bzI7B1PUCazzogYgEXJWqBSU19xff
- EwfePvX23zwtVPKOO
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to enable -Wcast-function-type in the top-level Makefile to
-support Control Flow Integrity builds, remove all the function callback
-casts.
+Few programs, especially old ones, simply don't want to work
+if there isn't a POSIX-compliant setattr.
 
-To do this modify the function prototypes accordingly.
+Follow vfat and implement a new "quiet" option to workaround this.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/s390/char/tty3270.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Signed-off-by: Park Ju Hyung <qkrwngud825@gmail.com>
+---
+ fs/exfat/exfat_fs.h |  2 ++
+ fs/exfat/file.c     | 13 +++++++++++--
+ fs/exfat/super.c    |  7 +++++++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index 98d7fc152e32..aec996de44d9 100644
-=2D-- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -556,8 +556,9 @@ tty3270_scroll_backward(struct kbd_data *kbd)
-  * Pass input line to tty.
-  */
- static void
--tty3270_read_tasklet(struct raw3270_request *rrq)
-+tty3270_read_tasklet(unsigned long data)
- {
-+	struct raw3270_request *rrq =3D (struct raw3270_request *)data;
- 	static char kreset_data =3D TW_KR;
- 	struct tty3270 *tp =3D container_of(rrq->view, struct tty3270, view);
- 	char *input;
-@@ -652,8 +653,9 @@ tty3270_issue_read(struct tty3270 *tp, int lock)
-  * Hang up the tty
-  */
- static void
--tty3270_hangup_tasklet(struct tty3270 *tp)
-+tty3270_hangup_tasklet(unsigned long data)
- {
-+	struct tty3270 *tp =3D (struct tty3270 *)data;
- 	tty_port_tty_hangup(&tp->port, true);
- 	raw3270_put_view(&tp->view);
- }
-@@ -752,11 +754,9 @@ tty3270_alloc_view(void)
-
- 	tty_port_init(&tp->port);
- 	timer_setup(&tp->timer, tty3270_update, 0);
--	tasklet_init(&tp->readlet,
--		     (void (*)(unsigned long)) tty3270_read_tasklet,
-+	tasklet_init(&tp->readlet, tty3270_read_tasklet,
- 		     (unsigned long) tp->read);
--	tasklet_init(&tp->hanglet,
--		     (void (*)(unsigned long)) tty3270_hangup_tasklet,
-+	tasklet_init(&tp->hanglet, tty3270_hangup_tasklet,
- 		     (unsigned long) tp);
- 	INIT_WORK(&tp->resize_work, tty3270_resize_work);
-
-=2D-
-2.20.1
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 3aed8e22087a..66837baf42d2 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -201,6 +201,8 @@ struct exfat_mount_options {
+ 	unsigned short allow_utime;
+ 	/* charset for filename input/display */
+ 	char *iocharset;
++	/* fake return success on setattr(e.g. chmods/chowns) */
++	unsigned char quiet;
+ 	/* on error: continue, panic, remount-ro */
+ 	enum exfat_error_mode errors;
+ 	unsigned utf8:1, /* Use of UTF-8 character set */
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 6707f3eb09b5..2ed6be7cab15 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -295,7 +295,7 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
+ 	    attr->ia_size > i_size_read(inode)) {
+ 		error = exfat_cont_expand(inode, attr->ia_size);
+ 		if (error || attr->ia_valid == ATTR_SIZE)
+-			return error;
++			goto out;
+ 		attr->ia_valid &= ~ATTR_SIZE;
+ 	}
+ 
+@@ -309,8 +309,11 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
+ 
+ 	error = setattr_prepare(dentry, attr);
+ 	attr->ia_valid = ia_valid;
+-	if (error)
++	if (error) {
++		if (sbi->options.quiet)
++			error = 0;
+ 		goto out;
++	}
+ 
+ 	if (((attr->ia_valid & ATTR_UID) &&
+ 	     !uid_eq(attr->ia_uid, sbi->options.fs_uid)) ||
+@@ -322,6 +325,12 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
+ 		goto out;
+ 	}
+ 
++	if (error) {
++		if (sbi->options.quiet)
++			error = 0;
++		goto out;
++	}
++
+ 	/*
+ 	 * We don't return -EPERM here. Yes, strange, but this is too
+ 	 * old behavior.
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index b5bf6dedbe11..030db33eed35 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -145,6 +145,8 @@ static int exfat_show_options(struct seq_file *m, struct dentry *root)
+ 	seq_printf(m, ",fmask=%04o,dmask=%04o", opts->fs_fmask, opts->fs_dmask);
+ 	if (opts->allow_utime)
+ 		seq_printf(m, ",allow_utime=%04o", opts->allow_utime);
++	if (opts->quiet)
++		seq_puts(m, ",quiet");
+ 	if (opts->utf8)
+ 		seq_puts(m, ",iocharset=utf8");
+ 	else if (sbi->nls_io)
+@@ -198,6 +200,7 @@ enum {
+ 	Opt_fmask,
+ 	Opt_allow_utime,
+ 	Opt_charset,
++	Opt_quiet,
+ 	Opt_errors,
+ 	Opt_discard,
+ 	Opt_time_offset,
+@@ -224,6 +227,7 @@ static const struct fs_parameter_spec exfat_parameters[] = {
+ 	fsparam_u32oct("fmask",			Opt_fmask),
+ 	fsparam_u32oct("allow_utime",		Opt_allow_utime),
+ 	fsparam_string("iocharset",		Opt_charset),
++	fsparam_flag("quiet",			Opt_quiet),
+ 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
+ 	fsparam_flag("discard",			Opt_discard),
+ 	fsparam_s32("time_offset",		Opt_time_offset),
+@@ -274,6 +278,9 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 		opts->iocharset = param->string;
+ 		param->string = NULL;
+ 		break;
++	case Opt_quiet:
++		opts->quiet = 1;
++		break;
+ 	case Opt_errors:
+ 		opts->errors = result.uint_32;
+ 		break;
+-- 
+2.27.0
 
