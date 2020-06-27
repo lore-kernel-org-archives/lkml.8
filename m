@@ -2,115 +2,110 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84016C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 21:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF267C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 21:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6222076E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 21:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrOHe2Al"
+	by mail.kernel.org (Postfix) with ESMTP id A8250206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 21:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593294392;
+	bh=F3oRDiJxIGtXcCW5CIdMLvfO8YHc58JcaOd1gOgcwtg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hW8/YEzJCvNKF8vpubu0a79iVE+d/h8JlBqrhg5GpS7RVIr8HN7gLNyS1y/LSdd7q
+	 2dobkOCm6i8YK+4JNz8GgaeKt7pBZApOfYG3UIHi76G+6d75k0M9xtG/Ak5lg9iH7f
+	 6wJqZippQkySaFzrOcsYfrfc5xyEu3EmC/ObAp2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgF0VXl (ORCPT
+        id S1726069AbgF0Vqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 17:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgF0VXj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 17:23:39 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE54DC061794;
-        Sat, 27 Jun 2020 14:23:38 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f9so6214936pfn.0;
-        Sat, 27 Jun 2020 14:23:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mizxgkzS/h5RAiTRnXHHAMYgNZSKy87tz0psMUuXu0c=;
-        b=KrOHe2AlaGQ7tV28Vl9qyOQ0elfd8r//wq4xzvB5xDb5jWlg6mXfsKxabi0zi9yPbE
-         a3CGp38U8cqw2mebqkt6TnvwzPA6E6KEcgpIj8HCQ1rHyHT3QVxyrownujSHvkYTCVSa
-         Gy95rzA2weVyQoDCaBGwSARvG5wXI2h42LYwK1iUZUWKUYeZG14+sFo/aPCYLw2NwZJj
-         nBqydL7WFvWCAVkBuzJ2gva+wATslrp9imqMIKL3E0H/YMoAyiaNhBbjIsjfeCv51DOd
-         WRdGRRQ8YZYlJSkPBIPY8Mf5k8q0bkdsr138mWgQL9YfzyKrJwEngJSJT/C0ZJyP38ue
-         p6eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mizxgkzS/h5RAiTRnXHHAMYgNZSKy87tz0psMUuXu0c=;
-        b=WL5XpW+ecyqMidd+epiIEdTGXOpDdY1OzGTc9e11WJZQAeE+PCot1Rl7hKWyW2Pw+i
-         BCgxyGZLfayOq7kE63ciWQGohAhNuK9+gYynA5kEXes899u+p15Br/kwQxajkRyPI9Bo
-         POv7KSQP126MCTmALZJOhGoyDlOgZt6scb7yaSz+NLQTJ61zi+RFY83dT1dStDjhjS85
-         3Cj5At/iHhpGdmigOIB5jXLYrvJeYa/LHz3aLJtpXIP7D/6MORQ7lcl6g+ddbh6Hc7/2
-         DxyBeXu3zBOvxLun3YZr1XxhYdIrhgT2pjZli1+d3HjRQD8Oi1bUbijlqFRWWdcIWwMc
-         YoNA==
-X-Gm-Message-State: AOAM531mPBFfXHW2bJOYyAWxjVmDg9Lw4YVbSUmJVkUnYWpcF/6HQ7d+
-        JYL/XN5aeYDQLnAXt6CpebwweO2oE20=
-X-Google-Smtp-Source: ABdhPJyLzAtm2TextcgHnw6pDE2t7RidtLOm1t9FNzgTafND17DEExqOaKhxKo2F07v49LSV9JtDbQ==
-X-Received: by 2002:a62:e305:: with SMTP id g5mr8523544pfh.115.1593293018476;
-        Sat, 27 Jun 2020 14:23:38 -0700 (PDT)
-Received: from localhost (g2.222-224-226.ppp.wakwak.ne.jp. [222.224.226.2])
-        by smtp.gmail.com with ESMTPSA id mw5sm15217406pjb.27.2020.06.27.14.23.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 14:23:37 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 06:23:35 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Joerg Roedel <joro@8bytes.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 2/8] opeinrisc: switch to generic version of pte
- allocation
-Message-ID: <20200627212335.GJ1401039@lianli.shorne-pla.net>
-References: <20200627143453.31835-1-rppt@kernel.org>
- <20200627143453.31835-3-rppt@kernel.org>
+        Sat, 27 Jun 2020 17:46:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbgF0Vqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 17:46:31 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D52206D7;
+        Sat, 27 Jun 2020 21:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593294390;
+        bh=F3oRDiJxIGtXcCW5CIdMLvfO8YHc58JcaOd1gOgcwtg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wAzt260oInXC/o4Kk6eOxh8LSitHoSdBUCivK35C3smjvRGi5ImCI1v7tjBveJpVI
+         e8saLa3UUiQQjUeXnub97h7LM6FYD00SzzY38gJlYlikPJDUK1fP4ZkZVUVaZA4hkV
+         S5Mr94ySbi68duZyQ22U6YwUleyUm51VgBt55tVk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0180C3522FF8; Sat, 27 Jun 2020 14:46:29 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 14:46:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@fb.com>
+Subject: Re: [PATCH tick-sched] Clarify "NOHZ: local_softirq_pending" warning
+Message-ID: <20200627214629.GH9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200626210506.GA27189@paulmck-ThinkPad-P72>
+ <CALCETrXN5Mm7yvDPsD7Ok=QAVoLH_fnEOgtdU2QCP+-q9u_ALA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627143453.31835-3-rppt@kernel.org>
+In-Reply-To: <CALCETrXN5Mm7yvDPsD7Ok=QAVoLH_fnEOgtdU2QCP+-q9u_ALA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 05:34:47PM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On Sat, Jun 27, 2020 at 02:02:15PM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 26, 2020 at 2:05 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > Currently, can_stop_idle_tick() prints "NOHZ: local_softirq_pending HH"
+> > (where "HH" is the hexadecimal softirq vector number) when one or more
+> > non-RCU softirq handlers are still enablded when checking to stop the
+> > scheduler-tick interrupt.  This message is not as enlightening as one
+> > might hope, so this commit changes it to "NOHZ tick-stop error: Non-RCU
+> > local softirq work is pending, handler #HH.
 > 
-> Replace pte_alloc_one(), pte_free() and pte_free_kernel() with the generic
-> implementation. The only actual functional change is the addition of
-> __GFP_ACCOUT for the allocation of the user page tables.
-> 
-> The pte_alloc_one_kernel() is kept back because its implementation on
-> openrisc is different than the generic one.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Thank you!  It would be even better if it would explain *why* the
+> problem happened, but I suppose this code doesn't actually know.
 
-Thank's for this.
+Glad to help!
 
-Acked-by: Stafford Horne <shorne@gmail.com>
+To your point, is it possible to bisect the appearance of this message,
+or is it as usual non-reproducible?  (Hey, had to ask!)
+
+							Thanx, Paul
+
+> --Andy
+> 
+> >
+> > Reported-by: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> >
+> > ---
+> >
+> >  tick-sched.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+> > index f0199a4..349a25a 100644
+> > --- a/kernel/time/tick-sched.c
+> > +++ b/kernel/time/tick-sched.c
+> > @@ -927,7 +927,7 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+> >
+> >                 if (ratelimit < 10 &&
+> >                     (local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK)) {
+> > -                       pr_warn("NOHZ: local_softirq_pending %02x\n",
+> > +                       pr_warn("NOHZ tick-stop error: Non-RCU local softirq work is pending, handler #%02x\n",
+> >                                 (unsigned int) local_softirq_pending());
+> >                         ratelimit++;
+> >                 }
