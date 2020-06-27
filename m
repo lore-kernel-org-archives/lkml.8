@@ -2,104 +2,110 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5B721582
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HD+NUZbo"
+	by mail.kernel.org (Postfix) with ESMTP id AA1442168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593265446;
+	bh=zNHHbv8yZG7Tr/13VLMjcj16QvLBa4eunXcfuBB0iI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aIa2r0pa/k7Rqqt5WI1+4k5dV5kTKtzsJA1dTStBjTViG6KcaN1mkKhiYGxwg/lii
+	 k4diFZGZ98JxjCfz6kNHc15kJXNQLS38h8iXmgYa2c7oKVAlGIIQ+wqGwz9DIyxaO2
+	 0/ooL7NQx3eRH88JURGX89qHtgKNvjClefHLeNPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgF0Niy (ORCPT
+        id S1726639AbgF0NoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbgF0Nix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:38:53 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8CCC061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:53 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f2so5339915plr.8
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CJNHqa8gvcLLhfALNMkMRlCHFKoxj8TZvfmU4UMdGP0=;
-        b=HD+NUZboFHju7L3cLkxvtPxs7weFWcnAISy5wk3hqIj4pUdGsKZLNLODE+32CU7pQd
-         rPqyaaoWt+BhroPoapGsv9dGU9hrMp5y90nbF1v3lrDpCSXXx7KmjNjKfxeuWFv77n//
-         TjGIU2CqPwwJxqgdnBSc1BJ05xn765SwejklRMHgcJ1gCHEK7zvG5tEeheXMK1RJx8WA
-         fcZO7ZanVcVYELGCUYKGWaSbIz5eGys4D90ZTFoDCedRkmW2yYm/K7hW9l3qmXjbZAl/
-         pgVV2vrQT483Py/vm0OTp9XM+fxzkx2SwZ7awY6ld6cDKY/TsBSlCqNgBO/XTh054liM
-         UrUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CJNHqa8gvcLLhfALNMkMRlCHFKoxj8TZvfmU4UMdGP0=;
-        b=MZ1CnZtJFIncV7Thfd4BTFL0f4v8ZV1jbxhiZHYx5V97RrES29B7D31ITMt+Y/WGfb
-         RadBHW8Aas9CKxfk9P6jhsHZS7C5vNlZ9WO6mPiCYZJ0PeKyl7NTK/xW5oLCSfmtb3Fe
-         MglyPqV8RzqUM/M17qb7RZs6dxf74ca6ZaSCjAVGaFZQxsMMYxvaT4W38AreznnrBnU7
-         meAqWxifWIweg4FfsFXGKXeEoZxmDerpfQDMepSBjCbieUxHlNfpvyWS+oMvfph3pEuW
-         BX8nim0H3j1xxUm1SpMGFOCkgHH0jheZqjg8yvXne056oqbqLAN/zB8qIjLIlbjerbn4
-         3big==
-X-Gm-Message-State: AOAM532/OJ2xL4EQPy/Pv+rwiJigWPZlo0fWY7e+0xluuyOjgvIp6Uys
-        I1dDKNgi6/0AQqmVe3isRz8=
-X-Google-Smtp-Source: ABdhPJwVFRaTxXhMwPo5Xgv2yRikW8rqSlbwTtdcRs6qtcjsAlkmA6lRcFB+12Fn3RFj5FA2vU07Xg==
-X-Received: by 2002:a17:902:9889:: with SMTP id s9mr6113812plp.299.1593265132982;
-        Sat, 27 Jun 2020 06:38:52 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id x8sm15060086pje.31.2020.06.27.06.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 06:38:52 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 15/15] perf ftrace: add change log
-Date:   Sat, 27 Jun 2020 21:36:54 +0800
-Message-Id: <20200627133654.64863-16-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200627133654.64863-1-changbin.du@gmail.com>
-References: <20200627133654.64863-1-changbin.du@gmail.com>
+        Sat, 27 Jun 2020 09:44:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgF0NoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:44:04 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E060E21655;
+        Sat, 27 Jun 2020 13:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593265444;
+        bh=zNHHbv8yZG7Tr/13VLMjcj16QvLBa4eunXcfuBB0iI8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SngmTcfUOfo9kUTKtkZ3J4MycHrDGJ5ImkJB9EBQ1IrspYuPSHyFVfzkJ3On5wm2v
+         cN8vJFfFXl+/+5eNmJNgyeZE06A6wTAqihdNYv9CEHKUIEpP0B7rZk9c82D5a8eTHV
+         SpLGbuzqidSTTuAGnUL39HkoyzQO5VkbhWlQW7a8=
+Date:   Sat, 27 Jun 2020 14:43:59 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: bmc150_magn: Document and fix
+ missing compatibles
+Message-ID: <20200627144359.1ae30bb0@archlinux>
+In-Reply-To: <20200622060110.23192-1-krzk@kernel.org>
+References: <20200622060110.23192-1-krzk@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a change log after previous enhancements.
+On Mon, 22 Jun 2020 08:01:09 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/builtin-ftrace.c | 1 +
- 1 file changed, 1 insertion(+)
+> The driver supports also BMC156B and BMM150B but these compatibles had
+> redundant suffix "_magn".  Add existing compatibles marking them
+> deprecated along with adding a new, proper one for this family of
+> devices.
+Thanks for tidying this up.
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 0f8716ea0da4..3d73809150c8 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -3,6 +3,7 @@
-  * builtin-ftrace.c
-  *
-  * Copyright (c) 2013  LG Electronics,  Namhyung Kim <namhyung@kernel.org>
-+ * Copyright (c) 2020  Changbin Du <changbin.du@gmail.com>, significant enhancement.
-  */
- 
- #include "builtin.h"
--- 
-2.25.1
+The BMC156B is a dual magnetometer and accelerometer chip
+so for that one the _magn postfix probably is needed.
+
+Or am I missing something?
+
+The way this does SPI is rather odd but seems to be the same as the bmc150
+(two chips with non overlapping register maps).
+
+Jonathan
+
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Mark old compatibles as deprecated, add new one.
+> ---
+>  .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt    | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> index fd5fca90fb39..efeda055be6a 100644
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+> @@ -4,7 +4,11 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS00
+>  
+>  Required properties:
+>  
+> -  - compatible : should be "bosch,bmc150_magn"
+> +  - compatible : should be one of:
+> +                 "bosch,bmc150_magn"
+> +                 "bosch,bmc156"
+> +                 "bosch,bmc156_magn" (DEPRECATED, use bosch,bmc156)
+> +                 "bosch,bmm150_magn" (DEPRECATED, use bosch,bmc156)
+>    - reg : the I2C address of the magnetometer
+>  
+>  Optional properties:
 
