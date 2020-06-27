@@ -2,101 +2,126 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D29C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D12C207FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E03E2081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZbX8WV/"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="pDNCTrB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgF0Fvk (ORCPT
+        id S1725880AbgF0GIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 01:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        Sat, 27 Jun 2020 02:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgF0Fvj (ORCPT
+        with ESMTP id S1725861AbgF0GII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 01:51:39 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427F6C03E979;
-        Fri, 26 Jun 2020 22:51:39 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c75so10281499ila.8;
-        Fri, 26 Jun 2020 22:51:39 -0700 (PDT)
+        Sat, 27 Jun 2020 02:08:08 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F56DC03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 23:08:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h22so5837207pjf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 23:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/XK9O5e9WYvpLJ8CUU6lWm9WXLh2aPJdj62lrelY7z0=;
-        b=PZbX8WV/OaNA6DgZ6Is7kfIwNjE23/oVVVKhrWXOyaLkvljZiKFQePoBr4dSVTBwSC
-         E5Ham/C1pDzR++vWFqCyS32++gOZAMbZDS/kW+rKqCg0p3qxQvMVFeTM/zgo4uOQ+0dX
-         fh8hQOJiJS5uvlX3uUMpqREYSLfevJbuWyqfoLDtVjVs10d0JqdcC6BPHX4LUs28VTl4
-         osf2a3EZCj1YCIXf4AFKI8yQuH3L0vAOBtmOYnBZlOFjr/z6YS14c0oPxOeX7i91wXFQ
-         pYM3R4u9W0ySVOKT/fzyficDQ5xuil6YkvUyisGqmOjkhjtA8jc3y4an0/FDNet/PtuQ
-         OvEw==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=gtmGpW21SyNiDgvXMh+8DiMIETkQ9kJybZA1frDwgbo=;
+        b=pDNCTrB3ZFp49fu1m/cIDeOovHxi7U2+qFg3Y1RBH1bVnUf4jiE4QdPPtF5aT9cuDs
+         5Y855FtE7yLDZrDbsrqVZlk+PLkC1bkU1WxXdm1yj7u+D6efBtITTOdp1iJJIiTxG3FC
+         uRLHn/PNBZwwZG1fbYA1WBy0xHVWLDHfY4RbyczyvfMCmQVGahZ1OZ+ftk0ZSZd3KQre
+         LBsrRUdVl4ZXr9Uao4E2lHEBSwm7gqqlOI3yzD/Va2VLn7fNTkU5S+bEKWJMzL4iNZS8
+         /miqRlnZHNXhHe6/94aUYx5Kyq+jNsnGQaCMrblKS5Z3vnvdXnuhh0lFyhwD1qYEcvBF
+         KbvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/XK9O5e9WYvpLJ8CUU6lWm9WXLh2aPJdj62lrelY7z0=;
-        b=GM1VPccKK7+4bNMx00RnFfWAzjeIdk2Uzm16Q/wnHTa549SvN5C8241F4X0ZWI76jG
-         kMMYUzAYB4tJtC7zYLj2ccLC4yj2T6Jr5EseNPBWmGqwc2Fodd/Qh5c23l0d/866AJsa
-         p3q/3QoVP9SbRhgZjVDic8FOpUpbNlFyaYEzhGa1mO29pLZVaN++k2t5qEUM9+xsCUoC
-         QtBbvqlSpRzU5YyHABvx5bPTMQEatlwKX5bmc8h8zIhRHpiWoVQBU8V76rebhlz6FN7U
-         nQh010pDnHbkQe1zeID8odnt4YQOLoqB+w7lzm7gdCVtEHuztFGQ5S/xKCplej9Oc/Ak
-         FVLg==
-X-Gm-Message-State: AOAM5318SI3cQ/A0EAbqzvGsP+fsAEFxaHoHgQiE5VpxYlIUWTlFQ4lN
-        Q08XeedwVwqJt8Ms5vI37kPD0IfTPyQXZGKgBUU=
-X-Google-Smtp-Source: ABdhPJy6prHvLGtnP9a/NnYKc8hXTVPikrzhNjdmbCOe1v5Ut7+vGkabZpdZwEYEUy+QJdErXgomCSZw1GERy2496/Y=
-X-Received: by 2002:a05:6e02:48e:: with SMTP id b14mr6281351ils.143.1593237098484;
- Fri, 26 Jun 2020 22:51:38 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=gtmGpW21SyNiDgvXMh+8DiMIETkQ9kJybZA1frDwgbo=;
+        b=dZcybFcrgn6SBKUdi6LJvlNW2CUdUgoTg22KglmWozIbowVovSZD/uuxKo7y1xAV5U
+         7J/E1iMn9C1yR+zikLXYaDwrIzva9M7cqIbgelByxS0Mgz1lXV9KZ9h1K23onGcKRr5x
+         74NRAYNSWcBT8UEARO2umKLfOEk45P030uBI5EsDlel5pia6ggJ+XgYs9MJ3Aa02HdjG
+         K3aimp/14rCt5R3sofaLQt7ULxeYs2I9BI6uZKYg0UP2F+KDmDKZW9nb9o084QJINQHj
+         76SWux/b6PnF7Y/Pv7vW758mno1lO0IPR7So39Vv5kcXyyCLDcIcTI9OqRdWEcn3DZw4
+         V8Dg==
+X-Gm-Message-State: AOAM530wHp4+gVyCNWY1puIH9N8gH0z6azdclDWGVmhmxN4HopLwFJiR
+        Srunw0nibnFQ75vPPM21Q+t1+A==
+X-Google-Smtp-Source: ABdhPJzOj7jeZpv1+qG45pcMxryGt8tD6hrSSPeZ1vjoz3D7oBfTKsDKIdE57PLoNbpgdqliPbyhJQ==
+X-Received: by 2002:a17:902:854c:: with SMTP id d12mr5535900plo.343.1593238087725;
+        Fri, 26 Jun 2020 23:08:07 -0700 (PDT)
+Received: from localhost ([2406:7400:73:59a9:908:f18a:1156:5c38])
+        by smtp.gmail.com with ESMTPSA id x17sm12623639pjr.29.2020.06.26.23.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 23:08:06 -0700 (PDT)
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
+Date:   Sat, 27 Jun 2020 02:07:58 -0400
+To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] qlge.h: Adding the missing blank line after declarations
+Message-ID: <20200627060758.aqcqs763rjoxn6cp@pesu-pes-edu>
 MIME-Version: 1.0
-References: <20200624175116.67911-1-vaibhavgupta40@gmail.com> <20200626.121428.112500348777695663.davem@davemloft.net>
-In-Reply-To: <20200626.121428.112500348777695663.davem@davemloft.net>
-From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
-Date:   Sat, 27 Jun 2020 11:20:03 +0530
-Message-ID: <CAPBsFfDBogBbLuzMd2dLwR_DD2hMpoYsXnOpLwMyS7CJ0vUH3A@mail.gmail.com>
-Subject: Re: [PATCH v1] bnx2x: use generic power management
-To:     David Miller <davem@davemloft.net>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Jakub Kicinski <kuba@kernel.org>, aelior@marvell.com,
-        skalluru@marvell.com, GR-everest-linux-l2@marvell.com,
-        netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uc3xmhwmmyrchpyj"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jun 2020 at 00:44, David Miller <davem@davemloft.net> wrote:
->
-> From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> Date: Wed, 24 Jun 2020 23:21:17 +0530
->
-> > With legacy PM, drivers themselves were responsible for managing the
-> > device's power states and takes care of register states.
-> >
-> > After upgrading to the generic structure, PCI core will take care of
-> > required tasks and drivers should do only device-specific operations.
-> >
-> > The driver was also calling bnx2x_set_power_state() to set the power state
-> > of the device by changing the device's registers' value. It is no more
-> > needed.
-> >
-> > Compile-tested only.
-> >
-> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
->
-> Applied, thanks.
-Thanks everyone :)
--- Vaibhav Gupta
+
+--uc3xmhwmmyrchpyj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+---
+ drivers/staging/qlge/qlge.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index fc8c5ca8935d..0b971a633001 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -2224,6 +2224,7 @@ static inline void ql_write_db_reg_relaxed(u32 val, v=
+oid __iomem *addr)
+ static inline u32 ql_read_sh_reg(__le32  *addr)
+ {
+ 	u32 reg;
++
+ 	reg =3D  le32_to_cpu(*addr);
+ 	rmb();
+ 	return reg;
+--=20
+2.20.1
+
+
+--uc3xmhwmmyrchpyj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl724j4ACgkQ471Q5AHe
+Z2qsiwv/ePdacbSqM7HjdTGbMfaQorE4XMc5+PfBqp9J4zHmenJXvSWW5dBhoS3r
+PikmkdGfXpx95NW4V9i6FKWvikrMv/4wSwhkA9IwzLX8UXm/hK+qUBd8axHf2lxI
+TQiqvIZYRi29CveRcxedUk1ABBARBCG4ULtleTJ6SSS8ISWUGRFek52FkKaoM0Pg
+eHQqZJvBo3bQjpZdq4337knL0Xt3la1ZZxfz8ku6Ihd3CcQ/qa3Sq+eVzPtr/qpG
+E90WoWBKMpjbyzjPpcZymW0nEHroIvryPRCUdGYomoHq+ep+VllFAxANTlOKpS+z
+UnylebC5mFe8YZsvleF4Sj5fR0VUp8q0NIqCfnEQdhdESn5hX5SfutLXE5hcWOhI
+l0AzFcaknLaTUXAHPfJ4vsQaGaCS2yKal07y2y55urwe7Vv9AnbZAjg2ZF4AzVRm
+gRJfNEToUoYSFP7MAhQu6zLvToI7m4Mu6XV0yfKPX5c39a/7p68WaBGNrzN+Ybaa
+yy7DoEiq
+=35Tf
+-----END PGP SIGNATURE-----
+
+--uc3xmhwmmyrchpyj--
