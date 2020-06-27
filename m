@@ -7,322 +7,143 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D675920672
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EC420656
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ddLfQ6Zq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZEPxRX1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgF0E40 (ORCPT
+        id S1725936AbgF0E6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 00:56:26 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17453 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgF0E4X (ORCPT
+        Sat, 27 Jun 2020 00:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgF0E6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 00:56:23 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef6d1680000>; Fri, 26 Jun 2020 21:56:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 26 Jun 2020 21:56:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 26 Jun 2020 21:56:21 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 27 Jun
- 2020 04:56:21 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 27 Jun 2020 04:56:21 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ef6d1700001>; Fri, 26 Jun 2020 21:56:20 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
-        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
-        <nicoleotsuka@gmail.com>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v4 23/23] arm64: tegra: Add support for APE sound card on Jetson Nano and TX1
-Date:   Sat, 27 Jun 2020 10:23:45 +0530
-Message-ID: <1593233625-14961-24-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+        Sat, 27 Jun 2020 00:58:47 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AE6C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 21:58:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cm23so5788945pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 21:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tTXhqZ7TnzTvvD3MCRFk7Xtz6d7PKf4CLgE6fbNTgI0=;
+        b=ZEPxRX1etLBNp9y8gpc6fC9lFfoALnqIbJ+RBxe3qCnzTIm4DGe/AAK94uu7pqBZ/u
+         7KxbqQfv08JLP7Bzrn+/unGnDhPdBQsFf9ESatMwoSBgqzIKmo+o1HIM6sb3eamEg0yk
+         0Pm8DqMmWI6gbTc03SvTwUUMyoA1G/Dgu3W1k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tTXhqZ7TnzTvvD3MCRFk7Xtz6d7PKf4CLgE6fbNTgI0=;
+        b=rnohsbpHQ47E38m+zCf6b+KtrRpty1FcE9qx2b3cR1tWUjF7QasIPov9nozBwS9DPK
+         97D//4zETX18ueBJMllP9AD8U5fpL+LPAeQgNzC+z/c4ZTl0inPLgFN4FVuVLTUVd9Yj
+         NSosok7JfARBzWhtkBovi88Z2xZw5bKIkRqUTW7b8IjlO8htdI7+0ShHr4mNuPNCwg3l
+         BQ5i2594HDluzhUZ93Ul+zTu0BMcNAnD9aTGJGcYpLwJaS33xRo9ICwtH7hLwNWGwhak
+         PXbYP0WYhQK68TjJ/y0CVESxxwi6d4YcYUhEPja/mNBygwz1z1jtyvQPPNwGtWyAkdMP
+         8eLw==
+X-Gm-Message-State: AOAM531SAif12bba0eSUcUbbFowI0JNUFsXk/R77WxNYKlV6vjQRApNX
+        LA6Vt4HW/+ArvXqVtKGwBXAypC2TNB4=
+X-Google-Smtp-Source: ABdhPJytEzOhayAeT4MyIb691roE7NPXZD6jU5xTOudCguT/4ZRmsPqMDxd3GWIL4roDGlYtNGyglA==
+X-Received: by 2002:a17:90a:f0cb:: with SMTP id fa11mr6662805pjb.113.1593233926875;
+        Fri, 26 Jun 2020 21:58:46 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id a33sm16123185pgl.75.2020.06.26.21.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 21:58:46 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 1/2] platform/chrome: cros_ec_typec: Use workqueue for port update
+Date:   Fri, 26 Jun 2020 21:58:39 -0700
+Message-Id: <20200627045840.1314019-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593233769; bh=taGJx4bnloUgV2sDI2d4cd/qcV9qYym60K4y+pWho+I=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=ddLfQ6ZqgcJjKddkhaXM+i6RtbI0Dj80XmVHjRcUwn0osUbF1Cu38zjubnmUFsLH2
-         uEiAeafhsLn3CkzUVJB69CHPogvF7dMtAa5e4qCg84Y8kB0x19mr/lerMbRfCQJXaX
-         7BOLLueVWOH/vnWTwd2FCySGciMOD4n63HOPUMVVk1Qw0sLkvw2fXvKBc7Kkc2UJTc
-         NM0nuWCVNxLDz8QUS7LE0FFo3/QxfmXFphZdpgHlknF8xpl8vIFpUuJqnFQ5PHw0AB
-         qTGDZuiN5RqpEHLO3x+m6kYy/wgFz46gHrSX3UXYmRtskm+VlJuUPsPtw3JJhOG+Tl
-         6Bagn6CFRAwbQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds APE sound card support on Jetson Nano and TX1 which is based
-on simple-card driver. Earlier in the series simple-card driver is
-enhanced to work with multiple ASoC components. Based on board design
-required I/O interfaces are exposed for I2S and DMIC. More complicated
-audio paths will be added going forward.
+Use a work queue to call the port update routines, instead of doing it
+directly in the PD notifier callback. This will prevent other drivers
+with PD notifier callbacks from being blocked on the port update routine
+completing.
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 94 ++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 49 +++++++++++
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 67 +++++++++++++++
- 3 files changed, 210 insertions(+)
+ drivers/platform/chrome/cros_ec_typec.c | 28 ++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-index 3c21137..7c4b521 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -166,4 +166,98 @@
- 			};
- 		};
- 	};
-+
-+	tegra_sound {
-+		status = "okay";
-+
-+		simple-audio-card,name = "jetson-tx1-ape";
-+
-+		simple-audio-card,widgets =
-+			"Microphone",   "MIC",
-+			"Speaker",	"SPK";
-+
-+		simple-audio-card,routing =
-+			"SPK",		  "I2S1 Playback",
-+			"SPK",		  "I2S2 Playback",
-+			"SPK",		  "I2S3 Playback",
-+			"SPK",		  "I2S4 Playback",
-+			"SPK",		  "I2S5 Playback",
-+			"I2S1 Capture",   "MIC",
-+			"I2S2 Capture",   "MIC",
-+			"I2S3 Capture",   "MIC",
-+			"I2S4 Capture",   "MIC",
-+			"I2S5 Capture",   "MIC",
-+			"DMIC1 Capture",  "MIC",
-+			"DMIC2 Capture",  "MIC",
-+			"DMIC3 Capture",  "MIC";
-+
-+		/* BE links */
-+		simple-audio-card,dai-link@1 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s1>;
-+			frame-master = <&cpu_i2s1>;
-+
-+			cpu_i2s1: cpu@0 {
-+				sound-dai = <&tegra_i2s1 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@2 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s2>;
-+			frame-master = <&cpu_i2s2>;
-+
-+			cpu_i2s2: cpu@0 {
-+				sound-dai = <&tegra_i2s2 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@3 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s3>;
-+			frame-master = <&cpu_i2s3>;
-+
-+			cpu_i2s3: cpu@0 {
-+				sound-dai = <&tegra_i2s3 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@4 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s4>;
-+			frame-master = <&cpu_i2s4>;
-+
-+			cpu_i2s4: cpu@0 {
-+				sound-dai = <&tegra_i2s4 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@5 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s5>;
-+			frame-master = <&cpu_i2s5>;
-+
-+			cpu_i2s5: cpu@0 {
-+				sound-dai = <&tegra_i2s5 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@6 {
-+			cpu@0 {
-+				sound-dai = <&tegra_dmic1 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@7 {
-+			cpu@0 {
-+				sound-dai = <&tegra_dmic2 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@8 {
-+			cpu@0 {
-+				sound-dai = <&tegra_dmic3 0>;
-+			};
-+		};
-+	};
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 0c041b79cbba..630170fb2cbe 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -58,6 +58,7 @@ struct cros_typec_data {
+ 	/* Array of ports, indexed by port number. */
+ 	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+ 	struct notifier_block nb;
++	struct work_struct port_work;
  };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-index 721f66c..31994f6 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-@@ -842,4 +842,53 @@
- 			};
- 		};
- 	};
+ 
+ static int cros_typec_parse_port_props(struct typec_capability *cap,
+@@ -619,18 +620,29 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+ 	return 0;
+ }
+ 
+-static int cros_ec_typec_event(struct notifier_block *nb,
+-			       unsigned long host_event, void *_notify)
++static void cros_typec_port_work(struct work_struct *work)
+ {
+-	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+-						     nb);
+-	int ret, i;
++	struct cros_typec_data *typec = container_of(work,
++						     struct cros_typec_data,
++						     port_work);
++	int ret;
++	int i;
+ 
+ 	for (i = 0; i < typec->num_ports; i++) {
+ 		ret = cros_typec_port_update(typec, i);
+ 		if (ret < 0)
+ 			dev_warn(typec->dev, "Update failed for port: %d\n", i);
+ 	}
++}
 +
-+	tegra_sound {
-+		status = "okay";
 +
-+		simple-audio-card,name = "jetson-nano-ape";
-+		simple-audio-card,widgets =
-+			"Microphone",   "MIC",
-+			"Speaker",	"SPK";
-+		simple-audio-card,routing =
-+			"SPK",		  "I2S3 Playback",
-+			"SPK",		  "I2S4 Playback",
-+			"I2S3 Capture",   "MIC",
-+			"I2S4 Capture",   "MIC",
-+			"DMIC1 Capture",  "MIC",
-+			"DMIC2 Capture",  "MIC";
++static int cros_ec_typec_event(struct notifier_block *nb,
++			       unsigned long host_event, void *_notify)
++{
++	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
++						     nb);
 +
-+		/* BE links */
-+		simple-audio-card,dai-link@1 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s1>;
-+			frame-master = <&cpu_i2s1>;
++	schedule_work(&typec->port_work);
+ 
+ 	return NOTIFY_OK;
+ }
+@@ -689,6 +701,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	INIT_WORK(&typec->port_work, cros_typec_port_work);
 +
-+			cpu_i2s1: cpu@0 {
-+				sound-dai = <&tegra_i2s3 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@2 {
-+			format = "i2s";
-+			bitclock-master = <&cpu_i2s2>;
-+			frame-master = <&cpu_i2s2>;
-+
-+			cpu_i2s2: cpu@0 {
-+				sound-dai = <&tegra_i2s4 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@3 {
-+			cpu@0 {
-+				sound-dai = <&tegra_dmic1 0>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link@4 {
-+			cpu@0 {
-+				sound-dai = <&tegra_dmic2 0>;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 73ae58f..f1925f1 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1841,4 +1841,71 @@
- 			};
- 		};
- 	};
-+
-+	tegra_sound {
-+		status = "disabled";
-+
-+		compatible = "simple-cc-audio-card";
-+
-+		clocks = <&tegra_car TEGRA210_CLK_PLL_A>,
-+			 <&tegra_car TEGRA210_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA210_CLK_EXTERN1>;
-+		clock-names = "pll_a", "plla_out0", "aud_mclk";
-+		assigned-clocks = <&tegra_car TEGRA210_CLK_PLL_A>,
-+				  <&tegra_car TEGRA210_CLK_PLL_A_OUT0>,
-+				  <&tegra_car TEGRA210_CLK_EXTERN1>;
-+		assigned-clock-parents = <0>, <0>, <&tegra_car TEGRA210_CLK_PLL_A_OUT0>;
-+		assigned-clock-rates = <368640000>, <49152000>, <12288000>;
-+
-+		simple-audio-card,aux-devs = <&tegra_ahub>;
-+
-+		/* FE links */
-+		simple-audio-card,dai-link@0 {
-+			cpu@0 {
-+				sound-dai = <&tegra_admaif 0>;
-+			};
-+
-+			cpu@1 {
-+				sound-dai = <&tegra_admaif 1>;
-+			};
-+
-+			cpu@2 {
-+				sound-dai = <&tegra_admaif 2>;
-+			};
-+
-+			cpu@3 {
-+				sound-dai = <&tegra_admaif 3>;
-+			};
-+
-+			cpu@4 {
-+				sound-dai = <&tegra_admaif 4>;
-+			};
-+
-+			cpu@5 {
-+				sound-dai = <&tegra_admaif 5>;
-+			};
-+
-+			cpu@6 {
-+				sound-dai = <&tegra_admaif 6>;
-+			};
-+
-+			cpu@7 {
-+				sound-dai = <&tegra_admaif 7>;
-+			};
-+
-+			cpu@8 {
-+				sound-dai = <&tegra_admaif 8>;
-+			};
-+
-+			cpu@9 {
-+				sound-dai = <&tegra_admaif 9>;
-+			};
-+
-+			/*
-+			 * Empty codec list.
-+			 * Router MUX controls take care of audio path by
-+			 * connecting multiple components.
-+			 */
-+		};
-+	};
- };
++	/*
++	 * Safe to call port update here, since we haven't registered the
++	 * PD notifier yet.
++	 */
+ 	for (i = 0; i < typec->num_ports; i++) {
+ 		ret = cros_typec_port_update(typec, i);
+ 		if (ret < 0)
 -- 
-2.7.4
+2.27.0.212.ge8ba1cc988-goog
 
