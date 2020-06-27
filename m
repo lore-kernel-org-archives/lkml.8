@@ -2,101 +2,134 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B46FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD5E212CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3C22080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgF0HLL (ORCPT
+        id S1726116AbgF0HRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 03:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgF0HLK (ORCPT
+        Sat, 27 Jun 2020 03:17:16 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46492 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgF0HRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 03:11:10 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2487BC03E979;
-        Sat, 27 Jun 2020 00:11:10 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 18F98BC12F;
-        Sat, 27 Jun 2020 07:11:05 +0000 (UTC)
-Subject: Re: [PATCH v2] Replace HTTP links with HTTPS ones: Documentation/arm
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     mchehab+samsung@kernel.org, alexandre.belloni@bootlin.com,
-        nicolas.ferre@microchip.com, robh@kernel.org,
-        j.neuschaefer@gmx.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200626194408.61245-1-grandmaster@al2klimov.de>
- <20200626150911.3d4f9ca7@lwn.net>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <c5d49d66-7765-d6e3-003a-c17bdef1c6b0@al2klimov.de>
-Date:   Sat, 27 Jun 2020 09:10:58 +0200
+        Sat, 27 Jun 2020 03:17:13 -0400
+Received: by mail-io1-f70.google.com with SMTP id z65so6352986iof.13
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 00:17:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=IsMH+mXeozfn9dfFmwoLPcz9puu1DMjtE0f+O1IgldQ=;
+        b=KTzrfj6cUCTqKrjwy9eXsGDHKOsHPxa7khp/kplL0PQicyw2WUELvjH6SCrZKML+WV
+         Md9zU2PCAM+fAtHqDsyFj1DjeC7quzOqlShVWkmsP4EtHBE3aTdWE3KP6MTe4/YfD36u
+         ZbOOhZcQq5Bep2PWRfcSttduheJESR/tYfrX6YoNoY091KW9fof8C8PWgRunutWN+Rv3
+         megjRkTmRwyaXIcLr3hrHFtZYzOQXONrUFeA6BMJD90tnY1zWzgbVUMfJG32jn4zzPTS
+         Qib7xNm/yGDBcIabIywxVuRG7FOGDt+JsWeQQ3SfmnK/Fnw/4WRNdwXQL4hDySzz5AJI
+         hV1g==
+X-Gm-Message-State: AOAM530PgeYcAV2Mo6Ld42vOrJYCJlK6CmDAIcHTVFv3nCP/xtq4NsVF
+        XDw/2jw6FBViiLoA4LBW2DUAw/YeHNilM+AZxzJW+nFIpavb
+X-Google-Smtp-Source: ABdhPJwKhI2xCErDjvcakGLd7G8m7X+MVGs3aP4wfTV4QSW0Zb2ZKsqysJOEwh4Ny9JtbJzQb/K8+ZiLzqGktDLG29BrbwbwWQG0
 MIME-Version: 1.0
-In-Reply-To: <20200626150911.3d4f9ca7@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: +
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Received: by 2002:a5d:8516:: with SMTP id q22mr7332943ion.130.1593242232128;
+ Sat, 27 Jun 2020 00:17:12 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 00:17:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000498aa905a90b9dd0@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Read in __cfg8NUM_wpan_dev_from_attrs
+From:   syzbot <syzbot+b108a9b0cf438a20f4f8@syzkaller.appspotmail.com>
+To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, stefan@datenfreihafen.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7a64135f libbpf: Adjust SEC short cut for expected attach ..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1365a5c5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=b108a9b0cf438a20f4f8
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b108a9b0cf438a20f4f8@syzkaller.appspotmail.com
+
+netlink: 26 bytes leftover after parsing attributes in process `syz-executor.5'.
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in nla_get_u32 include/net/netlink.h:1541 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in __cfg802154_wpan_dev_from_attrs+0x4b4/0x510 net/ieee802154/nl802154.c:53
+Read of size 4 at addr ffffc90001ad9018 by task syz-executor.5/31529
+
+CPU: 1 PID: 31529 Comm: syz-executor.5 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ nla_get_u32 include/net/netlink.h:1541 [inline]
+ __cfg802154_wpan_dev_from_attrs+0x4b4/0x510 net/ieee802154/nl802154.c:53
+ nl802154_prepare_wpan_dev_dump.constprop.0+0xf9/0x490 net/ieee802154/nl802154.c:245
+ nl802154_dump_llsec_dev+0xc0/0xb10 net/ieee802154/nl802154.c:1655
+ genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
+ netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb19
+Code: Bad RIP value.
+RSP: 002b:00007ff9558abc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000502400 RCX: 000000000045cb19
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a38 R14: 00000000004cd1fc R15: 00007ff9558ac6d4
 
 
-Am 26.06.20 um 23:09 schrieb Jonathan Corbet:
-> On Fri, 26 Jun 2020 21:44:08 +0200
-> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-> 
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
->>   Changes in v2:
->>   Undone all handhelds.org changes and 0 of 0 wearablegroup.org changes.
-> 
-> I wasn't asking that the changes be undone, I was asking that those links
-> simply be removed.  They are actively harmful - much more so than any http:
-> links - and shouldn't be there.  *Sigh*.  I guess I'll just do that.
-You know what: I totally agree with you! They are actively harmful and 
-shall not be there. End of story.
+Memory state around the buggy address:
+ ffffc90001ad8f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90001ad8f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>ffffc90001ad9000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                            ^
+ ffffc90001ad9080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90001ad9100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
 
-But *why* you don't let me work step-by-step and *focus on one task* at 
-a time?
 
-I.e. focus (for now) on HTTP links which shall stay in the kernel tree 
-rather than on the ones which shall not.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-IMAO both domains have literally nothing to do with e.g. the HTTPSified 
-www.ti.com and ww1.microchip.com.
-
-My trainers (employer) taught me to split commits (patches) per one 
-thing I've done. (What you asked for is a legit thing, but it's another 
-thing.)
-
-Also *after* finishing my current todo list I'll think about automating 
-the detection of such. (This would have a much larger coverage.)
-
-> 
-> jon
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
