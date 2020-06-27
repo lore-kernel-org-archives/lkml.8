@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0784DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF33421582
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035C521582
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q05+HZ9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEIM/oIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgF0NiI (ORCPT
+        id S1726791AbgF0NiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
+        Sat, 27 Jun 2020 09:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgF0NiG (ORCPT
+        with ESMTP id S1726737AbgF0NiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:38:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AACDC061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so5342458plo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:03 -0700 (PDT)
+        Sat, 27 Jun 2020 09:38:12 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC977C061794
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:12 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so6265085pgk.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1fJeC/w38J3A4p3KBZWDeZ2QkmjVYo2OE3plCtum5zE=;
-        b=q05+HZ9Z1Ds2LzF5saLPmP5/fZdUYeRVD4iHHWkhV3i+qnFYnnEcNWs+c48SI161Va
-         N/ZU8yetNgq55umIMLe4iQf95m3OAxRdzjJ/kCZTfJtz29EjTjaCJgWdIL+H+rE53BTe
-         Pl0avN59lYdcKZDtUCCWqQE9B69BI2IzdL7K8DkNpFgtK7V2+kuz5jmOi7PA0aUAwuQP
-         6Q6Ww+5X3ZnzAHdLjhLj3xFNY8J5AueK2jsZ4RaTKjHdBEyZS+G7EdGRRwxdf0Kaw5Vc
-         v8B8ZyBF/Ic97fyOv2JF7fF5pGy66k8Y7PvNAufOjddheAkxgnzvynOOjk6Br7htWmfk
-         Lv5g==
+        bh=mUiaFhQXBjd6L5mR7qyeq05qsRXEHFURN+UUcSPjTlA=;
+        b=rEIM/oIhGTKoU9GPe+1qJuUyaooU6oP1+eyqT97WVOZsetFapHxfpi7lJwr8XO0biE
+         cvwRmk+G/HOGD/35TTKK0CrPh6MCNKVMaObFXC8YbVFrVJPuLBewCeP6Tqu7zyCF5KkL
+         a1lkCXJgnrIlhvVPqPBttgyiWTfeylhCZi07Jz7xIilhQvk2cX5BBU46negFRvV6mAS2
+         LN0OS0CKwg6Q9G0lojbD9UY4d/UHiDnttiOvpbu3ebJSUUrUdoWZN9+HP6kF0yV4x3P9
+         gXj5D7JwMZ56v3slmPhPS0MkN4FnwxmYl91TO8k8Hcc+TBOKh2F8EQjnPiOo2GqVYecL
+         nbYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1fJeC/w38J3A4p3KBZWDeZ2QkmjVYo2OE3plCtum5zE=;
-        b=Er/5JfjEc7KwPB94gaY3UKp21d9/zZzNA5NxqvYMeqhhSlP/3yZvl0EkLtX2imQ9P/
-         r1sElVB0+wPBjGbfuW+Yu8WhAdiaRmv9ibGfh7KCGCLpqUGEbhAkffrvvgQl7tlYTS6d
-         fo5fYCt4C9IfySiZDe477wPuu+dcbHpEGckfPTQ71kWrl5wo7QnHOJnn4g8ql/yWUO/g
-         utljZSO0TXeoKRInQdwJ5LukvuWucRhu1k9CHgu1eD8nXFGnL7C6rgU3yG91sj7t/RqC
-         OBo6k006cffVL839dhxrVTH2+14+CRS55dD1VGehTmta/OtAdWvz0TWRK3RbkBpS4BSK
-         3CVw==
-X-Gm-Message-State: AOAM530+nC5GxbOb/0gtdF7RwBI0j9cqrNbZJUgY+4FFPosyTcKkGjWu
-        eqTsy/eFIVSDAwfsJPtUPuo=
-X-Google-Smtp-Source: ABdhPJwOK+wjWEZiT4nP+1HSpAD6gSarjA4DpHWte1IOqNuUhiJYgp5vfYWk2GLZ94wqu0F2ZGEpeg==
-X-Received: by 2002:a17:902:c082:: with SMTP id j2mr6651648pld.175.1593265082232;
-        Sat, 27 Jun 2020 06:38:02 -0700 (PDT)
+        bh=mUiaFhQXBjd6L5mR7qyeq05qsRXEHFURN+UUcSPjTlA=;
+        b=NjhLddT0GWG5w5cromQMha0rljR0xMkomoOkTM9VCfqZmVp3T1+Kq/C9k2l9BJyyTU
+         re12ajlmyR81Uu7rhFbpaEAR7Z8FiceQZgEgTQyULUAQ+GE3wnAS+Jr4ZQF3oh3EigWx
+         ONy9/ExmEcIoUYNnFGw1dsRR2aFPY5dXTJQbcwXsxuel3G+wYRmbD7CiGK12mXGU1jmn
+         T5KIDPz7pC9880SZ1J4otb6NqRFJXOyzL11WFRu85njQqG3kkltk2J6WMb+F8/FwH3AT
+         RLACS3RMDIJannhGbgzQjSS+KIfN4Z6BdaO4ApndU3QTNXdua8UeeDBV2DkQ/dDrORS4
+         dszA==
+X-Gm-Message-State: AOAM5324GtIvf/mTnKEHSmF3fh3RX43AfNIHVdMk56ztFCQcP2q7IIIT
+        BbPAKMgUb4YPwB2Wubp3enw=
+X-Google-Smtp-Source: ABdhPJy1l7OwEih4MzdDlKdYAdS1Lqe98Qt84aur+v7S/XwrCnuJvL34dYvhZ3WAIHA7GB4qmQkS6A==
+X-Received: by 2002:a63:564e:: with SMTP id g14mr3299143pgm.326.1593265092500;
+        Sat, 27 Jun 2020 06:38:12 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id x8sm15060086pje.31.2020.06.27.06.37.57
+        by smtp.gmail.com with ESMTPSA id x8sm15060086pje.31.2020.06.27.06.38.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 06:38:01 -0700 (PDT)
+        Sat, 27 Jun 2020 06:38:11 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 05/15] perf ftrace: factor out function write_tracing_file_int()
-Date:   Sat, 27 Jun 2020 21:36:44 +0800
-Message-Id: <20200627133654.64863-6-changbin.du@gmail.com>
+Subject: [PATCH v2 07/15] perf ftrace: show trace column header
+Date:   Sat, 27 Jun 2020 21:36:46 +0800
+Message-Id: <20200627133654.64863-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200627133654.64863-1-changbin.du@gmail.com>
 References: <20200627133654.64863-1-changbin.du@gmail.com>
@@ -81,55 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will reuse this function later.
+This makes perf-ftrace display column header before printing trace.
+
+$ sudo perf ftrace
+\# tracer: function
+\#
+\# entries-in-buffer/entries-written: 0/0   #P:8
+\#
+\#           TASK-PID     CPU#   TIMESTAMP  FUNCTION
+\#              | |         |       |         |
+           <...>-9246  [006]  10726.262760: mutex_unlock <-rb_simple_write
+           <...>-9246  [006]  10726.262764: __fsnotify_parent <-vfs_write
+           <...>-9246  [006]  10726.262765: fsnotify <-vfs_write
+           <...>-9246  [006]  10726.262766: __sb_end_write <-vfs_write
+           <...>-9246  [006]  10726.262767: fpregs_assert_state_consistent <-do_syscall_64
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/builtin-ftrace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/perf/builtin-ftrace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index dceae70c3a22..003efa756322 100644
+index e45496012611..686d744d5025 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -166,6 +166,17 @@ static int read_tracing_file_to_stdout(const char *name)
- 	return ret;
- }
+@@ -430,6 +430,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
+ 	pollfd.fd = trace_fd;
  
-+static int write_tracing_file_int(const char *name, int value)
-+{
-+	char buf[16];
++	/* display column headers */
++	read_tracing_file_to_stdout("trace");
 +
-+	snprintf(buf, sizeof(buf), "%d", value);
-+	if (write_tracing_file(name, buf) < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int reset_tracing_cpu(void);
- static void reset_tracing_filters(void);
- 
-@@ -296,8 +307,6 @@ static void reset_tracing_filters(void)
- 
- static int set_tracing_depth(struct perf_ftrace *ftrace)
- {
--	char buf[16];
--
- 	if (ftrace->graph_depth == 0)
- 		return 0;
- 
-@@ -306,9 +315,7 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
- 		return -1;
- 	}
- 
--	snprintf(buf, sizeof(buf), "%d", ftrace->graph_depth);
--
--	if (write_tracing_file("max_graph_depth", buf) < 0)
-+	if (write_tracing_file_int("max_graph_depth", ftrace->graph_depth) < 0)
- 		return -1;
- 
- 	return 0;
+ 	if (!ftrace->initial_delay) {
+ 		if (write_tracing_file("tracing_on", "1") < 0) {
+ 			pr_err("can't enable tracing\n");
 -- 
 2.25.1
 
