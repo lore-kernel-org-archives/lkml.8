@@ -2,97 +2,117 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C812186A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593267489;
-	bh=cIt6opZa+yAA6PsRPnToKEVJTOvIWVfLvMCDwYPe3Xk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mAkbi2EoYArQ9X88/F5vdHtt1ntFdvZye70YLrFESswbP6zmt70v7SRNoyqG7/rtg
-	 NbPvonEAPbwOuwlL0LI/h8s8zqVPBCBWs1QYX3he4NyCzxlO4j9LeZayhVBZZefZtd
-	 g5zQEGrCgqegdER4XNxheCcYFuVItoWdfPEXXGEg=
+	by mail.kernel.org (Postfix) with ESMTP id 6F22920672
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FPN1xFS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgF0OSI (ORCPT
+        id S1726003AbgF0OYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 10:18:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgF0OSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 10:18:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC7DF21655;
-        Sat, 27 Jun 2020 14:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593267487;
-        bh=cIt6opZa+yAA6PsRPnToKEVJTOvIWVfLvMCDwYPe3Xk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dTMsD6U1Gd9Qs59wnuvSXVIWP5yBbcKqUWOEqIRqRg003TxHdGjemMqUAOW021M3y
-         LDlPtAuI31mU3xn8qrXtq2QDqTSP5QolxLsRAKvrYHTzpwdnUsjZGyjJuFuLOycqOU
-         AnY4+beRGssrk+yVQP7fbEVlO0Tvb6GdFd3ZedEA=
-Date:   Sat, 27 Jun 2020 16:18:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Erwan Le Ray <erwan.leray@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: add generic DT binding for
- announcing RTS/CTS lines
-Message-ID: <20200627141801.GA1945477@kroah.com>
-References: <20200520133932.30441-1-erwan.leray@st.com>
- <20200520133932.30441-2-erwan.leray@st.com>
+        Sat, 27 Jun 2020 10:24:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36505 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725854AbgF0OYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593267881;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P20mCvZwl1CUQ5rTmZ1YZBWEHzrTo/uIYjUzY0MFAyo=;
+        b=FPN1xFS/Xw62r89MNBVVbS31n1FAY7bf6piab4QNwqXyL2Sg4M0yq2vPcW3wPYUcthrYab
+        bWrk15RNzRlDlbmABSVtWg2SlpE4BHqH1nCducy3iJSBxn1Qa7JowXCUMIdioG7WPou1eg
+        JGc52/DE2L7yKdzNetMlyjboogLbS+c=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-321-d7Z8pd5BMoyqoSgX7X6tgA-1; Sat, 27 Jun 2020 10:24:39 -0400
+X-MC-Unique: d7Z8pd5BMoyqoSgX7X6tgA-1
+Received: by mail-wm1-f71.google.com with SMTP id q20so4189017wme.3
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 07:24:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P20mCvZwl1CUQ5rTmZ1YZBWEHzrTo/uIYjUzY0MFAyo=;
+        b=Ov6vaezrDwvGNUp9u0TiAtAoLq2YsuCJWieoRi1dSLHDuWHNTyOsb9wRn1FBp8KIe5
+         B8xkDlvxLqJOr2pMVbEUN7Wa/2tt6ia6wh87wFN1lqIK/YHmG93L6qVKJ1Papg78Tm37
+         tIg6hilfnvz2YrHm5mus9HeA6AqOQf+GRKsZqMnISDvemxuwM/eZs9lWmw3k3EOG2VgK
+         N/tlcOU4GetX2UHntrl0s/QL2YtxYIOAeS81apTW93Lx/R4W1kCDfYq1R5OoQevq7Lnn
+         JlZVyZMXBhKfkQGZ+3ySU4aTuNMIll4SnXsDnMGCAcYMLdZXv/ozKrsjmWeEdnFD6Rae
+         YQeg==
+X-Gm-Message-State: AOAM533o/m4GbcxormWudn+U4xq9afeO0H/BR+AGguklrXc/+GbftD3K
+        5TpHoNnE146mo+rA9lUHxsiKZBDqvgQxfMp1qd4odmsrPUPA7OqCJZ6zquPF9J3ARWmHuu0uNd2
+        O6RiqSPoTJJWzUc9uN26p4FhD
+X-Received: by 2002:a7b:cb05:: with SMTP id u5mr8361689wmj.169.1593267878071;
+        Sat, 27 Jun 2020 07:24:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw0VkB//JczbBHekSyJSSjMtIF2NLh/jQCyWHYF7NMRiJk562df/Zsr1mDTHUmouOs7PK7sTg==
+X-Received: by 2002:a7b:cb05:: with SMTP id u5mr8361674wmj.169.1593267877856;
+        Sat, 27 Jun 2020 07:24:37 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91d0:a5f0:9f34:4d80? ([2001:b07:6468:f312:91d0:a5f0:9f34:4d80])
+        by smtp.gmail.com with ESMTPSA id h13sm1602625wml.42.2020.06.27.07.24.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 27 Jun 2020 07:24:36 -0700 (PDT)
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+ <20200625061544.GC2141@linux.intel.com>
+ <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com> <20200626180732.GB175520@xz-x1>
+ <20200626181820.GG6583@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
+Date:   Sat, 27 Jun 2020 16:24:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520133932.30441-2-erwan.leray@st.com>
+In-Reply-To: <20200626181820.GG6583@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:39:31PM +0200, Erwan Le Ray wrote:
-> Add support of generic DT binding for annoucing RTS/CTS lines. The initial
-> binding 'st,hw-flow-control' is not needed anymore since generic binding
-> is available, but is kept for backward compatibility.
-> 
-> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> index 75b8521eb7cb..06d5f251ec88 100644
-> --- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> @@ -35,9 +35,11 @@ properties:
->      description: label associated with this uart
->  
->    st,hw-flow-ctrl:
-> -    description: enable hardware flow control
-> +    description: enable hardware flow control (deprecated)
->      $ref: /schemas/types.yaml#/definitions/flag
->  
-> +  uart-has-rtscts: true
-> +
->    dmas:
->      minItems: 1
->      maxItems: 2
-> -- 
-> 2.17.1
-> 
+On 26/06/20 20:18, Sean Christopherson wrote:
+>> Btw, would it be more staightforward to check "vcpu->arch.arch_capabilities &
+>> ARCH_CAP_TSX_CTRL_MSR" rather than "*ebx | (F(RTM) | F(HLE))" even if we want
+>> to have such a fix?
+> Not really, That ends up duplicating the check in vmx_get_msr().  From an
+> emulation perspective, this really is a "guest" access to the MSR, in the
+> sense that it the virtual CPU is in the guest domain, i.e. not a god-like
+> entity that gets to break the rules of emulation.
 
-Did this get ignored by the DT maintainers?  :(
+But if you wrote a guest that wants to read MSR_IA32_TSX_CTRL, there are
+two choices:
+
+1) check ARCH_CAPABILITIES first
+
+2) blindly access it and default to 0.
+
+Both are fine, because we know MSR_IA32_TSX_CTRL has no
+reserved/must-be-one bits.  Calling __kvm_get_msr and checking for an
+invalid MSR through the return value is not breaking the rules of
+emulation, it is "faking" a #GP handler.
+
+So I think Peter's patch is fine, but (possibly on top as a third patch)
+__must_check should be added to MSR getters and setters.  Also one
+possibility is to return -EINVAL for invalid MSRs.
+
+Paolo
+
