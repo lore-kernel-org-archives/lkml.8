@@ -2,121 +2,634 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB01C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8894FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479CC20885
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FDC20885
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbgF0GnU (ORCPT
+        id S1726079AbgF0Gn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 02:43:20 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:46987 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgF0GnU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 02:43:20 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 05R6gFBw9013410, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 05R6gFBw9013410
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 27 Jun 2020 14:42:15 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 27 Jun 2020 14:42:15 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 27 Jun 2020 14:42:14 +0800
-Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
- ([fe80::405f:7a59:7271:e52d%7]) with mapi id 15.01.1779.005; Sat, 27 Jun 2020
- 14:42:14 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to descriptions
-Thread-Topic: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to
- descriptions
-Thread-Index: AQHWSQtjze542LDDpkSfnQJKXDbezajsCdrA
-Date:   Sat, 27 Jun 2020 06:42:14 +0000
-Message-ID: <f213468d0e2945d2af9f18b618afbc0c@realtek.com>
-References: <20200620233227.31585-1-afaerber@suse.de>
- <20200620233227.31585-2-afaerber@suse.de>
-In-Reply-To: <20200620233227.31585-2-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [101.15.193.107]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 27 Jun 2020 02:43:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60521 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgF0Gn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 02:43:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49v41h3DNRz9txhn;
+        Sat, 27 Jun 2020 08:42:32 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mgMmTbUfWAEl; Sat, 27 Jun 2020 08:42:32 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49v41h1Xskz9txhm;
+        Sat, 27 Jun 2020 08:42:32 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1F9BE8B772;
+        Sat, 27 Jun 2020 08:42:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VWAbaSaoVU_y; Sat, 27 Jun 2020 08:42:33 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA1FE8B75B;
+        Sat, 27 Jun 2020 08:42:31 +0200 (CEST)
+Subject: Re: [PATCH 02/11] powerpc/kexec_file: mark PPC64 specific code
+To:     Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319829236.16351.3935863082429593906.stgit@hbathini.in.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <68d59c00-da02-b362-7bd9-a9631eca0fdd@csgroup.eu>
+Date:   Sat, 27 Jun 2020 08:42:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <159319829236.16351.3935863082429593906.stgit@hbathini.in.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1yZWFsdGVrLXNvYyA8
-bGludXgtcmVhbHRlay1zb2MtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnPiBPbg0KPiBCZWhh
-bGYgT2YgQW5kcmVhcyBGYXJiZXINCj4gU2VudDogU3VuZGF5LCBKdW5lIDIxLCAyMDIwIDc6MzIg
-QU0NCj4gVG86IGxpbnV4LXJlYWx0ZWstc29jQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
-PjsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBBbmRyZWFzDQo+IEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+
-IFN1YmplY3Q6IFtQQVRDSCB2NCAxLzNdIGR0LWJpbmRpbmdzOiBhcm06IHJlYWx0ZWs6IENvbnZl
-cnQgY29tbWVudHMgdG8NCj4gZGVzY3JpcHRpb25zDQo+IA0KPiBUdXJuIHRoZSBTb0MtbGV2ZWwg
-Y29tbWVudHMgaW50byBkZXNjcmlwdGlvbiBwcm9wZXJ0aWVzLg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4gIHY0OiBOZXcN
-Cj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sICAgICAgfCAy
-NCArKysrKysrKystLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygr
-KSwgMTIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0KPiBpbmRleCA4NDVmOWM3NmQ2ZjcuLjBi
-Mzg4MDE2YmJjZCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gQEAgLTE0LDIxICsxNCwyMSBAQCBwcm9wZXJ0aWVz
-Og0KPiAgICAgIGNvbnN0OiAnLycNCj4gICAgY29tcGF0aWJsZToNCj4gICAgICBvbmVPZjoNCj4g
-LSAgICAgICMgUlREMTE5NSBTb0MgYmFzZWQgYm9hcmRzDQo+IC0gICAgICAtIGl0ZW1zOg0KPiAr
-ICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTE5NSBTb0MgYmFzZWQgYm9hcmRzDQo+ICsgICAgICAg
-IGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAgICAgICAgICAgICAgLSBtZWxlLHgx
-MDAwICMgTWVMRSBYMTAwMA0KPiAgICAgICAgICAgICAgICAtIHJlYWx0ZWssaG9yc2VyYWRpc2gg
-IyBSZWFsdGVrIEhvcnNlcmFkaXNoIEVWQg0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJlYWx0ZWss
-cnRkMTE5NQ0KPiANCj4gLSAgICAgICMgUlREMTI5MyBTb0MgYmFzZWQgYm9hcmRzDQo+IC0gICAg
-ICAtIGl0ZW1zOg0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTI5MyBTb0MgYmFzZWQgYm9h
-cmRzDQo+ICsgICAgICAgIGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAgICAgICAg
-ICAgICAgLSBzeW5vbG9neSxkczQxOGogIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOGoNCj4g
-ICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEyOTMNCj4gDQo+IC0gICAgICAjIFJURDEy
-OTUgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3Jp
-cHRpb246IFJURDEyOTUgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVtczoNCj4gICAg
-ICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gbWVsZSx2OSAjIE1lTEUgVjkNCj4g
-ICAgICAgICAgICAgICAgLSBwcm9ib3gyLGF2YSAjIFByb0JveDIgQVZBIEBAIC0zNiwyMSArMzYs
-MjEgQEANCj4gcHJvcGVydGllczoNCj4gICAgICAgICAgICAgICAgLSB6aWRvbyx4OXMgIyBaaWRv
-byBYOVMNCj4gICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEyOTUNCj4gDQo+IC0gICAg
-ICAjIFJURDEyOTYgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAg
-IC0gZGVzY3JpcHRpb246IFJURDEyOTYgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVt
-czoNCj4gICAgICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gc3lub2xvZ3ksZHM0
-MTggIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOA0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJl
-YWx0ZWsscnRkMTI5Ng0KPiANCj4gLSAgICAgICMgUlREMTM5NSBTb0MgYmFzZWQgYm9hcmRzDQo+
-IC0gICAgICAtIGl0ZW1zOg0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTM5NSBTb0MgYmFz
-ZWQgYm9hcmRzDQo+ICsgICAgICAgIGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAg
-ICAgICAgICAgICAgLSBiYW5hbmFwaSxicGktbTQgIyBCYW5hbmEgUGkgQlBJLU00DQo+ICAgICAg
-ICAgICAgICAgIC0gcmVhbHRlayxsaW9uLXNraW4gIyBSZWFsdGVrIExpb24gU2tpbiBFVkINCj4g
-ICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEzOTUNCj4gDQo+IC0gICAgICAjIFJURDE2
-MTkgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3Jp
-cHRpb246IFJURDE2MTkgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVtczoNCj4gICAg
-ICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gcmVhbHRlayxtam9sbmlyICMgUmVh
-bHRlayBNam9sbmlyIEVWQg0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJlYWx0ZWsscnRkMTYxOQ0K
-PiAtLQ0KPiAyLjI2LjINCkFja2VkLWJ5OiBKYW1lcyBUYWkgPGphbWVzLnRhaUByZWFsdGVrLmNv
-bT4NCg0K
+
+
+Le 26/06/2020 à 21:04, Hari Bathini a écrit :
+> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
+> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
+> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
+> same spirit.
+
+At the time being, CONFIG_KEXEC_FILE depends on PPC64.
+Are you planning to make it work on PPC32 as well ?
+Otherwise I don't understand the purpose of this patch.
+
+Also, what is being done in this patch seems to go far beyond what you 
+describe above. It is propably worth splitting in several patches with 
+proper explanation.
+
+Christophe
+
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/kexec.h       |   11 +++
+>   arch/powerpc/kexec/Makefile            |    2 -
+>   arch/powerpc/kexec/elf_64.c            |    7 +-
+>   arch/powerpc/kexec/file_load.c         |   37 ++--------
+>   arch/powerpc/kexec/file_load_64.c      |  108 ++++++++++++++++++++++++++++++
+>   arch/powerpc/purgatory/Makefile        |    4 +
+>   arch/powerpc/purgatory/trampoline.S    |  117 --------------------------------
+>   arch/powerpc/purgatory/trampoline_64.S |  117 ++++++++++++++++++++++++++++++++
+>   8 files changed, 248 insertions(+), 155 deletions(-)
+>   create mode 100644 arch/powerpc/kexec/file_load_64.c
+>   delete mode 100644 arch/powerpc/purgatory/trampoline.S
+>   create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+> 
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index c684768..7008ea1 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -114,8 +114,17 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+>   		    unsigned long fdt_load_addr);
+>   int setup_new_fdt(const struct kimage *image, void *fdt,
+>   		  unsigned long initrd_load_addr, unsigned long initrd_len,
+> -		  const char *cmdline);
+> +		  const char *cmdline, int *node);
+>   int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size);
+> +
+> +#ifdef CONFIG_PPC64
+> +int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+> +			  const void *fdt, unsigned long kernel_load_addr,
+> +			  unsigned long fdt_load_addr);
+> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+> +			unsigned long initrd_load_addr,
+> +			unsigned long initrd_len, const char *cmdline);
+> +#endif /* CONFIG_PPC64 */
+>   #endif /* CONFIG_KEXEC_FILE */
+>   
+>   #else /* !CONFIG_KEXEC_CORE */
+> diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
+> index 86380c6..67c3553 100644
+> --- a/arch/powerpc/kexec/Makefile
+> +++ b/arch/powerpc/kexec/Makefile
+> @@ -7,7 +7,7 @@ obj-y				+= core.o crash.o core_$(BITS).o
+>   
+>   obj-$(CONFIG_PPC32)		+= relocate_32.o
+>   
+> -obj-$(CONFIG_KEXEC_FILE)	+= file_load.o elf_$(BITS).o
+> +obj-$(CONFIG_KEXEC_FILE)	+= file_load.o file_load_$(BITS).o elf_$(BITS).o
+>   
+>   ifdef CONFIG_HAVE_IMA_KEXEC
+>   ifdef CONFIG_IMA
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index 3072fd6..23ad04c 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -88,7 +88,8 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>   		goto out;
+>   	}
+>   
+> -	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
+> +	ret = setup_new_fdt_ppc64(image, fdt, initrd_load_addr,
+> +				  initrd_len, cmdline);
+>   	if (ret)
+>   		goto out;
+>   
+> @@ -107,8 +108,8 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>   	pr_debug("Loaded device tree at 0x%lx\n", fdt_load_addr);
+>   
+>   	slave_code = elf_info.buffer + elf_info.proghdrs[0].p_offset;
+> -	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
+> -			      fdt_load_addr);
+> +	ret = setup_purgatory_ppc64(image, slave_code, fdt, kernel_load_addr,
+> +				    fdt_load_addr);
+>   	if (ret)
+>   		pr_err("Error setting up the purgatory.\n");
+>   
+> diff --git a/arch/powerpc/kexec/file_load.c b/arch/powerpc/kexec/file_load.c
+> index 143c917..99a2c4d 100644
+> --- a/arch/powerpc/kexec/file_load.c
+> +++ b/arch/powerpc/kexec/file_load.c
+> @@ -1,6 +1,6 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /*
+> - * ppc64 code to implement the kexec_file_load syscall
+> + * powerpc code to implement the kexec_file_load syscall
+>    *
+>    * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
+>    * Copyright (C) 2004  IBM Corp.
+> @@ -16,26 +16,10 @@
+>   
+>   #include <linux/slab.h>
+>   #include <linux/kexec.h>
+> -#include <linux/of_fdt.h>
+>   #include <linux/libfdt.h>
+>   #include <asm/ima.h>
+>   
+> -#define SLAVE_CODE_SIZE		256
+> -
+> -const struct kexec_file_ops * const kexec_file_loaders[] = {
+> -	&kexec_elf64_ops,
+> -	NULL
+> -};
+> -
+> -int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> -				  unsigned long buf_len)
+> -{
+> -	/* We don't support crash kernels yet. */
+> -	if (image->type == KEXEC_TYPE_CRASH)
+> -		return -EOPNOTSUPP;
+> -
+> -	return kexec_image_probe_default(image, buf, buf_len);
+> -}
+> +#define SLAVE_CODE_SIZE		256	/* First 0x100 bytes */
+>   
+>   /**
+>    * setup_purgatory - initialize the purgatory's global variables
+> @@ -127,24 +111,17 @@ int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size)
+>    * @initrd_len:		Size of the next initrd, or 0 if there will be none.
+>    * @cmdline:		Command line for the next kernel, or NULL if there will
+>    *			be none.
+> + * @chosen_node:        Set this output parameter to chosen_node.
+>    *
+>    * Return: 0 on success, or negative errno on error.
+>    */
+>   int setup_new_fdt(const struct kimage *image, void *fdt,
+>   		  unsigned long initrd_load_addr, unsigned long initrd_len,
+> -		  const char *cmdline)
+> +		  const char *cmdline, int *node)
+>   {
+>   	int ret, chosen_node;
+>   	const void *prop;
+>   
+> -	/* Remove memory reservation for the current device tree. */
+> -	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
+> -				 fdt_totalsize(initial_boot_params));
+> -	if (ret == 0)
+> -		pr_debug("Removed old device tree reservation.\n");
+> -	else if (ret != -ENOENT)
+> -		return ret;
+> -
+>   	chosen_node = fdt_path_offset(fdt, "/chosen");
+>   	if (chosen_node == -FDT_ERR_NOTFOUND) {
+>   		chosen_node = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"),
+> @@ -157,6 +134,8 @@ int setup_new_fdt(const struct kimage *image, void *fdt,
+>   		pr_err("Malformed device tree: error reading /chosen.\n");
+>   		return -EINVAL;
+>   	}
+> +	if (node)
+> +		*node = chosen_node;
+>   
+>   	/* Did we boot using an initrd? */
+>   	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", NULL);
+> @@ -242,10 +221,6 @@ int setup_new_fdt(const struct kimage *image, void *fdt,
+>   		return ret;
+>   	}
+>   
+> -	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
+> -	if (ret)
+> -		goto err;
+> -
+>   	return 0;
+>   
+>   err:
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> new file mode 100644
+> index 0000000..e6bff960
+> --- /dev/null
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * ppc64 code to implement the kexec_file_load syscall
+> + *
+> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
+> + * Copyright (C) 2004  IBM Corp.
+> + * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
+> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
+> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
+> + * Copyright (C) 2020  IBM Corporation
+> + *
+> + * Based on kexec-tools' kexec-ppc64.c, kexec-elf-rel-ppc64.c, fs2dt.c.
+> + * Heavily modified for the kernel by
+> + * Hari Bathini <hbathini@linux.ibm.com>.
+> + */
+> +
+> +#include <linux/kexec.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/libfdt.h>
+> +
+> +const struct kexec_file_ops * const kexec_file_loaders[] = {
+> +	&kexec_elf64_ops,
+> +	NULL
+> +};
+> +
+> +/**
+> + * setup_purgatory_ppc64 - initialize PPC64 specific purgatory's global
+> + *                         variables and call setup_purgatory() to initialize
+> + *                         common global variable.
+> + * @image:                 kexec image.
+> + * @slave_code:            Slave code for the purgatory.
+> + * @fdt:                   Flattened device tree for the next kernel.
+> + * @kernel_load_addr:      Address where the kernel is loaded.
+> + * @fdt_load_addr:         Address where the flattened device tree is loaded.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+> +			  const void *fdt, unsigned long kernel_load_addr,
+> +			  unsigned long fdt_load_addr)
+> +{
+> +	int ret;
+> +
+> +	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
+> +			      fdt_load_addr);
+> +	if (ret)
+> +		pr_err("Failed to setup purgatory symbols");
+> +	return ret;
+> +}
+> +
+> +/**
+> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
+> + *                       being loaded.
+> + * @image:               kexec image being loaded.
+> + * @fdt:                 Flattened device tree for the next kernel.
+> + * @initrd_load_addr:    Address where the next initrd will be loaded.
+> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
+> + * @cmdline:             Command line for the next kernel, or NULL if there will
+> + *                       be none.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+> +			unsigned long initrd_load_addr,
+> +			unsigned long initrd_len, const char *cmdline)
+> +{
+> +	int chosen_node, ret;
+> +
+> +	/* Remove memory reservation for the current device tree. */
+> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
+> +				 fdt_totalsize(initial_boot_params));
+> +	if (ret == 0)
+> +		pr_debug("Removed old device tree reservation.\n");
+> +	else if (ret != -ENOENT) {
+> +		pr_err("Failed to remove old device-tree reservation.\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
+> +			    cmdline, &chosen_node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
+> +	if (ret)
+> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * arch_kexec_kernel_image_probe - Does additional handling needed to setup
+> + *                                 kexec segments.
+> + * @image:                         kexec image being loaded.
+> + * @buf:                           Buffer pointing to elf data.
+> + * @buf_len:                       Length of the buffer.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> +				  unsigned long buf_len)
+> +{
+> +	/* We don't support crash kernels yet. */
+> +	if (image->type == KEXEC_TYPE_CRASH)
+> +		return -EOPNOTSUPP;
+> +
+> +	return kexec_image_probe_default(image, buf, buf_len);
+> +}
+> diff --git a/arch/powerpc/purgatory/Makefile b/arch/powerpc/purgatory/Makefile
+> index 7c6d8b1..348f5958 100644
+> --- a/arch/powerpc/purgatory/Makefile
+> +++ b/arch/powerpc/purgatory/Makefile
+> @@ -2,11 +2,11 @@
+>   
+>   KASAN_SANITIZE := n
+>   
+> -targets += trampoline.o purgatory.ro kexec-purgatory.c
+> +targets += trampoline_$(BITS).o purgatory.ro kexec-purgatory.c
+>   
+>   LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined
+>   
+> -$(obj)/purgatory.ro: $(obj)/trampoline.o FORCE
+> +$(obj)/purgatory.ro: $(obj)/trampoline_$(BITS).o FORCE
+>   		$(call if_changed,ld)
+>   
+>   quiet_cmd_bin2c = BIN2C   $@
+> diff --git a/arch/powerpc/purgatory/trampoline.S b/arch/powerpc/purgatory/trampoline.S
+> deleted file mode 100644
+> index a5a83c3..0000000
+> --- a/arch/powerpc/purgatory/trampoline.S
+> +++ /dev/null
+> @@ -1,117 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> -/*
+> - * kexec trampoline
+> - *
+> - * Based on code taken from kexec-tools and kexec-lite.
+> - *
+> - * Copyright (C) 2004 - 2005, Milton D Miller II, IBM Corporation
+> - * Copyright (C) 2006, Mohan Kumar M, IBM Corporation
+> - * Copyright (C) 2013, Anton Blanchard, IBM Corporation
+> - */
+> -
+> -#include <asm/asm-compat.h>
+> -
+> -	.machine ppc64
+> -	.balign 256
+> -	.globl purgatory_start
+> -purgatory_start:
+> -	b	master
+> -
+> -	/* ABI: possible run_at_load flag at 0x5c */
+> -	.org purgatory_start + 0x5c
+> -	.globl run_at_load
+> -run_at_load:
+> -	.long 0
+> -	.size run_at_load, . - run_at_load
+> -
+> -	/* ABI: slaves start at 60 with r3=phys */
+> -	.org purgatory_start + 0x60
+> -slave:
+> -	b .
+> -	/* ABI: end of copied region */
+> -	.org purgatory_start + 0x100
+> -	.size purgatory_start, . - purgatory_start
+> -
+> -/*
+> - * The above 0x100 bytes at purgatory_start are replaced with the
+> - * code from the kernel (or next stage) by setup_purgatory().
+> - */
+> -
+> -master:
+> -	or	%r1,%r1,%r1	/* low priority to let other threads catchup */
+> -	isync
+> -	mr	%r17,%r3	/* save cpu id to r17 */
+> -	mr	%r15,%r4	/* save physical address in reg15 */
+> -
+> -	or	%r3,%r3,%r3	/* ok now to high priority, lets boot */
+> -	lis	%r6,0x1
+> -	mtctr	%r6		/* delay a bit for slaves to catch up */
+> -	bdnz	.		/* before we overwrite 0-100 again */
+> -
+> -	bl	0f		/* Work out where we're running */
+> -0:	mflr	%r18
+> -
+> -	/* load device-tree address */
+> -	ld	%r3, (dt_offset - 0b)(%r18)
+> -	mr	%r16,%r3	/* save dt address in reg16 */
+> -	li	%r4,20
+> -	LWZX_BE	%r6,%r3,%r4	/* fetch __be32 version number at byte 20 */
+> -	cmpwi	%cr0,%r6,2	/* v2 or later? */
+> -	blt	1f
+> -	li	%r4,28
+> -	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
+> -1:
+> -	/* load the kernel address */
+> -	ld	%r4,(kernel - 0b)(%r18)
+> -
+> -	/* load the run_at_load flag */
+> -	/* possibly patched by kexec */
+> -	ld	%r6,(run_at_load - 0b)(%r18)
+> -	/* and patch it into the kernel */
+> -	stw	%r6,(0x5c)(%r4)
+> -
+> -	mr	%r3,%r16	/* restore dt address */
+> -
+> -	li	%r5,0		/* r5 will be 0 for kernel */
+> -
+> -	mfmsr	%r11
+> -	andi.	%r10,%r11,1	/* test MSR_LE */
+> -	bne	.Little_endian
+> -
+> -	mtctr	%r4		/* prepare branch to */
+> -	bctr			/* start kernel */
+> -
+> -.Little_endian:
+> -	mtsrr0	%r4		/* prepare branch to */
+> -
+> -	clrrdi	%r11,%r11,1	/* clear MSR_LE */
+> -	mtsrr1	%r11
+> -
+> -	rfid			/* update MSR and start kernel */
+> -
+> -
+> -	.balign 8
+> -	.globl kernel
+> -kernel:
+> -	.8byte  0x0
+> -	.size kernel, . - kernel
+> -
+> -	.balign 8
+> -	.globl dt_offset
+> -dt_offset:
+> -	.8byte  0x0
+> -	.size dt_offset, . - dt_offset
+> -
+> -
+> -	.data
+> -	.balign 8
+> -.globl purgatory_sha256_digest
+> -purgatory_sha256_digest:
+> -	.skip	32
+> -	.size purgatory_sha256_digest, . - purgatory_sha256_digest
+> -
+> -	.balign 8
+> -.globl purgatory_sha_regions
+> -purgatory_sha_regions:
+> -	.skip	8 * 2 * 16
+> -	.size purgatory_sha_regions, . - purgatory_sha_regions
+> diff --git a/arch/powerpc/purgatory/trampoline_64.S b/arch/powerpc/purgatory/trampoline_64.S
+> new file mode 100644
+> index 0000000..a5a83c3
+> --- /dev/null
+> +++ b/arch/powerpc/purgatory/trampoline_64.S
+> @@ -0,0 +1,117 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * kexec trampoline
+> + *
+> + * Based on code taken from kexec-tools and kexec-lite.
+> + *
+> + * Copyright (C) 2004 - 2005, Milton D Miller II, IBM Corporation
+> + * Copyright (C) 2006, Mohan Kumar M, IBM Corporation
+> + * Copyright (C) 2013, Anton Blanchard, IBM Corporation
+> + */
+> +
+> +#include <asm/asm-compat.h>
+> +
+> +	.machine ppc64
+> +	.balign 256
+> +	.globl purgatory_start
+> +purgatory_start:
+> +	b	master
+> +
+> +	/* ABI: possible run_at_load flag at 0x5c */
+> +	.org purgatory_start + 0x5c
+> +	.globl run_at_load
+> +run_at_load:
+> +	.long 0
+> +	.size run_at_load, . - run_at_load
+> +
+> +	/* ABI: slaves start at 60 with r3=phys */
+> +	.org purgatory_start + 0x60
+> +slave:
+> +	b .
+> +	/* ABI: end of copied region */
+> +	.org purgatory_start + 0x100
+> +	.size purgatory_start, . - purgatory_start
+> +
+> +/*
+> + * The above 0x100 bytes at purgatory_start are replaced with the
+> + * code from the kernel (or next stage) by setup_purgatory().
+> + */
+> +
+> +master:
+> +	or	%r1,%r1,%r1	/* low priority to let other threads catchup */
+> +	isync
+> +	mr	%r17,%r3	/* save cpu id to r17 */
+> +	mr	%r15,%r4	/* save physical address in reg15 */
+> +
+> +	or	%r3,%r3,%r3	/* ok now to high priority, lets boot */
+> +	lis	%r6,0x1
+> +	mtctr	%r6		/* delay a bit for slaves to catch up */
+> +	bdnz	.		/* before we overwrite 0-100 again */
+> +
+> +	bl	0f		/* Work out where we're running */
+> +0:	mflr	%r18
+> +
+> +	/* load device-tree address */
+> +	ld	%r3, (dt_offset - 0b)(%r18)
+> +	mr	%r16,%r3	/* save dt address in reg16 */
+> +	li	%r4,20
+> +	LWZX_BE	%r6,%r3,%r4	/* fetch __be32 version number at byte 20 */
+> +	cmpwi	%cr0,%r6,2	/* v2 or later? */
+> +	blt	1f
+> +	li	%r4,28
+> +	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
+> +1:
+> +	/* load the kernel address */
+> +	ld	%r4,(kernel - 0b)(%r18)
+> +
+> +	/* load the run_at_load flag */
+> +	/* possibly patched by kexec */
+> +	ld	%r6,(run_at_load - 0b)(%r18)
+> +	/* and patch it into the kernel */
+> +	stw	%r6,(0x5c)(%r4)
+> +
+> +	mr	%r3,%r16	/* restore dt address */
+> +
+> +	li	%r5,0		/* r5 will be 0 for kernel */
+> +
+> +	mfmsr	%r11
+> +	andi.	%r10,%r11,1	/* test MSR_LE */
+> +	bne	.Little_endian
+> +
+> +	mtctr	%r4		/* prepare branch to */
+> +	bctr			/* start kernel */
+> +
+> +.Little_endian:
+> +	mtsrr0	%r4		/* prepare branch to */
+> +
+> +	clrrdi	%r11,%r11,1	/* clear MSR_LE */
+> +	mtsrr1	%r11
+> +
+> +	rfid			/* update MSR and start kernel */
+> +
+> +
+> +	.balign 8
+> +	.globl kernel
+> +kernel:
+> +	.8byte  0x0
+> +	.size kernel, . - kernel
+> +
+> +	.balign 8
+> +	.globl dt_offset
+> +dt_offset:
+> +	.8byte  0x0
+> +	.size dt_offset, . - dt_offset
+> +
+> +
+> +	.data
+> +	.balign 8
+> +.globl purgatory_sha256_digest
+> +purgatory_sha256_digest:
+> +	.skip	32
+> +	.size purgatory_sha256_digest, . - purgatory_sha256_digest
+> +
+> +	.balign 8
+> +.globl purgatory_sha_regions
+> +purgatory_sha_regions:
+> +	.skip	8 * 2 * 16
+> +	.size purgatory_sha_regions, . - purgatory_sha_regions
+> 
