@@ -2,266 +2,153 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29264C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB02C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0E02137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPbYFm8L"
+	by mail.kernel.org (Postfix) with ESMTP id B129A20DD4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgF0Kbq (ORCPT
+        id S1726593AbgF0Kby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 06:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgF0Kbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 06:31:45 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8ACCC03E979;
-        Sat, 27 Jun 2020 03:31:44 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w9so10549476ilk.13;
-        Sat, 27 Jun 2020 03:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=hBYoEvRRpXyGXqyyyK+UUmgCSVK6/vU+GBKDP/WjSog=;
-        b=WPbYFm8LkOEQ491lr6WUlHUx16k0jFw8yAAedERvFPkMZRQYu10ksjg9pFFKLIByzC
-         hgyOgBwVWOkvUt89+lmwMJmfw5eHkEXd0bIrQWenwWXrk+sO0QbnNKQmijnRPWYsvwPC
-         wo3X8XTVZ8GdwgqdAL6m2wgJWYZlEq9OMqnES/DXosyoE/5NAneEtupy4AVlwQC7Rn9Z
-         iL/2oik8A3XFKaA5x2Yq7qXbdYMn1wuj0W0enSXkrRVXVbBvAidxxZTOMpkgyI6/hdxl
-         eov8Dpv6qqHrK+b3+vjt5iZ6YPTt2p3jdQn7W4GvbTaqDKuCUevci8iCXqxiejv+ADSB
-         OaSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=hBYoEvRRpXyGXqyyyK+UUmgCSVK6/vU+GBKDP/WjSog=;
-        b=ZeT8LqeiVQqhxltXRcrLxfxJNho/2cGJWDUOP+F4tCH8H76bdeTFO8/HfPu75b6xkI
-         QEjgNH++hvbnYvkUpSJCQNIUJ4oax9zVgZnD/TnJWiXoa6ZIscWt7OHYTnlEGhAFb5Ud
-         S7mcWpMH0sQ8ckDVrtgp3XurFno3E5Q+jr+FWWEaXYEo31I9hqDotzwriStHVLK4IUfz
-         B90v2LP5PcviCD2qjGTOq/7RBucAV9sBzxooEbGUANB3EnNFfHb/ketbwpCZbxSKcjXC
-         N+LGshYgx+XZ1lfpSWGCa8aR966p/bgRmDIwxfGR++DAYupWC/vAEv3LjKALyQAbH7IN
-         EgCA==
-X-Gm-Message-State: AOAM531fff3Au3EbQc1xyPwzZhz8i241zZVMlWhT27pwAGhVZ7jzIMVj
-        qvUfETjaHd8oL5zkzoZopSI2TxVvs6s/b5B9yGHuaRtrI4w=
-X-Google-Smtp-Source: ABdhPJz5AyJtabGAW8xkxuzMwsBOaBn/dnqc6WDQFkSkcopWOOO+69r5vU0f2n59M+r8ti12ivIoPmjiBO+Qs1hiMcg=
-X-Received: by 2002:a05:6e02:92:: with SMTP id l18mr7060839ilm.212.1593253904114;
- Sat, 27 Jun 2020 03:31:44 -0700 (PDT)
+        Sat, 27 Jun 2020 06:31:54 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:46262 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgF0Kbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 06:31:53 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2C328BC193;
+        Sat, 27 Jun 2020 10:31:48 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        corbet@lwn.net, song@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: LVM
+Date:   Sat, 27 Jun 2020 12:31:38 +0200
+Message-Id: <20200627103138.71885-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <2733b41a-b4c6-be94-0118-a1a8d6f26eec@virtuozzo.com> <d6e8ef46-c311-b993-909c-4ae2823e2237@virtuozzo.com>
-In-Reply-To: <d6e8ef46-c311-b993-909c-4ae2823e2237@virtuozzo.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 27 Jun 2020 12:31:51 +0200
-Message-ID: <CA+icZUUad6Nk_ezhY5vcuVox41Eg120fELf5Kh_E1FCKhpv4Nw@mail.gmail.com>
-Subject: Re: [PATCH] fuse_writepages_fill() optimization to avoid WARN_ON in tree_insert
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org,
-        Maxim Patlasov <maximvp@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:52 AM Vasily Averin <vvs@virtuozzo.com> wrote:
->
-> In current implementation fuse_writepages_fill() tries to share the code:
-> for new wpa it calls tree_insert() with num_pages = 0
-> then switches to common code used non-modified num_pages
-> and increments it at the very end.
->
-> Though it triggers WARN_ON(!wpa->ia.ap.num_pages) in tree_insert()
->  WARNING: CPU: 1 PID: 17211 at fs/fuse/file.c:1728 tree_insert+0xab/0xc0 [fuse]
->  RIP: 0010:tree_insert+0xab/0xc0 [fuse]
->  Call Trace:
->   fuse_writepages_fill+0x5da/0x6a0 [fuse]
->   write_cache_pages+0x171/0x470
->   fuse_writepages+0x8a/0x100 [fuse]
->   do_writepages+0x43/0xe0
->
-> This patch re-works fuse_writepages_fill() to call tree_insert()
-> with num_pages = 1 and avoids its subsequent increment and
-> an extra spin_lock(&fi->lock) for newly added wpa.
->
-> Fixes: 6b2fb79963fb ("fuse: optimize writepages search")
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Hi Vasily,
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-I have cherry-picked commit 6b2fb79963fb ("fuse: optimize writepages
-search") on top of Linux v5.7.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
 
-Tested against Linux v5.7.6 with your triple patchset together (I
-guess the triple belongs together?):
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
 
-$ git log --oneline v5.7..
-0b26115de7aa (HEAD -> for-5.7/fuse-writepages-optimization-vvs)
-fuse_writepages ignores errors from fuse_writepages_fill
-687be6184c30 fuse_writepages_fill: simplified "if-else if" constuction
-8d8e2e5d90c0 fuse_writepages_fill() optimization to avoid WARN_ON in tree_insert
-cd4e568ca924 (for-5.7/fuse-writepages-optimization) fuse: optimize
-writepages search
+ Documentation/admin-guide/device-mapper/dm-raid.rst  | 2 +-
+ Documentation/admin-guide/device-mapper/dm-zoned.rst | 2 +-
+ drivers/md/Kconfig                                   | 8 ++++----
+ drivers/md/dm-crypt.c                                | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-Unsure if your single patches should be labeled with:
+diff --git a/Documentation/admin-guide/device-mapper/dm-raid.rst b/Documentation/admin-guide/device-mapper/dm-raid.rst
+index 695a2ea1d1ae..7ef9fe63b3d4 100644
+--- a/Documentation/admin-guide/device-mapper/dm-raid.rst
++++ b/Documentation/admin-guide/device-mapper/dm-raid.rst
+@@ -71,7 +71,7 @@ The target is named "raid" and it accepts the following parameters::
+   ============= ===============================================================
+ 
+   Reference: Chapter 4 of
+-  http://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
++  https://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
+ 
+ <#raid_params>: The number of parameters that follow.
+ 
+diff --git a/Documentation/admin-guide/device-mapper/dm-zoned.rst b/Documentation/admin-guide/device-mapper/dm-zoned.rst
+index 553752ea2521..e635041351bc 100644
+--- a/Documentation/admin-guide/device-mapper/dm-zoned.rst
++++ b/Documentation/admin-guide/device-mapper/dm-zoned.rst
+@@ -14,7 +14,7 @@ host-aware zoned block devices.
+ For a more detailed description of the zoned block device models and
+ their constraints see (for SCSI devices):
+ 
+-http://www.t10.org/drafts.htm#ZBC_Family
++https://www.t10.org/drafts.htm#ZBC_Family
+ 
+ and (for ATA devices):
+ 
+diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+index 921888df6764..30ba3573626c 100644
+--- a/drivers/md/Kconfig
++++ b/drivers/md/Kconfig
+@@ -27,7 +27,7 @@ config BLK_DEV_MD
+ 
+ 	  More information about Software RAID on Linux is contained in the
+ 	  Software RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also learn
++	  <https://www.tldp.org/docs.html#howto>. There you will also learn
+ 	  where to get the supporting user space utilities raidtools.
+ 
+ 	  If unsure, say N.
+@@ -71,7 +71,7 @@ config MD_RAID0
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also
++	  <https://www.tldp.org/docs.html#howto>. There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  To compile this as a module, choose M here: the module
+@@ -93,7 +93,7 @@ config MD_RAID1
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.  There you will also
++	  <https://www.tldp.org/docs.html#howto>.  There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  If you want to use such a RAID-1 set, say Y.  To compile this code
+@@ -148,7 +148,7 @@ config MD_RAID456
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also
++	  <https://www.tldp.org/docs.html#howto>. There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  If you want to use such a RAID-4/RAID-5/RAID-6 set, say Y.  To
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 000ddfab5ba0..4704a16e637c 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -300,7 +300,7 @@ static struct crypto_aead *any_tfm_aead(struct crypt_config *cc)
+  * elephant: The extended version of eboiv with additional Elephant diffuser
+  *           used with Bitlocker CBC mode.
+  *           This mode was used in older Windows systems
+- *           http://download.microsoft.com/download/0/2/3/0238acaf-d3bf-4a6d-b3d6-0a0be4bbb36e/bitlockercipher200608.pdf
++ *           https://download.microsoft.com/download/0/2/3/0238acaf-d3bf-4a6d-b3d6-0a0be4bbb36e/bitlockercipher200608.pdf
+  */
+ 
+ static int crypt_iv_plain_gen(struct crypt_config *cc, u8 *iv,
+-- 
+2.27.0
 
-"fuse:" or "fuse: writepages:" or "fuse: writepages_fill:"
-
-It is common to use present tense not past tense in the subject line.
-I found one typo in one subject line.
-
-Example (understand this as suggestions):
-1/3: fuse: writepages: Avoid WARN_ON in tree_insert in fuse_writepages_fill
-2/3: fuse: writepages: Simplif*y* "if-else if" const*r*uction
-3/3: fuse: writepages: Ignore errors from fuse_writepages_fill
-
-Unsure how to test your patchset.
-My usecase with fuse is to mount and read from the root.disk (loop,
-ext4) of a WUBI-installation of Ubuntu/precise 12.04-LTS.
-
-root@iniza# mount -r -t auto /dev/sda2 /mnt/win7
-root@iniza# cd /path/to/root.disk
-root@iniza# mount -r -t ext4 -o loop ./root.disk /mnt/ubuntu
-
-BTW, your patchset is bullet-proof with Clang version 11.0.0-git IAS
-(Integrated Assembler).
-
-If you send a v2 please add my:
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot; Linux
-v5.7.6 with clang-11 (IAS)
-
-Can you send a (git) cover-letter if this is a patchset - next time?
-
-Thanks.
-
-Regards,
-- Sedat -
-
-
-
-
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  fs/fuse/file.c | 56 +++++++++++++++++++++++++++++---------------------------
->  1 file changed, 29 insertions(+), 27 deletions(-)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index e573b0c..cf267bd 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -1966,10 +1966,9 @@ static bool fuse_writepage_in_flight(struct fuse_writepage_args *new_wpa,
->         struct fuse_writepage_args *old_wpa;
->         struct fuse_args_pages *new_ap = &new_wpa->ia.ap;
->
-> -       WARN_ON(new_ap->num_pages != 0);
-> +       WARN_ON(new_ap->num_pages != 1);
->
->         spin_lock(&fi->lock);
-> -       rb_erase(&new_wpa->writepages_entry, &fi->writepages);
->         old_wpa = fuse_find_writeback(fi, page->index, page->index);
->         if (!old_wpa) {
->                 tree_insert(&fi->writepages, new_wpa);
-> @@ -1977,7 +1976,6 @@ static bool fuse_writepage_in_flight(struct fuse_writepage_args *new_wpa,
->                 return false;
->         }
->
-> -       new_ap->num_pages = 1;
->         for (tmp = old_wpa->next; tmp; tmp = tmp->next) {
->                 pgoff_t curr_index;
->
-> @@ -2020,7 +2018,7 @@ static int fuse_writepages_fill(struct page *page,
->         struct fuse_conn *fc = get_fuse_conn(inode);
->         struct page *tmp_page;
->         bool is_writeback;
-> -       int err;
-> +       int index, err;
->
->         if (!data->ff) {
->                 err = -EIO;
-> @@ -2083,44 +2081,48 @@ static int fuse_writepages_fill(struct page *page,
->                 wpa->next = NULL;
->                 ap->args.in_pages = true;
->                 ap->args.end = fuse_writepage_end;
-> -               ap->num_pages = 0;
-> +               ap->num_pages = 1;
->                 wpa->inode = inode;
-> -
-> -               spin_lock(&fi->lock);
-> -               tree_insert(&fi->writepages, wpa);
-> -               spin_unlock(&fi->lock);
-> -
-> +               index = 0;
->                 data->wpa = wpa;
-> +       } else {
-> +               index = ap->num_pages;
->         }
->         set_page_writeback(page);
->
->         copy_highpage(tmp_page, page);
-> -       ap->pages[ap->num_pages] = tmp_page;
-> -       ap->descs[ap->num_pages].offset = 0;
-> -       ap->descs[ap->num_pages].length = PAGE_SIZE;
-> +       ap->pages[index] = tmp_page;
-> +       ap->descs[index].offset = 0;
-> +       ap->descs[index].length = PAGE_SIZE;
->
->         inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
->         inc_node_page_state(tmp_page, NR_WRITEBACK_TEMP);
->
->         err = 0;
-> -       if (is_writeback && fuse_writepage_in_flight(wpa, page)) {
-> -               end_page_writeback(page);
-> -               data->wpa = NULL;
-> -               goto out_unlock;
-> +       if (is_writeback) {
-> +               if (fuse_writepage_in_flight(wpa, page)) {
-> +                       end_page_writeback(page);
-> +                       data->wpa = NULL;
-> +                       goto out_unlock;
-> +               }
-> +       } else if (!index) {
-> +               spin_lock(&fi->lock);
-> +               tree_insert(&fi->writepages, wpa);
-> +               spin_unlock(&fi->lock);
->         }
-> -       data->orig_pages[ap->num_pages] = page;
-> -
-> -       /*
-> -        * Protected by fi->lock against concurrent access by
-> -        * fuse_page_is_writeback().
-> -        */
-> -       spin_lock(&fi->lock);
-> -       ap->num_pages++;
-> -       spin_unlock(&fi->lock);
-> +       data->orig_pages[index] = page;
->
-> +       if (index) {
-> +               /*
-> +                * Protected by fi->lock against concurrent access by
-> +                * fuse_page_is_writeback().
-> +                */
-> +               spin_lock(&fi->lock);
-> +               ap->num_pages++;
-> +               spin_unlock(&fi->lock);
-> +       }
->  out_unlock:
->         unlock_page(page);
-> -
->         return err;
->  }
->
-> --
-> 1.8.3.1
->
