@@ -2,260 +2,206 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C81C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEDD20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C658208B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593268579;
-	bh=7yKGaSys/x4kSwsiwsgHnvwOIWo9krh7zT7L0zfUSqI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXwqTJAeB7wGRTCRaQjU9HyMCCUOWfQ9g9ADBc0EgfbcJgo31gw0MKiE1kpcUAnqP
-	 zbnMGCWyETHvqq2ezCpIBEsmK6FTwoJxTNquuWKN8HL8MSgS/R/aB3b+idVcwI4qIe
-	 r5lF/IJaC0I1/L9jzSBVxAyFMB3hEC3w6VIzccXg=
+	s=default; t=1593269212;
+	bh=8mD5HfkoOC5sXuSWLshxJieEpfSpC92uKbIm8U25v2A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=R8AF0avlcg9e5vL566IkDnMwvwmxSBre+H6auj2sEdQ3AXyuuhAEhxPrhyleLSrEd
+	 zsHatLIcVLsyPr7hhIsWv0HNyz1Ds9GIBtQE7+/VjzMFv7zgw4Vd5VLstS5POk2nd7
+	 wEXuAZpTG4yoX9aZdd7QLoNZh7wXaTfI2CmRbuGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgF0OgR (ORCPT
+        id S1726139AbgF0Oqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 10:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 10:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0OgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 10:36:15 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725850AbgF0Oqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:46:50 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28792089D;
-        Sat, 27 Jun 2020 14:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F2D208B6;
+        Sat, 27 Jun 2020 14:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593268574;
-        bh=7yKGaSys/x4kSwsiwsgHnvwOIWo9krh7zT7L0zfUSqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vedhTYE9T67avhoKl2zDmD+CF8XE3npkylRfYp07gEBnq/wQv81HahhSLX12TWWXt
-         Q7apuh6XkhDqPkOu1zRv2yq0e5GqbJDequ8aSDANQRvuz7aSP+Dmn/IKErWl9fGhG/
-         riDKDn6+/FvQBd8H0M/pmjSmyHQLO7e5+/A0lSk8=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Joerg Roedel <joro@8bytes.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stafford Horne <shorne@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
-        sparclinux@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 8/8] mm: move p?d_alloc_track to separate header file
-Date:   Sat, 27 Jun 2020 17:34:53 +0300
-Message-Id: <20200627143453.31835-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200627143453.31835-1-rppt@kernel.org>
-References: <20200627143453.31835-1-rppt@kernel.org>
+        s=default; t=1593269209;
+        bh=8mD5HfkoOC5sXuSWLshxJieEpfSpC92uKbIm8U25v2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1tX2ZrQ1EbCeFH05x6zhrOe1TN5vR7nqAlmHSUf0VK3noFpEnBhXHTkv1vXgYqLVx
+         McyoHcGIwshwLQVMd1ttN18d8yo8+K7wPpb2/ZKhz/mVeDWiFjig6597blZXjOkaSS
+         MtDzbgU0WIEg4yi4siPbuE7mIpAm1AYbfMs2/h8E=
+Date:   Sat, 27 Jun 2020 15:46:46 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Berghe, Darius" <Darius.Berghe@analog.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v1 3/3] iio:adc:ltc2471: add dt binding yaml
+Message-ID: <20200627154646.012ffd10@archlinux>
+In-Reply-To: <053ba6af36636cb5b87c885ef1c6e157405e4412.camel@analog.com>
+References: <20200617133523.58158-1-darius.berghe@analog.com>
+        <20200617133523.58158-3-darius.berghe@analog.com>
+        <20200620163124.29d9cd38@archlinux>
+        <053ba6af36636cb5b87c885ef1c6e157405e4412.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Mon, 22 Jun 2020 08:05:13 +0000
+"Berghe, Darius" <Darius.Berghe@analog.com> wrote:
 
-The functions are only used in two source files, both residing in mm/
-subdirectory, so there is no need for them to be in the global <linux/mm.h>
-header.  Move them to the new mm/pgalloc-track.h header and include it only
-where needed.
+> On Sat, 2020-06-20 at 16:31 +0100, Jonathan Cameron wrote:
+> > [External]
+> > 
+> > On Wed, 17 Jun 2020 16:35:23 +0300
+> > Darius Berghe <darius.berghe@analog.com> wrote:
+> >   
+> > > Add dt binding documentation for ltc2471 driver. This covers all supported
+> > > devices.
+> > > 
+> > > Signed-off-by: Darius Berghe <darius.berghe@analog.com>  
+> > A few things inline but basically fine.
+> > 
+> > We should however also think about documenting power supplies.
+> > Even though the driver doesn't currently control the binding should
+> > be as complete as possible.
+> > 
+> > Jonathan
+> >   
+> Hi Jonathan,
+> 
+> And thanks for the review !
 
-[rppt: mv include/linux/pgalloc-track.h mm/]
+> 
+> This chips have a fixed internal vref of 1.25V that is output on the REFOUT pin,
+> there is no place for configuration here. Or perhaps did you mean the VCC (2.7V-5.5V) ?
 
-Link: http://lkml.kernel.org/r/20200609120533.25867-1-joro@8bytes.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/linux/mm.h | 45 ----------------------------------------
- mm/ioremap.c       |  2 ++
- mm/pgalloc-track.h | 51 ++++++++++++++++++++++++++++++++++++++++++++++
- mm/vmalloc.c       |  1 +
- 4 files changed, 54 insertions(+), 45 deletions(-)
- create mode 100644 mm/pgalloc-track.h
+Yes, VCC was what I was referring to.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index dc7b87310c10..5e878a3c7c57 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2093,51 +2093,11 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
- 		NULL : pud_offset(p4d, address);
- }
- 
--static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--
--{
--	if (unlikely(pgd_none(*pgd))) {
--		if (__p4d_alloc(mm, pgd, address))
--			return NULL;
--		*mod_mask |= PGTBL_PGD_MODIFIED;
--	}
--
--	return p4d_offset(pgd, address);
--}
--
--static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--{
--	if (unlikely(p4d_none(*p4d))) {
--		if (__pud_alloc(mm, p4d, address))
--			return NULL;
--		*mod_mask |= PGTBL_P4D_MODIFIED;
--	}
--
--	return pud_offset(p4d, address);
--}
--
- static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
- {
- 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
- 		NULL: pmd_offset(pud, address);
- }
--
--static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--{
--	if (unlikely(pud_none(*pud))) {
--		if (__pmd_alloc(mm, pud, address))
--			return NULL;
--		*mod_mask |= PGTBL_PUD_MODIFIED;
--	}
--
--	return pmd_offset(pud, address);
--}
- #endif /* CONFIG_MMU */
- 
- #if USE_SPLIT_PTE_PTLOCKS
-@@ -2253,11 +2213,6 @@ static inline void pgtable_pte_page_dtor(struct page *page)
- 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
- 		NULL: pte_offset_kernel(pmd, address))
- 
--#define pte_alloc_kernel_track(pmd, address, mask)			\
--	((unlikely(pmd_none(*(pmd))) &&					\
--	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
--		NULL: pte_offset_kernel(pmd, address))
--
- #if USE_SPLIT_PMD_PTLOCKS
- 
- static struct page *pmd_to_page(pmd_t *pmd)
-diff --git a/mm/ioremap.c b/mm/ioremap.c
-index 5ee3526f71b8..5fa1ab41d152 100644
---- a/mm/ioremap.c
-+++ b/mm/ioremap.c
-@@ -13,6 +13,8 @@
- #include <linux/export.h>
- #include <asm/cacheflush.h>
- 
-+#include "pgalloc-track.h"
-+
- #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
- static int __read_mostly ioremap_p4d_capable;
- static int __read_mostly ioremap_pud_capable;
-diff --git a/mm/pgalloc-track.h b/mm/pgalloc-track.h
-new file mode 100644
-index 000000000000..1dcc865029a2
---- /dev/null
-+++ b/mm/pgalloc-track.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PGALLLC_TRACK_H
-+#define _LINUX_PGALLLC_TRACK_H
-+
-+#if defined(CONFIG_MMU)
-+static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(pgd_none(*pgd))) {
-+		if (__p4d_alloc(mm, pgd, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PGD_MODIFIED;
-+	}
-+
-+	return p4d_offset(pgd, address);
-+}
-+
-+static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(p4d_none(*p4d))) {
-+		if (__pud_alloc(mm, p4d, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_P4D_MODIFIED;
-+	}
-+
-+	return pud_offset(p4d, address);
-+}
-+
-+static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(pud_none(*pud))) {
-+		if (__pmd_alloc(mm, pud, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PUD_MODIFIED;
-+	}
-+
-+	return pmd_offset(pud, address);
-+}
-+#endif /* CONFIG_MMU */
-+
-+#define pte_alloc_kernel_track(pmd, address, mask)			\
-+	((unlikely(pmd_none(*(pmd))) &&					\
-+	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
-+		NULL: pte_offset_kernel(pmd, address))
-+
-+#endif /* _LINUX_PGALLLC_TRACK_H */
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 5a2b55c8dd9a..5be3cf3b59de 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -41,6 +41,7 @@
- #include <asm/shmparam.h>
- 
- #include "internal.h"
-+#include "pgalloc-track.h"
- 
- bool is_vmalloc_addr(const void *x)
- {
--- 
-2.26.2
+> I'm not sure what the added value would be to add vref-supply and vcc-supply to yaml
+> if they are not implemented. I find it confusing.
+
+Bindings are intended to describe the hardware rather than what we've implemented
+support for in the driver.   It's fairly likely that we will end up supporting
+regulator control sooner or later (tends to happen if a driver is getting much use
+as someone will care about powering down the supplies when suspending etc).
+
+So ideally we'd add support to the driver, but even if it's not there we can consider
+adding it to the binding docs. However, it's not (to my mind) vital.
+
+> 
+> > > ---
+> > >  .../bindings/iio/adc/adi,ltc2471.yaml         | 52 +++++++++++++++++++
+> > >  1 file changed, 52 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> > > new file mode 100644
+> > > index 000000000000..0b84e14ec984
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> > > @@ -0,0 +1,52 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +# Copyright 2020 Analog Devices Inc.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/bindings/iio/adc/adi,ltc2471.yaml*__;Iw!!A3Ni8CS0y2Y!vUpDwSslcaNrc3db6AQ6x3gzYHbR_WxOtQyPinkeZCjgpiQ4elEbjMzDs1OGEYZou4E$ 
+> > > +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas/core.yaml*__;Iw!!A3Ni8CS0y2Y!vUpDwSslcaNrc3db6AQ6x3gzYHbR_WxOtQyPinkeZCjgpiQ4elEbjMzDs1OG4cmRuW4$ 
+> > > +
+> > > +title: Analog Devices LTC2471 16-bit I2C Sigma-Delta ADC
+> > > +
+> > > +maintainers:
+> > > +  - Mike Looijmans <mike.looijmans@topic.nl>
+> > > +
+> > > +description: |
+> > > +  Analog Devices LTC2471 (single-ended) and LTC2473 (differential) 16-bit
+> > > +  I2C Sigma-Delta ADC with selectable 208/833sps output rate.
+> > > +  https://www.analog.com/media/en/technical-documentation/data-sheets/24713fb.pdf
+> > > +
+> > > +  Analog Devices LTC2461 (single-ended) and LTC2463 (differential) 16-bit
+> > > +  I2C Sigma-Delta ADC with 60sps output rate.
+> > > +  https://www.analog.com/media/en/technical-documentation/data-sheets/24613fa.pdf  
+> > 
+> > Put these two blocks in numeric order.  If we end up adding a bunch more
+> > devices it will be much more consistent if they are order.
+> >   
+> 
+> Ack, will do.
+> 
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,ltc2471
+> > > +      - adi,ltc2473
+> > > +      - adi,ltc2461
+> > > +      - adi,ltc2463  
+> > 
+> > Put them in numeric order.
+> >   
+> 
+> Ack, will do.
+> 
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    i2c0 {
+> > > +      ltc2461@14 {  
+> > 
+> > Should use a generic name
+> > adc@14
+> >   
+> 
+> Ack, will do.
+> 
+> > > +        compatible = "ltc2461";
+> > > +        reg = <0x14>;
+> > > +      };
+> > > +    };
+> > > +  - |
+> > > +    i2c0 {  
+> > 
+> > Not a lot of point in two examples given how similar they are.
+> > I'd just keep the one. 
+> >   
+> 
+> Ack, will do.
+> I only chose to give two examples because the chip has 2 possible I2C slave addresses 0x14 and 0x54 depending on the AO pin value being low or high. But you're right, they're too simple and similar.
+
+Agreed
+
+Thanks,
+
+Jonathan
+
+> 
+> Best regards,
+> Darius
+> 
+> > > +      ltc2473@54 {
+> > > +        compatible = "ltc2473";
+> > > +        reg = <0x54>;
+> > > +      };
+> > > +    };
+> > > +  
 
