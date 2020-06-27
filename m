@@ -2,184 +2,85 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C41C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2692089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96F920720
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYwbbD/J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlSSOZGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgF0M4E (ORCPT
+        id S1726614AbgF0NFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 08:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
+        Sat, 27 Jun 2020 09:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbgF0M4D (ORCPT
+        with ESMTP id S1726177AbgF0NFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 08:56:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D5CC03E979;
-        Sat, 27 Jun 2020 05:56:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i4so6087878pjd.0;
-        Sat, 27 Jun 2020 05:56:03 -0700 (PDT)
+        Sat, 27 Jun 2020 09:05:39 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E50C03E979;
+        Sat, 27 Jun 2020 06:05:39 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id k7so5555043vso.2;
+        Sat, 27 Jun 2020 06:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGvZib8pdw3S5tlf2fLr9MTmZjnf+euhMJXGijUwvfw=;
-        b=aYwbbD/J1SI38fp02GDl82/GSSX9R02Ewea3Re0BXnrbRfsdZqIo/UtgbmebQMNKxs
-         guZtJS/EMfpLcYhwjQtnkDF63ioRJeB8aW2icRTjzyJdkfv9ytIj5uS7JpL1aYZG7Rwo
-         l0CtetgR3mdslTKD8MyQsrvHwhIu+NL69PUSajfJKBwOdK5PsFOFFRY7l6rp+kM6wqZ3
-         5HKs6ULkpo5XQxFXoZAIkrCPPNdUJef6uMnzTL85FZhM4J2L1J0fuPejiRl9v4mN/HHy
-         71Avk3D5c6C1y0Wh27LbkSOnzhVJe9W744JI3YG++0m3uwKRY2PSvRV2QS4gbvQzK3A8
-         RHdw==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=VjC16p+GoxuoIWlJhKz+IIz8N8uNdW4gDeTUzcPL0Ak=;
+        b=YlSSOZGztdfK1neu9Enh1MfW1rZK34OjqNV/UyuGx9JADOSaYo457pjorKAqAkdEPZ
+         LiYHv1LJN2Q2QpWUvpKyT7d4jKZRpl0XXqUNDxb2og5keR8d+fGEhEb4Zrs+m7BCbFoo
+         /WJZaTA3unBWFUmcgdcLeQVWhx5GU1iVfgajNbwxLCj0pMU7aMQu2+9IwUv6ZCdi71bz
+         SZPi/+fWmepH9u/3614U6tEQZPss1PZIamzSLqyDK/wPS9tkWM+vj6SkHpULpqd/uPj4
+         9sUT0ZUXOHza+gFsb8e2pH0HsrT++p2YBURDa+nSX83azojww2hUYRA1J9rzdJrr3aJx
+         MNRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGvZib8pdw3S5tlf2fLr9MTmZjnf+euhMJXGijUwvfw=;
-        b=pxJyxNdVpQCWD9oM42z8fHzGg9Rl24/eZbStYcFFWFZyIjlEww+zmw7ZtNxLi6Ru5z
-         CB7TnFRermaIssqG8oobL9DmRpRNaFTkd0K1reqn8AVdDCySYsvXuRaYHWXDHTP7jOwQ
-         ZlmPkSLIvouV0eepIKPOGGV7MoqN4rzMbo63CPBw1FQrlaKqVIc83GpeHOQNsB2yvvhy
-         LeLO+IJJ3eOQcjehq64kgm4a7X4aDxkSOEtufZ6zyDb95cRT69Ccc2/CTudX1ileOury
-         NtOm97NcLVAZA0eZPUTuVY7q+8QAtccZtOtgBCgsI9Z3p2dI1PYEilPwU11EUdw3BKq1
-         6eGg==
-X-Gm-Message-State: AOAM533o6WUVitefA8xz7BTAY/eq+wjBP+tj/oIv7tAIGdi2tlljN6zP
-        +9ak/WNkeIyMY+u4+9k6WTquglHJfDgjHw==
-X-Google-Smtp-Source: ABdhPJzLmyVikN5w48/X6MhRGaWzTPhpgXGppM+9aXL0CyTAu7JOQk/LEbxCUKt6DQ7oSuA38j1o0w==
-X-Received: by 2002:a17:90b:a11:: with SMTP id gg17mr8499048pjb.74.1593262562502;
-        Sat, 27 Jun 2020 05:56:02 -0700 (PDT)
-Received: from localhost.localdomain ([211.195.169.54])
-        by smtp.gmail.com with ESMTPSA id o1sm13873552pjp.37.2020.06.27.05.56.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 05:56:02 -0700 (PDT)
-From:   Park Ju Hyung <qkrwngud825@gmail.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Park Ju Hyung <qkrwngud825@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] exfat: implement "quiet" option for setattr
-Date:   Sat, 27 Jun 2020 21:55:09 +0900
-Message-Id: <20200627125509.142393-1-qkrwngud825@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=VjC16p+GoxuoIWlJhKz+IIz8N8uNdW4gDeTUzcPL0Ak=;
+        b=gTEGWw3odHK69HeSvljLQCi8/gJyw/QQONTm/MUYq7e9d/Oxd5K+6r4GJFCPIscG+3
+         u5pOON8FXSlpl9tePj4CzwbMEzEo5D/8WHo/2KZYSbx1edBdshr5HtNQxpM4AYUKgceg
+         J5YKxNEWCvlkvmkSudGlZypDeGMFh2wED67duD18al7Ev+J3MXZKeTtM+dH8PnRTw5CC
+         QX8K4rxFzNjdBFvD84H4npYdneK+mHoD2GoxhEuzwsXDU6NXMUPURyHznklyDQrdIHoR
+         JMEuDTy+uc+T3nBhjiEQspDTuF4Q10vVEi7RAYVftBgbbN54aIh3DJdNQceP/6uAYWhi
+         2y1Q==
+X-Gm-Message-State: AOAM532i14gk+Z+TkHLMNet4TVK/uCyI4uQYCX+MiY8l7CfhcPqzhtfX
+        27QZHtdiWDq2tkjdYk1HLbFw7avsKvMtZinSTSI=
+X-Google-Smtp-Source: ABdhPJyseDDlbK9yS7yhoqK/FiQxELToQw+pvf/n2Lnfy7aDvshahJX5DvPZvf9cAQhNojTceDvj1Wc6OP1abvpil7Q=
+X-Received: by 2002:a67:ea84:: with SMTP id f4mr5694066vso.113.1593263138880;
+ Sat, 27 Jun 2020 06:05:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Ju Hyung Park <qkrwngud825@gmail.com>
+Date:   Sat, 27 Jun 2020 22:05:28 +0900
+Message-ID: <CAD14+f1mAW-tVM6c1vbA_7ZgbtKzLRsBaceVBZ6PzZGsFzGPKg@mail.gmail.com>
+Subject: exfat: request to implement FITRIM ioctl for fstrim
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>, witallwang@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few programs, especially old ones, simply don't want to work
-if there isn't a POSIX-compliant setattr.
+Hi.
 
-Follow vfat and implement a new "quiet" option to workaround this.
+It has come to my attention that while exfat supports live trim via
+the discard mount option, it does not implement FITRIM ioctl for
+fstrim(8).
 
-Signed-off-by: Park Ju Hyung <qkrwngud825@gmail.com>
----
- fs/exfat/exfat_fs.h |  2 ++
- fs/exfat/file.c     | 13 +++++++++++--
- fs/exfat/super.c    |  7 +++++++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+As exfat finally became the R/W cross-platform file-system solution
+and many flash storages defaulting to exfat, I'd love to see fstrim
+support added to exfat too.
 
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 3aed8e22087a..66837baf42d2 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -201,6 +201,8 @@ struct exfat_mount_options {
- 	unsigned short allow_utime;
- 	/* charset for filename input/display */
- 	char *iocharset;
-+	/* fake return success on setattr(e.g. chmods/chowns) */
-+	unsigned char quiet;
- 	/* on error: continue, panic, remount-ro */
- 	enum exfat_error_mode errors;
- 	unsigned utf8:1, /* Use of UTF-8 character set */
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index 6707f3eb09b5..2ed6be7cab15 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -295,7 +295,7 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
- 	    attr->ia_size > i_size_read(inode)) {
- 		error = exfat_cont_expand(inode, attr->ia_size);
- 		if (error || attr->ia_valid == ATTR_SIZE)
--			return error;
-+			goto out;
- 		attr->ia_valid &= ~ATTR_SIZE;
- 	}
- 
-@@ -309,8 +309,11 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
- 
- 	error = setattr_prepare(dentry, attr);
- 	attr->ia_valid = ia_valid;
--	if (error)
-+	if (error) {
-+		if (sbi->options.quiet)
-+			error = 0;
- 		goto out;
-+	}
- 
- 	if (((attr->ia_valid & ATTR_UID) &&
- 	     !uid_eq(attr->ia_uid, sbi->options.fs_uid)) ||
-@@ -322,6 +325,12 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
- 		goto out;
- 	}
- 
-+	if (error) {
-+		if (sbi->options.quiet)
-+			error = 0;
-+		goto out;
-+	}
-+
- 	/*
- 	 * We don't return -EPERM here. Yes, strange, but this is too
- 	 * old behavior.
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index b5bf6dedbe11..030db33eed35 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -145,6 +145,8 @@ static int exfat_show_options(struct seq_file *m, struct dentry *root)
- 	seq_printf(m, ",fmask=%04o,dmask=%04o", opts->fs_fmask, opts->fs_dmask);
- 	if (opts->allow_utime)
- 		seq_printf(m, ",allow_utime=%04o", opts->allow_utime);
-+	if (opts->quiet)
-+		seq_puts(m, ",quiet");
- 	if (opts->utf8)
- 		seq_puts(m, ",iocharset=utf8");
- 	else if (sbi->nls_io)
-@@ -198,6 +200,7 @@ enum {
- 	Opt_fmask,
- 	Opt_allow_utime,
- 	Opt_charset,
-+	Opt_quiet,
- 	Opt_errors,
- 	Opt_discard,
- 	Opt_time_offset,
-@@ -224,6 +227,7 @@ static const struct fs_parameter_spec exfat_parameters[] = {
- 	fsparam_u32oct("fmask",			Opt_fmask),
- 	fsparam_u32oct("allow_utime",		Opt_allow_utime),
- 	fsparam_string("iocharset",		Opt_charset),
-+	fsparam_flag("quiet",			Opt_quiet),
- 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
- 	fsparam_flag("discard",			Opt_discard),
- 	fsparam_s32("time_offset",		Opt_time_offset),
-@@ -274,6 +278,9 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		opts->iocharset = param->string;
- 		param->string = NULL;
- 		break;
-+	case Opt_quiet:
-+		opts->quiet = 1;
-+		break;
- 	case Opt_errors:
- 		opts->errors = result.uint_32;
- 		break;
--- 
-2.27.0
+Wentao Wang added FITRIM ioctl for vfat about 2 years ago. I hope that
+can be a useful reference:
+Commit f663b5b38fffeb31841f8bfaf0ef87a445b0ffee ("fat: add FITRIM
+ioctl for FAT file system").
 
+Thanks.
