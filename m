@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DFCC433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AE4C433E2
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10402067D
+	by mail.kernel.org (Postfix) with ESMTP id 807562071A
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593289524;
-	bh=fbYrsCer1z/zOX2JYA572ehcuYvqaX/yYNi9GFDg5+w=;
+	bh=4ZVFImtbaCKd0Np4tmJJBMCy0Tek++XCgT1Ml2ZJ58o=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=CfB7YKrPvcCuaoldsNytqMNH/CHChV5/e8Aepu7IGa2VfmRJVqphwrsK76mDJY3Z/
-	 bTGKec2WLnZbyOKx86Gz7+bLvgUcJzkzCSLPK9L/bqeVHcmqd98JGXROrUhxHu+cOK
-	 0OG9dvghhFhcVF3UtfuxF1Lke+wARfgQpysRZbGU=
+	b=0itzBSN6vJlN1V81eMaT+u197b16NAXEX98yQX6zMozNrySbA4Yfguq/SB7aakFlI
+	 K8c2+YeLlRJDkwgeSTa88fzQ7Rv3+UL5wV0ygGfxsLwOt8kOlxR0oD0yf4V6RQcnoX
+	 tUH+vR8tTrSl5Ydlxl5u6qOW++cUJtfGN47WaO8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgF0UZT (ORCPT
+        id S1726897AbgF0UZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 16:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40262 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 16:25:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgF0UZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725975AbgF0UZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Jun 2020 16:25:14 -0400
-Subject: Re: [GIT PULL] USB driver fixes for 5.8-rc3
+Subject: Re: [GIT PULL] EDAC urgent for 5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593289514;
-        bh=fbYrsCer1z/zOX2JYA572ehcuYvqaX/yYNi9GFDg5+w=;
+        s=default; t=1593289513;
+        bh=4ZVFImtbaCKd0Np4tmJJBMCy0Tek++XCgT1Ml2ZJ58o=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=EUADxNKfjeVbu/GialC1j+2HjZgEUGj4QBpEnS4MPKuATl9PFxaSzZftPR1GrqNwx
-         SKlFN7Vi6B9Yw3DM76Sa46Lxmz+Bwd/IMLu9IIzcterdEVGuz95HRqehpLpg8Yk0vp
-         9ZsIoFz56lvYIF3oulZdnfqAvsmOnZ6WvhPKe3j8=
+        b=XF0TTRWVKcxQVKy9PRFvVilaIIIt5ERquPMGDf22xNAgPSW0UdMc2V2b8EDdy3B9r
+         VFuLlXHWgra8se6gw/tUFuOvyd99dJ6AOwQSyz6ze5EgJ3zi6s9Z9146K1FQair54U
+         yMPgUBbZvUn/1gfITnd9OZiNFwXSyahcpJdLFPcI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200627114013.GA1636882@kroah.com>
-References: <20200627114013.GA1636882@kroah.com>
+In-Reply-To: <20200627105918.GD18956@zn.tnic>
+References: <20200627105918.GD18956@zn.tnic>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200627114013.GA1636882@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc3
-X-PR-Tracked-Commit-Id: ed8fa04243e22f7b8f470d08e5806c9f8c6a460a
+X-PR-Tracked-Message-Id: <20200627105918.GD18956@zn.tnic>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git
+ tags/edac_urgent_for_5.8
+X-PR-Tracked-Commit-Id: ee470bb25d0dcdf126f586ec0ae6dca66cb340a4
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7eb8f53b8afe87a7993c9d71d3d01bb97c50bd0a
-Message-Id: <159328951427.11719.1463054512484214153.pr-tracker-bot@kernel.org>
-Date:   Sat, 27 Jun 2020 20:25:14 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
+X-PR-Merge-Commit-Id: 42f8f9bc5cb7c35ca04a6867cc01c24538d59f7f
+Message-Id: <159328951364.11719.14509799335240723936.pr-tracker-bot@kernel.org>
+Date:   Sat, 27 Jun 2020 20:25:13 +0000
+To:     Borislav Petkov <bp@suse.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+        linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 27 Jun 2020 13:40:13 +0200:
+The pull request you sent on Sat, 27 Jun 2020 12:59:18 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_5.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7eb8f53b8afe87a7993c9d71d3d01bb97c50bd0a
+https://git.kernel.org/torvalds/c/42f8f9bc5cb7c35ca04a6867cc01c24538d59f7f
 
 Thank you!
 
