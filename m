@@ -2,182 +2,111 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8445CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB8120885
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593264581;
-	bh=bYRgBNnkNpkhq+5KsbmZ23kTjQ4YEcihVz5msz6QX6s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KaMctFd8Jtp7bmhvXE0mP8PNkwLmRAX8R2kFcfJ8/r6uhw5BfrwNzAdirCMe6799v
-	 /hOcw+dxE97me8ktOD1aMri2A6r9pfWNPJa5DAzbjAKHJRi8mozd2RfXwvzQJm4HCB
-	 0C5/wRQD2ls5DWCd3ACkCGypQp61Q+UHy8e5VzE0=
+	by mail.kernel.org (Postfix) with ESMTP id 5EC8620885
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:33:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNKqZfUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgF0N3h (ORCPT
+        id S1726656AbgF0Nda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0N3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:29:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D837B20885;
-        Sat, 27 Jun 2020 13:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593264576;
-        bh=bYRgBNnkNpkhq+5KsbmZ23kTjQ4YEcihVz5msz6QX6s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ISLsKv7lswwBX0YXGOxRlv6mx3SzMEnQNIm4PXazGlt5GVbGFdmHPNJ+RR2M5Fhip
-         CzufdX98ZclkKj8hh0YCgpzadpiNnz2vW/r59/ZMILWkmyfxX5Vyzo37Pj3tYzy02G
-         pSIGHWb6G3X3XpUAG+qnyvfIiXF6qOPHthQw8sHg=
-Date:   Sat, 27 Jun 2020 14:29:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/13] iio: imu: new inv_icm42600 driver
-Message-ID: <20200627142931.4a522c6e@archlinux>
-In-Reply-To: <20200622153729.12702-1-jmaneyrol@invensense.com>
-References: <20200622153729.12702-1-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Jun 2020 09:33:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36760 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725850AbgF0Nd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:33:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593264808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=Qer1iXTJUcRgtSy6CWeiNt2qqL/Nc340WbBo6sqo8Hw=;
+        b=SNKqZfUHh+7L3OvXdN6PsE99UWrpAI84+xh6mpi+iw3PvXjEEOifKYK/h2rgEvlzNAW6NE
+        pXAIyy1wmhMI2d+3zHZ7BT0BGrll45x7fRb4avjxvzZTtSlrzFwJDpBrHv2nE2Q3XnvirC
+        H8ug3Qsm/8OTx5Gd6q8vnXgROv1X44M=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-JyeQVqn5PDSvQ5E9hr_UhQ-1; Sat, 27 Jun 2020 09:33:25 -0400
+X-MC-Unique: JyeQVqn5PDSvQ5E9hr_UhQ-1
+Received: by mail-qt1-f200.google.com with SMTP id 94so8275733qtb.21
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:32:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Qer1iXTJUcRgtSy6CWeiNt2qqL/Nc340WbBo6sqo8Hw=;
+        b=cAjw060f+7TUnrvDbi/yzZqjSDJ6Fn4cN92apgOkjXp8lcLJzCksXUtBHhj0DTVi1c
+         /pFMva/uK+QWLbix7enyeXWdhh/UmgYJQ0h/gc9jQP9UID2NorcPN2c3gf6zmjHEmAhw
+         FtQZMB1V1dGb0vPPJvDJcail1ykZvyBLchjp/biX30DDV39TyYr3bdQgfujxpBLg9tNO
+         5U0aeviGyZR7KeZKD5Gbg4Z0JJRTDN1IsgXQUqMzdGtseVZsRug4T6WO/Tl2iwYmzGBV
+         mzWFyuA0v9gDv49QZpFew2aeCiP31XBFmgHOzfdEE3Moy4HBW6qPcDYDl86GydI5nlNS
+         rNhQ==
+X-Gm-Message-State: AOAM53145V4e5rMDQ+g/lwVW3JMb52YnQFmO+s0vCGLpuoHBmripl0oM
+        tKOrO0Y6d8jBixpTPH9BhQIHHGkVulQKB0lmA9DdCTPWr1JnCQ4RoGv1F70kV+bCP0p1bAyGQ2B
+        kWHp1lVFCGbPGh+mHIVk/B4Op
+X-Received: by 2002:ac8:40cd:: with SMTP id f13mr7446119qtm.373.1593264777902;
+        Sat, 27 Jun 2020 06:32:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxTywsDCYj1R1MS3BxIDCt8awqyb1UCPMVd5HfK6pZlMhU6x4aB7OaqYuih/FjYDa/EJvOPwQ==
+X-Received: by 2002:ac8:40cd:: with SMTP id f13mr7446108qtm.373.1593264777712;
+        Sat, 27 Jun 2020 06:32:57 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b22sm9767979qka.43.2020.06.27.06.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 06:32:57 -0700 (PDT)
+From:   trix@redhat.com
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] scsi: scsi_transport_spi: fix function pointer check.
+Date:   Sat, 27 Jun 2020 06:32:42 -0700
+Message-Id: <20200627133242.21618-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 17:37:16 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+From: Tom Rix <trix@redhat.com>
 
-Looks good to me.  Whole series applied (picking up Rob's ack
-for the DT binding docs patch) to the togreg branch of iio.git and pushed
-out as testing for the various autobuilders to poke at it.
+clang static analysis flags several null function pointer problems.
 
-Thanks,
+drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
+spi_transport_max_attr(offset, "%d\n");
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Jonathan
+Reviewing the store_spi_store_max macro
 
-> Changelog
-> v1
->   -initial patch submission
-> v2
->   - formatting reworks, missing headers, code cleanup ...
->   - delete all debug traces
->   - add commentaries for better explanation of suspend/resume, timestamp, ...
->   - delete i2c/spi table ids keeping only of, and use I2C probe_new function
->   - switch calibbias to SI units and add calibias_available attribute
->   - use DMA-safe buffer for all regmap_bulk_* calls
->   - delete iio trigger usage and setup/handle interrupt in core module
->   - add open-drain interrupt support
->   - add FIFO on reference counter and buffer postenable/predisable to replace
->     iio trigger usage
->   - check that temperature data is present before copying in buffer
->   - add temperature sensor off when fifo is turned off
->   - delete timestamp channel reading
->   - move timestamp state in IIO device private data
->   - allow only 1 ODR change in a batch of data
->   - add driver-open-drain in devicetree YAML and delete spi options
-> v3
->   - delete const pointer cast for iio_device_get_drvdata
->   - change gyro and accel init to return the allocated iio_dev structure
->   - delete manual parent device assignment
->   - correct style and improve readability
->   - add commentaries about IIO buffer and watermark complex computation
->   - add timestamp alignment in IIO buffer structure
->   - wrap lines 80 columns for dt bindings
->   - add ABI documentation for calibbias values in SI units
-> v4
->   - return high resolution 16 bits temperature as raw data when polled with the
->     corresponding scale and offset.
->   - for data buffer return temperature in the same 16 bits using the same
->     scale and offset. Convert low resolution temperature FIFO data to high
->     resolution format.
->   - explicitely zero out data buffer before copying to iio buffer.
-> 
-> This series add a new driver for managing InvenSense ICM-426xx 6-axis IMUs.
-> This next generation of chips includes new generations of 3-axis gyroscope
-> and 3-axis accelerometer, support of I3C in addition to I2C and SPI, and
-> intelligent MotionTracking features like pedometer, tilt detection, and
-> tap detection.
-> 
-> This series is delivering a driver supporting gyroscope, accelerometer and
-> temperature data, with polling and buffering using hwfifo and watermark,
-> on I2C and SPI busses.
-> 
-> Gyroscope and accelerometer sensors are completely independent and can have
-> different ODRs. Since there is only a single FIFO a specific value is used to
-> mark invalid data. For keeping the device standard we are de-multiplexing data
-> from the FIFO to 2 IIO devices with 2 buffers, 1 for the accelerometer and 1
-> for the gyroscope. This architecture also enables to easily turn each sensor
-> on/off without impacting the other. The device interrupt is used to read the
-> FIFO and launch parsing of accelerometer and gyroscope data. A complex
-> timestamping mechanism is added to handle correctly FIFO watermark and dynamic
-> changes of settings.
-> 
-> 
-> 
-> Jean-Baptiste Maneyrol (13):
->   iio: imu: inv_icm42600: add core of new inv_icm42600 driver
->   iio: imu: inv_icm42600: add I2C driver for inv_icm42600 driver
->   iio: imu: inv_icm42600: add SPI driver for inv_icm42600 driver
->   iio: imu: inv_icm42600: add gyroscope IIO device
->   iio: imu: inv_icm42600: add accelerometer IIO device
->   iio: imu: inv_icm42600: add temperature sensor support
->   iio: imu: add Kconfig and Makefile for inv_icm42600 driver
->   Documentation: ABI: add specific icm42600 documentation
->   iio: imu: inv_icm42600: add device interrupt
->   iio: imu: inv_icm42600: add buffer support in iio devices
->   iio: imu: inv_icm42600: add accurate timestamping
->   dt-bindings: iio: imu: Add inv_icm42600 documentation
->   MAINTAINERS: add entry for inv_icm42600 6-axis imu sensor
-> 
->  .../ABI/testing/sysfs-bus-iio-icm42600        |  20 +
->  .../bindings/iio/imu/invensense,icm42600.yaml |  90 ++
->  MAINTAINERS                                   |   8 +
->  drivers/iio/imu/Kconfig                       |   1 +
->  drivers/iio/imu/Makefile                      |   1 +
->  drivers/iio/imu/inv_icm42600/Kconfig          |  29 +
->  drivers/iio/imu/inv_icm42600/Makefile         |  15 +
->  drivers/iio/imu/inv_icm42600/inv_icm42600.h   | 395 +++++++++
->  .../iio/imu/inv_icm42600/inv_icm42600_accel.c | 787 +++++++++++++++++
->  .../imu/inv_icm42600/inv_icm42600_buffer.c    | 601 +++++++++++++
->  .../imu/inv_icm42600/inv_icm42600_buffer.h    |  98 +++
->  .../iio/imu/inv_icm42600/inv_icm42600_core.c  | 786 +++++++++++++++++
->  .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 798 ++++++++++++++++++
->  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   | 101 +++
->  .../iio/imu/inv_icm42600/inv_icm42600_spi.c   | 100 +++
->  .../iio/imu/inv_icm42600/inv_icm42600_temp.c  |  84 ++
->  .../iio/imu/inv_icm42600/inv_icm42600_temp.h  |  30 +
->  .../imu/inv_icm42600/inv_icm42600_timestamp.c | 195 +++++
->  .../imu/inv_icm42600/inv_icm42600_timestamp.h |  85 ++
->  19 files changed, 4224 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-icm42600
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
->  create mode 100644 drivers/iio/imu/inv_icm42600/Kconfig
->  create mode 100644 drivers/iio/imu/inv_icm42600/Makefile
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600.h
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_temp.h
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_timestamp.c
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_timestamp.h
-> 
+	if (i->f->set_##field)
+		return -EINVAL;
+
+should be
+
+	if (!i->f->set_##field)
+		return -EINVAL;
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/scsi/scsi_transport_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
+index f8661062ef95..f3d5b1bbd5aa 100644
+--- a/drivers/scsi/scsi_transport_spi.c
++++ b/drivers/scsi/scsi_transport_spi.c
+@@ -339,7 +339,7 @@ store_spi_transport_##field(struct device *dev, 			\
+ 	struct spi_transport_attrs *tp					\
+ 		= (struct spi_transport_attrs *)&starget->starget_data;	\
+ 									\
+-	if (i->f->set_##field)						\
++	if (!i->f->set_##field)						\
+ 		return -EINVAL;						\
+ 	val = simple_strtoul(buf, NULL, 0);				\
+ 	if (val > tp->max_##field)					\
+-- 
+2.18.1
 
