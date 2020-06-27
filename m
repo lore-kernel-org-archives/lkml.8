@@ -2,216 +2,129 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73276C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B75C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C78F2074F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:14:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTYh6RdX"
+	by mail.kernel.org (Postfix) with ESMTP id B2A672080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgF0IOk (ORCPT
+        id S1726419AbgF0IPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 04:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgF0IOj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 04:14:39 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27E1C03E979;
-        Sat, 27 Jun 2020 01:14:39 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i4so5916794pjd.0;
-        Sat, 27 Jun 2020 01:14:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dpM993DYx757L959Dyb6uvrVfTSpmyE+QSSbfrUcBkg=;
-        b=fTYh6RdXSkRMtPVsVoCTi+cghdBug+y6T/Sv1djnKnS6+QYs2f0ANYxz7WUZWL4GFU
-         30XWR+Q9ZlueRgvjp3kAApQM7cevL+S3SeJwqUcom8G/6i4lEC0Rk8eq4MYH91hukfHN
-         Y3d4pFYZAC846CyRqMV26J0zt29EG8sRJ8sUw/TY0W/MzH9Fop8HGLEc6dxKJm9MPP8W
-         dcfTmVRBDmUcYORA/2MrB+cvCYjdx0kFDA/Ez71dHrT5buCCxxDQdtydTuIRI/8DRd9K
-         jFcq1Roi44BLAdOJL/SZfUxLcpjBVU9y+nEjotyAmW5biH72ZqW0ycSpWHSLpuGwjkaf
-         i/Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dpM993DYx757L959Dyb6uvrVfTSpmyE+QSSbfrUcBkg=;
-        b=GNi7dD2UVx9nY8wmEjtq0xp9UzDTXwZNLftNmHUzTfnnpBaqOuj7OloaHMs9M5qhBQ
-         yzif1zf3udKUTLAh/L2V4JdfXzfOZpuiUPx6DebsGIa4BJxzKOBID0no1rQbAbjIu+cd
-         K4WkCWa7YFZB+O4tOX+dsQuWoXTN5n/NaUUqKEH0i4iGNHn2lpVa3kJtVFijMX3d9VB3
-         PJeG/5g/ZSikhGVKkULH6dlWol1rkPaDS80oA8g4AM/Ep14BWk5oqbKDYjhe2Ne8XGZU
-         LmLLXzgovZQb5eSU8c5j9mxt/1f8xlqOrl7S02Q4g2BgAkMl3nZsnTNqSw6ZytQxovqn
-         rMQQ==
-X-Gm-Message-State: AOAM531QEvHCFAtSlnWQ3mDt+E09MWe0T1G8PK831gSnyAqhoxzr+n5j
-        i3VsQgrFeTMwCzrK6Op/oWw=
-X-Google-Smtp-Source: ABdhPJxlLPfHUJU3msNctbpW/nRfqu1Q5Wt3/FlbO0z+jENpMMgputAm+r7e4r8/qnaj7e1ONqgjNw==
-X-Received: by 2002:a17:902:fe8f:: with SMTP id x15mr5557911plm.249.1593245679417;
-        Sat, 27 Jun 2020 01:14:39 -0700 (PDT)
-Received: from syed ([106.198.160.82])
-        by smtp.gmail.com with ESMTPSA id h3sm4416100pjz.23.2020.06.27.01.14.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jun 2020 01:14:39 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 13:44:23 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        bgolaszewski@baylibre.com, michal.simek@xilinx.com,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 4/4] gpio: xilinx: Utilize generic bitmap_get_value and
- _set_value.
-Message-ID: <0a35c10d1613aff43038bc7d4d6f95061d9d80d3.1593243081.git.syednwaris@gmail.com>
-References: <cover.1593243079.git.syednwaris@gmail.com>
+        Sat, 27 Jun 2020 04:15:03 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2365 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725991AbgF0IPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 04:15:02 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 572573B0E92068A8C89E;
+        Sat, 27 Jun 2020 09:15:01 +0100 (IST)
+Received: from [127.0.0.1] (10.210.171.165) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Sat, 27 Jun
+ 2020 09:15:00 +0100
+Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+References: <20200626194720.2915044-1-jolsa@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b1fd3b2d-9312-bbb1-7803-426dbb737866@huawei.com>
+Date:   Sat, 27 Jun 2020 09:13:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1593243079.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200626194720.2915044-1-jolsa@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.171.165]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reimplements the xgpio_set_multiple function in
-drivers/gpio/gpio-xilinx.c to use the new generic functions:
-bitmap_get_value and bitmap_set_value. The code is now simpler
-to read and understand. Moreover, instead of looping for each bit
-in xgpio_set_multiple function, now we can check each channel at
-a time and save cycles.
----
-Changes in v9:
- - Remove looping of 'for_each_set_clump' and instead process two
-   halves of a 64-bit bitmap separately or individually. Use normal spin_lock 
-   call for second inner lock. And take the spin_lock_init call outside the 'if'
-   condition in the 'probe' function of driver.
+On 26/06/2020 20:47, Jiri Olsa wrote:
+> hi,
+> this patchset is adding the support to reused metric in another
+> metric. The metric needs to be referenced by 'metric:' prefix.
+> 
 
-Changes in v8:
- - No change.
+I notice that there is much repetition in the x86 metric JSONs between CPUs.
 
-Changes in v7:
- - No change.
+So I know it's not the same as what you propose here, but jevents 
+standard arch events feature could be used to reduce the repetition.
 
-Changes in v6:
- - No change.
+I'm guessing that those metric JSONs are human generated, so would be 
+suitable; unlike the regular JSONs, which are automated.
 
-Changes in v5:
- - Minor change: Inline values '32' and '64' in code for better
-   code readability.
+Thanks,
+John
 
-Changes in v4:
- - Minor change: Inline values '32' and '64' in code for better
-   code readability.
-
-Changes in v3:
- - No change.
-
-Changes in v2:
- - No change
-
- drivers/gpio/gpio-xilinx.c | 66 +++++++++++++++++++-------------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 67f9f82e0db0..48393d06fb55 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -136,39 +136,39 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 			       unsigned long *bits)
- {
--	unsigned long flags;
-+	unsigned long flag;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int index = xgpio_index(chip, 0);
--	int offset, i;
--
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
--
--	/* Write to GPIO signals */
--	for (i = 0; i < gc->ngpio; i++) {
--		if (*mask == 0)
--			break;
--		/* Once finished with an index write it out to the register */
--		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       index * XGPIO_CHANNEL_OFFSET,
--				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
--			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock[index], flags);
--		}
--		if (__test_and_clear_bit(i, mask)) {
--			offset =  xgpio_offset(chip, i);
--			if (test_bit(i, bits))
--				chip->gpio_state[index] |= BIT(offset);
--			else
--				chip->gpio_state[index] &= ~BIT(offset);
--		}
--	}
--
--	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
--
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	u32 *const state = chip->gpio_state;
-+	unsigned int *const width = chip->gpio_width;
-+
-+	DECLARE_BITMAP(old, 64);
-+	DECLARE_BITMAP(new, 64);
-+	DECLARE_BITMAP(changed, 64);
-+
-+	spin_lock_irqsave(&chip->gpio_lock[0], flag);
-+	spin_lock(&chip->gpio_lock[1]);
-+
-+	bitmap_set_value(old, state[0], 0, width[0]);
-+	bitmap_set_value(old, state[1], width[0], width[1]);
-+	bitmap_replace(new, old, bits, mask, gc->ngpio);
-+
-+	bitmap_set_value(old, state[0], 0, 32);
-+	bitmap_set_value(old, state[1], 32, 32);
-+	state[0] = bitmap_get_value(new, 0, width[0]);
-+	state[1] = bitmap_get_value(new, width[0], width[1]);
-+	bitmap_set_value(new, state[0], 0, 32);
-+	bitmap_set_value(new, state[1], 32, 32);
-+	bitmap_xor(changed, old, new, 64);
-+
-+	if (((u32 *)changed)[0])
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
-+				state[0]);
-+	if (((u32 *)changed)[1])
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-+				XGPIO_CHANNEL_OFFSET, state[1]);
-+
-+	spin_unlock(&chip->gpio_lock[1]);
-+	spin_unlock_irqrestore(&chip->gpio_lock[0], flag);
- }
- 
- /**
-@@ -292,6 +292,7 @@ static int xgpio_probe(struct platform_device *pdev)
- 		chip->gpio_width[0] = 32;
- 
- 	spin_lock_init(&chip->gpio_lock[0]);
-+	spin_lock_init(&chip->gpio_lock[1]);
- 
- 	if (of_property_read_u32(np, "xlnx,is-dual", &is_dual))
- 		is_dual = 0;
-@@ -314,7 +315,6 @@ static int xgpio_probe(struct platform_device *pdev)
- 					 &chip->gpio_width[1]))
- 			chip->gpio_width[1] = 32;
- 
--		spin_lock_init(&chip->gpio_lock[1]);
- 	}
- 
- 	chip->gc.base = -1;
--- 
-2.26.2
+> For example, to define IPC by using CPI with change like:
+> 
+>           "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+>   -       "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+>   +       "MetricExpr": "1/metric:CPI",
+>           "MetricGroup": "TopDownL1",
+>           "MetricName": "IPC"
+> 
+> I won't be able to find all the possible places we could
+> use this at, so I wonder you guys (who was asking for this)
+> would try it and come up with comments if there's something
+> missing or we could already use it at some places.
+> 
+> It's based on Arnaldo's tmp.perf/core.
+> 
+> Also available in here:
+>    git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>    perf/metric
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> Jiri Olsa (10):
+>        perf tools: Rename expr__add_id to expr__add_val
+>        perf tools: Add struct expr_parse_data to keep expr value
+>        perf tools: Add expr__add_id function
+>        perf tools: Change expr__get_id to return struct expr_parse_data
+>        perf tools: Add expr__del_id function
+>        perf tools: Collect other metrics in struct egroup
+>        perf tools: Collect other metrics in struct metric_expr
+>        perf tools: Add other metrics to hash data
+>        perf tools: Compute other metrics
+>        perf tests: Add cache_miss_cycles to metric parse test
+> 
+>   tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json |   2 +-
+>   tools/perf/tests/expr.c                                 |   7 ++--
+>   tools/perf/tests/parse-metric.c                         |  33 +++++++++++++++++
+>   tools/perf/tests/pmu-events.c                           |   4 +--
+>   tools/perf/util/expr.c                                  | 115 +++++++++++++++++++++++++++++++++++++++++++++-------------
+>   tools/perf/util/expr.h                                  |  24 +++++++++++--
+>   tools/perf/util/expr.y                                  |  34 ++++++++++++++----
+>   tools/perf/util/metricgroup.c                           | 187 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+>   tools/perf/util/metricgroup.h                           |   6 ++++
+>   tools/perf/util/stat-shadow.c                           |  23 +++++++-----
+>   10 files changed, 374 insertions(+), 61 deletions(-)
+> 
+> .
+> 
 
