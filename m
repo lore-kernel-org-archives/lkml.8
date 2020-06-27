@@ -2,85 +2,120 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C41C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5438EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96F920720
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3274521548
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlSSOZGz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyOSMPYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgF0NFk (ORCPT
+        id S1726627AbgF0NJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgF0NFj (ORCPT
+        Sat, 27 Jun 2020 09:09:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24043 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726439AbgF0NJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:05:39 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E50C03E979;
-        Sat, 27 Jun 2020 06:05:39 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id k7so5555043vso.2;
-        Sat, 27 Jun 2020 06:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=VjC16p+GoxuoIWlJhKz+IIz8N8uNdW4gDeTUzcPL0Ak=;
-        b=YlSSOZGztdfK1neu9Enh1MfW1rZK34OjqNV/UyuGx9JADOSaYo457pjorKAqAkdEPZ
-         LiYHv1LJN2Q2QpWUvpKyT7d4jKZRpl0XXqUNDxb2og5keR8d+fGEhEb4Zrs+m7BCbFoo
-         /WJZaTA3unBWFUmcgdcLeQVWhx5GU1iVfgajNbwxLCj0pMU7aMQu2+9IwUv6ZCdi71bz
-         SZPi/+fWmepH9u/3614U6tEQZPss1PZIamzSLqyDK/wPS9tkWM+vj6SkHpULpqd/uPj4
-         9sUT0ZUXOHza+gFsb8e2pH0HsrT++p2YBURDa+nSX83azojww2hUYRA1J9rzdJrr3aJx
-         MNRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=VjC16p+GoxuoIWlJhKz+IIz8N8uNdW4gDeTUzcPL0Ak=;
-        b=gTEGWw3odHK69HeSvljLQCi8/gJyw/QQONTm/MUYq7e9d/Oxd5K+6r4GJFCPIscG+3
-         u5pOON8FXSlpl9tePj4CzwbMEzEo5D/8WHo/2KZYSbx1edBdshr5HtNQxpM4AYUKgceg
-         J5YKxNEWCvlkvmkSudGlZypDeGMFh2wED67duD18al7Ev+J3MXZKeTtM+dH8PnRTw5CC
-         QX8K4rxFzNjdBFvD84H4npYdneK+mHoD2GoxhEuzwsXDU6NXMUPURyHznklyDQrdIHoR
-         JMEuDTy+uc+T3nBhjiEQspDTuF4Q10vVEi7RAYVftBgbbN54aIh3DJdNQceP/6uAYWhi
-         2y1Q==
-X-Gm-Message-State: AOAM532i14gk+Z+TkHLMNet4TVK/uCyI4uQYCX+MiY8l7CfhcPqzhtfX
-        27QZHtdiWDq2tkjdYk1HLbFw7avsKvMtZinSTSI=
-X-Google-Smtp-Source: ABdhPJyseDDlbK9yS7yhoqK/FiQxELToQw+pvf/n2Lnfy7aDvshahJX5DvPZvf9cAQhNojTceDvj1Wc6OP1abvpil7Q=
-X-Received: by 2002:a67:ea84:: with SMTP id f4mr5694066vso.113.1593263138880;
- Sat, 27 Jun 2020 06:05:38 -0700 (PDT)
+        Sat, 27 Jun 2020 09:09:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593263362;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gocYarnZ2JlHVc9RG/zHaX044tbXdzru5bTv0I6/CXM=;
+        b=EyOSMPYZDBaYzx1/vEWkp3lSaui6n5Y0niAX5TeR5Dcscov+xLmfAw5rjThlVOomZFB3Hr
+        /DQ8xzKGTfS7w8ctrj0kQcbBc4HIn0tRt0Xl9lWnDvJFm2Q2ewVl9oEwfW4SOS99LtvRPx
+        N8C429wG5CDD4u+KEvJX56IEgsoJP+k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-qk0xhzsyPy-G0Q7G_J2UvQ-1; Sat, 27 Jun 2020 09:09:18 -0400
+X-MC-Unique: qk0xhzsyPy-G0Q7G_J2UvQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDF59804001;
+        Sat, 27 Jun 2020 13:09:16 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3758B2B4AC;
+        Sat, 27 Jun 2020 13:09:13 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05RD9CXa015401;
+        Sat, 27 Jun 2020 09:09:12 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05RD99e3015395;
+        Sat, 27 Jun 2020 09:09:10 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Sat, 27 Jun 2020 09:09:09 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Dave Chinner <david@fromorbit.com>
+cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
+In-Reply-To: <20200626230847.GI2005@dread.disaster.area>
+Message-ID: <alpine.LRH.2.02.2006270848540.14350@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200625113122.7540-1-willy@infradead.org> <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com> <20200626230847.GI2005@dread.disaster.area>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Sat, 27 Jun 2020 22:05:28 +0900
-Message-ID: <CAD14+f1mAW-tVM6c1vbA_7ZgbtKzLRsBaceVBZ6PzZGsFzGPKg@mail.gmail.com>
-Subject: exfat: request to implement FITRIM ioctl for fstrim
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>, witallwang@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
 
-It has come to my attention that while exfat supports live trim via
-the discard mount option, it does not implement FITRIM ioctl for
-fstrim(8).
 
-As exfat finally became the R/W cross-platform file-system solution
-and many flash storages defaulting to exfat, I'd love to see fstrim
-support added to exfat too.
+On Sat, 27 Jun 2020, Dave Chinner wrote:
 
-Wentao Wang added FITRIM ioctl for vfat about 2 years ago. I hope that
-can be a useful reference:
-Commit f663b5b38fffeb31841f8bfaf0ef87a445b0ffee ("fat: add FITRIM
-ioctl for FAT file system").
+> On Fri, Jun 26, 2020 at 11:02:19AM -0400, Mikulas Patocka wrote:
+> > Hi
+> > 
+> > I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
+> > prevents both filesystem recursion and i/o recursion.
+> > 
+> > Note that any I/O can recurse into a filesystem via the loop device, thus 
+> > it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
+> > and PF_MEMALLOC_NOIO is not set.
+> 
+> Correct me if I'm wrong, but I think that will prevent swapping from
+> GFP_NOFS memory reclaim contexts.
 
-Thanks.
+Yes.
+
+> IOWs, this will substantially
+> change the behaviour of the memory reclaim system under sustained
+> GFP_NOFS memory pressure. Sustained GFP_NOFS memory pressure is
+> quite common, so I really don't think we want to telling memory
+> reclaim "you can't do IO at all" when all we are trying to do is
+> prevent recursion back into the same filesystem.
+
+So, we can define __GFP_ONLY_SWAP_IO and __GFP_IO.
+
+> Given that the loop device IO path already operates under
+> memalloc_noio context, (i.e. the recursion restriction is applied in
+> only the context that needs is) I see no reason for making that a
+> global reclaim limitation....
+
+I think this is a problem.
+
+Suppose that a filesystem does GFP_NOFS allocation, the allocation 
+triggers an IO and waits for it to finish, the loop device driver 
+redirects the IO to the same filesystem that did the GFP_NOFS allocation.
+
+I saw this deadlock in the past in the dm-bufio subsystem - see the commit 
+9d28eb12447ee08bb5d1e8bb3195cf20e1ecd1c0 that fixed it.
+
+Other subsystems that do IO in GFP_NOFS context may deadlock just like 
+bufio.
+
+Mikulas
+
