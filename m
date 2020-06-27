@@ -2,108 +2,164 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B867AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F2420768
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593247783;
-	bh=hJ/9GrC67f1tuUmfTLQDxK1x8SfKFDzbXZk5X543OJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1kea+HHG4TLw+fSL+m5hvh51lIFMvbXlFxaI3Nuk43+uwN3RG020ZNVI5f5QGBo+E
-	 g/TyqJwl+Y3PoOGKpDd6Hj8nc9z9E0fdEuJXIJgeWAl6ycXscg8t1ki6C2sJl3gCnO
-	 39lHQgWiP/qsRvwn/gh5a5dtcRrD6p3RP3z9T5KE=
+	by mail.kernel.org (Postfix) with ESMTP id 9F5702080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgF0Itj (ORCPT
+        id S1726087AbgF0IuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 04:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgF0Itj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 04:49:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C6920768;
-        Sat, 27 Jun 2020 08:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593247778;
-        bh=hJ/9GrC67f1tuUmfTLQDxK1x8SfKFDzbXZk5X543OJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0nJFoJbJkMyU7/kNRsXs2kWkdzWiQoDSWLm4xutD0u9RnZpQGX48yo0DqxzhndvSC
-         7HXz24A4/et7gKP4ACOwimMhIpexj4eBWfYq60JH8s3e/MUdDGeCgnmp33g6mh38Hb
-         1nWDzAC6NQYplB6GQGlo6nXAghG6RQjwHuQjznGA=
-Date:   Sat, 27 Jun 2020 10:49:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC
-         Campus <bkkarthik@pesu.pes.edu>, devel@driverdev.osuosl.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
- before ',' (ctx:WxW)
-Message-ID: <20200627084932.GA1560170@kroah.com>
-References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
- <CAAhDqq0tSftPxMWGeVy3mp4DGDN3o0uQwTqVbjYUwjqzWpbibQ@mail.gmail.com>
- <20200627050745.GD226238@kroah.com>
- <f73c5a69-1bf9-d80d-2399-ef18ce78b8ac@xs4all.nl>
+        Sat, 27 Jun 2020 04:50:14 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51496 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgF0IuO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 04:50:14 -0400
+Received: by mail-il1-f198.google.com with SMTP id m3so8083673ila.18
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 01:50:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7wRV/GNx9fRFaea//hQ/IeTkGX118WBrKIiYqITZZYk=;
+        b=SQ9HzKhwn+9pzWuxATCO1fC0b/hyXSB1vgRetr2M73hIIzkUWw8TihPQdVUAv98sIU
+         81A8j+d8dok4zFicjZtpOLPUYReG5XWrB2n9jEeJcQHTjQz37LjHeBdjp7Pn/CkIkLPR
+         tHctiYZlza3JxMaEvm7jicX24K5e3+2VWDk7MMts8qj4GZJHns56Oksv/d5NeztlICeF
+         gjTIxoovURUFW1/lG+JHR9MFtfxii2qhIANjPMzf2m04CguuPWCdNVliexo65mdlNDdu
+         dGOccTBILdwKQOVaCEvixPCMO3LDrQddubEJJvoaNlDNtpZd7ovucb0AjF3tqxE3Qjk3
+         h3dw==
+X-Gm-Message-State: AOAM533O3/kNWP9XZpE32J9/SfhHUYaQP3VevJ8RV7citEJYRcatRu0B
+        /ae56o+9FAaeLnwHhMgleUYkCul/vSMv2u3R5EG6hOlbgA4U
+X-Google-Smtp-Source: ABdhPJw8vqU/XQzhRZz+PcMjQUl3b/xu4xW1QSTKQsv1uBiS0HT6LxH5b7PE8Y+1Hjgju4D7DYoE8b5V+k/rQgfTW0JrHZ24uS8t
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f73c5a69-1bf9-d80d-2399-ef18ce78b8ac@xs4all.nl>
+X-Received: by 2002:a6b:14cc:: with SMTP id 195mr7406679iou.117.1593247813542;
+ Sat, 27 Jun 2020 01:50:13 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 01:50:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f728fc05a90ce9c9@google.com>
+Subject: KASAN: slab-out-of-bounds Read in qrtr_endpoint_post
+From:   syzbot <syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com>
+To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 10:28:31AM +0200, Hans Verkuil wrote:
-> On 27/06/2020 07:07, Greg Kroah-Hartman wrote:
-> > 
-> > A: http://en.wikipedia.org/wiki/Top_post
-> > Q: Were do I find info about this thing called top-posting?
-> > A: Because it messes up the order in which people normally read text.
-> > Q: Why is top-posting such a bad thing?
-> > A: Top-posting.
-> > Q: What is the most annoying thing in e-mail?
-> > 
-> > A: No.
-> > Q: Should I include quotations after my reply?
-> > 
-> > http://daringfireball.net/2007/07/on_top
-> > 
-> > On Fri, Jun 26, 2020 at 11:42:49AM -0400, B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC Campus wrote:
-> >> Oh, I'm sorry but wouldn't it be helpful if we had a file that lists
-> >> all drivers that are scheduled for removal?
-> > 
-> > The TODO file in the directory for the driver should have this
-> > information in it.  I don't know if all of the media drivers have this,
-> > if not, then there is no way you could have known this.
-> 
-> They have, and in addition the Kconfig entry will mention that the driver
-> is deprecated.
-> 
-> TODO of usbvision:
-> 
-> The driver is deprecated and scheduled for removal by the end
-> of 2020.
-> 
-> In order to prevent removal the following actions would have to
-> be taken:
-> 
-> - clean up the code
-> - convert to the vb2 framework
-> - fix the disconnect and free-on-last-user handling (i.e., add
->   a release callback for struct v4l2_device and rework the code
->   to use that correctly).
+Hello,
 
-Ah, great, nevermind then!
+syzbot found the following crash on:
 
-B K, your wish is already granted, the text is present, you just needed
-to have noticed it :)
+HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1142febb100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+dashboard link: https://syzkaller.appspot.com/bug?extid=b8fe393f999a291a9ea6
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-greg k-h
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in qrtr_endpoint_post+0xf9b/0x1010 net/qrtr/qrtr.c:447
+Read of size 4 at addr ffff88809df0ce44 by task syz-executor.2/29604
+
+CPU: 1 PID: 29604 Comm: syz-executor.2 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ qrtr_endpoint_post+0xf9b/0x1010 net/qrtr/qrtr.c:447
+ qrtr_tun_write_iter+0xf5/0x180 net/qrtr/tun.c:92
+ call_write_iter include/linux/fs.h:1907 [inline]
+ new_sync_write+0x422/0x650 fs/read_write.c:484
+ __vfs_write+0xc9/0x100 fs/read_write.c:497
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x12d/0x250 fs/read_write.c:612
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb19
+Code: Bad RIP value.
+RSP: 002b:00007ff63f2a7c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000050dd80 RCX: 000000000045cb19
+RDX: 0000000000000004 RSI: 0000000020000140 RDI: 0000000000000005
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000d1e R14: 00000000004cf76d R15: 00007ff63f2a86d4
+
+Allocated by task 29604:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x17a/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ qrtr_tun_write_iter+0x8a/0x180 net/qrtr/tun.c:83
+ call_write_iter include/linux/fs.h:1907 [inline]
+ new_sync_write+0x422/0x650 fs/read_write.c:484
+ __vfs_write+0xc9/0x100 fs/read_write.c:497
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x12d/0x250 fs/read_write.c:612
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 24714:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ kvm_destroy_vm_debugfs arch/x86/kvm/../../../virt/kvm/kvm_main.c:628 [inline]
+ kvm_destroy_vm+0x158/0xbe0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:801
+ kvm_put_kvm arch/x86/kvm/../../../virt/kvm/kvm_main.c:843 [inline]
+ kvm_vcpu_release+0xc2/0x110 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2979
+ __fput+0x33c/0x880 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:123
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:216 [inline]
+ __prepare_exit_to_usermode+0x1e9/0x1f0 arch/x86/entry/common.c:246
+ do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:368
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88809df0ce40
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 4 bytes inside of
+ 32-byte region [ffff88809df0ce40, ffff88809df0ce60)
+The buggy address belongs to the page:
+page:ffffea000277c300 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809df0cfc1
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027c0a88 ffffea00027b7c08 ffff8880aa0001c0
+raw: ffff88809df0cfc1 ffff88809df0c000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809df0cd00: 00 01 fc fc fc fc fc fc 00 01 fc fc fc fc fc fc
+ ffff88809df0cd80: 00 fc fc fc fc fc fc fc 06 fc fc fc fc fc fc fc
+>ffff88809df0ce00: fb fb fb fb fc fc fc fc 04 fc fc fc fc fc fc fc
+                                           ^
+ ffff88809df0ce80: 00 01 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff88809df0cf00: fb fb fb fb fc fc fc fc 00 00 00 fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
