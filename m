@@ -2,82 +2,165 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83406C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF84BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5257020675
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zoz0O+Fe"
+	by mail.kernel.org (Postfix) with ESMTP id B5CAA20675
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 03:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbgF0DNl (ORCPT
+        id S1725897AbgF0DTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 23:13:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgF0DNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 23:13:40 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371CBC03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 20:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0qSzBJi+XuKj7CRmKywfW9dDWMGYScdJeNBfiOOZ+Go=; b=Zoz0O+FeBjpB00KsH/icqN4hlA
-        bJvQZcDlrmgrAAP+E7FTJFMzV8OXmiIF5uNvDaTR5pYc+7aidJbIdhZ9qZGPXa3hUg8JtBikKkR5b
-        vUEjtn5eZB7T4+4RbDgZM6G47Ca7v7iXnfi21tBTlKuZ9mhz57aHn+vusYzH9YEalhcd+mwp3eG2U
-        3TQDdl4RdR3bAH8A/1ChoWYiaHHBnNeTeGDGYNBPJlJWO5WrBay4wBMWhIKy1V5Du5Bt7WfsC75cH
-        V8U0xLXF7bXbp5Ktg8Ku3T00ZTjJLp8hq//BgLqZ93NfBNEHqujQpSdtXWVl6I7+cPTNID85wTkNz
-        dkXWi78w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jp1H7-0006RJ-0j; Sat, 27 Jun 2020 03:13:05 +0000
-Date:   Sat, 27 Jun 2020 04:13:04 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ying Huang <ying.huang@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch] mm: Increase pagevec size on large system
-Message-ID: <20200627031304.GC25039@casper.infradead.org>
-References: <d1cc9f12a8ad6c2a52cb600d93b06b064f2bbc57.1593205965.git.tim.c.chen@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1cc9f12a8ad6c2a52cb600d93b06b064f2bbc57.1593205965.git.tim.c.chen@linux.intel.com>
+        Fri, 26 Jun 2020 23:19:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37086 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725824AbgF0DTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 23:19:48 -0400
+IronPort-SDR: MnVQEjqkoRRnYkuYIadoevUmLARBv/B0tr8n1nL0Ue8DWZiPZJ0eC7O8da03FEcr0a0VMQbKFH
+ XQM/Yzxg15qA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="163598208"
+X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
+   d="scan'208";a="163598208"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 20:19:47 -0700
+IronPort-SDR: qY7Jeb0gjAhCYKqtByIdcIK5OQ+iplSWB3X3cDvSESt7Dti7Yy0tRrjx9TsUe4kK0esTBPdZ6f
+ m+bf/00U1rBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
+   d="scan'208";a="302510424"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Jun 2020 20:19:45 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
+Date:   Sat, 27 Jun 2020 11:15:31 +0800
+Message-Id: <20200627031532.28046-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 02:23:03PM -0700, Tim Chen wrote:
-> Enlarge the pagevec size to 31 to reduce LRU lock contention for
-> large systems.
-> 
-> The LRU lock contention is reduced from 8.9% of total CPU cycles
-> to 2.2% of CPU cyles.  And the pmbench throughput increases
-> from 88.8 Mpages/sec to 95.1 Mpages/sec.
+The hardware assistant vfio mediated device is a use case of iommu
+aux-domain. The interactions between vfio/mdev and iommu during mdev
+creation and passthr are:
 
-The downside here is that pagevecs are often stored on the stack (eg
-truncate_inode_pages_range()) as well as being used for the LRU list.
-On a 64-bit system, this increases the stack usage from 128 to 256 bytes
-for this array.
+- Create a group for mdev with iommu_group_alloc();
+- Add the device to the group with
+        group = iommu_group_alloc();
+        if (IS_ERR(group))
+                return PTR_ERR(group);
 
-I wonder if we could do something where we transform the ones on the
-stack to DECLARE_STACK_PAGEVEC(pvec), and similarly DECLARE_LRU_PAGEVEC
-the ones used for the LRUs.  There's plenty of space in the header to
-add an unsigned char sz, delete PAGEVEC_SIZE and make it an variable
-length struct.
+        ret = iommu_group_add_device(group, &mdev->dev);
+        if (!ret)
+                dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+                         iommu_group_id(group));
+- Allocate an aux-domain
+	iommu_domain_alloc()
+- Attach the aux-domain to the physical device from which the mdev is
+  created.
+	iommu_aux_attach_device()
 
-Or maybe our stacks are now big enough that we just don't care.
-What do you think?
+In the whole process, an iommu group was allocated for the mdev and an
+iommu domain was attached to the group, but the group->domain leaves
+NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+
+This adds iommu_group_get/set_domain() so that group->domain could be
+managed whenever a domain is attached or detached through the aux-domain
+api's.
+
+Fixes: 7bd50f0cd2fd5 ("vfio/type1: Add domain at(de)taching group helpers")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/iommu.c | 28 ++++++++++++++++++++++++++++
+ include/linux/iommu.h | 14 ++++++++++++++
+ 2 files changed, 42 insertions(+)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index d43120eb1dc5..e2b665303d70 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -715,6 +715,34 @@ int iommu_group_set_name(struct iommu_group *group, const char *name)
+ }
+ EXPORT_SYMBOL_GPL(iommu_group_set_name);
+ 
++/**
++ * iommu_group_get_domain - get domain of a group
++ * @group: the group
++ *
++ * This is called to get the domain of a group.
++ */
++struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
++{
++	return group->domain;
++}
++EXPORT_SYMBOL_GPL(iommu_group_get_domain);
++
++/**
++ * iommu_group_set_domain - set domain for a group
++ * @group: the group
++ * @domain: iommu domain
++ *
++ * This is called to set the domain for a group. In aux-domain case, a domain
++ * might attach or detach to an iommu group through the aux-domain apis, but
++ * the group->domain doesn't get a chance to be updated there.
++ */
++void iommu_group_set_domain(struct iommu_group *group,
++			    struct iommu_domain *domain)
++{
++	group->domain = domain;
++}
++EXPORT_SYMBOL_GPL(iommu_group_set_domain);
++
+ static int iommu_create_device_direct_mappings(struct iommu_group *group,
+ 					       struct device *dev)
+ {
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 5f0b7859d2eb..ff88d548a870 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -496,6 +496,9 @@ extern void iommu_group_set_iommudata(struct iommu_group *group,
+ 				      void *iommu_data,
+ 				      void (*release)(void *iommu_data));
+ extern int iommu_group_set_name(struct iommu_group *group, const char *name);
++extern struct iommu_domain *iommu_group_get_domain(struct iommu_group *group);
++extern void iommu_group_set_domain(struct iommu_group *group,
++				   struct iommu_domain *domain);
+ extern int iommu_group_add_device(struct iommu_group *group,
+ 				  struct device *dev);
+ extern void iommu_group_remove_device(struct device *dev);
+@@ -840,6 +843,17 @@ static inline int iommu_group_set_name(struct iommu_group *group,
+ 	return -ENODEV;
+ }
+ 
++static inline
++struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
++{
++	return NULL;
++}
++
++static inline void iommu_group_set_domain(struct iommu_group *group,
++					  struct iommu_domain *domain)
++{
++}
++
+ static inline int iommu_group_add_device(struct iommu_group *group,
+ 					 struct device *dev)
+ {
+-- 
+2.17.1
 
