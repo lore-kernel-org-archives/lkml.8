@@ -2,482 +2,182 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9976C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5F320885
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4zMdi0h"
+	by mail.kernel.org (Postfix) with ESMTP id 1BB8120885
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593264581;
+	bh=bYRgBNnkNpkhq+5KsbmZ23kTjQ4YEcihVz5msz6QX6s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KaMctFd8Jtp7bmhvXE0mP8PNkwLmRAX8R2kFcfJ8/r6uhw5BfrwNzAdirCMe6799v
+	 /hOcw+dxE97me8ktOD1aMri2A6r9pfWNPJa5DAzbjAKHJRi8mozd2RfXwvzQJm4HCB
+	 0C5/wRQD2ls5DWCd3ACkCGypQp61Q+UHy8e5VzE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgF0NYN (ORCPT
+        id S1726616AbgF0N3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:24:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32765 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726893AbgF0NX2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:23:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593264205;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:in-reply-to:
-         references:references:references;
-        bh=CPP8DwxyP2nxU5T7VlnBBLby4pxWG218P+Lbpwd6l5M=;
-        b=Q4zMdi0hHDdVtCiqyJzDPfJ7QwKjM4VQE8+4vVn7wHN0UOPydMVb1uBaElnqAB30iPPiMR
-        VQD2aYmgdo0ivSG1O9HVsq8cs3tT2TT8W/X094K0y2c4X2RGHC8UNlZL7W0OAH7yXPzlCJ
-        aXRReJGYsgH3hYu80aewWOTMWZu0a2g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-Az1n9d3oNUGv4uftFmg6og-1; Sat, 27 Jun 2020 09:23:21 -0400
-X-MC-Unique: Az1n9d3oNUGv4uftFmg6og-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 27 Jun 2020 09:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgF0N3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:29:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A05A804003;
-        Sat, 27 Jun 2020 13:23:19 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A09D71662;
-        Sat, 27 Jun 2020 13:23:14 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak90 V9 10/13] audit: add support for containerid to network namespaces
-Date:   Sat, 27 Jun 2020 09:20:43 -0400
-Message-Id: <e9c1216a361c38ebc9cb4089922c259e2cfd5013.1593198710.git.rgb@redhat.com>
-In-Reply-To: <cover.1593198710.git.rgb@redhat.com>
-References: <cover.1593198710.git.rgb@redhat.com>
-In-Reply-To: <cover.1593198710.git.rgb@redhat.com>
-References: <cover.1593198710.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id D837B20885;
+        Sat, 27 Jun 2020 13:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593264576;
+        bh=bYRgBNnkNpkhq+5KsbmZ23kTjQ4YEcihVz5msz6QX6s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ISLsKv7lswwBX0YXGOxRlv6mx3SzMEnQNIm4PXazGlt5GVbGFdmHPNJ+RR2M5Fhip
+         CzufdX98ZclkKj8hh0YCgpzadpiNnz2vW/r59/ZMILWkmyfxX5Vyzo37Pj3tYzy02G
+         pSIGHWb6G3X3XpUAG+qnyvfIiXF6qOPHthQw8sHg=
+Date:   Sat, 27 Jun 2020 14:29:31 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/13] iio: imu: new inv_icm42600 driver
+Message-ID: <20200627142931.4a522c6e@archlinux>
+In-Reply-To: <20200622153729.12702-1-jmaneyrol@invensense.com>
+References: <20200622153729.12702-1-jmaneyrol@invensense.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This also adds support to qualify NETFILTER_PKT records.
+On Mon, 22 Jun 2020 17:37:16 +0200
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
-Audit events could happen in a network namespace outside of a task
-context due to packets received from the net that trigger an auditing
-rule prior to being associated with a running task.  The network
-namespace could be in use by multiple containers by association to the
-tasks in that network namespace.  We still want a way to attribute
-these events to any potential containers.  Keep a list per network
-namespace to track these audit container identifiiers.
+Looks good to me.  Whole series applied (picking up Rob's ack
+for the DT binding docs patch) to the togreg branch of iio.git and pushed
+out as testing for the various autobuilders to poke at it.
 
-Add/increment the audit container identifier on:
-- initial setting of the audit container identifier via /proc
-- clone/fork call that inherits an audit container identifier
-- unshare call that inherits an audit container identifier
-- setns call that inherits an audit container identifier
-Delete/decrement the audit container identifier on:
-- an inherited audit container identifier dropped when child set
-- process exit
-- unshare call that drops a net namespace
-- setns call that drops a net namespace
+Thanks,
 
-Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-event standalone records.  Iterate through all potential audit container
-identifiers associated with a network namespace.
+Jonathan
 
-Please see the github audit kernel issue for contid net support:
-  https://github.com/linux-audit/audit-kernel/issues/92
-Please see the github audit testsuiite issue for the test case:
-  https://github.com/linux-audit/audit-testsuite/issues/64
-Please see the github audit wiki for the feature overview:
-  https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
----
- include/linux/audit.h    |  20 ++++++
- kernel/audit.c           | 156 ++++++++++++++++++++++++++++++++++++++++++++++-
- kernel/nsproxy.c         |   4 ++
- net/netfilter/nft_log.c  |  11 +++-
- net/netfilter/xt_AUDIT.c |  11 +++-
- 5 files changed, 195 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index c4a755ae0d61..304fbb7c3c5b 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -128,6 +128,13 @@ struct audit_task_info {
- 
- extern struct audit_task_info init_struct_audit;
- 
-+struct audit_contobj_netns {
-+	struct list_head	list;
-+	struct audit_contobj	*obj;
-+	int			count;
-+	struct rcu_head		rcu;
-+};
-+
- extern int is_audit_feature_set(int which);
- 
- extern int __init audit_register_class(int class, unsigned *list);
-@@ -233,6 +240,11 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
- 
- extern void audit_log_container_id(struct audit_context *context,
- 				   struct audit_contobj *cont);
-+extern void audit_copy_namespaces(struct net *net, struct task_struct *tsk);
-+extern void audit_switch_task_namespaces(struct nsproxy *ns,
-+					 struct task_struct *p);
-+extern void audit_log_netns_contid_list(struct net *net,
-+					struct audit_context *context);
- 
- extern u32 audit_enabled;
- 
-@@ -306,6 +318,14 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
- static inline void audit_log_container_id(struct audit_context *context,
- 					  struct audit_contobj *cont)
- { }
-+static inline void audit_copy_namespaces(struct net *net, struct task_struct *tsk)
-+{ }
-+static inline void audit_switch_task_namespaces(struct nsproxy *ns,
-+						struct task_struct *p)
-+{ }
-+static inline void audit_log_netns_contid_list(struct net *net,
-+					       struct audit_context *context)
-+{ }
- 
- #define audit_enabled AUDIT_OFF
- 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 997c34178ee8..a862721dfd9b 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -59,6 +59,7 @@
- #include <linux/freezer.h>
- #include <linux/pid_namespace.h>
- #include <net/netns/generic.h>
-+#include <net/net_namespace.h>
- 
- #include "audit.h"
- 
-@@ -86,9 +87,13 @@
- /**
-  * struct audit_net - audit private network namespace data
-  * @sk: communication socket
-+ * @contobj_list: audit container identifier list
-+ * @contobj_list_lock audit container identifier list lock
-  */
- struct audit_net {
- 	struct sock *sk;
-+	struct list_head contobj_list;
-+	spinlock_t contobj_list_lock;
- };
- 
- /**
-@@ -214,6 +219,9 @@ struct audit_reply {
- 
- static struct kmem_cache *audit_task_cache;
- 
-+void audit_netns_contid_add(struct net *net, struct audit_contobj *cont);
-+void audit_netns_contid_del(struct net *net, struct audit_contobj *cont);
-+
- void __init audit_task_init(void)
- {
- 	audit_task_cache = kmem_cache_create("audit_task",
-@@ -326,10 +334,17 @@ struct audit_task_info init_struct_audit = {
- void audit_free(struct task_struct *tsk)
- {
- 	struct audit_task_info *info = tsk->audit;
-+	struct nsproxy *ns = tsk->nsproxy;
-+	struct audit_contobj *cont;
- 
- 	audit_free_syscall(tsk);
- 	rcu_read_lock();
--	_audit_contobj_put(tsk->audit->cont);
-+	cont = _audit_contobj_get(tsk);
-+	if (ns) {
-+		audit_netns_contid_del(ns->net_ns, cont);
-+		_audit_contobj_put(cont);
-+	}
-+	_audit_contobj_put(cont);
- 	rcu_read_unlock();
- 	/* Freeing the audit_task_info struct must be performed after
- 	 * audit_log_exit() due to need for loginuid and sessionid.
-@@ -437,6 +452,136 @@ static struct sock *audit_get_sk(const struct net *net)
- 	return aunet->sk;
- }
- 
-+void audit_netns_contid_add(struct net *net, struct audit_contobj *cont)
-+{
-+	struct audit_net *aunet;
-+	struct list_head *contobj_list;
-+	struct audit_contobj_netns *contns;
-+
-+	if (!net)
-+		return;
-+	if (!cont)
-+		return;
-+	aunet = net_generic(net, audit_net_id);
-+	if (!aunet)
-+		return;
-+	contobj_list = &aunet->contobj_list;
-+	rcu_read_lock();
-+	spin_lock(&aunet->contobj_list_lock);
-+	list_for_each_entry_rcu(contns, contobj_list, list)
-+		if (contns->obj == cont) {
-+			contns->count++;
-+			goto out;
-+		}
-+	contns = kmalloc(sizeof(*contns), GFP_ATOMIC);
-+	if (contns) {
-+		INIT_LIST_HEAD(&contns->list);
-+		contns->obj = cont;
-+		contns->count = 1;
-+		list_add_rcu(&contns->list, contobj_list);
-+	}
-+out:
-+	spin_unlock(&aunet->contobj_list_lock);
-+	rcu_read_unlock();
-+}
-+
-+void audit_netns_contid_del(struct net *net, struct audit_contobj *cont)
-+{
-+	struct audit_net *aunet;
-+	struct list_head *contobj_list;
-+	struct audit_contobj_netns *contns = NULL;
-+
-+	if (!net)
-+		return;
-+	if (!cont)
-+		return;
-+	aunet = net_generic(net, audit_net_id);
-+	if (!aunet)
-+		return;
-+	contobj_list = &aunet->contobj_list;
-+	rcu_read_lock();
-+	spin_lock(&aunet->contobj_list_lock);
-+	list_for_each_entry_rcu(contns, contobj_list, list)
-+		if (contns->obj == cont) {
-+			contns->count--;
-+			if (contns->count < 1) {
-+				list_del_rcu(&contns->list);
-+				kfree_rcu(contns, rcu);
-+			}
-+			break;
-+		}
-+	spin_unlock(&aunet->contobj_list_lock);
-+	rcu_read_unlock();
-+}
-+
-+void audit_copy_namespaces(struct net *net, struct task_struct *tsk)
-+{
-+	struct audit_contobj *cont;
-+
-+	rcu_read_lock();
-+	cont = _audit_contobj_get(tsk);
-+	audit_netns_contid_add(net, cont);
-+	rcu_read_unlock();
-+}
-+
-+void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-+{
-+	struct audit_contobj *cont;
-+	struct nsproxy *new = p->nsproxy;
-+
-+	rcu_read_lock();
-+	cont = _audit_contobj_get(p);
-+	if (!cont)
-+		goto out;
-+	audit_netns_contid_del(ns->net_ns, cont);
-+	if (new)
-+		audit_netns_contid_add(new->net_ns, cont);
-+	else
-+		_audit_contobj_put(cont);
-+	_audit_contobj_put(cont);
-+out:
-+	rcu_read_unlock();
-+}
-+
-+/**
-+ * audit_log_netns_contid_list - List contids for the given network namespace
-+ * @net: the network namespace of interest
-+ * @context: the audit context to use
-+ *
-+ * Description:
-+ * Issues a CONTAINER_ID record with a CSV list of contids associated
-+ * with a network namespace to accompany a NETFILTER_PKT record.
-+ */
-+void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
-+{
-+	struct audit_buffer *ab = NULL;
-+	struct audit_contobj_netns *cont;
-+	struct audit_net *aunet;
-+
-+	/* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
-+	rcu_read_lock();
-+	aunet = net_generic(net, audit_net_id);
-+	if (!aunet)
-+		goto out;
-+	list_for_each_entry_rcu(cont, &aunet->contobj_list, list) {
-+		if (!ab) {
-+			ab = audit_log_start(context, GFP_ATOMIC,
-+					     AUDIT_CONTAINER_ID);
-+			if (!ab) {
-+				audit_log_lost("out of memory in audit_log_netns_contid_list");
-+				goto out;
-+			}
-+			audit_log_format(ab, "contid=");
-+		} else
-+			audit_log_format(ab, ",");
-+		audit_log_format(ab, "%llu", cont->obj->id);
-+	}
-+	audit_log_end(ab);
-+out:
-+	rcu_read_unlock();
-+}
-+EXPORT_SYMBOL(audit_log_netns_contid_list);
-+
- void audit_panic(const char *message)
- {
- 	switch (audit_failure) {
-@@ -1786,7 +1931,6 @@ static int __net_init audit_net_init(struct net *net)
- 		.flags	= NL_CFG_F_NONROOT_RECV,
- 		.groups	= AUDIT_NLGRP_MAX,
- 	};
--
- 	struct audit_net *aunet = net_generic(net, audit_net_id);
- 
- 	aunet->sk = netlink_kernel_create(net, NETLINK_AUDIT, &cfg);
-@@ -1795,7 +1939,8 @@ static int __net_init audit_net_init(struct net *net)
- 		return -ENOMEM;
- 	}
- 	aunet->sk->sk_sndtimeo = MAX_SCHEDULE_TIMEOUT;
--
-+	INIT_LIST_HEAD(&aunet->contobj_list);
-+	spin_lock_init(&aunet->contobj_list_lock);
- 	return 0;
- }
- 
-@@ -2585,6 +2730,7 @@ int audit_set_contid(struct task_struct *task, u64 contid)
- 	int rc = 0;
- 	struct audit_buffer *ab;
- 	struct audit_contobj *oldcont = NULL;
-+	struct net *net = task->nsproxy->net_ns;
- 
- 	task_lock(task);
- 	/* Can't set if audit disabled */
-@@ -2657,6 +2803,10 @@ int audit_set_contid(struct task_struct *task, u64 contid)
- 		spin_unlock(&audit_contobj_list_lock);
- 		task->audit->cont = newcont;
- 		_audit_contobj_put(oldcont);
-+		audit_netns_contid_del(net, oldcont);
-+		_audit_contobj_put(oldcont);
-+		_audit_contobj_hold(newcont);
-+		audit_netns_contid_add(net, newcont);
- 	}
- conterror:
- 	task_unlock(task);
-diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
-index b03df67621d0..5eddb3377049 100644
---- a/kernel/nsproxy.c
-+++ b/kernel/nsproxy.c
-@@ -26,6 +26,7 @@
- #include <linux/syscalls.h>
- #include <linux/cgroup.h>
- #include <linux/perf_event.h>
-+#include <linux/audit.h>
- 
- static struct kmem_cache *nsproxy_cachep;
- 
-@@ -187,6 +188,8 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
- 	}
- 
- 	tsk->nsproxy = new_ns;
-+	if (flags & CLONE_NEWNET)
-+		audit_copy_namespaces(new_ns->net_ns, tsk);
- 	return 0;
- }
- 
-@@ -249,6 +252,7 @@ void switch_task_namespaces(struct task_struct *p, struct nsproxy *new)
- 	ns = p->nsproxy;
- 	p->nsproxy = new;
- 	task_unlock(p);
-+	audit_switch_task_namespaces(ns, p);
- 
- 	if (ns && atomic_dec_and_test(&ns->count))
- 		free_nsproxy(ns);
-diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
-index fe4831f2258f..98d1e7e1a83c 100644
---- a/net/netfilter/nft_log.c
-+++ b/net/netfilter/nft_log.c
-@@ -66,13 +66,16 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 	struct sk_buff *skb = pkt->skb;
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (!audit_enabled)
- 		return;
- 
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (!ab)
--		return;
-+		goto errout;
- 
- 	audit_log_format(ab, "mark=%#x", skb->mark);
- 
-@@ -99,6 +102,10 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 		audit_log_format(ab, " saddr=? daddr=? proto=-1");
- 
- 	audit_log_end(ab);
-+	net = xt_net(&pkt->xt);
-+	audit_log_netns_contid_list(net, context);
-+errout:
-+	audit_free_context(context);
- }
- 
- static void nft_log_eval(const struct nft_expr *expr,
-diff --git a/net/netfilter/xt_AUDIT.c b/net/netfilter/xt_AUDIT.c
-index 9cdc16b0d0d8..ecf868a1abde 100644
---- a/net/netfilter/xt_AUDIT.c
-+++ b/net/netfilter/xt_AUDIT.c
-@@ -68,10 +68,13 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- {
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (audit_enabled == AUDIT_OFF)
--		goto errout;
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+		goto out;
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (ab == NULL)
- 		goto errout;
- 
-@@ -101,7 +104,11 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- 
- 	audit_log_end(ab);
- 
-+	net = xt_net(par);
-+	audit_log_netns_contid_list(net, context);
- errout:
-+	audit_free_context(context);
-+out:
- 	return XT_CONTINUE;
- }
- 
--- 
-1.8.3.1
+> Changelog
+> v1
+>   -initial patch submission
+> v2
+>   - formatting reworks, missing headers, code cleanup ...
+>   - delete all debug traces
+>   - add commentaries for better explanation of suspend/resume, timestamp, ...
+>   - delete i2c/spi table ids keeping only of, and use I2C probe_new function
+>   - switch calibbias to SI units and add calibias_available attribute
+>   - use DMA-safe buffer for all regmap_bulk_* calls
+>   - delete iio trigger usage and setup/handle interrupt in core module
+>   - add open-drain interrupt support
+>   - add FIFO on reference counter and buffer postenable/predisable to replace
+>     iio trigger usage
+>   - check that temperature data is present before copying in buffer
+>   - add temperature sensor off when fifo is turned off
+>   - delete timestamp channel reading
+>   - move timestamp state in IIO device private data
+>   - allow only 1 ODR change in a batch of data
+>   - add driver-open-drain in devicetree YAML and delete spi options
+> v3
+>   - delete const pointer cast for iio_device_get_drvdata
+>   - change gyro and accel init to return the allocated iio_dev structure
+>   - delete manual parent device assignment
+>   - correct style and improve readability
+>   - add commentaries about IIO buffer and watermark complex computation
+>   - add timestamp alignment in IIO buffer structure
+>   - wrap lines 80 columns for dt bindings
+>   - add ABI documentation for calibbias values in SI units
+> v4
+>   - return high resolution 16 bits temperature as raw data when polled with the
+>     corresponding scale and offset.
+>   - for data buffer return temperature in the same 16 bits using the same
+>     scale and offset. Convert low resolution temperature FIFO data to high
+>     resolution format.
+>   - explicitely zero out data buffer before copying to iio buffer.
+> 
+> This series add a new driver for managing InvenSense ICM-426xx 6-axis IMUs.
+> This next generation of chips includes new generations of 3-axis gyroscope
+> and 3-axis accelerometer, support of I3C in addition to I2C and SPI, and
+> intelligent MotionTracking features like pedometer, tilt detection, and
+> tap detection.
+> 
+> This series is delivering a driver supporting gyroscope, accelerometer and
+> temperature data, with polling and buffering using hwfifo and watermark,
+> on I2C and SPI busses.
+> 
+> Gyroscope and accelerometer sensors are completely independent and can have
+> different ODRs. Since there is only a single FIFO a specific value is used to
+> mark invalid data. For keeping the device standard we are de-multiplexing data
+> from the FIFO to 2 IIO devices with 2 buffers, 1 for the accelerometer and 1
+> for the gyroscope. This architecture also enables to easily turn each sensor
+> on/off without impacting the other. The device interrupt is used to read the
+> FIFO and launch parsing of accelerometer and gyroscope data. A complex
+> timestamping mechanism is added to handle correctly FIFO watermark and dynamic
+> changes of settings.
+> 
+> 
+> 
+> Jean-Baptiste Maneyrol (13):
+>   iio: imu: inv_icm42600: add core of new inv_icm42600 driver
+>   iio: imu: inv_icm42600: add I2C driver for inv_icm42600 driver
+>   iio: imu: inv_icm42600: add SPI driver for inv_icm42600 driver
+>   iio: imu: inv_icm42600: add gyroscope IIO device
+>   iio: imu: inv_icm42600: add accelerometer IIO device
+>   iio: imu: inv_icm42600: add temperature sensor support
+>   iio: imu: add Kconfig and Makefile for inv_icm42600 driver
+>   Documentation: ABI: add specific icm42600 documentation
+>   iio: imu: inv_icm42600: add device interrupt
+>   iio: imu: inv_icm42600: add buffer support in iio devices
+>   iio: imu: inv_icm42600: add accurate timestamping
+>   dt-bindings: iio: imu: Add inv_icm42600 documentation
+>   MAINTAINERS: add entry for inv_icm42600 6-axis imu sensor
+> 
+>  .../ABI/testing/sysfs-bus-iio-icm42600        |  20 +
+>  .../bindings/iio/imu/invensense,icm42600.yaml |  90 ++
+>  MAINTAINERS                                   |   8 +
+>  drivers/iio/imu/Kconfig                       |   1 +
+>  drivers/iio/imu/Makefile                      |   1 +
+>  drivers/iio/imu/inv_icm42600/Kconfig          |  29 +
+>  drivers/iio/imu/inv_icm42600/Makefile         |  15 +
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h   | 395 +++++++++
+>  .../iio/imu/inv_icm42600/inv_icm42600_accel.c | 787 +++++++++++++++++
+>  .../imu/inv_icm42600/inv_icm42600_buffer.c    | 601 +++++++++++++
+>  .../imu/inv_icm42600/inv_icm42600_buffer.h    |  98 +++
+>  .../iio/imu/inv_icm42600/inv_icm42600_core.c  | 786 +++++++++++++++++
+>  .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 798 ++++++++++++++++++
+>  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   | 101 +++
+>  .../iio/imu/inv_icm42600/inv_icm42600_spi.c   | 100 +++
+>  .../iio/imu/inv_icm42600/inv_icm42600_temp.c  |  84 ++
+>  .../iio/imu/inv_icm42600/inv_icm42600_temp.h  |  30 +
+>  .../imu/inv_icm42600/inv_icm42600_timestamp.c | 195 +++++
+>  .../imu/inv_icm42600/inv_icm42600_timestamp.h |  85 ++
+>  19 files changed, 4224 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-icm42600
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+>  create mode 100644 drivers/iio/imu/inv_icm42600/Kconfig
+>  create mode 100644 drivers/iio/imu/inv_icm42600/Makefile
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600.h
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.h
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_temp.h
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_timestamp.c
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_timestamp.h
+> 
 
