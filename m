@@ -2,145 +2,104 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77488C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3106EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6102D20760
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1706720760
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C5RrWz/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgF0SXl (ORCPT
+        id S1726561AbgF0SbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 14:23:41 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:33817 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgF0SXk (ORCPT
+        Sat, 27 Jun 2020 14:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgF0SbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 14:23:40 -0400
-Received: from 'smile.earth' ([95.89.6.124]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MWzbr-1jMUM41Agj-00XHv5 for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020
- 20:23:37 +0200
-X-Virus-Scanned: amavisd at 'smile.earth'
-From:   Hans-Peter Jansen <hpj@urpla.net>
-To:     linux-kernel@vger.kernel.org
-Subject: AMD PCI Bridge: Hardware error from APEI
-Date:   Sat, 27 Jun 2020 20:23:35 +0200
-Message-ID: <2559180.cUrjzdZFCD@xrated>
+        Sat, 27 Jun 2020 14:31:05 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAE4C061794;
+        Sat, 27 Jun 2020 11:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EqUqgITG7ecsHU1e88clY3vesSjbEZhx3MeoTPdWfIg=; b=C5RrWz/fA6p/G3PTFtiwvmczon
+        4mz/MmxNzJKyeo7VvdUJMBSd9TcPYjJG4+zfpLX4uw3yZdQ0WYKKZxpYYJ5IiJ40812UD0FoAnysS
+        UlzrnQHO72zQ4UIuUymqAVVzNyP68SdX7PTQprTpl3MhKO1pEptFBAvdAxwbuV4C55KcgdZ2VfF9O
+        1ImievnmyEYFw89GohdJXs1fH06ZBus1NZBNhWlhiSb8mKl2syj0g0XeizGlsO2DEBPjj7mIrBIIV
+        MmmJ3Up5lcQxmx3DSuNHlt9zRLvGYf1YiQbISb7ddq5BjWFE5n5cGNiWk5LpBJ+JrbaMVm0yL4CkA
+        pgXgZnIg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpFbB-0004Ve-DO; Sat, 27 Jun 2020 18:30:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB45F301A7A;
+        Sat, 27 Jun 2020 20:30:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A3C7E22B8B6C1; Sat, 27 Jun 2020 20:30:42 +0200 (CEST)
+Date:   Sat, 27 Jun 2020 20:30:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [Bug, sched, 5.8-rc2]: PREEMPT kernels crashing in
+ check_preempt_wakeup() running fsx on XFS
+Message-ID: <20200627183042.GK4817@hirez.programming.kicks-ass.net>
+References: <20200626004722.GF2005@dread.disaster.area>
+ <20200626073345.GI4800@hirez.programming.kicks-ass.net>
+ <20200626223254.GH2005@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Provags-ID: V03:K1:pgSVbZvg9o9I5RV+b5PxgIyGgmff/kliI8g9zVZ516hs9KBHbWe
- KL4PRLxN4hIUFmavvjNzkogFiIC4qeiaDDH5SE9nxdAxKqs842VreSZGjK9Ei1+mznP9WGe
- 3aSi2fdxUvYnd3ScF8xNZDm+am9A81qYrnl77ZLBbWBrnE3rvx6axZ5VEeupyOmv+1w3Mt6
- jtEHDaw6qh+bIljxb7VHw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oh00HN4EWBk=:sz37T8HFfkm8j5Xqhkf9QJ
- bcKNWuOcu6/AbPoux6ayrjDuqbOLgmrvLoVLqSJdBWOvRTAQhW6IthGm4/vMDUljDiBRQhnVS
- pM+/E95zqeafFNoThbTe1ZhhQajDZGKXBxy8GwBL8QAq7EiBQFYoPusMhR8+wZelIsWy9U9rK
- //IwhiazS7yKEOl9IKMk6F8tTfWsyqnFxvvxSZ5JMdjahyPbLBB4VHyPDkJlf44JN+iWbdV2J
- a0i8mietU6JjJc/F+S0UmvA5Gao20rU3BbKKaOHzoK/Xg+S8DeW3FPip9hvgjOJDNlv1x+28Q
- UqbNdEBDIa+zh8aSamEzH0NhcAqABft4NC++2PcJkNbnTjtaV4ZFkODr/0k5DnqTVDENHYv9F
- V7OkwDUqxX+miN0s92jxqp92agx3e5VdIClYHH/ZZw4/u4SOEiFK5cRh+3VnLZAPCp4rstD1Y
- zBzsxlMcGXot1y1MEfhCzQpOtdv0ipi8YSuOlzvm9epdiksiw1/G3njglzeBhViaHKKvwZRqC
- AQoKH4Z01RMTFSQGYfCekLij+4W/I48lRLYC4bnbo2fPQnsFUjmWNIdUr6a7xwZJcPBYoqB+S
- nWti8efwbDRZsbEFjA6O+kqoVe+K2AxzK+9KzbaWh/CCMb44Q4jvbO+7Qim5HbI3qezbKhRMo
- AEFYlJgIIySFk1lwK8oX/46GfQloRe43hh6TSj7KzfMrxQo5udChCyuWjdv/QA85J9KDIgEqT
- 58QA7sjDY5KfeS7/oplAacBr22mlaiFtmEeAEdA0G5vNglVK7HFiW7qgZ+aYeXX9YWi4tdXBg
- lhuSj15GrOWI8PdOc4j/RAcEiiGIl5s1tj137U+MIjyfvCCgO0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626223254.GH2005@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear hacker from the order of the penguins,
+On Sat, Jun 27, 2020 at 08:32:54AM +1000, Dave Chinner wrote:
+> Observation from the outside:
+> 
+> "However I'm having trouble convincing myself that's actually
+> possible on x86_64.... "
 
-we're facing a disturbing issue here after swapping a motherboard of a 
-mission critical system:
+Using the weaker rules of LKMM (as relevant to Power) I could in fact
+make it happen, the 'problem' is that it's being observed on the much
+stronger x86_64.
 
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 4
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]: It has been corrected by h/w and requires no further action
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]: event severity: corrected
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  Error 0, type: corrected
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  fru_text: PcieError
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   section_type: PCIe error
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   port_type: 4, root port
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   version: 0.2
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   command: 0x0407, status: 0x0010
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   device_id: 0000:60:03.1
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   slot: 19
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   secondary_bus: 0x62
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   vendor_id: 0x1022, device_id: 0x1453
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   class_code: 060400
-Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0012
-Jun 27 20:05:29 server kernel: pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask: 0x00006000
-Jun 27 20:05:29 server kernel: pcieport 0000:60:03.1: AER:    [12] Timeout               
-Jun 27 20:05:29 server kernel: pcieport 0000:60:03.1: AER: aer_layer=Data Link Layer, aer_agent=Transmitter ID
+So possibly I did overlook a more 'sensible' scenario, but I'm pretty
+confident the problem holds as it fully explains the failure mode.
 
+> This scheduler code has fallen off a really high ledge on the memory
+> barrier cliff, hasn't it?
 
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 4
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]: It has been corrected by h/w and requires no further action
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]: event severity: corrected
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  Error 0, type: corrected
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  fru_text: PcieError
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   section_type: PCIe error
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   port_type: 4, root port
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   version: 0.2
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   command: 0x0407, status: 0x0010
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   device_id: 0000:60:03.1
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   slot: 19
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   secondary_bus: 0x62
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   vendor_id: 0x1022, device_id: 0x1453
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   class_code: 060400
-Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0012
-Jun 27 20:05:51 server kernel: pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask: 0x00006000
-Jun 27 20:05:51 server kernel: pcieport 0000:60:03.1: AER:    [12] Timeout               
-Jun 27 20:05:51 server kernel: pcieport 0000:60:03.1: AER: aer_layer=Data Link Layer, aer_agent=Transmitter ID
+Just a wee bit.. I did need pen and paper and a fair amount of
+scribbling for this one.
 
+> Having looked at this code over the past 24 hours and the recent
+> history, I know that understanding it - let alone debugging and
+> fixing problem in it - is way beyond my capabilities.  And I say
+> that as an experienced kernel developer with a pretty good grasp of
+> concurrent programming and a record of implementing a fair number of
+> non-trivial lockless algorithms over the years....
 
-60:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe GPP Bridge (prog-if 00 [Normal decode])
-        Flags: bus master, fast devsel, latency 0, IRQ 44, NUMA node 3
-        Bus: primary=60, secondary=62, subordinate=62, sec-latency=0
-        I/O behind bridge: None
-        Memory behind bridge: e3600000-e36fffff [size=1M]
-        Prefetchable memory behind bridge: None
-        Capabilities: [50] Power Management version 3
-        Capabilities: [58] Express Root Port (Slot+), MSI 00
-        Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-        Capabilities: [c0] Subsystem: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe GPP Bridge
-        Capabilities: [c8] HyperTransport: MSI Mapping Enable+ Fixed+
-        Capabilities: [100] Vendor Specific Information: ID=0001 Rev=1 Len=010 <?>
-        Capabilities: [150] Advanced Error Reporting
-        Capabilities: [270] #19
-        Capabilities: [2a0] Access Control Services
-        Capabilities: [370] L1 PM Substates
-        Capabilities: [380] Downstream Port Containment
-        Capabilities: [3c4] #23
-        Kernel driver in use: pcieport
+All in the name of making it go fast, I suppose. It used to be much
+simpler... like much of the kernel.
 
-It's probably related to a satellite receiver card, since it only appeared 
-after plugging:
+The biggest problem I had with this thing was that the reproduction case
+we had (Paul's rcutorture) wouldn't readily trigger on my machines
+(altough it did, but at a much lower rate, just twice in a week's worth
+of runtime).
 
-62:00.0 Multimedia controller: Digital Devices GmbH Max
-        Subsystem: Digital Devices GmbH Max S8 4/8
-        Flags: bus master, fast devsel, latency 0, IRQ 161, NUMA node 3
-        Memory at e3600000 (64-bit, non-prefetchable) [size=64K]
-        Capabilities: [50] Power Management version 3
-        Capabilities: [70] MSI: Enable- Count=1/2 Maskable- 64bit+
-        Capabilities: [90] Express Endpoint, MSI 00
-        Capabilities: [100] Vendor Specific Information: ID=0000 Rev=0 Len=00c <?>
-        Kernel driver in use: ddbridge
-        Kernel modules: ddbridge
+Also; I'm sure you can spot a problem in the I/O layer much faster than
+I possibly could :-)
 
-Specs:
-ASUS KNPA-U16 with an AMD EPYC 7261, 2x32 GB Kingston KSM26RD4/32MEI 
-(officially supported RAM modules)
-
-openSUSE 15.1, Kernel 5.7.5
-
-Cheers,
-Pete
-
-
+Anyway, let me know if you still observe any problems.
