@@ -3,108 +3,204 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2667C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6220021655
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65772158C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="U5oGykqj"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="T8sLRMvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgF0NpH (ORCPT
+        id S1726665AbgF0Nzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:45:07 -0400
-Received: from mout.gmx.net ([212.227.15.18]:41645 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0NpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:45:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593265462;
-        bh=lFWXqdePd4DyXgNpm31xytWm1F1ZN/XcJboKFJ2akTc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=U5oGykqjhCeWQ6VOBTNmh03M6XCAm+pD09uH4+T7DrDwY1SKQhxbtOL/ABnStEa/S
-         PfoTVIE0VA04JG9UkzA1YktiDtrzAYLz9JeFpb2MCwwMNzeA6fREx2Q9KuzMHPOy5C
-         4OSneFLG1uqkqFNYxcRHmqoVLVQnPbxaES8rt2oI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N7zBR-1ikTo63WZH-014y1o; Sat, 27 Jun 2020 15:44:21 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>
-Cc:     kernel-hardening@lists.openwall.com, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH] parisc/kernel/ftrace: Remove function callback casts
-Date:   Sat, 27 Jun 2020 15:43:48 +0200
-Message-Id: <20200627134348.30601-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 27 Jun 2020 09:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgF0Nzy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:55:54 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9377BC061794
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:55:53 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id e15so9055721edr.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:55:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hoSrfN6BUR4s2KxWgiwxUSDxg2CiKyhfKscI1191oiA=;
+        b=T8sLRMvw/GozyjPIwBVAuof7TWZV5UE+xRUqLg5JJVUQV/qh8ABpO+NdDWOEOl7In3
+         3500XHgq2minPL+o2DBa/QDRLeY4TU+A/XsjL0LRaRr7b5ZdBj6MW2SOysKirBN4UZdW
+         9sxehSPrLAFe100eH49YKmxBEazdwIU6WfX0ouKm4v7dwM+3bKbNoytUSSwoDhhb8Rmn
+         EXv33BYFX8Etmck3DZxXkKer4ZRM8sleFnVNf9Qzmrk56vh6Qx27uoOxSop58Rw0CYBm
+         O6CzoQ+wScSN57FdDSHJ2Uk64fFluScupS0tEEQLyvgP8iMsmBSwDbG+etGnrVxS4W4P
+         ZbVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hoSrfN6BUR4s2KxWgiwxUSDxg2CiKyhfKscI1191oiA=;
+        b=C8+uOoAo+DuefjIXcBGiwzMdNicuYvAfYsv3xi2kiPQ8XMM/Jtssuhk/v8T+Z/vKu/
+         GL3IKrzP614Mk2OQDTubMrTOO+1j2cIfoAklkFTC3/NxVXIqgnblYCwitmCGl03XZOb4
+         Owoi4Bp61xWBnMBuf4yw2HPcbCAue2BEFdU+rgAf++KDuiwY/EToDQQbep4qhjfx2Grt
+         exnkbdfZAFvBF0/sO8tR40mO3ugqp59vb3eN0B0GhxcnpgpZnmF6c4iz5KiU6ER6V/6D
+         XdU+7ZIs49KxDXgJotQCWESvTLuEBIvaRjBGX1Joe5j3OGnWUwbbhsAeFYSha1tP3fY0
+         novQ==
+X-Gm-Message-State: AOAM533wpWThEBEnh8VAGb9DLuhGYkdlT4t4hygDBAz4Qib0mFdDvnHu
+        L3hDimKQKCgX2l03D9+aKCbxDw==
+X-Google-Smtp-Source: ABdhPJyQ9Nm7pcD7I8ZuGmTzvTdIQKbVgRckXBQakwSnqr+vyREZjumQpmx23E0PMKrU7of3rXTC8g==
+X-Received: by 2002:aa7:c305:: with SMTP id l5mr2571618edq.163.1593266152157;
+        Sat, 27 Jun 2020 06:55:52 -0700 (PDT)
+Received: from localhost.localdomain ([2001:16b8:5c8f:5b01:3446:ed90:fece:8da5])
+        by smtp.gmail.com with ESMTPSA id bc23sm5665335edb.90.2020.06.27.06.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 06:55:51 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        bcousson@baylibre.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH] Add default mux for pins that a free GPIO lines on the PocketBeagle
+Date:   Sat, 27 Jun 2020 15:55:38 +0200
+Message-Id: <20200627135538.194179-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wIA4UEOVrMPBixJrC6vud+7JWju+3dUuA9dgRmOulVfkomqN98k
- J686MFh0NZuXx/c979VCYvyYbzDfk2va4O6y6reWPq02BtPDMcl5z718wLB3jUZSdt51xSI
- VxifaDCeidc4XqZTDBYctS5uThXMfngzbm8w6w59pLFMUNO6WB8X1mfgGPi47RxiOthkzqE
- rZnnXYY3g3OktLNANK8Fw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+bxAtbELlTU=:AIVXJGBmVMIT65YrALMuS8
- SKARVtgwT6z9XLB+mawgeRIbj0E7ldANgLcChrGyzj7rIenKH5VEMbIqOWLIesYkeOxXquZoD
- 7jer8nKfPuNEl3mQpi6UPgJZs9b9K8uO9sxL/nSGS82dhTHNlKy+z46COcerbravGzKPjtJM7
- 89Rpwj3GU6l+JY/oJ7HK4AUnsddckYU7s0I5lZXrmK9reSioubHrIIO7/0WN748hLzKL5YtRq
- 6tyrG3k6QTxD+v7nwV2sFp8mf+2o8d3ETUFnELAnw8y0W6l7pkbUdpfnIl7b1ooUTcDdPbjdT
- P8OvyCur47xAO6eBfQV4OBN2FZvUtOQj38hgdKUy1WWDbyR2mx6hjkBxvY8FFFCXabH/B16FQ
- 4h40iXu+afncRyB6XQoH0bhmn7wG+lGUQFgbTojkE8Qr8ydlIipAm3nzpCzbIr32c+JXkutff
- +n5ArbwBkHUv15tEGZwK4kkaYUtN7MPARtWLpw4S9h6zst3sH765BSAOgyI7BPTvmYrdCQA5u
- bC1J9DW+kIbIt+wHB8YfMqYLGDo7SVApVDQrbFRA3DSicRi95alGCJaVy/XSwOIGg1s7Up0J/
- iVgjv+i4wpCNO1sAAp2VGSI0ja8osyzgFJEJ8fETrTXcqFtl82wopajFFGW8aaHatA7q27p65
- fkyskIbY6OktGhl8B2JqDpc69rw9WsXLkCLDsyCn+D/UQA6xoGMhyDPIthUFjaOyFZ102rDfB
- oKIRs4OlYx6RFyTUms9ymo2+WoPTxoEFpCI+EyDKg8MZ4xxftdnBLs411Gscofwg+pPnwDfXU
- uZZHF1PoGAUHVUOuJCrR2Qwsmzl3CSENblP8VXcsNeVSB/dOtoyOR7Vgqn1OdaBKLD+5J5kdA
- rydtWW7LkBtpkC5fMukERaKfFqOSQ4z3qVsOaPRUMCsMd2JxCU2hR4oVEGQtZScgJCJJOTyZ/
- lzFYO/7KLg9UqjyPjJ332wL1ljFooR48m108euwoN6m4p+idHtFxvIYv05FgXUVNQMhA15mMu
- 3Gl27uha8kIgM3Za3URdV9riEUBMI5UwFXQ4VrZi/KcXzOcYqdKsN5avw3RkLEeNbPzt8hin9
- Dy6RfQ/N6f4GYSWT00QPU7q5Y38jp1NSJ8pK4uVD+4aHPnmxcth4UPKZjcDURYLTMswkgDudk
- J694lY5ivXx4PHgJyHnev0QFBLuTRfCx5tvzmmxelBg6RVcRkc9oEMrCQph63Zc/QjBLYXq2n
- Q4KjZA5K9R7yBeJXC
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to enable -Wcast-function-type in the top-level Makefile to
-support Control Flow Integrity builds, remove all the function callback
-casts.
+These pins on the PocketBeagle P1 and P2 headers are connected to AM3358
+balls with gpio lines, and these pins are not used for any other
+peripherals by default. These GPIO lines are unclaimed and could be used
+by userspace program through the gpiod ABI. However, no driver will have
+set mux mode for the pins.
 
-To do this remove the cast to a function pointer type in the comparison
-statement and add to the right and left operand a cast to unsigned long
-type. This can be done since the comparison is against function address
-(these operands are not function calls).
+This patch adds a "default" state in the am33xx_pinmux node and sets the
+pins to gpio output mux mode.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- arch/parisc/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 98 +++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 1df0f67ed667..86b49a5fc049 100644
-=2D-- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -64,7 +64,7 @@ void notrace __hot ftrace_function_trampoline(unsigned l=
-ong parent,
- 				function_trace_op, regs);
-
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
--	if (ftrace_graph_return !=3D (trace_func_graph_ret_t) ftrace_stub ||
-+	if ((unsigned long)ftrace_graph_return !=3D (unsigned long)ftrace_stub |=
-|
- 	    ftrace_graph_entry !=3D ftrace_graph_entry_stub) {
- 		unsigned long *parent_rp;
-
-=2D-
-2.20.1
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index f0b222201b86..900dc6558701 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -60,6 +60,104 @@ vmmcsd_fixed: fixedregulator0 {
+ };
+ 
+ &am33xx_pinmux {
++
++	pinctrl-names = "default";
++	pinctrl-0 =   <	&P2_03_gpio &P1_34_gpio &P2_19_gpio &P2_24_gpio
++			&P2_33_gpio &P2_22_gpio &P2_18_gpio &P2_10_gpio
++			&P2_06_gpio &P2_04_gpio &P2_02_gpio &P2_08_gpio
++			&P2_17_gpio >;
++
++	/* P2_03 (ZCZ ball T10) gpio0_23 0x824 */
++	P2_03_gpio: pinmux_P2_03_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P1_34 (ZCZ ball T11) gpio0_26 0x828 */
++	P1_34_gpio: pinmux_P1_34_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD10, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++		/* P2_19 (ZCZ ball U12) gpio0_27 0x82c */
++	P2_19_gpio: pinmux_P2_19_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD11, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_24 (ZCZ ball T12) gpio1_12 0x830 */
++	P2_24_gpio: pinmux_P2_24_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_33 (ZCZ ball R12) gpio1_13 0x834 */
++	P2_33_gpio: pinmux_P2_33_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_22 (ZCZ ball V13) gpio1_14 0x838 */
++	P2_22_gpio: pinmux_P2_22_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_18 (ZCZ ball U13) gpio1_15 0x83c */
++	P2_18_gpio: pinmux_P2_18_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_10 (ZCZ ball R14) gpio1_20 0x850 */
++	P2_10_gpio: pinmux_P2_10_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_06 (ZCZ ball U16) gpio1_25 0x864 */
++	P2_06_gpio: pinmux_P2_06_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A9, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_04 (ZCZ ball T16) gpio1_26 0x868 */
++	P2_04_gpio: pinmux_P2_04_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A10, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_02 (ZCZ ball V17) gpio1_27 0x86c */
++	P2_02_gpio: pinmux_P2_02_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_08 (ZCZ ball U18) gpio1_28 0x878 */
++	P2_08_gpio: pinmux_P2_08_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
++	/* P2_17 (ZCZ ball V12) gpio2_1 0x88c */
++	P2_17_gpio: pinmux_P2_17_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_OUTPUT, MUX_MODE7)
++		>;
++	};
++
+ 	i2c2_pins: pinmux-i2c2-pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
+-- 
+2.25.1
 
