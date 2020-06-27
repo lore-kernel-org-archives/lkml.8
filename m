@@ -2,126 +2,144 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB821C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA875C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C84BF20768
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F1B208B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593249786;
-	bh=ARyWigMo4Grv0OKY/VJy1kBAOavs8Wcx2VYSGAzPgks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=or1ZMisd2vpdLDdFVucO4ZipTh6fNEhtJ/+9Spap3cxdJrPto8frW46polShCGhhK
-	 aNPN0D+zytBGMmnyZlDGh30r8m0p00U4F6S9yIc9eISbu2wfaWpbHBWPyVPWZIsGym
-	 U6m/W5l2C0sk6bNuuUqcJeRlv/Am4B5KxAITLk9E=
+	s=default; t=1593250673;
+	bh=zZELxKTTCTxcMP1neFCDkhEmsrYvFsuFOQvTPs2LW+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LgOMH9Q74ijH2BQOLiNBPdVcEfd1zY8I+xP9rM6XfX6PKt77EbHy9iVOM/XL4AvbT
+	 clrEPtw9aius/SbPeyzIZ+T1nu+xyadCeady6P+gccl8/aOqv58OI6keYhuhzc7KIc
+	 pFNXOaEl4TxXfgRsdLAaOM12y9dzXd3fYxKVnfOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgF0JW7 (ORCPT
+        id S1726436AbgF0Jhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 05:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 05:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0JW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 05:22:59 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726160AbgF0Jhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 05:37:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8AE20768;
-        Sat, 27 Jun 2020 09:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 917952080C;
+        Sat, 27 Jun 2020 09:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593249778;
-        bh=ARyWigMo4Grv0OKY/VJy1kBAOavs8Wcx2VYSGAzPgks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=alfu06HdLDJlx9dHguCZCd6adJiGTpaZut2AgOBHIUONCJOpM+pf1RfMeMpQX6gYd
-         FFWtixphoW0dkd7a4aOvlC3PWm4n10zA6kxsxqPe/qEi8Kxn9UDb4YPbPD8+DxA4/b
-         Akehks0sO8iSVKe/feBFTukUQUImHpfY1YR2Gh18=
-Received: by mail-oi1-f178.google.com with SMTP id e4so2061302oib.1;
-        Sat, 27 Jun 2020 02:22:58 -0700 (PDT)
-X-Gm-Message-State: AOAM53299oY+WOB4chkyeghUjkLw2/LlpvqcNZceQA/pHpSDC4dex6eh
-        fybCaAN4Ajy+2m3cTgOe0EhWA3Q/8Gdf0V4WCnE=
-X-Google-Smtp-Source: ABdhPJzXhP2MzfyfoCyaSQW0DSKdl3DV8flP5dJdRFPcAeVju94JAwoLPbhzsWceJ651vzoXIIf/QbZL/VTSeG7+3oo=
-X-Received: by 2002:aca:d0d:: with SMTP id 13mr5614620oin.174.1593249777771;
- Sat, 27 Jun 2020 02:22:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
- <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de> <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
- <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 27 Jun 2020 11:22:46 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
-Message-ID: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1593250670;
+        bh=zZELxKTTCTxcMP1neFCDkhEmsrYvFsuFOQvTPs2LW+c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SJmq8KRi1jgvWRcPI4SHkPEc+R43hu090gDiOWiQYBd6f7KyhD9u36f7wdK4SAiOi
+         TiykfH2Ivq0Q2vu8CYu6ont40rZejzwmuhcQiE7XXc6jEno7gLZaVviX4OZd+1a9Ap
+         tCUsekZtHIj1Id7RZIS6xZu22vuc88/JBigULWZI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jp7HQ-006rG2-LY; Sat, 27 Jun 2020 10:37:48 +0100
+Date:   Sat, 27 Jun 2020 10:37:47 +0100
+Message-ID: <87wo3setn8.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
+In-Reply-To: <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+References: <20200625001039.56174-1-john.stultz@linaro.org>
+        <20200625001039.56174-4-john.stultz@linaro.org>
+        <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+        <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: john.stultz@linaro.org, swboyd@chromium.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, mkshah@codeaurora.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jun 2020 at 00:03, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Fri, 26 Jun 2020 at 23:56, Atish Patra <atishp@atishpatra.org> wrote:
+On Sat, 27 Jun 2020 02:34:25 +0100,
+John Stultz <john.stultz@linaro.org> wrote:
+> 
+> On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
 > >
-> > On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> > Quoting John Stultz (2020-06-24 17:10:37)
+> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> > > index 6ae9e1f0819d..3fee8b655da1 100644
+> > > --- a/drivers/irqchip/qcom-pdc.c
+> > > +++ b/drivers/irqchip/qcom-pdc.c
+> > > @@ -430,4 +432,33 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+> > >         return ret;
+> > >  }
 > > >
-> > > On 6/26/20 1:45 AM, Atish Patra wrote:
-> > > > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
-> > > > a __umoddi3 error while building EFI for 32 bit.
-> > > >
-> > > > Use bitwise operations instead of modulo operations to fix the issue.
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
-> > > > index cc89c4d6196f..1de9878ddd3a 100644
-> > > > --- a/drivers/firmware/efi/libstub/alignedmem.c
-> > > > +++ b/drivers/firmware/efi/libstub/alignedmem.c
-> > > > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-> > > >       *addr = ALIGN((unsigned long)alloc_addr, align);
-> > > >
-> > > >       if (slack > 0) {
-> > > > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
-> > > > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
-> > >
-> > > Here you rely on the compiler to silently convert the division by
-> > > EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
-> > > EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
-> > >
-> > > slack = (align >> EFI_PAGE_SHIFT) - 1;
-> > > ...
-> > > int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
-> > >
+> > > +#ifdef MODULE
+> > > +static int qcom_pdc_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct device_node *np = pdev->dev.of_node;
+> > > +       struct device_node *parent = of_irq_find_parent(np);
+> > > +
+> > > +       return qcom_pdc_init(np, parent);
+> > > +}
+> > > +
+> > > +static const struct of_device_id qcom_pdc_match_table[] = {
+> > > +       { .compatible = "qcom,pdc" },
+> > > +       {}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+> > > +
+> > > +static struct platform_driver qcom_pdc_driver = {
+> > > +       .probe = qcom_pdc_probe,
+> > > +       .driver = {
+> > > +               .name = "qcom-pdc",
+> > > +               .of_match_table = qcom_pdc_match_table,
+> > > +               .suppress_bind_attrs = true,
+> > > +       },
+> > > +};
+> > > +module_platform_driver(qcom_pdc_driver);
+> > > +#else
+> > >  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
 > >
-> > Sure. I will update it in the next version. Thanks for the suggestion.
->
-> Please don't. Dividing by EFI_PAGE_SIZE is perfectly fine, and is more readable.
+> > Is there any reason to use IRQCHIP_DECLARE if this can work as a
+> > platform device driver?
+> >
+> 
+> Hey! Thanks so much for the review!
+> 
+> Mostly it was done this way to minimize the change in the non-module
+> case. But if you'd rather avoid the #ifdefery I'll respin it without.
 
-Actually, I will take this patch as a fix right away - 32-bit ARM has
-the same issue (although it does not actually incorporate this object
-file)
+That would certainly be my own preference. In general, IRQCHIP_DECLARE
+and platform drivers should be mutually exclusive in the same driver:
+if you can delay the probing and have it as a proper platform device,
+then this should be the one true way.
 
-In the meantime, please check how the stub gets pulled into your
-kernel: the idea of a static library is that only the objects that are
-used are included in the final build, but this turned out to be broken
-for arm64 [0]. IOW, simply applying a similar change might fix your
-build issue as well (assuming RISC-V does not actually call
-efi_allocate_pages_aligned() anywhere)
+Thanks,
 
-[0] https://lore.kernel.org/linux-arm-kernel/20200604022031.164207-1-masahiroy@kernel.org/
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
