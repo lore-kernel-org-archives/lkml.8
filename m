@@ -2,75 +2,102 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0935CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14AEA2137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593254840;
-	bh=1rtJRr7/QYwETTIOCkQD0l88nYTT+cOmhg0Mk0eX6H0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AO6A+CRmj/1V2Q1hJuXBcsV0ZlmZeeCfpHaTEljBq1yoZxqW/Q+6DicNsH4J/qBGy
-	 pV5+iwVoQ5hQ5ffiX5EANxy9mD39loIfzC394pucvu6k0fhwD3CVyPf9ld3S8skpL4
-	 DIDVzYpQuMImjwYqU1x1R2j8Ui9NGOC80YLAMCu4=
+	by mail.kernel.org (Postfix) with ESMTP id CAFB92137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgF0KrR (ORCPT
+        id S1726529AbgF0Ktq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 06:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbgF0KrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 06:47:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57ED72137B;
-        Sat, 27 Jun 2020 10:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593254834;
-        bh=1rtJRr7/QYwETTIOCkQD0l88nYTT+cOmhg0Mk0eX6H0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2QRv8i/V33OsxjU3E95V55C8EMqt2ybW3VAmht3U1L3gea3ifWphFa5anMmxMThub
-         MAlHp77JCH7H5bRK6jYL8dpJJqiFmwIK4T1ps3KATrOQnbm2R+Jbb7wTVHicSGf+yK
-         YI52utrFOedkzlCLwR10mq3YIJpxRjG05CSfJkog=
-Date:   Sat, 27 Jun 2020 12:47:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        joe@perches.com, dan.carpenter@oracle.com
-Subject: Re: [PATCH 1/4] fix trailing */ in block comment
-Message-ID: <20200627104708.GA1581263@kroah.com>
-References: <20200627101447.167370-1-coiby.xu@gmail.com>
- <20200627101447.167370-2-coiby.xu@gmail.com>
+        Sat, 27 Jun 2020 06:49:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26897 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbgF0Ktq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 06:49:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-123-vJ8joaIvN8aZFMN3JjXhHA-1; Sat, 27 Jun 2020 11:49:42 +0100
+X-MC-Unique: vJ8joaIvN8aZFMN3JjXhHA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 27 Jun 2020 11:49:41 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 27 Jun 2020 11:49:41 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Thread-Topic: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Thread-Index: AQHWSlL8Fz5PlOyONku9ShNOCTqEYajsST7A
+Date:   Sat, 27 Jun 2020 10:49:41 +0000
+Message-ID: <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
+References: <20200624162901.1814136-1-hch@lst.de>
+ <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
+ <20200624175548.GA25939@lst.de>
+ <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627101447.167370-2-coiby.xu@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 06:14:44PM +0800, Coiby Xu wrote:
-> Remove trailing "*/" in block comments.
-> 
-> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjQgSnVuZSAyMDIwIDE5OjEyDQo+IE9uIFdl
+ZCwgSnVuIDI0LCAyMDIwIGF0IDEwOjU1IEFNIENocmlzdG9waCBIZWxsd2lnIDxoY2hAbHN0LmRl
+PiB3cm90ZToNCj4gPg0KPiA+IEkgZG9uJ3QgY2FyZSBhdCBhbGwuICBCYXNlZCBvbiBvdXIgcHJl
+dmlvdXMgY2hhdCBJIGFzc3VtZWQgeW91DQo+ID4gd2FudGVkIHNvbWV0aGluZyBsaWtlIHRoaXMu
+ICBXZSBtaWdodCBzdGlsbCBuZWVkIHRoZSB1cHRyX3QgZm9yDQo+ID4gc2V0c29ja29wdCwgdGhv
+dWdoLg0KPiANCj4gTm8uDQo+IA0KPiBXaGF0IEkgbWVhbiB3YXMgKm5vdCogc29tZXRoaW5nIGxp
+a2UgdXB0cl90Lg0KPiANCj4gSnVzdCBrZWVwIHRoZSBleGlzdGluZyAic2V0X2ZzKCkiLiBJdCdz
+IG5vdCBoYXJtZnVsIGlmIGl0J3Mgb25seSB1c2VkDQo+IG9jY2FzaW9uYWxseS4gV2Ugc2hvdWxk
+IHJlbmFtZSBpdCBvbmNlIGl0J3MgcmFyZSBlbm91Z2gsIHRob3VnaC4NCg0KQW0gSSByaWdodCBp
+biB0aGlua2luZyB0aGF0IGl0IGp1c3Qgc2V0cyBhIGZsYWcgaW4gJ2N1cnJlbnQnID8NCkFsdGhv
+dWdoIEkgZG9uJ3QgcmVtZW1iZXIgYWNjZXNzX29rKCkgZG9pbmcgYSBzdWl0YWJsZSBjaGVjaw0K
+KHdvdWxkIG5lZWQgdG8gYmUgKGFkZHJlc3MgLSBiYXNlKSA8IGxpbWl0KS4NCg0KPiBUaGVuLCBt
+YWtlIHRoZSBmb2xsb3dpbmcgY2hhbmdlczoNCj4gDQo+ICAtIGFsbCB0aGUgbm9ybWFsIHVzZXIg
+YWNjZXNzIGZ1bmN0aW9ucyBzdG9wIGNhcmluZy4gVGhleSB1c2UNCj4gVEFTS19TSVpFX01BWCBh
+bmQgYXJlIGRvbmUgd2l0aCBpdC4gVGhleSBiYXNpY2FsbHkgc3RvcCByZWFjdGluZyB0bw0KPiBz
+ZXRfZnMoKS4NCj4gDQo+ICAtIHRoZW4sIHdlIGNhbiBoYXZlIGEgZmV3ICp2ZXJ5KiBzcGVjaWZp
+YyBjYXNlcyAobGlrZSBzZXRzb2Nrb3B0LA0KPiBtYXliZSBzb21lIHJhbmRvbSByZWFkL3dyaXRl
+KSB0aGF0IHdlIHRlYWNoIHRvIHVzZSB0aGUgbmV3IHNldF9mcygpDQo+IHRoaW5nLg0KDQpDZXJ0
+YWlubHkgdGhlcmUgaXMgYSAnQlBGJyBob29rIGluIHRoZSBzZXRzb2Nrb3B0KCkgc3lzY2FsbCBo
+YW5kbGVyDQp0aGF0IGNhbiBzdWJzdGl0dXRlIGEga2VybmVsIGJ1ZmZlciBmb3IgYW55IHNldHNv
+Y2tvcHQoKSByZXF1ZXN0Lg0KDQpJZiB0aGF0IGlzIG5lZWRlZCAoSSBwcmVzdW1lIGl0IHdhcyBh
+ZGRlZCBmb3IgYSBwdXJwb3NlKSB0aGVuIGFsbA0KdGhlIHNvY2tldCBvcHRpb24gY29kZSBuZWVk
+cyB0byBiZSBhYmxlIHRvIGhhbmRsZSBrZXJuZWwgYnVmZmVycy4NCihBY3R1YWxseSBnaXZlbiB3
+aGF0IHNvbWUgZ2V0c29ja29wdCgpIGRvLCBpZiB0aGVyZSB3YXMgYQ0KcmVxdWlyZW1lbnQgdG8g
+J2FkanVzdCcgc2V0c29ja29wdCgpIHRoZW4gdGhlcmUgc2hvdWxkIGJlIGEgaG9vaw0KaW4gdGhl
+IGdldHNvY2tvcHQoKSBjb2RlIGFzIHdlbGwuKQ0KDQpJZiB5b3UgYXJlIGdvaW5nIHRvIGdvIHRo
+cm91Z2ggYWxsIHRoZSBzb2NrZXQgb3B0aW9uIGNvZGUgdG8gY2hhbmdlDQp0aGUgbmFtZSBvZiBh
+bGwgdGhlIGJ1ZmZlciBhY2Nlc3MgZnVuY3Rpb25zIHRoZW4gaXQgaXMgcHJvYmFibHkNCmFsbW9z
+dCBhcyBlYXN5IHRvIG1vdmUgdGhlIHVzZXJjb3BpZXMgb3V0IGludG8gdGhlIHdyYXBwZXJzLg0K
+DQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQs
+IE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86
+IDEzOTczODYgKFdhbGVzKQ0K
 
-The subject lines of all of your patches should match other patches for
-this driver.  It should look like "staging: qlge: ..."
-
-Please fix up and resend a v2 of this series.
-
-thanks,
-
-greg k-h
