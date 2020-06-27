@@ -2,205 +2,153 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2667C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65772158C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="T8sLRMvw"
+	by mail.kernel.org (Postfix) with ESMTP id 7B2A92168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593266199;
+	bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DzR2vJF7rFfVdXqD4Xiw+jJxm+KIAl+NRzPGcTgulBHut3emQXo/dDY1lOw0ICo7e
+	 SreuAI1h55jOe8SKFSM+CEUcq8jFidcxc0g7eJYm9uw3G3sSvKYQGjwU40BdnMSIzx
+	 yEdDPSab5Py8uuoqQOqX4nceSCoU81acB18JxXJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbgF0Nzz (ORCPT
+        id S1726679AbgF0N4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgF0Nzy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:55:54 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9377BC061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:55:53 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e15so9055721edr.2
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hoSrfN6BUR4s2KxWgiwxUSDxg2CiKyhfKscI1191oiA=;
-        b=T8sLRMvw/GozyjPIwBVAuof7TWZV5UE+xRUqLg5JJVUQV/qh8ABpO+NdDWOEOl7In3
-         3500XHgq2minPL+o2DBa/QDRLeY4TU+A/XsjL0LRaRr7b5ZdBj6MW2SOysKirBN4UZdW
-         9sxehSPrLAFe100eH49YKmxBEazdwIU6WfX0ouKm4v7dwM+3bKbNoytUSSwoDhhb8Rmn
-         EXv33BYFX8Etmck3DZxXkKer4ZRM8sleFnVNf9Qzmrk56vh6Qx27uoOxSop58Rw0CYBm
-         O6CzoQ+wScSN57FdDSHJ2Uk64fFluScupS0tEEQLyvgP8iMsmBSwDbG+etGnrVxS4W4P
-         ZbVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hoSrfN6BUR4s2KxWgiwxUSDxg2CiKyhfKscI1191oiA=;
-        b=C8+uOoAo+DuefjIXcBGiwzMdNicuYvAfYsv3xi2kiPQ8XMM/Jtssuhk/v8T+Z/vKu/
-         GL3IKrzP614Mk2OQDTubMrTOO+1j2cIfoAklkFTC3/NxVXIqgnblYCwitmCGl03XZOb4
-         Owoi4Bp61xWBnMBuf4yw2HPcbCAue2BEFdU+rgAf++KDuiwY/EToDQQbep4qhjfx2Grt
-         exnkbdfZAFvBF0/sO8tR40mO3ugqp59vb3eN0B0GhxcnpgpZnmF6c4iz5KiU6ER6V/6D
-         XdU+7ZIs49KxDXgJotQCWESvTLuEBIvaRjBGX1Joe5j3OGnWUwbbhsAeFYSha1tP3fY0
-         novQ==
-X-Gm-Message-State: AOAM533wpWThEBEnh8VAGb9DLuhGYkdlT4t4hygDBAz4Qib0mFdDvnHu
-        L3hDimKQKCgX2l03D9+aKCbxDw==
-X-Google-Smtp-Source: ABdhPJyQ9Nm7pcD7I8ZuGmTzvTdIQKbVgRckXBQakwSnqr+vyREZjumQpmx23E0PMKrU7of3rXTC8g==
-X-Received: by 2002:aa7:c305:: with SMTP id l5mr2571618edq.163.1593266152157;
-        Sat, 27 Jun 2020 06:55:52 -0700 (PDT)
-Received: from localhost.localdomain ([2001:16b8:5c8f:5b01:3446:ed90:fece:8da5])
-        by smtp.gmail.com with ESMTPSA id bc23sm5665335edb.90.2020.06.27.06.55.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 06:55:51 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        bcousson@baylibre.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH] Add default mux for pins that a free GPIO lines on the PocketBeagle
-Date:   Sat, 27 Jun 2020 15:55:38 +0200
-Message-Id: <20200627135538.194179-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Sat, 27 Jun 2020 09:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgF0N4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:56:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE852158C;
+        Sat, 27 Jun 2020 13:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593266196;
+        bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Nz3+TyqlyEsmkYUn7YJn+qS8TVFDPdAFklQjKKItZs4XI6kRkoDgYsaj9x4AlMx9Z
+         eZtE3EtY3ZIKaFQG9kbsUgt7LX0mOwMEQFvvt9grynyvxrEKlT8BjjLRs/9fsSW4Ti
+         X9H2K6sxF0MbJWntoRWQmEUJBYmBl2x22mxTVebI=
+Date:   Sat, 27 Jun 2020 14:56:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v6 0/4] Add support for SCD30 sensor
+Message-ID: <20200627145633.6be4c956@archlinux>
+In-Reply-To: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
+References: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These pins on the PocketBeagle P1 and P2 headers are connected to AM3358
-balls with gpio lines, and these pins are not used for any other
-peripherals by default. These GPIO lines are unclaimed and could be used
-by userspace program through the gpiod ABI. However, no driver will have
-set mux mode for the pins.
+On Sun, 21 Jun 2020 21:56:57 +0200
+Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
 
-This patch adds a "default" state in the am33xx_pinmux node and sets the
-pins to gpio output mux mode.
+> Following series adds support for Sensirion SCD30 sensor module capable of
+> measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+> base on NDIR principle while temperature and relative humidity are measured by
+> the on board SHT31. As for sensor communication, both I2C and serial interfaces
+> are supported.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 98 +++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+Series applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index f0b222201b86..900dc6558701 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -60,6 +60,104 @@ vmmcsd_fixed: fixedregulator0 {
- };
- 
- &am33xx_pinmux {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 =   <	&P2_03_gpio &P1_34_gpio &P2_19_gpio &P2_24_gpio
-+			&P2_33_gpio &P2_22_gpio &P2_18_gpio &P2_10_gpio
-+			&P2_06_gpio &P2_04_gpio &P2_02_gpio &P2_08_gpio
-+			&P2_17_gpio >;
-+
-+	/* P2_03 (ZCZ ball T10) gpio0_23 0x824 */
-+	P2_03_gpio: pinmux_P2_03_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P1_34 (ZCZ ball T11) gpio0_26 0x828 */
-+	P1_34_gpio: pinmux_P1_34_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD10, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+		/* P2_19 (ZCZ ball U12) gpio0_27 0x82c */
-+	P2_19_gpio: pinmux_P2_19_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD11, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_24 (ZCZ ball T12) gpio1_12 0x830 */
-+	P2_24_gpio: pinmux_P2_24_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_33 (ZCZ ball R12) gpio1_13 0x834 */
-+	P2_33_gpio: pinmux_P2_33_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_22 (ZCZ ball V13) gpio1_14 0x838 */
-+	P2_22_gpio: pinmux_P2_22_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_18 (ZCZ ball U13) gpio1_15 0x83c */
-+	P2_18_gpio: pinmux_P2_18_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_10 (ZCZ ball R14) gpio1_20 0x850 */
-+	P2_10_gpio: pinmux_P2_10_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_06 (ZCZ ball U16) gpio1_25 0x864 */
-+	P2_06_gpio: pinmux_P2_06_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A9, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_04 (ZCZ ball T16) gpio1_26 0x868 */
-+	P2_04_gpio: pinmux_P2_04_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A10, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_02 (ZCZ ball V17) gpio1_27 0x86c */
-+	P2_02_gpio: pinmux_P2_02_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_08 (ZCZ ball U18) gpio1_28 0x878 */
-+	P2_08_gpio: pinmux_P2_08_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_17 (ZCZ ball V12) gpio2_1 0x88c */
-+	P2_17_gpio: pinmux_P2_17_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_OUTPUT, MUX_MODE7)
-+		>;
-+	};
-+
- 	i2c2_pins: pinmux-i2c2-pins {
- 		pinctrl-single,pins = <
- 			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
--- 
-2.25.1
+Thanks,
+
+Jonathan
+
+> 
+> v6:
+> * fix warnings produced by C=2 build option
+> * fix 0-day warning 'Clarify calculation precedence for '&' and '?''
+> 
+> v5:
+> * set pressure calibration via output channel
+> * use kstrtobool() to read value into _enabled attribute
+> * drop explicit parent asignment as the default one is good enough
+>   (seems 'iio: core: pass parent device as parameter during allocation'
+>    series was accepted)
+> 
+> v4:
+> * improve formatting
+> * improve error handling readability
+> * fix message validity check on serial write
+> 
+> v3:
+> * simplify code by scaling temperature & humidity in _read_meas()
+> * update realbits in scan types
+> * s/adjecent/adjacent
+> * drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
+>   output channel
+> * rework locking in _read_raw
+> * fix endianess problem on BE machine
+> * align timestamp properly before pushing to buffers
+> * explain why interrupt gets disabled after registration
+> * add trigger validation
+> * drop SCALE for temperature and humidity channel as they are processed
+> * register action which stops measuring after starting measurements
+> * spit generic calibration attr into two doing specific things
+> * add comment explaining why priv in struct scd30_state is for
+> * rename node in binding example to co2-sensor
+> 
+> v2:
+> * move asm/byteorder.h towards the bottom of include list
+> * make channel address names in enum more specific
+> * add postfixes to defines and extra comments
+> * drop unneeded i2c include from scd30 header
+> * break generic command sending function into specialized options
+> * expose automatic calibration and forced calibration via the same attr
+> * use SAMP_FREQ to set frequency instead of meas_interval attr
+> * use CALISCALE to set pressure compensation instead of pressure_comp attr
+> * use CALIBBIAS to set temperature offset instead of temp_offset attr
+> * fix order in MAINTAINERS
+> * drop attribute allowing one to reset sensor
+> * as we have dt probing drop board file based probing (i2c_device_id)
+> * merge patches touching related files
+> * use fwnode API to retrieve interrupt from dt
+> * fix interrupt-parent spelling
+> * change binding license
+> * drop supply from required property
+> 
+> Tomasz Duszynski (4):
+>   iio: chemical: scd30: add core driver
+>   iio: chemical: scd30: add I2C interface driver
+>   iio: chemical: scd30: add serial interface driver
+>   dt-bindings: iio: scd30: add device binding file
+> 
+>  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
+>  .../iio/chemical/sensirion,scd30.yaml         |  68 ++
+>  MAINTAINERS                                   |   9 +
+>  drivers/iio/chemical/Kconfig                  |  33 +
+>  drivers/iio/chemical/Makefile                 |   3 +
+>  drivers/iio/chemical/scd30.h                  |  78 ++
+>  drivers/iio/chemical/scd30_core.c             | 771 ++++++++++++++++++
+>  drivers/iio/chemical/scd30_i2c.c              | 139 ++++
+>  drivers/iio/chemical/scd30_serial.c           | 263 ++++++
+>  9 files changed, 1398 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+>  create mode 100644 drivers/iio/chemical/scd30.h
+>  create mode 100644 drivers/iio/chemical/scd30_core.c
+>  create mode 100644 drivers/iio/chemical/scd30_i2c.c
+>  create mode 100644 drivers/iio/chemical/scd30_serial.c
+> 
+> --
+> 2.27.0
+> 
 
