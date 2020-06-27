@@ -3,103 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3106EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D314FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1706720760
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E6020760
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C5RrWz/f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MsYzlS2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgF0SbG (ORCPT
+        id S1726740AbgF0Sbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 14:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46620 "EHLO
+        Sat, 27 Jun 2020 14:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgF0SbF (ORCPT
+        with ESMTP id S1725867AbgF0Sbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 14:31:05 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAE4C061794;
-        Sat, 27 Jun 2020 11:31:04 -0700 (PDT)
+        Sat, 27 Jun 2020 14:31:42 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1097C061794;
+        Sat, 27 Jun 2020 11:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EqUqgITG7ecsHU1e88clY3vesSjbEZhx3MeoTPdWfIg=; b=C5RrWz/fA6p/G3PTFtiwvmczon
-        4mz/MmxNzJKyeo7VvdUJMBSd9TcPYjJG4+zfpLX4uw3yZdQ0WYKKZxpYYJ5IiJ40812UD0FoAnysS
-        UlzrnQHO72zQ4UIuUymqAVVzNyP68SdX7PTQprTpl3MhKO1pEptFBAvdAxwbuV4C55KcgdZ2VfF9O
-        1ImievnmyEYFw89GohdJXs1fH06ZBus1NZBNhWlhiSb8mKl2syj0g0XeizGlsO2DEBPjj7mIrBIIV
-        MmmJ3Up5lcQxmx3DSuNHlt9zRLvGYf1YiQbISb7ddq5BjWFE5n5cGNiWk5LpBJ+JrbaMVm0yL4CkA
-        pgXgZnIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpFbB-0004Ve-DO; Sat, 27 Jun 2020 18:30:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB45F301A7A;
-        Sat, 27 Jun 2020 20:30:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A3C7E22B8B6C1; Sat, 27 Jun 2020 20:30:42 +0200 (CEST)
-Date:   Sat, 27 Jun 2020 20:30:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [Bug, sched, 5.8-rc2]: PREEMPT kernels crashing in
- check_preempt_wakeup() running fsx on XFS
-Message-ID: <20200627183042.GK4817@hirez.programming.kicks-ass.net>
-References: <20200626004722.GF2005@dread.disaster.area>
- <20200626073345.GI4800@hirez.programming.kicks-ass.net>
- <20200626223254.GH2005@dread.disaster.area>
+        bh=iUonY5tAtTgjqNbCWE5Vwbj85TqSh1tjYug5m+z4Qck=; b=MsYzlS2SipjcxBXS/jfM5VXHva
+        0MfNKJEN4Ox+ZUvZVKPtEzNZ/zLlCXy8jbjH80IN8Oo773ZG+LOVNciLsZ72OHXVwzxk8wniA3U0V
+        tIoFs0GZReQhvgYWkbnVwL19Dtx67F+f2/O0c4xdQPIiDKuRbrQdIabEJGQ0UH7dl9YfrpBoHiVgY
+        LJn5cith0pkJo77B4FDd/wIbqvCKQwOqO7uUuO1u9O+wrbWAQz/Co4K78ZNVlmHwzVD0Tbj5ZR3ox
+        rEf/WEDcRKl4UkREWSDVjoOd6pfKJAywWo3Lu/yQzI4vCUWY3bSD+SM2sePDqJoJZXsfpfI+PBruY
+        O/fqA5KQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpFba-0004Zp-Dw; Sat, 27 Jun 2020 18:31:10 +0000
+Date:   Sat, 27 Jun 2020 19:31:10 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH 0/8] mm: cleanup usage of <asm/pgalloc.h>
+Message-ID: <20200627183110.GE25039@casper.infradead.org>
+References: <20200627143453.31835-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626223254.GH2005@dread.disaster.area>
+In-Reply-To: <20200627143453.31835-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 08:32:54AM +1000, Dave Chinner wrote:
-> Observation from the outside:
-> 
-> "However I'm having trouble convincing myself that's actually
-> possible on x86_64.... "
+On Sat, Jun 27, 2020 at 05:34:45PM +0300, Mike Rapoport wrote:
+> Most architectures have very similar versions of pXd_alloc_one() and
+> pXd_free_one() for intermediate levels of page table. 
+> These patches add generic versions of these functions in
+> <asm-generic/pgalloc.h> and enable use of the generic functions where
+> appropriate.
 
-Using the weaker rules of LKMM (as relevant to Power) I could in fact
-make it happen, the 'problem' is that it's being observed on the much
-stronger x86_64.
+For the series:
 
-So possibly I did overlook a more 'sensible' scenario, but I'm pretty
-confident the problem holds as it fully explains the failure mode.
-
-> This scheduler code has fallen off a really high ledge on the memory
-> barrier cliff, hasn't it?
-
-Just a wee bit.. I did need pen and paper and a fair amount of
-scribbling for this one.
-
-> Having looked at this code over the past 24 hours and the recent
-> history, I know that understanding it - let alone debugging and
-> fixing problem in it - is way beyond my capabilities.  And I say
-> that as an experienced kernel developer with a pretty good grasp of
-> concurrent programming and a record of implementing a fair number of
-> non-trivial lockless algorithms over the years....
-
-All in the name of making it go fast, I suppose. It used to be much
-simpler... like much of the kernel.
-
-The biggest problem I had with this thing was that the reproduction case
-we had (Paul's rcutorture) wouldn't readily trigger on my machines
-(altough it did, but at a much lower rate, just twice in a week's worth
-of runtime).
-
-Also; I'm sure you can spot a problem in the I/O layer much faster than
-I possibly could :-)
-
-Anyway, let me know if you still observe any problems.
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
