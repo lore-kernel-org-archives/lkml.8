@@ -4,116 +4,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B827C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D57F208C7
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA42E208C7
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593243297;
-	bh=Itmuk4QOyPwIKwsALdhVa2cCBtOvlPtICWP8yExdrkQ=;
+	s=default; t=1593243561;
+	bh=r4RD6Yj/wh2sz/DvMIH7PYJ2ZmuZh6S/3C/0plRZHQ4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0sDWMpau4j4dd2oeYfiiKBuUZDhixV2IbmUTkGY7w2C5xpFbkTGqq7uwNwLOpI/BZ
-	 fj8XHkyf3rRcvM3XNkVtyOgBiV9RdZHdqDF6Wq9ouL3rAUjngK4wOkfgaWI//NvOrv
-	 9rm7g1CGHC3SUe9yfHNH2mwbezIGCOpmwz8DGfJI=
+	b=Rvj1NKyQkkTBbCYk31tlazVXVVlGTPvh32Z6NW+Dwfu+ZNQkT7L9UFIt/HsevZ/Sl
+	 /aVyAy3KbAKal23/LUgmxS34F5loC4V6MMa2lumEt39E2fAqb9XwXyNQJ3jFqqe/Fg
+	 kUmZYfUKlJdLHP7oYpATJaYPr7W6ecEsMbsbLJlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgF0Hez (ORCPT
+        id S1726056AbgF0HjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 03:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 03:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgF0Hez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 03:34:55 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        id S1725885AbgF0HjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 03:39:16 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56A9208C7;
-        Sat, 27 Jun 2020 07:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C4520706;
+        Sat, 27 Jun 2020 07:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593243294;
-        bh=Itmuk4QOyPwIKwsALdhVa2cCBtOvlPtICWP8yExdrkQ=;
+        s=default; t=1593243555;
+        bh=r4RD6Yj/wh2sz/DvMIH7PYJ2ZmuZh6S/3C/0plRZHQ4=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ytezSzQykMahou3pqLknMYHGq+8/x5+uhogNAXuiNCmvKi+ZCWECBx4qXvEXFr6Mx
-         z8PnK82Z+4iYXLLovPvGmQvxQe541i2I74VThkMfoyx5fVus9V3LCSg05Yv2Lv0rk1
-         tAHHSyaG/18Tsv2tnlQ32CghSrWn3xV1pzFN2yAs=
-Received: by mail-ot1-f45.google.com with SMTP id 5so8758778oty.11;
-        Sat, 27 Jun 2020 00:34:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530m4f2yXk4MmQl8DbNzkmPgbn3Kt6lc0Zo6bEDX75Nfo2ZTmF6K
-        9DRzG6SiV9pUNrYJ1fYqN/MpPn/fnVv5ggHL+nQ=
-X-Google-Smtp-Source: ABdhPJxo4GBgpI3CfYGRDTcSeYC19Y/AaYwBMPAP0EKLufVSK5++jOx6RFOZghHqIsVnypd++ND2Rq+oIwGgJMhTXEw=
-X-Received: by 2002:a9d:5a12:: with SMTP id v18mr5423029oth.90.1593243294044;
- Sat, 27 Jun 2020 00:34:54 -0700 (PDT)
+        b=WG3304fCrTrmJmQRNYNog6nBl+KU0DNsUIiKj8/w7U3rhj+ofgs7Y8SU9wSHpV8MO
+         BzWjh8ivi3P/Jxq+voVMcawJPpk/m0JdlwbDwoxcyhMjG3Br8J+9ReZG+pYec2eTXu
+         y+c0ZgpdA2pEvnfuoAThP5H5WqWcjENLfz9hX7ig=
+Received: by mail-ot1-f49.google.com with SMTP id n6so10792474otl.0;
+        Sat, 27 Jun 2020 00:39:15 -0700 (PDT)
+X-Gm-Message-State: AOAM531zf0cL8luvRStNUyqDR0HTqKnaE0LATXeHJfX47T8MWk7Sv0iA
+        wJa3qZl2wZWDd6MzD1V87eZjEph2if8RYgMdwpg=
+X-Google-Smtp-Source: ABdhPJzeBH5EvyZjQDcTyVYTObiSzPCIBclsABXsIUoqdBDzUWJ3e34H/Xvj4eW1+AEASg5Hn1rBFpCLMASWNOqaXs8=
+X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr5881966otf.77.1593243555117;
+ Sat, 27 Jun 2020 00:39:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618064307.32739-1-hch@lst.de> <20200618064307.32739-3-hch@lst.de>
-In-Reply-To: <20200618064307.32739-3-hch@lst.de>
+References: <20200626185913.92890-1-masahiroy@kernel.org> <20200626185913.92890-2-masahiroy@kernel.org>
+In-Reply-To: <20200626185913.92890-2-masahiroy@kernel.org>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 27 Jun 2020 09:34:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH985Aqma47yf96N45CYkTGePVpvihrc_TmOAp2f0vN-g@mail.gmail.com>
-Message-ID: <CAMj1kXH985Aqma47yf96N45CYkTGePVpvihrc_TmOAp2f0vN-g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in alloc_insn_page
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-hyperv@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        X86 ML <x86@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Jessica Yu <jeyu@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Sat, 27 Jun 2020 09:39:03 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGsJsU-zbsuWi4O46XqE71DRdKOX1MeC5ndnE+j9Nw7Cw@mail.gmail.com>
+Message-ID: <CAMj1kXGsJsU-zbsuWi4O46XqE71DRdKOX1MeC5ndnE+j9Nw7Cw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: remove cc-option test of -ffreestanding
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 at 08:44, Christoph Hellwig <hch@lst.de> wrote:
+On Fri, 26 Jun 2020 at 21:00, Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
-> page read-only just after the allocation.
+> Some Makefiles already pass -ffreestanding unconditionally.
+> For example, arch/arm64/lib/Makefile, arch/x86/purgatory/Makefile.
+> No problem report so far about hard-coding this option. So, we can
+> assume all supported compilers know -ffreestanding.
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> I confirmed GCC 4.8 and Clang manuals document this option.
+>
+> Get rid of cc-option from -ffreestanding.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
 > ---
->  arch/arm64/kernel/probes/kprobes.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
 >
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index d1c95dcf1d7833..cbe49cd117cfec 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+>  arch/s390/Makefile                    | 2 +-
+>  arch/x86/Makefile                     | 2 +-
+>  arch/x86/boot/compressed/Makefile     | 2 +-
+>  drivers/firmware/efi/libstub/Makefile | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 >
->  void *alloc_insn_page(void)
->  {
-> -       void *page;
-> -
-> -       page = vmalloc_exec(PAGE_SIZE);
-> -       if (page) {
-> -               set_memory_ro((unsigned long)page, 1);
-> -               set_vm_flush_reset_perms(page);
-> -       }
-> -
-> -       return page;
-> +       return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> +                       GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> +                       NUMA_NO_NODE, __func__);
-
-Why is this passing a string for the 'caller' argument, and not the
-address of the caller?
-
-
->  }
+> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+> index 8dfa2cf1f05c..ba94b03c8b2f 100644
+> --- a/arch/s390/Makefile
+> +++ b/arch/s390/Makefile
+> @@ -27,7 +27,7 @@ KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
+>  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+>  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+>  KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+> -KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
+> +KBUILD_CFLAGS_DECOMPRESSOR += -ffreestanding
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
+>  KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 89c3cdfba753..edc68538a04e 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -36,7 +36,7 @@ REALMODE_CFLAGS       := $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
+>                    -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
+>                    -mno-mmx -mno-sse
 >
->  /* arm kprobe: install breakpoint in text */
+> -REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
+> +REALMODE_CFLAGS += -ffreestanding
+>  REALMODE_CFLAGS += -fno-stack-protector
+>  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
+>  REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index c88a31569a5e..b7beabecef8a 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -35,7 +35,7 @@ cflags-$(CONFIG_X86_32) := -march=i386
+>  cflags-$(CONFIG_X86_64) := -mcmodel=small
+>  KBUILD_CFLAGS += $(cflags-y)
+>  KBUILD_CFLAGS += -mno-mmx -mno-sse
+> -KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
+> +KBUILD_CFLAGS += -ffreestanding
+>  KBUILD_CFLAGS += -fno-stack-protector
+>  KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index f8418763cd79..296b18fbd7a2 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -28,7 +28,7 @@ cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
+>  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
+>                                    -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
+>                                    -D__NO_FORTIFY \
+> -                                  $(call cc-option,-ffreestanding) \
+> +                                  -ffreestanding \
+>                                    -fno-stack-protector \
+>                                    $(call cc-option,-fno-addrsig) \
+>                                    -D__DISABLE_EXPORTS
 > --
-> 2.26.2
+> 2.25.1
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
