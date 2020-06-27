@@ -2,219 +2,244 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 16:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 16:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74449206A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 16:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8A420674
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 16:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593275608;
-	bh=d9pGLeKX7Mnj2Sis5onHc4rcPHK59+Cn8LDz/l6cVCo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YjMeMdprHqYHF+jeHHp91a+YUfqwRTEOI4H5GnvyRWtrOFLSmMiPaAXo19yO+v3Ji
-	 76hVDNkiv08Nfyce11WtUaLYOjyabPKx4WGVGFAJiOesTdeXfQL1OqbEdtUbWHlKAU
-	 cgvxi5Vf6+frupcB3ZEnzMBZ7tE63rSBuVXTpgCM=
+	s=default; t=1593276051;
+	bh=SVEjpSjxSWxRPqQhAq+Fl2LSbcXLhNqvibbtrHls+2o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rAzNkvOf3ZJ6DOuKMNVC7C6KK447/E4/THHVFhx0UppPDJPzIlkeAufOYBh1D+F7f
+	 0G2n8Az0eQf0ja8NOjboSn4Qkp5pRFwKtIgACtoL55/ZJhu/aojzQ2qt9wU4FuZHS7
+	 ZHAWTCok2vF1CNaWyk0YnRYKZdOE77wffI6fGdn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgF0Qd1 (ORCPT
+        id S1726364AbgF0Qkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 12:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgF0QdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 12:33:24 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229C6C03E979
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 09:33:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n24so13418768lji.10
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 09:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zm7F5E21VOj53dJ+cv9f96G78mr9Hbsprjoym1XE0Kg=;
-        b=dFxU7A/dIhFjWtexhRNj28JLQPwpPSTC1IGJO/QY3YkFQYuCZfN6sVlY1GZnZj6nWT
-         kQ1zk7vcokCOAN2dBrIDOU7zEwC2lfKje2337ddmXvQK9BmAk8ikcCQhrJv3qQd4ngmg
-         VFhgtqA8GhgsJmUd8Y4k5JIGnPtXeVQvq0e0I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zm7F5E21VOj53dJ+cv9f96G78mr9Hbsprjoym1XE0Kg=;
-        b=fBw3gmDY/7c9aW8RxEGpfu529tcy3hh3IbVGSkfAMJ0dleao8M5aCe2iB4paiZZ/T2
-         tn8H7uMYNwuatJgIsOy0qwyyatGGqv5K+ZzfbiL4D/EOibLNBZpMw3LJNHW+VxwCRmJh
-         jjN1HSdYWUFx61aCFCUB23xDHzCOA+91m5YBROFk3VRivdsT8cifk0QLQJhMKL5vvgTo
-         5QFltExMpbbw3tLOnj6v/p+hOAPTnfmy4Qd6bjJVjrQKWSXXHVlEDSersCsQJYAJ1w84
-         zERtzPFzYQ1/uhISGJLRWxikC2gJix0ve+NHi72h5opjDA2crr0mJ9pFwhJwFCiWhUvL
-         sD+w==
-X-Gm-Message-State: AOAM532MWAea3zk/jbehBVfrF/GGYyP4MdzertowBwHsXa3NtRRl9Pb6
-        5z9u6wr8pGAYKx4eHOXeVFSa603BmmY=
-X-Google-Smtp-Source: ABdhPJwvTIde7C6ObJWfE/1KGzSrUj5kVCG3uv16rj6Fv7cTv8RV1+E3xXKK/Vb1D4TbZKxvKr7njw==
-X-Received: by 2002:a2e:8490:: with SMTP id b16mr4241329ljh.325.1593275601677;
-        Sat, 27 Jun 2020 09:33:21 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id n10sm7484022lfb.82.2020.06.27.09.33.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jun 2020 09:33:20 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id i3so13475072ljg.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 09:33:19 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr3996353ljj.102.1593275599478;
- Sat, 27 Jun 2020 09:33:19 -0700 (PDT)
+        Sat, 27 Jun 2020 12:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725831AbgF0Qkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 12:40:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C04AF20674;
+        Sat, 27 Jun 2020 16:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593276039;
+        bh=SVEjpSjxSWxRPqQhAq+Fl2LSbcXLhNqvibbtrHls+2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BLKXtyi19DHD2ixX9W1DPwE/XbIM022S6lFTDvY87CvJfHkMZnp0zjdfA7cpZuG3L
+         NAdHxNV9THlY3x2caK1AKz4XEgE40VqYFSQ7/OWzDdZhs1AQ6KsLw02hYNg9TX1WDE
+         zPdLoUxS6s1AorhoRfbt9b6gByF6N4KeQtFcFddA=
+Date:   Sat, 27 Jun 2020 17:40:35 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <knaack.h@gmx.de>
+Subject: Re: [PATCH v3 2/7] iio: core: wrap IIO device into an
+ iio_dev_opaque object
+Message-ID: <20200627174035.04e659bc@archlinux>
+In-Reply-To: <20200621123345.2469-3-alexandru.ardelean@analog.com>
+References: <20200621123345.2469-1-alexandru.ardelean@analog.com>
+        <20200621123345.2469-3-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de>
- <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
- <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
- <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
-In-Reply-To: <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 27 Jun 2020 09:33:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
-Message-ID: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 3:49 AM David Laight <David.Laight@aculab.com> wrote:
->
-> > Just keep the existing "set_fs()". It's not harmful if it's only used
-> > occasionally. We should rename it once it's rare enough, though.
->
-> Am I right in thinking that it just sets a flag in 'current' ?
+On Sun, 21 Jun 2020 15:33:40 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Basically, yes. That's what it has always done.
+> There are plenty of bad designs we want to discourage or not have to review
+> manually usually about accessing private (marked as [INTERN]) fields of
+> 'struct iio_dev'.
+> 
+> Sometimes users copy drivers that are not always the best examples.
+> 
+> A better idea is to hide those fields into the framework.
+> For 'struct iio_dev' this is a 'struct iio_dev_opaque' which wraps a public
+> 'struct iio_dev' object.
+> 
+> In the next series, some fields will be moved to this new struct, each with
+> it's own rework.
+> 
+> This rework will not be complete-able for a while, as many fields need some
+> drivers to be reworked in order to finalize them (e.g. 'indio_dev->mlock').
+> 
+> But some fields can already be moved, and in time, all of them may get
+> there (in the 'struct iio_dev_opaque' object).
+> 
+> Since a lot of drivers also call 'iio_priv()', in order to preserve
+> fast-paths (where this matters), the public iio_dev object will have a
+> 'priv' field that will have the pointer to the private information already
+> computed. The reference returned by this field should be guaranteed to be
+> cacheline aligned.
+> 
+> As for the 'iio_priv_to_dev()' helper, this needs to be hidden away. There
+> aren't many users of this helper, and arguably drivers shouldn't need to
+> use it in any fast-paths, as they can maintain a reference to the IIO
+> device.
+Dropped this bit as previous patch deleted iio_priv_to_dev :)
+> 
+> The opaque parts will be moved into the 'include/linux/iio/iio-opaque.h'
+> header. Should the hidden information be required for some debugging or
+> some special needs, it can be made available via this header.
+> Otherwise, only the IIO core files should include this file.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Well "always" is not true - it used to set the %fs segment register
-originally (thus the name), but _conceptually_ it sets a flag for
-"should user accesses be kernel accesses instead".
+I've applied this as it stands, but I wonder if we should combine
+this with the existing iio-core.h header.
 
-On x86 - and most other architectures where user space and kernel
-space are in the same address space and accessed with the same
-instructions, that has then been implemented as just a "what is the
-limit for an access".
+Can do that later if it makes sense.
 
-On other architectures - architectures that need different access
-methods (or different flags to the load/store instruction) - it's an
-actual flag that changes which access method you use.
+Jonathan
 
-> Although I don't remember access_ok() doing a suitable check
-> (would need to be (address - base) < limit).
 
-So again, on the architectures with a unified address space,
-access_ok() is exactly that "address + access_size <= limit", although
-often done with some inline asm just to get the overflow case done
-efficiently.
 
-On other architectures, there's no limit check, because _all_
-addresses are either user space or kernel space addresses, and what
-changes isn't the address limit, but the access itself.
+> ---
+>  drivers/iio/industrialio-core.c | 19 +++++++++++++------
+>  include/linux/iio/iio-opaque.h  | 17 +++++++++++++++++
+>  include/linux/iio/iio.h         |  6 +++++-
+>  3 files changed, 35 insertions(+), 7 deletions(-)
+>  create mode 100644 include/linux/iio/iio-opaque.h
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 75661661aaba..33e2953cf021 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/mutex.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/iio-opaque.h>
+>  #include "iio_core.h"
+>  #include "iio_core_trigger.h"
+>  #include <linux/iio/sysfs.h>
+> @@ -1473,6 +1474,8 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
+>  static void iio_dev_release(struct device *device)
+>  {
+>  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
+> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+> +
+>  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
+>  		iio_device_unregister_trigger_consumer(indio_dev);
+>  	iio_device_unregister_eventset(indio_dev);
+> @@ -1481,7 +1484,7 @@ static void iio_dev_release(struct device *device)
+>  	iio_buffer_put(indio_dev->buffer);
+>  
+>  	ida_simple_remove(&iio_ida, indio_dev->id);
+> -	kfree(indio_dev);
+> +	kfree(iio_dev_opaque);
+>  }
+>  
+>  struct device_type iio_device_type = {
+> @@ -1495,10 +1498,11 @@ struct device_type iio_device_type = {
+>   **/
+>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+>  {
+> +	struct iio_dev_opaque *iio_dev_opaque;
+>  	struct iio_dev *dev;
+>  	size_t alloc_size;
+>  
+> -	alloc_size = sizeof(struct iio_dev);
+> +	alloc_size = sizeof(struct iio_dev_opaque);
+>  	if (sizeof_priv) {
+>  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+>  		alloc_size += sizeof_priv;
+> @@ -1506,11 +1510,14 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+>  	/* ensure 32-byte alignment of whole construct ? */
+>  	alloc_size += IIO_ALIGN - 1;
+>  
+> -	dev = kzalloc(alloc_size, GFP_KERNEL);
+> -	if (!dev)
+> +	iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
+> +	if (!iio_dev_opaque)
+>  		return NULL;
+>  
+> -	dev->dev.parent = parent;
+> +	dev = &iio_dev_opaque->indio_dev;
+> +	dev->priv = (char *)iio_dev_opaque +
+> +		ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
+> +
+>  	dev->dev.groups = dev->groups;
+>  	dev->dev.type = &iio_device_type;
+>  	dev->dev.bus = &iio_bus_type;
+> @@ -1524,7 +1531,7 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+>  	if (dev->id < 0) {
+>  		/* cannot use a dev_err as the name isn't available */
+>  		pr_err("failed to get device id\n");
+> -		kfree(dev);
+> +		kfree(iio_dev_opaque);
+>  		return NULL;
+>  	}
+>  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
+> diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
+> new file mode 100644
+> index 000000000000..1375674f14cd
+> --- /dev/null
+> +++ b/include/linux/iio/iio-opaque.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef _INDUSTRIAL_IO_OPAQUE_H_
+> +#define _INDUSTRIAL_IO_OPAQUE_H_
+> +
+> +/**
+> + * struct iio_dev_opaque - industrial I/O device opaque information
+> + * @indio_dev:			public industrial I/O device information
+> + */
+> +struct iio_dev_opaque {
+> +	struct iio_dev			indio_dev;
+> +};
+> +
+> +#define to_iio_dev_opaque(indio_dev)		\
+> +	container_of(indio_dev, struct iio_dev_opaque, indio_dev)
+> +
+> +#endif
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 10a6d97a8e3e..86112e35ae5f 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -522,6 +522,8 @@ struct iio_buffer_setup_ops {
+>   * @flags:		[INTERN] file ops related flags including busy flag.
+>   * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
+>   * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
+> + * @priv:		[DRIVER] reference to driver's private information
+> + *			**MUST** be accessed **ONLY** via iio_priv() helper
+>   */
+>  struct iio_dev {
+>  	int				id;
+> @@ -571,6 +573,7 @@ struct iio_dev {
+>  	char				read_buf[20];
+>  	unsigned int			read_buf_len;
+>  #endif
+> +	void				*priv;
+>  };
+>  
+>  const struct iio_chan_spec
+> @@ -698,9 +701,10 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
+>  #define IIO_ALIGN L1_CACHE_BYTES
+>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+>  
+> +/* The information at the returned address is guaranteed to be cacheline aligned */
+>  static inline void *iio_priv(const struct iio_dev *indio_dev)
+>  {
+> -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
+> +	return indio_dev->priv;
+>  }
+>  
+>  void iio_device_free(struct iio_dev *indio_dev);
 
-So what I was suggesting is literally
-
- - keep this flag around as a flag
-
- - but make all _normal_ user accesses ignore it, and always do user
-accesses (so on a unified address space architecture like x86 it
-always checks the _fixed_ limit, and on something like sparc32 which
-has separate kernel and user address spaces, it just always does a
-user access with no conditionals at all)
-
- - then make the really odd and hopefully very rare cases check that
-flag explicitly and manually, and do
-
-        if (current->legacy_uptr_is_kernel)
-                memcpy(...);
-        else
-                copy_to/from_user(...);
-
-and my hope is that we'd have only a handful of cases (like the
-setsockopt thing: one for each protocol or whatever) that actually
-want this.
-
-Note that the legacy behavior would still remain in architectures that
-haven't been modified to remove the use of set_fs(), so I would
-further suggest that the two approaches live side-by-side for at least
-a while. But _generic_ code (and with Christoph's patches at least
-x86) would make set_fs() cause a build error.
-
-So we'd have a new
-
-     set_force_kernel_pointers();
-     ....
-     clear_force_kernel_pointers();
-
-that would set/clear that 'current->legacy_uptr_is_kernel' variable,
-and we'd have a handful of places that would check it.
-
-The naming above is all random, and I'm not claiming that any of this
-is particularly _clean_. I'm also not claiming that it's really any
-better than our current "set_fs()" mess conceptually.
-
-The only thing that makes it better than our current "set_fs()" is
-
- - there would hopefully be very few cases of this
-
- - it would *not* affect random incidental user accesses that just
-happen to be in the shadow of this thing.
-
-That second point is the important one, I feel. The real problem with
-"set_fs()" has been that we've occasionally had bugs where we ended up
-running odd paths that we really didn't _intend_ to run with kernel
-pointers. The classic example is the SCSI "write as ioctl" example,
-where a write to a SCSI generic device would do various odd things and
-follow pointers and what-not. Then you get into real trouble when
-"splice()" ends up truiong to write a kernel buffer, and because of
-"set_fs()" suddenly the sg code started accessing kernel memory
-willy-nilly.
-
-So my suggestion was basically a new version of set_fs(), but one that
-is just much more targeted, and doesn't affect all random user
-accesses, only those very special ones that are then very *explicitly*
-aware of the fact that "hey, I might be called in this situation where
-I'm going to get a kernel address instead".
-
-> If that is needed (I presume it was added for a purpose) then all
-> the socket option code needs to be able to handle kernel buffers.
-
-So that's very much what I'd like to avoid.
-
-The plan would be that all the *normal* stuff would be handled by
-either (a) always having the data come from user space, or (b) the
-data has a known size (either fixed, or "optlen" or whatever) and then
-being copied to a kernel buffer and then always handled as a kernel
-field that bpf can then call with kernel data.
-
-I thought there was just one very specific case of "oh, in certain
-cases of setsockopt we don't know what size this address is and optlen
-is ignored", so we have to just pass the pointer down to the protocol,
-which is the point that knows how much of an address it wants..
-
-Was that a misunderstanding on my part?
-
-Because if there are tons and tons of places that want this "either
-kernel or user" then we could still have a helper function for it, but
-it means that the whole "limit the cases" advantage to some degree
-goes away.
-
-It would still fix the 99% of normal "copy/from/to_user()" cases,
-though. They'd be fixed and "safe" and coule never ever touch kernel
-memory even if there was some confusion about things. So it would be
-an improvement, but I was really hoping that the cases where there can
-be confusion would be pretty rare.
-
-             Linus
