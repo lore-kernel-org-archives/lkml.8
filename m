@@ -2,105 +2,98 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2939208B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlMVQLA0"
+	by mail.kernel.org (Postfix) with ESMTP id B4D1721655
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593270765;
+	bh=C6b0LLCAfmlV8FuDgswjds1M0qKz2uubTGMmipdtiwY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RrPFVilx+YnOIzSGt14xCrvfvBGbqmfdsreav+Fsu3Uyl0t85YD+gcRnnd/1j7Cno
+	 WfbQpfxe8F+UUP/Fp6YvKtM8enN3FAfg7FXFOXBpcQB/Sij1Av2SnK2FAI7SFYuKvJ
+	 Khnws/D4lK1qe6a9W0Cc0Vu41bwFhO/sR009ixIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgF0PBv (ORCPT
+        id S1726315AbgF0PMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 11:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgF0PBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 11:01:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A99C061794;
-        Sat, 27 Jun 2020 08:01:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s14so5389445plq.6;
-        Sat, 27 Jun 2020 08:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9lher+rQxC0kRrcoezVIymaqZSTGLdetiTQ54P1L/Qc=;
-        b=nlMVQLA0jQBARLHqP/GFmOdd7QX7HfxH5YBnecu+434yb/XWokEqmSaKLQfaQcamSB
-         zuQBtk54DIYk9Ip2JCMSvjdpb8dFAZt1Kgmt9B6tsJ/TnQZoK0yUUxxpDKXNEmzK/bXd
-         aylGDdU46wZK0GF8aoHcYHX5SWRE6EVYjXVHlyzMhzWv143Wp7rd9HAJbCkpWilZ5KE3
-         RWhaCLT4OG/YmTTUWOCi58DWrHh47OvmF4CHMGvKNnc1fvfueTJLzSWqyaOmxv4YffWr
-         J502vMRa2YH5d1/k1hfhXmLvsSjKeZViHgKMMdHqceaDs6QzVpQwYelzu9rPW/nQlYTi
-         8zmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9lher+rQxC0kRrcoezVIymaqZSTGLdetiTQ54P1L/Qc=;
-        b=CmJ8CV4+G7UJeh7qVdsjuWP42PuK+cflHW+RPCc+MGbABzC2P73DVhXYiHNCcR4NFQ
-         YnOmFLaOmEYLF5i18o6OjOwExAl9hVa2c1BR0HB6L2tm2GxwIEh3vEfXo6RRKOk2rj9w
-         9qsOScjedhhP88Ot20JMgLED4KpJdtVkiiOlGUrpzlAkWKjmv0L7HKrQZhjNKDdC2caq
-         0M1WW4yUQ3Ra3L9RofS2pAWNpxn/Idjr6tYvcWxIQk3xVdj/yeRIgqVAN6tuGNBTmhz9
-         8/Iz6YV79Bojvph8M4tsbc7zbn2Jfu9vXU208nu8cnIORcTCloJ0+nOPZlaVtVOipIVM
-         MHcA==
-X-Gm-Message-State: AOAM531PLusjRBbs0gLhxnMzDrFkp7ea6+ucSMfFGgBsLi5FkOQVva+6
-        b0yvKUsOlUAeu7QKVG1n47A=
-X-Google-Smtp-Source: ABdhPJw9oECpaLZ/lIFVcCCPrnE7fCPYaId7ioMgiD3ZzwIUDxtHteJpqVOUN8uK/vDAJKSZMUcfdQ==
-X-Received: by 2002:a17:902:b48f:: with SMTP id y15mr6823297plr.284.1593270110619;
-        Sat, 27 Jun 2020 08:01:50 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id 66sm12902375pfd.93.2020.06.27.08.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 08:01:50 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Sat, 27 Jun 2020 23:01:42 +0800
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        joe@perches.com, dan.carpenter@oracle.com
-Subject: Re: [PATCH 1/4] fix trailing */ in block comment
-Message-ID: <20200627150142.nukckb2ezyxiuemm@Rk>
-References: <20200627101447.167370-1-coiby.xu@gmail.com>
- <20200627101447.167370-2-coiby.xu@gmail.com>
- <20200627104708.GA1581263@kroah.com>
+        Sat, 27 Jun 2020 11:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgF0PMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 11:12:44 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F51620FC3;
+        Sat, 27 Jun 2020 15:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593270763;
+        bh=C6b0LLCAfmlV8FuDgswjds1M0qKz2uubTGMmipdtiwY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nx9ob/1Z3xEmUfyTesUHH/3RtYpfk6whGJMqapC/D4fqNzfZs0LIw9XkFaGEtB+vG
+         kOJklqX/q8jA2bOwFc+li4h2wae7WFS42yl2AmWckERgAdf7k6TutqvaAO/CufC9g0
+         asIK5LM7kJLjljQUlpdFIZ1nE1qrgM1tfJc9gvyg=
+Date:   Sat, 27 Jun 2020 16:12:39 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <knaack.h@gmx.de>
+Subject: Re: [PATCH v3 1/7] iio: core: remove iio_priv_to_dev() helper
+Message-ID: <20200627161239.72159cea@archlinux>
+In-Reply-To: <20200621123345.2469-2-alexandru.ardelean@analog.com>
+References: <20200621123345.2469-1-alexandru.ardelean@analog.com>
+        <20200621123345.2469-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200627104708.GA1581263@kroah.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 12:47:08PM +0200, Greg Kroah-Hartman wrote:
->On Sat, Jun 27, 2020 at 06:14:44PM +0800, Coiby Xu wrote:
->> Remove trailing "*/" in block comments.
->>
->> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
->
->The subject lines of all of your patches should match other patches for
->this driver.  It should look like "staging: qlge: ..."
->
->Please fix up and resend a v2 of this series.
->
->thanks,
->
->greg k-h
+On Sun, 21 Jun 2020 15:33:39 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Thank you for pointing out this issue!
+> All users of this helper have been updated to not use it.
+> Remove it now, so that we don't need to move it when creating the
+> iio_dev_opaque structure.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
---
-Best regards,
-Coiby
+Applied to the togreg branch of iio.git and pushed out as testing
+(note I discovered I'd not applied the at91-sama5d patch when I said I had
+so noticed when doing local tests on this).
+
+Thanks,
+
+Jonathan
+
+> ---
+>  include/linux/iio/iio.h | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 1c1d02107722..10a6d97a8e3e 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -703,12 +703,6 @@ static inline void *iio_priv(const struct iio_dev *indio_dev)
+>  	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
+>  }
+>  
+> -static inline struct iio_dev *iio_priv_to_dev(void *priv)
+> -{
+> -	return (struct iio_dev *)((char *)priv -
+> -				  ALIGN(sizeof(struct iio_dev), IIO_ALIGN));
+> -}
+> -
+>  void iio_device_free(struct iio_dev *indio_dev);
+>  struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv);
+>  struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+
