@@ -2,125 +2,126 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35206C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB821C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A32073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84BF20768
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593249786;
+	bh=ARyWigMo4Grv0OKY/VJy1kBAOavs8Wcx2VYSGAzPgks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=or1ZMisd2vpdLDdFVucO4ZipTh6fNEhtJ/+9Spap3cxdJrPto8frW46polShCGhhK
+	 aNPN0D+zytBGMmnyZlDGh30r8m0p00U4F6S9yIc9eISbu2wfaWpbHBWPyVPWZIsGym
+	 U6m/W5l2C0sk6bNuuUqcJeRlv/Am4B5KxAITLk9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgF0JUT (ORCPT
+        id S1726443AbgF0JW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 05:20:19 -0400
-Received: from smtprelay0206.hostedemail.com ([216.40.44.206]:58100 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgF0JUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 05:20:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 214C4837F24C;
-        Sat, 27 Jun 2020 09:20:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: week56_580e02926e5c
-X-Filterd-Recvd-Size: 3605
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 27 Jun 2020 09:20:15 +0000 (UTC)
-Message-ID: <3f3cc81521d405c62a83650c9315c9ddbf2135aa.camel@perches.com>
-Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
- before ',' (ctx:WxW)
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC
-         Campus <bkkarthik@pesu.pes.edu>, devel@driverdev.osuosl.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Date:   Sat, 27 Jun 2020 02:20:14 -0700
-In-Reply-To: <20200627084932.GA1560170@kroah.com>
-References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
-         <CAAhDqq0tSftPxMWGeVy3mp4DGDN3o0uQwTqVbjYUwjqzWpbibQ@mail.gmail.com>
-         <20200627050745.GD226238@kroah.com>
-         <f73c5a69-1bf9-d80d-2399-ef18ce78b8ac@xs4all.nl>
-         <20200627084932.GA1560170@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Sat, 27 Jun 2020 05:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgF0JW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 05:22:59 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8AE20768;
+        Sat, 27 Jun 2020 09:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593249778;
+        bh=ARyWigMo4Grv0OKY/VJy1kBAOavs8Wcx2VYSGAzPgks=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=alfu06HdLDJlx9dHguCZCd6adJiGTpaZut2AgOBHIUONCJOpM+pf1RfMeMpQX6gYd
+         FFWtixphoW0dkd7a4aOvlC3PWm4n10zA6kxsxqPe/qEi8Kxn9UDb4YPbPD8+DxA4/b
+         Akehks0sO8iSVKe/feBFTukUQUImHpfY1YR2Gh18=
+Received: by mail-oi1-f178.google.com with SMTP id e4so2061302oib.1;
+        Sat, 27 Jun 2020 02:22:58 -0700 (PDT)
+X-Gm-Message-State: AOAM53299oY+WOB4chkyeghUjkLw2/LlpvqcNZceQA/pHpSDC4dex6eh
+        fybCaAN4Ajy+2m3cTgOe0EhWA3Q/8Gdf0V4WCnE=
+X-Google-Smtp-Source: ABdhPJzXhP2MzfyfoCyaSQW0DSKdl3DV8flP5dJdRFPcAeVju94JAwoLPbhzsWceJ651vzoXIIf/QbZL/VTSeG7+3oo=
+X-Received: by 2002:aca:d0d:: with SMTP id 13mr5614620oin.174.1593249777771;
+ Sat, 27 Jun 2020 02:22:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
+ <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de> <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
+ <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 27 Jun 2020 11:22:46 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
+Message-ID: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-06-27 at 10:49 +0200, Greg Kroah-Hartman wrote:
-> On Sat, Jun 27, 2020 at 10:28:31AM +0200, Hans Verkuil wrote:
-> > On 27/06/2020 07:07, Greg Kroah-Hartman wrote:
-> > > A: http://en.wikipedia.org/wiki/Top_post
-> > > Q: Were do I find info about this thing called top-posting?
-> > > A: Because it messes up the order in which people normally read text.
-> > > Q: Why is top-posting such a bad thing?
-> > > A: Top-posting.
-> > > Q: What is the most annoying thing in e-mail?
-> > > 
-> > > A: No.
-> > > Q: Should I include quotations after my reply?
-> > > 
-> > > http://daringfireball.net/2007/07/on_top
-> > > 
-> > > On Fri, Jun 26, 2020 at 11:42:49AM -0400, B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC Campus wrote:
-> > > > Oh, I'm sorry but wouldn't it be helpful if we had a file that lists
-> > > > all drivers that are scheduled for removal?
-> > > 
-> > > The TODO file in the directory for the driver should have this
-> > > information in it.  I don't know if all of the media drivers have this,
-> > > if not, then there is no way you could have known this.
-> > 
-> > They have, and in addition the Kconfig entry will mention that the driver
-> > is deprecated.
-> > 
-> > TODO of usbvision:
-> > 
-> > The driver is deprecated and scheduled for removal by the end
-> > of 2020.
-> > 
-> > In order to prevent removal the following actions would have to
-> > be taken:
-> > 
-> > - clean up the code
-> > - convert to the vb2 framework
-> > - fix the disconnect and free-on-last-user handling (i.e., add
-> >   a release callback for struct v4l2_device and rework the code
-> >   to use that correctly).
-> 
-> Ah, great, nevermind then!
-> 
-> B K, your wish is already granted, the text is present, you just needed
-> to have noticed it :)
-> 
-> greg k-h
+On Sat, 27 Jun 2020 at 00:03, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Fri, 26 Jun 2020 at 23:56, Atish Patra <atishp@atishpatra.org> wrote:
+> >
+> > On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> > >
+> > > On 6/26/20 1:45 AM, Atish Patra wrote:
+> > > > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
+> > > > a __umoddi3 error while building EFI for 32 bit.
+> > > >
+> > > > Use bitwise operations instead of modulo operations to fix the issue.
+> > > >
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > ---
+> > > >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
+> > > > index cc89c4d6196f..1de9878ddd3a 100644
+> > > > --- a/drivers/firmware/efi/libstub/alignedmem.c
+> > > > +++ b/drivers/firmware/efi/libstub/alignedmem.c
+> > > > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
+> > > >       *addr = ALIGN((unsigned long)alloc_addr, align);
+> > > >
+> > > >       if (slack > 0) {
+> > > > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
+> > > > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
+> > >
+> > > Here you rely on the compiler to silently convert the division by
+> > > EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
+> > > EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
+> > >
+> > > slack = (align >> EFI_PAGE_SHIFT) - 1;
+> > > ...
+> > > int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
+> > >
+> >
+> > Sure. I will update it in the next version. Thanks for the suggestion.
+>
+> Please don't. Dividing by EFI_PAGE_SIZE is perfectly fine, and is more readable.
 
-You should mark the entry in MAINTAINERS as obsolete
-so checkpatch tells people not to send patches.
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Actually, I will take this patch as a fix right away - 32-bit ARM has
+the same issue (although it does not actually incorporate this object
+file)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 04fceaee5200..7c136018d153 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17906,7 +17906,7 @@ F:	include/uapi/linux/uvcvideo.h
- USB VISION DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
- L:	linux-media@vger.kernel.org
--S:	Odd Fixes
-+S:	Odd Fixes / Obsolete
- W:	https://linuxtv.org
- T:	git git://linuxtv.org/media_tree.git
- F:	drivers/staging/media/usbvision/
+In the meantime, please check how the stub gets pulled into your
+kernel: the idea of a static library is that only the objects that are
+used are included in the final build, but this turned out to be broken
+for arm64 [0]. IOW, simply applying a similar change might fix your
+build issue as well (assuming RISC-V does not actually call
+efi_allocate_pages_aligned() anywhere)
 
-
+[0] https://lore.kernel.org/linux-arm-kernel/20200604022031.164207-1-masahiroy@kernel.org/
