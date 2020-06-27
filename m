@@ -2,216 +2,147 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F54C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9398DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E0720663
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E51720663
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 20:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CuoXchm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgF0UlR (ORCPT
+        id S1726094AbgF0Unp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 16:41:17 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:48118 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgF0UlQ (ORCPT
+        Sat, 27 Jun 2020 16:43:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37474 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgF0Uno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 16:41:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id o2so9132153ilg.14
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 13:41:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OpKGrZ/rza+W2ZjTp9f8Zf16IEiEVrX/SyobKRnmc34=;
-        b=PeaIYiH8O+pNOfR9uylMzH07wL0NeGhQTp2Ck1wcJKTxQ5XYimZ3AFfZ9hHaotrTjH
-         fC8GtJ5YYPfSkzU3doK1p7VL8ASI41RweoK07Y1wdUc1PYnRuzP7qGGTcSICIjKG6OBp
-         L4A2tpY35vlpAEFxZ5yu0Y+DKdepfxQEIOsM81BPxs3n0+NGZh1RSDcRZhsn7fZqk7Qi
-         NSSBzEvuuoYNexkibQl2fhHgRr7012FaJLmEBoZn5Ar886uzNaMU8SQi5PnbLvV8oPRb
-         fU1Jr2wcGnPIDxF63ACzwWF4qSjog2ow8VPoq9rHEFn788NNZyFFMb39fLr2u/2SAmJO
-         /yTQ==
-X-Gm-Message-State: AOAM530uU7UOTuoYK9x6a1he/alVPI+gMZ4XLE7KM+OB2DCH7Ubb+QcJ
-        JgVWpRfc7rwiYweBVUssLts/uI+/zUTQ4YIynuhualUEy49T
-X-Google-Smtp-Source: ABdhPJyfadJ7Sly0jNHF6/UX4WdtcFQ1e0NUsf7RzvjxffpFk2bR6/MnySTqazsXly8SwMbPQu2ya+xtR41Io8CTYVC5pqwBv+lK
+        Sat, 27 Jun 2020 16:43:44 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E6C18576;
+        Sat, 27 Jun 2020 22:43:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593290622;
+        bh=jvH2aA/gigMXp4FM0R9jUn0zODDOAzaZorDcNJk2SfE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CuoXchm35zDuLxDDzAVCIbwMKI+DOD1CMoMR92qVNJ8JAlCrgNLIic0K+jMjQ1B2O
+         O40aySE55l3R2GgS8DaZBT+At+Jn6E8jCBZR65dmMOt6VttK1HpFTKzxLSeRhJM+MV
+         DbPesDiv173/IwTr7IBAw/T+Zal6MkceHN/H6dPc=
+Date:   Sat, 27 Jun 2020 23:43:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] drm/panel-simple: Add missing BUS descriptions
+ for some panels
+Message-ID: <20200627204338.GL5966@pendragon.ideasonboard.com>
+References: <20200621222742.25695-1-digetx@gmail.com>
+ <20200621222742.25695-3-digetx@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd42:: with SMTP id v2mr8248163ilq.99.1593290475512;
- Sat, 27 Jun 2020 13:41:15 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 13:41:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d12abc05a916d8b0@google.com>
-Subject: possible deadlock in dev_mc_sync
-From:   syzbot <syzbot+4d35bd6ecc37bccfd165@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200621222742.25695-3-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Dmitry,
 
-syzbot found the following crash on:
+Thank you for the patch.
 
-HEAD commit:    4a21185c Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=105b374d100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d35bd6ecc37bccfd165
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+On Mon, Jun 22, 2020 at 01:27:42AM +0300, Dmitry Osipenko wrote:
+> This patch adds missing BUS fields to the display panel descriptions of
+> the panels which are found on NVIDIA Tegra devices:
+> 
+>   1. AUO B101AW03
+>   2. Chunghwa CLAA070WP03XG
+>   3. Chunghwa CLAA101WA01A
+>   4. Chunghwa CLAA101WB01
+>   5. Innolux N156BGE L21
+>   6. Samsung LTN101NT05
+> 
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 87edd2bdf09a..986df9937650 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -698,6 +698,8 @@ static const struct panel_desc auo_b101aw03 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Does DRM_BUS_FLAG_PIXDATA_DRIVE_* make sense for LVDS ?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4d35bd6ecc37bccfd165@syzkaller.appspotmail.com
+The rest looks good, except the Samsung panel for which I haven't been
+able to locate a datasheet.
 
-netlink: 8 bytes leftover after parsing attributes in process `syz-executor.4'.
-======================================================
-WARNING: possible circular locking dependency detected
-5.8.0-rc2-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.4/407 is trying to acquire lock:
-ffff88805ddb2280 (&dev_addr_list_lock_key#2/2){+...}-{2:2}, at: netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
-ffff88805ddb2280 (&dev_addr_list_lock_key#2/2){+...}-{2:2}, at: dev_mc_sync+0xdc/0x190 net/core/dev_addr_lists.c:861
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-but task is already holding lock:
-ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
-ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
-ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_set_rx_mode net/core/dev.c:8204 [inline]
-ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: __dev_open+0x28e/0x3d0 net/core/dev.c:1523
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> @@ -1352,6 +1354,8 @@ static const struct panel_desc chunghwa_claa070wp03xg = {
+>  		.width = 94,
+>  		.height = 150,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> @@ -1375,6 +1379,8 @@ static const struct panel_desc chunghwa_claa101wa01a = {
+>  		.width = 220,
+>  		.height = 120,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> @@ -1398,6 +1404,8 @@ static const struct panel_desc chunghwa_claa101wb01 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> @@ -2071,6 +2079,8 @@ static const struct panel_desc innolux_n156bge_l21 = {
+>  		.width = 344,
+>  		.height = 193,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> @@ -3018,6 +3028,8 @@ static const struct panel_desc samsung_ltn101nt05 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
 
-which lock already depends on the new lock.
+-- 
+Regards,
 
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}:
-       _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
-       netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
-       dev_uc_sync_multiple+0xdc/0x190 net/core/dev_addr_lists.c:670
-       team_set_rx_mode+0xce/0x220 drivers/net/team/team.c:1779
-       __dev_set_rx_mode+0x1ea/0x300 net/core/dev.c:8199
-       dev_uc_unsync net/core/dev_addr_lists.c:696 [inline]
-       dev_uc_unsync+0x139/0x190 net/core/dev_addr_lists.c:688
-       macvlan_stop+0xfe/0x4c0 drivers/net/macvlan.c:678
-       __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1599
-       dev_close_many+0x238/0x650 net/core/dev.c:1624
-       rollback_registered_many+0x3af/0xf60 net/core/dev.c:8945
-       unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10113
-       unregister_netdevice_many net/core/dev.c:10112 [inline]
-       default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10596
-       ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
-       cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
-       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
-       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-       kthread+0x3b5/0x4a0 kernel/kthread.c:291
-       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
--> #0 (&dev_addr_list_lock_key#2/2){+...}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain kernel/locking/lockdep.c:3218 [inline]
-       __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
-       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
-       _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
-       netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
-       dev_mc_sync+0xdc/0x190 net/core/dev_addr_lists.c:861
-       vlan_dev_set_rx_mode+0x38/0x80 net/8021q/vlan_dev.c:487
-       __dev_set_rx_mode+0x1ea/0x300 net/core/dev.c:8199
-       dev_set_rx_mode net/core/dev.c:8205 [inline]
-       __dev_open+0x296/0x3d0 net/core/dev.c:1523
-       __dev_change_flags+0x505/0x660 net/core/dev.c:8278
-       rtnl_configure_link+0xee/0x230 net/core/rtnetlink.c:3021
-       __rtnl_newlink+0x10bb/0x1730 net/core/rtnetlink.c:3357
-       rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3397
-       rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
-       netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
-       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-       netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
-       netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
-       ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
-       __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
-       do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&vlan_netdev_addr_lock_key/1);
-                               lock(&dev_addr_list_lock_key#2/2);
-                               lock(&vlan_netdev_addr_lock_key/1);
-  lock(&dev_addr_list_lock_key#2/2);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.4/407:
- #0: ffffffff8a7b0228 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
- #0: ffffffff8a7b0228 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5457
- #1: ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
- #1: ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
- #1: ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_set_rx_mode net/core/dev.c:8204 [inline]
- #1: ffff88809cebc280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: __dev_open+0x28e/0x3d0 net/core/dev.c:1523
-
-stack backtrace:
-CPU: 1 PID: 407 Comm: syz-executor.4 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain kernel/locking/lockdep.c:3218 [inline]
- __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
- netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
- dev_mc_sync+0xdc/0x190 net/core/dev_addr_lists.c:861
- vlan_dev_set_rx_mode+0x38/0x80 net/8021q/vlan_dev.c:487
- __dev_set_rx_mode+0x1ea/0x300 net/core/dev.c:8199
- dev_set_rx_mode net/core/dev.c:8205 [inline]
- __dev_open+0x296/0x3d0 net/core/dev.c:1523
- __dev_change_flags+0x505/0x660 net/core/dev.c:8278
- rtnl_configure_link+0xee/0x230 net/core/rtnetlink.c:3021
- __rtnl_newlink+0x10bb/0x1730 net/core/rtnetlink.c:3357
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3397
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb19
-Code: Bad RIP value.
-RSP: 002b:00007fe66d6eac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000502600 RCX: 000000000045cb19
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000012
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a40 R14: 00000000004cd276 R15: 00007fe66d6eb6d4
-netlink: 8 bytes leftover after parsing attributes in process `syz-executor.4'.
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Laurent Pinchart
