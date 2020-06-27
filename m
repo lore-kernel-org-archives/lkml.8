@@ -2,121 +2,99 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A85C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 23:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F93C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 23:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722182081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 23:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2053206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 23:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aYg4T2ji"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qio5u1at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgF0X0I (ORCPT
+        id S1726725AbgF0XjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 19:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgF0X0H (ORCPT
+        Sat, 27 Jun 2020 19:39:10 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36064 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgF0XjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 19:26:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40CC3C061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 16:26:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so12887969wrv.9
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 16:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L4+B/5zRE6IlLNMawmOgQqKjyJjPtaf685ecf8wNhZ4=;
-        b=aYg4T2jiVER7HPDQvi5XvY9tVi8U9mOpXgtzHE7zAx4mkd+JICwXTookoWRRZ9evnR
-         WE6BP8j+c9rn+1LcxC7r6khQHfhwHKaJzpizkuwOuJP3HDY3npp90nZNhVCdvKFQnEhc
-         nuK/tIfqPw1FRdxAKzb2FgKxXuQv46Hwoy5uy4VYn9RoswbT/ytPZzatiPRNlT/IOTTW
-         +XXD9cctfl549JLoLpLR+AQVz7O0x8pe2f9YWP0s3T0IJcQUmNJdIzXa0tF55dHQXUR5
-         O6Y/7UUbp6WQl/GC/hAoGt8olpw+fS6fC2op2WD0n3dY2fUtjMMPc3pst3hy9s02QQ/y
-         qSGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L4+B/5zRE6IlLNMawmOgQqKjyJjPtaf685ecf8wNhZ4=;
-        b=bR0apNsgplZFN1Vq65OFwOnBTqOQHtfBNvSccCoIay5l9HTV9XF9JZ5dir7qe+whIa
-         +SFBXQXIdTcPDE3dNu6/vdRxUyIRMIgbTYrsGh9ifGQdFa4YRz+dJm4J/3ResvOiEZqA
-         a7QKSa6KpWL9MlCPxliuOqUbDtDOoFQC7Bc1OQgz9VTsHZgV9GYhakFg0UFzP/MgS/wf
-         WqeAqAn9VfOyKyOf2FwSZZzNhaaGDyA3YgrAJPlTyJOqBLgang2BB/1bQ7yYx/SFWZSE
-         UkM96Pza3P5lhAriySllOSZhDo56MEuCMIgMgq3nanDfdKPgi7BXGrkVBL+3AcGJ4Bup
-         s0yQ==
-X-Gm-Message-State: AOAM530BbGl9tHPPIlwRFaSQ4Ay1b9xw/CZfYfe8NStAJ7a20//oXbdk
-        xgVCNujcQ1cM6QwiI1Ir7R9f36rpJCLEr8nG5kMrMpdG
-X-Google-Smtp-Source: ABdhPJyX9erD70E2ASM3OudQcXPpzudIpg7Ycu3QUmrxsXDgqA7NlKnSee2DU1kTpllx4IMSOC3Hc6DTbJ5l9u4Wvp4=
-X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr10155439wrt.119.1593300365558;
- Sat, 27 Jun 2020 16:26:05 -0700 (PDT)
+        Sat, 27 Jun 2020 19:39:10 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 28DCF20B4901;
+        Sat, 27 Jun 2020 16:39:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28DCF20B4901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593301149;
+        bh=FoeYr1KfVsguPVO0JjpdXIr6pshrcYnStx+NK/LsnLQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qio5u1atOxueAiYQLGxnFoV7By1w9HFe9LHu7X0HqDSBKXops4uev3NIL/ATUnMHD
+         bkiFLMiXDktck330u5v/IMJGNRR71ZFlsad9HzU62kXJxLMOoyTUpIw0hqk3k4AD1h
+         Uhg0UT5/C2vB+u0k+4QVeqivjexV4S7MTyWXcrBU=
+Subject: Re: [PATCH v2 06/11] ima: Fail rule parsing when the KEY_CHECK hook
+ is combined with an invalid cond
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-7-tyhicks@linux.microsoft.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8eb0035d-f326-0299-aa4c-27d3db2deb2a@linux.microsoft.com>
+Date:   Sat, 27 Jun 2020 16:39:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626212522.GF818054@tassilo.jf.intel.com>
- <CAP-5=fVMs4Ok3=gYmzheNTzbBUGGHbCr0cpJSm9TV45aeZb4Ng@mail.gmail.com>
- <20200626215759.GG818054@tassilo.jf.intel.com> <20200627124821.GF29008@kernel.org>
-In-Reply-To: <20200627124821.GF29008@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 27 Jun 2020 16:25:54 -0700
-Message-ID: <CAP-5=fXxrNVfiCd6pVmM9BPErXcVU4PKgX8Fvbzq63H=xh=2Hw@mail.gmail.com>
-Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200626223900.253615-7-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 5:48 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Jun 26, 2020 at 02:57:59PM -0700, Andi Kleen escreveu:
-> > > The name could be a metric or an event, the logic for each is quite
-> >
-> > I would say collisions are unlikely. Event names follow quite structured
-> > patterns.
->
-> And when introducing a new metric the build process can detect that
-> clash and fail.
->
-> > > different. You could look up an event and when it fails assume it was
-> > > a metric, but I like the simplicity of this approach.
->
-> > I don't think it's simpler for the user.
->
-> Agreed.
->
-> > > Maybe this
-> > > change could be adopted more widely with something like "perf stat -e
-> > > metric:IPC -a -I 1000" rather than the current "perf stat -M IPC -a -I
-> > > 1000".
-> >
-> > I thought about just adding metrics to -e, without metric: of course.
->
-> Ditto.
+On 6/26/20 3:38 PM, Tyler Hicks wrote:
+> The KEY_CHECK function only supports the uid, pcr, and keyrings
+> conditionals. Make this clear at policy load so that IMA policy authors
+> don't assume that other conditionals are supported.
+> 
+> Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+> 
+> * v2
+>    - No change
+> 
+>   security/integrity/ima/ima_policy.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 676d5557af1a..f9b1bdb897da 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1018,6 +1018,13 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>   			if (entry->action & ~(MEASURE | DONT_MEASURE))
+>   				return false;
+>   
+> +			if (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
+> +					     IMA_KEYRINGS))
+> +				return false;
+> +
+> +			if (ima_rule_contains_lsm_cond(entry))
+> +				return false;
+> +
+>   			break;
+>   		default:
+>   			return false;
+> 
 
-Thanks, while we're thinking about this I'd like there to be support
-for flags on metrics. Such as 'perf stat -M IPC:u ...' where the ':u'
-is specifying user only as with events.
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Fwiw, another point of pain is lining up events with cgroups. Being
-able to have the cgroup be a flag on an event or metric would be nice.
-
-Ian
-
-> - Arnaldo
