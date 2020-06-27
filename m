@@ -2,110 +2,110 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA15C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47186C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391B0206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593296122;
-	bh=LPMYAPRRxguRn61pkhZt5cTXc7rHCyiq+/Zp7N8Zh5s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N+mRXtjd9s/td3yaAT0UWxqtrv8y4CMNr/53ozdsEtnlwvf5zGiRPdb9G4x8NxNSo
-	 b0znr04qno9FdsDPS0Bantkq3O2fYo0TzWHm7bsQK81L0u93D2/PKXw7TCokQOU6nR
-	 SVhHacTPB8UHRScYN/bEQ4ManywYSGiz5EjeqJeo=
+	by mail.kernel.org (Postfix) with ESMTP id 2034320760
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ALBY/7Ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgF0WPV (ORCPT
+        id S1726427AbgF0WZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 18:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
+        Sat, 27 Jun 2020 18:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgF0WPU (ORCPT
+        with ESMTP id S1725907AbgF0WZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 18:15:20 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8C4C03E979
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:15:20 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s9so13904595ljm.11
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:15:19 -0700 (PDT)
+        Sat, 27 Jun 2020 18:25:29 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53D1C061794
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:25:29 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id dm12so6080644qvb.9
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4JEHR7Il2IGp8f5V95s+cFH08ZEfipxHhJKa+vtSQXc=;
-        b=L5az16Wx0Vb9F9owDOvTovtU9UfiHOeqrhQTmmBE4a4nothf30qTjIzyM7cu7SLlCV
-         YKOvifljh4XN6M2evYVQVyyN8JAU84f2cZB3eUoAUJ7NLDuZx7HIHXCdIn+SygeHmNx+
-         97SUthWIKvp2epNCe7/LpggsYcP6nm+vsFS9A=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B7GpCtb/sR/TjCdWqWZIsoVoP3af+VvPEeIrSBxtNwQ=;
+        b=ALBY/7OwEiOqs4GU7y1mMMiUAO7d8R/zMkOaYa2sunQGk6iCtyuYONJshXcxOblkeS
+         ke3ez/h975geKvV03lXJdffAbEq86yU6xL4sprCC9UROXEg6951nNjyLK2CWUOa6IiAT
+         Nk8mhHzaY3Z9LI1hO4V2kpsHJtqSuc8mKGy29vA5ghe7uJrf8Jj6ILMQLPQTts5WLgsl
+         HFJkR/MokZhuFeZNeeg5qzOBWUzgeCVOx/lwgb4MVis3LKwqUK1Jedy74CUw26JDcAVR
+         7Mi2uoaGqNfImIjzSkLJQZ8Gn6lE/Eprr2FLOXvCr/KIcFU0ehlv7WzkRjH2eAZgBJHC
+         h8oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4JEHR7Il2IGp8f5V95s+cFH08ZEfipxHhJKa+vtSQXc=;
-        b=iEYVHdvoXnjy35sLgOgq26c9yO8lArKV0DGDyYDscYlgfjF3VfcKrTCeC0B+TbtZ0l
-         EEAK40ZIZpObbjXg5n4imDneHLfB7eVMObP7+h5KinIXmKermav9FRqAX4hCg5N+FAzZ
-         7U1GTK92sqt6JTSsM9FXJGPUQvmNUJhbsCOEQoIksoosawc9m+iowzSbFx1eQPNrGC43
-         X63cPRLRlTDkqq7U82ElhbzB2fA0hSOBtu5wPwFLLliPFrMLrVfZnOhyUNv/4yEC3EIn
-         stO0xNtmJx2yNZr5Tvjctjlmyr5XWwwDmF/jSOAl0h0RrkplxbbsqEempN94sviGwwOi
-         TDIA==
-X-Gm-Message-State: AOAM532duaWsxmbABKUaPRkrw1gEXpfJn3IJjLlxgvBFuGOHwkQST/hH
-        38HF7ayYsIdnfi1jgIcfBOtJeSTtvZs=
-X-Google-Smtp-Source: ABdhPJzySpzAxjz7OJ+bMMBB8oBx0BqGHGUoxk4DkQGuq51FQ7zORAD2PyCaheUEQE07AGQXTG1bZA==
-X-Received: by 2002:a2e:81d2:: with SMTP id s18mr4446362ljg.124.1593296118150;
-        Sat, 27 Jun 2020 15:15:18 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id i22sm1977921ljg.31.2020.06.27.15.15.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jun 2020 15:15:17 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 9so13938049ljc.8
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:15:16 -0700 (PDT)
-X-Received: by 2002:a2e:9c92:: with SMTP id x18mr155744lji.70.1593296116489;
- Sat, 27 Jun 2020 15:15:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B7GpCtb/sR/TjCdWqWZIsoVoP3af+VvPEeIrSBxtNwQ=;
+        b=G4YoPPG5qHgLLCMrlRlE4lhBV//CQs5bDQaU+3TJ/T5Pw3gX6LV12kyDZOY8f1PT01
+         mtjNkOGMqu4MDjquTeYtnA73WJ6cGl4rQgMH/GL3vBPrOUlCTozME/FqhK9DED2dfUz6
+         DhFNQpJz9MAdkmPebCvAKJ/RYCfdbLNdvO6VE8U5hu59t+mqCG5zxKb0z9k8RqpoFSfv
+         CbJL3xPOp9EK0teVU74ATcFp3/79U/cugSu2rX6RwUpHBGpW4VnVM/ZJ/y4Z03Ru7XLr
+         EnQC7jaRB4l6xY1NLjuKC86bVIVvcbJQpzue/kXMNKIoQg67hYNKgGNKE5oVR4vaXbXC
+         SZ6A==
+X-Gm-Message-State: AOAM532n/DeifIGknurl22JiMwM1EmeVB+025c8tsCsO0G8HdvpznZ7R
+        NDNWsJk4Lx+VuCgJDwiZJq4GNQ==
+X-Google-Smtp-Source: ABdhPJxlXMh1W9yDUlNTSm+3IU2P2JTP2cJj/PP3kid1a5TVpbuIyOC5ajObbm4cht3FuYpwxRv6kQ==
+X-Received: by 2002:a0c:f281:: with SMTP id k1mr3159188qvl.219.1593296728910;
+        Sat, 27 Jun 2020 15:25:28 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 125sm3067882qkg.88.2020.06.27.15.25.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 15:25:28 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jpJGJ-000iUW-Gu; Sat, 27 Jun 2020 19:25:27 -0300
+Date:   Sat, 27 Jun 2020 19:25:27 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in addr_handler (2)
+Message-ID: <20200627222527.GC25301@ziepe.ca>
+References: <000000000000107b4605a7bdce7d@google.com>
+ <20200614085321.8740-1-hdanton@sina.com>
+ <20200627130205.16900-1-hdanton@sina.com>
 MIME-Version: 1.0
-References: <20200626075836.1998185-1-hch@lst.de>
-In-Reply-To: <20200626075836.1998185-1-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 27 Jun 2020 15:15:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiFVdi_AGKvUH5FWfD4Pe-dFa+iYPzS174AHKx_ZsjW5w@mail.gmail.com>
-Message-ID: <CAHk-=wiFVdi_AGKvUH5FWfD4Pe-dFa+iYPzS174AHKx_ZsjW5w@mail.gmail.com>
-Subject: Re: [RFC] stop using ->read and ->write for kernel access v2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627130205.16900-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:58 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> as part of removing set_fs entirely (for which I have a working
-> prototype), we need to stop calling ->read and ->write with kernel
-> pointers under set_fs.
->
-> My previous "clean up kernel_{read,write} & friends v5" series, on which
-> this one builds, consolidate those calls into the __=E1=B8=B5ernel_{read,=
-write}
-> helpers.  This series goes further and removes the option to call
-> ->read and ->write with kernel pointers entirely.
+On Sat, Jun 27, 2020 at 09:02:05PM +0800, Hillf Danton wrote:
+> > So, to hit this syzkaller one of these must have happened:
+> >  1) rdma_addr_cancel() didn't work and the process_one_work() is still
+> >     runnable/running
+> 
+> What syzbot reported indicates that the kworker did survive not only
+> canceling work but the handler_mutex, despite it's a sync cancel that
+> waits for the work to complete.
 
-Ack. I scanned through these and didn't find anything odd.
+The syzbot report doesn't confirm that the cancel work was actaully
+called.
 
-Which either means that it's all good, or that my scanning was too
-limited. But this does feel like the right way to go about things.
+The most likely situation is that it was skipped because of the state
+mangling the patch fixes..
 
-Al?
+> >  2) The state changed away from RDMA_CM_ADDR_QUERY without doing
+> >     rdma_addr_cancel()
+> 
+> The cancel does cover the query state in the reported case, and have
+> difficult time working out what's in the patch below preventing the
+> work from going across the line the sync cancel draws. That's the
+> question we can revisit once there is a reproducer available.
 
-                 Linus
+rdma-cm never seems to get reproducers from syzkaller
+
+Jason
