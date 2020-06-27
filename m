@@ -2,107 +2,95 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69497C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 11:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D59C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 11:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46CBB21707
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 11:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593258213;
-	bh=luIbcfQ9AtgqmqpM9hXBQ4Dyo3o9hQW+jfI/EipCS8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MCfrV4oq5kqchRc2Y5W34WEJKTjIm6pG2uVeniC3tYhC9t8v7Ofpouyup8b9uUD0/
-	 zEQqn+G/GxMDlBaIhUS/n0JjtGEQql5UNFqNOsY1ifOqbc1U4vm5/T2mne+I1rGFr2
-	 BIzgfdJM3aNM9xy7QfsNqrXpCMjkquBAiPCCasNc=
+	by mail.kernel.org (Postfix) with ESMTP id 5930D21548
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 11:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgF0Lnb (ORCPT
+        id S1726566AbgF0LpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 07:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgF0Lnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 07:43:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E1F2168B;
-        Sat, 27 Jun 2020 11:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593258210;
-        bh=luIbcfQ9AtgqmqpM9hXBQ4Dyo3o9hQW+jfI/EipCS8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZUyy6/58KAgvEA0zYlPzS9GLC+9nsuaVuYjq5jCEbel/yq9PCRgeqHqk+VgiI6sDE
-         bImsDyg9wdH8sceZAU8jyaPJufZ4Lml3H12NJwzsDwLJyoo7yWYiGrIEr0rdPBVQyA
-         GCtRYSlyLCrMy7KlZJ0A1waDDjIsl5b1IBxpwzkw=
-Date:   Sat, 27 Jun 2020 13:43:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] tty: serial_core: Fix uart_state refcnt leak when the
- port startup
-Message-ID: <20200627114323.GA1645692@kroah.com>
-References: <1592052738-95202-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200624093407.GB1751086@kroah.com>
- <954840f0-2078-fe0f-1e52-d985a4997564@kernel.org>
+        Sat, 27 Jun 2020 07:45:20 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:46952 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgF0LpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 07:45:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id D88E9626F1CF;
+        Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id nyKl7qGuVRZM; Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 5BD9C626F1B7;
+        Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ZTYWiHUKOkTX; Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 32B0D626F1AB;
+        Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+Date:   Sat, 27 Jun 2020 13:45:16 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, sumit.semwal@linaro.org,
+        robin.murphy@arm.com, m.szyprowski@samsung.com, hch@lst.de,
+        dan.carpenter@oracle.com
+Message-ID: <1669515915.65540.1593258316061.JavaMail.zimbra@nod.at>
+Subject: Passing NULL dev to dma_alloc_coherent() allowed or not?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <954840f0-2078-fe0f-1e52-d985a4997564@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Index: 13sQTWOYZsCUQyAkPRAVyk7WekFvGA==
+Thread-Topic: Passing NULL dev to dma_alloc_coherent() allowed or not?
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:42:59AM +0200, Jiri Slaby wrote:
-> On 24. 06. 20, 11:34, Greg Kroah-Hartman wrote:
-> > On Sat, Jun 13, 2020 at 08:52:18PM +0800, Xiyu Yang wrote:
-> >> uart_port_startup() invokes uart_port_lock(), which returns a reference
-> >> of the uart_port object if increases the refcount of the uart_state
-> >> object successfully or returns NULL if fails.
-> >>
-> >> However, uart_port_startup() don't take the return value of
-> >> uart_port_lock() as the new uart_port object to "uport" and use the old
-> >> "uport" instead to balance refcount in uart_port_unlock(), which may
-> >> cause a redundant decrement of refcount occurred when the new "uport"
-> >> equals to NULL and then cause a potential memory leak.
-> >>
-> >> Fix this issue by update the "uport" object to the return value of
-> >> uart_port_lock() when invoking uart_port_lock().
-> >>
-> >> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> >> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> >> ---
-> >>  drivers/tty/serial/serial_core.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> >> index 57840cf90388..968fd619aec0 100644
-> >> --- a/drivers/tty/serial/serial_core.c
-> >> +++ b/drivers/tty/serial/serial_core.c
-> >> @@ -205,7 +205,7 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
-> >>  	if (!page)
-> >>  		return -ENOMEM;
-> >>  
-> >> -	uart_port_lock(state, flags);
-> >> +	uport = uart_port_lock(state, flags);
-> > 
-> > How is this a different pointer than you originally had?
-> 
-> Was this patch sent twice? As I had very same questions on the other
-> one, but never received a feedback:
-> https://lore.kernel.org/linux-serial/bf6c1e7b-3dc6-aba6-955a-fee351a6d800@suse.com/
-> 
-> 
-> Oh, wait: this is uart_port_startup, I commented on the uart_shutdown
-> one. But whatever, I would scratch both of them.
+Hi!
 
-Yeah, you are right, dropping them both now, thanks.
+While porting on an old out-of-tree driver I noticed that dma_alloc_coherent()
+was used with dev being NULL.
 
-greg k-h
+commit 148a97d5a02a62f81b5d6176f871c94a65e1f3af
+Author: Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Wed Apr 24 17:24:37 2019 +0300
+
+    dma-mapping: remove an unnecessary NULL check
+    
+    We already dereferenced "dev" when we called get_dma_ops() so this NULL
+    check is too late.  We're not supposed to pass NULL "dev" pointers to
+    dma_alloc_attrs().
+    
+    Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+says that dma_alloc_attrs() with dev being NULL is not allowed, but in
+include/linux/dma-mapping.h we have:
+
+static inline void *dma_alloc_coherent(struct device *dev, size_t size,
+                dma_addr_t *dma_handle, gfp_t gfp)
+{
+
+        return dma_alloc_attrs(dev, size, dma_handle, gfp,
+                        (gfp & __GFP_NOWARN) ? DMA_ATTR_NO_WARN : 0);
+}
+
+In Linus' tree I see at least three callers of dma_alloc_coherent() with a NULL device.
+drivers/staging/emxx_udc/emxx_udc.c:2596:                       ep->virt_buf = dma_alloc_coherent(NULL, PAGE_SIZE,
+drivers/tty/synclink.c:3667:            info->buffer_list = dma_alloc_coherent(NULL, BUFFERLISTSIZE, &info->buffer_list_dma_addr, GFP_KERNEL);
+drivers/tty/synclink.c:3777:                    BufferList[i].virt_addr = dma_alloc_coherent(NULL, DMABUFFERSIZE, &BufferList[i].dma_addr, GFP_KERNEL);
+
+I think these callers are wrong.
+Can you please clarify?
+
+Thanks,
+//richard
