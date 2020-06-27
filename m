@@ -2,107 +2,88 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D64DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4487D208B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS263lqB"
+	by mail.kernel.org (Postfix) with ESMTP id 006F3208B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 10:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgF0KVm (ORCPT
+        id S1726527AbgF0KWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 06:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgF0KVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 06:21:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9C7C03E979;
-        Sat, 27 Jun 2020 03:21:37 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e18so6118939pgn.7;
-        Sat, 27 Jun 2020 03:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tW07XZiC9CEEWw6VcmU9nAkZCHxzclaGfw7X0IosT68=;
-        b=hS263lqByHbO7EYkzC8PMkEf1Zra+GukflOKzTVKlMAAmYsEImhAl6R5zhjVE4uJ54
-         59OgbvfmjJDVYGXAI2kbEczUHHuDoqJBso3wk1aw3DubX9tqf6sJFRL080s1+QHSz3+3
-         d5W/dZatNIQe2XxF74qw4mOLqUiQkxpEzSrfq4hH4EGSDZbFrCXVSK3hQnt2LB74B54U
-         ZDIQM0v9LNkGOJXveWjbw9EohiRV2jgIRk14IJxT1sX7l58v88p57bb+RH1WHGwYSTIF
-         /mVmNOk/DNfwFtsYqp0b9KXyRfHi4hXAAQlLH8kNlFkIT9jNAVYEM89e5X2aVZZzCFxo
-         1QsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tW07XZiC9CEEWw6VcmU9nAkZCHxzclaGfw7X0IosT68=;
-        b=sDI4VevdMsA3fjbD/ryoxj3rBssdDk0T7AJp/pXA69pT+eutRGWbiMKvKeLuWD9dO/
-         TxPoJv8Luo4YVK8e0EvaS6AAs24ueZAXfSw6hLe1565LWfes0pSJgLo1kMjL0hjmJIbg
-         5FTXxlx6qYYLqyKboDyQPKUM+6w3CBpXF8kbo/qB0xlAECCLJlUjJDMySqmpg9PZzbqu
-         jVu/htI8dC75j4y527je2J90R+seB/jUI/fcETSn87QpB3SKNIqKyIwmCzVi7+ts0NxJ
-         4109FfkPTp3qnIOvRgy4sS/V2d93Y0WcrWogdqI8GazROkYHhgqUHiVjD07S20/adi76
-         A5KA==
-X-Gm-Message-State: AOAM532OQz0J/iZyvEZkgclQm6SqgA40IR9gTNcztDsJYj2vkz70BdqO
-        jMsFRvaPNFP5jEsjKzhclj8=
-X-Google-Smtp-Source: ABdhPJxb8SajYw85oD0ETALA1g8P+Gea5rsMXujMPh4tPVcPh6hXLpGiqDCBPV9pJr2CvaTX46hY5A==
-X-Received: by 2002:a63:e114:: with SMTP id z20mr2415276pgh.300.1593253297259;
-        Sat, 27 Jun 2020 03:21:37 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id l126sm1064898pfd.202.2020.06.27.03.21.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 03:21:36 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Sat, 27 Jun 2020 18:21:29 +0800
-To:     Joe Perches <joe@perches.com>
-Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
-Message-ID: <20200627102129.iizp5rnj27viyfti@Rk>
-References: <20200625215755.70329-1-coiby.xu@gmail.com>
- <20200625215755.70329-3-coiby.xu@gmail.com>
- <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
- <20200626235725.2rcpisito2253jhm@Rk>
- <324448187976fc690ea63f1c18e063fb0b09f740.camel@perches.com>
+        Sat, 27 Jun 2020 06:22:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54664 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbgF0KWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 06:22:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 52891ACA7;
+        Sat, 27 Jun 2020 10:22:50 +0000 (UTC)
+Date:   Sat, 27 Jun 2020 12:22:40 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Petteri Aimonen <jpa@git.mail.kapsi.fi>, kbuild-all@lists.01.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [bp:tip-x86-fpu 2/2] test_fpu.c:undefined reference to
+ `__sanitizer_cov_trace_cmpd'
+Message-ID: <20200627102240.GC18956@zn.tnic>
+References: <202006271139.H8IXpYlR%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <324448187976fc690ea63f1c18e063fb0b09f740.camel@perches.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202006271139.H8IXpYlR%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:06:33PM -0700, Joe Perches wrote:
->On Sat, 2020-06-27 at 07:57 +0800, Coiby Xu wrote:
->> On Thu, Jun 25, 2020 at 03:13:14PM -0700, Joe Perches wrote:
->> > On Fri, 2020-06-26 at 05:57 +0800, Coiby Xu wrote:
->> > > Remove unnecessary elses after return or break.
->> >
->> > unrelated trivia:
->[]
->> > looks like all of these could use netdev_err
->[]
->> should we also replace all pr_errs with netdev_err in
->> ql_dump_* functions?
->
->Ideally, anywhere a struct netdevice * is available, it should
->be used to output netdev_<level> in preference to pr_<level>.
+On Sat, Jun 27, 2020 at 11:15:42AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git tip-x86-fpu
+> head:   dca364a883e0ac1f61b4d4e482edf66e63ffcdd2
+> commit: dca364a883e0ac1f61b4d4e482edf66e63ffcdd2 [2/2] selftests/fpu: Add an FPU selftest
+> config: x86_64-allyesconfig (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ld: lib/test_fpu.o: in function `test_fpu_get':
+> >> test_fpu.c:(.text+0x16e): undefined reference to `__sanitizer_cov_trace_cmpd'
+> >> ld: test_fpu.c:(.text+0x1a7): undefined reference to `__sanitizer_cov_trace_cmpd'
+>    ld: test_fpu.c:(.text+0x1e0): undefined reference to `__sanitizer_cov_trace_cmpd'
+> 
+> ---
 
-Thank you for the explaining!
+I'm getting sick'n'tired of having to deal with compilers lately:
 
---
-Best regards,
-Coiby
+---
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index e4add3e89c47..5842885ab184 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2309,7 +2309,7 @@ config TEST_HMM
+ 
+ config TEST_FPU
+ 	tristate "Test floating point operations in kernel space"
+-	depends on X86
++	depends on X86 && !KCOV_INSTRUMENT_ALL
+ 	help
+ 	  Enable this option to add /sys/kernel/debug/selftest_helpers/test_fpu
+ 	  which will trigger a sequence of floating point operations. This is used
+---
+
+Thx for the report, folded in.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
