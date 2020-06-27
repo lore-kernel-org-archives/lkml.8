@@ -2,144 +2,138 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC98C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3941421707
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FD0217A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 12:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWYU/pH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgF0MXj (ORCPT
+        id S1726611AbgF0MZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 08:23:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33141 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgF0MXh (ORCPT
+        Sat, 27 Jun 2020 08:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgF0MZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 08:23:37 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jp9ro-0001ja-RZ; Sat, 27 Jun 2020 12:23:32 +0000
-Date:   Sat, 27 Jun 2020 14:23:32 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-m68k@lists.linux-m68k.org, x86@kernel.org, lkp@lists.01.org
-Subject: Re: [fork] 11689456e6: ltp.clone302.fail
-Message-ID: <20200627122332.ki2otaiw3v7wndbl@wittgenstein>
-References: <20200622234326.906346-2-christian.brauner@ubuntu.com>
- <20200627082748.GM5535@shao2-debian>
+        Sat, 27 Jun 2020 08:25:11 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31666C03E979;
+        Sat, 27 Jun 2020 05:25:11 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id ga4so11782655ejb.11;
+        Sat, 27 Jun 2020 05:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :mime-version:content-disposition:user-agent;
+        bh=bKj5E7fN4L3i4q9pH++a2sUBIVlAsTMv8ldQxeQKvCI=;
+        b=mWYU/pH0sAu3pR53puM2h/R6Nbq7ZFJLtWEnsXU3IxMRWOy8pcW3NALxiIkpWiUmG9
+         gUtjAE7eVSqqLpGyntER/yQE/31wKfDKKTwdqXKUkP8YDg4oAwGYEaz32u5Ca+UVCSuc
+         HPaznexwlCqn8IOhTmWwASqxMJ/8/I75/g0W/BNnlUS7TWLXPsdp1o3o5PDlZ832L/jX
+         Bh0QFxU2TBmvhma7PEWY9PWWvO3tIoq8Ai3HDjpigkUok/Khy3yof7qy3IYpLKwjSZ2X
+         lMtY1VXyd0fa5Lwb54QcGlLQ/OTKK+V40E26jDcBHCNAnVRaHCp9T+pTm/0dLDhn7cl9
+         CobA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition:user-agent;
+        bh=bKj5E7fN4L3i4q9pH++a2sUBIVlAsTMv8ldQxeQKvCI=;
+        b=mWzVyzmgAL5DddWdUdsa9yfFzD/5+aUMThCPzZNiC59Bdy1nsy2mLx4ywsFXbvbmzj
+         P3P3vaAJJ7xyIl9bRAQqciAdpPPH1yX/AuznW2m1imguTSC/uOcLMazDdpwXbkil1Mo0
+         phMViB8svf3einPTQOTqSdKyRxEIoDEVuF2b44rEYhFYYRLoFb3v7y51EjxB9dDzuyze
+         lnOGeDWsVKkeLa2KPv4kwG1Wv/A8ubE2Q2gkYdlY1NBt7lEIGzCXGy1kHMPT1RfpJx+E
+         8dFqjElGd0LATLQAhm+IhZS8OeF+13YbaXojiSEBnNJHYW3SkA3DDhl10rlx0SJbWvcY
+         +t/g==
+X-Gm-Message-State: AOAM530Eh31LDMXeI7ZNzJPUXm9ue4Kn5FwfV4zOmRZrqFYCPAP6Y16k
+        2huUFkxTQL7DtiPdrHxLGEuecwRnhJw=
+X-Google-Smtp-Source: ABdhPJzAdmAJUqUIp9Tq+ONgQVfdOecfXBUf95JnGwQipAeqFBs/N8kBJidFJEeJ56tV0s5CoERgYA==
+X-Received: by 2002:a17:906:7115:: with SMTP id x21mr6395079ejj.86.1593260709897;
+        Sat, 27 Jun 2020 05:25:09 -0700 (PDT)
+Received: from dumbo ([2a0b:f4c2:2::1])
+        by smtp.gmail.com with ESMTPSA id lx26sm20642632ejb.112.2020.06.27.05.25.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 05:25:09 -0700 (PDT)
+Received: from cavok by dumbo with local (Exim 4.92)
+        (envelope-from <cavok@dumbo>)
+        id 1jp9tJ-0001cI-Nb; Sat, 27 Jun 2020 14:25:05 +0200
+Date:   Sat, 27 Jun 2020 14:25:05 +0200
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH v4] kbuild: buildtar: add dtbs support
+Message-ID: <20200627122505.GA6095@dumbo>
+Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>, Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627082748.GM5535@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 04:27:48PM +0800, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 11689456e6df828b7917a558a36212e68fa9aa69 ("[PATCH 01/17] fork: fold legacy_clone_args_valid() into _do_fork()")
-> url: https://github.com/0day-ci/linux/commits/Christian-Brauner/arch-remove-do_fork-and-HAVE_COPY_THREAD_TLS/20200623-080105
-> base: https://git.kernel.org/cgit/linux/kernel/git/davem/sparc.git master
-> 
-> in testcase: ltp
-> with following parameters:
-> 
-> 	disk: 1HDD
-> 	fs: ext4
-> 	test: syscalls_part1
-> 
-> test-description: The LTP testsuite contains a collection of tools for testing the Linux kernel and related features.
-> test-url: http://linux-test-project.github.io/
-> 
-> 
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> <<<test_start>>>
-> tag=clone302 stime=1593153327
-> cmdline="clone302"
-> contacts=""
-> analysis=exit
-> <<<test_output>>>
-> tst_buffers.c:55: INFO: Test is using guarded buffers
-> tst_test.c:1247: INFO: Timeout per run is 0h 05m 00s
-> clone302.c:92: PASS: invalid args: clone3() failed as expected: EFAULT (14)
-> clone302.c:92: PASS: zero size: clone3() failed as expected: EINVAL (22)
-> clone302.c:92: PASS: short size: clone3() failed as expected: EINVAL (22)
-> clone302.c:92: PASS: extra size: clone3() failed as expected: EFAULT (14)
-> clone302.c:92: PASS: sighand-no-VM: clone3() failed as expected: EINVAL (22)
-> clone302.c:92: PASS: thread-no-sighand: clone3() failed as expected: EINVAL (22)
-> clone302.c:92: PASS: fs-newns: clone3() failed as expected: EINVAL (22)
-> clone302.c:92: PASS: invalid pidfd: clone3() failed as expected: EFAULT (14)
-> clone302.c:92: PASS: invalid childtid: clone3() failed as expected: EFAULT (14)
-> clone302.c:88: FAIL: invalid parenttid: clone3() should fail with EFAULT: EINVAL (22)
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-In short, this is a change in failure behavior for clone3() I did expect
-and am willing to risk. Here's why in the short form:
-- clone3() is extremely new
-- this failed before
-- setting both CLONE_PIDFD and CLONE_PARENT_SETTID is extremely rare
-  (haven't seen it in any codebases I know that use clone3())
-- setting both CLONE_PIDFD and CLONE_PARENT_SETTID __and__ pointing them
-  to the same adress doesn't work
-  (haven't seen it in any codebases I know that use clone3() but see
-  some more notes on that below)
-- the change makes a special case go away and simplifies multiple
-  call-sites
+Make 'make tar-pkg' install dtbs.
 
-So a few notes about the test. I did stare at it for a while and was
-confused why you expect EFAULT to be returned when CLONE_PARENT_SETTID
-is set to an invalid memory address. Because that doesn't make sense.
-When the parent tid is written to the memory location for
-CLONE_PARENT_SETTID we're past the point of no return of process
-creation, i.e. the return value from put_user() isn't checked and can't
-be checked anymore so you'd never receive EFAULT for a bogus parent_tid
-memory address. This is not something new. This has been the case since
-the introduction of pid namespaces and specifically since commit
-30e49c263e36 ("pid namespaces: allow cloning of new namespace").
+v4:
+ - Install the dtbs before modules & kernel, not after
+ - Check for the dtbs_install target before attempting to invoke it
 
-But then it dawned on me. You're setting CLONE_PIDFD |
-CLONE_PARENT_SETTID and you're pointing:
-- args->parent_tid	= <invalid-address>
-- args->pidfd		= NULL
-so the EFAULT you've seen so far in your test-suite has never been for
-CLONE_PARENT_SETTID but for CLONE_PIDFD since that value is written
-before the point of no return and consequently put_user() is checked and
-the EFAULT is surfaced. So independent of that issue here you might want
-to adapt that test so it really tests what you want. :) (And maybe it's
-worth documenting on the manpage for clone{3}() that failures for
-CLONE_PARENT_SETTID and CLONE_CHILD_SETTID are not seen.)
+v3:
+ - Check for CONFIG_OF_EARLY_FLATTREE=y instead of ARCH before installing dtbs
 
-(Also, note that for some reason, args->pidfd and pargs->parent_tid
-must've ended up pointing to the same address in your test-suite. So my
-guess is that args->pidfd pointed to garbage which got turned into a
-useable address after tst_get_bad_addr() returned &invalid_address.
-Maybe I'm missing something subtle though.)
+v2:
+ - Add the kernel release to the destination path
 
-Christian
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+
+---
+ scripts/package/buildtar |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+Index: b/scripts/package/buildtar
+===================================================================
+--- a/scripts/package/buildtar
++++ b/scripts/package/buildtar
+@@ -53,6 +53,18 @@ rm -rf -- "${tmpdir}"
+ mkdir -p -- "${tmpdir}/boot"
+ dirs=boot
+ 
++
++#
++# Try to install dtbs
++#
++if grep -q '^CONFIG_OF_EARLY_FLATTREE=y' include/config/auto.conf; then
++	# Only some architectures with OF support have this target
++	if [ -d "${srctree}/arch/${SRCARCH}/boot/dts" ]; then
++		$MAKE ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
++    fi
++fi
++
++
+ #
+ # Try to install modules
+ #
+
+-- 
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
