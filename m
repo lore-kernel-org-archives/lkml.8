@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79162C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14096C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B3D218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E658E21883
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 15:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0Cb6Bvs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AXsLQE1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgF0PTR (ORCPT
+        id S1726824AbgF0PTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 11:19:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32229 "EHLO
+        Sat, 27 Jun 2020 11:19:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31472 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725975AbgF0PTQ (ORCPT
+        with ESMTP id S1725975AbgF0PTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 11:19:16 -0400
+        Sat, 27 Jun 2020 11:19:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593271154;
+        s=mimecast20190719; t=1593271158;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=eLwTLImb7enkGubyMMaYkyOwPQksw78zQ5jTtq8zfrE=;
-        b=Y0Cb6Bvsir3aa1db6ppz8sYkSlikeR1bmkgCF2zQFePuXnNL91TM/HQpVtDmwROf1GJHUg
-        QZKBuAo+C/1zPcXjRJ41BH37buXkW2ul6o0xTiyNLwMB7fIik5GmAA60QuAcjF9VZgtZxv
-        WtEktcySZ6qK0yciOvF13Lc9XN5ovak=
+        bh=NVRW4k5syQIZZZPcry9woxR/GxAuxmu6z7uAcEtQlBc=;
+        b=AXsLQE1s+vyhB8v6w8zq26jeBTf5TJHGrW9kbh4d1sNaPNJ/YSW9zFmOBTZAHCcItu0xJ8
+        4AkeFhXuD7/Om0dXThpU1SYpZo0Yp881U+QRq2bhqjOf7KGKA7wOE4m4ZN9bFrOzZk40lD
+        fJ2hk/N3T/LIXMpPw+yY5skHKrHVOBo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-v65Xn0LINXan-uUb1hG0ag-1; Sat, 27 Jun 2020 11:19:12 -0400
-X-MC-Unique: v65Xn0LINXan-uUb1hG0ag-1
+ us-mta-142-g3zCIx4DOk2nVqhYO_wKXg-1; Sat, 27 Jun 2020 11:19:16 -0400
+X-MC-Unique: g3zCIx4DOk2nVqhYO_wKXg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81C96107ACCA;
-        Sat, 27 Jun 2020 15:19:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97C8E1005512;
+        Sat, 27 Jun 2020 15:19:14 +0000 (UTC)
 Received: from madcap2.tricolour.ca (unknown [10.10.110.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40EF460BF4;
-        Sat, 27 Jun 2020 15:19:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2DDB60BF4;
+        Sat, 27 Jun 2020 15:19:11 +0000 (UTC)
 From:   Richard Guy Briggs <rgb@redhat.com>
 To:     containers@lists.linux-foundation.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
@@ -51,9 +51,9 @@ Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
         omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
         nhorman@redhat.com, dwalsh@redhat.com, mpatel@redhat.com,
         Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghau51/ghau40 v9 05/11] start normalization containerid support
-Date:   Sat, 27 Jun 2020 11:18:05 -0400
-Message-Id: <1593271091-30188-6-git-send-email-rgb@redhat.com>
+Subject: [PATCH ghau51/ghau40 v9 06/11] libaudit: add support to get the task audit container identifier
+Date:   Sat, 27 Jun 2020 11:18:06 -0400
+Message-Id: <1593271091-30188-7-git-send-email-rgb@redhat.com>
 In-Reply-To: <1593271091-30188-1-git-send-email-rgb@redhat.com>
 References: <1593271091-30188-1-git-send-email-rgb@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -62,99 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the audit_get_containerid() call analogous to audit_getloginuid()
+and audit_get_session() calls to get our own audit container identifier.
+
+This is intended as a debug patch, not to be upstreamed.
+
 Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 ---
- auparse/auparse-defs.h           |  3 ++-
- auparse/interpret.c              | 10 ++++++++++
- auparse/normalize_record_map.h   |  2 ++
- auparse/typetab.h                |  2 ++
- bindings/python/auparse_python.c |  1 +
- 5 files changed, 17 insertions(+), 1 deletion(-)
+ docs/Makefile.am             |  2 +-
+ docs/audit_get_containerid.3 | 25 +++++++++++++++++++++++++
+ lib/libaudit.c               | 29 +++++++++++++++++++++++++++++
+ lib/libaudit.h               |  1 +
+ 4 files changed, 56 insertions(+), 1 deletion(-)
+ create mode 100644 docs/audit_get_containerid.3
 
-diff --git a/auparse/auparse-defs.h b/auparse/auparse-defs.h
-index 27bfa943612c..a9b144df3462 100644
---- a/auparse/auparse-defs.h
-+++ b/auparse/auparse-defs.h
-@@ -87,7 +87,8 @@ typedef enum {  AUPARSE_TYPE_UNCLASSIFIED,  AUPARSE_TYPE_UID, AUPARSE_TYPE_GID,
- 	AUPARSE_TYPE_PROCTITLE, AUPARSE_TYPE_HOOK,
- 	AUPARSE_TYPE_NETACTION, AUPARSE_TYPE_MACPROTO,
- 	AUPARSE_TYPE_IOCTL_REQ, AUPARSE_TYPE_ESCAPED_KEY,
--	AUPARSE_TYPE_ESCAPED_FILE, AUPARSE_TYPE_FANOTIFY } auparse_type_t;
-+	AUPARSE_TYPE_ESCAPED_FILE, AUPARSE_TYPE_FANOTIFY, AUPARSE_TYPE_CONTID
-+} auparse_type_t;
- 
- /* This type determines what escaping if any gets applied to interpreted fields */
- typedef enum { AUPARSE_ESC_RAW, AUPARSE_ESC_TTY, AUPARSE_ESC_SHELL,
-diff --git a/auparse/interpret.c b/auparse/interpret.c
-index e23c3533877b..14fcc72148c8 100644
---- a/auparse/interpret.c
-+++ b/auparse/interpret.c
-@@ -2843,6 +2843,13 @@ static const char *print_seccomp_code(const char *val)
- 	return out;
+diff --git a/docs/Makefile.am b/docs/Makefile.am
+index 8fb030c6e5e4..209789bb2051 100644
+--- a/docs/Makefile.am
++++ b/docs/Makefile.am
+@@ -28,7 +28,7 @@ man_MANS = audit_add_rule_data.3 audit_add_watch.3 auditctl.8 auditd.8 \
+ auditd.conf.5 auditd-plugins.5 \
+ audit_delete_rule_data.3 audit_detect_machine.3 \
+ audit_encode_nv_string.3 audit_getloginuid.3 \
+-audit_get_reply.3 audit_get_session.3 \
++audit_get_reply.3 audit_get_session.3 audit_get_containerid.3 \
+ audit_log_acct_message.3 audit_log_user_avc_message.3 \
+ audit_log_user_command.3 audit_log_user_comm_message.3 \
+ audit_log_user_message.3 audit_log_semanage_message.3 \
+diff --git a/docs/audit_get_containerid.3 b/docs/audit_get_containerid.3
+new file mode 100644
+index 000000000000..ef62a25db970
+--- /dev/null
++++ b/docs/audit_get_containerid.3
+@@ -0,0 +1,25 @@
++.TH "AUDIT_GET_CONTAINERID" "3" "Feb 2018" "Red Hat" "Linux Audit API"
++.SH NAME
++audit_get_containerid \- Get a program's container id value
++.SH SYNOPSIS
++.B #include <libaudit.h>
++.sp
++uin64_t audit_get_containerid(void);
++
++.SH DESCRIPTION
++This function returns the task's audit container identifier attribute.
++
++.SH "RETURN VALUE"
++
++This function returns the audit container identifier value if it was set. It will return a \-1 if the audit container identifier is unset. However, since uint64_t is an unsigned type, you will see the converted value instead of \-1.
++
++.SH "ERRORS"
++
++This function returns \-2 on failure. Additionally, in the event of a real error, errno would be set. The function can set errno based on failures of open, read, or strtoull.
++
++.SH "SEE ALSO"
++
++.BR audit_getloginuid (3).
++
++.SH AUTHOR
++Richard Guy Briggs
+diff --git a/lib/libaudit.c b/lib/libaudit.c
+index 2e7b18a70eb8..e64bc4628da4 100644
+--- a/lib/libaudit.c
++++ b/lib/libaudit.c
+@@ -951,6 +951,35 @@ uint32_t audit_get_session(void)
+ 		return ses;
  }
  
-+static const char *print_contid(const char *val)
++/*
++ * This function will retrieve the audit container identifier or -2 if
++ * there is an error.
++ */
++uint64_t audit_get_containerid(void)
 +{
-+	if (strcmp(val, "18446744073709551615") == 0 || strcmp(val, "-1") == 0)
-+		return strdup("unset");
-+	return strdup(val);
++	uint64_t containerid;
++	int len, in;
++	char buf[32];
++
++	errno = 0;
++	in = open("/proc/self/audit_containerid", O_NOFOLLOW|O_RDONLY);
++	if (in < 0)
++		return -2;
++	do {
++		len = read(in, buf, sizeof(buf));
++	} while (len < 0 && errno == EINTR);
++	close(in);
++	if (len < 0 || len >= sizeof(buf))
++		return -2;
++	buf[len] = 0;
++	errno = 0;
++	containerid = strtoull(buf, 0, 10);
++	if (errno)
++		return -2;
++	else
++		return containerid;
 +}
 +
- int lookup_type(const char *name)
+ int audit_rule_syscall_data(struct audit_rule_data *rule, int scall)
  {
- 	int i;
-@@ -3083,6 +3090,9 @@ unknown:
- 		case AUPARSE_TYPE_FANOTIFY:
- 			out = print_fanotify(id->val);
- 			break;
-+		case AUPARSE_TYPE_CONTID:
-+			out = print_contid(id->val);
-+			break;
- 		case AUPARSE_TYPE_MAC_LABEL:
- 		case AUPARSE_TYPE_UNCLASSIFIED:
- 		default:
-diff --git a/auparse/normalize_record_map.h b/auparse/normalize_record_map.h
-index fee778e76db7..7332249c7b34 100644
---- a/auparse/normalize_record_map.h
-+++ b/auparse/normalize_record_map.h
-@@ -25,6 +25,7 @@
- 
- _S(AUDIT_USER, "sent-message")
- _S(AUDIT_LOGIN, "changed-login-id-to")
-+_S(AUDIT_CONTAINER_OP, "changed-container-id-to")
- _S(AUDIT_USER_AUTH, "authenticated")
- _S(AUDIT_USER_ACCT, "was-authorized")
- _S(AUDIT_USER_MGMT, "modified-user-account")
-@@ -84,6 +85,7 @@ _S(AUDIT_FEATURE_CHANGE, "changed-audit-feature")
- //_S(AUDIT_REPLACE,"")
- _S(AUDIT_KERN_MODULE, "loaded-kernel-module")
- _S(AUDIT_FANOTIFY, "accessed-policy-controlled-file")
-+_S(AUDIT_CONTAINER_ID, "has-container-id")
- _S(AUDIT_AVC, "accessed-mac-policy-controlled-object")
- _S(AUDIT_MAC_POLICY_LOAD, "loaded-selinux-policy")
- _S(AUDIT_MAC_STATUS, "changed-selinux-enforcement-to")
-diff --git a/auparse/typetab.h b/auparse/typetab.h
-index 0391e87f731c..0c160bb56c3b 100644
---- a/auparse/typetab.h
-+++ b/auparse/typetab.h
-@@ -142,3 +142,5 @@ _S(AUPARSE_TYPE_IOCTL_REQ,	"ioctlcmd"	)
- _S(AUPARSE_TYPE_FANOTIFY,	"resp"		)
- _S(AUPARSE_TYPE_ESCAPED,	"sw"		)
- _S(AUPARSE_TYPE_ESCAPED,	"root_dir"	)
-+_S(AUPARSE_TYPE_CONTID,		"contid"	)
-+_S(AUPARSE_TYPE_CONTID,		"old-contid"	)
-diff --git a/bindings/python/auparse_python.c b/bindings/python/auparse_python.c
-index 1ba59cf78527..947d018cf594 100644
---- a/bindings/python/auparse_python.c
-+++ b/bindings/python/auparse_python.c
-@@ -2376,6 +2376,7 @@ initauparse(void)
-     PyModule_AddIntConstant(m, "AUPARSE_ESC_TTY", AUPARSE_ESC_TTY);
-     PyModule_AddIntConstant(m, "AUPARSE_ESC_SHELL", AUPARSE_ESC_SHELL);
-     PyModule_AddIntConstant(m, "AUPARSE_ESC_SHELL_QUOTE", AUPARSE_ESC_SHELL_QUOTE);
-+    PyModule_AddIntConstant(m, "AUPARSE_TYPE_CONTID", AUPARSE_TYPE_CONTID);
- 
- #ifdef IS_PY3K
-     return m;
+ 	int word = AUDIT_WORD(scall);
+diff --git a/lib/libaudit.h b/lib/libaudit.h
+index a249463a0888..ec171e4d08f3 100644
+--- a/lib/libaudit.h
++++ b/lib/libaudit.h
+@@ -601,6 +601,7 @@ extern int  audit_get_reply(int fd, struct audit_reply *rep, reply_t block,
+ extern uid_t audit_getloginuid(void);
+ extern int  audit_setloginuid(uid_t uid);
+ extern uint32_t audit_get_session(void);
++extern uint64_t audit_get_containerid(void);
+ extern int  audit_detect_machine(void);
+ extern int audit_determine_machine(const char *arch);
+ extern char *audit_format_signal_info(char *buf, int len, char *op, struct audit_reply *rep, char *res);
 -- 
 1.8.3.1
 
