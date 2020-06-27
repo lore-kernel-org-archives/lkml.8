@@ -2,79 +2,73 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA875C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1B208B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB89C20B80
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 09:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593250673;
-	bh=zZELxKTTCTxcMP1neFCDkhEmsrYvFsuFOQvTPs2LW+c=;
+	s=default; t=1593251313;
+	bh=IxnkrHLXk/gcwa3WhvrkauHPx68lmhRoHCUjT2rX01A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LgOMH9Q74ijH2BQOLiNBPdVcEfd1zY8I+xP9rM6XfX6PKt77EbHy9iVOM/XL4AvbT
-	 clrEPtw9aius/SbPeyzIZ+T1nu+xyadCeady6P+gccl8/aOqv58OI6keYhuhzc7KIc
-	 pFNXOaEl4TxXfgRsdLAaOM12y9dzXd3fYxKVnfOw=
+	b=Lf0I3BR+skBS4GBkFQLiim5KEZtokZpQNQRvozCR2KlTLC/Kwk8vRCF8139+5rgtp
+	 yuucnVcpvIHkC4LlIN7uLbUY+k3bulQSgOHRH/2MntirXd7U7u12N+VBCVoWJqENkC
+	 9Lljgtwnl/2IatweDx3qemZmRKiDI0BqBJsFc/zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgF0Jhw (ORCPT
+        id S1726422AbgF0Jsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 05:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 05:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgF0Jhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 05:37:51 -0400
+        id S1726175AbgF0Jsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 05:48:30 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917952080C;
-        Sat, 27 Jun 2020 09:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0C4208B6;
+        Sat, 27 Jun 2020 09:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593250670;
-        bh=zZELxKTTCTxcMP1neFCDkhEmsrYvFsuFOQvTPs2LW+c=;
+        s=default; t=1593251309;
+        bh=IxnkrHLXk/gcwa3WhvrkauHPx68lmhRoHCUjT2rX01A=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SJmq8KRi1jgvWRcPI4SHkPEc+R43hu090gDiOWiQYBd6f7KyhD9u36f7wdK4SAiOi
-         TiykfH2Ivq0Q2vu8CYu6ont40rZejzwmuhcQiE7XXc6jEno7gLZaVviX4OZd+1a9Ap
-         tCUsekZtHIj1Id7RZIS6xZu22vuc88/JBigULWZI=
+        b=yhIM2WgfX21AVxbsstEDDdV+xyzyzQQ1uA94R7Z9HqiL/Mq+cqs3pG8l5PyjLgw0e
+         s3Eicip9RTI66nQwr0Cv17QDEBxrTfiK22DtEbnswv0mxa6AEudlrWnvGe5ij3Mlb1
+         I0mZxXLRSo8jeSeChtbkoNx4ZDHxDUIw3S5Gxetk=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jp7HQ-006rG2-LY; Sat, 27 Jun 2020 10:37:48 +0100
-Date:   Sat, 27 Jun 2020 10:37:47 +0100
-Message-ID: <87wo3setn8.wl-maz@kernel.org>
+        id 1jp7Rj-006rKU-PG; Sat, 27 Jun 2020 10:48:27 +0100
+Date:   Sat, 27 Jun 2020 10:48:26 +0100
+Message-ID: <87v9jcet5h.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
-In-Reply-To: <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
-        <20200625001039.56174-4-john.stultz@linaro.org>
-        <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
-        <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+In-Reply-To: <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: john.stultz@linaro.org, swboyd@chromium.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, mkshah@codeaurora.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,62 +76,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jun 2020 02:34:25 +0100,
-John Stultz <john.stultz@linaro.org> wrote:
+On Thu, 18 Jun 2020 09:38:09 +0100,
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
 > 
-> On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting John Stultz (2020-06-24 17:10:37)
-> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> > > index 6ae9e1f0819d..3fee8b655da1 100644
-> > > --- a/drivers/irqchip/qcom-pdc.c
-> > > +++ b/drivers/irqchip/qcom-pdc.c
-> > > @@ -430,4 +432,33 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
-> > >         return ret;
-> > >  }
-> > >
-> > > +#ifdef MODULE
-> > > +static int qcom_pdc_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct device_node *np = pdev->dev.of_node;
-> > > +       struct device_node *parent = of_irq_find_parent(np);
-> > > +
-> > > +       return qcom_pdc_init(np, parent);
-> > > +}
-> > > +
-> > > +static const struct of_device_id qcom_pdc_match_table[] = {
-> > > +       { .compatible = "qcom,pdc" },
-> > > +       {}
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
-> > > +
-> > > +static struct platform_driver qcom_pdc_driver = {
-> > > +       .probe = qcom_pdc_probe,
-> > > +       .driver = {
-> > > +               .name = "qcom-pdc",
-> > > +               .of_match_table = qcom_pdc_match_table,
-> > > +               .suppress_bind_attrs = true,
-> > > +       },
-> > > +};
-> > > +module_platform_driver(qcom_pdc_driver);
-> > > +#else
-> > >  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
-> >
-> > Is there any reason to use IRQCHIP_DECLARE if this can work as a
-> > platform device driver?
-> >
+> The misc interrupts consisting of PME, AER, and Link event, is handled
+> by INTx handler, however, these interrupts should be also handled by
+> MSI handler.
 > 
-> Hey! Thanks so much for the review!
+> This adds the function uniphier_pcie_misc_isr() that handles misc
+> interrupts, which is called from both INTx and MSI handlers.
+> This function detects PME and AER interrupts with the status register,
+> and invoke PME and AER drivers related to MSI.
 > 
-> Mostly it was done this way to minimize the change in the non-module
-> case. But if you'd rather avoid the #ifdefery I'll respin it without.
+> And this sets the mask for misc interrupts from INTx if MSI is enabled
+> and sets the mask for misc interrupts from MSI if MSI is disabled.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>  1 file changed, 46 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0..5ce2479 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -44,7 +44,9 @@
+>  #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>  
+>  #define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>  
+>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  {
+> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	u32 val;
+> +
+> +	val = PCL_RCV_INT_ALL_ENABLE;
+> +	if (pci_msi_enabled())
+> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+> +	else
+> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
 
-That would certainly be my own preference. In general, IRQCHIP_DECLARE
-and platform drivers should be mutually exclusive in the same driver:
-if you can delay the probing and have it as a proper platform device,
-then this should be the one true way.
+Does this affect endpoints? Or just the RC itself?
 
-Thanks,
+> +
+> +	writel(val, priv->base + PCL_RCV_INT);
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+>  
+> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>  	.map = uniphier_pcie_intx_map,
+>  };
+>  
+> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>  {
+> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	unsigned long reg;
+> -	u32 val, bit, virq;
+> +	u32 val, virq;
+>  
+> -	/* INT for debug */
+>  	val = readl(priv->base + PCL_RCV_INT);
+>  
+>  	if (val & PCL_CFG_BW_MGT_STATUS)
+>  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+> +
+>  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> -		dev_dbg(pci->dev, "Root Error\n");
+> -	if (val & PCL_CFG_PME_MSI_STATUS)
+> -		dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +	if (is_msi) {
+> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> +			dev_dbg(pci->dev, "Root Error Status\n");
+> +
+> +		if (val & PCL_CFG_PME_MSI_STATUS)
+> +			dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+> +			   PCL_CFG_PME_MSI_STATUS)) {
+> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> +			generic_handle_irq(virq);
+> +		}
+> +	}
+
+Please have two handlers: one for interrupts that are from the RC,
+another for interrupts coming from the endpoints.
 
 	M.
 
