@@ -2,74 +2,77 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA41C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29EE920857
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:51:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cJU7Kmy1"
+	by mail.kernel.org (Postfix) with ESMTP id 7924820857
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgF0Gvc (ORCPT
+        id S1726071AbgF0Gxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 02:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgF0Gvc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 02:51:32 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174FAC03E979;
-        Fri, 26 Jun 2020 23:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cA+nDLk1cEiM+pjhFHWGJZnPhFcjX6nAKwC92ViSHuk=; b=cJU7Kmy1aduUvHoiPAo1vh16S7
-        lN7xe3StQ5MB7txNrLcHuv3hHkuDTagybLIaCpnw8Cd20sXvqmhtn7mtrzf/gvfyY0eiFE6KwcAuY
-        ZHkFfjSsqPIib22YZ3I6Sku5XtZZUkuaUmeoONil6pw4UF/Rp54mfPwGOO8qpuy1ZBcxDvosIZWdp
-        oaImaF6BBRTmoiG6bcKYsNimillWYaBpua7CFYiYlPF5DHHKFfnu0UsxyHC5BWal8X61mhX7IujAP
-        4L+3aIwbGMa710Zi58WPU63g8b/fBV2pMLPb9A+YQoSM12xTjGkmL5irlo0aT/Qc+S7PFsYUdbygF
-        uLWb8Kew==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jp4g4-0005I8-2Z; Sat, 27 Jun 2020 06:51:04 +0000
-Date:   Sat, 27 Jun 2020 07:51:04 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, asml.silence@gmail.com,
-        Damien.LeMoal@wdc.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        selvakuma.s1@samsung.com, nj.shetty@samsung.com,
-        javier.gonz@samsung.com, Arnav Dawn <a.dawn@samsung.com>
-Subject: Re: [PATCH v2 1/2] fs,block: Introduce RWF_ZONE_APPEND and handling
- in direct IO path
-Message-ID: <20200627065104.GA20157@infradead.org>
-References: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
- <CGME20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85@epcas5p2.samsung.com>
- <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
- <20200626085846.GA24962@infradead.org>
- <20200626211514.GA24762@test-zns>
+        Sat, 27 Jun 2020 02:53:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36106 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725900AbgF0Gxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 02:53:39 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 889A3D586FD425B1F867;
+        Sat, 27 Jun 2020 14:53:36 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 27 Jun 2020 14:53:30 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+Subject: [PATCH net-next v3 0/5] hinic: add some ethtool ops support
+Date:   Sat, 27 Jun 2020 14:52:37 +0800
+Message-ID: <20200627065242.26761-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626211514.GA24762@test-zns>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 02:45:14AM +0530, Kanchan Joshi wrote:
-> For block IO path (which is the scope of this patchset) there is no
-> probelm in using RWF_APPEND for zone-append, because it does not do
-> anything for block device. We can use that, avoiding introduction of
-> RWF_ZONE_APPEND in user-space.
+patch #1: support to set and get pause params with
+          "ethtool -A/a" cmd
+patch #2: support to set and get irq coalesce params with
+          "ethtool -C/c" cmd
+patch #3: support to do self test with "ethtool -t" cmd
+patch #4: support to identify physical device with "ethtool -p" cmd
+patch #5: support to get eeprom information with "ethtool -m" cmd
 
-No, you are not just touching the block I/O path.  This is all over the
-general file code, and all RWF_* flag are about file I/O.
+Luo bin (5):
+  hinic: add support to set and get pause params
+  hinic: add support to set and get irq coalesce
+  hinic: add self test support
+  hinic: add support to identify physical device
+  hinic: add support to get eeprom information
+
+ drivers/net/ethernet/huawei/hinic/hinic_dev.h |  14 +
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 678 +++++++++++++++++-
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  66 ++
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  31 +
+ .../net/ethernet/huawei/hinic/hinic_hw_io.h   |  10 +
+ .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   7 +-
+ .../net/ethernet/huawei/hinic/hinic_main.c    | 131 +++-
+ .../net/ethernet/huawei/hinic/hinic_port.c    | 197 +++++
+ .../net/ethernet/huawei/hinic/hinic_port.h    |  94 +++
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  58 +-
+ .../net/ethernet/huawei/hinic/hinic_sriov.c   |   4 +-
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  80 +++
+ drivers/net/ethernet/huawei/hinic/hinic_tx.h  |   2 +
+ 13 files changed, 1357 insertions(+), 15 deletions(-)
+
+-- 
+2.17.1
+
