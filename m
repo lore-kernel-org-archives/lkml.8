@@ -2,385 +2,574 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD14E2081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7D520707
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 06:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QeP6dF6E"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J2BvF1Cq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgF0GPB (ORCPT
+        id S1726013AbgF0GXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 02:15:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:55302 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgF0GPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 02:15:00 -0400
-IronPort-SDR: kW6PTwqyj3UKatD6EbkWt9fRanhlXv66tRrzuwq5Q53lm6DR1ZFu2mRs9uKdB3OQJ2tyfZ4OGp
- YdFRpcgTMR2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="207121411"
-X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
-   d="scan'208";a="207121411"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 23:14:58 -0700
-IronPort-SDR: nziV5KgVlps8oS4XZ5Uc2B0gdnFKKzK+DNm1X2BliGqouK1XuiCtGeVkfO58FNoMqCJkj83HIG
- gciFJ2n2+sYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
-   d="scan'208";a="276571553"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga003.jf.intel.com with ESMTP; 26 Jun 2020 23:14:56 -0700
-Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 26 Jun 2020 23:14:55 -0700
-Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 26 Jun 2020 23:14:55 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 26 Jun 2020 23:14:55 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 26 Jun 2020 23:14:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ix+vGXZ362HsncnPEFZXGuDuRzZNOL4BmZ9DCMJRDai2IYtEPiPlztY11kiVCypsoQcZMkR25ulOgcLKt+kycBGvKjAWUDtrUJL2oc4E/tFsOsoDbJVyRmJJavitxOxvVFXUfbf2yvCAqWKRaj/L3y68/1XWnX3Io1WmR9mTVcpbb/wpLPr3pbuvhlh5HoBsM364N2KA71ZD6/8zG9oAdg0jOBQxUMZ2tM7fqeyXa24OrKb5ze2bmlDDjWSrQA9fF2J+h6+fNGiWgPfztQImni1Tot4cb4gjWp2ebN4h8B5ovyMkT1Ao1YBECYF8dvnyLZ2+8wVhzYQNx05Ju8460w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1TScMjCm7htZTBLSFsxW+bfzPVFr4rFxs5gXSiFe47k=;
- b=FKqfM5Ggxk9yXjQ8p4PddlsXbT5MZ9VfsSL6G3APSEG4nbi4nTy1kCcQrxqYznGWvjCeBSKe5bRsMa0cxunBdZETM6GSeC3iR9HyXoOdFgZ10tTcyoDg57ZQmQnYjFCVwpKIpjvvXoRrZZJ3kbcV21xKdUVYdSbUFzvtCFo3KGWq3MJF3SeqI6x8e2mCp1OfCRl/E4CY9t+0WTthmpRi1ZKhtQm7sTg41q5wMOBcOL/xKWUPISrt958O6bwztESIwAtXsVeJri4eH/KDmqRuwgirWBKWOJvSrfGdaDzLJPwQLSaLxIrZLsBCarGulC5tpIkrG8sCp8v8aG8khpUuFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1TScMjCm7htZTBLSFsxW+bfzPVFr4rFxs5gXSiFe47k=;
- b=QeP6dF6E7Z9eIlLsrpv0E1DBkroDk+DLNuQrHjXM0k5Sf3GpKV8ME3X1MokIF1YR7pH1swFVVYyzuc5x6OaG6xqMtKy7JLU7rIcXhQrgAUo21p48Ra+USPkMDNidMlGHS+2jmlE01bTvG+q5fbOG0n1BaoCEUP9kdoHavZv3ta8=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM5PR11MB2009.namprd11.prod.outlook.com (2603:10b6:3:15::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.25; Sat, 27 Jun 2020 06:14:53 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.025; Sat, 27 Jun 2020
- 06:14:53 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Index: AQHWSgRQVmc9Qp+Xi0mQEumzIJrE0qjqiBcAgAF4MYA=
-Date:   Sat, 27 Jun 2020 06:14:52 +0000
-Message-ID: <DM5PR11MB14355918CBF5DDDA1C1352C8C3900@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
- <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
- <20200626074738.GA2107508@myrica>
-In-Reply-To: <20200626074738.GA2107508@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.221]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d5b00e14-6f4c-44eb-7d41-08d81a6167f4
-x-ms-traffictypediagnostic: DM5PR11MB2009:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB20094A98D4E7EAC9E8CC33B0C3900@DM5PR11MB2009.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0447DB1C71
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U6z+CSSDszwJevYlYrr0cZ3db7Tp39XZegYTY9dEjEpkq/pF4vtPq3f/7puAgtmTLllij1kTYDxUfNCtjOWG4IKicEZn5Fj3tITH7dLzpVV5TFvVaZkuy1HpHI3DYArqn4pW6f+fn7IHI8G5Sd3dbxL1+ZafnGBAyKlkAu2m4Ed4ee73pHx5pgXfvB//kxKr2SNMlU3yVksM24wl96MqZj9s3sbL1FeeKzQ5orOnvaGnTnXcppV5B1gjRZhw74Y8KcyatPg3ZpdVDyRyP4RiG9LDwnSBidlkQ4FrZcKKN3XsSyIJGUqu6OmrLUQNgZQybOjDNgBI7Soq0gAJPDNayg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(7696005)(52536014)(478600001)(186003)(2906002)(26005)(6506007)(66446008)(6916009)(66476007)(64756008)(8676002)(66556008)(66946007)(71200400001)(8936002)(4326008)(316002)(54906003)(86362001)(5660300002)(9686003)(83380400001)(33656002)(55016002)(7416002)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 11u8uGvGmKoVQ93E7nUGbIWFG96m2kdu0xVwakFHiMBkwgvjBwoTtJ4V7otUKCki+eZIreYQziRbaBx3YE7jSzAoEl6iQf6fnkgx6TwNJDrHFkpPhvsutajvHNzfQp2VDtyj5uvf9G0rSW+X9EtFgVoPUdH6CgCsgnT4vNlZ8yW1FgfBixvk97vgf+NZpS0fLlKZ7rWjRIyGOTNlej56rKkQLlGeHUnTK0StnD3bWOSoOfMQWOM/0K978Plnt+/Xrhi2ErJ4nN1TAjYLiJa/Cy7fkv4Id4d/IDrEOsv4V2Yug7Mr+4fQIk8laPblZoosbj/CcbWLKPDfDbjyuOydQv9U+dpF9EDMpKcAXER/1H0CtiDFSpYVyNOcHJBhpqTTH4TZQH/965Erq4zLaZsmd/o9DpOYq3EiSJ28Vs2SD3U28Tor3JCSVN0dHHPYcagA/eHypMIMKtX1rdClCOmqCI2ziJ55GtSuObmeTF9JEti2+V3WnBlJdU7xOBL25Sku
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5b00e14-6f4c-44eb-7d41-08d81a6167f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2020 06:14:52.8992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OXVrgK5dU0kPLK4EJkVtqJ8ySIgiyHSt1yuwbpme7MA3wO98FI84Z1C0JSsV+b9a3VDeAOqJO/p4YSPjV9VtxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB2009
-X-OriginatorOrg: intel.com
+        Sat, 27 Jun 2020 02:23:19 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38923 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbgF0GXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 02:23:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593238996; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=3B8DtFpbDD8QiQPmG4elCiyFJXgpzM3e2d8vy0b5vTs=; b=J2BvF1Cqlq6eSgaona9jFeuwNDjGOgS95ddlqb7ozhTuzrpZMG724XGA039UjNqfT5YUWsET
+ qMqi5gCdRBYVRKgCQ+49356jw77OsSG6pTdhSFErNOoWI8oD8jV020uFM86iEPVIK90B3ISA
+ 88sC8D01LWVLsX1z9JhIuvRwMgQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ef6e5c8117610c7ff1009e5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 27 Jun 2020 06:23:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E884BC433CA; Sat, 27 Jun 2020 06:23:03 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0D07C433C6;
+        Sat, 27 Jun 2020 06:23:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0D07C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH] ath10k: Add history for tracking certain events
+Date:   Sat, 27 Jun 2020 11:52:53 +0530
+Message-Id: <1593238973-23237-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Friday, June 26, 2020 3:48 PM
->=20
-> On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
-> > IOMMUs that support nesting translation needs report the capability
-> > info to userspace, e.g. the format of first level/stage paging structur=
-es.
-> >
-> > This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
-> > nesting info after setting DOMAIN_ATTR_NESTING.
-> >
-> > v2 -> v3:
-> > *) remvoe cap/ecap_mask in iommu_nesting_info.
-> > *) reuse DOMAIN_ATTR_NESTING to get nesting info.
-> > *) return an empty iommu_nesting_info for SMMU drivers per Jean'
-> >    suggestion.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/arm-smmu-v3.c | 29 ++++++++++++++++++++--
-> >  drivers/iommu/arm-smmu.c    | 29 ++++++++++++++++++++--
->=20
-> Looks reasonable to me. Please move the SMMU changes to a separate patch
-> and Cc the SMMU maintainers:
->=20
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
+For debugging many issues, a history of the
+below mentioned events can help get an idea
+of what exactly was going on just before any
+issue occurred in the system. These event
+history will be collected only when the host
+driver is run in debug mode (i.e. with the
+config ATH10K_DEBUG enabled).
 
-got you. will do it.
+Add history for tracking the below events
+- register read
+- register write
+- IRQ trigger
+- IRQ Enable
+- IRQ Disable
+- NAPI poll
+- CE service
+- WMI cmd
+- WMI event
+- WMI tx completion
 
-Regards,
-Yi Liu
+This will help in debugging any crash or any
+improper behaviour.
 
-> Thanks,
-> Jean
->=20
-> >  include/uapi/linux/iommu.h  | 59
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 113 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> > index f578677..0c45d4d 100644
-> > --- a/drivers/iommu/arm-smmu-v3.c
-> > +++ b/drivers/iommu/arm-smmu-v3.c
-> > @@ -3019,6 +3019,32 @@ static struct iommu_group
-> *arm_smmu_device_group(struct device *dev)
-> >  	return group;
-> >  }
-> >
-> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
-> *smmu_domain,
-> > +					void *data)
-> > +{
-> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
-a;
-> > +	u32 size;
-> > +
-> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-> > +		return -ENODEV;
-> > +
-> > +	size =3D sizeof(struct iommu_nesting_info);
-> > +
-> > +	/*
-> > +	 * if provided buffer size is not equal to the size, should
-> > +	 * return 0 and also the expected buffer size to caller.
-> > +	 */
-> > +	if (info->size !=3D size) {
-> > +		info->size =3D size;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* report an empty iommu_nesting_info for now */
-> > +	memset(info, 0x0, size);
-> > +	info->size =3D size;
-> > +	return 0;
-> > +}
-> > +
-> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  				    enum iommu_attr attr, void *data)  { @@ -
-> 3028,8 +3054,7 @@
-> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  	case IOMMU_DOMAIN_UNMANAGED:
-> >  		switch (attr) {
-> >  		case DOMAIN_ATTR_NESTING:
-> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
-> ARM_SMMU_DOMAIN_NESTED);
-> > -			return 0;
-> > +			return arm_smmu_domain_nesting_info(smmu_domain,
-> data);
-> >  		default:
-> >  			return -ENODEV;
-> >  		}
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
-> > 243bc4c..908607d 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -1506,6 +1506,32 @@ static struct iommu_group
-> *arm_smmu_device_group(struct device *dev)
-> >  	return group;
-> >  }
-> >
-> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
-> *smmu_domain,
-> > +					void *data)
-> > +{
-> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
-a;
-> > +	u32 size;
-> > +
-> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-> > +		return -ENODEV;
-> > +
-> > +	size =3D sizeof(struct iommu_nesting_info);
-> > +
-> > +	/*
-> > +	 * if provided buffer size is not equal to the size, should
-> > +	 * return 0 and also the expected buffer size to caller.
-> > +	 */
-> > +	if (info->size !=3D size) {
-> > +		info->size =3D size;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* report an empty iommu_nesting_info for now */
-> > +	memset(info, 0x0, size);
-> > +	info->size =3D size;
-> > +	return 0;
-> > +}
-> > +
-> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  				    enum iommu_attr attr, void *data)  { @@ -
-> 1515,8 +1541,7 @@
-> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  	case IOMMU_DOMAIN_UNMANAGED:
-> >  		switch (attr) {
-> >  		case DOMAIN_ATTR_NESTING:
-> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
-> ARM_SMMU_DOMAIN_NESTED);
-> > -			return 0;
-> > +			return arm_smmu_domain_nesting_info(smmu_domain,
-> data);
-> >  		default:
-> >  			return -ENODEV;
-> >  		}
-> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> > index 1afc661..898c99a 100644
-> > --- a/include/uapi/linux/iommu.h
-> > +++ b/include/uapi/linux/iommu.h
-> > @@ -332,4 +332,63 @@ struct iommu_gpasid_bind_data {
-> >  	} vendor;
-> >  };
-> >
-> > +/*
-> > + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
-> > + *				user space should check it before using
-> > + *				nesting capability.
-> > + *
-> > + * @size:	size of the whole structure
-> > + * @format:	PASID table entry format, the same definition with
-> > + *		@format of struct iommu_gpasid_bind_data.
-> > + * @features:	supported nesting features.
-> > + * @flags:	currently reserved for future extension.
-> > + * @data:	vendor specific cap info.
-> > + *
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | feature       |  Notes                                           =
-  |
-> > + *
-> >
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D=3D=3D=3D=3D=3D=3D
-> > ++
-> > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used=
-  |
-> > + * |               |  in the system should be allocated by host kernel=
-  |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could =
-  |
-> > + * |               |  either be a host PASID passed in bind request or=
-  |
-> > + * |               |  default PASIDs (e.g. default PASID of aux-domain=
-) |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU     =
-  |
-> > + *
-> > ++---------------+----------------------------------------------------
-> > ++
-> > + *
-> > + */
-> > +struct iommu_nesting_info {
-> > +	__u32	size;
-> > +	__u32	format;
-> > +	__u32	features;
-> > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
-> > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
-> > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
-> > +	__u32	flags;
-> > +	__u8	data[];
-> > +};
-> > +
-> > +/*
-> > + * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info
-> > + *
-> > + *
-> > + * @flags:	VT-d specific flags. Currently reserved for future
-> > + *		extension.
-> > + * @addr_width:	The output addr width of first level/stage translation
-> > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
-> > + *		support.
-> > + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
-> > + *		register.
-> > + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
-> > + *		extended capability register.
-> > + */
-> > +struct iommu_nesting_info_vtd {
-> > +	__u32	flags;
-> > +	__u16	addr_width;
-> > +	__u16	pasid_bits;
-> > +	__u64	cap_reg;
-> > +	__u64	ecap_reg;
-> > +};
-> > +
-> >  #endif /* _UAPI_IOMMU_H */
-> > --
-> > 2.7.4
-> >
+Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+ drivers/net/wireless/ath/ath10k/ce.c      |   2 +
+ drivers/net/wireless/ath/ath10k/core.h    |  77 +++++++++++++++++
+ drivers/net/wireless/ath/ath10k/debug.c   | 134 ++++++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/debug.h   |  74 +++++++++++++++++
+ drivers/net/wireless/ath/ath10k/snoc.c    |  17 ++++
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
+ drivers/net/wireless/ath/ath10k/wmi.c     |  10 +++
+ 7 files changed, 315 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 1e16f26..ddf2765 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -509,6 +509,7 @@ u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar)
+ 		}
+ 	}
+ 
++	ath10k_record_ce_event(ar, ATH10K_IRQ_SUMMARY, irq_summary);
+ 	return irq_summary;
+ }
+ EXPORT_SYMBOL(ath10k_ce_gen_interrupt_summary);
+@@ -1331,6 +1332,7 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
+ 	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 	u32 ctrl_addr = ce_state->ctrl_addr;
+ 
++	ath10k_record_ce_event(ar, ATH10K_CE_SERVICE, ce_id);
+ 	/*
+ 	 * Clear before handling
+ 	 *
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index 040053a..eecb5cc 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -971,6 +971,78 @@ struct ath10k_bus_params {
+ 	bool hl_msdu_ids;
+ };
+ 
++#define ATH10K_REG_ACCESS_HISTORY_MAX	512
++#define ATH10K_CE_EVENT_HISTORY_MAX	1024
++#define ATH10K_WMI_EVENT_HISTORY_MAX	512
++#define ATH10K_WMI_CMD_HISTORY_MAX	256
++
++#define ATH10K_WMI_DATA_LEN	16
++
++enum ath10k_ce_event {
++	ATH10K_IRQ_ENTRY,
++	ATH10K_IRQ_EXIT,
++	ATH10K_IRQ_ENABLE,
++	ATH10K_IRQ_DISABLE,
++	ATH10K_NAPI_POLL,
++	ATH10K_CE_SERVICE,
++	ATH10K_NAPI_COMPLETE,
++	ATH10K_NAPI_RESCHED,
++	ATH10K_IRQ_SUMMARY,
++};
++
++enum ath10k_wmi_type {
++	ATH10K_WMI_EVENT,
++	ATH10K_WMI_CMD,
++	ATH10K_WMI_TX_COMPL,
++};
++
++struct ath10k_reg_access_entry {
++	bool write;
++	u32 cpu_id;
++	u32 offset;
++	u32 val;
++	u64 timestamp;
++};
++
++struct ath10k_wmi_event_entry {
++	enum ath10k_wmi_type type;
++	u32 cpu_id;
++	u32 id;
++	u64 timestamp;
++	unsigned char data[ATH10K_WMI_DATA_LEN];
++};
++
++struct ath10k_ce_event_entry {
++	enum ath10k_ce_event event_type;
++	u32 cpu_id;
++	u32 ce_id;
++	u64 timestamp;
++};
++
++struct ath10k_wmi_event_history {
++	struct ath10k_wmi_event_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing wmi event history */
++	spinlock_t hist_lock;
++};
++
++struct ath10k_ce_event_history {
++	struct ath10k_ce_event_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing ce event history */
++	spinlock_t hist_lock;
++};
++
++struct ath10k_reg_access_history {
++	struct ath10k_reg_access_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing register access history */
++	spinlock_t hist_lock;
++};
++
+ struct ath10k {
+ 	struct ath_common ath_common;
+ 	struct ieee80211_hw *hw;
+@@ -1263,6 +1335,11 @@ struct ath10k {
+ 	bool coex_support;
+ 	int coex_gpio_pin;
+ 
++	struct ath10k_reg_access_history reg_access_history;
++	struct ath10k_ce_event_history ce_event_history;
++	struct ath10k_wmi_event_history wmi_event_history;
++	struct ath10k_wmi_event_history wmi_cmd_history;
++
+ 	/* must be last */
+ 	u8 drv_priv[] __aligned(sizeof(void *));
+ };
+diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
+index e8250a6..1be4883 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.c
++++ b/drivers/net/wireless/ath/ath10k/debug.c
+@@ -2722,4 +2722,138 @@ void ath10k_dbg_dump(struct ath10k *ar,
+ }
+ EXPORT_SYMBOL(ath10k_dbg_dump);
+ 
++int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->reg_access_history.record = vzalloc(max_entries *
++						sizeof(struct ath10k_reg_access_entry));
++	if (!ar->reg_access_history.record)
++		return -ENOMEM;
++
++	ar->reg_access_history.max_entries = max_entries;
++	atomic_set(&ar->reg_access_history.index, 0);
++	spin_lock_init(&ar->reg_access_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_reg_access_history_init);
++
++int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->wmi_cmd_history.record = vzalloc(max_entries *
++					     sizeof(struct ath10k_wmi_event_entry));
++	if (!ar->wmi_cmd_history.record)
++		return -ENOMEM;
++
++	ar->wmi_cmd_history.max_entries = max_entries;
++	atomic_set(&ar->wmi_cmd_history.index, 0);
++	spin_lock_init(&ar->wmi_cmd_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_wmi_cmd_history_init);
++
++int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->wmi_event_history.record = vzalloc(max_entries *
++					       sizeof(struct ath10k_wmi_event_entry));
++	if (!ar->wmi_event_history.record)
++		return -ENOMEM;
++
++	ar->wmi_event_history.max_entries = max_entries;
++	atomic_set(&ar->wmi_event_history.index, 0);
++	spin_lock_init(&ar->wmi_event_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_wmi_event_history_init);
++
++int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->ce_event_history.record = vzalloc(max_entries *
++					      sizeof(struct ath10k_ce_event_entry));
++	if (!ar->ce_event_history.record)
++		return -ENOMEM;
++
++	ar->ce_event_history.max_entries = max_entries;
++	atomic_set(&ar->ce_event_history.index, 0);
++	spin_lock_init(&ar->ce_event_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_ce_event_history_init);
++
++void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val, bool write)
++{
++	struct ath10k_reg_access_entry *entry;
++	u32 idx;
++
++	if (!ar->reg_access_history.record)
++		return;
++
++	idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++				       ar->reg_access_history.max_entries);
++	entry = &ar->reg_access_history.record[idx];
++
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->cpu_id = smp_processor_id();
++	entry->write = write;
++	entry->offset = offset;
++	entry->val = val;
++}
++EXPORT_SYMBOL(ath10k_record_reg_access);
++
++void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
++			     u32 id, unsigned char *data)
++{
++	struct ath10k_wmi_event_entry *entry;
++	u32 idx;
++
++	if (type == ATH10K_WMI_EVENT) {
++		if (!ar->wmi_event_history.record)
++			return;
++
++		spin_lock_bh(&ar->wmi_event_history.hist_lock);
++		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++					       ar->wmi_event_history.max_entries);
++		entry = &ar->wmi_event_history.record[idx];
++		spin_unlock_bh(&ar->wmi_event_history.hist_lock);
++	} else {
++		if (!ar->wmi_cmd_history.record)
++			return;
++
++		spin_lock_bh(&ar->wmi_cmd_history.hist_lock);
++		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++					       ar->wmi_cmd_history.max_entries);
++		entry = &ar->wmi_cmd_history.record[idx];
++		spin_unlock_bh(&ar->wmi_cmd_history.hist_lock);
++	}
++
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->cpu_id = smp_processor_id();
++	entry->type = type;
++	entry->id = id;
++	memcpy(&entry->data, data + 4, ATH10K_WMI_DATA_LEN);
++}
++EXPORT_SYMBOL(ath10k_record_wmi_event);
++
++void ath10k_record_ce_event(struct ath10k *ar, enum ath10k_ce_event event_type,
++			    int ce_id)
++{
++	struct ath10k_ce_event_entry *entry;
++	u32 idx;
++
++	if (!ar->ce_event_history.record)
++		return;
++
++	idx = ath10k_core_get_next_idx(&ar->ce_event_history.index,
++				       ar->ce_event_history.max_entries);
++	entry = &ar->ce_event_history.record[idx];
++
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->cpu_id = smp_processor_id();
++	entry->event_type = event_type;
++	entry->ce_id = ce_id;
++}
++EXPORT_SYMBOL(ath10k_record_ce_event);
++
+ #endif /* CONFIG_ATH10K_DEBUG */
+diff --git a/drivers/net/wireless/ath/ath10k/debug.h b/drivers/net/wireless/ath/ath10k/debug.h
+index 997c1c8..c28aeb1 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.h
++++ b/drivers/net/wireless/ath/ath10k/debug.h
+@@ -258,6 +258,38 @@ void ath10k_dbg_dump(struct ath10k *ar,
+ 		     enum ath10k_debug_mask mask,
+ 		     const char *msg, const char *prefix,
+ 		     const void *buf, size_t len);
++
++/* ========== History init APIs =========== */
++int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries);
++
++/* ========== History record APIs =========== */
++void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val,
++			      bool write);
++void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
++			     u32 id, unsigned char *data);
++void ath10k_record_ce_event(struct ath10k *ar,
++			    enum ath10k_ce_event event_type,
++			    int ce_id);
++
++static inline u64 ath10k_core_get_timestamp(void)
++{
++	struct timespec64 ts;
++
++	ktime_get_real_ts64(&ts);
++	return ((u64)ts.tv_sec * 1000000) + (ts.tv_nsec / 1000);
++}
++
++static inline int ath10k_core_get_next_idx(atomic_t *index, u32 max_entries)
++{
++	u32 curr_idx;
++
++	curr_idx = atomic_fetch_inc(index);
++	return (curr_idx & (max_entries - 1));
++}
++
+ #else /* CONFIG_ATH10K_DEBUG */
+ 
+ static inline int __ath10k_dbg(struct ath10k *ar,
+@@ -273,6 +305,48 @@ static inline void ath10k_dbg_dump(struct ath10k *ar,
+ 				   const void *buf, size_t len)
+ {
+ }
++
++static inline int ath10k_core_reg_access_history_init(struct ath10k *ar,
++						      u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_wmi_cmd_history_init(struct ath10k *ar,
++						   u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_wmi_event_history_init(struct ath10k *ar,
++						     u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_ce_event_history_init(struct ath10k *ar,
++						    u32 max_entries)
++{
++	return 0;
++}
++
++static inline void ath10k_record_reg_access(struct ath10k *ar, u32 offset,
++					    u32 val, bool write)
++{
++}
++
++static inline void ath10k_record_wmi_event(struct ath10k *ar,
++					   enum ath10k_wmi_type type,
++					   u32 id, unsigned char *data)
++{
++}
++
++static inline void ath10k_record_ce_event(struct ath10k *ar,
++					  enum ath10k_ce_event event_type,
++					  int ce_id)
++{
++}
++
+ #endif /* CONFIG_ATH10K_DEBUG */
+ 
+ /* Avoid calling __ath10k_dbg() if debug_mask is not set and tracing
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 8440e64..cfc0ae2 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -474,6 +474,7 @@ static void ath10k_snoc_write32(struct ath10k *ar, u32 offset, u32 value)
+ {
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 
++	ath10k_record_reg_access(ar, offset, value, true);
+ 	iowrite32(value, ar_snoc->mem + offset);
+ }
+ 
+@@ -482,7 +483,9 @@ static u32 ath10k_snoc_read32(struct ath10k *ar, u32 offset)
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	u32 val;
+ 
++	ath10k_record_reg_access(ar, offset, 0, false);
+ 	val = ioread32(ar_snoc->mem + offset);
++	ath10k_record_reg_access(ar, offset, val, false);
+ 
+ 	return val;
+ }
+@@ -828,11 +831,13 @@ static void ath10k_snoc_hif_get_default_pipe(struct ath10k *ar,
+ static inline void ath10k_snoc_irq_disable(struct ath10k *ar)
+ {
+ 	ath10k_ce_disable_interrupts(ar);
++	ath10k_record_ce_event(ar, ATH10K_IRQ_DISABLE, 0);
+ }
+ 
+ static inline void ath10k_snoc_irq_enable(struct ath10k *ar)
+ {
+ 	ath10k_ce_enable_interrupts(ar);
++	ath10k_record_ce_event(ar, ATH10K_IRQ_ENABLE, 0);
+ }
+ 
+ static void ath10k_snoc_rx_pipe_cleanup(struct ath10k_snoc_pipe *snoc_pipe)
+@@ -1154,7 +1159,9 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	int ce_id = ath10k_snoc_get_ce_id_from_irq(ar, irq);
+ 
++	ath10k_record_ce_event(ar, ATH10K_IRQ_ENTRY, ce_id);
+ 	if (ce_id < 0 || ce_id >= ARRAY_SIZE(ar_snoc->pipe_info)) {
++		ath10k_record_ce_event(ar, ATH10K_IRQ_EXIT, ce_id);
+ 		ath10k_warn(ar, "unexpected/invalid irq %d ce_id %d\n", irq,
+ 			    ce_id);
+ 		return IRQ_HANDLED;
+@@ -1163,6 +1170,7 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ 	ath10k_snoc_irq_disable(ar);
+ 	napi_schedule(&ar->napi);
+ 
++	ath10k_record_ce_event(ar, ATH10K_IRQ_EXIT, ce_id);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -1171,6 +1179,7 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ 	struct ath10k *ar = container_of(ctx, struct ath10k, napi);
+ 	int done = 0;
+ 
++	ath10k_record_ce_event(ar, ATH10K_NAPI_POLL, 0);
+ 	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
+ 		napi_complete(ctx);
+ 		return done;
+@@ -1182,6 +1191,9 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ 	if (done < budget) {
+ 		napi_complete(ctx);
+ 		ath10k_snoc_irq_enable(ar);
++		ath10k_record_ce_event(ar, ATH10K_NAPI_COMPLETE, 0);
++	} else {
++		ath10k_record_ce_event(ar, ATH10K_NAPI_RESCHED, 0);
+ 	}
+ 
+ 	return done;
+@@ -1655,6 +1667,11 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+ 	ar->ce_priv = &ar_snoc->ce;
+ 	msa_size = drv_data->msa_size;
+ 
++	ath10k_core_reg_access_history_init(ar, ATH10K_REG_ACCESS_HISTORY_MAX);
++	ath10k_core_wmi_event_history_init(ar, ATH10K_WMI_EVENT_HISTORY_MAX);
++	ath10k_core_wmi_cmd_history_init(ar, ATH10K_WMI_CMD_HISTORY_MAX);
++	ath10k_core_ce_event_history_init(ar, ATH10K_CE_EVENT_HISTORY_MAX);
++
+ 	ath10k_snoc_quirks_init(ar);
+ 
+ 	ret = ath10k_snoc_resource_init(ar);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 932266d..9df5748 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -627,6 +627,7 @@ static void ath10k_wmi_tlv_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 	if (skb_pull(skb, sizeof(struct wmi_cmd_hdr)) == NULL)
+ 		goto out;
+ 
++	ath10k_record_wmi_event(ar, ATH10K_WMI_EVENT, id, skb->data);
+ 	trace_ath10k_wmi_event(ar, id, skb->data, skb->len);
+ 
+ 	consumed = ath10k_tm_event_wmi(ar, id, skb);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index a81a1ab..8ebd05c 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -1802,6 +1802,15 @@ struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
+ 
+ static void ath10k_wmi_htc_tx_complete(struct ath10k *ar, struct sk_buff *skb)
+ {
++	struct wmi_cmd_hdr *cmd_hdr;
++	enum wmi_tlv_event_id id;
++
++	cmd_hdr = (struct wmi_cmd_hdr *)skb->data;
++	id = MS(__le32_to_cpu(cmd_hdr->cmd_id), WMI_CMD_HDR_CMD_ID);
++
++	ath10k_record_wmi_event(ar, ATH10K_WMI_TX_COMPL, id,
++				skb->data + sizeof(struct wmi_cmd_hdr));
++
+ 	dev_kfree_skb(skb);
+ }
+ 
+@@ -1912,6 +1921,7 @@ int ath10k_wmi_cmd_send(struct ath10k *ar, struct sk_buff *skb, u32 cmd_id)
+ 
+ 	might_sleep();
+ 
++	ath10k_record_wmi_event(ar, ATH10K_WMI_CMD, cmd_id, skb->data);
+ 	if (cmd_id == WMI_CMD_UNSUPPORTED) {
+ 		ath10k_warn(ar, "wmi command %d is not supported by firmware\n",
+ 			    cmd_id);
+-- 
+2.7.4
+
