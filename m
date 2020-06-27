@@ -2,78 +2,137 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5632CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 02:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA15C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 02:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E0120720
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 02:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881F420773
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 02:25:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LAoVozES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgF0CLh (ORCPT
+        id S1726585AbgF0CZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 22:11:37 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2551 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726315AbgF0CLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 22:11:37 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id DEF4C21CB25F7E0F9FE4;
-        Sat, 27 Jun 2020 10:11:35 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Sat, 27 Jun 2020 10:11:35 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 27 Jun 2020 10:11:35 +0800
-Subject: Re: [PATCH net-next v2 5/5] hinic: add support to get eeprom
- information
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-References: <20200623142409.19081-1-luobin9@huawei.com>
- <20200623142409.19081-6-luobin9@huawei.com>
- <20200623150233.440583b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <6bfe95da-7166-d141-235b-2b7ab4b88b43@huawei.com>
-Date:   Sat, 27 Jun 2020 10:11:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 26 Jun 2020 22:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgF0CZh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 22:25:37 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE090C03E979
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 19:25:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e9so5777996pgo.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 19:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nhkZLuZObi8zavAGC6FM3sZjX28XBVMWrEcExx5l178=;
+        b=LAoVozESfeYoIEIRrxzaIfG7DHejZkoeqXCdPXMX2td7HeSTTubdnaSztqfkoP3+2H
+         SHVE2oT/tajrNXYaDUhHQuAG1d7L1sqeVBeZ0nQuN5qhBbajVXXdWVF8+B39LTQYCO8D
+         VfqgynPbkRKXBa0GWyz9HwVmp/f/p0XwxhgsgTqHZQS4V3lL1f+JUDGpyDhZVhZCY6/8
+         1jo1MoB86ug91uVHOGln/MD9jSxDTWOHXbmSLYY7vPBlF1g/RaLLBT5XFGNMn63B768K
+         wYYTtLmcgrKN0V9VPnJE6wRoro38EmcjaY3lybBeHbKEAGuRLIwXeS0GdXHN+zvi8PTc
+         HRKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nhkZLuZObi8zavAGC6FM3sZjX28XBVMWrEcExx5l178=;
+        b=AXy0tiL1p3TyveZHU7FIZoX7T+SFdSxNNc+1u/ObTWRvaXsOP1+flAJf4c5Hu3HeOQ
+         MgbCUOwrCHlpLRJyHMDXV/LNluxEu0myFJhj+7mLV0mq/JMLrnNI+f2WkHZCuGwBnfQF
+         /cRbywN/HRUEcd3gI+MyxM1ELIe8mHSjH8L4SG93EVXMfgBqdtp4W8Mo9xCZ7VNxSiJi
+         XeVXEUPrs94t+zT4kKx8/ty8LLJhRY7jwaYXn2x31BEN7mkb9YEOfspn8+IVEEVeyVOg
+         PcGD/3S3vUXQH6StVwR+dYXYXvJDiLz/HI9ZRdYYeI6nDCjw9qsdvO+VPoZp3kKM3MU5
+         HKgA==
+X-Gm-Message-State: AOAM533KwklLAEbVk/rx/NTXcz3z8QQjWPPzHFXrBuN59i/mypcBPas2
+        XBB+eHKrPzxc3zMxWrbxsQL7YQ==
+X-Google-Smtp-Source: ABdhPJwGRIIjy5Q6jCNsVauhqNGYF/RFyiqmf+/zsyyVaY2vG6+wnwHD/CVeLw0bq/S0fnIof5y99A==
+X-Received: by 2002:a63:3c2:: with SMTP id 185mr1554777pgd.46.1593224733279;
+        Fri, 26 Jun 2020 19:25:33 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id u19sm28762225pfk.98.2020.06.26.19.25.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 19:25:32 -0700 (PDT)
+Subject: Re: linux-next: Fixes tag needs some work in the block tree
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+References: <20200627090740.683308fd@canb.auug.org.au>
+ <6920f023-5909-6ebf-606c-dbf467a31c7c@kernel.dk>
+ <20200627015605.goc2btyq6z3wwb5z@chatter.i7.local>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <425cdd05-4123-c1ec-ad82-990eceae0b5a@kernel.dk>
+Date:   Fri, 26 Jun 2020 20:25:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200623150233.440583b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200627015605.goc2btyq6z3wwb5z@chatter.i7.local>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/24 6:02, Jakub Kicinski wrote:
-> On Tue, 23 Jun 2020 22:24:09 +0800 Luo bin wrote:
->> +int hinic_get_sfp_type(struct hinic_hwdev *hwdev, u8 *data0, u8 *data1)
->> +{
->> +	u8 sfp_data[STD_SFP_INFO_MAX_SIZE];
->> +	u16 len;
->> +	int err;
->> +
->> +	if (!hwdev || !data0 || !data1)
->> +		return -EINVAL;
+On 6/26/20 7:56 PM, Konstantin Ryabitsev wrote:
+> On Fri, Jun 26, 2020 at 07:32:15PM -0600, Jens Axboe wrote:
+>> On 6/26/20 5:07 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> In commit
+>>>
+>>>   cd664b0e35cb ("io_uring: fix hanging iopoll in case of -EAGAIN")
+>>>
+>>> Fixes tag
+>>>
+>>>   Fixes: bbde017a32b3 ("io_uring: add memory barrier to synchronize
+>>>
+>>> has these problem(s):
+>>>
+>>>   - Subject has leading but no trailing parentheses
+>>>   - Subject has leading but no trailing quotes
+>>>
+>>> Please do not split Fixes tags over more than one line.
+>>
+>> Gah, that's b4 messing it up. I've actually seen this before, but
+>> I caught it. If you look at the actual commit, this is what the b4
+>> output ends up being for the fixes line:
+>>
+>> [snip]
+>> io_kiocb's result and iopoll_completed")
+>>
+>> Fixes: bbde017a32b3 ("io_uring: add memory barrier to synchronize
+>>
+>> even though it's correct in the email. I'm guessing some issue having to
+>> do with the longer line?
 > 
-> No need to check these, callers are correct. We don't do defensive
-> programming in the kernel.
+> Yeah, I'll try to see if there's something I can do here, but it's going 
+> to be largely guesswork. Here's the original email:
 > 
-Will fix. Thank you for your review.
->> +	return  0;
+> https://lore.kernel.org/lkml/22111b29e298f5f606130fcf4307bda99dbec089.1593077359.git.asml.silence@gmail.com/raw
 > 
-> double space
-Will fix. Thank you for your review.
+> The Fixes: footer really does get split into two. It's not that hard to 
+> add logic just for the Fixes tag (since it conveniently follows a set 
+> pattern), but finding a universal fix for split footers will be more 
+> difficult.
+
+Right, but that's what git format-patch does when the line is long. Do
+we have other tags where that's a concern? If not, then the fix should
+be solid I think.
+
+> I'll see what I can do.
+
+Thanks!
+
+-- 
+Jens Axboe
 
