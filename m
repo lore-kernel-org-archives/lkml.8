@@ -2,114 +2,69 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC94C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C71B2088E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593241561;
-	bh=0Qczu/M7GyE6uD82ovyvwKji/pUl3Hpg++uH1cTaKOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=icXKbp1ApJ6XBfdNmoS2rF4RoDhTppn/+9iXZ8jg8zUS+W0J3qxkmPylDiR1Cj9ES
-	 DkVv3rOaXZeGY1giyA2BLllgESKbBBX7U8lzZ2EhNsbOzduHN/Bes6FhJNzoFErjyL
-	 5KQ1voIYqbMA0RSIGDcN0ybZhL44V1GJug8B2Bro=
+	by mail.kernel.org (Postfix) with ESMTP id DD20B20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgF0HF7 (ORCPT
+        id S1726032AbgF0HKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 03:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 03:10:37 -0400
+Received: from verein.lst.de ([213.95.11.211]:53843 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgF0HF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 03:05:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB0A20707;
-        Sat, 27 Jun 2020 07:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593241557;
-        bh=0Qczu/M7GyE6uD82ovyvwKji/pUl3Hpg++uH1cTaKOc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2aX2VibtFKEZAIGK1a70N/BwGTPzLjHOXgx3R5qgpG/fJZLgsVvnaX1yrM8HyE7Zd
-         HrAGgif1//tVh+7NLAlPFGtlvNnnNNhFu5H2vUVaS0zcbO7z+z32mfOKIS3WFrhO6l
-         ikAdf2OekOZSYWmyFlYSwH8XHy6qckxDRCa8JR2g=
-Date:   Sat, 27 Jun 2020 09:05:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] qlge.h: Adding the missing blank line after declarations
-Message-ID: <20200627070554.GB264737@kroah.com>
-References: <20200627060758.aqcqs763rjoxn6cp@pesu-pes-edu>
+        id S1725885AbgF0HKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 03:10:37 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2364368B02; Sat, 27 Jun 2020 09:10:33 +0200 (CEST)
+Date:   Sat, 27 Jun 2020 09:10:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 8/9] fs: don't allow kernel reads and writes without
+ iter ops
+Message-ID: <20200627071033.GC11854@lst.de>
+References: <20200626075836.1998185-1-hch@lst.de> <20200626075836.1998185-9-hch@lst.de> <20200626135147.GB25039@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627060758.aqcqs763rjoxn6cp@pesu-pes-edu>
+In-Reply-To: <20200626135147.GB25039@casper.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 02:07:58AM -0400, B K Karthik wrote:
-> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> ---
->  drivers/staging/qlge/qlge.h | 1 +
->  1 file changed, 1 insertion(+)
+On Fri, Jun 26, 2020 at 02:51:47PM +0100, Matthew Wilcox wrote:
+> On Fri, Jun 26, 2020 at 09:58:35AM +0200, Christoph Hellwig wrote:
+> > +static void warn_unsupported(struct file *file, const char *op)
+> > +{
+> > +	char pathname[128], *path;
+> > +
+> > +	path = file_path(file, pathname, sizeof(pathname));
+> > +	if (IS_ERR(path))
+> > +		path = "(unknown)";
+> > +	pr_warn_ratelimited(
+> > +		"kernel %s not supported for file %s (pid: %d comm: %.20s)\n",
+> > +		op, path, current->pid, current->comm);
+> > +}
+> > +
 > 
-> diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-> index fc8c5ca8935d..0b971a633001 100644
-> --- a/drivers/staging/qlge/qlge.h
-> +++ b/drivers/staging/qlge/qlge.h
-> @@ -2224,6 +2224,7 @@ static inline void ql_write_db_reg_relaxed(u32 val, void __iomem *addr)
->  static inline u32 ql_read_sh_reg(__le32  *addr)
->  {
->  	u32 reg;
-> +
->  	reg =  le32_to_cpu(*addr);
->  	rmb();
->  	return reg;
-> -- 
-> 2.20.1
+> how about just:
 > 
+> 	pr_warn_ratelimited(
+> 		"kernel %s not supported for file %pD4 (pid: %d comm: %.20s)\n",
+> 			op, file, current->pid, current->comm);
 
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Sure, we could use %pD for a few less line of code and a little less
+typesafety.  I'm not a huge fan of these custom, unchecked format
+specifiers, but given that they exist we might a well use them.
