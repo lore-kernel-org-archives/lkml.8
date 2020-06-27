@@ -2,221 +2,132 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED580C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4F12184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="hB7puQo3"
+	by mail.kernel.org (Postfix) with ESMTP id 32D0221852
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593267154;
+	bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lbBr549KblBntdlF6tujyzRQ9tN981KYPQRZoVYZ1T9TA1AjVaBQiOWGEqalXw3Up
+	 7fs6ZZhmP+5Gu7HDcrwbqkXuZ++SYIyINJ/7lGe7uKCMp/e1kvdWtb/Bm+K8/5WEIz
+	 cGn3AtZbO9P8u6SMlq+K0muB/Kt61TPSImKNi4wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgF0OJi (ORCPT
+        id S1726055AbgF0OMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 10:09:38 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:25004 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgF0OJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 10:09:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1593266972;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=oZX/2REc+F7gc5PSyf4xLdHRaC1Jao1IJPfNXwG+ask=;
-        b=hB7puQo3D8wdgy79Gwnv6MGt2P2yRewKjcXTexkp270ZgBW32n6+KvNoYWjVsY+rmR
-        tI1YB7zxv2FrxhKJTpunmke2R4n/RK9cmz3391JckNvOC/apFjr3XjXSLRAqwCpZygID
-        WBfLEzvmGaoVXClAggzEtNnoedOm+dGdSnazennrZu2aydjdGyhO73E4tRw4A5qJUg7/
-        bn6AqApsc34tPUB2dh0aOjZUhrP76YFvkejzhrd6Yez+iX+h2+f3N6t+YFLGHO+/O34c
-        rFeidqzFYnnhBA+GO59iwC/wSccm4Iq88MF9nqxDhdIuo87Tc2QzBrNzXMwozlbEdx2g
-        5C8Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXA0MG+M="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id V07054w5RE9OHTJ
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 27 Jun 2020 16:09:24 +0200 (CEST)
-Subject: Re: [PATCH] Add default mux for pins that a free GPIO lines on the PocketBeagle
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Sat, 27 Jun 2020 10:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbgF0OMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:12:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB4C2184D;
+        Sat, 27 Jun 2020 14:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593267149;
+        bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TfrrfsmELqDgVdyohdtQg5RGnq/X72CkFtYXD+vVAHqE8bU22zy+qL2STz3ewIsSp
+         a82+ne6RpaLkVeJ5rbGMc/Yhr/6tyXaN6oAKecHhJLWOK+X4sw/UL9jgy/NSwDNSEn
+         EEzmq/TNa+IF7b03gev789SKgOHxnvk12u9q00r8=
+Date:   Sat, 27 Jun 2020 16:12:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     sean.wang@mediatek.com
+Cc:     robh+dt@kernel.org, jslaby@suse.com,
+        andriy.shevchenko@linux.intel.com, robert.jarzmik@free.fr,
+        arnd@arndb.de, p.zabel@pengutronix.de, joel@jms.id.au,
+        david@lechnology.com, jan.kiszka@siemens.com,
+        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
+        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
+Message-ID: <20200627141222.GC1901451@kroah.com>
+References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200627135538.194179-1-drew@beagleboard.org>
-Date:   Sat, 27 Jun 2020 16:09:27 +0200
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        bcousson@baylibre.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        linux-gpio@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <53805044-06E2-4A70-A024-4D77DEA3FCDE@goldelico.com>
-References: <20200627135538.194179-1-drew@beagleboard.org>
-To:     Drew Fustini <drew@beagleboard.org>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Am 27.06.2020 um 15:55 schrieb Drew Fustini <drew@beagleboard.org>:
->=20
-> These pins on the PocketBeagle P1 and P2 headers are connected to =
-AM3358
-> balls with gpio lines, and these pins are not used for any other
-> peripherals by default. These GPIO lines are unclaimed and could be =
-used
-> by userspace program through the gpiod ABI. However, no driver will =
-have
-> set mux mode for the pins.
->=20
-> This patch adds a "default" state in the am33xx_pinmux node and sets =
-the
-> pins to gpio output mux mode.
-
-wouldn't it be more safe to set them to input mode?
-
-BR,
-Nikolaus Schaller
-
->=20
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
+> BT in order to be instead of the UART interface between BT module and Host
+> CPU, and not exported to user space to access.
+> 
+> As the UART design, BTIF will be an APB slave and can transmit or receive
+> data by MCU access, but doesn't provide termios function like baudrate and
+> flow control setup.
+> 
+> Even LCR on offset 0xC that is just a FAKELCR
+> a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
+>    will not be readable/writable.
+> 
+> b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
+>    IIR(0x08), and LSR(0x14) will not be readable/writable.
+> 
+> So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
+> case.
+> 
+> The bluetooth driver would use BTIF device as a serdev. So the termios
+> still function would be called in kernelspace from ttyport_open in
+> drivers/tty/serdev/serdev-ttyprt.c.
+> 
+> Fixes: 1c16ae65e250 ("serial: 8250: of: Add new port type for MediaTek BTIF controller on MT7622/23 SoC")
+> Cc: Steven Liu <steven.liu@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> --
+> v1->v2:
+> no change on termios->c_cflag and refine commit message
+> 
+> v2->v3:
+> change the naming from NMOD to NTIO as TIO is a well established prefix
+> for termios IOCTLs.
+> 
+> v3->v4:
+> 1. remove appropriate tag
+> 2. add the explanation why the termios is required even when the connection
+>    isn't exported to userspace.
 > ---
-> arch/arm/boot/dts/am335x-pocketbeagle.dts | 98 +++++++++++++++++++++++
-> 1 file changed, 98 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts =
-b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> index f0b222201b86..900dc6558701 100644
-> --- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> @@ -60,6 +60,104 @@ vmmcsd_fixed: fixedregulator0 {
-> };
->=20
-> &am33xx_pinmux {
-> +
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D   <	&P2_03_gpio &P1_34_gpio &P2_19_gpio =
-&P2_24_gpio
-> +			&P2_33_gpio &P2_22_gpio &P2_18_gpio &P2_10_gpio
-> +			&P2_06_gpio &P2_04_gpio &P2_02_gpio &P2_08_gpio
-> +			&P2_17_gpio >;
-> +
-> +	/* P2_03 (ZCZ ball T10) gpio0_23 0x824 */
-> +	P2_03_gpio: pinmux_P2_03_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P1_34 (ZCZ ball T11) gpio0_26 0x828 */
-> +	P1_34_gpio: pinmux_P1_34_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD10, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +		/* P2_19 (ZCZ ball U12) gpio0_27 0x82c */
-> +	P2_19_gpio: pinmux_P2_19_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD11, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_24 (ZCZ ball T12) gpio1_12 0x830 */
-> +	P2_24_gpio: pinmux_P2_24_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_33 (ZCZ ball R12) gpio1_13 0x834 */
-> +	P2_33_gpio: pinmux_P2_33_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_22 (ZCZ ball V13) gpio1_14 0x838 */
-> +	P2_22_gpio: pinmux_P2_22_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_18 (ZCZ ball U13) gpio1_15 0x83c */
-> +	P2_18_gpio: pinmux_P2_18_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_10 (ZCZ ball R14) gpio1_20 0x850 */
-> +	P2_10_gpio: pinmux_P2_10_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_06 (ZCZ ball U16) gpio1_25 0x864 */
-> +	P2_06_gpio: pinmux_P2_06_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_A9, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_04 (ZCZ ball T16) gpio1_26 0x868 */
-> +	P2_04_gpio: pinmux_P2_04_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_A10, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_02 (ZCZ ball V17) gpio1_27 0x86c */
-> +	P2_02_gpio: pinmux_P2_02_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_08 (ZCZ ball U18) gpio1_28 0x878 */
-> +	P2_08_gpio: pinmux_P2_08_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> +	/* P2_17 (ZCZ ball V12) gpio2_1 0x88c */
-> +	P2_17_gpio: pinmux_P2_17_gpio {
-> +		pinctrl-single,pins =3D <
-> +			AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_OUTPUT, =
-MUX_MODE7)
-> +		>;
-> +	};
-> +
-> 	i2c2_pins: pinmux-i2c2-pins {
-> 		pinctrl-single,pins =3D <
-> 			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, =
-PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
-> --=20
-> 2.25.1
->=20
+>  drivers/tty/serial/8250/8250.h      | 1 +
+>  drivers/tty/serial/8250/8250_port.c | 5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+> index 52bb21205bb6..0d9d3bfe48af 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -82,6 +82,7 @@ struct serial8250_config {
+>  #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
+>  					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
+>  					 */
+> +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
 
+Naming is hard.  I will never remember what "NTIO" is, how about we make
+it explicit:
+	define UART_CAP_IGNORE_TERMIOS
+
+And the _CAP_ name is getting out of hand, this isn't a "capability",
+it's a "quirk for this port" but that's a battle to worry about later...
+
+thanks,
+
+greg k-h
