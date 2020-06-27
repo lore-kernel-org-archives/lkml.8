@@ -2,153 +2,88 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2A92168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A5C21707
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593266199;
-	bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DzR2vJF7rFfVdXqD4Xiw+jJxm+KIAl+NRzPGcTgulBHut3emQXo/dDY1lOw0ICo7e
-	 SreuAI1h55jOe8SKFSM+CEUcq8jFidcxc0g7eJYm9uw3G3sSvKYQGjwU40BdnMSIzx
-	 yEdDPSab5Py8uuoqQOqX4nceSCoU81acB18JxXJk=
+	s=default; t=1593266298;
+	bh=zFFmAxQIJ282vX1U5MTEGpJFoSCC8e6dQDRcPHERdds=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=exHmo2weLV/Grvp8+KW+bE8pOtq3m9Z4goYkeWKwzlFcGhWRw9tMVD/JCpqveRKnQ
+	 jjAMa3tUWSTH3VoWVxt156pTXZb+NJR62CAcUk+mfhW8j2OBiLAnJk94oJPRaebFMB
+	 xIHyNfeVP8tpRWDiSdlUymF5kdMzoxTpuzuzYQdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgF0N4i (ORCPT
+        id S1726706AbgF0N6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 09:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0N4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:56:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725850AbgF0N6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:58:15 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE852158C;
-        Sat, 27 Jun 2020 13:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A9D2158C;
+        Sat, 27 Jun 2020 13:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593266196;
-        bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nz3+TyqlyEsmkYUn7YJn+qS8TVFDPdAFklQjKKItZs4XI6kRkoDgYsaj9x4AlMx9Z
-         eZtE3EtY3ZIKaFQG9kbsUgt7LX0mOwMEQFvvt9grynyvxrEKlT8BjjLRs/9fsSW4Ti
-         X9H2K6sxF0MbJWntoRWQmEUJBYmBl2x22mxTVebI=
-Date:   Sat, 27 Jun 2020 14:56:33 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v6 0/4] Add support for SCD30 sensor
-Message-ID: <20200627145633.6be4c956@archlinux>
-In-Reply-To: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
-References: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1593266295;
+        bh=zFFmAxQIJ282vX1U5MTEGpJFoSCC8e6dQDRcPHERdds=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yAESvf8Gfcairgg2gf6m4SeyFniwS9u435AovnO6RhjbHX242Bg6ekMEv02L/JvTq
+         92lemG1EhMpXQZFM6LRiRg4tk+BihGTb+JVWiAHrLwNY0xdjo3MHF7bE4Oszig/ANe
+         +dIZzzaGJbpCu2PBeWX7wUqKuYMbfdSTJFeYjGfs=
+From:   guoren@kernel.org
+To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
+        aou@eecs.berkeley.edu, tglx@linutronix.de, tycho@tycho.ws,
+        nickhu@andestech.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH V2 0/3] riscv: Enable LOCKDEP
+Date:   Sat, 27 Jun 2020 13:57:05 +0000
+Message-Id: <1593266228-61125-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 21:56:57 +0200
-Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+From: Guo Ren <guoren@linux.alibaba.com>
 
-> Following series adds support for Sensirion SCD30 sensor module capable of
-> measuring carbon dioxide, temperature and relative humidity. CO2 measurements
-> base on NDIR principle while temperature and relative humidity are measured by
-> the on board SHT31. As for sensor communication, both I2C and serial interfaces
-> are supported.
+Lockdep is needed by proving the spinlocks and rwlocks. To support it,
+we need to add TRACE_IRQFLAGS codes in kernel/entry.S. These patches
+follow Documentation/irqflags-tracing.txt.
 
-Series applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Fixup 2 bugs that block the lockdep implementation.
 
-Thanks,
+---
+Changes in v2
+ - Remove sX regs recovery codes which are unnecessary, because
+   callee will handle them. Thx Greentime :)
 
-Jonathan
+ - Move "restore a0 - a7" to handle_syscall, but if _TIF_SYSCALL_WORK
+   is set, "restore a1 - a7" is still duplicated. I prefer a C wrapper
+   for syscall.
 
-> 
-> v6:
-> * fix warnings produced by C=2 build option
-> * fix 0-day warning 'Clarify calculation precedence for '&' and '?''
-> 
-> v5:
-> * set pressure calibration via output channel
-> * use kstrtobool() to read value into _enabled attribute
-> * drop explicit parent asignment as the default one is good enough
->   (seems 'iio: core: pass parent device as parameter during allocation'
->    series was accepted)
-> 
-> v4:
-> * improve formatting
-> * improve error handling readability
-> * fix message validity check on serial write
-> 
-> v3:
-> * simplify code by scaling temperature & humidity in _read_meas()
-> * update realbits in scan types
-> * s/adjecent/adjacent
-> * drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
->   output channel
-> * rework locking in _read_raw
-> * fix endianess problem on BE machine
-> * align timestamp properly before pushing to buffers
-> * explain why interrupt gets disabled after registration
-> * add trigger validation
-> * drop SCALE for temperature and humidity channel as they are processed
-> * register action which stops measuring after starting measurements
-> * spit generic calibration attr into two doing specific things
-> * add comment explaining why priv in struct scd30_state is for
-> * rename node in binding example to co2-sensor
-> 
-> v2:
-> * move asm/byteorder.h towards the bottom of include list
-> * make channel address names in enum more specific
-> * add postfixes to defines and extra comments
-> * drop unneeded i2c include from scd30 header
-> * break generic command sending function into specialized options
-> * expose automatic calibration and forced calibration via the same attr
-> * use SAMP_FREQ to set frequency instead of meas_interval attr
-> * use CALISCALE to set pressure compensation instead of pressure_comp attr
-> * use CALIBBIAS to set temperature offset instead of temp_offset attr
-> * fix order in MAINTAINERS
-> * drop attribute allowing one to reset sensor
-> * as we have dt probing drop board file based probing (i2c_device_id)
-> * merge patches touching related files
-> * use fwnode API to retrieve interrupt from dt
-> * fix interrupt-parent spelling
-> * change binding license
-> * drop supply from required property
-> 
-> Tomasz Duszynski (4):
->   iio: chemical: scd30: add core driver
->   iio: chemical: scd30: add I2C interface driver
->   iio: chemical: scd30: add serial interface driver
->   dt-bindings: iio: scd30: add device binding file
-> 
->  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
->  .../iio/chemical/sensirion,scd30.yaml         |  68 ++
->  MAINTAINERS                                   |   9 +
->  drivers/iio/chemical/Kconfig                  |  33 +
->  drivers/iio/chemical/Makefile                 |   3 +
->  drivers/iio/chemical/scd30.h                  |  78 ++
->  drivers/iio/chemical/scd30_core.c             | 771 ++++++++++++++++++
->  drivers/iio/chemical/scd30_i2c.c              | 139 ++++
->  drivers/iio/chemical/scd30_serial.c           | 263 ++++++
->  9 files changed, 1398 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
->  create mode 100644 drivers/iio/chemical/scd30.h
->  create mode 100644 drivers/iio/chemical/scd30_core.c
->  create mode 100644 drivers/iio/chemical/scd30_i2c.c
->  create mode 100644 drivers/iio/chemical/scd30_serial.c
-> 
-> --
-> 2.27.0
-> 
+Guo Ren (2):
+  riscv: Fixup static_obj() fail
+  riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
+
+Zong Li (1):
+  riscv: Fixup lockdep_assert_held with wrong param cpu_running
+
+ arch/riscv/Kconfig              |  3 +++
+ arch/riscv/kernel/entry.S       | 33 ++++++++++++++++++++++++++++++++-
+ arch/riscv/kernel/smpboot.c     |  1 -
+ arch/riscv/kernel/vmlinux.lds.S |  2 +-
+ 4 files changed, 36 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
 
