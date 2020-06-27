@@ -2,109 +2,142 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB52DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B922C21473
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:28:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ga4etwEj"
+	by mail.kernel.org (Postfix) with ESMTP id 992CC214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593246561;
+	bh=szGmIZlJg1bl0CWzihjEryyq/q9lpa2iAJMU4Ws0+Ww=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=VA5IrZyIOVcdpXy6llbpNlMn7y/kZ0mzlxJF80qLs0cSf/yGj1hpHbIwI/FqqR/NK
+	 SDPjgTmscOWaY2Ug2KxFu/gD/vO+lVxKZ2Z3++fwzG7LerVWtb4xSSoFcc4oPbi+aW
+	 cx7LlCTVJ0RzpbhTUM3O87+DSdeTFY5u2+FnC3Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgF0I2l (ORCPT
+        id S1726503AbgF0I3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 04:28:41 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:55827 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgF0I2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 04:28:38 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id p6CNjiPG4xmkVp6CQjl6zN; Sat, 27 Jun 2020 10:28:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593246516; bh=9dCkr8q438k8a7OtUe9GHrF8GoB3+P1Sq6GHRgD7MMo=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Ga4etwEjjiKjj4nIxTE1CvhQoVlaFwKxNCgSY6sfpcsZqEg6oiAcX9F1hc+lwW++U
-         V0kIs/HxfCz1VN1NgmEDyPBofpaGADSKhaHNUoMd1PD6wyf+3JGQzq5y/oM7vmsflj
-         7tYJPNoA23X85YXZI9ThqqXtiFBFK5prRYsJsILnRr1lpfYVFw5FpKu1yCm7BxyWWZ
-         19AQP6iXvlOVWcVotor1SripoZ0cp4kDqjKIaBvxZmc3euhTsyc8Q1ap3oguA8j68/
-         xedaWGveGcfJnMOtxuynQamYa94SA+p28rI50UPRuI2hFtRgF3BkJKW3uJ80QsQx4/
-         7ggGu0Vm5mQ9Q==
-Subject: Re: [PATCH] staging: media: usbvision: removing prohibited space
- before ',' (ctx:WxW)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC
-         Campus <bkkarthik@pesu.pes.edu>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20200626143205.xns6nwggskssujao@pesu-pes-edu>
- <CAAhDqq0tSftPxMWGeVy3mp4DGDN3o0uQwTqVbjYUwjqzWpbibQ@mail.gmail.com>
- <20200627050745.GD226238@kroah.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f73c5a69-1bf9-d80d-2399-ef18ce78b8ac@xs4all.nl>
-Date:   Sat, 27 Jun 2020 10:28:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 27 Jun 2020 04:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbgF0I3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 04:29:19 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBB821473;
+        Sat, 27 Jun 2020 08:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593246559;
+        bh=szGmIZlJg1bl0CWzihjEryyq/q9lpa2iAJMU4Ws0+Ww=;
+        h=From:To:Cc:Subject:Date:From;
+        b=N5F7k/CrH1XaTSp9J/4JvKG7kglu+keTAdP0jKMECpQS2/iXx+KQr8YBJ8KRTm5/m
+         xBYn+D7Tayl7FNK6gFSNC6JhMBPtxy0uoupnxigd8pMiDyt7KrVuKG3bykxH0LMaEg
+         IH5CnXdlFYVfDweuVkeBytC8qtYKnFXifh0YWFes=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [RESEND PATCH] sched: fix build with GCC_PLUGIN_RANDSTRUCT
+Date:   Sat, 27 Jun 2020 11:29:12 +0300
+Message-Id: <20200627082912.28303-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200627050745.GD226238@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP9bgrYsjbNib59VOH2MNZMoeUze+VQAk3Xl6GQlkUNZRlsnHFWYe79nxsesg/Ysz9pF6xPWzoV1Mc3eMQlijsfTLWZEPQegM/l0N+JNTfOc98eveA4D
- dsYguGkiA+mPxJtKclNksyR7PAPEIwsp4T9dzMQy9uoo8YIDol91L3ZqrxkzidfK7rSVGduunsbMJRBXmk0cvwVEAVjtSdGDjemNfKLlWnlDE259Y7tYyoSt
- opCEXH+wrnKCSGFob0XxANQ+1m16grx8ee/JaEZU05CCLCQpjEuL2CKQVeAnAgjyUaL/aevg+PncqZbSgTPCCObtq/D96ilmKEBe61pz5gIKsDhwjP9x4s1z
- diM9QE5e
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/06/2020 07:07, Greg Kroah-Hartman wrote:
-> 
-> A: http://en.wikipedia.org/wiki/Top_post
-> Q: Were do I find info about this thing called top-posting?
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
-> A: Top-posting.
-> Q: What is the most annoying thing in e-mail?
-> 
-> A: No.
-> Q: Should I include quotations after my reply?
-> 
-> http://daringfireball.net/2007/07/on_top
-> 
-> On Fri, Jun 26, 2020 at 11:42:49AM -0400, B K KARTHIK PES2201800185STUDENT ECE DeptPESU EC Campus wrote:
->> Oh, I'm sorry but wouldn't it be helpful if we had a file that lists
->> all drivers that are scheduled for removal?
-> 
-> The TODO file in the directory for the driver should have this
-> information in it.  I don't know if all of the media drivers have this,
-> if not, then there is no way you could have known this.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-They have, and in addition the Kconfig entry will mention that the driver
-is deprecated.
+Since the commit a148866489fb ("sched: Replace rq::wake_list")
+task_struct and CSD_TYPE_TTWU objects can be on the same queue and this
+requires that have "layout similar enough".
 
-TODO of usbvision:
+This assumption is broken when CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled:
 
-The driver is deprecated and scheduled for removal by the end
-of 2020.
+  CHK     include/generated/compile.h
+  CC      kernel/smp.o
+In file included from arch/x86/include/asm/atomic.h:5,
+                 from include/linux/atomic.h:7,
+                 from include/linux/llist.h:51,
+                 from include/linux/irq_work.h:5,
+                 from kernel/smp.c:10:
+kernel/smp.c: In function ‘smp_init’:
+include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_157’ declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) != offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist)
+  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                      ^
+include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
+  373 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
+  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+kernel/smp.c:687:2: note: in expansion of macro ‘BUILD_BUG_ON’
+  687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+      |  ^~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:280: kernel/smp.o] Error 1
+make[1]: *** [Makefile:1764: kernel] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory '/home/mike/build/kernel'
+make: *** [Makefile:185: __sub-make] Error 2
 
-In order to prevent removal the following actions would have to
-be taken:
+Move 'wake_entry' and 'wake_entry_type' fiels of task_struct out of the
+randomized fields to keep their layout intact.
 
-- clean up the code
-- convert to the vb2 framework
-- fix the disconnect and free-on-last-user handling (i.e., add
-  a release callback for struct v4l2_device and rework the code
-  to use that correctly).
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ include/linux/sched.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Regards,
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b62e6aaf28f0..c885573669ac 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -641,6 +641,15 @@ struct task_struct {
+ 	/* -1 unrunnable, 0 runnable, >0 stopped: */
+ 	volatile long			state;
+ 
++	/*
++	 * The layout of these fields must match the layout CSD_TYPE_TTWU
++	 * so they can be on the same @call_single_queue
++	 */
++#ifdef CONFIG_SMP
++	struct llist_node		wake_entry;
++	unsigned int			wake_entry_type;
++#endif
++
+ 	/*
+ 	 * This begins the randomizable portion of task_struct. Only
+ 	 * scheduling-critical items should be added above here.
+@@ -654,8 +663,6 @@ struct task_struct {
+ 	unsigned int			ptrace;
+ 
+ #ifdef CONFIG_SMP
+-	struct llist_node		wake_entry;
+-	unsigned int			wake_entry_type;
+ 	int				on_cpu;
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/* Current CPU: */
+-- 
+2.25.4
 
-	Hans
