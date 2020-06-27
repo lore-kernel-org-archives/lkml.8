@@ -2,178 +2,132 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3010C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4C3E207FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qu6vSC1j"
+	by mail.kernel.org (Postfix) with ESMTP id 872142080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 18:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593282066;
+	bh=pzK053JxESKmHL36eDUmCVc40aMZUxcYIzQWVFw3hL0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=GEU773WaBqADFYrkGa/UYJB5PLwW4kXYrogXZ6bvDw/NKtvcHpc0+dvDDr8wb7Uv1
+	 5QaGmnq01M0Xd1znMKwd9iZmiJZNP+xQ9MnyN3R+PT+3DdIcBGsAzd8jUgUHJ6Zr16
+	 R18zUgar6bKNoEmM+MPluxAUsPCbVUsM45GOUhbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgF0SSH (ORCPT
+        id S1726676AbgF0SVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 14:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgF0SSG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 14:18:06 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F401CC061794;
-        Sat, 27 Jun 2020 11:18:04 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id m9so5958054qvx.5;
-        Sat, 27 Jun 2020 11:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZfS1zQEXxVr5pDKOKLlkhLbHYnS+buWmBwUy/Xrx/Oc=;
-        b=qu6vSC1jPfgHL/kV3nJFd5+olf7eZKNmjbYU0fJa1IPH8AxS/ZUX/2wraYWI9Kb2ms
-         9Z4+5PDUboqbXOUl4wIJFt2wIEw0lAKftDi58QttIO7NhJb9VvpG36vh2DpAb17mLCen
-         oSWct2KXoEYkp7FODSeUDpNfg42A01s37GDHJmkCPyXHnVVCM4ftSqFala09wf1llGrG
-         1sglbZr7hbHa4jayiLzxcCan3DdTmZdBUbI3knR3Xs4AmJg+x4qR9KNQqqnEiV7+cK89
-         b0IRVHbDtZ0mGk0OfGYi4VS/kvdp15b+dsGQDVdbKd9MO3aqZt9d0GQk58BLaeG5oMNX
-         H0Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZfS1zQEXxVr5pDKOKLlkhLbHYnS+buWmBwUy/Xrx/Oc=;
-        b=NX7hE/sj1cca9l9fB2gqe/mtdkOFA5v59reWFv5lBbr5jUQ+k1OSV8Ndg9ZCb2hkKb
-         wYY781wWz6LN4NZf6E6P20mvx4+TCmWzFT4RP23oilXD4JbnC8RSK7l08JbYvaV8nSKv
-         7WsiDXATv4it3bUU1hOpMh3BA/JvjYkaheaHgIeyI/8jGKzCmufHiD5jxYmMGlY2Jjs1
-         Anav3irTz0Ttd6SiZJOQ6qxEP23RtEmOXK9OKMmHOKJfNEqiHch0fMLt8fJ24+SheB4Z
-         mmBq9sYMDIhmT6yqhKtTICmRAmX69kojWESYHgcRdff6NgqsnyY/sz3sOsSMUnYrMeyS
-         cGxw==
-X-Gm-Message-State: AOAM530TofCic/j81Y9gqdZpA6iq7Q876DKC19mfH4DnZ31VAdchCvfs
-        J5Hw9lgqZU255TY013f3EK8=
-X-Google-Smtp-Source: ABdhPJx01oRpIQIb8KuN+kaIF5K7gUAF7wqHvbJFPlNJV6vCemc2pGIggoC1p7UfEgH0kZZlDSFKkg==
-X-Received: by 2002:ad4:57b2:: with SMTP id g18mr8452730qvx.207.1593281883789;
-        Sat, 27 Jun 2020 11:18:03 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id q47sm13053073qta.16.2020.06.27.11.18.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 11:18:02 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 14:17:48 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH v3 3/4] counter: Add character device interface
-Message-ID: <20200627181748.GA8254@shinobu>
-References: <cover.1592341702.git.vilhelm.gray@gmail.com>
- <afe40ef2e24ecaca44fc229f7983cf4cde3374a8.1592341702.git.vilhelm.gray@gmail.com>
- <8fae0659-56df-c0b5-7c0d-220feefed2b4@lechnology.com>
- <20200621195347.GA59797@shinobu>
- <47ad15e7-05ce-d463-b6af-406365b3c3b4@lechnology.com>
+        Sat, 27 Jun 2020 14:21:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgF0SVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 14:21:05 -0400
+Received: from localhost (p5486ce85.dip0.t-ipconnect.de [84.134.206.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C444A20760;
+        Sat, 27 Jun 2020 18:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593282064;
+        bh=pzK053JxESKmHL36eDUmCVc40aMZUxcYIzQWVFw3hL0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Z+2cNzgoYeYltgKHqnZYVO2mbnVBY7KuDMyQ6tS0LOYPHgS2WpSe2Aq9cuwa7iulH
+         l2KP/zjGzJQSg0GXK2sTLjxDz2h6VAkQZmJNuk0LC/U21s478xKYpl1oXoa1KihjOO
+         wmv9optcdK2M8eMDNJ8O4h7zr5I3c7teDDvyYrQU=
+Date:   Sat, 27 Jun 2020 20:20:57 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.8
+Message-ID: <20200627182057.GA4356@kunai>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Content-Disposition: inline
-In-Reply-To: <47ad15e7-05ce-d463-b6af-406365b3c3b4@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=utf-8
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2020 at 09:08:48AM -0500, David Lechner wrote:
-> On 6/21/20 2:53 PM, William Breathitt Gray wrote:
-> > For example, in the dual-axes positioning table scenario, a user
-> > application would likely want to know the exact X and Y position at the
-> > time of a given event -- that means an event should provide two Count
-> > values (and possibly associated device flags) when it occurs. I'm not
-> > sure yet how the struct counter_event should be defined in order to
-> > support this; we will need to indicate the format of data as well as
-> > provide the data itself. Perhaps, we can handle this by providing an
-> > unique id field so that only a single datum (e.g. a single count value)
-> > is provided via the value field, but subsequent struct counter_event
-> > items share the same id so that the user knows that a particular datum
-> > is part of a larger group of data for a specific event.
->=20
-> The timestamp could act as the "id" to correlate multiple values of a
-> single event.
+Linus,
 
-Okay, I see how that can work. So the /dev/counterX character nodes
-would return a stream of data structures that look something like this:
+This I2C pull request contains a 5.8 regression fix for the Designware
+driver, a register bitfield fix for the fsi driver, and a missing sanity
+check for the I2C core.
 
-struct counter_event {
-	/**
-	 * Best approximation of when event occurred in nanoseconds.
-	 * Same timestamp value indicates data is part of same event.
-	 */
-	struct timeval time;
-	/**
-	 * Type of event that triggered. This would correlate with the
-	 * IRQ set up for the device.
-	 */
-	__u16 type;
-	/**
-	 * Type of data represented by the value member. This enables
-	 * the user to extract the right datatype from the value field.
-	 */
-	__u16 code;
-	/** The value recorded when the event fired. */
-	__u64 value;
-};
+Please pull.
 
-In fact, this data structure looks a lot like struct input_event; would
-it make sense to use that for this? I suppose we can't because we need
-to support 64-bit value for our use cases.
+Thanks,
 
-Userspace also requires a way to enable the events and configure them to
-report the data it wants. So perhaps the following sysfs attributes
-would accomplish such:
+   Wolfram
 
-* /sys/bus/devices/counterX/eventY_enable:
-  Users can enable/disable event Y.
-* /sys/bus/devices/counterX/eventY_config:
-  Data to get when event Y is triggered (e.g. Counts, extensions, etc.).
 
-Here's another concern for latency-sensitive applications: should we
-handle writing data to the devices? While we have real-life examples of
-latency-sensitive read operations, I'm not sure if a user will ever need
-to write to a counter device within some realtime critical deadline --
-I think write operations are primarily done for the purpose of
-configuring the device for operation rather than during it. So perhaps
-we don't need to worry about this use case because users can write data
-via the existing sysfs interface.
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
 
-William Breathitt Gray
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
 
---G4iJoqBmSsgzjUCe
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+
+for you to fetch changes up to 40e05200593af06633f64ab0effff052eee6f076:
+
+  i2c: core: check returned size of emulated smbus block read (2020-06-26 10:18:35 +0200)
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      i2c: designware: Adjust bus speed independently of ACPI
+
+Eddie James (1):
+      i2c: fsi: Fix the port number field in status register
+
+Mans Rullgard (1):
+      i2c: core: check returned size of emulated smbus block read
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+John Stultz (1):
+      (Test) i2c: designware: Adjust bus speed independently of ACPI
+
+ drivers/i2c/busses/i2c-designware-common.c  | 25 +++++++++++++++++--------
+ drivers/i2c/busses/i2c-designware-core.h    |  3 +--
+ drivers/i2c/busses/i2c-designware-pcidrv.c  |  2 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c |  2 +-
+ drivers/i2c/busses/i2c-fsi.c                |  2 +-
+ drivers/i2c/i2c-core-smbus.c                |  7 +++++++
+ 6 files changed, 28 insertions(+), 13 deletions(-)
+
+--bg08WKrSYDhXBjb5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl73jUQACgkQhvpINdm7
-VJI+5Q/9F+iiZdKk+/Rbp7+DBs4MIahPcIfm80GiTAS9+CB5A6gewetdkCiG9NtJ
-kFdOjw9wRUSdB+ah+o0t0zGLC1v4q069zwrbns6giE6KsbMHItihk/pEZ1A8mel2
-+Mo56yo+7n5EkkQkmnYZLRwTm0P+bRpSHGN4p0JrTaiGfsZQYnZuJuyYDwFV3EoJ
-QQQwlx+OmvpNXISugKy/t/BRJzcjWNKIIuxQC3ejk1y0LUqEkU5yh8g3z3foktWw
-2vQJJtTVBQNpMncSbjCysK51oF9QE3W6merHqj8nzeMKBW336cqzySFD3pOagPe8
-AolVMd7YnUQ1uylD5t1/ysYPiihGkvWNO+YED2JuU12Y8oldYjI7ELpjSNUBzvie
-FeHu8v7w4fcQ1SY0xm1Y5XWdKJx0WOPjfqxmcSN2t9zb1Cc4Z4/7bpM4CvErusjR
-PQEukMibjwj/T5BsfdutwhIX5GHT5SVYVUKoLhe0gI4n+y3lxn4jfS638lnDBhGg
-NPwhHUVksRHEh/RXyleNz2Mopt/f3cUg48O1vQA8tLcZ7nxTU1GKDOvaZ8AevVa3
-H+K8URgeKInEyhkt0px9H2x83aqEk921Czcxm15qE7RY4bfIU86lZEITRE4INnmy
-Qd3Nf8tIjV6Pk5F7ZKjiFAUbhrcdFsCiXM5doYGkKcfLrZuVh1I=
-=sQ+8
+iQIxBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl73jgUACgkQFA3kzBSg
+Kbbg+g/w9a/+R1JHOq92KMkqn7Y7QjCpAOTKk7t5XvENzmMZFRyr01gDTI6cR/XW
+ViV9/C4hygmDNpCiIFrguQKdDt7GVKARpKOWme/E3jl4LzlWIWEFHI6Bo1E+I8T+
+cwHqLKHpXxHlig2GNydPtvTz7lO0tjDIdYwgoY/u/OEbLjCzgsxlLns5vS8gNBow
+PokI93z83h0BQR6nBpuaa+y3JCF3BO5flKYVVB1dDroQWguvnLGGEgS7skKiQ0uI
+Dzn8bcTwAYv5sV0c8JrfTH25/ayN92Mow6BBPDTld2gLpTOQ13ZXXPP5X/8WEZv5
+xydQxOwELHURgmMqatPOf/Vf3BEtS6t1C/mhFAWBwtu7ZDNtf21fWCwhdBK8poS9
+tVfLd0lJZi0hQzaYZc7PhtYAm7f8h90I6Z5d5vfjTvNn6h1YPXieZxCnylGAfGHw
+AmgbjtwF6NOhoe+BId9fh5kCrEFsABq0Ngrb0TLlHbFI0rsub5dxxTSFoH4EG0vy
+EFSkWSOr3cqcwHrs1XP2n4w5+jDRoEwF8XtpqaPOEAnc8/cksZ9ETLpLWbpFpxVz
+HzXUuD/yFBGUlkaL/UyFhGA13ooyH2OZpJ7ULkoN+TNu1gqlukEQmxmrnWj3QlMd
+qVCpa9oh6bkday24iI5JrXTohEPWC3Bv9zmZdM71SKqiAMsH
+=pdhS
 -----END PGP SIGNATURE-----
 
---G4iJoqBmSsgzjUCe--
+--bg08WKrSYDhXBjb5--
