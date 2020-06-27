@@ -2,137 +2,301 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F518C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67872080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A0A2080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 04:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="HdfxoZlW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ieyO7nVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgF0Ev6 (ORCPT
+        id S1725992AbgF0EyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 00:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgF0Ev5 (ORCPT
+        Sat, 27 Jun 2020 00:54:17 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17339 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgF0EyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 00:51:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D3BC03E97A
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 21:51:57 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so5043383plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 21:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2m5JaK8rotSonwx/sP/f5LHubDWMPNymxIpTxYlUo6A=;
-        b=HdfxoZlWJQlGoozkGi3XYW/MiGAw4euyHjR+e7WfgPMw4zz7LBb41nC1qVtih34Ur5
-         hjqDXgcA4iJ+/fBCVjwza6b9MLdjCr3cVosVUp+58OnQbYqfiCIV0GAYT0Vl5knrZFyH
-         KIs4SYsGgUqG3SKmHTefnx5j1nrHsmYMlVrwzfpXZnhOZBon23SQUixaExCdhWp7v106
-         SHnIOxAi2phCuEUz8VxTz3X75sbCPQpi1YMx3MuhPIwwOPPy5VTeCyf+RYpt8+I8EAk+
-         DzxPZqDVcw4JDutORo9PvNVEWKEPsXRm8d94LgzyCQQAnuOramTHpu346Ii8zhHeFD4y
-         Q6/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2m5JaK8rotSonwx/sP/f5LHubDWMPNymxIpTxYlUo6A=;
-        b=K7jWd2aeVV71Ettd5OsC5xmDsMEOHx98smdszM4qO/nF85UUM6YqccsiVQb/23cEe8
-         lhcyFdFY+2gfiLCZ/EYeCPsh03S8+pXU1PEI+awVGnux+MEe0dONzadAzECTi7LZiK9l
-         /uwUES2gkInN0aACtv6jrCMUKKsC3FEPZJfpc76YtFOzts5wOoq5nv2f5F073Gxbc6VB
-         OiNJMw708+b/oT8Ug8934AX7I3SiVGHdvIgl2g8t9hamHF5VaXUBEbKchgywjb++etw+
-         KMpdApvC8nGnTmoRJT3GnI+1nJdIeRuz61O6C/4K4K+dV3noxp1UWsE3YZAfX/aMxMzt
-         EWjQ==
-X-Gm-Message-State: AOAM532Tz+hFDeK/V5gDOMQV//LmFoyhEg8KZmJDvpLSz1fSYAA+EVsi
-        xdztzRKMHHTQf/2w3Psox3Stig==
-X-Google-Smtp-Source: ABdhPJxHyMwtOzx+gAvFq1xBuRoB6v6iA5rKjZad34+AZjGjKrJ6P0JsrDQTjuK5Sur8logNECvRNw==
-X-Received: by 2002:a17:902:a585:: with SMTP id az5mr5227052plb.207.1593233516708;
-        Fri, 26 Jun 2020 21:51:56 -0700 (PDT)
-Received: from localhost ([2406:7400:73:59a9:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id t5sm5499821pgl.38.2020.06.26.21.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 21:51:55 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Sat, 27 Jun 2020 00:51:50 -0400
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Sebastian =?utf-8?B?R8O2dHRl?= <linux@jaseg.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fbtft-bus.c: Removing that prohibited space before ')'
-Message-ID: <20200627045150.ysqvd47o52f4a6rc@pesu-pes-edu>
+        Sat, 27 Jun 2020 00:54:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef6d0eb0000>; Fri, 26 Jun 2020 21:54:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 26 Jun 2020 21:54:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 21:54:16 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 27 Jun
+ 2020 04:54:15 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 27 Jun 2020 04:54:15 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ef6d0f20000>; Fri, 26 Jun 2020 21:54:15 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
+        <lgirdwood@gmail.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v4 00/23] Add support for Tegra210 Audio
+Date:   Sat, 27 Jun 2020 10:23:22 +0530
+Message-ID: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="t7rr5fenqhwyb57p"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593233643; bh=gS2LeCBOkNr/NDBOzIl7Kje7Ih0caLuxNgYjjUAkrGI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=ieyO7nVuxuTmORQkdbE14Hai2Rn9w2fwSB8T/JhuxN7zy4axsO/cN17rh8HCzuI13
+         isyZH6lmG6+zUq7FYm5AG7oan9P8z8d0TyZBnLZxfmQAaCWjOnaLAX2PWjlm8FS5Pw
+         4CqDGCUGCeW5MewCYcXG5/j/RcD8IVThc8JzvJhJkwjhYVfO6GnbFjHX5UBF0aMDtJ
+         hcGekQFPwtuaeURJLIwIkUd3+jsONFmhqdO9YijDc0xOLNY0ovywJlG4rwD12UeEk/
+         e/nZRyKdsavpTM31b6Tw2pKmAbchFq5Ub0TzbgVukLdO99DZt0Ghthwx4WCu1N6ceZ
+         f22CFnoUVX8aQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Overview
+========
+Audio Processing Engine (APE) comprises of Audio DMA (ADMA) and Audio
+Hub (AHUB) unit. AHUB is a collection of hardware accelerators for audio
+pre-processing and post-processing. It also includes a programmable full
+crossbar for routing audio data across these accelerators.
 
---t7rr5fenqhwyb57p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series exposes some of these below mentioned HW devices as ASoC
+components for Tegra platforms from Tegra210 onwards.
+ * ADMAIF : The interface between ADMA and AHUB
+ * XBAR   : Crossbar for routing audio samples across various modules
+ * I2S    : Inter-IC Sound Controller
+ * DMIC   : Digital Microphone
+ * DSPK   : Digital Speaker
 
-fbtft-bus.c:
+Following is the summary of current series.
+ * Add YAML DT binding documentation for above mentioned modules.
+ * Helper function for ACIF programming is exposed for Tegra210 and later.
+ * Add ASoC driver components for each of the above modules.
+ * Add DT entries for above components for Tegra210, Tegra186 and
+   Tegra194.
+ * Enable these components for Jetson Nano/TX1/TX2/Xavier
+ * Enhance simple-card DPCM driver to suit Tegra Audio applications with
+   few changes in core.
+ * To begin with, enable sound card support for Tegra210 based platforms
+   like Jetson Nano/TX1.
 
-fixing ERROR: space prohibited before that close parenthesis ')' by removin=
-g that space and ',' in line 65 and 67.
+Sound card support for platforms based on Tegra186 and later will be
+subsequently added which can re-use all of the above components.
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/fbtft/fbtft-bus.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changelog
+=========
 
-diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtf=
-t-bus.c
-index 63c65dd67b17..847cbfbbd766 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -62,9 +62,9 @@ out:									      \
- }                                                                         =
-    \
- EXPORT_SYMBOL(func);
-=20
--define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
-+define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8)
- define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16, cpu_to_be16)
--define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
-+define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16)
-=20
- void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
- {
---=20
-2.20.1
+v3 -> v4
+--------
+ * [1/23] "ASoC: dt-bindings: tegra: Add DT bindings for Tegra210"
+   - Removed multiple examples and retained one example per doc
+   - Fixed as per inputs on the previous series
+   - Tested bindings with 'make dt_binding_check/dtbs_check'
+
+ * [2/23] "ASoC: tegra: Add support for CIF programming"
+   - No change
+
+ * Common changes (for patch [3/10] to [7/10])
+   - Mixer control overrides, for PCM parameters (rate, channel, bits),
+     in each driver are dropped.
+   - Updated routing as per DPCM usage
+   - Minor changes related to formatting
+
+ * New changes (patch [8/23] to [18/23] and patch [23/23])
+   - Based on discussions in following threads DPCM is used for Tegra Audio.
+     https://lkml.org/lkml/2020/2/20/91
+     https://lkml.org/lkml/2020/4/30/519
+   - The simple-card driver is used for Tegra Audio and accordingly
+     some enhancements are made in simple-card and core drivers.
+   - Patch [8/23] to [18/23] are related to simple-card and core changes.
+   - Patch [23/23] adds sound card support to realize complete audio path.
+     This is based on simple-card driver with proposed enhancements.
+   - Re-ordered patches depending on above 
+
+v2 -> v3
+--------
+ * [1/10]  "dt-bindings: sound: tegra: add DT binding for AHUB
+   - Updated licence
+   - Removed redundancy w.r.t items/const/enum
+   - Added constraints wherever needed with "pattern" property
+
+ * [2/10]  "ASoC: tegra: add support for CIF programming"
+   - Removed tegra_cif.c
+   - Instead added inline helper function in tegra_cif.h
+
+ * common changes (for patch [3/10] to [7/10])
+   - Replace LATE system calls with Normal sleep
+   - Remove explicit RPM suspend in driver remove() call
+   - Use devm_kzalloc() instead of devm_kcalloc() for single element
+   - Replace 'ret' with 'err' for better reading
+   - Consistent error printing style across drivers
+   - Minor formating fixes
+
+ * [8/10]  "arm64: tegra: add AHUB components for few Tegra chips"
+   - no change
+
+ * [9/10]  "arm64: tegra: enable AHUB modules for few Tegra chips"
+   - no change
+
+ * [10/10] "arm64: defconfig: enable AHUB components for Tegra210 and later"
+   (New patch)
+   - Enables ACONNECT and AHUB components. With this AHUB and components are
+     registered with ASoC core.
 
 
---t7rr5fenqhwyb57p
-Content-Type: application/pgp-signature; name="signature.asc"
+v1 -> v2
+--------
+ * [1/9] "dt-bindings: sound: tegra: add DT binding for AHUB"
+   - no changes
 
------BEGIN PGP SIGNATURE-----
+ * [2/9] "ASoC: tegra: add support for CIF programming"
+   - removed CIF programming changes for legacy chips.
+   - this patch now exposes helper function for CIF programming,
+     which can be used on Tegra210 later.
+   - later tegra_cif.c can be extended for legacy chips as well.
+   - updated commit message accordingly
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl720GYACgkQ471Q5AHe
-Z2qzmAv9H0yKGQeZE/+LG3U87JdxsfJKO6l2V+1+Bqb4T+jrD52zcitgEaKaPkMd
-y5JqgAPxpFk1YNpSFbw+j4xsa36+TFKGYIDCuPIPmYhEtUfUG1Aj8roQPdqrs2Ir
-oiGfJ293xMBp1GDYOMAAdB55BWNGHGiEgJ1GG++9AVSXz1Nm0R9SIJwPddoPq9yA
-Ez+tYms6eNVfnk+CVEpsEjhUf6rk+WARb+UgfJ9lxzebU1damViQda/naEiIOPm5
-MRt1V5PUUZcYYlGsrisCbc8DhTrMrD82j/j3uKyS/3Wm/+J39bq7WZO2t6kDcl9k
-2vdUFUinO9szZJR9bfEbsZkRVZzkv3j5Qyqg4Sur09vy04se6JZWod2vTBaepnnx
-vulIXywLvtsnfyZLVsBsRPit8zyO1BI2P+o1T+NRjfQKUuvkmzChmGt3DanuvGBB
-Fop35oDLMjcbK/KIH8lQGXzt51kpQ8M5sCc8DAWxGlGJFK7h0bVUnOe5w/3G1S5G
-YWNuuvZC
-=Tfl7
------END PGP SIGNATURE-----
+ * [3/9] "ASoC: tegra: add Tegra210 based DMIC driver"
+   - removed unnecessary initialization of 'ret' in probe()
 
---t7rr5fenqhwyb57p--
+ * [4/9] "ASoC: tegra: add Tegra210 based I2S driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - fixed indentation
+   - added consistent bracing for if-else clauses
+   - updated 'rx_fifo_th' type to 'unsigned int'
+   - used BIT() macro for defines like '1 << {x}' in tegra210_i2s.h
+
+ * [5/9] "ASoC: tegra: add Tegra210 based AHUB driver"
+   - used of_device_get_match_data() to get 'soc_data' and removed
+    explicit of_match_device()
+   - used devm_platform_ioremap_resource() and removed explicit
+    platform_get_resource()
+   - fixed indentation for devm_snd_soc_register_component()
+   - updated commit message
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+* [6/9] "ASoC: tegra: add Tegra186 based DSPK driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - updated 'max_th' to 'unsigned int'
+   - shortened lengthy macro names to avoid wrapping in
+     tegra186_dspk_wr_reg() and to be consistent
+
+ * [7/9] "ASoC: tegra: add Tegra210 based ADMAIF driver"
+   - used of_device_get_match_data() and removed explicit of_match_device()
+   - used BIT() macro for defines like '1 << {x}' in tegra210_admaif.h
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+
+ * [8/9] "arm64: tegra: add AHUB components for few Tegra chips"
+   - no change
+
+ * [9/9] "arm64: tegra: enable AHUB modules for few Tegra chips"
+   - no change
+
+ * common changes for patch [3/9] to [7/9]
+   - sorted headers in alphabetical order
+   - moved MODULE_DEVICE_TABLE() right below *_of_match table
+   - removed macro DRV_NAME
+   - removed explicit 'owner' field from platform_driver structure
+   - added 'const' to snd_soc_dai_ops structure
+
+==================
+Sameer Pujar (23):
+  ASoC: dt-bindings: tegra: Add DT bindings for Tegra210
+  ASoC: tegra: Add support for CIF programming
+  ASoC: tegra: Add Tegra210 based DMIC driver
+  ASoC: tegra: Add Tegra210 based I2S driver
+  ASoC: tegra: Add Tegra210 based AHUB driver
+  ASoC: tegra: Add Tegra186 based DSPK driver
+  ASoC: tegra: Add Tegra210 based ADMAIF driver
+  ASoC: soc-core: Fix component name_prefix parsing
+  ASoC: simple-card: Use of_node and DAI names for DAI link names
+  ASoC: simple-card: Wrong daifmt for CPU end of DPCM DAI link
+  ASoC: simple-card: Loop over all children for 'mclk-fs'
+  ASoC: simple-card: Support DPCM DAI link with multiple Codecs
+  ASoC: simple-card: DPCM DAI link direction as per DAI capability
+  ASoC: soc-core: Probe auxiliary component before others
+  ASoC: soc-core: Identify 'no_pcm' DAI links for DPCM
+  ASoC: soc-pcm: Get all BEs along DAPM path
+  ASoC: dt-bindings: simple-card: Add compatible for component chaining
+  ASoC: simple-card: Add support for component chaining
+  arm64: defconfig: Build AHUB component drivers
+  arm64: defconfig: Enable CONFIG_TEGRA210_ADMA
+  arm64: tegra: Add DT binding for AHUB components
+  arm64: tegra: Enable AHUB components on few Tegra platforms
+  arm64: tegra: Add support for APE sound card on Jetson Nano and TX1
+
+ .../bindings/sound/nvidia,tegra186-dspk.yaml       |  88 +++
+ .../bindings/sound/nvidia,tegra210-admaif.yaml     | 116 +++
+ .../bindings/sound/nvidia,tegra210-ahub.yaml       | 144 ++++
+ .../bindings/sound/nvidia,tegra210-dmic.yaml       |  88 +++
+ .../bindings/sound/nvidia,tegra210-i2s.yaml        | 106 +++
+ .../devicetree/bindings/sound/simple-card.yaml     |   1 +
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 +++++-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 136 +++-
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  85 +++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 219 +++++-
+ arch/arm64/configs/defconfig                       |   8 +
+ include/sound/simple_card.h                        |   5 +
+ include/sound/soc.h                                |   3 +
+ sound/soc/generic/simple-card.c                    |  96 ++-
+ sound/soc/soc-core.c                               |  43 +-
+ sound/soc/soc-dai.c                                |   1 +
+ sound/soc/soc-pcm.c                                |   3 +-
+ sound/soc/tegra/Kconfig                            |  56 ++
+ sound/soc/tegra/Makefile                           |  10 +
+ sound/soc/tegra/tegra186_dspk.c                    | 427 +++++++++++
+ sound/soc/tegra/tegra186_dspk.h                    |  70 ++
+ sound/soc/tegra/tegra210_admaif.c                  | 845 +++++++++++++++++++++
+ sound/soc/tegra/tegra210_admaif.h                  | 162 ++++
+ sound/soc/tegra/tegra210_ahub.c                    | 578 ++++++++++++++
+ sound/soc/tegra/tegra210_ahub.h                    | 100 +++
+ sound/soc/tegra/tegra210_dmic.c                    | 440 +++++++++++
+ sound/soc/tegra/tegra210_dmic.h                    |  82 ++
+ sound/soc/tegra/tegra210_i2s.c                     | 780 +++++++++++++++++++
+ sound/soc/tegra/tegra210_i2s.h                     | 126 +++
+ sound/soc/tegra/tegra_cif.h                        |  65 ++
+ sound/soc/tegra/tegra_pcm.c                        | 235 +++++-
+ sound/soc/tegra/tegra_pcm.h                        |  21 +-
+ 35 files changed, 5657 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+ create mode 100644 sound/soc/tegra/tegra186_dspk.c
+ create mode 100644 sound/soc/tegra/tegra186_dspk.h
+ create mode 100644 sound/soc/tegra/tegra210_admaif.c
+ create mode 100644 sound/soc/tegra/tegra210_admaif.h
+ create mode 100644 sound/soc/tegra/tegra210_ahub.c
+ create mode 100644 sound/soc/tegra/tegra210_ahub.h
+ create mode 100644 sound/soc/tegra/tegra210_dmic.c
+ create mode 100644 sound/soc/tegra/tegra210_dmic.h
+ create mode 100644 sound/soc/tegra/tegra210_i2s.c
+ create mode 100644 sound/soc/tegra/tegra210_i2s.h
+ create mode 100644 sound/soc/tegra/tegra_cif.h
+
+-- 
+2.7.4
+
