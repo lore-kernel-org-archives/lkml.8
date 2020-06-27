@@ -2,387 +2,267 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C140C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A181AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E802089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8349220757
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593268512;
+	bh=qu2PC/KfnpK0kWKvuL7CXpDG7X/LanYdYjS7VhuA2tc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KDNYX+jI3b9YNQTEpchgZ1SCOIJpG58wbCjbw1n8u5EMaUiPVSxgDpFfC6L6Rhkxi
+	 jSlaze22JnUCuFBfaSxfyiOXprwjmCKMfcw2BDKnRLP/OlJ//Egf7ISQJUm1kpeUhf
+	 uo6mVXYazB2AU02Uc0a1Q1Q3hX98C3rJgRsuoSZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgF0O0k (ORCPT
+        id S1726227AbgF0OfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 10:26:40 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:49511 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgF0O0k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 10:26:40 -0400
-Received: from [192.168.43.237] (245.161.185.81.rev.sfr.net [81.185.161.245])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id DB40A200003;
-        Sat, 27 Jun 2020 14:26:33 +0000 (UTC)
-Subject: Re: [PATCH v2 5/8] riscv: Implement sv48 support
-To:     Nick Kossifidis <mick@ics.forth.gr>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>, Anup Patel <anup@brainfault.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200603081104.14004-1-alex@ghiti.fr>
- <20200603081104.14004-6-alex@ghiti.fr>
- <74a770fcf00980281b60bb3f6274419d@mailhost.ics.forth.gr>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <0fb8931a-67f6-f28a-a17b-a991b9eb8478@ghiti.fr>
-Date:   Sat, 27 Jun 2020 10:26:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 27 Jun 2020 10:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgF0OfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:35:06 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341C22089D;
+        Sat, 27 Jun 2020 14:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593268505;
+        bh=qu2PC/KfnpK0kWKvuL7CXpDG7X/LanYdYjS7VhuA2tc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FBB5WzdHZCyO5w4PctPzcY7Z3LAstOygEoRUhk/Ng1G+Z4/lWOJE048kW7zjqiOhR
+         IdlIfwSDXvF8p9LDdqBSj5MmgeYKrg3f6jEZKT4anjo+p6hHbu6Ts9fIOvn7KQVkjy
+         XGJTIYBUuYdW9Ish6HFB+sclhFQo+pGzuMIA9dOg=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH 0/8] mm: cleanup usage of <asm/pgalloc.h>
+Date:   Sat, 27 Jun 2020 17:34:45 +0300
+Message-Id: <20200627143453.31835-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <74a770fcf00980281b60bb3f6274419d@mailhost.ics.forth.gr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Le 6/27/20 à 8:30 AM, Nick Kossifidis a écrit :
-> Στις 2020-06-03 11:11, Alexandre Ghiti έγραψε:
->> By adding a new 4th level of page table, give the possibility to 64bit
->> kernel to address 2^48 bytes of virtual address: in practice, that 
->> roughly
->> offers ~160TB of virtual address space to userspace and allows up to 64TB
->> of physical memory.
->>
->> If the underlying hardware does not support sv48, we will automatically
->> fallback to a standard 3-level page table by folding the new PUD level 
->> into
->> PGDIR level. In order to detect HW capabilities at runtime, we
->> use SATP feature that ignores writes with an unsupported mode.
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> Reviewed-by: Anup Patel <anup@brainfault.org>
->> ---
->>  arch/riscv/Kconfig                  |   6 +-
->>  arch/riscv/include/asm/csr.h        |   3 +-
->>  arch/riscv/include/asm/fixmap.h     |   1 +
->>  arch/riscv/include/asm/page.h       |  15 +++
->>  arch/riscv/include/asm/pgalloc.h    |  36 +++++++
->>  arch/riscv/include/asm/pgtable-64.h |  97 ++++++++++++++++-
->>  arch/riscv/include/asm/pgtable.h    |  10 +-
->>  arch/riscv/kernel/head.S            |   3 +-
->>  arch/riscv/mm/context.c             |   2 +-
->>  arch/riscv/mm/init.c                | 158 +++++++++++++++++++++++++---
->>  10 files changed, 307 insertions(+), 24 deletions(-)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index e167f16131f4..3f73f60e9732 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -68,6 +68,7 @@ config RISCV
->>      select ARCH_HAS_GCOV_PROFILE_ALL
->>      select HAVE_COPY_THREAD_TLS
->>      select HAVE_ARCH_KASAN if MMU && 64BIT
->> +    select RELOCATABLE if 64BIT
->>
->>  config ARCH_MMAP_RND_BITS_MIN
->>      default 18 if 64BIT
->> @@ -106,7 +107,7 @@ config PAGE_OFFSET
->>      default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
->>      default 0x80000000 if 64BIT && !MMU
->>      default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
->> -    default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
->> +    default 0xffffc00000000000 if 64BIT && !MAXPHYSMEM_2GB
->>
->>  config ARCH_FLATMEM_ENABLE
->>      def_bool y
->> @@ -155,8 +156,11 @@ config GENERIC_HWEIGHT
->>  config FIX_EARLYCON_MEM
->>      def_bool MMU
->>
->> +# On a 64BIT relocatable kernel, the 4-level page table is at runtime 
->> folded
->> +# on a 3-level page table when sv48 is not supported.
->>  config PGTABLE_LEVELS
->>      int
->> +    default 4 if 64BIT && RELOCATABLE
->>      default 3 if 64BIT
->>      default 2
->>
->> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
->> index cec462e198ce..d41536c3f8d4 100644
->> --- a/arch/riscv/include/asm/csr.h
->> +++ b/arch/riscv/include/asm/csr.h
->> @@ -40,11 +40,10 @@
->>  #ifndef CONFIG_64BIT
->>  #define SATP_PPN    _AC(0x003FFFFF, UL)
->>  #define SATP_MODE_32    _AC(0x80000000, UL)
->> -#define SATP_MODE    SATP_MODE_32
->>  #else
->>  #define SATP_PPN    _AC(0x00000FFFFFFFFFFF, UL)
->>  #define SATP_MODE_39    _AC(0x8000000000000000, UL)
->> -#define SATP_MODE    SATP_MODE_39
->> +#define SATP_MODE_48    _AC(0x9000000000000000, UL)
->>  #endif
->>
->>  /* Exception cause high bit - is an interrupt if set */
->> diff --git a/arch/riscv/include/asm/fixmap.h 
->> b/arch/riscv/include/asm/fixmap.h
->> index 2368d49eb4ef..d891cf9c73c5 100644
->> --- a/arch/riscv/include/asm/fixmap.h
->> +++ b/arch/riscv/include/asm/fixmap.h
->> @@ -27,6 +27,7 @@ enum fixed_addresses {
->>      FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
->>      FIX_PTE,
->>      FIX_PMD,
->> +    FIX_PUD,
->>      FIX_TEXT_POKE1,
->>      FIX_TEXT_POKE0,
->>      FIX_EARLYCON_MEM_BASE,
->> diff --git a/arch/riscv/include/asm/page.h 
->> b/arch/riscv/include/asm/page.h
->> index 48bb09b6a9b7..5e77fe7f0d6d 100644
->> --- a/arch/riscv/include/asm/page.h
->> +++ b/arch/riscv/include/asm/page.h
->> @@ -31,7 +31,19 @@
->>   * When not using MMU this corresponds to the first free page in
->>   * physical memory (aligned on a page boundary).
->>   */
->> +#ifdef CONFIG_RELOCATABLE
->> +#define PAGE_OFFSET        __page_offset
->> +
->> +#ifdef CONFIG_64BIT
->> +/*
->> + * By default, CONFIG_PAGE_OFFSET value corresponds to SV48 address 
->> space so
->> + * define the PAGE_OFFSET value for SV39.
->> + */
->> +#define PAGE_OFFSET_L3        0xffffffe000000000
->> +#endif /* CONFIG_64BIT */
->> +#else
->>  #define PAGE_OFFSET        _AC(CONFIG_PAGE_OFFSET, UL)
->> +#endif /* CONFIG_RELOCATABLE */
->>
->>  #define KERN_VIRT_SIZE (-PAGE_OFFSET)
->>
->> @@ -102,6 +114,9 @@ extern unsigned long pfn_base;
->>  extern unsigned long max_low_pfn;
->>  extern unsigned long min_low_pfn;
->>  extern unsigned long kernel_virt_addr;
->> +#ifdef CONFIG_RELOCATABLE
->> +extern unsigned long __page_offset;
->> +#endif
->>
->>  #define __pa_to_va_nodebug(x)    ((void *)((unsigned long) (x) + 
->> va_pa_offset))
->>  #define linear_mapping_va_to_pa(x)    ((unsigned long)(x) - 
->> va_pa_offset)
->> diff --git a/arch/riscv/include/asm/pgalloc.h 
->> b/arch/riscv/include/asm/pgalloc.h
->> index 3f601ee8233f..540eaa5a8658 100644
->> --- a/arch/riscv/include/asm/pgalloc.h
->> +++ b/arch/riscv/include/asm/pgalloc.h
->> @@ -36,6 +36,42 @@ static inline void pud_populate(struct mm_struct
->> *mm, pud_t *pud, pmd_t *pmd)
->>
->>      set_pud(pud, __pud((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
->>  }
->> +
->> +static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4d, 
->> pud_t *pud)
->> +{
->> +    if (pgtable_l4_enabled) {
->> +        unsigned long pfn = virt_to_pfn(pud);
->> +
->> +        set_p4d(p4d, __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
->> +    }
->> +}
->> +
->> +static inline void p4d_populate_safe(struct mm_struct *mm, p4d_t *p4d,
->> +                     pud_t *pud)
->> +{
->> +    if (pgtable_l4_enabled) {
->> +        unsigned long pfn = virt_to_pfn(pud);
->> +
->> +        set_p4d_safe(p4d,
->> +                 __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
->> +    }
->> +}
->> +
->> +static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned 
->> long addr)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return (pud_t *)__get_free_page(
->> +                GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
->> +    return NULL;
->> +}
->> +
->> +static inline void pud_free(struct mm_struct *mm, pud_t *pud)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        free_page((unsigned long)pud);
->> +}
->> +
->> +#define __pud_free_tlb(tlb, pud, addr)  pud_free((tlb)->mm, pud)
->>  #endif /* __PAGETABLE_PMD_FOLDED */
->>
->>  #define pmd_pgtable(pmd)    pmd_page(pmd)
->> diff --git a/arch/riscv/include/asm/pgtable-64.h
->> b/arch/riscv/include/asm/pgtable-64.h
->> index b15f70a1fdfa..c84c31fbf8da 100644
->> --- a/arch/riscv/include/asm/pgtable-64.h
->> +++ b/arch/riscv/include/asm/pgtable-64.h
->> @@ -8,16 +8,32 @@
->>
->>  #include <linux/const.h>
->>
->> -#define PGDIR_SHIFT     30
->> +extern bool pgtable_l4_enabled;
->> +
->> +#define PGDIR_SHIFT     (pgtable_l4_enabled ? 39 : 30)
->>  /* Size of region mapped by a page global directory */
->>  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
->>  #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
->>
->> +/* pud is folded into pgd in case of 3-level page table */
->> +#define PUD_SHIFT    30
->> +#define PUD_SIZE    (_AC(1, UL) << PUD_SHIFT)
->> +#define PUD_MASK    (~(PUD_SIZE - 1))
->> +
->>  #define PMD_SHIFT       21
->>  /* Size of region mapped by a page middle directory */
->>  #define PMD_SIZE        (_AC(1, UL) << PMD_SHIFT)
->>  #define PMD_MASK        (~(PMD_SIZE - 1))
->>
->> +/* Page Upper Directory entry */
->> +typedef struct {
->> +    unsigned long pud;
->> +} pud_t;
->> +
->> +#define pud_val(x)      ((x).pud)
->> +#define __pud(x)        ((pud_t) { (x) })
->> +#define PTRS_PER_PUD    (PAGE_SIZE / sizeof(pud_t))
->> +
->>  /* Page Middle Directory entry */
->>  typedef struct {
->>      unsigned long pmd;
->> @@ -60,6 +76,16 @@ static inline void pud_clear(pud_t *pudp)
->>      set_pud(pudp, __pud(0));
->>  }
->>
->> +static inline pud_t pfn_pud(unsigned long pfn, pgprot_t prot)
->> +{
->> +    return __pud((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
->> +}
->> +
->> +static inline unsigned long _pud_pfn(pud_t pud)
->> +{
->> +    return pud_val(pud) >> _PAGE_PFN_SHIFT;
->> +}
->> +
->>  static inline unsigned long pud_page_vaddr(pud_t pud)
->>  {
->>      return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
->> @@ -70,6 +96,15 @@ static inline struct page *pud_page(pud_t pud)
->>      return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
->>  }
->>
->> +#define mm_pud_folded    mm_pud_folded
->> +static inline bool mm_pud_folded(struct mm_struct *mm)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return false;
->> +
->> +    return true;
->> +}
->> +
->>  #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
->>
->>  static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
->> @@ -90,4 +125,64 @@ static inline unsigned long _pmd_pfn(pmd_t pmd)
->>  #define pmd_ERROR(e) \
->>      pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
->>
->> +#define pud_ERROR(e)    \
->> +    pr_err("%s:%d: bad pud %016lx.\n", __FILE__, __LINE__, pud_val(e))
->> +
->> +static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        *p4dp = p4d;
->> +    else
->> +        set_pud((pud_t *)p4dp, (pud_t){ p4d_val(p4d) });
->> +}
->> +
->> +static inline int p4d_none(p4d_t p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return (p4d_val(p4d) == 0);
->> +
->> +    return 0;
->> +}
->> +
->> +static inline int p4d_present(p4d_t p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return (p4d_val(p4d) & _PAGE_PRESENT);
->> +
->> +    return 1;
->> +}
->> +
->> +static inline int p4d_bad(p4d_t p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return !p4d_present(p4d);
->> +
->> +    return 0;
->> +}
->> +
->> +static inline void p4d_clear(p4d_t *p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        set_p4d(p4d, __p4d(0));
->> +}
->> +
->> +static inline unsigned long p4d_page_vaddr(p4d_t p4d)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return (unsigned long)pfn_to_virt(
->> +                p4d_val(p4d) >> _PAGE_PFN_SHIFT);
->> +
->> +    return pud_page_vaddr((pud_t) { p4d_val(p4d) });
->> +}
->> +
->> +#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
->> +
->> +static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
->> +{
->> +    if (pgtable_l4_enabled)
->> +        return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
->> +
->> +    return (pud_t *)p4d;
->> +}
->> +
-> 
-> In my test I had to put
-> #define pud_offset pud_offset
-> here or else I got a compilation error due to pud_offset being redefined 
-> on include/linux/pgtable.h:
-> 
-> #ifndef pud_offset
-> static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
-> {
->          return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
-> }
-> #define pud_offset pud_offset
-> #endif
+Hi,
 
-Yes, the rebase on 5.8-rc2 requires that and removing pmd_offset definition.
+Most architectures have very similar versions of pXd_alloc_one() and
+pXd_free_one() for intermediate levels of page table. 
+These patches add generic versions of these functions in
+<asm-generic/pgalloc.h> and enable use of the generic functions where
+appropriate.
 
-Alex
+In addition, functions declared and defined in <asm/pgalloc.h> headers
+are used mostly by core mm and early mm initialization in arch and there is
+no actual reason to have the <asm/pgalloc.h> included all over the place.
+The first patch in this series removes unneeded includes of <asm/pgalloc.h>
+
+In the end it didn't work out as neatly as I hoped and moving
+pXd_alloc_track() definitions to <asm-generic/pgalloc.h> would require
+unnecessary changes to arches that have custom page table allocations, so
+I've decided to move lib/ioremap.c to mm/ and make pgalloc-track.h local to
+mm/.
+
+Joerg Roedel (1):
+  mm: move p?d_alloc_track to separate header file
+
+Mike Rapoport (7):
+  mm: remove unneeded includes of <asm/pgalloc.h>
+  opeinrisc: switch to generic version of pte allocation
+  xtensa: switch to generic version of pte allocation
+  asm-generic: pgalloc: provide generic pmd_alloc_one() and pmd_free_one()
+  asm-generic: pgalloc: provide generic pud_alloc_one() and pud_free_one()
+  asm-generic: pgalloc: provide generic pgd_free()
+  mm: move lib/ioremap.c to mm/
+
+ arch/alpha/include/asm/pgalloc.h             | 21 +----
+ arch/alpha/include/asm/tlbflush.h            |  1 -
+ arch/alpha/kernel/core_irongate.c            |  1 -
+ arch/alpha/kernel/core_marvel.c              |  1 -
+ arch/alpha/kernel/core_titan.c               |  1 -
+ arch/alpha/kernel/machvec_impl.h             |  2 -
+ arch/alpha/kernel/smp.c                      |  1 -
+ arch/alpha/mm/numa.c                         |  1 -
+ arch/arc/mm/fault.c                          |  1 -
+ arch/arc/mm/init.c                           |  1 -
+ arch/arm/include/asm/pgalloc.h               | 12 +--
+ arch/arm/include/asm/tlb.h                   |  1 -
+ arch/arm/kernel/machine_kexec.c              |  1 -
+ arch/arm/kernel/smp.c                        |  1 -
+ arch/arm/kernel/suspend.c                    |  1 -
+ arch/arm/mach-omap2/omap-mpuss-lowpower.c    |  1 -
+ arch/arm/mm/hugetlbpage.c                    |  1 -
+ arch/arm/mm/mmu.c                            |  1 +
+ arch/arm64/include/asm/pgalloc.h             | 39 +---------
+ arch/arm64/kernel/smp.c                      |  1 -
+ arch/arm64/mm/hugetlbpage.c                  |  1 -
+ arch/arm64/mm/ioremap.c                      |  1 -
+ arch/arm64/mm/mmu.c                          |  1 +
+ arch/csky/include/asm/pgalloc.h              |  7 +-
+ arch/csky/kernel/smp.c                       |  1 -
+ arch/hexagon/include/asm/pgalloc.h           |  7 +-
+ arch/ia64/include/asm/pgalloc.h              | 24 ------
+ arch/ia64/include/asm/tlb.h                  |  1 -
+ arch/ia64/kernel/process.c                   |  1 -
+ arch/ia64/kernel/smp.c                       |  1 -
+ arch/ia64/kernel/smpboot.c                   |  1 -
+ arch/ia64/mm/contig.c                        |  1 -
+ arch/ia64/mm/discontig.c                     |  1 -
+ arch/ia64/mm/hugetlbpage.c                   |  1 -
+ arch/ia64/mm/tlb.c                           |  1 -
+ arch/m68k/include/asm/mmu_context.h          |  2 +-
+ arch/m68k/include/asm/sun3_pgalloc.h         |  7 +-
+ arch/m68k/kernel/dma.c                       |  2 +-
+ arch/m68k/kernel/traps.c                     |  3 +-
+ arch/m68k/mm/cache.c                         |  2 +-
+ arch/m68k/mm/fault.c                         |  1 -
+ arch/m68k/mm/kmap.c                          |  2 +-
+ arch/m68k/mm/mcfmmu.c                        |  1 +
+ arch/m68k/mm/memory.c                        |  1 -
+ arch/m68k/sun3x/dvma.c                       |  2 +-
+ arch/microblaze/include/asm/pgalloc.h        |  6 --
+ arch/microblaze/include/asm/tlbflush.h       |  1 -
+ arch/microblaze/kernel/process.c             |  1 -
+ arch/microblaze/kernel/signal.c              |  1 -
+ arch/mips/include/asm/pgalloc.h              | 19 +----
+ arch/mips/sgi-ip32/ip32-memory.c             |  1 -
+ arch/nds32/mm/mm-nds32.c                     |  2 +
+ arch/nios2/include/asm/pgalloc.h             |  7 +-
+ arch/openrisc/include/asm/pgalloc.h          | 33 +-------
+ arch/openrisc/include/asm/tlbflush.h         |  1 -
+ arch/openrisc/kernel/or32_ksyms.c            |  1 -
+ arch/parisc/include/asm/mmu_context.h        |  1 -
+ arch/parisc/include/asm/pgalloc.h            | 12 +--
+ arch/parisc/kernel/cache.c                   |  1 -
+ arch/parisc/kernel/pci-dma.c                 |  1 -
+ arch/parisc/kernel/process.c                 |  1 -
+ arch/parisc/kernel/signal.c                  |  1 -
+ arch/parisc/kernel/smp.c                     |  1 -
+ arch/parisc/mm/hugetlbpage.c                 |  1 -
+ arch/parisc/mm/ioremap.c                     |  2 +-
+ arch/powerpc/include/asm/tlb.h               |  1 -
+ arch/powerpc/mm/book3s64/hash_hugetlbpage.c  |  1 -
+ arch/powerpc/mm/book3s64/hash_pgtable.c      |  1 -
+ arch/powerpc/mm/book3s64/hash_tlb.c          |  1 -
+ arch/powerpc/mm/book3s64/radix_hugetlbpage.c |  1 -
+ arch/powerpc/mm/init_32.c                    |  1 -
+ arch/powerpc/mm/kasan/8xx.c                  |  1 -
+ arch/powerpc/mm/kasan/book3s_32.c            |  1 -
+ arch/powerpc/mm/mem.c                        |  1 -
+ arch/powerpc/mm/nohash/40x.c                 |  1 -
+ arch/powerpc/mm/nohash/8xx.c                 |  1 -
+ arch/powerpc/mm/nohash/fsl_booke.c           |  1 -
+ arch/powerpc/mm/nohash/kaslr_booke.c         |  1 -
+ arch/powerpc/mm/pgtable.c                    |  1 -
+ arch/powerpc/mm/pgtable_64.c                 |  1 -
+ arch/powerpc/mm/ptdump/hashpagetable.c       |  2 +-
+ arch/powerpc/mm/ptdump/ptdump.c              |  1 -
+ arch/powerpc/platforms/pseries/cmm.c         |  1 -
+ arch/riscv/include/asm/pgalloc.h             | 18 +----
+ arch/riscv/mm/fault.c                        |  1 -
+ arch/s390/include/asm/tlb.h                  |  1 -
+ arch/s390/include/asm/tlbflush.h             |  1 -
+ arch/s390/kernel/machine_kexec.c             |  1 -
+ arch/s390/kernel/ptrace.c                    |  1 -
+ arch/s390/kvm/diag.c                         |  1 -
+ arch/s390/kvm/priv.c                         |  1 -
+ arch/s390/kvm/pv.c                           |  1 -
+ arch/s390/mm/cmm.c                           |  1 -
+ arch/s390/mm/mmap.c                          |  1 -
+ arch/s390/mm/pgtable.c                       |  1 -
+ arch/sh/include/asm/pgalloc.h                |  4 +
+ arch/sh/kernel/idle.c                        |  1 -
+ arch/sh/kernel/machine_kexec.c               |  1 -
+ arch/sh/mm/cache-sh3.c                       |  1 -
+ arch/sh/mm/cache-sh7705.c                    |  1 -
+ arch/sh/mm/hugetlbpage.c                     |  1 -
+ arch/sh/mm/init.c                            |  1 +
+ arch/sh/mm/ioremap_fixed.c                   |  1 -
+ arch/sh/mm/tlb-sh3.c                         |  1 -
+ arch/sparc/include/asm/ide.h                 |  1 -
+ arch/sparc/include/asm/tlb_64.h              |  1 -
+ arch/sparc/kernel/leon_smp.c                 |  1 -
+ arch/sparc/kernel/process_32.c               |  1 -
+ arch/sparc/kernel/signal_32.c                |  1 -
+ arch/sparc/kernel/smp_32.c                   |  1 -
+ arch/sparc/kernel/smp_64.c                   |  1 +
+ arch/sparc/kernel/sun4m_irq.c                |  1 -
+ arch/sparc/mm/highmem.c                      |  1 -
+ arch/sparc/mm/io-unit.c                      |  1 -
+ arch/sparc/mm/iommu.c                        |  1 -
+ arch/sparc/mm/tlb.c                          |  1 -
+ arch/um/include/asm/pgalloc.h                |  9 +--
+ arch/um/include/asm/pgtable-3level.h         |  3 -
+ arch/um/kernel/mem.c                         | 17 -----
+ arch/x86/ia32/ia32_aout.c                    |  1 -
+ arch/x86/include/asm/mmu_context.h           |  1 -
+ arch/x86/include/asm/pgalloc.h               | 42 +---------
+ arch/x86/kernel/alternative.c                |  1 +
+ arch/x86/kernel/apic/apic.c                  |  1 -
+ arch/x86/kernel/mpparse.c                    |  1 -
+ arch/x86/kernel/traps.c                      |  1 -
+ arch/x86/mm/fault.c                          |  1 -
+ arch/x86/mm/hugetlbpage.c                    |  1 -
+ arch/x86/mm/kaslr.c                          |  1 -
+ arch/x86/mm/pgtable_32.c                     |  1 -
+ arch/x86/mm/pti.c                            |  1 -
+ arch/x86/platform/uv/bios_uv.c               |  1 +
+ arch/xtensa/include/asm/pgalloc.h            | 40 ++++------
+ arch/xtensa/kernel/xtensa_ksyms.c            |  1 -
+ arch/xtensa/mm/cache.c                       |  1 -
+ arch/xtensa/mm/fault.c                       |  1 -
+ drivers/block/xen-blkback/common.h           |  1 -
+ drivers/iommu/ipmmu-vmsa.c                   |  1 -
+ drivers/xen/balloon.c                        |  1 -
+ drivers/xen/privcmd.c                        |  1 -
+ fs/binfmt_elf_fdpic.c                        |  1 -
+ include/asm-generic/pgalloc.h                | 80 ++++++++++++++++++++
+ include/asm-generic/tlb.h                    |  1 -
+ include/linux/mm.h                           | 45 -----------
+ lib/Makefile                                 |  1 -
+ mm/Makefile                                  |  2 +-
+ mm/hugetlb.c                                 |  1 +
+ {lib => mm}/ioremap.c                        |  2 +
+ mm/pgalloc-track.h                           | 51 +++++++++++++
+ mm/sparse.c                                  |  1 -
+ mm/vmalloc.c                                 |  1 +
+ 151 files changed, 194 insertions(+), 451 deletions(-)
+ rename {lib => mm}/ioremap.c (99%)
+ create mode 100644 mm/pgalloc-track.h
+
+-- 
+2.26.2
+
