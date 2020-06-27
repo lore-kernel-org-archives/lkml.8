@@ -2,120 +2,131 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5438EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3274521548
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD0621548
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyOSMPYZ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ql8e9lUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgF0NJZ (ORCPT
+        id S1726645AbgF0NJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:09:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24043 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726439AbgF0NJX (ORCPT
+        Sat, 27 Jun 2020 09:09:48 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37336 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgF0NJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:09:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593263362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gocYarnZ2JlHVc9RG/zHaX044tbXdzru5bTv0I6/CXM=;
-        b=EyOSMPYZDBaYzx1/vEWkp3lSaui6n5Y0niAX5TeR5Dcscov+xLmfAw5rjThlVOomZFB3Hr
-        /DQ8xzKGTfS7w8ctrj0kQcbBc4HIn0tRt0Xl9lWnDvJFm2Q2ewVl9oEwfW4SOS99LtvRPx
-        N8C429wG5CDD4u+KEvJX56IEgsoJP+k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-qk0xhzsyPy-G0Q7G_J2UvQ-1; Sat, 27 Jun 2020 09:09:18 -0400
-X-MC-Unique: qk0xhzsyPy-G0Q7G_J2UvQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDF59804001;
-        Sat, 27 Jun 2020 13:09:16 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3758B2B4AC;
-        Sat, 27 Jun 2020 13:09:13 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05RD9CXa015401;
-        Sat, 27 Jun 2020 09:09:12 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05RD99e3015395;
-        Sat, 27 Jun 2020 09:09:10 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Sat, 27 Jun 2020 09:09:09 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Dave Chinner <david@fromorbit.com>
-cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
-In-Reply-To: <20200626230847.GI2005@dread.disaster.area>
-Message-ID: <alpine.LRH.2.02.2006270848540.14350@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20200625113122.7540-1-willy@infradead.org> <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com> <20200626230847.GI2005@dread.disaster.area>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Sat, 27 Jun 2020 09:09:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05RCwW3Q157642;
+        Sat, 27 Jun 2020 13:09:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=y6Z3ndKwcdvb/o527oos0Vmmml29kOeFL0WHa87IivU=;
+ b=Ql8e9lUtJMlfraXeMxmr7CbqCK9xuMbtf7EWIRx61zzfGC2opBP3kGLATC2sx1f0RDA2
+ d0Lvy+oGkcU29Lff/OVWhty22/vB9iokcaJ6FClpQ297FuDtl5L2ayJQDzxF7ZNUJmmv
+ E0efY9Sop8sMj7xOUd25EAaXgcWhXaz9lpxi4auYpPgM6aHGFBgG/WaPE1HNt+Bf+UoY
+ 5LFHxswr0Nv7qmXarlD7O7Bocr93+xlVe3um0N5oefhuS5x2pIEkyzqdCUFhcMDumXn1
+ hrpafsd3CKEf2aQ9rCHTQgUpIIQRcKEDTyGq285awLJVP5wytvkyghJUfa8F/Boo0Oup Ow== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31wxrmru6e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 27 Jun 2020 13:09:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05RCvZxY049144;
+        Sat, 27 Jun 2020 13:09:25 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31wu7s3k7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Jun 2020 13:09:25 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05RD9Mij009209;
+        Sat, 27 Jun 2020 13:09:22 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 27 Jun 2020 13:09:21 +0000
+Date:   Sat, 27 Jun 2020 16:09:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, robin.murphy@arm.com,
+        m.szyprowski@samsung.com, hch@lst.de
+Subject: Re: Passing NULL dev to dma_alloc_coherent() allowed or not?
+Message-ID: <20200627130915.GF2571@kadam>
+References: <1669515915.65540.1593258316061.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1669515915.65540.1593258316061.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9664 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006270095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9664 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006270095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Sat, 27 Jun 2020, Dave Chinner wrote:
-
-> On Fri, Jun 26, 2020 at 11:02:19AM -0400, Mikulas Patocka wrote:
-> > Hi
-> > 
-> > I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
-> > prevents both filesystem recursion and i/o recursion.
-> > 
-> > Note that any I/O can recurse into a filesystem via the loop device, thus 
-> > it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
-> > and PF_MEMALLOC_NOIO is not set.
+On Sat, Jun 27, 2020 at 01:45:16PM +0200, Richard Weinberger wrote:
+> Hi!
 > 
-> Correct me if I'm wrong, but I think that will prevent swapping from
-> GFP_NOFS memory reclaim contexts.
+> While porting on an old out-of-tree driver I noticed that dma_alloc_coherent()
+> was used with dev being NULL.
+> 
+> commit 148a97d5a02a62f81b5d6176f871c94a65e1f3af
+> Author: Dan Carpenter <dan.carpenter@oracle.com>
+> Date:   Wed Apr 24 17:24:37 2019 +0300
+> 
+>     dma-mapping: remove an unnecessary NULL check
+>     
+>     We already dereferenced "dev" when we called get_dma_ops() so this NULL
+>     check is too late.  We're not supposed to pass NULL "dev" pointers to
+>     dma_alloc_attrs().
+>     
+>     Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>     Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> says that dma_alloc_attrs() with dev being NULL is not allowed, but in
+> include/linux/dma-mapping.h we have:
+> 
+> static inline void *dma_alloc_coherent(struct device *dev, size_t size,
+>                 dma_addr_t *dma_handle, gfp_t gfp)
+> {
+> 
+>         return dma_alloc_attrs(dev, size, dma_handle, gfp,
+>                         (gfp & __GFP_NOWARN) ? DMA_ATTR_NO_WARN : 0);
+> }
+> 
+> In Linus' tree I see at least three callers of dma_alloc_coherent() with a NULL device.
+> drivers/staging/emxx_udc/emxx_udc.c:2596:                       ep->virt_buf = dma_alloc_coherent(NULL, PAGE_SIZE,
+> drivers/tty/synclink.c:3667:            info->buffer_list = dma_alloc_coherent(NULL, BUFFERLISTSIZE, &info->buffer_list_dma_addr, GFP_KERNEL);
+> drivers/tty/synclink.c:3777:                    BufferList[i].virt_addr = dma_alloc_coherent(NULL, DMABUFFERSIZE, &BufferList[i].dma_addr, GFP_KERNEL);
+> 
+> I think these callers are wrong.
+> Can you please clarify?
 
-Yes.
+The are wrong.  It was slightly worse when I originally sent the patch
+but we fixed comedi.
 
-> IOWs, this will substantially
-> change the behaviour of the memory reclaim system under sustained
-> GFP_NOFS memory pressure. Sustained GFP_NOFS memory pressure is
-> quite common, so I really don't think we want to telling memory
-> reclaim "you can't do IO at all" when all we are trying to do is
-> prevent recursion back into the same filesystem.
 
-So, we can define __GFP_ONLY_SWAP_IO and __GFP_IO.
+https://lkml.org/lkml/2019/4/24/668
 
-> Given that the loop device IO path already operates under
-> memalloc_noio context, (i.e. the recursion restriction is applied in
-> only the context that needs is) I see no reason for making that a
-> global reclaim limitation....
-
-I think this is a problem.
-
-Suppose that a filesystem does GFP_NOFS allocation, the allocation 
-triggers an IO and waits for it to finish, the loop device driver 
-redirects the IO to the same filesystem that did the GFP_NOFS allocation.
-
-I saw this deadlock in the past in the dm-bufio subsystem - see the commit 
-9d28eb12447ee08bb5d1e8bb3195cf20e1ecd1c0 that fixed it.
-
-Other subsystems that do IO in GFP_NOFS context may deadlock just like 
-bufio.
-
-Mikulas
+regards,
+dan carpenter
 
