@@ -2,652 +2,171 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A60C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44177C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66EDA208B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEA920720
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgF0BN6 (ORCPT
+        id S1726531AbgF0BaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 21:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgF0BNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 21:13:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF292084C;
-        Sat, 27 Jun 2020 01:13:50 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jozPh-003zX3-PB; Fri, 26 Jun 2020 21:13:49 -0400
-Message-ID: <20200627011349.653601969@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Fri, 26 Jun 2020 21:00:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: [PATCH 1/3] ring-buffer: Have nested events still record running time stamp
-References: <20200627010041.517736087@goodmis.org>
+        Fri, 26 Jun 2020 21:30:21 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2550 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbgF0BaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 21:30:20 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 41F4623B295038994A6A;
+        Sat, 27 Jun 2020 09:30:15 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Sat, 27 Jun 2020 09:30:14 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 27 Jun 2020 09:30:14 +0800
+Subject: Re: [PATCH net-next v2 1/5] hinic: add support to set and get pause
+ params
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+References: <20200623142409.19081-1-luobin9@huawei.com>
+ <20200623142409.19081-2-luobin9@huawei.com>
+ <20200623145421.163d22fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <65424d07-7e87-5f1a-f82b-2badbf47b38c@huawei.com>
+Date:   Sat, 27 Jun 2020 09:30:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200623145421.163d22fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On 2020/6/24 5:54, Jakub Kicinski wrote:
+> On Tue, 23 Jun 2020 22:24:05 +0800 Luo bin wrote:
+>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+>> index e9e6f4c9309a..e69edb01fd9b 100644
+>> --- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
+>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+>> @@ -467,6 +467,7 @@ int hinic_open(struct net_device *netdev)
+>>  	if (ret)
+>>  		netif_warn(nic_dev, drv, netdev,
+>>  			   "Failed to revert port state\n");
+>> +
+> 
+> Unrelated chunk, please drop.
+> 
+Will undo this.Thanks.
+>>  err_port_state:
+>>  	free_rxqs(nic_dev);
+>>  	if (nic_dev->flags & HINIC_RSS_ENABLE) {
+>> @@ -887,6 +888,26 @@ static void netdev_features_init(struct net_device *netdev)
+>>  	netdev->features = netdev->hw_features | NETIF_F_HW_VLAN_CTAG_FILTER;
+>>  }
+>>  
+>> +static void hinic_refresh_nic_cfg(struct hinic_dev *nic_dev)
+>> +{
+>> +	struct hinic_nic_cfg *nic_cfg = &nic_dev->hwdev->func_to_io.nic_cfg;
+>> +	struct hinic_pause_config pause_info = {0};
+>> +	struct hinic_port_cap port_cap = {0};
+>> +
+>> +	if (hinic_port_get_cap(nic_dev, &port_cap))
+>> +		return;
+>> +
+>> +	mutex_lock(&nic_cfg->cfg_mutex);
+>> +	if (nic_cfg->pause_set || !port_cap.autoneg_state) {
+>> +		nic_cfg->auto_neg = port_cap.autoneg_state;
+>> +		pause_info.auto_neg = nic_cfg->auto_neg;
+>> +		pause_info.rx_pause = nic_cfg->rx_pause;
+>> +		pause_info.tx_pause = nic_cfg->tx_pause;
+>> +		hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
+>> +	}
+>> +	mutex_unlock(&nic_cfg->cfg_mutex);
+>> +}
+>> +
+>>  /**
+>>   * link_status_event_handler - link event handler
+>>   * @handle: nic device for the handler
+>> @@ -918,6 +939,9 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
+>>  
+>>  		up(&nic_dev->mgmt_lock);
+>>  
+>> +		if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
+>> +			hinic_refresh_nic_cfg(nic_dev);
+>> +
+>>  		netif_info(nic_dev, drv, nic_dev->netdev, "HINIC_Link is UP\n");
+>>  	} else {
+>>  		down(&nic_dev->mgmt_lock);
+>> @@ -950,26 +974,38 @@ static int set_features(struct hinic_dev *nic_dev,
+>>  	u32 csum_en = HINIC_RX_CSUM_OFFLOAD_EN;
+>>  	int err = 0;
+>>  
+>> -	if (changed & NETIF_F_TSO)
+>> +	if (changed & NETIF_F_TSO) {
+>>  		err = hinic_port_set_tso(nic_dev, (features & NETIF_F_TSO) ?
+>>  					 HINIC_TSO_ENABLE : HINIC_TSO_DISABLE);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>>  
+>> -	if (changed & NETIF_F_RXCSUM)
+>> +	if (changed & NETIF_F_RXCSUM) {
+>>  		err = hinic_set_rx_csum_offload(nic_dev, csum_en);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>>  
+>>  	if (changed & NETIF_F_LRO) {
+>>  		err = hinic_set_rx_lro_state(nic_dev,
+>>  					     !!(features & NETIF_F_LRO),
+>>  					     HINIC_LRO_RX_TIMER_DEFAULT,
+>>  					     HINIC_LRO_MAX_WQE_NUM_DEFAULT);
+>> +		if (err)
+>> +			return err;
+>>  	}
+>>  
+>> -	if (changed & NETIF_F_HW_VLAN_CTAG_RX)
+>> +	if (changed & NETIF_F_HW_VLAN_CTAG_RX) {
+>>  		err = hinic_set_rx_vlan_offload(nic_dev,
+>>  						!!(features &
+>>  						   NETIF_F_HW_VLAN_CTAG_RX));
+>> +		if (err)
+>> +			return err;
+>> +	}
+> 
+> I missed this on v1, but this looks broken, multiple features may be
+> changed at the same time. If user requests RXCSUM and LRO to be changed
+> and LRO change fails the RXCSUM will be left in a different state than
+> dev->features indicates.
+>  
+You're right. Will fix. Thank you.
+>> -	return err;
+>> +	/* enable pause and disable pfc by default */
+>> +	return hinic_dcb_set_pfc(nic_dev->hwdev, 0, 0);
+> 
+> Why do you disable PFC every time features are changed?
+>
+It can be optimized. Thanks.
 
-Up until now, if an event is interrupted while it is recorded by an
-interrupt, and that interrupt records events, the time of those events will
-all be the same. This is because events only record the delta of the time
-since the previous event (or beginning of a page), and to handle updating
-the time keeping for that of nested events is extremely racy. After years of
-thinking about this and several failed attempts, I finally have a solution
-to solve this puzzle.
-
-The problem is that you need to atomically calculate the delta and then
-update the time stamp you made the delta from, as well as then record it
-into the buffer, all this while at any time an interrupt can come in and
-do the same thing. This is easy to solve with heavy weight atomics, but that
-would be detrimental to the performance of the ring buffer. The current
-state of affairs sacrificed the time deltas for nested events for
-performance.
-
-The reason for previous failed attempts at solving this puzzle was because I
-was trying to completely avoid slow atomic operations like cmpxchg. I final
-came to the conclusion to always avoid cmpxchg is not possible, which is why
-those previous attempts always failed. But it is possible to pick one path
-(the most common case) and avoid cmpxchg in that path, which is the "fast
-path". The most common case is that an event will not be interrupted and
-have other events added into it. An event can detect if it has
-interrupted another event, and for these cases we can make it the slow
-path and use the heavy operations like cmpxchg.
-
-One more player was added to the game that made this possible, and that is
-the "absolute timestamp" (by Tom Zanussi) that allows us to inject a full 59
-bit time stamp. (Of course this breaks if a machine is running for more than
-18 years without a reboot!).
-
-There's barrier() placements around for being paranoid, even when they
-are not needed because of other atomic functions near by. But those
-should not hurt, as if they are not needed, they basically become a nop.
-
-Note, this also makes the race window much smaller, which means there
-are less slow paths to slow down the performance.
-
-Here's the design of this solution:
-
- All this is per cpu, and only needs to worry about nested events (not
- parallel events).
-
-The players:
-
- write_tail: The index in the buffer where new events can be written to.
-     It is incremented via local_add() to reserve space for a new event.
-
- before_stamp: A time stamp set by all events before reserving space.
-
- write_stamp: A time stamp updated by events after it has successfully
-     reserved space.
-
- next_write: A copy of "write_tail" used to help with races.
-
-	/* Save the current position of write */
- [A]	w = local_read(write_tail);
-	barrier();
-	/* Read both before and write stamps before touching anything */
-	before = READ_ONCE(before_stamp);
-	after = local_read(write_stamp);
-	barrier();
-
-	/*
-	 * If before and after are the same, then this event is not
-	 * interrupting a time update. If it is, then reserve space for adding
-	 * a full time stamp (this can turn into a time extend which is
-	 * just an extended time delta but fill up the extra space).
-	 */
-	if (after != before)
-		abs = true;
-
-	ts = clock();
-
-	/* Now update the before_stamp (everyone does this!) */
- [B]	WRITE_ONCE(before_stamp, ts);
-
-	/* Read the current next_write and update it to what we want write
-	 * to be after we reserve space. */
- 	next = READ_ONCE(next_write);
-	WRITE_ONCE(next_write, w + len);
-
-	/* Now reserve space on the buffer */
- [C]	write = local_add_return(len, write_tail);
-
-	/* Set tail to be were this event's data is */
-	tail = write - len;
-
- 	if (w == tail) {
-
-		/* Nothing interrupted this between A and C */
- [D]		local_set(write_stamp, ts);
-		barrier();
- [E]		save_before = READ_ONCE(before_stamp);
-
- 		if (!abs) {
-			/* This did not interrupt a time update */
-			delta = ts - after;
-		} else {
-			delta = ts; /* The full time stamp will be in use */
-		}
-		if (ts != save_before) {
-			/* slow path - Was interrupted between C and E */
-			/* The update to write_stamp could have overwritten the update to
-			 * it by the interrupting event, but before and after should be
-			 * the same for all completed top events */
-			after = local_read(write_stamp);
-			if (save_before > after)
-				local_cmpxchg(write_stamp, after, save_before);
-		}
-	} else {
-		/* slow path - Interrupted between A and C */
-
-		after = local_read(write_stamp);
-		temp_ts = clock();
-		barrier();
- [F]		if (write == local_read(write_tail) && after < temp_ts) {
-			/* This was not interrupted since C and F
-			 * The last write_stamp is still valid for the previous event
-			 * in the buffer. */
-			delta = temp_ts - after;
-			/* OK to keep this new time stamp */
-			ts = temp_ts;
-		} else {
-			/* Interrupted between C and F
-			 * Well, there's no use to try to know what the time stamp
-			 * is for the previous event. Just set delta to zero and
-			 * be the same time as that event that interrupted us before
-			 * the reservation of the buffer. */
-
-			delta = 0;
-		}
-		/* No need to use full timestamps here */
-		abs = 0;
-	}
-
-Link: https://lkml.kernel.org/r/20200625094454.732790f7@oasis.local.home
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 281 ++++++++++++++++++++++++-------------
- 1 file changed, 186 insertions(+), 95 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 00867ff82412..4f13ae38b8f8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -27,6 +27,7 @@
- #include <linux/oom.h>
- 
- #include <asm/local.h>
-+#include <asm/local64.h>
- 
- static void update_pages_handler(struct work_struct *work);
- 
-@@ -418,6 +419,17 @@ struct rb_event_info {
- 	int			add_timestamp;
- };
- 
-+/*
-+ * Used for the add_timestamp
-+ *  NONE
-+ *  NORMAL - may be for either time extend or absolute
-+ *  FORCE - force a full time stamp.
-+ */
-+enum {
-+	RB_ADD_STAMP_NONE,
-+	RB_ADD_STAMP_NORMAL,
-+	RB_ADD_STAMP_FORCE
-+};
- /*
-  * Used for which event context the event is in.
-  *  NMI     = 0
-@@ -470,7 +482,9 @@ struct ring_buffer_per_cpu {
- 	size_t				shortest_full;
- 	unsigned long			read;
- 	unsigned long			read_bytes;
--	u64				write_stamp;
-+	unsigned long			next_write;
-+	local64_t			write_stamp;
-+	local64_t			before_stamp;
- 	u64				read_stamp;
- 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
- 	long				nr_pages_to_update;
-@@ -2416,16 +2430,13 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
- 	unsigned length = info->length;
- 	u64 delta = info->delta;
- 
--	/* Only a commit updates the timestamp */
--	if (unlikely(!rb_event_is_commit(cpu_buffer, event)))
--		delta = 0;
--
- 	/*
- 	 * If we need to add a timestamp, then we
- 	 * add it to the start of the reserved space.
- 	 */
- 	if (unlikely(info->add_timestamp)) {
--		bool abs = ring_buffer_time_stamp_abs(cpu_buffer->buffer);
-+		bool abs = info->add_timestamp == RB_ADD_STAMP_FORCE ||
-+			ring_buffer_time_stamp_abs(cpu_buffer->buffer);
- 
- 		event = rb_add_time_stamp(event, abs ? info->delta : delta, abs);
- 		length -= RB_LEN_TIME_EXTEND;
-@@ -2480,6 +2491,39 @@ static inline bool sched_clock_stable(void)
- }
- #endif
- 
-+static __always_inline bool
-+rb_event_is_commit(struct ring_buffer_per_cpu *cpu_buffer,
-+		   struct ring_buffer_event *event)
-+{
-+	unsigned long addr = (unsigned long)event;
-+	unsigned long index;
-+
-+	index = rb_event_index(event);
-+	addr &= PAGE_MASK;
-+
-+	return cpu_buffer->commit_page->page == (void *)addr &&
-+		rb_commit_index(cpu_buffer) == index;
-+}
-+
-+static u64 rb_time_delta(struct ring_buffer_event *event)
-+{
-+	switch (event->type_len) {
-+	case RINGBUF_TYPE_PADDING:
-+		return 0;
-+
-+	case RINGBUF_TYPE_TIME_EXTEND:
-+		return ring_buffer_event_time_stamp(event);
-+
-+	case RINGBUF_TYPE_TIME_STAMP:
-+		return 0;
-+
-+	case RINGBUF_TYPE_DATA:
-+		return event->time_delta;
-+	default:
-+		return 0;
-+	}
-+}
-+
- static inline int
- rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 		  struct ring_buffer_event *event)
-@@ -2488,6 +2532,8 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct buffer_page *bpage;
- 	unsigned long index;
- 	unsigned long addr;
-+	u64 write_stamp;
-+	u64 delta;
- 
- 	new_index = rb_event_index(event);
- 	old_index = new_index + rb_event_ts_length(event);
-@@ -2496,10 +2542,32 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	bpage = READ_ONCE(cpu_buffer->tail_page);
- 
-+	delta = rb_time_delta(event);
-+
-+	write_stamp = local64_read(&cpu_buffer->write_stamp);
-+
-+	/* Make sure the write stamp is read before testing the location */
-+	barrier();
-+
- 	if (bpage->page == (void *)addr && rb_page_write(bpage) == old_index) {
- 		unsigned long write_mask =
- 			local_read(&bpage->write) & ~RB_WRITE_MASK;
- 		unsigned long event_length = rb_event_length(event);
-+		u64 ret;
-+
-+		ret = local64_cmpxchg(&cpu_buffer->write_stamp, write_stamp, write_stamp - delta);
-+		/* Something came in, can't discard */
-+		if (ret != write_stamp)
-+			return 0;
-+
-+		/*
-+		 * If an event were to come in now, it would see that the
-+		 * write_stamp and the before_stamp are different, and assume
-+		 * that this event just added itself before updating
-+		 * the write stamp. The interrupting event will fix the
-+		 * write stamp for us, and use the before stamp as its delta.
-+		 */
-+
- 		/*
- 		 * This is on the tail page. It is possible that
- 		 * a write could come in and move the tail page
-@@ -2551,10 +2619,6 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
- 		local_set(&cpu_buffer->commit_page->page->commit,
- 			  rb_page_write(cpu_buffer->commit_page));
- 		rb_inc_page(cpu_buffer, &cpu_buffer->commit_page);
--		/* Only update the write stamp if the page has an event */
--		if (rb_page_write(cpu_buffer->commit_page))
--			cpu_buffer->write_stamp =
--				cpu_buffer->commit_page->page->time_stamp;
- 		/* add barrier to keep gcc from optimizing too much */
- 		barrier();
- 	}
-@@ -2626,54 +2690,10 @@ static inline void rb_event_discard(struct ring_buffer_event *event)
- 		event->time_delta = 1;
- }
- 
--static __always_inline bool
--rb_event_is_commit(struct ring_buffer_per_cpu *cpu_buffer,
--		   struct ring_buffer_event *event)
--{
--	unsigned long addr = (unsigned long)event;
--	unsigned long index;
--
--	index = rb_event_index(event);
--	addr &= PAGE_MASK;
--
--	return cpu_buffer->commit_page->page == (void *)addr &&
--		rb_commit_index(cpu_buffer) == index;
--}
--
--static __always_inline void
--rb_update_write_stamp(struct ring_buffer_per_cpu *cpu_buffer,
--		      struct ring_buffer_event *event)
--{
--	u64 delta;
--
--	/*
--	 * The event first in the commit queue updates the
--	 * time stamp.
--	 */
--	if (rb_event_is_commit(cpu_buffer, event)) {
--		/*
--		 * A commit event that is first on a page
--		 * updates the write timestamp with the page stamp
--		 */
--		if (!rb_event_index(event))
--			cpu_buffer->write_stamp =
--				cpu_buffer->commit_page->page->time_stamp;
--		else if (event->type_len == RINGBUF_TYPE_TIME_EXTEND) {
--			delta = ring_buffer_event_time_stamp(event);
--			cpu_buffer->write_stamp += delta;
--		} else if (event->type_len == RINGBUF_TYPE_TIME_STAMP) {
--			delta = ring_buffer_event_time_stamp(event);
--			cpu_buffer->write_stamp = delta;
--		} else
--			cpu_buffer->write_stamp += event->time_delta;
--	}
--}
--
- static void rb_commit(struct ring_buffer_per_cpu *cpu_buffer,
- 		      struct ring_buffer_event *event)
- {
- 	local_inc(&cpu_buffer->entries);
--	rb_update_write_stamp(cpu_buffer, event);
- 	rb_end_commit(cpu_buffer);
- }
- 
-@@ -2872,13 +2892,13 @@ rb_handle_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		  KERN_WARNING "Delta way too big! %llu ts=%llu write stamp = %llu\n%s",
- 		  (unsigned long long)info->delta,
- 		  (unsigned long long)info->ts,
--		  (unsigned long long)cpu_buffer->write_stamp,
-+		  (unsigned long long)local64_read(&cpu_buffer->write_stamp),
- 		  sched_clock_stable() ? "" :
- 		  "If you just came from a suspend/resume,\n"
- 		  "please switch to the trace global clock:\n"
- 		  "  echo global > /sys/kernel/debug/tracing/trace_clock\n"
- 		  "or add trace_clock=global to the kernel command line\n");
--	info->add_timestamp = 1;
-+	info->add_timestamp = RB_ADD_STAMP_NORMAL;
- }
- 
- static struct ring_buffer_event *
-@@ -2887,8 +2907,36 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- {
- 	struct ring_buffer_event *event;
- 	struct buffer_page *tail_page;
--	unsigned long tail, write;
-+	unsigned long tail, write, w, next;
-+	u64 delta, before, after;
-+	bool abs = false;
-+
-+	/* Don't let the compiler play games with cpu_buffer->tail_page */
-+	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
-+
-+ /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
-+	barrier();
-+	before = local64_read(&cpu_buffer->before_stamp);
-+	after = local64_read(&cpu_buffer->write_stamp);
-+	barrier();
-+	info->ts = rb_time_stamp(cpu_buffer->buffer);
-+
-+	if (ring_buffer_time_stamp_abs(cpu_buffer->buffer)) {
-+		info->delta = info->ts;
-+		abs = true;
-+	} else {
-+		info->delta = info->ts - after;
-+	}
-+
-+	if (unlikely(test_time_stamp(info->delta)))
-+		rb_handle_timestamp(cpu_buffer, info);
- 
-+	/*
-+	 * If interrupting an event time update, we may need an absolute timestamp.
-+	 * Don't bother if this is the start of a new page (w == 0).
-+	 */
-+	if (unlikely(before != after && w))
-+		info->add_timestamp = RB_ADD_STAMP_FORCE;
- 	/*
- 	 * If the time delta since the last event is too big to
- 	 * hold in the time field of the event, then we append a
-@@ -2897,25 +2945,91 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	if (unlikely(info->add_timestamp))
- 		info->length += RB_LEN_TIME_EXTEND;
- 
--	/* Don't let the compiler play games with cpu_buffer->tail_page */
--	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
--	write = local_add_return(info->length, &tail_page->write);
-+	next = READ_ONCE(cpu_buffer->next_write);
-+	WRITE_ONCE(cpu_buffer->next_write, w + info->length);
-+
-+ /*B*/	local64_set(&cpu_buffer->before_stamp, info->ts);
-+
-+ /*C*/	write = local_add_return(info->length, &tail_page->write);
- 
- 	/* set write to only the index of the write */
- 	write &= RB_WRITE_MASK;
-+
- 	tail = write - info->length;
- 
-+	/* See if we shot pass the end of this buffer page */
-+	if (unlikely(write > BUF_PAGE_SIZE)) {
-+		if (tail != w) {
-+			/* before and after may now different, fix it up*/
-+			before = local64_read(&cpu_buffer->before_stamp);
-+			after = local64_read(&cpu_buffer->write_stamp);
-+			if (before != after)
-+				(void)local64_cmpxchg(&cpu_buffer->before_stamp, before, after);
-+		}
-+		return rb_move_tail(cpu_buffer, tail, info);
-+	}
-+
-+	if (likely(tail == w)) {
-+		u64 save_before;
-+
-+		/* Nothing interrupted us between A and C */
-+ /*D*/		local64_set(&cpu_buffer->write_stamp, info->ts);
-+		barrier();
-+ /*E*/		save_before = local64_read(&cpu_buffer->before_stamp);
-+		if (likely(info->add_timestamp != RB_ADD_STAMP_FORCE))
-+			/* This did not interrupt any time update */
-+			info->delta = info->ts - after;
-+		else
-+			/* Just use full timestamp for inerrupting event */
-+			info->delta = info->ts;
-+		barrier();
-+		if (unlikely(info->ts != save_before)) {
-+			/* SLOW PATH - Interrupted between C and E */
-+
-+			after = local64_read(&cpu_buffer->write_stamp);
-+			/* Write stamp must only go forward */
-+			if (save_before > after) {
-+				/*
-+				 * We do not care about the result, only that
-+				 * it gets updated atomically.
-+				 */
-+				(void)local64_cmpxchg(&cpu_buffer->write_stamp, after, save_before);
-+			}
-+		}
-+	} else {
-+		u64 ts;
-+		/* SLOW PATH - Interrupted between A and C */
-+		after = local64_read(&cpu_buffer->write_stamp);
-+		ts = rb_time_stamp(cpu_buffer->buffer);
-+		barrier();
-+ /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
-+		    after < ts) {
-+			/* Nothing came after this event between C and E */
-+			info->delta = ts - after;
-+			(void)local64_cmpxchg(&cpu_buffer->write_stamp, after, info->ts);
-+			info->ts = ts;
-+		} else {
-+			/*
-+			 * Interrupted beween C and E:
-+			 * Lost the previous events time stamp. Just set the
-+			 * delta to zero, and this will be the same time as
-+			 * the event this event interrupted. And the events that
-+			 * came after this will still be correct (as they would
-+			 * have built their delta on the previous event.
-+			 */
-+			info->delta = 0;
-+		}
-+		if (info->add_timestamp == RB_ADD_STAMP_FORCE)
-+			info->add_timestamp = RB_ADD_STAMP_NORMAL;
-+	}
-+
- 	/*
- 	 * If this is the first commit on the page, then it has the same
- 	 * timestamp as the page itself.
- 	 */
--	if (!tail && !ring_buffer_time_stamp_abs(cpu_buffer->buffer))
-+	if (unlikely(!tail && info->add_timestamp != RB_ADD_STAMP_FORCE && !abs))
- 		info->delta = 0;
- 
--	/* See if we shot pass the end of this buffer page */
--	if (unlikely(write > BUF_PAGE_SIZE))
--		return rb_move_tail(cpu_buffer, tail, info);
--
- 	/* We reserved something on the buffer */
- 
- 	event = __rb_page_index(tail_page, tail);
-@@ -2944,9 +3058,9 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	struct ring_buffer_event *event;
- 	struct rb_event_info info;
- 	int nr_loops = 0;
--	u64 diff;
- 
- 	rb_start_commit(cpu_buffer);
-+	/* The commit page can not change after this */
- 
- #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
- 	/*
-@@ -2965,7 +3079,7 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 
- 	info.length = rb_calculate_event_length(length);
-  again:
--	info.add_timestamp = 0;
-+	info.add_timestamp = RB_ADD_STAMP_NONE;
- 	info.delta = 0;
- 
- 	/*
-@@ -2980,22 +3094,6 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 1000))
- 		goto out_fail;
- 
--	info.ts = rb_time_stamp(cpu_buffer->buffer);
--	diff = info.ts - cpu_buffer->write_stamp;
--
--	/* make sure this diff is calculated here */
--	barrier();
--
--	if (ring_buffer_time_stamp_abs(buffer)) {
--		info.delta = info.ts;
--		rb_handle_timestamp(cpu_buffer, &info);
--	} else /* Did the write stamp get updated already? */
--		if (likely(info.ts >= cpu_buffer->write_stamp)) {
--		info.delta = diff;
--		if (unlikely(test_time_stamp(info.delta)))
--			rb_handle_timestamp(cpu_buffer, &info);
--	}
--
- 	event = __rb_reserve_next(cpu_buffer, &info);
- 
- 	if (unlikely(PTR_ERR(event) == -EAGAIN)) {
-@@ -3004,11 +3102,8 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 		goto again;
- 	}
- 
--	if (!event)
--		goto out_fail;
--
--	return event;
--
-+	if (likely(event))
-+		return event;
-  out_fail:
- 	rb_end_commit(cpu_buffer);
- 	return NULL;
-@@ -3154,11 +3249,6 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
- 	if (rb_try_to_discard(cpu_buffer, event))
- 		goto out;
- 
--	/*
--	 * The commit is still visible by the reader, so we
--	 * must still update the timestamp.
--	 */
--	rb_update_write_stamp(cpu_buffer, event);
-  out:
- 	rb_end_commit(cpu_buffer);
- 
-@@ -4475,8 +4565,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- 	cpu_buffer->read = 0;
- 	cpu_buffer->read_bytes = 0;
- 
--	cpu_buffer->write_stamp = 0;
--	cpu_buffer->read_stamp = 0;
-+	local64_set(&cpu_buffer->write_stamp, 0);
-+	local64_set(&cpu_buffer->before_stamp, 0);
-+	cpu_buffer->next_write = 0;
- 
- 	cpu_buffer->lost_events = 0;
- 	cpu_buffer->last_overrun = 0;
--- 
-2.26.2
-
-
+>> +int hinic_dcb_set_pfc(struct hinic_hwdev *hwdev, u8 pfc_en, u8 pfc_bitmap)
+> 
+> This is only ever called with 0, 0 as parameters.
+> .
+> 
+This function will be called with other parameters before long to support DCB.
+So I intend not to modify it.
