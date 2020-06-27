@@ -2,108 +2,156 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9548C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1A02081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593295638;
-	bh=Vrwp9LlSSqt+PkzBn7Mss1gYfhswZqIsr4jc72AIC5E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LSY/jftefbQnEqkKJjZbWrPb6sOUYqIyTQ5s9tthQM7yr8tURppeA9vXA0UUwoKlU
-	 tZAaSrBBlTrOcGjbc79uw64pgxLqiueynbypH1z9PEde7Z5PhDfwzc//FadrZUMGjW
-	 0ZXevcVuC0Hgqms0BxZSvvdMkoAE5rpBuYQl8IBM=
+	by mail.kernel.org (Postfix) with ESMTP id 080C1207E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 22:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgF0WHR (ORCPT
+        id S1726601AbgF0WMS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 18:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgF0WHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 18:07:15 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD85C061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:07:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y10so12653574eje.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T23WU98K7DfgxGFmX90QFUixn3Yje6mK/5XDasGAeVc=;
-        b=ZNtM25PmsQsusE0RMwt8rTRzvMaOEmTyBf1gCzGoYLJzTEHQ4rZRdRFZC26QdoRA5I
-         WXi87xWufETnQM0xP+yJvROVCSrJMMujBnInqZJE7QGfzfnWS5dR4zWckwDc2/8lY4WL
-         g/pvHw4QvT+aFYzaYYpdY90LP5+Mf2UNU8S8c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T23WU98K7DfgxGFmX90QFUixn3Yje6mK/5XDasGAeVc=;
-        b=nIo0TFUZ72TYAjoXAYGqnQEPLXsBH3V12QIQA2Hm7775yuGOAZMLH+G4VeScmR1FtI
-         SC6fy9oRsTPBkLNtcYjW/Wk3/Y1DjRn36ac4/m9bROHztQPrHeJkhuz3izEJJ4SOFBmU
-         1EDfJrKJ2DZRPwNylR33nzBhodlYKVL67WzIxZU727gN/IBAYW3MHzSQzApHdfvKSI2A
-         P9IzggaG0IsXLBKc97JDnIV3m8h2FFLRYtVYqoxpoM9rEApHshZnUarKNcSI10Qk90+o
-         kxAgXl8EXjNL+6PFDByi6rrbSSgsd9Dxbs1ypUZ6q/ASbod/n6Q3Uq3souCSJzDuhTsp
-         Ob9Q==
-X-Gm-Message-State: AOAM533x9YGauQItHigaDtxitv7+AJJuvqBrVfPa8IALm4tWgNTFqwhe
-        UVriudndLJnAdN3LzHQUKyaun3y/PJA=
-X-Google-Smtp-Source: ABdhPJz4QgHO0VH5rXoYv1DT1pblxYGb1bpq7MmUxFLfzln9PMfjh+44i1OgTR1DSTH2kAsRIilTqA==
-X-Received: by 2002:a17:906:f49:: with SMTP id h9mr8460511ejj.155.1593295633694;
-        Sat, 27 Jun 2020 15:07:13 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id q14sm24650582edj.47.2020.06.27.15.07.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jun 2020 15:07:13 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id l12so12600284ejn.10
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 15:07:13 -0700 (PDT)
-X-Received: by 2002:a2e:9cd4:: with SMTP id g20mr4559628ljj.371.1593295287735;
- Sat, 27 Jun 2020 15:01:27 -0700 (PDT)
+        Sat, 27 Jun 2020 18:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgF0WMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 18:12:18 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3040520706;
+        Sat, 27 Jun 2020 22:12:16 +0000 (UTC)
+Date:   Sat, 27 Jun 2020 18:12:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] sched: fix build with GCC_PLUGIN_RANDSTRUCT
+Message-ID: <20200627181214.3a4d4a42@oasis.local.home>
+In-Reply-To: <20200620104136.12195-1-rppt@kernel.org>
+References: <20200620104136.12195-1-rppt@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200625202807.b630829d6fa55388148bee7d@linux-foundation.org>
- <20200626032946._LJ_E6G66%akpm@linux-foundation.org> <CAHk-=wiZrhVUq3N17=GVzMQNQUKi65x=-djTM2A+fz8UdQxgEg@mail.gmail.com>
- <CADRDgG6SXwngT5gS2EY1Y0xnPdYth-FicQyTnPyqiwpmw52eQg@mail.gmail.com>
- <CAHp75Ve2x9dEqaHSue5UAftsJw+U3n8K9YEXBy5QFGJHgkQ3DA@mail.gmail.com> <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-In-Reply-To: <CAK8P3a3doveL3DxjcyiAqxNve07WfXYNTXK77Pbm70Dvyowg2w@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 27 Jun 2020 15:01:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiKCXEWKJ9dWUimGbrVRo_N2RosESUw8E7m9AEtyZcu=w@mail.gmail.com>
-Message-ID: <CAHk-=wiKCXEWKJ9dWUimGbrVRo_N2RosESUw8E7m9AEtyZcu=w@mail.gmail.com>
-Subject: Re: [patch 10/32] linux/bits.h: fix unsigned less than zero warnings
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>,
-        mm-commits@vger.kernel.org,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 7:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> How about moving that warning from W=1 to W=2?
+On Sat, 20 Jun 2020 13:41:36 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-That sounds like the right thing to do, perhaps with some extra
-warnings about W=2 (and W=3) being things that you definitely
-shouldn't be running in automated environments (unless you are then
-very very careful to look very critically at the warnings).
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Since the commit a148866489fb ("sched: Replace rq::wake_list")
+> task_struct and CSD_TYPE_TTWU objects can be on the same queue and this
+> requires that have "layout similar enough".
+> 
+> This assumption is broken when CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled:
 
-            Linus
+You forgot to Cc Kees, who's the one that is probably the most
+concerned about randomizing structures!
+
+
+
+> 
+>   CHK     include/generated/compile.h
+>   CC      kernel/smp.o
+> In file included from arch/x86/include/asm/atomic.h:5,
+>                  from include/linux/atomic.h:7,
+>                  from include/linux/llist.h:51,
+>                  from include/linux/irq_work.h:5,
+>                  from kernel/smp.c:10:
+> kernel/smp.c: In function ‘smp_init’:
+> include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_157’ declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) != offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist)
+>   392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>       |                                      ^
+> include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
+>   373 |    prefix ## suffix();    \
+>       |    ^~~~~~
+> include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
+>   392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>       |  ^~~~~~~~~~~~~~~~~~~
+> include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>       |                                     ^~~~~~~~~~~~~~~~~~
+> include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>    50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>       |  ^~~~~~~~~~~~~~~~
+> kernel/smp.c:687:2: note: in expansion of macro ‘BUILD_BUG_ON’
+>   687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+>       |  ^~~~~~~~~~~~
+> make[2]: *** [scripts/Makefile.build:280: kernel/smp.o] Error 1
+> make[1]: *** [Makefile:1764: kernel] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> make[1]: Leaving directory '/home/mike/build/kernel'
+> make: *** [Makefile:185: __sub-make] Error 2
+
+Seems the dependency is that the offsets between wake_entry and
+wake_entry_type doesn't change.
+
+> 
+> Move 'wake_entry' and 'wake_entry_type' fiels of task_struct out of
+> the randomized fields to keep their layout intact.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  include/linux/sched.h | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b62e6aaf28f0..c885573669ac 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -641,6 +641,15 @@ struct task_struct {
+>  	/* -1 unrunnable, 0 runnable, >0 stopped: */
+>  	volatile long			state;
+>  
+> +	/*
+> +	 * The layout of these fields must match the layout
+> CSD_TYPE_TTWU
+> +	 * so they can be on the same the @call_single_queue
+> +	 */
+> +#ifdef CONFIG_SMP
+> +	struct llist_node		wake_entry;
+> +	unsigned int			wake_entry_type;
+> +#endif
+> +
+>  	/*
+>  	 * This begins the randomizable portion of task_struct. Only
+>  	 * scheduling-critical items should be added above here.
+> @@ -654,8 +663,6 @@ struct task_struct {
+>  	unsigned int			ptrace;
+>  
+>  #ifdef CONFIG_SMP
+> -	struct llist_node		wake_entry;
+> -	unsigned int			wake_entry_type;
+
+What about instead just create an anonymous structure of the two. That
+way they can still be randomized within the task struct and not be a
+target of attacks?
+
+	struct {
+		struct llist_node	wake_entry;
+		unsigned int		wake_entry_type;
+	};
+
+Would that work?
+
+-- Steve
+
+
+>  	int				on_cpu;
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>  	/* Current CPU: */
+
