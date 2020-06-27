@@ -2,620 +2,237 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F75FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A153020720
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E46D2081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 01:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TowiYZjf"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nHlQZpZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgF0ApZ (ORCPT
+        id S1726504AbgF0BGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 20:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgF0ApY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 20:45:24 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8415C03E979
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 17:45:22 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id m81so11705897ioa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 17:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/oi2LEuTy/0Ld+RhLGkKz44qbsN9XhiFNsWnVD3b5vY=;
-        b=TowiYZjfaGJZzomHGCH1xXc76fzVC2WUMZGsu9nv9lfrLlmX+Y/U1g6ywJX9bWuuid
-         MS5/LYQiXToF21Piy6ZAP33UFlS+GqPKKQJhfWWHvu8Z82CBOAMS92+FVzyEVr6cIBZ5
-         rT8wA4fr/lgbZHQWMTIlfqfyzzINDJ+8Vj6yz/TJs0kjbw32+92hIsC2QkjBWSBd05vA
-         rboiHeQNF95bbvRmmYgAJT2DyNtGaal+VsN7sW9MCRWgC4Z8niQdCZlng2CMQ581voK0
-         QlSz/bdEJiU4ff58m/b9gh6DB0eCRwYm1/ZeRfam9ytsLOURxoxkMGU9Ve9mlHyzahkP
-         YObg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/oi2LEuTy/0Ld+RhLGkKz44qbsN9XhiFNsWnVD3b5vY=;
-        b=doNvSxHhbRHPAF4lf7zrlWeMz6FflqT1ddt8s8YwAp5BD5/rgqHh+5aqeAfihGjM7x
-         +n2P+QTOFh6KVFI7KIFOpsEZZrgUonBxIcGJ3wai6+0RivXlmx/f1U4LWmFhORYV2xKW
-         ZgEj1BYhiQmO9/H+dj+6JW762WPcjmdT6wPFJhCyWM6WZg/ncP/TaulVePp0YB0MoYq0
-         laE1rD8cTa10X7c1V+pUrQNTKKOw3Du1UQB/e9BHswavsGJ1MPp2xermO7yz+bdNyv/G
-         2+ifqLwx+/O5DiG5QbA0X5BedvmzmdrmQqIeJOfMlYCNLqRYYcIoD6WibgjKBtBaUEF9
-         nvCA==
-X-Gm-Message-State: AOAM530kaLT8UNHnaIE9EaaI0+cuuQEhBpx6wMjx0uum4C5tefIyivq0
-        zDJW5emv8HycWEwRy3J2YGUyhzNi5Egrug==
-X-Google-Smtp-Source: ABdhPJy9+SBJvN1jUJFKf0DFT2vQ9ELF7KMbBOB+IwbLy+TDp5La4aAig9Qx+jwa7N3w+s50FhHVug==
-X-Received: by 2002:a02:3501:: with SMTP id k1mr6104740jaa.14.1593218721910;
-        Fri, 26 Jun 2020 17:45:21 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id f2sm9778744ioc.52.2020.06.26.17.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 17:45:20 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1joyy7-000SSN-Cf; Fri, 26 Jun 2020 21:45:19 -0300
-Date:   Fri, 26 Jun 2020 21:45:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in addr_handler (2)
-Message-ID: <20200627004519.GB25301@ziepe.ca>
-References: <000000000000107b4605a7bdce7d@google.com>
- <20200614085321.8740-1-hdanton@sina.com>
+        Fri, 26 Jun 2020 21:06:32 -0400
+Received: from mail-vi1eur05on2062.outbound.protection.outlook.com ([40.107.21.62]:6214
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbgF0BGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 21:06:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A900vvr1oqfbmG7hi2xJIRePA5PYSvOB2l7svcAgMFjsPF5lFMqAV8ZYHEodTCQm/RfValI5XQiQosvAfNn8fojVWfgUl6WkqNCmgNmpmSah371XihBKuEsNZcD8u0ys4EGKES+R8gwz1ElpSJzS5xFe2MB3jH2zX0hX8NLTeaciVywn6k7cQdB08Yz9dyXYZ/VjYm0WC889Kk5BIqyRA6+7TPC+aYVW2V68Ntf2KyiPVA/5k7XSONIwSQPfK3oAkCxyz8SI80bdpfG/9G8ca6Mi6OLs5kQB5pKRx25DfWAiWpJDxG9YEgNEfVjrGt7uNgo2bDPvApQPqaTHEXDTvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kDAXNqRVmnXUg9usKF6cWr3v0fdpH3aNGXBkjHm9no0=;
+ b=hdXYaeu7Fni2C48wZQ0cgStZhfkj4omoUOEDYlsZk4gt3JDSfGIWYIcuGGnuIk+8lAlYwN9+VQqFtrv8TbeWBge2A6uzVMO5IqvL8Rdrn1k6cSmVXrK+LqKfiAbZEadk/8IEpWTHSI57hdfOZHVjJeqPgEWdgdb3E11iQ5xC0fI62+wPMhrekVHYaX7/ByFd75pcMPAsWOOV8sCclf8HWh3Atcp/I0GWQlRcAFI83aMQ74YyoHuFnN27ww+124yxgYAMg/p9qBCIjdgNKzgoU+mc3leC3K0jYX9D+NSvEDfZM6CYItNXUFrspm21km1keDn40thsz+58wVMQUOLjZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kDAXNqRVmnXUg9usKF6cWr3v0fdpH3aNGXBkjHm9no0=;
+ b=nHlQZpZysiQoUqoYXIdG+GYEVxl9ZtkTJ4KhqpP1wX9nUN21hseIcsBmp1s+CCQK+PoL9jKwcqKj/u9TGhn3UYsHSJDT9gS3lujLlUSxrAnz1GtoS37SDuVE2ONP/N6WvtAZp6tftZMVDCHBgNbmehC6OGYE1V6eJKrsRzR8liE=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VI1PR04MB4000.eurprd04.prod.outlook.com (2603:10a6:803:4c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Sat, 27 Jun
+ 2020 01:06:24 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3131.025; Sat, 27 Jun 2020
+ 01:06:24 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "idosch@idosch.org" <idosch@idosch.org>
+CC:     "jiri@resnulli.us" <jiri@resnulli.us>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        "vlad@buslov.dev" <vlad@buslov.dev>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
+        "vishal@chelsio.com" <vishal@chelsio.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "moshe@mellanox.com" <moshe@mellanox.com>,
+        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
+        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        Edward Cree <ecree@solarflare.com>
+Subject: RE:  Re: [v1,net-next 3/4] net: qos: police action add index for tc
+ flower offloading
+Thread-Topic: Re: [v1,net-next 3/4] net: qos: police action add index for tc
+ flower offloading
+Thread-Index: AdZLxKgmD59kGggcTEKT0YbNVDx95g==
+Date:   Sat, 27 Jun 2020 01:06:23 +0000
+Message-ID: <VE1PR04MB6496E945835DED23EA746A3D92900@VE1PR04MB6496.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mojatatu.com; dkim=none (message not signed)
+ header.d=none;mojatatu.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [221.221.90.193]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3e8d00c7-4bc2-4259-4950-08d81a364fe0
+x-ms-traffictypediagnostic: VI1PR04MB4000:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4000CC17E954D03E395454B892900@VI1PR04MB4000.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0447DB1C71
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bjb6H/J/QP0ECRaQteTaj2B6wUSzbvUfZoOD6Z0nnudiTiagt3x80tL6YUn9irsNTGPy4H73rqYAHh7xauK04bqibW4j+Qrs1xWwgK9ZV2zyIymId4C1aPxx/9WbJm/wWQVUHAWuEAODxKeOCX1+OYxMAUaLNto9YiPZ+ZTTej0LV0RjtTz8zRxfE3tdPL+EaJhyAODWTNwqjs8vdcaZDIEkGzyUjTGlR3yGTv4ZTSkrvsnYE9eSVAeOUCYHFK/3gFjBH0w5/5sXUVkMRqRWwx6Z5gzettXxlSK83uRYNO8s9SEx88qI5Wp2r+IjOg+WF5iFr2JiJTGoXIhCWmeQvBIPGWQmwkmH9mruJUgwLd0lVmZszzFQAADEi+Jy6SaTyfNqMD/AtSJ+z44vE2T6gA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(4326008)(71200400001)(83080400001)(2906002)(966005)(66556008)(66946007)(66446008)(8936002)(66476007)(8676002)(64756008)(45080400002)(83380400001)(316002)(54906003)(186003)(33656002)(478600001)(110136005)(55016002)(9686003)(86362001)(26005)(7416002)(7696005)(52536014)(6506007)(44832011)(76116006)(5660300002)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 49Th8QngXj98iioC37A1xsKQZDi9rSmCOr7yMvWegxbLJ0SCFrbso5c7wfLYBFxEKJdWwIlqKXsFClUHf4lJXRbZR6fL6oB8RTyuapk/uwvQeZb2/9LvC8qTG7tEqI90+Oh5olWdmvVAFwpPl65zd+BZ33eid0bHUcpClNo+vulIaCpl/A7xh5ukDogAV/2yPvApdDCKgJ3GHCZonrCfoQjVQH6nfXzvHJVTGUH2J/836AmAKTTM+maM9p28eZ76zp7z3RFCExf2gHinFj+mYh7mfCN9Yy7vT+gMPuna4uZveMk+PJOCEKjdKzXV0Fe/6su9P7wfg7buG78hwB9+eiet+K43iQdeol5DFFwWSEYdfBIwKLfLbOq4+WEfXUbhZ/cHlb/h1EZjGA88b+WV45XCkf9hYPeky/J6+fz2ZVdTwZsQ0e8TnWBQJOAakHPH43Mc+LaqeK0wwEYFOCPzTwMICMRM2cQKN/7vdMVog/etY5vASvABCRZvffdxb5+e
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614085321.8740-1-hdanton@sina.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6496.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e8d00c7-4bc2-4259-4950-08d81a364fe0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2020 01:06:24.0731
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TPfWTgWLyGKyFaHObfOJx9BS92snEl8G3Y2vVS8UD3dPliqw8ZiHUNQDN9B2U+XU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 04:53:21PM +0800, Hillf Danton wrote:
-> 
-> Wed, 10 Jun 2020 10:02:11 -0700
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16c0d3a6100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a929647172775e335941
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > 
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+a929647172775e335941@syzkaller.appspotmail.com
-> > 
-> > ==================================================================
-> > BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-> > BUG: KASAN: use-after-free in __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
-> > Read of size 8 at addr ffff888088ec33b0 by task kworker/u4:5/14014
-> > 
-> > CPU: 1 PID: 14014 Comm: kworker/u4:5 Not tainted 5.7.0-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Workqueue: ib_addr process_one_req
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
-> >  __kasan_report mm/kasan/report.c:513 [inline]
-> >  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
-> >  __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-> >  __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
-> >  addr_handler+0xa0/0x340 drivers/infiniband/core/cma.c:3100
-> >  process_one_req+0xfa/0x680 drivers/infiniband/core/addr.c:643
-> >  process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
-> >  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
-> >  kthread+0x388/0x470 kernel/kthread.c:268
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> > 
-> > Allocated by task 31499:
-> >  save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  set_track mm/kasan/common.c:56 [inline]
-> >  __kasan_kmalloc mm/kasan/common.c:494 [inline]
-> >  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
-> >  kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
-> >  kmalloc include/linux/slab.h:555 [inline]
-> >  kzalloc include/linux/slab.h:669 [inline]
-> >  __rdma_create_id+0x5b/0x850 drivers/infiniband/core/cma.c:861
-> >  ucma_create_id+0x1d1/0x590 drivers/infiniband/core/ucma.c:503
-> >  ucma_write+0x285/0x350 drivers/infiniband/core/ucma.c:1729
-> >  __vfs_write+0x76/0x100 fs/read_write.c:495
-> >  vfs_write+0x268/0x5d0 fs/read_write.c:559
-> >  ksys_write+0x1ee/0x250 fs/read_write.c:612
-> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > 
-> > Freed by task 31496:
-> >  save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  set_track mm/kasan/common.c:56 [inline]
-> >  kasan_set_free_info mm/kasan/common.c:316 [inline]
-> >  __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
-> >  __cache_free mm/slab.c:3426 [inline]
-> >  kfree+0x109/0x2b0 mm/slab.c:3757
-> >  ucma_close+0x111/0x300 drivers/infiniband/core/ucma.c:1807
-> >  __fput+0x33e/0x880 fs/file_table.c:281
-> >  task_work_run+0xf4/0x1b0 kernel/task_work.c:123
-> >  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-> >  exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
-> >  prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
-> >  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-> >  do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > 
-> > The buggy address belongs to the object at ffff888088ec3000
-> >  which belongs to the cache kmalloc-2k of size 2048
-> > The buggy address is located 944 bytes inside of
-> >  2048-byte region [ffff888088ec3000, ffff888088ec3800)
-> > The buggy address belongs to the page:
-> > page:ffffea000223b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-> > flags: 0xfffe0000000200(slab)
-> > raw: 00fffe0000000200 ffffea000299f588 ffffea000263d0c8 ffff8880aa000e00
-> > raw: 0000000000000000 ffff888088ec3000 0000000100000001 0000000000000000
-> > page dumped because: kasan: bad access detected
-> > 
-> > Memory state around the buggy address:
-> >  ffff888088ec3280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff888088ec3300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > >ffff888088ec3380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                                      ^
-> >  ffff888088ec3400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff888088ec3480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
-> 
-> Add extra grab to id_priv to make addr_handler() safe.
-> It may also fix what's
->   Reported-by: syzbot+08092148130652a6faae@syzkaller.appspotmail.com
-
-In some way adding the refcounting is appealing, but it is not quite
-right..
-
-Once rdma_resolve_addr() is called the cm_id state is supposed to go
-to RDMA_CM_ADDR_QUERY and stay there until the address is resolved.
-
-The first thing rdma_destroy_id() does (which is what triggered the
-kfree) is to call cma_cancel_operation(), which does a
-cancel_delayed_work_sync().
-
-So, to hit this syzkaller one of these must have happened:
- 1) rdma_addr_cancel() didn't work and the process_one_work() is still
-    runnable/running
- 2) The state changed away from RDMA_CM_ADDR_QUERY without doing
-    rdma_addr_cancel()
- 3) rdma_resolve_addr() ran concurrently with rdma_destroy_id()
-
-I think #1 and #3 are not likely as I've already fixed those in the
-past, but maybe you can see something?
-
-So, this is probably #2. Actually it looks like there are many cases
-where #2 is possible, so lets start there.
-
-Something sort of like this should help:
-
-From 036b462378a376725d81072c47754a89a51e4774 Mon Sep 17 00:00:00 2001
-From: Jason Gunthorpe <jgg@nvidia.com>
-Date: Fri, 26 Jun 2020 16:54:30 -0300
-Subject: [PATCH] RDMA/cma: Execute rdma_cm destruction from a handler properly
-
-When a rdma_cm_id needs to be destroyed after a handler callback fails,
-part of the destruction pattern is open coded into each call site.
-
-Unfortunately the blind assignment to state discards important information
-needed to do cma_cancel_operation(). This results in active operations
-being left running after rdma_destroy_id() completes, and the
-use-after-free bugs from KASAN.
-
-Consolidate this entire pattern into destroy_id_handler_unlock() and
-manage the locking correctly. The state should be set to
-RDMA_CM_DESTROYING under the handler_lock to atomically ensure no futher
-handlers are called.
-
-Reported-by: syzbot+a929647172775e335941@syzkaller.appspotmail.com
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
----
- drivers/infiniband/core/cma.c | 212 ++++++++++++++++------------------
- 1 file changed, 101 insertions(+), 111 deletions(-)
-
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 3d7cc9f0f3d40c..a599a628e45dc7 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1825,23 +1825,11 @@ static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
- 	}
- }
- 
--void rdma_destroy_id(struct rdma_cm_id *id)
-+static void _destroy_id(struct rdma_id_private *id_priv,
-+			enum rdma_cm_state state)
- {
--	struct rdma_id_private *id_priv;
--	enum rdma_cm_state state;
--
--	id_priv = container_of(id, struct rdma_id_private, id);
--	trace_cm_id_destroy(id_priv);
--	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
- 	cma_cancel_operation(id_priv, state);
- 
--	/*
--	 * Wait for any active callback to finish.  New callbacks will find
--	 * the id_priv state set to destroying and abort.
--	 */
--	mutex_lock(&id_priv->handler_mutex);
--	mutex_unlock(&id_priv->handler_mutex);
--
- 	rdma_restrack_del(&id_priv->res);
- 	if (id_priv->cma_dev) {
- 		if (rdma_cap_ib_cm(id_priv->id.device, 1)) {
-@@ -1870,6 +1858,38 @@ void rdma_destroy_id(struct rdma_cm_id *id)
- 	put_net(id_priv->id.route.addr.dev_addr.net);
- 	kfree(id_priv);
- }
-+
-+/*
-+ * destroy an ID from within the handler_mutex. This ensures that no other
-+ * handlers can start running concurrently.
-+ */
-+static void destroy_id_handler_unlock(struct rdma_id_private *id_priv)
-+	__releases(&idprv->handler_mutex)
-+{
-+	enum rdma_cm_state state;
-+
-+	trace_cm_id_destroy(id_priv);
-+
-+	/*
-+	 * Setting the state to destroyed under the handler mutex provides a
-+	 * fence against calling handler callbacks. If this is invoked due to
-+	 * the failure of a handler callback then it guarentees that no future
-+	 * handlers will be called.
-+	 */
-+	lockdep_assert_held(&id_priv->handler_mutex);
-+	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
-+	mutex_unlock(&id_priv->handler_mutex);
-+	_destroy_id(id_priv, state);
-+}
-+
-+void rdma_destroy_id(struct rdma_cm_id *id)
-+{
-+	struct rdma_id_private *id_priv =
-+		container_of(id, struct rdma_id_private, id);
-+
-+	mutex_lock(&id_priv->handler_mutex);
-+	destroy_id_handler_unlock(id_priv);
-+}
- EXPORT_SYMBOL(rdma_destroy_id);
- 
- static int cma_rep_recv(struct rdma_id_private *id_priv)
-@@ -2001,9 +2021,7 @@ static int cma_ib_handler(struct ib_cm_id *cm_id,
- 	if (ret) {
- 		/* Destroy the CM ID by returning a non-zero value. */
- 		id_priv->cm_id.ib = NULL;
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		mutex_unlock(&id_priv->handler_mutex);
--		rdma_destroy_id(&id_priv->id);
-+		destroy_id_handler_unlock(id_priv);
- 		return ret;
- 	}
- out:
-@@ -2170,7 +2188,7 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
- 	mutex_lock(&listen_id->handler_mutex);
- 	if (listen_id->state != RDMA_CM_LISTEN) {
- 		ret = -ECONNABORTED;
--		goto err1;
-+		goto err_unlock;
- 	}
- 
- 	offset = cma_user_data_offset(listen_id);
-@@ -2187,55 +2205,38 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
- 	}
- 	if (!conn_id) {
- 		ret = -ENOMEM;
--		goto err1;
-+		goto err_unlock;
- 	}
- 
- 	mutex_lock_nested(&conn_id->handler_mutex, SINGLE_DEPTH_NESTING);
- 	ret = cma_ib_acquire_dev(conn_id, listen_id, &req);
--	if (ret)
--		goto err2;
-+	if (ret) {
-+		destroy_id_handler_unlock(conn_id);
-+		goto err_unlock;
-+	}
- 
- 	conn_id->cm_id.ib = cm_id;
- 	cm_id->context = conn_id;
- 	cm_id->cm_handler = cma_ib_handler;
- 
--	/*
--	 * Protect against the user destroying conn_id from another thread
--	 * until we're done accessing it.
--	 */
--	cma_id_get(conn_id);
- 	ret = cma_cm_event_handler(conn_id, &event);
--	if (ret)
--		goto err3;
--	/*
--	 * Acquire mutex to prevent user executing rdma_destroy_id()
--	 * while we're accessing the cm_id.
--	 */
--	mutex_lock(&lock);
-+	if (ret) {
-+		/* Destroy the CM ID by returning a non-zero value. */
-+		conn_id->cm_id.ib = NULL;
-+		destroy_id_handler_unlock(conn_id);
-+		goto err_unlock;
-+	}
-+
-+	/* NOTE: Holding handler_mutex prevents concurrent destroy */
- 	if (cma_comp(conn_id, RDMA_CM_CONNECT) &&
- 	    (conn_id->id.qp_type != IB_QPT_UD)) {
- 		trace_cm_send_mra(cm_id->context);
- 		ib_send_cm_mra(cm_id, CMA_CM_MRA_SETTING, NULL, 0);
- 	}
--	mutex_unlock(&lock);
- 	mutex_unlock(&conn_id->handler_mutex);
--	mutex_unlock(&listen_id->handler_mutex);
--	cma_id_put(conn_id);
--	if (net_dev)
--		dev_put(net_dev);
--	return 0;
- 
--err3:
--	cma_id_put(conn_id);
--	/* Destroy the CM ID by returning a non-zero value. */
--	conn_id->cm_id.ib = NULL;
--err2:
--	cma_exch(conn_id, RDMA_CM_DESTROYING);
--	mutex_unlock(&conn_id->handler_mutex);
--err1:
-+err_unlock:
- 	mutex_unlock(&listen_id->handler_mutex);
--	if (conn_id)
--		rdma_destroy_id(&conn_id->id);
- 
- net_dev_put:
- 	if (net_dev)
-@@ -2335,9 +2336,7 @@ static int cma_iw_handler(struct iw_cm_id *iw_id, struct iw_cm_event *iw_event)
- 	if (ret) {
- 		/* Destroy the CM ID by returning a non-zero value. */
- 		id_priv->cm_id.iw = NULL;
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		mutex_unlock(&id_priv->handler_mutex);
--		rdma_destroy_id(&id_priv->id);
-+		destroy_id_handler_unlock(id_priv);
- 		return ret;
- 	}
- 
-@@ -2384,15 +2383,13 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 
- 	ret = rdma_translate_ip(laddr, &conn_id->id.route.addr.dev_addr);
- 	if (ret) {
--		mutex_unlock(&conn_id->handler_mutex);
--		rdma_destroy_id(new_cm_id);
-+		destroy_id_handler_unlock(conn_id);
- 		goto out;
- 	}
- 
- 	ret = cma_iw_acquire_dev(conn_id, listen_id);
- 	if (ret) {
--		mutex_unlock(&conn_id->handler_mutex);
--		rdma_destroy_id(new_cm_id);
-+		destroy_id_handler_unlock(conn_id);
- 		goto out;
- 	}
- 
-@@ -2403,25 +2400,15 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 	memcpy(cma_src_addr(conn_id), laddr, rdma_addr_size(laddr));
- 	memcpy(cma_dst_addr(conn_id), raddr, rdma_addr_size(raddr));
- 
--	/*
--	 * Protect against the user destroying conn_id from another thread
--	 * until we're done accessing it.
--	 */
--	cma_id_get(conn_id);
- 	ret = cma_cm_event_handler(conn_id, &event);
- 	if (ret) {
- 		/* User wants to destroy the CM ID */
- 		conn_id->cm_id.iw = NULL;
--		cma_exch(conn_id, RDMA_CM_DESTROYING);
--		mutex_unlock(&conn_id->handler_mutex);
--		mutex_unlock(&listen_id->handler_mutex);
--		cma_id_put(conn_id);
--		rdma_destroy_id(&conn_id->id);
--		return ret;
-+		destroy_id_handler_unlock(conn_id);
-+		goto out;
- 	}
- 
- 	mutex_unlock(&conn_id->handler_mutex);
--	cma_id_put(conn_id);
- 
- out:
- 	mutex_unlock(&listen_id->handler_mutex);
-@@ -2478,6 +2465,10 @@ static int cma_listen_handler(struct rdma_cm_id *id,
- {
- 	struct rdma_id_private *id_priv = id->context;
- 
-+	/* Listening IDs are always destroyed on removal */
-+	if (event->event == RDMA_CM_EVENT_DEVICE_REMOVAL)
-+		return -1;
-+
- 	id->context = id_priv->id.context;
- 	id->event_handler = id_priv->id.event_handler;
- 	trace_cm_event_handler(id_priv, event);
-@@ -2651,21 +2642,21 @@ static void cma_work_handler(struct work_struct *_work)
- {
- 	struct cma_work *work = container_of(_work, struct cma_work, work);
- 	struct rdma_id_private *id_priv = work->id;
--	int destroy = 0;
- 
- 	mutex_lock(&id_priv->handler_mutex);
- 	if (!cma_comp_exch(id_priv, work->old_state, work->new_state))
--		goto out;
-+		goto out_unlock;
- 
- 	if (cma_cm_event_handler(id_priv, &work->event)) {
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		destroy = 1;
-+		cma_id_put(id_priv);
-+		destroy_id_handler_unlock(id_priv);
-+		goto out_free;
- 	}
--out:
-+
-+out_unlock:
- 	mutex_unlock(&id_priv->handler_mutex);
- 	cma_id_put(id_priv);
--	if (destroy)
--		rdma_destroy_id(&id_priv->id);
-+out_free:
- 	kfree(work);
- }
- 
-@@ -2673,23 +2664,22 @@ static void cma_ndev_work_handler(struct work_struct *_work)
- {
- 	struct cma_ndev_work *work = container_of(_work, struct cma_ndev_work, work);
- 	struct rdma_id_private *id_priv = work->id;
--	int destroy = 0;
- 
- 	mutex_lock(&id_priv->handler_mutex);
- 	if (id_priv->state == RDMA_CM_DESTROYING ||
- 	    id_priv->state == RDMA_CM_DEVICE_REMOVAL)
--		goto out;
-+		goto out_unlock;
- 
- 	if (cma_cm_event_handler(id_priv, &work->event)) {
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		destroy = 1;
-+		cma_id_put(id_priv);
-+		destroy_id_handler_unlock(id_priv);
-+		goto out_free;
- 	}
- 
--out:
-+out_unlock:
- 	mutex_unlock(&id_priv->handler_mutex);
- 	cma_id_put(id_priv);
--	if (destroy)
--		rdma_destroy_id(&id_priv->id);
-+out_free:
- 	kfree(work);
- }
- 
-@@ -3165,9 +3155,7 @@ static void addr_handler(int status, struct sockaddr *src_addr,
- 		event.event = RDMA_CM_EVENT_ADDR_RESOLVED;
- 
- 	if (cma_cm_event_handler(id_priv, &event)) {
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		mutex_unlock(&id_priv->handler_mutex);
--		rdma_destroy_id(&id_priv->id);
-+		destroy_id_handler_unlock(id_priv);
- 		return;
- 	}
- out:
-@@ -3822,9 +3810,7 @@ static int cma_sidr_rep_handler(struct ib_cm_id *cm_id,
- 	if (ret) {
- 		/* Destroy the CM ID by returning a non-zero value. */
- 		id_priv->cm_id.ib = NULL;
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		mutex_unlock(&id_priv->handler_mutex);
--		rdma_destroy_id(&id_priv->id);
-+		destroy_id_handler_unlock(id_priv);
- 		return ret;
- 	}
- out:
-@@ -4354,9 +4340,7 @@ static int cma_ib_mc_handler(int status, struct ib_sa_multicast *multicast)
- 
- 	rdma_destroy_ah_attr(&event.param.ud.ah_attr);
- 	if (ret) {
--		cma_exch(id_priv, RDMA_CM_DESTROYING);
--		mutex_unlock(&id_priv->handler_mutex);
--		rdma_destroy_id(&id_priv->id);
-+		destroy_id_handler_unlock(id_priv);
- 		return 0;
- 	}
- 
-@@ -4771,29 +4755,38 @@ static int cma_add_one(struct ib_device *device)
- 	return ret;
- }
- 
--static int cma_remove_id_dev(struct rdma_id_private *id_priv)
-+static void cma_send_device_removal_put(struct rdma_id_private *id_priv)
- {
--	struct rdma_cm_event event = {};
-+	struct rdma_cm_event event = { .event = RDMA_CM_EVENT_DEVICE_REMOVAL };
- 	enum rdma_cm_state state;
--	int ret = 0;
-+	unsigned long flags;
- 
- 	/* Record that we want to remove the device */
--	state = cma_exch(id_priv, RDMA_CM_DEVICE_REMOVAL);
--	if (state == RDMA_CM_DESTROYING)
--		return 0;
--
--	cma_cancel_operation(id_priv, state);
- 	mutex_lock(&id_priv->handler_mutex);
-+	spin_lock_irqsave(&id_priv->lock, flags);
-+	state = id_priv->state;
-+	if (state == RDMA_CM_DESTROYING || state == RDMA_CM_DEVICE_REMOVAL) {
-+		spin_unlock_irqsave(&id_priv->lock, flags);
-+		mutex_unlock(&id_priv->handler_mutex);
-+		cm_id_put(id_priv);
-+		return;
-+	}
-+	id_priv->state = RDMA_CM_DEVICE_REMOVAL;
-+	spin_unlock_irqsave(&id_priv->lock, flags);
- 
--	/* Check for destruction from another callback. */
--	if (!cma_comp(id_priv, RDMA_CM_DEVICE_REMOVAL))
--		goto out;
--
--	event.event = RDMA_CM_EVENT_DEVICE_REMOVAL;
--	ret = cma_cm_event_handler(id_priv, &event);
--out:
-+	if (cma_cm_event_handler(id_priv, &event)) {
-+		mutex_unlock(&id_priv->handler_mutex);
-+		cm_id_put(id_priv);
-+		trace_cm_id_destroy(id_priv);
-+		_destroy_id(id_priv, state);
-+		return;
-+	}
- 	mutex_unlock(&id_priv->handler_mutex);
--	return ret;
-+
-+	/* The thread that assigns state does the cancel */
-+	cma_cancel_operation(id_priv, state);
-+
-+	cm_id_put(id_priv);
- }
- 
- static void cma_process_remove(struct cma_device *cma_dev)
-@@ -4811,10 +4804,7 @@ static void cma_process_remove(struct cma_device *cma_dev)
- 		cma_id_get(id_priv);
- 		mutex_unlock(&lock);
- 
--		ret = id_priv->internal_id ? 1 : cma_remove_id_dev(id_priv);
--		cma_id_put(id_priv);
--		if (ret)
--			rdma_destroy_id(&id_priv->id);
-+		cma_send_device_removal_put(id_priv);
- 
- 		mutex_lock(&lock);
- 	}
--- 
-2.27.0
-
+SGkgSmFtYWwsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYW1h
+bCBIYWRpIFNhbGltIDxqaHNAbW9qYXRhdHUuY29tPg0KPiBTZW50OiAyMDIw5bm0NuaciDI25pel
+IDIxOjI4DQo+IFRvOiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPjsgZGF2ZW1AZGF2ZW1sb2Z0Lm5l
+dDsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5v
+cmc7IGlkb3NjaEBpZG9zY2gub3JnDQo+IENjOiBqaXJpQHJlc251bGxpLnVzOyB2aW5pY2l1cy5n
+b21lc0BpbnRlbC5jb207IHZsYWRAYnVzbG92LmRldjsgQ2xhdWRpdQ0KPiBNYW5vaWwgPGNsYXVk
+aXUubWFub2lsQG54cC5jb20+OyBWbGFkaW1pciBPbHRlYW4NCj4gPHZsYWRpbWlyLm9sdGVhbkBu
+eHAuY29tPjsgQWxleGFuZHJ1IE1hcmdpbmVhbg0KPiA8YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAu
+Y29tPjsgbWljaGFlbC5jaGFuQGJyb2FkY29tLmNvbTsNCj4gdmlzaGFsQGNoZWxzaW8uY29tOyBz
+YWVlZG1AbWVsbGFub3guY29tOyBsZW9uQGtlcm5lbC5vcmc7DQo+IGppcmlAbWVsbGFub3guY29t
+OyBpZG9zY2hAbWVsbGFub3guY29tOw0KPiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsg
+VU5HTGludXhEcml2ZXJAbWljcm9jaGlwLmNvbTsNCj4ga3ViYUBrZXJuZWwub3JnOyB4aXlvdS53
+YW5nY29uZ0BnbWFpbC5jb207DQo+IHNpbW9uLmhvcm1hbkBuZXRyb25vbWUuY29tOyBwYWJsb0Bu
+ZXRmaWx0ZXIub3JnOw0KPiBtb3NoZUBtZWxsYW5veC5jb207IG0ta2FyaWNoZXJpMkB0aS5jb207
+DQo+IGFuZHJlLmd1ZWRlc0BsaW51eC5pbnRlbC5jb207IHN0ZXBoZW5AbmV0d29ya3BsdW1iZXIu
+b3JnOyBFZHdhcmQNCj4gQ3JlZSA8ZWNyZWVAc29sYXJmbGFyZS5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbdjEsbmV0LW5leHQgMy80XSBuZXQ6IHFvczogcG9saWNlIGFjdGlvbiBhZGQgaW5kZXggZm9y
+IHRjDQo+IGZsb3dlciBvZmZsb2FkaW5nDQo+IA0KPiBPbiAyMDIwLTA2LTI0IDg6MzQgcC5tLiwg
+UG8gTGl1IHdyb3RlOg0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gDQo+ID4+IFRoYXQgaXMgdGhlIHBvaW50IGkgd2FzIHRyeWluZyB0byBnZXQgdG8uIEJhc2lj
+YWxseToNCj4gPj4gWW91IGhhdmUgYSBjb3VudGVyIHRhYmxlIHdoaWNoIGlzIHJlZmVyZW5jZWQg
+YnkgImluZGV4Ig0KPiA+PiBZb3UgYWxzbyBoYXZlIGEgbWV0ZXIvcG9saWNlciB0YWJsZSB3aGlj
+aCBpcyByZWZlcmVuY2VkIGJ5ICJpbmRleCIuDQo+ID4NCj4gPiBUaGV5IHNob3VsZCBiZSBvbmUg
+c2FtZSBncm91cCBhbmQgc2FtZSBtZWFuaW5nLg0KPiA+DQo+IA0KPiBEaWRudCBmb2xsb3cuIFlv
+dSBtZWFuIHRoZSBpbmRleCBpcyB0aGUgc2FtZSBmb3IgYm90aCB0aGUgc3RhdCBhbmQgcG9saWNl
+cj8NCg0KU29ycnksIGp1c3QgaWdub3JlIHRoaXMgcmVwbHkgbGluZSwgaGFyZHdhcmUgaGFzIHRo
+aXMgcG9saWNlIGluZGV4IGNvdW50ZXIsIGJ1dCB3YXNuJ3QgdXNlIGluIHRoaXMgdGMgY29tbWFu
+ZCwganVzdCBmb2N1cyBvbiBiZWxvdyBwc2ZwX3N0cmVhbWZpbHRlcl9jb3VudGVycy4gDQpJIHRo
+b3VnaHQgeW91IHRob3VnaHQgaW4gdGhpcyB3YXkuDQoNCj4gDQo+ID4+DQo+ID4+IEZvciBwb2xp
+Y2VycywgdGhleSBtYWludGFpbiB0aGVpciBvd24gc3RhdHMuIFNvIHdoZW4gaSBzYXk6DQo+ID4+
+IHRjIC4uLiBmbG93ZXIgLi4uIGFjdGlvbiBwb2xpY2UgLi4uIGluZGV4IDUgVGhlIGluZGV4IHJl
+ZmVycmVkIHRvIGlzDQo+ID4+IGluIHRoZSBwb2xpY2VyIHRhYmxlDQo+ID4+DQo+ID4NCj4gPiBT
+dXJlLiBNZWFucyBwb2xpY2Ugd2l0aCBOby4gNSBlbnRyeS4NCj4gPg0KPiA+PiBCdXQgZm9yIG90
+aGVyIGFjdGlvbnMsIGV4YW1wbGUgd2hlbiBpIHNheToNCj4gPj4gdGMgLi4uIGZsb3dlciAuLi4g
+YWN0aW9uIGRyb3AgaW5kZXggMTANCj4gPg0KPiA+IFN0aWxsIHRoZSBxdWVzdGlvbiwgZG9lcyBn
+YWN0IGFjdGlvbiBkcm9wIGNvdWxkIGJpbmQgd2l0aCBpbmRleD8gSXQNCj4gZG9lc24ndCBtZWFu
+ZnVsLg0KPiA+DQo+IA0KPiBEZXBlbmRzIG9uIHlvdXIgaGFyZHdhcmUuIEZyb20gdGhpcyBkaXNj
+dXNzaW9uIGkgYW0gdHJ5aW5nIHRvIHVuZGVyc3RhbmQNCj4gd2hlcmUgdGhlIGNvbnN0cmFpbnQg
+aXMgZm9yIHlvdXIgY2FzZS4NCj4gV2hldGhlciBpdCBpcyB5b3VyIGgvdyBvciB0aGUgVFNOIHNw
+ZWMuDQo+IEZvciBhIHNhbXBsZSBjb3VudGluZyB3aGljaCBpcyBmbGV4aWJsZSBzZWUgaGVyZToN
+Cj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0
+dHBzJTNBJTJGJTJGcDQubw0KPiByZyUyRnA0LXNwZWMlMkZkb2NzJTJGUFNBLmh0bWwlMjNzZWMt
+DQo+IGNvdW50ZXJzJmFtcDtkYXRhPTAyJTdDMDElN0Nwby5saXUlNDBueHAuY29tJTdDMDJkYzhm
+M2Y2MDcxNGFmZA0KPiAzZGFiMDhkODE5ZDRjNjZlJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTlj
+NWMzMDE2MzUlN0MwJTdDMSU3DQo+IEM2MzcyODc3NDg5NDEwNDEzNTMmYW1wO3NkYXRhPTklMkZT
+JTJCQU1iSFYwOUg1VnJKTXdkRWVpU1B6Zw0KPiA0dyUyRm1XNUZ4UXI0ZWN1emU0JTNEJmFtcDty
+ZXNlcnZlZD0wDQo+IA0KPiBUaGF0IGNvbmNlcHQgaXMgbm90IHNwZWNpZmljIHRvIFA0IGJ1dCBy
+YXRoZXIgdG8gbmV3ZXIgZmxvdy1iYXNlZA0KPiBoYXJkd2FyZS4NCj4gDQo+IE1vcmUgY29udGV4
+dDoNCj4gVGhlIGFzc3VtcHRpb24gdGhlc2UgZGF5cyBpcyB3ZSBjYW4gaGF2ZSBhIF9sb3RfIG9m
+IGZsb3dzIHdpdGggYSBsb3Qgb2YNCj4gYWN0aW9ucy4NCj4gVGhlbiB5b3Ugd2FudCB0byBiZSBh
+YmxlIHRvIGNvbGxlY3QgdGhlIHN0YXRzIHNlcGFyYXRlbHksIHBvc3NpYmx5IG9uZQ0KPiBjb3Vu
+dGVyIGVudHJ5IGZvciBlYWNoIGFjdGlvbiBvZiBpbnRlcmVzdC4NCj4gV2h5IGlzIHRoaXMgaW1w
+b3J0YW50P2YgRm9yIGFuYWx5dGljcyB1c2VzIGNhc2VzLCB3aGVuIHlvdSBhcmUgcmV0cmlldmlu
+Zw0KPiB0aGUgc3RhdHMgeW91IHdhbnQgdG8gcmVkdWNlIHRoZSBhbW91bnQgb2YgZGF0YSBiZWlu
+ZyByZXRyaWV2ZWQuIFR5cGljYWxseQ0KPiB0aGVzZSBzdGF0cyBhcmUgcG9sbGVkIGV2ZXJ5IFgg
+c2Vjb25kcy4NCj4gRm9yIHN0YXJ0ZXJzLCB5b3UgZG9udCBkdW1wIGZpbHRlcnMgKHdoaWNoIGlu
+IHlvdXIgY2FzZSBzZWVtcyB0byBiZSB0aGUNCj4gb25seSB3YXkgdG8gZ2V0IHRoZSBzdGF0cyku
+DQo+IEluIGN1cnJlbnQgdGMsIHlvdSBkdW1wIHRoZSBhY3Rpb25zLiBCdXQgdGhhdCBjb3VsZCBi
+ZSBpbXByb3ZlZCBzbyB5b3UNCj4gY2FuIGp1c3QgZHVtcCB0aGUgc3RhdHMuIFRoZSBtYXBwaW5n
+IG9mIHN0YXRzIGluZGV4IHRvIGFjdGlvbnMgaXMga25vd24gdG8NCj4gdGhlIGVudGl0eSBkb2lu
+ZyB0aGUgZHVtcC4NCj4gDQo+IERvZXMgdGhhdCBtYWtlIHNlbnNlPw0KPiANCj4gPj4gVGhlIGlu
+ZGV4IGlzIGluIHRoZSBjb3VudGVyL3N0YXRzIHRhYmxlLg0KPiA+PiBJdCBpcyBub3QgZXhhY3Rs
+eSAiMTAiIGluIGhhcmR3YXJlLCB0aGUgZHJpdmVyIG1hZ2ljYWxseSBoaWRlcyBpdA0KPiA+PiBm
+cm9tIHRoZSB1c2VyIC0gc28gaXQgY291bGQgYmUgaHcgY291bnRlciBpbmRleCAxMjM0DQo+ID4N
+Cj4gPiBOb3QgZXhhY3RseS4gQ3VycmVudCBmbG93ZXIgb2ZmbG9hZGluZyBzdGF0cyBtZWFucyBn
+ZXQgdGhlIGNoYWluIGluZGV4DQo+IGZvciB0aGF0IGZsb3cgZmlsdGVyLiBUaGUgb3RoZXIgYWN0
+aW9ucyBzaG91bGQgYmluZCB0byB0aGF0IGNoYWluIGluZGV4Lg0KPiAgPg0KPiANCj4gU28gaWYg
+aSByZWFkIGNvcnJlY3RseTogWW91IGhhdmUgYW4gaW5kZXggcGVyIGZpbHRlciBwb2ludGluZyB0
+byB0aGUgY291bnRlcg0KPiB0YWJsZS4NCj4gSXMgdGhpcyBzb21ldGhpbmcgX3lvdV8gZGVjaWRl
+ZCB0byBkbyBpbiBzb2Z0d2FyZSBvciBpcyBpdCBob3cgdGhlDQo+IGhhcmR3YXJlIHdvcmtzPyAo
+bm90ZSBpIHJlZmVycmVkIHRvIHRoaXMgYXMgImxlZ2FjeSBBQ0wiIGFwcHJvYWNoIGVhcmxpZXIu
+DQo+IEl0IHdvcmtlZCBsaWtlIHRoYXQgaW4gb2xkIGhhcmR3YXJlIGJlY2F1c2UgdGhlIG1haW4g
+dXNlIGNhc2Ugd2FzIHRvIGhhdmUNCj4gb25lIGFjdGlvbiBvbiBhIG1hdGNoIChkcm9wL2FjY2Vw
+dCBraW5kKS4NCg0KSXQgaXMgdGhlIGhhcmR3YXJlIHdvcmtzIGFuZCBhbGwgcmVnaXN0ZXJzIGFj
+Y29yZGluZyB0byB0aGUgSUVFRTgwMi4xUWNpIHNwZWMuDQoNCj4gDQo+ID5MaWtlIElFRUU4MDIu
+MVFjaSwgd2hhdCBJIGFtIGRvaW5nIGlzIGJpbmQgZ2F0ZSBhY3Rpb24gdG8gZmlsdGVyDQo+IGNo
+YWluKG1hbmRhdG9yeSkuIEFuZCBhbHNvIHBvbGljZSBhY3Rpb24gYXMgb3B0aW9uYWwuDQo+IA0K
+PiBJIGNhbnQgc2VlbSB0byBmaW5kIHRoaXMgc3BlYyBvbmxpbmUuIElzIGl0IGZyZWVseSBhdmFp
+bGFibGU/DQoNCk1heWJlIG5lZWQgYSByZWdpc3RlciBjb3VudCBvbiBodHRwOi8vd3d3LmllZWU4
+MDIub3JnLw0KDQo+IEFsc28sIGlmIGkgdW5kZXJzdGFuZCB5b3UgY29ycmVjdGx5IHlvdSBhcmUg
+c2F5aW5nIGFjY29yZGluZyB0byB0aGlzIHNwZWMNCj4geW91IGNhbiBvbmx5IGhhdmUgdGhlIGZv
+bGxvd2luZyB0eXBlIG9mIHBvbGljeToNCj4gdGMgLi4gZmlsdGVyIG1hdGNoLXNwZWMtaGVyZSAu
+LiBcDQo+IGFjdGlvbiBnYXRlIGdhdGUtYWN0aW9uLWF0dHJpYnV0ZXMgXA0KPiBhY3Rpb24gcG9s
+aWNlIC4uLg0KPiANCj4gVGhhdCAiYWN0aW9uIGdhdGUiIE1VU1QgYWx3YXlzIGJlIHByZXNlbnQg
+YnV0ICJhY3Rpb24gcG9saWNlIiBpcyBvcHRpb25hbD8NCg0KWWVzLiBUaGF0IGlzIHdoYXQgSSB0
+cnlpbmcgdG8gZG86IG1hcCBzdHJlYW0gZ2F0ZSB0byBnYXRlIGFjdGlvbiBhbmQgZmxvdyBtZXRl
+cmluZyBlbnRyeSB0byBhY3Rpb24gcG9saWNlLiBBbmQgYSBmbG93IGZpbHRlciB0byBhIHN0cmVh
+bSBmaWx0ZXIgZW50cnkuIEVhY2ggc3RyZWFtIGZpbHRlciBlbnRyeSBpbiBoYXJkd2FyZSBiaW5k
+IHdpdGggc3RyZWFtIGZpbHRlciBlbnRyeS4NCg0KPiANCj4gPiBUaGVyZSBpcyBzdHJlYW0gY291
+bnRlciB0YWJsZSB3aGljaCBzdW1tYXJ5IHRoZSBjb3VudGVycyBwYXNzIGdhdGUNCj4gYWN0aW9u
+IGVudHJ5IGFuZCBwb2xpY2UgYWN0aW9uIGVudHJ5IGZvciB0aGF0IGNoYWluIGluZGV4KHRoZXJl
+IGlzIGEgYml0DQo+IGRpZmZlcmVudCBpZiB0d28gY2hhaW4gc2hhcmluZyBzYW1lIGFjdGlvbiBs
+aXN0KS4NCj4gPiBPbmUgY2hhaW4gY291bnRlciB3aGljaCB0YyBzaG93IHN0YXRzIGdldCBjb3Vu
+dGVyIHNvdXJjZToNCj4gPiBzdHJ1Y3QgcHNmcF9zdHJlYW1maWx0ZXJfY291bnRlcnMgew0KPiA+
+ICAgICAgICAgIHU2NCBtYXRjaGluZ19mcmFtZXNfY291bnQ7DQo+ID4gICAgICAgICAgdTY0IHBh
+c3NpbmdfZnJhbWVzX2NvdW50Ow0KPiA+ICAgICAgICAgIHU2NCBub3RfcGFzc2luZ19mcmFtZXNf
+Y291bnQ7DQo+ID4gICAgICAgICAgdTY0IHBhc3Npbmdfc2R1X2NvdW50Ow0KPiA+ICAgICAgICAg
+IHU2NCBub3RfcGFzc2luZ19zZHVfY291bnQ7DQo+ID4gICAgICAgICAgdTY0IHJlZF9mcmFtZXNf
+Y291bnQ7DQo+ID4gfTsNCj4gPg0KPiANCj4gQXNzdW1pbmcgcHNmcCBpcyBzb21ldGhpbmcgZGVm
+aW5lZCBpbiBJRUVFODAyLjFRY2kgYW5kIHRoZSBzcGVjIHdpbGwNCj4gZGVzY3JpYmUgdGhlc2U/
+DQoNClllcy4NCg0KPiBJcyB0aGUgZmlsdGVyICAiaW5kZXgiIHBvaW50aW5nIHRvIG9uZSBvZiB0
+aG9zZSBpbiBzb21lIGNvdW50ZXIgdGFibGU/DQoNCkZpbHRlciAnaW5kZXgnIHRvZ2V0aGVyIHdp
+dGggYSBjb3VudGVyICdpbmRleCcgYXMgc3RhdGlzdGljcy4NCg0KPiANCj4gDQo+ID4gV2hlbiBw
+YXNzIHRvIHRoZSB1c2VyIHNwYWNlLCBzdW1tYXJpemUgYXM6DQo+ID4gICAgICAgICAgc3RhdHMu
+cGt0cyA9IGNvdW50ZXJzLm1hdGNoaW5nX2ZyYW1lc19jb3VudCArDQo+ID4gY291bnRlcnMubm90
+X3Bhc3Npbmdfc2R1X2NvdW50IC0gZmlsdGVyLT5zdGF0cy5wa3RzOw0KPiAgPg0KPiA+ICAgICAg
+ICAgIHN0YXRzLmRyb3BzID0gY291bnRlcnMubm90X3Bhc3NpbmdfZnJhbWVzX2NvdW50ICsNCj4g
+Y291bnRlcnMubm90X3Bhc3Npbmdfc2R1X2NvdW50ICsgICBjb3VudGVycy5yZWRfZnJhbWVzX2Nv
+dW50IC0gZmlsdGVyLQ0KPiA+c3RhdHMuZHJvcHM7DQo+ID4NCj4gDQo+IFRoYW5rcyBmb3IgdGhl
+IGV4cGxhbmF0aW9uLg0KPiBXaGF0IGlzIGZpbHRlci0+c3RhdHM/DQoNCkZpbHRlci0+c3RhdHMg
+YnVmZmVyIHRoZSBjb3VudGVycyBsYXN0IHRpbWUgcmVhZCBzdGF0cy4gRmxvd2VyIHN0YXRzIGdl
+dCB0aGUgaW5jcmVhc2luZyBjb3VudGVycy4NCg0KPiBUaGUgcmVzdCBvZiB0aG9zZSBjb3VudGVy
+cyBzZWVtIHJlbGF0ZWQgdG8gdGhlIGdhdGUgYWN0aW9uLg0KPiBIb3cgZG8geW91IGFjY291bnQg
+Zm9yIHBvbGljaW5nIGFjdGlvbnM/DQoNCmNvdW50ZXJzLnJlZF9mcmFtZXNfY291bnQgaXMgdGhl
+IHBvbGljaW5nIGFjdGlvbiBjb3VudGVycy4NCg0KDQo+IA0KPiBjaGVlcnMsDQo+IGphbWFsDQoN
+Cg0KQnIsDQpQbyBMaXUNCg==
