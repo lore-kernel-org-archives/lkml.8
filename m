@@ -2,541 +2,156 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA8A208B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593263567;
-	bh=BBlB1KWcJsLKGF5UEELLanB5fxTeYHN5Td1hV7IMtX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1jk8CJpfiliNOz1bfI7sXuoA6ccT6sSfMQB3llJZFslOJre8oupyKW2l1F8+UaXTe
-	 mJM38ZQi/8k1Qj9caT6UYGDPAL8enpRYOThsG2b9w+Bs1O/Z6Q1ki3bm9FGVHjoTHI
-	 C/wBg+zMZQBegqgOn+fh2gG8t9twTgcFeUJKYEIk=
+	by mail.kernel.org (Postfix) with ESMTP id E2E2E2088E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 13:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgF0NMo (ORCPT
+        id S1726595AbgF0NTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0NMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:12:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29F22207E8;
-        Sat, 27 Jun 2020 13:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593263561;
-        bh=BBlB1KWcJsLKGF5UEELLanB5fxTeYHN5Td1hV7IMtX4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WmAAzLWEEhP6renhj/FnBq5Y1K/M0rUJeqQXg7o8ZNsrt1fJ9kduyZToekGWCZmCr
-         SoFj/bW0aZw6JC2pwYLL22Dfli+WKvnb2D0/l0MO4gcQI70vTfqrI251BvYcv+WceU
-         gply+j+G+m5ovH9mwj95rw2UK1IhVzBlkiZf+Y5Y=
-Date:   Sat, 27 Jun 2020 14:12:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V7 1/7] iio: adc: Convert the QCOM SPMI ADC bindings to
- .yaml format
-Message-ID: <20200627141235.6496c668@archlinux>
-In-Reply-To: <1592897399-24089-2-git-send-email-jprakash@codeaurora.org>
-References: <1592897399-24089-1-git-send-email-jprakash@codeaurora.org>
-        <1592897399-24089-2-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jun 2020 09:19:13 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:43018 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgF0NTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:19:12 -0400
+Received: by mail-il1-f198.google.com with SMTP id y13so8495105ila.10
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 06:19:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=2ETT4vRqkagml67hgM1LINwp51bE7tiOUDLkI2udidU=;
+        b=J/PTUtg+pFqhW5S/J1C0/71+hdIlJclVLx0XMpikAzOeqAa2zR3EUhSYrShk0O/4Oq
+         DT570/9L0litzKQAXsbhIFh+o9zvPfCNSoMlC3XADLDfXkXJ1/x5raA1D/zcIFnWPVyI
+         DtnmjIF1V3tCDNObLk1NJwkLGQpUsbWKyjy8HVRLEYvsDlQ6LUz0R4Ih4TjrXNcE0Id7
+         evS8mJLFoYvpX6PuC2p36jlV01qZFnWCVufrrNinE4m75I+JIOcLWxAMAi8qpA811iVs
+         gUZpwwt0v71MpKFY6+2PLLcoYU6asYcekO0XtcDQ77+YRobgOBHjaUEKXaNnhgdJDRDR
+         9FyA==
+X-Gm-Message-State: AOAM531MgYzgIctGhg4VZYg1tN7fZeIvXop4Gc1Yj2kdvFGeFepaBmAp
+        dKHic2DD+OfcQkP473C3tGlhG8K0iWLrdozVMMZMg4Sj2Niy
+X-Google-Smtp-Source: ABdhPJzZicoDpcMR9MJB8x29XA1Na8tAmKCbYlYr3OMYiW7Ru8tafplRKxXouDIpLHcHy5Y+fgdc7VDA0BzIYstrpohP+2zW0+G9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:8947:: with SMTP id n68mr3024125ild.235.1593263951270;
+ Sat, 27 Jun 2020 06:19:11 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 06:19:11 -0700
+In-Reply-To: <000000000000cf1be105a8ffc44c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d95a0505a910abd1@google.com>
+Subject: Re: possible deadlock in dev_mc_unsync
+From:   syzbot <syzbot+08e3d39f3eb8643216be@syzkaller.appspotmail.com>
+To:     ap420073@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 12:59:53 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
+syzbot has found a reproducer for the following crash on:
 
-> Convert the adc bindings from .txt to .yaml format.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-I applied all but patch 7 from the previous version (I think)
+HEAD commit:    4a21185c Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12e8e9c5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+dashboard link: https://syzkaller.appspot.com/bug?extid=08e3d39f3eb8643216be
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d2b1c5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17aed775100000
 
-Given there doesn't seem to be a chance log I'll assume only
-that patch changed and apply that one on top.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+08e3d39f3eb8643216be@syzkaller.appspotmail.com
 
-If there were any other changes then please send an incremental
-patch.
+============================================
+WARNING: possible recursive locking detected
+5.8.0-rc2-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor094/7550 is trying to acquire lock:
+ffff8880a8f1e280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+ffff8880a8f1e280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:915 [inline]
+ffff8880a8f1e280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:909
 
-Clearly this means I'm not adding Andy's additional Acks as that
-would require a rebase I'd rather not do.  Sorry about that Andy!
+but task is already holding lock:
+ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
+ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
+ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:914 [inline]
+ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:909
 
-Jonathan
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
+       CPU0
+       ----
+  lock(&vlan_netdev_addr_lock_key/1);
+  lock(&vlan_netdev_addr_lock_key/1);
 
+ *** DEADLOCK ***
 
-> ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 --------------
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 252 +++++++++++++++++++++
->  2 files changed, 252 insertions(+), 173 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> deleted file mode 100644
-> index c878768..0000000
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> +++ /dev/null
-> @@ -1,173 +0,0 @@
-> -Qualcomm's SPMI PMIC ADC
-> -
-> -- SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> -  voltage. The VADC is a 15-bit sigma-delta ADC.
-> -- SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> -  voltage. The VADC is a 16-bit sigma-delta ADC.
-> -
-> -VADC node:
-> -
-> -- compatible:
-> -    Usage: required
-> -    Value type: <string>
-> -    Definition: Should contain "qcom,spmi-vadc".
-> -                Should contain "qcom,spmi-adc5" for PMIC5 ADC driver.
-> -                Should contain "qcom,spmi-adc-rev2" for PMIC rev2 ADC driver.
-> -                Should contain "qcom,pms405-adc" for PMS405 PMIC
-> -
-> -- reg:
-> -    Usage: required
-> -    Value type: <prop-encoded-array>
-> -    Definition: VADC base address in the SPMI PMIC register map.
-> -
-> -- #address-cells:
-> -    Usage: required
-> -    Value type: <u32>
-> -    Definition: Must be one. Child node 'reg' property should define ADC
-> -            channel number.
-> -
-> -- #size-cells:
-> -    Usage: required
-> -    Value type: <u32>
-> -    Definition: Must be zero.
-> -
-> -- #io-channel-cells:
-> -    Usage: required
-> -    Value type: <u32>
-> -    Definition: Must be one. For details about IIO bindings see:
-> -            Documentation/devicetree/bindings/iio/iio-bindings.txt
-> -
-> -- interrupts:
-> -    Usage: optional
-> -    Value type: <prop-encoded-array>
-> -    Definition: End of conversion interrupt.
-> -
-> -Channel node properties:
-> -
-> -- reg:
-> -    Usage: required
-> -    Value type: <u32>
-> -    Definition: ADC channel number.
-> -            See include/dt-bindings/iio/qcom,spmi-vadc.h
-> -
-> -- label:
-> -    Usage: required for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2"
-> -    Value type: <empty>
-> -    Definition: ADC input of the platform as seen in the schematics.
-> -            For thermistor inputs connected to generic AMUX or GPIO inputs
-> -            these can vary across platform for the same pins. Hence select
-> -            the platform schematics name for this channel.
-> -
-> -- qcom,decimation:
-> -    Usage: optional
-> -    Value type: <u32>
-> -    Definition: This parameter is used to decrease ADC sampling rate.
-> -            Quicker measurements can be made by reducing decimation ratio.
-> -            - For compatible property "qcom,spmi-vadc", valid values are
-> -              512, 1024, 2048, 4096. If property is not found, default value
-> -              of 512 will be used.
-> -            - For compatible property "qcom,spmi-adc5", valid values are 250, 420
-> -              and 840. If property is not found, default value of 840 is used.
-> -            - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
-> -              512 and 1024. If property is not present, default value is 1024.
-> -
-> -- qcom,pre-scaling:
-> -    Usage: optional
-> -    Value type: <u32 array>
-> -    Definition: Used for scaling the channel input signal before the signal is
-> -            fed to VADC. The configuration for this node is to know the
-> -            pre-determined ratio and use it for post scaling. Select one from
-> -            the following options.
-> -            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
-> -            If property is not found default value depending on chip will be used.
-> -
-> -- qcom,ratiometric:
-> -    Usage: optional
-> -    Value type: <empty>
-> -    Definition: Channel calibration type.
-> -            - For compatible property "qcom,spmi-vadc", if this property is
-> -              specified VADC will use the VDD reference (1.8V) and GND for
-> -              channel calibration. If property is not found, channel will be
-> -              calibrated with 0.625V and 1.25V reference channels, also
-> -              known as absolute calibration.
-> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> -              if this property is specified VADC will use the VDD reference
-> -              (1.875V) and GND for channel calibration. If property is not found,
-> -              channel will be calibrated with 0V and 1.25V reference channels,
-> -              also known as absolute calibration.
-> -
-> -- qcom,hw-settle-time:
-> -    Usage: optional
-> -    Value type: <u32>
-> -    Definition: Time between AMUX getting configured and the ADC starting
-> -            conversion. The 'hw_settle_time' is an index used from valid values
-> -            and programmed in hardware to achieve the hardware settling delay.
-> -            - For compatible property "qcom,spmi-vadc" and "qcom,spmi-adc-rev2",
-> -              Delay = 100us * (hw_settle_time) for hw_settle_time < 11,
-> -              and 2ms * (hw_settle_time - 10) otherwise.
-> -              Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-> -              900 us and 1, 2, 4, 6, 8, 10 ms.
-> -              If property is not found, channel will use 0us.
-> -            - For compatible property "qcom,spmi-adc5", delay = 15us for
-> -              value 0, 100us * (value) for values < 11,
-> -              and 2ms * (value - 10) otherwise.
-> -              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 800,
-> -              900 us and 1, 2, 4, 6, 8, 10 ms
-> -              Certain controller digital versions have valid values of
-> -              15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
-> -              If property is not found, channel will use 15us.
-> -
-> -- qcom,avg-samples:
-> -    Usage: optional
-> -    Value type: <u32>
-> -    Definition: Number of samples to be used for measurement.
-> -            Averaging provides the option to obtain a single measurement
-> -            from the ADC that is an average of multiple samples. The value
-> -            selected is 2^(value).
-> -            - For compatible property "qcom,spmi-vadc", valid values
-> -              are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-> -              If property is not found, 1 sample will be used.
-> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> -              valid values are: 1, 2, 4, 8, 16
-> -              If property is not found, 1 sample will be used.
-> -
-> -NOTE:
-> -
-> -For compatible property "qcom,spmi-vadc" following channels, also known as
-> -reference point channels, are used for result calibration and their channel
-> -configuration nodes should be defined:
-> -VADC_REF_625MV and/or VADC_SPARE1(based on PMIC version) VADC_REF_1250MV,
-> -VADC_GND_REF and VADC_VDD_VADC.
-> -
-> -Example:
-> -
-> -#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> -#include <linux/irq.h>
-> -/* ... */
-> -
-> -	/* VADC node */
-> -	pmic_vadc: vadc@3100 {
-> -		compatible = "qcom,spmi-vadc";
-> -		reg = <0x3100>;
-> -		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		#io-channel-cells = <1>;
-> -		io-channel-ranges;
-> -
-> -		/* Channel node */
-> -		adc-chan@VADC_LR_MUX10_USB_ID {
-> -			reg = <VADC_LR_MUX10_USB_ID>;
-> -			qcom,decimation = <512>;
-> -			qcom,ratiometric;
-> -			qcom,hw-settle-time = <200>;
-> -			qcom,avg-samples = <1>;
-> -			qcom,pre-scaling = <1 3>;
-> -		};
-> -	};
-> -
-> -	/* IIO client node */
-> -	usb {
-> -		io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
-> -		io-channel-names = "vadc";
-> -	};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> new file mode 100644
-> index 0000000..de8d243
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> @@ -0,0 +1,252 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/qcom,spmi-vadc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm's SPMI PMIC ADC
-> +
-> +maintainers:
-> +  - Andy Gross <agross@kernel.org>
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description: |
-> +  SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> +  voltage. The VADC is a 15-bit sigma-delta ADC.
-> +  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> +  voltage. The VADC is a 16-bit sigma-delta ADC.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: qcom,pms405-adc
-> +          - const: qcom,spmi-adc-rev2
-> +
-> +      - items:
-> +        - enum:
-> +          - qcom,spmi-vadc
-> +          - qcom,spmi-adc5
-> +          - qcom,spmi-adc-rev2
-> +
-> +  reg:
-> +    description: VADC base address in the SPMI PMIC register map
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  '#io-channel-cells':
-> +    const: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-> +      End of conversion interrupt.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - '#io-channel-cells'
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      Represents the external channels which are connected to the ADC.
-> +      For compatible property "qcom,spmi-vadc" following channels, also known as
-> +      reference point channels, are used for result calibration and their channel
-> +      configuration nodes should be defined:
-> +      VADC_REF_625MV and/or VADC_SPARE1(based on PMIC version) VADC_REF_1250MV,
-> +      VADC_GND_REF and VADC_VDD_VADC.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          ADC channel number.
-> +          See include/dt-bindings/iio/qcom,spmi-vadc.h
-> +
-> +      label:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description: |
-> +            ADC input of the platform as seen in the schematics.
-> +            For thermistor inputs connected to generic AMUX or GPIO inputs
-> +            these can vary across platform for the same pins. Hence select
-> +            the platform schematics name for this channel.
-> +
-> +      qcom,decimation:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +            This parameter is used to decrease ADC sampling rate.
-> +            Quicker measurements can be made by reducing decimation ratio.
-> +
-> +      qcom,pre-scaling:
-> +        description: |
-> +            Used for scaling the channel input signal before the signal is
-> +            fed to VADC. The configuration for this node is to know the
-> +            pre-determined ratio and use it for post scaling. It is a pair of
-> +            integers, denoting the numerator and denominator of the fraction by which
-> +            input signal is multiplied. For example, <1 3> indicates the signal is scaled
-> +            down to 1/3 of its value before ADC measurement.
-> +            If property is not found default value depending on chip will be used.
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        oneOf:
-> +          - items:
-> +            - const: 1
-> +            - enum: [ 1, 3, 4, 6, 20, 8, 10 ]
-> +
-> +          - items:
-> +            - const: 10
-> +            - const: 81
-> +
-> +      qcom,ratiometric:
-> +        description: |
-> +            Channel calibration type.
-> +            - For compatible property "qcom,spmi-vadc", if this property is
-> +              specified VADC will use the VDD reference (1.8V) and GND for
-> +              channel calibration. If property is not found, channel will be
-> +              calibrated with 0.625V and 1.25V reference channels, also
-> +              known as absolute calibration.
-> +            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> +              if this property is specified VADC will use the VDD reference (1.875V)
-> +              and GND for channel calibration. If property is not found, channel
-> +              will be calibrated with 0V and 1.25V reference channels, also known
-> +              as absolute calibration.
-> +        type: boolean
-> +
-> +      qcom,hw-settle-time:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +            Time between AMUX getting configured and the ADC starting
-> +            conversion. The 'hw_settle_time' is an index used from valid values
-> +            and programmed in hardware to achieve the hardware settling delay.
-> +
-> +      qcom,avg-samples:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +            Number of samples to be used for measurement.
-> +            Averaging provides the option to obtain a single measurement
-> +            from the ADC that is an average of multiple samples. The value
-> +            selected is 2^(value).
-> +
-> +    required:
-> +      - reg
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,spmi-vadc
-> +
-> +    then:
-> +      patternProperties:
-> +        "^.*@[0-9a-f]+$":
-> +          properties:
-> +            qcom,decimation:
-> +              enum: [ 512, 1024, 2048, 4096 ]
-> +              default: 512
-> +
-> +            qcom,hw-settle-time:
-> +              enum: [ 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1, 2,
-> +                      4, 6, 8, 10 ]
-> +              default: 0
-> +
-> +            qcom,avg-samples:
-> +              enum: [ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 ]
-> +              default: 1
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,spmi-adc-rev2
-> +
-> +    then:
-> +      patternProperties:
-> +        "^.*@[0-9a-f]+$":
-> +          properties:
-> +            qcom,decimation:
-> +              enum: [ 256, 512, 1024 ]
-> +              default: 1024
-> +
-> +            qcom,hw-settle-time:
-> +              enum: [ 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1, 2,
-> +                      4, 6, 8, 10 ]
-> +              default: 0
-> +
-> +            qcom,avg-samples:
-> +              enum: [ 1, 2, 4, 8, 16 ]
-> +              default: 1
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,spmi-adc5
-> +
-> +    then:
-> +      patternProperties:
-> +        "^.*@[0-9a-f]+$":
-> +          properties:
-> +            qcom,decimation:
-> +              enum: [ 250, 420, 840 ]
-> +              default: 840
-> +
-> +            qcom,hw-settle-time:
-> +              enum: [ 15, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1, 2,
-> +                      4, 6, 8, 10, 16, 32, 64, 128 ]
-> +              default: 15
-> +
-> +            qcom,avg-samples:
-> +              enum: [ 1, 2, 4, 8, 16 ]
-> +              default: 1
-> +
-> +examples:
-> +  - |
-> +    spmi_bus {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      /* VADC node */
-> +      pmic_vadc: adc@3100 {
-> +        compatible = "qcom,spmi-vadc";
-> +        reg = <0x3100>;
-> +        interrupts = <0x0 0x31 0x0 0x1>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        #io-channel-cells = <1>;
-> +        io-channel-ranges;
-> +
-> +        /* Channel node */
-> +        adc-chan@39 {
-> +          reg = <0x39>;
-> +          qcom,decimation = <512>;
-> +          qcom,ratiometric;
-> +          qcom,hw-settle-time = <200>;
-> +          qcom,avg-samples = <1>;
-> +          qcom,pre-scaling = <1 3>;
-> +        };
-> +
-> +        adc-chan@9 {
-> +          reg = <0x9>;
-> +        };
-> +
-> +        adc-chan@a {
-> +          reg = <0xa>;
-> +        };
-> +
-> +        adc-chan@e {
-> +          reg = <0xe>;
-> +        };
-> +
-> +        adc-chan@f {
-> +          reg = <0xf>;
-> +        };
-> +      };
-> +    };
+ May be due to missing lock nesting notation
+
+2 locks held by syz-executor094/7550:
+ #0: ffffffff8a7b0228 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a7b0228 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5457
+ #1: ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
+ #1: ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
+ #1: ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync net/core/dev_addr_lists.c:914 [inline]
+ #1: ffff8880876f4280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_mc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:909
+
+stack backtrace:
+CPU: 0 PID: 7550 Comm: syz-executor094 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
+ check_deadlock kernel/locking/lockdep.c:2432 [inline]
+ validate_chain kernel/locking/lockdep.c:3202 [inline]
+ __lock_acquire.cold+0x178/0x3f8 kernel/locking/lockdep.c:4380
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+ _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
+ netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+ dev_mc_unsync net/core/dev_addr_lists.c:915 [inline]
+ dev_mc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:909
+ vlan_dev_stop+0x51/0x350 net/8021q/vlan_dev.c:315
+ __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1599
+ dev_close_many+0x238/0x650 net/core/dev.c:1624
+ vlan_device_event+0x8ef/0x2010 net/8021q/vlan.c:450
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ dev_close_many+0x30b/0x650 net/core/dev.c:1628
+ rollback_registered_many+0x3af/0xf60 net/core/dev.c:8945
+ unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10113
+ unregister_netdevice_many+0x36/0x50 net/core/dev.c:10112
+ rtnl_delete_link net/core/rtnetlink.c:2953 [inline]
+ rtnl_dellink+0x351/0xa70 net/core/rtnetlink.c:3005
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4495a9
+Code: Bad RIP value.
+RSP: 002b:00007f5a08ffddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dec68 RCX: 00000000004495a9
+RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+RBP: 00000000006dec60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dec6c
+R13: 00007ffef4bb9e0f R14: 00007f5a08ffe9c0 R15: 00000000006dec6c
 
