@@ -2,164 +2,147 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40411C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C3B2084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8282084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="febIOE8b"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HTaDkR4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgF0AGh (ORCPT
+        id S1726459AbgF0AI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 20:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgF0AGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 20:06:36 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC77C03E979;
-        Fri, 26 Jun 2020 17:06:36 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id u17so8862412qtq.1;
-        Fri, 26 Jun 2020 17:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=udBllLsYA6lB00cOOJeSI526QRhFyN1UuKw5hU7KkHo=;
-        b=febIOE8be8srwpirNRekGtuSASef3Zu8G9ORyVKjmYgcKvf3IAu/EwRI7QJA5s9B/N
-         9868iMPjM0OFZaxWhKExEh2ykodEtbpFhCfvumLlH+hRxklCxE8AKH4yhK/gAlwnvMWQ
-         kkMhttGQYvOcdHYJis2B87ZT2ajqVkhYVyxFB1GyNfyedwKHVPZT4uWQsNZpAnOfQ5Yc
-         0zEmUg5QTLwt1TzOPN+WQTqftA+O8mmi7bczGKtOVT9j9A1U7keM7z9PO/RMzAXwvePf
-         b6ZAf+nMvtrtc6lawua5zQLI6kDnEbPrm4ahPvf18ImFrhyqhymGPsYCIwi/gKMwFyiX
-         a+lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=udBllLsYA6lB00cOOJeSI526QRhFyN1UuKw5hU7KkHo=;
-        b=Mxx+SR86CYUPIg5FSiWSE2csxDHwrXoph9uW6en6XAmNlKH1ajvPnx1BwMQdYvstfE
-         0I2mtYWqoLtmldPBkihPrEBMswmNS9yZb8T9RMpyH0X/P/MWLU2nrUONIaWSKoi7k4yh
-         HnMGCDKDQnLV23Gf/XUWPqdvncHPBIzJO+lQp2L8Fiel4XlALGZwYy4+vV4sqOHRrIiQ
-         PtMG3I6bpn7ILseOzTVnErxyByaEnIpDjhvHH7cqwaIB6BCfTbDEO+4sgMOJIlXV5I2P
-         KB2nJBlsCId1BmtkRgGyeisJ4kPphaXwM5pYENfxToaMEI2GjJUGOhtctJu42FtZSOHs
-         yLCw==
-X-Gm-Message-State: AOAM5302MaKWJ8S64nRz55RKec2vrenyO9Jzx6sG0ESKm49CJZtIlUue
-        +M4JK7kkPVbpKIw6ZuUEbyy2Y5WWnIPaOh1WG6Y=
-X-Google-Smtp-Source: ABdhPJzHtkpQ4mcoJjnIF7AdtA+0kYcRkb2AhTvezqXZVa2Kg9FixR+Q8uqSgoJy7UVMbQkcs3AaFOB12M+mSWc7VA4=
-X-Received: by 2002:ac8:1991:: with SMTP id u17mr5271867qtj.93.1593216395389;
- Fri, 26 Jun 2020 17:06:35 -0700 (PDT)
+        Fri, 26 Jun 2020 20:08:56 -0400
+Received: from mout.gmx.net ([212.227.15.15]:50603 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbgF0AIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 20:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593216484;
+        bh=4otcmsUcuNIHrWB18fGLT23iJsc5+XpSSQ0JeZZP6Zg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=HTaDkR4TLueDwQwa+k8Nk8k2q0pKnY4Ma1CAZEE4qmOb/zK1GqpD4bD9XyaLRiBct
+         ZyGQ2mM84Qge+E5mhQrGU//SK2gpdIp/BuedMicYSqbSkEI3T6wnxTNHWr0IAlJizT
+         YapRz4BwOu/GQNecTMjc2C/RGQI3470aMre54r8g=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1jZuLV2EH3-00K8kO; Sat, 27
+ Jun 2020 02:08:04 +0200
+Date:   Sat, 27 Jun 2020 02:07:57 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
+Message-ID: <20200627000757.GA2699@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+ <20200620223915.1311485-2-j.neuschaefer@gmx.net>
+ <20200622103243.GT954398@dell>
 MIME-Version: 1.0
-References: <20200626001332.1554603-1-songliubraving@fb.com>
- <20200626001332.1554603-3-songliubraving@fb.com> <CAEf4BzZ6-s-vqp+bLiCAVgS2kmp09a1WdaSvaL_jJySx7s7inA@mail.gmail.com>
- <C3B6DD3E-1B69-4D0C-8A55-4EB81C21C619@fb.com> <CAEf4BzaC1Dqn3PXBJmczPRaUmjKc7pcg6_mjyKymBek-sDKv7Q@mail.gmail.com>
- <AD7AE0B3-94F9-4430-990C-85B9CF431EC7@fb.com>
-In-Reply-To: <AD7AE0B3-94F9-4430-990C-85B9CF431EC7@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 26 Jun 2020 17:06:24 -0700
-Message-ID: <CAEf4BzZSioccpzc-OXEZqRo-VLP6RE8nEtxXEWEmAOpnmPWWvw@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 2/4] bpf: introduce helper bpf_get_task_stak()
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <20200622103243.GT954398@dell>
+X-Provags-ID: V03:K1:eMxhCUYGNR4xIz4Sxup0XWxxmE2BA6MUjV6y9nWg0dsf9ecoPNS
+ lxhlxzKJ91a38+Xstg0rmg0QvGMBTMUXw7+mODQZa5hsY7rXVAnTegVmqFI+h+0KRtOjzDK
+ RdXYKyjLsp2kNP5li/2ImKjJfU3KC38/6bL6iF1vJ3brlZjGrkDn+R/s3onxLSykyGlvCXQ
+ PvLh7ovJrIPGhWLzr12Zw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yTY0aGX6+xA=:n1YGoNm1wZM8bRWdZQ5KWN
+ 2vmVtaa84gmspzZFGB6cgGfbHXkhUNaOwk49+bz1FSFH0O32RzLEEdFui+wxIW+L7mkxAtUyv
+ stazEJyrBs5tBZ5HaPnZ0JvKs6GDDl7gDjglrRJXYBm/TxkSGsLJd/ycvDwek/Q1eN9NbA5YR
+ 7HsgO52xG3Wo44jiTR4T2wjiPlwNNgpC1ibiSakBCTdCrip2V41okqzfib9BajOx8hR/XsAnh
+ O+2bFYWTmThzt1MFHSEbB/a1B+rBO7g7EF6tLMMxoAVpe4VVDzDfQKKOeKRzi+i4YCrHuJltD
+ POAVNOVlJE1oWwEanBJacXd5DmHOe+oK5VzqfMYne9fBEI7auOe6J8B0Og6hlcn/GHX3UKUaG
+ W1XAKN7JX/otVDpnxzv2WhgCFI09zlu7RNlPT0VgrJa35Hg6DSgF9Lp176YPixBEy32205WQx
+ 9HKpJ8ZBEz0/6K8/A+Xi3R24PXkLKtxT+LPyhmU1plVmdnnJPlynCCBQUJBLG/8RLk+0CCOCz
+ qz9uYqqS7iLs1NR7djVDjR7TLTa3PvnheSsPZT1v3dcUGJFY081UzWHGgT6uM6d+rLKXKvKTX
+ 3vkiwfs87Zpxu7t2K+ChPapBrG+8oCxPtFKODAaNTNW50RYQU5lrjWoTLplLJMvWSZwuGnz2E
+ Cl+s99vWylMu7bJOVreGeVZRXgKiAUXM8pTdUhYJWQoDdVgSSnl2x34jYqdSw7XGc4eSgMqYq
+ OqLOnfPqgZcksh64OEU9sk18lRdhd9UAvqYjjZavW4wxkGLq7kLQ4fg74EvIqhZQV+FuMCVT3
+ 3UG6otqEnhOk3R0sXsqjbMJtVzGuw+msuLfixtoiiXyyZw8Wyz0ZNx2Gozh0c7+EoTiIAtlFg
+ XS/y4CD/6HI5MkmjLSaN6ElotLylvrAmIQlQn/hHjNj42nQOp4DFw2UGIC+W7BxxT9nICBBso
+ h9Kp+bikfQ2XILGPiRUUEnrL4+qBavuspMeTtBrCDkIr80QxqghF/ldNbnDTLDhPUfxg7F9mM
+ Bsdmi5UGKQR2QCTtKxh36M4n6E8F3xUS+6IbQRph4Xe2DVpXJcoje3YnZWg0jbu7rfDspp4B4
+ CYhmP6wN+GfhP4lThpzR2Ld6dESwNzKmMz0es6Z5yS9p0h4mC463elpnYg37G4Typv85Zr0CA
+ NkTt9Bmmx2ThMbLqeAFkCWHx3utn01TSkShVZYWstL7lY3RUpxGvO5b+3aB76dNnBG8cMtHJA
+ VLEmYDbiP22ZpOXaU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 4:47 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jun 26, 2020, at 3:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 3:45 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Jun 26, 2020, at 1:17 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >>>
-> >>> On Thu, Jun 25, 2020 at 5:14 PM Song Liu <songliubraving@fb.com> wrote:
-> >>>>
-> >>>> Introduce helper bpf_get_task_stack(), which dumps stack trace of given
-> >>>> task. This is different to bpf_get_stack(), which gets stack track of
-> >>>> current task. One potential use case of bpf_get_task_stack() is to call
-> >>>> it from bpf_iter__task and dump all /proc/<pid>/stack to a seq_file.
-> >>>>
-> >>>> bpf_get_task_stack() uses stack_trace_save_tsk() instead of
-> >>>> get_perf_callchain() for kernel stack. The benefit of this choice is that
-> >>>> stack_trace_save_tsk() doesn't require changes in arch/. The downside of
-> >>>> using stack_trace_save_tsk() is that stack_trace_save_tsk() dumps the
-> >>>> stack trace to unsigned long array. For 32-bit systems, we need to
-> >>>> translate it to u64 array.
-> >>>>
-> >>>> Signed-off-by: Song Liu <songliubraving@fb.com>
-> >>>> ---
-> >>>
-> >>> Looks great, I just think that there are cases where user doesn't
-> >>> necessarily has valid task_struct pointer, just pid, so would be nice
-> >>> to not artificially restrict such cases by having extra helper.
-> >>>
-> >>> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> >>
-> >> Thanks!
-> >>
-> >>>
-> >>>> include/linux/bpf.h            |  1 +
-> >>>> include/uapi/linux/bpf.h       | 35 ++++++++++++++-
-> >>>> kernel/bpf/stackmap.c          | 79 ++++++++++++++++++++++++++++++++--
-> >>>> kernel/trace/bpf_trace.c       |  2 +
-> >>>> scripts/bpf_helpers_doc.py     |  2 +
-> >>>> tools/include/uapi/linux/bpf.h | 35 ++++++++++++++-
-> >>>> 6 files changed, 149 insertions(+), 5 deletions(-)
-> >>>>
-> >>>
-> >>> [...]
-> >>>
-> >>>> +       /* stack_trace_save_tsk() works on unsigned long array, while
-> >>>> +        * perf_callchain_entry uses u64 array. For 32-bit systems, it is
-> >>>> +        * necessary to fix this mismatch.
-> >>>> +        */
-> >>>> +       if (__BITS_PER_LONG != 64) {
-> >>>> +               unsigned long *from = (unsigned long *) entry->ip;
-> >>>> +               u64 *to = entry->ip;
-> >>>> +               int i;
-> >>>> +
-> >>>> +               /* copy data from the end to avoid using extra buffer */
-> >>>> +               for (i = entry->nr - 1; i >= (int)init_nr; i--)
-> >>>> +                       to[i] = (u64)(from[i]);
-> >>>
-> >>> doing this forward would be just fine as well, no? First iteration
-> >>> will cast and overwrite low 32-bits, all the subsequent iterations
-> >>> won't even overlap.
-> >>
-> >> I think first iteration will write zeros to higher 32 bits, no?
-> >
-> > Oh, wait, I completely misread what this is doing. It up-converts from
-> > 32-bit to 64-bit, sorry. Yeah, ignore me on this :)
-> >
-> > But then I have another question. How do you know that entry->ip has
-> > enough space to keep the same number of 2x bigger entries?
->
-> The buffer is sized for sysctl_perf_event_max_stack u64 numbers.
-> stack_trace_save_tsk() will put at most stack_trace_save_tsk unsigned
-> long in it (init_nr == 0). So the buffer is big enough.
->
 
-Awesome, thanks for clarification!
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks,
-> Song
+On Mon, Jun 22, 2020 at 11:32:43AM +0100, Lee Jones wrote:
+> On Sun, 21 Jun 2020, Jonathan Neusch=C3=A4fer wrote:
+>=20
+> > For reference, here are the devicetree bindings in plaintext format.
+> > (Not for merge.)
+>=20
+> This would be better placed inside the relevant patch(es), rather than
+> in a separate non-mergeable extra/superfluous patch.
+
+Ok, I'll put it in the patch descriptions (as long as the plaintext DT
+bindings are relevant for review).
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+
+> >  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
+> >  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
+> >  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl72jdUACgkQCDBEmo7z
+X9sVSQ//dO2mmSQ8irQcGq+ghniFyM5T/oE/AuJByz+DeR8rIh6vaaPtz9ECq8If
+BKOOwgL5IBJE2dUEYXjVwFy+jvW7dMUvPkOm7WOuzjGj1Rs3I4QvzcyhrPyeKinE
+CAi8mxQsggvq0ntaevbtvbgOBU/FQVmv58DKpkUOW0JIMpplDyne2tSUCSYjjZro
+czdeMhbA6Sd2UzK/2tuxgmF6n05KqgObgVQKUG7tiToAj9IuoS8OPn62MD9xm8Vv
+M4EO57heoLmtUDQl08ObZJ0esnsC5RyjcZgNruEKXta8f6BSik25/Z7w9aZcVybm
+8QqcX13GsM5DYJpmNZ6I/56BuxderNnrBsuLjaqnmBbXUgCugl6PYEAPPZ0MJKBK
+GFFimgrzG/H8p3Cy/Vp6yY5d9+Yb0DGhpl+XQnZRzwabKV18LwCmlgeb/m0fm/aB
+G09odAz3tZbMdeaU7aBRVIHctK/CAQb1O6LH/7IKLQNT0Lus+55amD4Fm6+gx+O4
+g0U74dcxrm3dAGD+bp3IVjPV09ZoNm0l+1Vl+83Qq6P0NE+y0lXnoRAUM5xSHaye
+srcAe6UJglI4qqu22unvkzv+uhMcZ0AqY65wGBA+LKazcCmZ6UnpwhcWdWrI5pva
+PWf8gqk3BXCySDeN+fVpPDidwrYr/r9DI4MGxZf/dnWJStmbgl4=
+=h4Re
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
