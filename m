@@ -2,97 +2,86 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC9F20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TfSWUrRX"
+	by mail.kernel.org (Postfix) with ESMTP id 81D5220720
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 05:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593234775;
+	bh=Gw5zaq+vMe/vtdVW8SlA7Vem2sWc7vMLiEdibwo5Tno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zDQYQwjKUPSNqNR13JKv7iNc4FSDPnTlFclTQ+G55lrp/duKZv8/Wfwvm8cHQnwmj
+	 xZu11rjRFUr4biVfIh9hpopP0yWbrijKgodXFRkRdFQ8kg+5am5/C3BKGt32ess1AR
+	 OstKzWCdHrWUXbouqY7nk6fnBj3PsPCc4R7vxqnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgF0FMm (ORCPT
+        id S1726059AbgF0FMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 01:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgF0FMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 01:12:40 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B9AC03E979;
-        Fri, 26 Jun 2020 22:12:40 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sat, 27 Jun 2020 01:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbgF0FMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 01:12:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49v21y2JxKz9sQt;
-        Sat, 27 Jun 2020 15:12:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593234758;
-        bh=hcSzOMIAPmFAWY+WVzxKymSCEik0c4vpPaJPDe1y4hM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TfSWUrRXkUznmwqJiiWC0J+1Mgfroe9ybvV49Io89jNp9Oj7j0MtoItoD8LSKXdoC
-         x8G48WRAurT3x/MbjuncOJojiW9n0sDttYBiaEZxWYVXvvlEjjqa0JWTgghl7R7Fly
-         fdVAyHRXlHRdnGjq0d1u21YF93uIwUDOg1kyCitbIHBcAm2sDq0KDerWdZLry+m1iA
-         8CZig6UxI0PJgtF8eKXG6OvcPI8WarB5jfE/uY9D8NLfS6Wtr3mjj9RJKYc8H7ttpO
-         46uaz+XVfJMhQhhZQstjrypsCkhxH53yOSKSXmP/esuSOLuuyg5bsbFW9ERWDShyKL
-         pIvGpkTbNaMbQ==
-Date:   Sat, 27 Jun 2020 15:12:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20200627151237.72b68e8b@canb.auug.org.au>
-In-Reply-To: <425cdd05-4123-c1ec-ad82-990eceae0b5a@kernel.dk>
-References: <20200627090740.683308fd@canb.auug.org.au>
-        <6920f023-5909-6ebf-606c-dbf467a31c7c@kernel.dk>
-        <20200627015605.goc2btyq6z3wwb5z@chatter.i7.local>
-        <425cdd05-4123-c1ec-ad82-990eceae0b5a@kernel.dk>
+        by mail.kernel.org (Postfix) with ESMTPSA id 78BCD20720;
+        Sat, 27 Jun 2020 05:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593234773;
+        bh=Gw5zaq+vMe/vtdVW8SlA7Vem2sWc7vMLiEdibwo5Tno=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jwo183Uw/BYuL37VI8DSmUM58XmYEuDcx3JGyXEv04LLKrFdsl0Qpf4I8MNpPt/A1
+         97MOndH+T+zSyc072BVSrb4TmDgxSJ0Kh6y5hOT+rCMvEQdws1tdAD6UjHKDgIyTcB
+         uuu58Hmg+kEK+tk2Z+tuApffxTblN3d6OayY0QiA=
+Date:   Sat, 27 Jun 2020 07:12:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     B K Karthik <bkkarthik@pesu.pes.edu>
+Cc:     Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fbtft-bus.c: Removing that prohibited space before ')'
+Message-ID: <20200627051249.GB233327@kroah.com>
+References: <20200627045150.ysqvd47o52f4a6rc@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dqhu0tSoUDHNttd/0/2C4=_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627045150.ysqvd47o52f4a6rc@pesu-pes-edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dqhu0tSoUDHNttd/0/2C4=_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jun 27, 2020 at 12:51:50AM -0400, B K Karthik wrote:
+> fbtft-bus.c:
+> 
+> fixing ERROR: space prohibited before that close parenthesis ')' by removing that space and ',' in line 65 and 67.
+> 
+> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> ---
+>  drivers/staging/fbtft/fbtft-bus.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
+> index 63c65dd67b17..847cbfbbd766 100644
+> --- a/drivers/staging/fbtft/fbtft-bus.c
+> +++ b/drivers/staging/fbtft/fbtft-bus.c
+> @@ -62,9 +62,9 @@ out:									      \
+>  }                                                                             \
+>  EXPORT_SYMBOL(func);
+>  
+> -define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
+> +define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8)
+>  define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16, cpu_to_be16)
+> -define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
+> +define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16)
 
-Hi Jens,
+Also, did you test-build this patch?  I think this just broke the
+build...
 
-On Fri, 26 Jun 2020 20:25:31 -0600 Jens Axboe <axboe@kernel.dk> wrote:
->
-> Right, but that's what git format-patch does when the line is long.
-
-I just tested, and "git format-patch" (for me) does *not* split those lines.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dqhu0tSoUDHNttd/0/2C4=_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl721UUACgkQAVBC80lX
-0GxI6wf9EazoolfjFxW11dNaNq6xTCKpRGxAaUf6B6tIDPWpPCxhT1dEVS0vAUYM
-M0Z5yekWVdP6wlgE8vqruTIN8QCaOWK/K/NgGfBKdmRcFPLjOHeAOftnKo6pXs4P
-WYakgeN2feDYCBm/G1XLiUMcVyZxWwrVhFULslkJr43V/lc6h/D/ZeGcZNEY8+Jf
-YRrafjBjfwe0kG7//yeobWk+lUyEBDK1LjL6h/mJLNN6qZiX8FRK6kJK/gnd9AFV
-BaSqbmMKBl0XIw8Tb5opXX2N8F2ERiTAPdRLTjr5lOUPMF5wkPaQv9JIvDYd728X
-IgWLaplpQK0JGPrJ6LShz5yNMRnlOA==
-=mGJ7
------END PGP SIGNATURE-----
-
---Sig_/dqhu0tSoUDHNttd/0/2C4=_--
