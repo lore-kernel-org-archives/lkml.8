@@ -2,132 +2,69 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE160C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D0221852
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC7F2186A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 14:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593267154;
-	bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+	s=default; t=1593267375;
+	bh=itT5if3N84nfVPow/9kdBCYR0Rh7EMAOUqN8xHYSKug=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lbBr549KblBntdlF6tujyzRQ9tN981KYPQRZoVYZ1T9TA1AjVaBQiOWGEqalXw3Up
-	 7fs6ZZhmP+5Gu7HDcrwbqkXuZ++SYIyINJ/7lGe7uKCMp/e1kvdWtb/Bm+K8/5WEIz
-	 cGn3AtZbO9P8u6SMlq+K0muB/Kt61TPSImKNi4wk=
+	b=pPbRXW/h3cZNCKht5zVvnFxr/26u60YMXO34Kyd56mVUmoS1vfL+ul/HWoirajf8/
+	 7Zo1WX9k4onOJXc8GPGbVbal9Y5zrU25cN84vJ0bOTGIqowv0fMfacIzAAGwnVb+nZ
+	 ffVLdk0FeSnYas+fjhaQb4mpnNhVWkgIepB5NHXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgF0OMa (ORCPT
+        id S1726000AbgF0OQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 10:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 10:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgF0OMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 10:12:30 -0400
+        id S1725798AbgF0OQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:16:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB4C2184D;
-        Sat, 27 Jun 2020 14:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19AC621655;
+        Sat, 27 Jun 2020 14:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593267149;
-        bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+        s=default; t=1593267373;
+        bh=itT5if3N84nfVPow/9kdBCYR0Rh7EMAOUqN8xHYSKug=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TfrrfsmELqDgVdyohdtQg5RGnq/X72CkFtYXD+vVAHqE8bU22zy+qL2STz3ewIsSp
-         a82+ne6RpaLkVeJ5rbGMc/Yhr/6tyXaN6oAKecHhJLWOK+X4sw/UL9jgy/NSwDNSEn
-         EEzmq/TNa+IF7b03gev789SKgOHxnvk12u9q00r8=
-Date:   Sat, 27 Jun 2020 16:12:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     sean.wang@mediatek.com
-Cc:     robh+dt@kernel.org, jslaby@suse.com,
-        andriy.shevchenko@linux.intel.com, robert.jarzmik@free.fr,
-        arnd@arndb.de, p.zabel@pengutronix.de, joel@jms.id.au,
-        david@lechnology.com, jan.kiszka@siemens.com,
-        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
-Message-ID: <20200627141222.GC1901451@kroah.com>
-References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
+        b=v8caGgvguck+JKuFnoTdAvQHyPhjvsMNNzQ0Bm/uxlzL1ASM6Kofiv5YOB+LJBa/3
+         dBcovb9HGZ0lwnoj4/sXMueUhdnEbBOLhyCAbdFvNVZS04hvjxItLnUGKoH5jPbbHE
+         ZcqUHZvAI5l6cqz69pzRT8bDT6fIMhF+ASYAO7bQ=
+Date:   Sat, 27 Jun 2020 16:16:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] serial: core: fix up sysrq regressions
+Message-ID: <20200627141607.GA1927422@kroah.com>
+References: <20200610152232.16925-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
+In-Reply-To: <20200610152232.16925-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Wed, Jun 10, 2020 at 05:22:29PM +0200, Johan Hovold wrote:
+> This series fixes a few regressions introduced by the recent sysrq
+> rework that went into 5.6.
 > 
-> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> BT in order to be instead of the UART interface between BT module and Host
-> CPU, and not exported to user space to access.
-> 
-> As the UART design, BTIF will be an APB slave and can transmit or receive
-> data by MCU access, but doesn't provide termios function like baudrate and
-> flow control setup.
-> 
-> Even LCR on offset 0xC that is just a FAKELCR
-> a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
->    will not be readable/writable.
-> 
-> b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
->    IIR(0x08), and LSR(0x14) will not be readable/writable.
-> 
-> So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
-> case.
-> 
-> The bluetooth driver would use BTIF device as a serdev. So the termios
-> still function would be called in kernelspace from ttyport_open in
-> drivers/tty/serdev/serdev-ttyprt.c.
-> 
-> Fixes: 1c16ae65e250 ("serial: 8250: of: Add new port type for MediaTek BTIF controller on MT7622/23 SoC")
-> Cc: Steven Liu <steven.liu@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> --
-> v1->v2:
-> no change on termios->c_cflag and refine commit message
-> 
-> v2->v3:
-> change the naming from NMOD to NTIO as TIO is a well established prefix
-> for termios IOCTLs.
-> 
-> v3->v4:
-> 1. remove appropriate tag
-> 2. add the explanation why the termios is required even when the connection
->    isn't exported to userspace.
-> ---
->  drivers/tty/serial/8250/8250.h      | 1 +
->  drivers/tty/serial/8250/8250_port.c | 5 ++++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-> index 52bb21205bb6..0d9d3bfe48af 100644
-> --- a/drivers/tty/serial/8250/8250.h
-> +++ b/drivers/tty/serial/8250/8250.h
-> @@ -82,6 +82,7 @@ struct serial8250_config {
->  #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
->  					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
->  					 */
-> +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
+> The fix for the unnecessary per-character overhead probably could have
+> been marked for stable but I left that decision to the maintainers as it
+> is a bit intrusive (although mostly shuffling code around).
 
-Naming is hard.  I will never remember what "NTIO" is, how about we make
-it explicit:
-	define UART_CAP_IGNORE_TERMIOS
-
-And the _CAP_ name is getting out of hand, this isn't a "capability",
-it's a "quirk for this port" but that's a battle to worry about later...
-
-thanks,
+It makes sense to backport this, I'll mark it as such, thanks!
 
 greg k-h
