@@ -1,140 +1,73 @@
-Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BF4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F7120787
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 23:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qaJFgFOq"
+	by mail.kernel.org (Postfix) with ESMTP id D8E772088E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgFZX5f (ORCPT
+        id S1726499AbgF0AGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 19:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgFZX5f (ORCPT
+        Fri, 26 Jun 2020 20:06:38 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:46550 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726101AbgF0AGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 19:57:35 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14842C03E979;
-        Fri, 26 Jun 2020 16:57:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s14so4860393plq.6;
-        Fri, 26 Jun 2020 16:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rsEV3VWlPvkhUXAUMqPfLhxZXBvMiVayXQJsZCVog6Q=;
-        b=qaJFgFOqAcU29/5kD0f06Npxd2Dlxs2CofOxWIM1ri/KxJeD3CMMJ59rQmHzFucJ8B
-         nh+vDWWb+BZtfjTYdIbBpJMUOu030FU6Y+BhUOavRYl3MX0jA7NtmJIIxBGfckqOL/pZ
-         kGNCyhm8AjNr+poSF74dgm1gYnHVvWwFl6PRIPz/nC9ezwCvaDSGHLApTFGq4E3djAey
-         yUqEr0GP9DqRyggZnLAydyoons0pEOwnqNWJ18syoG1G3wnz8VxgY5IZ6Vtn3vNhFbSW
-         Uv2UMMCUu0B/IhXD3Ex/l0STcGim+cHLqzPyHuLLt/r3fWRgJ4wjhZFK77Xhna4/Ftor
-         QMVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rsEV3VWlPvkhUXAUMqPfLhxZXBvMiVayXQJsZCVog6Q=;
-        b=X1p8S+hgHTmk6FTKnopDzLegYSjIRabpXS1qzKFnrINTs0c3DYoEw99iR8rg0ox1jJ
-         itEWrypZufcN4JLa8+GR/H5eWL0G8KD9Clpd9a3bc8MWJ8ce3L04bOHJ+B12mdBUn2ye
-         nFrnwUGL6MlfwUo3zVvoEtoSGbtNfescsyuWF8F393U1EeIUw+8kykMwOfVGLllkqt+d
-         QrubsaCW+j2/qCGvq090BtNB8xR96KcY/ZOS1WYx3uHvJsKJCpFpMwQe0HxdtnPSZejB
-         VopmY+4wE+vpo22LqB5lIAak0NVcRdH3mItvlV/xxTLD1idbC+cmo0hqpwSOU4IvlJF5
-         HaYg==
-X-Gm-Message-State: AOAM532o7Jp7rhXEKl23hfUyy1VVuHxYajoye6m59tKk2YN1ZHZezjfl
-        eVmIDk3h/jnj//6NEVC85Yg=
-X-Google-Smtp-Source: ABdhPJzVai7R7S/T4iw8i1jkT9aJDWWEaEIMVs2EARAOFCaoDxYnib5o0dCMspzPd8YqYik5vgix9g==
-X-Received: by 2002:a17:90b:50d:: with SMTP id r13mr5872471pjz.94.1593215854419;
-        Fri, 26 Jun 2020 16:57:34 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id t5sm5081758pgl.38.2020.06.26.16.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 16:57:33 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Sat, 27 Jun 2020 07:57:25 +0800
-To:     Joe Perches <joe@perches.com>
+        Fri, 26 Jun 2020 20:06:37 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 25C3A100E7B42;
+        Sat, 27 Jun 2020 00:06:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: roof26_4408f0826e59
+X-Filterd-Recvd-Size: 1693
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 27 Jun 2020 00:06:34 +0000 (UTC)
+Message-ID: <324448187976fc690ea63f1c18e063fb0b09f740.camel@perches.com>
+Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
+From:   Joe Perches <joe@perches.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
 Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
         "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
         <GR-Linux-NIC-Dev@marvell.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] staging: qlge: fix else after return or break
-Message-ID: <20200626235725.2rcpisito2253jhm@Rk>
+Date:   Fri, 26 Jun 2020 17:06:33 -0700
+In-Reply-To: <20200626235725.2rcpisito2253jhm@Rk>
 References: <20200625215755.70329-1-coiby.xu@gmail.com>
- <20200625215755.70329-3-coiby.xu@gmail.com>
- <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
+         <20200625215755.70329-3-coiby.xu@gmail.com>
+         <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
+         <20200626235725.2rcpisito2253jhm@Rk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <049f51497b84e55e61aca989025b64493287cbab.camel@perches.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 03:13:14PM -0700, Joe Perches wrote:
->On Fri, 2020-06-26 at 05:57 +0800, Coiby Xu wrote:
->> Remove unnecessary elses after return or break.
->
->unrelated trivia:
->
->> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
->[]
->> @@ -1391,12 +1391,11 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
->>  			pr_err("%s: Failed read of mac index register\n",
->>  			       __func__);
->>  			return;
->> -		} else {
->> -			if (value[0])
->> -				pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
->> -				       qdev->ndev->name, i, value[1], value[0],
->> -				       value[2]);
->
->looks like all of these could use netdev_err
->
->				netdev_err(qdev, "etc...",
->					   i, value[1], value[0], value[2]);
->
->etc...
+On Sat, 2020-06-27 at 07:57 +0800, Coiby Xu wrote:
+> On Thu, Jun 25, 2020 at 03:13:14PM -0700, Joe Perches wrote:
+> > On Fri, 2020-06-26 at 05:57 +0800, Coiby Xu wrote:
+> > > Remove unnecessary elses after return or break.
+> > 
+> > unrelated trivia:
+[]
+> > looks like all of these could use netdev_err
+[]
+> should we also replace all pr_errs with netdev_err in
+> ql_dump_* functions?
 
-Should we also replace all pr_errs with netdev_err in
-ql_dump_* functions? I'm not sure how we will use ql_dump_*. For example,
-ql_dump_regs is not referred by any kernel source, so I guess it's for
-the sole purpose of debugging the driver by the developer. But one
-pr_err in ql_dump_routing_entries which is called by dl_dump_regs doesn't
-prints out the device name whereas the other does,
+Ideally, anywhere a struct netdevice * is available, it should
+be used to output netdev_<level> in preference to pr_<level>.
 
-> void ql_dump_routing_entries(struct ql_adapter *qdev)
-> {
-> 	int i;
-> 	u32 value;
->
-> 	i = ql_sem_spinlock(qdev, SEM_RT_IDX_MASK);
-> 	if (i)
-> 		return;
-> 	for (i = 0; i < 16; i++) {
-> 		value = 0;
-> 		if (ql_get_routing_reg(qdev, i, &value)) {
-> 			pr_err("%s: Failed read of routing index register\n",
-> 			       __func__);
-> 			break;
-> 		}
-> 		if (value)
-> 			pr_err("%s: Routing Mask %d = 0x%.08x\n",
-> 			       qdev->ndev->name, i, value);
-> 	}
 
---
-Best regards,
-Coiby
