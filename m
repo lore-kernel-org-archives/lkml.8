@@ -2,112 +2,90 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E81C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 038E32080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB94120B80
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 08:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593244993;
+	bh=FxmCdS8O54mxRzyX22UP4gP8aPWMTFqpBboIyM9uHy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fotA1qSGeAxnRLyuPxuEKO02yJ/zU3MIwuI0z2q5Q5Rkozv7Boywk1+fgLIFkcrxj
+	 D1rZhuaPLzKvGr6ekd1PJDjmf3tLP4jnLe0W/XxDimD8tgsH/jNjHrJajOiHuwcRgF
+	 UG8hEJ6MS+8wMRixmrXe4KT9rWEkL+KM/eJ4SmzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgF0H6L convert rfc822-to-8bit (ORCPT
+        id S1726161AbgF0IDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 03:58:11 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34756 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgF0H6K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 03:58:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e4so1958940oib.1;
-        Sat, 27 Jun 2020 00:58:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FEOix1PkmJ3Xu++XOiz630IHPluOaNyyv6Gt5QqasRA=;
-        b=fqgYEG+zOrFBXq/UTt23d5o6YuURSPJts55aFRwNpZyVS+bC4CWPgJPs356PfC85EG
-         n+KJWYdOxwzL8uAv9JWfbZn9cAilqGkm20qLpgR8hlOJdbl/ASf7hUXDJ/OJ2NBVnzxi
-         k/rGsFD3lNHWMcI/1ErZxSufIZ3fO2nxlpsj5SuQCY9vFsUFcNfZBqubPIj6W/72ye6E
-         wAsKHpc5BhD1yL5nJkvNGK2Ex7sBUesUfCLI6XOHBB4T0aV5cMhsKCy9eIRjkqMxTTck
-         MEtFvhF0LIpiylN+PIJ9ju6BLmB2oRZ46i3snjWSZrF/kT/Mqpaxt5YZRt/YInlEsZXI
-         +kLw==
-X-Gm-Message-State: AOAM531DKQ48YblDJW9WtIPgFbf4oFAcrfZyro2yWeD0PzIA7bvBjSob
-        WGzvN3VWqg+5vVN/DxysL5EDvVrIDb3FRGnhD2c=
-X-Google-Smtp-Source: ABdhPJywEEVQosCF11WlTPVdrjY75D4bMbsAOBshW+Sp17UOS0su3peMoxbY3LhIAorZswc0ivDvi+jHTLtoNnSxZlI=
-X-Received: by 2002:aca:1801:: with SMTP id h1mr928201oih.148.1593244690056;
- Sat, 27 Jun 2020 00:58:10 -0700 (PDT)
+        Sat, 27 Jun 2020 04:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgF0IDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 04:03:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052B72081A;
+        Sat, 27 Jun 2020 08:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593244991;
+        bh=FxmCdS8O54mxRzyX22UP4gP8aPWMTFqpBboIyM9uHy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BGa5vpvy7dZu4hmc66dH6NPCZZDnW2jk6ItxrDlnt6TtPKx4m6V882Xm1ot0+MI2t
+         asMaMgs37mK9j1TCA7xzjIWGXCMiPiv2GamUQ77dUxJe+UCsx+uR4gjgfcRCaCSIkA
+         UoLMHW2WCL1O4nBDaa7B11hn+0XpsNSl9DjemI+w=
+Date:   Sat, 27 Jun 2020 10:03:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     richard.gong@linux.intel.com, atull@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH V3] firmware: stratix10-svc: Fix some error handling code
+Message-ID: <20200627080305.GB1547070@kroah.com>
+References: <0ecc14c7-b4df-1890-fbe7-91307c2db398@wanadoo.fr>
+ <20200626193720.949431-1-christophe.jaillet@wanadoo.fr>
+ <20200627051556.GD233327@kroah.com>
+ <eb3ed7ba-902e-8ecf-1246-82ce88efd436@wanadoo.fr>
 MIME-Version: 1.0
-References: <20200623145748.28877-1-geert+renesas@glider.be>
- <20200623145748.28877-3-geert+renesas@glider.be> <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
- <CAHp75VenuB=up5wHm+BtkQPy_N6GuE7xvHJWq-e4Fricg1M7Vw@mail.gmail.com>
-In-Reply-To: <CAHp75VenuB=up5wHm+BtkQPy_N6GuE7xvHJWq-e4Fricg1M7Vw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 27 Jun 2020 09:57:58 +0200
-Message-ID: <CAMuHMdWR5=3UZuWx5hRe8YmxX6Xj2mCxJsT2kKjVceqVYY3SZA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: aggregator: Use bitmap_parselist() for parsing
- GPIO offsets
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb3ed7ba-902e-8ecf-1246-82ce88efd436@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-On Wed, Jun 24, 2020 at 3:41 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jun 24, 2020 at 3:16 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > wt., 23 cze 2020 o 16:57 Geert Uytterhoeven <geert+renesas@glider.be>
-> > napisaÅ‚(a):
-> > >
-> > > Replace the custom code to parse GPIO offsets and/or GPIO offset ranges
-> > > by a call to bitmap_parselist(), and an iteration over the returned bit
-> > > mask.
-> > >
-> > > This should have no impact on the format of the configuration parameters
-> > > written to the "new_device" virtual file in sysfs.
-> > >
-> > > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Sat, Jun 27, 2020 at 09:31:27AM +0200, Marion & Christophe JAILLET wrote:
+> 
+> Le 27/06/2020 à 07:15, Greg KH a écrit :
+> > On Fri, Jun 26, 2020 at 09:37:20PM +0200, Christophe JAILLET wrote:
 > > > ---
-> > > I'm not super happy with the mask[] array, which is on the stack.
-> > > But there is no real limit on the number of GPIO lines provided by a
-> > > single gpiochip, except for the global ARCH_NR_GPIOS.
-> >
-> > Why not allocate it with bitmap_zalloc() then?
+> > > v2: takes Dan's comment into account and fix another resource leak.
+> > > v3: merge the previous 4 patches in a single one to ease review
+> > 
+> > No, 4 small patches are _MUCH_ easier to review than one larger one that
+> > mixes everything together.  Who told you to put them together?
+> 
+> The cover letter of v2 serie can be found at [1].
+> The request for merging them in 1 patch is in [2].
+> 
+> V3, should be the same as v2, but all in one.
+> 
+> [1]: https://lkml.org/lkml/2020/4/29/77
+> [2]: https://lkml.org/lkml/2020/5/5/541
 
-Bartosz: Thanks, good idea!
+Please use lore.kernel.org in the future, we don't control lkml.org and
+can't rely on it.
 
-> I haven't got the original messages yet, so my thought is to actually
-> extract a helper from
-> gpiod_get_array_value_complex() or gpiod_set_array_value_complex() for
-> bitmap allocation.
-> But I didn't check if it's suitable here. So, bitmap_zalloc() would be helpful.
+Anyway, that request was incorrect, sorry.  Please keep them split up in
+a way that makes it easy to review.
 
-/me confused
+Which would you want to read if you had to review hundreds of patches?
 
-This function is not about getting/setting multiple GPIO lines in a gpiochip,
-but about parsing a list of numbers and ranges. No gpiochip is involved.
+thanks,
 
-original message:
-https://lore.kernel.org/r/20200623145748.28877-3-geert+renesas@glider.be
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
