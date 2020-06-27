@@ -2,147 +2,132 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40411C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55864C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8282084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3165D2081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 00:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HTaDkR4T"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dj5nFQ0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgF0AI4 (ORCPT
+        id S1726429AbgF0A0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jun 2020 20:08:56 -0400
-Received: from mout.gmx.net ([212.227.15.15]:50603 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgF0AIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jun 2020 20:08:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593216484;
-        bh=4otcmsUcuNIHrWB18fGLT23iJsc5+XpSSQ0JeZZP6Zg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=HTaDkR4TLueDwQwa+k8Nk8k2q0pKnY4Ma1CAZEE4qmOb/zK1GqpD4bD9XyaLRiBct
-         ZyGQ2mM84Qge+E5mhQrGU//SK2gpdIp/BuedMicYSqbSkEI3T6wnxTNHWr0IAlJizT
-         YapRz4BwOu/GQNecTMjc2C/RGQI3470aMre54r8g=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1jZuLV2EH3-00K8kO; Sat, 27
- Jun 2020 02:08:04 +0200
-Date:   Sat, 27 Jun 2020 02:07:57 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
-Message-ID: <20200627000757.GA2699@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
- <20200620223915.1311485-2-j.neuschaefer@gmx.net>
- <20200622103243.GT954398@dell>
+        Fri, 26 Jun 2020 20:26:23 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:1346 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725781AbgF0A0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jun 2020 20:26:22 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05R0FNvF023087
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 17:26:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=GM6A8UjAF0fo4iVW+BpkuaPZ8qEq48fS4fEZOdfNKXk=;
+ b=dj5nFQ0sYN0px8jy4hratYAGTN6L8Fd/FIVQ9J/TiJJcdCZLQDxruZdCOYgGktwqzgNh
+ 90sDK3MsGCGjA70GT86M+2m8jI6wrFWtsD8oe0W9N5R0sG7xMyvv6xFGIJ2ASqjHHq0f
+ 3fYeAfZqDweRbfrQLq9HnWIyWkGGXIrQwr0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 31wudn817v-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jun 2020 17:26:20 -0700
+Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 26 Jun 2020 17:26:19 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id B00FE62E4DEC; Fri, 26 Jun 2020 17:26:15 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v3 bpf-next 0/4] bpf: introduce bpf_get_task_stack()
+Date:   Fri, 26 Jun 2020 17:26:04 -0700
+Message-ID: <20200627002609.3222870-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <20200622103243.GT954398@dell>
-X-Provags-ID: V03:K1:eMxhCUYGNR4xIz4Sxup0XWxxmE2BA6MUjV6y9nWg0dsf9ecoPNS
- lxhlxzKJ91a38+Xstg0rmg0QvGMBTMUXw7+mODQZa5hsY7rXVAnTegVmqFI+h+0KRtOjzDK
- RdXYKyjLsp2kNP5li/2ImKjJfU3KC38/6bL6iF1vJ3brlZjGrkDn+R/s3onxLSykyGlvCXQ
- PvLh7ovJrIPGhWLzr12Zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yTY0aGX6+xA=:n1YGoNm1wZM8bRWdZQ5KWN
- 2vmVtaa84gmspzZFGB6cgGfbHXkhUNaOwk49+bz1FSFH0O32RzLEEdFui+wxIW+L7mkxAtUyv
- stazEJyrBs5tBZ5HaPnZ0JvKs6GDDl7gDjglrRJXYBm/TxkSGsLJd/ycvDwek/Q1eN9NbA5YR
- 7HsgO52xG3Wo44jiTR4T2wjiPlwNNgpC1ibiSakBCTdCrip2V41okqzfib9BajOx8hR/XsAnh
- O+2bFYWTmThzt1MFHSEbB/a1B+rBO7g7EF6tLMMxoAVpe4VVDzDfQKKOeKRzi+i4YCrHuJltD
- POAVNOVlJE1oWwEanBJacXd5DmHOe+oK5VzqfMYne9fBEI7auOe6J8B0Og6hlcn/GHX3UKUaG
- W1XAKN7JX/otVDpnxzv2WhgCFI09zlu7RNlPT0VgrJa35Hg6DSgF9Lp176YPixBEy32205WQx
- 9HKpJ8ZBEz0/6K8/A+Xi3R24PXkLKtxT+LPyhmU1plVmdnnJPlynCCBQUJBLG/8RLk+0CCOCz
- qz9uYqqS7iLs1NR7djVDjR7TLTa3PvnheSsPZT1v3dcUGJFY081UzWHGgT6uM6d+rLKXKvKTX
- 3vkiwfs87Zpxu7t2K+ChPapBrG+8oCxPtFKODAaNTNW50RYQU5lrjWoTLplLJMvWSZwuGnz2E
- Cl+s99vWylMu7bJOVreGeVZRXgKiAUXM8pTdUhYJWQoDdVgSSnl2x34jYqdSw7XGc4eSgMqYq
- OqLOnfPqgZcksh64OEU9sk18lRdhd9UAvqYjjZavW4wxkGLq7kLQ4fg74EvIqhZQV+FuMCVT3
- 3UG6otqEnhOk3R0sXsqjbMJtVzGuw+msuLfixtoiiXyyZw8Wyz0ZNx2Gozh0c7+EoTiIAtlFg
- XS/y4CD/6HI5MkmjLSaN6ElotLylvrAmIQlQn/hHjNj42nQOp4DFw2UGIC+W7BxxT9nICBBso
- h9Kp+bikfQ2XILGPiRUUEnrL4+qBavuspMeTtBrCDkIr80QxqghF/ldNbnDTLDhPUfxg7F9mM
- Bsdmi5UGKQR2QCTtKxh36M4n6E8F3xUS+6IbQRph4Xe2DVpXJcoje3YnZWg0jbu7rfDspp4B4
- CYhmP6wN+GfhP4lThpzR2Ld6dESwNzKmMz0es6Z5yS9p0h4mC463elpnYg37G4Typv85Zr0CA
- NkTt9Bmmx2ThMbLqeAFkCWHx3utn01TSkShVZYWstL7lY3RUpxGvO5b+3aB76dNnBG8cMtHJA
- VLEmYDbiP22ZpOXaU
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-26_12:2020-06-26,2020-06-26 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015 bulkscore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
+ cotscore=-2147483648 adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006270000
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This set introduces a new helper bpf_get_task_stack(). The primary use ca=
+se
+is to dump all /proc/*/stack to seq_file via bpf_iter__task.
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A few different approaches have been explored and compared:
 
-On Mon, Jun 22, 2020 at 11:32:43AM +0100, Lee Jones wrote:
-> On Sun, 21 Jun 2020, Jonathan Neusch=C3=A4fer wrote:
->=20
-> > For reference, here are the devicetree bindings in plaintext format.
-> > (Not for merge.)
->=20
-> This would be better placed inside the relevant patch(es), rather than
-> in a separate non-mergeable extra/superfluous patch.
+  1. A simple wrapper around stack_trace_save_tsk(), as v1 [1].
 
-Ok, I'll put it in the patch descriptions (as long as the plaintext DT
-bindings are relevant for review).
+     This approach introduces new syntax, which is different to existing
+     helper bpf_get_stack(). Therefore, this is not ideal.
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+  2. Extend get_perf_callchain() to support "task" as argument.
 
+     This approach reuses most of bpf_get_stack(). However, extending
+     get_perf_callchain() requires non-trivial changes to architecture
+     specific code. Which is error prone.
 
-> >  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
-> >  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
-> >  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
+  3. Current (v2) approach, leverages most of existing bpf_get_stack(), a=
+nd
+     uses stack_trace_save_tsk() to handle architecture specific logic.
 
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://lore.kernel.org/netdev/20200623070802.2310018-1-songliubravin=
+g@fb.com/
 
------BEGIN PGP SIGNATURE-----
+Changes v2 =3D> v3:
+1. Rebase on top of bpf-next. (Yonghong)
+2. Sanitize get_callchain_entry(). (Peter)
+3. Use has_callchain_buf for bpf_get_task_stack. (Andrii)
+4. Other small clean up. (Yonghong, Andrii).
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl72jdUACgkQCDBEmo7z
-X9sVSQ//dO2mmSQ8irQcGq+ghniFyM5T/oE/AuJByz+DeR8rIh6vaaPtz9ECq8If
-BKOOwgL5IBJE2dUEYXjVwFy+jvW7dMUvPkOm7WOuzjGj1Rs3I4QvzcyhrPyeKinE
-CAi8mxQsggvq0ntaevbtvbgOBU/FQVmv58DKpkUOW0JIMpplDyne2tSUCSYjjZro
-czdeMhbA6Sd2UzK/2tuxgmF6n05KqgObgVQKUG7tiToAj9IuoS8OPn62MD9xm8Vv
-M4EO57heoLmtUDQl08ObZJ0esnsC5RyjcZgNruEKXta8f6BSik25/Z7w9aZcVybm
-8QqcX13GsM5DYJpmNZ6I/56BuxderNnrBsuLjaqnmBbXUgCugl6PYEAPPZ0MJKBK
-GFFimgrzG/H8p3Cy/Vp6yY5d9+Yb0DGhpl+XQnZRzwabKV18LwCmlgeb/m0fm/aB
-G09odAz3tZbMdeaU7aBRVIHctK/CAQb1O6LH/7IKLQNT0Lus+55amD4Fm6+gx+O4
-g0U74dcxrm3dAGD+bp3IVjPV09ZoNm0l+1Vl+83Qq6P0NE+y0lXnoRAUM5xSHaye
-srcAe6UJglI4qqu22unvkzv+uhMcZ0AqY65wGBA+LKazcCmZ6UnpwhcWdWrI5pva
-PWf8gqk3BXCySDeN+fVpPDidwrYr/r9DI4MGxZf/dnWJStmbgl4=
-=h4Re
------END PGP SIGNATURE-----
+Changes v1 =3D> v2:
+1. Reuse most of bpf_get_stack() logic. (Andrii)
+2. Fix unsigned long vs. u64 mismatch for 32-bit systems. (Yonghong)
+3. Add %pB support in bpf_trace_printk(). (Daniel)
+4. Fix buffer size to bytes.
 
---ikeVEW9yuYc//A+q--
+Song Liu (4):
+  perf: expose get/put_callchain_entry()
+  bpf: introduce helper bpf_get_task_stack()
+  bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
+  selftests/bpf: add bpf_iter test with bpf_get_task_stack()
+
+ include/linux/bpf.h                           |  1 +
+ include/linux/perf_event.h                    |  2 +
+ include/uapi/linux/bpf.h                      | 36 ++++++++-
+ kernel/bpf/stackmap.c                         | 75 ++++++++++++++++++-
+ kernel/bpf/verifier.c                         |  4 +-
+ kernel/events/callchain.c                     | 13 ++--
+ kernel/trace/bpf_trace.c                      | 12 ++-
+ scripts/bpf_helpers_doc.py                    |  2 +
+ tools/include/uapi/linux/bpf.h                | 36 ++++++++-
+ .../selftests/bpf/prog_tests/bpf_iter.c       | 17 +++++
+ .../selftests/bpf/progs/bpf_iter_task_stack.c | 53 +++++++++++++
+ 11 files changed, 236 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
+.c
+
+--
+2.24.1
