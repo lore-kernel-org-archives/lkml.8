@@ -2,52 +2,51 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B46FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8369C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3C22080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55982080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 07:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgF0HRQ (ORCPT
+        id S1725904AbgF0HRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 03:17:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46492 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgF0HRN (ORCPT
+        Sat, 27 Jun 2020 03:17:14 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55523 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgF0HRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Jun 2020 03:17:13 -0400
-Received: by mail-io1-f70.google.com with SMTP id z65so6352986iof.13
+Received: by mail-io1-f69.google.com with SMTP id k10so7410145ioh.22
         for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 00:17:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IsMH+mXeozfn9dfFmwoLPcz9puu1DMjtE0f+O1IgldQ=;
-        b=KTzrfj6cUCTqKrjwy9eXsGDHKOsHPxa7khp/kplL0PQicyw2WUELvjH6SCrZKML+WV
-         Md9zU2PCAM+fAtHqDsyFj1DjeC7quzOqlShVWkmsP4EtHBE3aTdWE3KP6MTe4/YfD36u
-         ZbOOhZcQq5Bep2PWRfcSttduheJESR/tYfrX6YoNoY091KW9fof8C8PWgRunutWN+Rv3
-         megjRkTmRwyaXIcLr3hrHFtZYzOQXONrUFeA6BMJD90tnY1zWzgbVUMfJG32jn4zzPTS
-         Qib7xNm/yGDBcIabIywxVuRG7FOGDt+JsWeQQ3SfmnK/Fnw/4WRNdwXQL4hDySzz5AJI
-         hV1g==
-X-Gm-Message-State: AOAM530PgeYcAV2Mo6Ld42vOrJYCJlK6CmDAIcHTVFv3nCP/xtq4NsVF
-        XDw/2jw6FBViiLoA4LBW2DUAw/YeHNilM+AZxzJW+nFIpavb
-X-Google-Smtp-Source: ABdhPJwKhI2xCErDjvcakGLd7G8m7X+MVGs3aP4wfTV4QSW0Zb2ZKsqysJOEwh4Ny9JtbJzQb/K8+ZiLzqGktDLG29BrbwbwWQG0
+        bh=O8yhhfv67XW37X/ycOvuxmls81kz3h5COJbT73m0epk=;
+        b=Drtc31PqCZ1cRgPs+wGFkGHcn9I781UoYnX7wBfN6w3WvM/5926WzvxSNTXybcwULu
+         ww5jfZGBBy2KyTTglXg2nzFe9wmlADsx6fBv5nfOcwppmSMXbxZZaqhWikMcZ6I65LSi
+         EAXD+byZldkeFVcACaQiZ9NuQ3aPo5PBlXsS/rJMQk7o9XQ+B0MoV8DgdkdBne//XNJ4
+         wVrQMJVgEVhQOV34nS3nf6pmdCnWfliWo40uKx7kTd79/YaTo7gyXKZYRXaKWXdTOX1x
+         ylSqHlCH4lZHZJzjE/rSmXaAemenk70HcX3I9lScKA3jOpATat2ZlyyCMGdZdi+4hCLl
+         QHfw==
+X-Gm-Message-State: AOAM533PTEWMtgmF3IDnFXWG4OXZASvc7zM/M9eBVG323bYZwWXkSokp
+        L37e8+NW3yr8GWuaggECA56c2crCo5jjDRHwdaVuQfTLmkIX
+X-Google-Smtp-Source: ABdhPJxPGS6BdRgguUJ51JPxBTwzwL2QYw2wEofGYanjclDQLhNfXox07Q3nOhjZcQwki9Ga0ax0N+sZGAuF6hUdS6CkGox/FSGD
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8516:: with SMTP id q22mr7332943ion.130.1593242232128;
+X-Received: by 2002:a02:370b:: with SMTP id r11mr7073884jar.119.1593242232380;
  Sat, 27 Jun 2020 00:17:12 -0700 (PDT)
 Date:   Sat, 27 Jun 2020 00:17:12 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000498aa905a90b9dd0@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Read in __cfg8NUM_wpan_dev_from_attrs
-From:   syzbot <syzbot+b108a9b0cf438a20f4f8@syzkaller.appspotmail.com>
-To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, stefan@datenfreihafen.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000004d61fe05a90b9db0@google.com>
+Subject: WARNING in ovl_d_real
+From:   syzbot <syzbot+3886b8b076850872876e@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,72 +57,72 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    7a64135f libbpf: Adjust SEC short cut for expected attach ..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1365a5c5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=b108a9b0cf438a20f4f8
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11704e29100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=3886b8b076850872876e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b108a9b0cf438a20f4f8@syzkaller.appspotmail.com
+Reported-by: syzbot+3886b8b076850872876e@syzkaller.appspotmail.com
 
-netlink: 26 bytes leftover after parsing attributes in process `syz-executor.5'.
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in nla_get_u32 include/net/netlink.h:1541 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in __cfg802154_wpan_dev_from_attrs+0x4b4/0x510 net/ieee802154/nl802154.c:53
-Read of size 4 at addr ffffc90001ad9018 by task syz-executor.5/31529
-
-CPU: 1 PID: 31529 Comm: syz-executor.5 Not tainted 5.8.0-rc1-syzkaller #0
+------------[ cut here ]------------
+ovl_d_real(/file0, sda1:15683): real dentry not found
+WARNING: CPU: 0 PID: 10016 at fs/overlayfs/super.c:112 ovl_d_real+0x1ec/0x300 fs/overlayfs/super.c:111
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 10016 Comm: syz-executor.3 Not tainted 5.7.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- nla_get_u32 include/net/netlink.h:1541 [inline]
- __cfg802154_wpan_dev_from_attrs+0x4b4/0x510 net/ieee802154/nl802154.c:53
- nl802154_prepare_wpan_dev_dump.constprop.0+0xf9/0x490 net/ieee802154/nl802154.c:245
- nl802154_dump_llsec_dev+0xc0/0xb10 net/ieee802154/nl802154.c:1655
- genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
- netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb19
-Code: Bad RIP value.
-RSP: 002b:00007ff9558abc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000502400 RCX: 000000000045cb19
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1ac/0x2d0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:ovl_d_real+0x1ec/0x300 fs/overlayfs/super.c:111
+Code: c1 e8 03 42 80 3c 28 00 74 08 4c 89 e7 e8 1c b6 2b ff 49 8b 0c 24 48 c7 c7 56 03 ef 88 4c 89 f6 48 89 da 31 c0 e8 04 98 be fe <0f> 0b e9 c0 00 00 00 e8 c8 d1 ec fe e9 b3 00 00 00 e8 be d1 ec fe
+RSP: 0018:ffffc90009507840 EFLAGS: 00010246
+RAX: 83d49f6fcdb20800 RBX: ffff888099184698 RCX: 0000000000040000
+RDX: ffffc9000fce2000 RSI: 00000000000137b1 RDI: 00000000000137b2
+RBP: ffffffff88759760 R08: ffffffff815dd879 R09: ffffed1015d066c8
+R10: ffffed1015d066c8 R11: 0000000000000000 R12: ffff8880514d62f8
+R13: dffffc0000000000 R14: ffff88808ab6d170 R15: ffff8880887e7e60
+ d_real include/linux/dcache.h:583 [inline]
+ file_dentry include/linux/fs.h:1332 [inline]
+ fscrypt_file_open+0x2a4/0x310 fs/crypto/hooks.c:41
+ ext4_file_open+0x193/0x5b0 fs/ext4/file.c:811
+ do_dentry_open+0x808/0x1020 fs/open.c:828
+ open_with_fake_path+0x53/0x90 fs/open.c:976
+ ovl_open_realfile fs/overlayfs/file.c:44 [inline]
+ ovl_open+0x172/0x2b0 fs/overlayfs/file.c:139
+ do_dentry_open+0x808/0x1020 fs/open.c:828
+ do_open fs/namei.c:3229 [inline]
+ path_openat+0x2790/0x38b0 fs/namei.c:3346
+ do_filp_open+0x191/0x3a0 fs/namei.c:3373
+ do_sys_openat2+0x463/0x770 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1388 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x1af/0x1e0 fs/open.c:1199
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45cb09
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc620690c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00000000004f7be0 RCX: 000000000045cb09
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000080
 RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a38 R14: 00000000004cd1fc R15: 00007ff9558ac6d4
-
-
-Memory state around the buggy address:
- ffffc90001ad8f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90001ad8f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->ffffc90001ad9000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                            ^
- ffffc90001ad9080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90001ad9100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-==================================================================
+R13: 0000000000000798 R14: 0000000000526dff R15: 00007fc6206916d4
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
