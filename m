@@ -2,185 +2,114 @@ Return-Path: <SRS0=QqoS=AI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51ECF206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C90C207FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jun 2020 17:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gG/5jUPI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aWxjc7xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgF0Rnp (ORCPT
+        id S1726635AbgF0R5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 13:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgF0Rnp (ORCPT
+        Sat, 27 Jun 2020 13:57:13 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48948 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgF0R5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 13:43:45 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AE4C061794;
-        Sat, 27 Jun 2020 10:43:44 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f26ff00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:ff00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ECAE11EC0212;
-        Sat, 27 Jun 2020 19:43:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593279822;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1A1dVBrbGPPkY/HQ3nWi6nbRp+BjUmn3DkY6Tj41HdA=;
-        b=gG/5jUPIpYuAaOggN0AoYuUN0RH5V6m3GQcIaP4pjuzJTN4kF++dHDk+Hzi2ECFcMxU8hY
-        lXu72EPKKpZmQAQDe0ePb3lwibrlerxn5jeX9ln15n2p3BMP8ABeLO8Z4sXA8GFqKchGma
-        6EEtwJzoTXOPFLH957DiON3ns6TTklE=
-Date:   Sat, 27 Jun 2020 19:43:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200627174335.GC15585@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+        Sat, 27 Jun 2020 13:57:12 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05RHo6ln064903;
+        Sat, 27 Jun 2020 17:56:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=HLOz9kDIzLCFVGuef2bWdtwPRWQv/R1O3VG3deV5rYo=;
+ b=aWxjc7xAxaKRoF23k/UL92NwiTbHNf38/b5EdWI4wbgb9X0K+UvPmdLifd18X+sRopce
+ UeIA2I7Z65c6bcm6kdop95ydVT4rdbQwjt3Juo1KSycDb3wEA2Geq87NYQM9neZMVEUS
+ cwP22BzoI+99E1yIvfoIh9kFvCbgAwiKh43HCVLBIFT/m3C/0x9lFs8cQKlui1LgN4Ik
+ PiEogSoQ30/Sy5vF9/vNkE83yeqY/ZO1jd2PG3FUMSA2JCEn1giAKIkY9BKymuM7KayU
+ 1QlDl1FYf0nnfB7ApUqhbNmAWP0sTyebYQbulMOVoP0DMkmy2y9AZaWJgSs42T0r/wE2 +w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31wxrmsb72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 27 Jun 2020 17:56:58 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05RHsOfs026954;
+        Sat, 27 Jun 2020 17:54:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 31wwehp5nb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Jun 2020 17:54:57 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05RHstx8019373;
+        Sat, 27 Jun 2020 17:54:55 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 27 Jun 2020 17:54:55 +0000
+Date:   Sat, 27 Jun 2020 20:54:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     "'Avri Altman'" <avri.altman@wdc.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kiwoong Kim'" <kwmad.kim@samsung.com>,
+        "'Wei Yongjun'" <weiyongjun1@huawei.com>,
+        linux-scsi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs: ufs-exynos: Remove an unnecessary NULL check
+Message-ID: <20200627175445.GG2571@kadam>
+References: <CGME20200626105156epcas5p191d18d66af6bd09a10635559461c0bc0@epcas5p1.samsung.com>
+ <20200626105133.GF314359@mwanda>
+ <041701d64ca7$70bafb80$5230f280$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <041701d64ca7$70bafb80$5230f280$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9665 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006270130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9665 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006270129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
-> +			 void *token)
-> +{
-> +	u64 mrsigner[4];
-> +	int ret;
-> +	int i;
-> +	int j;
-> +
-> +	/* Check that the required attributes have been authorized. */
-> +	if (encl->secs_attributes & ~encl->allowed_attributes)
-> +		return -EACCES;
-> +
-> +	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&encl->lock);
-> +
-> +	if (atomic_read(&encl->flags) & SGX_ENCL_INITIALIZED) {
-> +		ret = -EFAULT;
-> +		goto err_out;
-> +	}
+On Sat, Jun 27, 2020 at 10:51:44PM +0530, Alim Akhtar wrote:
+> Hi Dan
+> 
+> > -----Original Message-----
+> > The "head" pointer can't be NULL because it points to an address in the
+> middle
+> > of a ufs_hba struct.  Looking at this code, probably someone would wonder
+> if
+> > the intent was to check whether "hba" is NULL, but "hba"
+> > isn't NULL and the check can just be removed.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> Please add Fixes: tag
+> With that
+> Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-That test should be the first thing this function or its caller does.
+It's not a bug fix it's just a cleanup.
 
-> +	for (i = 0; i < SGX_EINIT_SLEEP_COUNT; i++) {
-> +		for (j = 0; j < SGX_EINIT_SPIN_COUNT; j++) {
+regards,
+dan carpenter
 
-Ew, what's that double-loop for?
-
-It tries to init an enclave a bunch of times. Why does it need to init
-more than once?
-
-> +			ret = sgx_einit(sigstruct, token, encl->secs.epc_page,
-> +					mrsigner);
-> +			if (ret == SGX_UNMASKED_EVENT)
-> +				continue;
-> +			else
-> +				break;
-> +		}
-> +
-> +		if (ret != SGX_UNMASKED_EVENT)
-> +			break;
-> +
-> +		msleep_interruptible(SGX_EINIT_SLEEP_TIME);
-> +
-> +		if (signal_pending(current)) {
-> +			ret = -ERESTARTSYS;
-> +			goto err_out;
-> +		}
-> +	}
-> +
-> +	if (ret & ENCLS_FAULT_FLAG) {
-> +		if (encls_failed(ret))
-> +			ENCLS_WARN(ret, "EINIT");
-> +
-> +		sgx_encl_destroy(encl);
-> +		ret = -EFAULT;
-> +	} else if (ret) {
-> +		pr_debug("EINIT returned %d\n", ret);
-> +		ret = -EPERM;
-> +	} else {
-> +		atomic_or(SGX_ENCL_INITIALIZED, &encl->flags);
-> +	}
-> +
-> +err_out:
-> +	mutex_unlock(&encl->lock);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
-> + *
-> + * @filep:	open file to /dev/sgx
-
-@encl:       pointer to an enclave instance (via ioctl() file pointer)
-
-> + * @arg:	userspace pointer to a struct sgx_enclave_init instance
-> + *
-> + * Flush any outstanding enqueued EADD operations and perform EINIT.  The
-> + * Launch Enclave Public Key Hash MSRs are rewritten as necessary to match
-> + * the enclave's MRSIGNER, which is caculated from the provided sigstruct.
-> + *
-> + * Return:
-> + *   0 on success,
-> + *   SGX error code on EINIT failure,
-> + *   -errno otherwise
-> + */
-> +static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
-> +{
-> +	struct sgx_sigstruct *sigstruct;
-> +	struct sgx_enclave_init einit;
-> +	struct page *initp_page;
-> +	void *token;
-> +	int ret;
-> +
-> +	if (!(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
-
-Might just as well check the other flags: doing EINIT on an already
-initialized enclave - SGX_ENCL_INITIALIZED - is perhaps a nono or
-similarly on a SGX_ENCL_DEAD enclave.
-
-And you could do similar sanity checks in the other ioctl functions.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
