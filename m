@@ -2,172 +2,191 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3F920760
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEF120760
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593309258;
+	bh=b5rNKyqd9zg8ODr9cRaqQ9RlYo/l30nAvQk8WOUQvKo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dLTdJDqjKKrsCe6QtTzNYxyVReA8nDs0FelVxQZxS/tHnwcmeuRzqSY939z1s6vWm
+	 TyI/mroNcmNb4UZZMCf8gV9mHQ7euS6sZrvHFBBkxa7eefLu6vWR2m+G8Ko0/nTUUY
+	 2z6t9EgVjNSioRW0wHjukRbOZ9+ZJhjPMUoo7mFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgF1Bvn (ORCPT
+        id S1726858AbgF1ByR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 21:51:43 -0400
-Received: from regular1.263xmail.com ([211.150.70.197]:50748 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgF1Bvm (ORCPT
+        Sat, 27 Jun 2020 21:54:17 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:50055 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgF1ByQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 21:51:42 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by regular1.263xmail.com (Postfix) with ESMTP id E9D49B2B;
-        Sun, 28 Jun 2020 09:51:31 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.76] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P15430T140188661573376S1593309088919980_;
-        Sun, 28 Jun 2020 09:51:30 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <dfb966992b97e608fb76880cf6eb5680>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: hjc@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Huang Jiachai <hjc@rock-chips.com>
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/2=5d_drm=3a_drm=5ffourcc=3a_add_NV20_YUV?=
- =?UTF-8?B?IGZvcm1hdOOAkOivt+azqOaEj++8jOmCruS7tueUsWxpbnV4LXJvY2tjaGlwLWJv?=
- =?UTF-8?Q?unces+sandy=2ehuang=3drock-chips=2ecom=40lists=2einfradead=2eorg?=
- =?UTF-8?B?5Luj5Y+R44CR?=
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?B?6Zer5a2d5Yab?= <andy.yan@rock-chips.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Ben Davis <ben.davis@arm.com>,
-        =?UTF-8?B?5p2o5Yev?= <kever.yang@rock-chips.com>,
-        Tao Huang <huangtao@rock-chips.com>
-References: <20200607202521.18438-1-jonas@kwiboo.se>
- <20200607202521.18438-2-jonas@kwiboo.se>
- <d503eed1-571f-3e37-858b-b5de04cb79f7@rock-chips.com>
- <f5c46547-3278-2226-e194-929fbfa95864@kwiboo.se>
-Message-ID: <bee64956-8ab0-c358-9762-63c5a5b97b6a@rock-chips.com>
-Date:   Sun, 28 Jun 2020 09:51:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 27 Jun 2020 21:54:16 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 05S1oixP004742;
+        Sun, 28 Jun 2020 10:50:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 05S1oixP004742
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593309045;
+        bh=hkY77VUGXSYac7YbrIkUecBgq7WORaGieZmySJIL5UA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ahJ3uto2fhcnzsnIdLNU74S4vUyrlAQ4RsoPaFq9zt9MQ9rNbQLVQSS7jxeu5Q8si
+         hZ34tVZRnliSC5lwB2mp+XhuUvw+20+ogpJbv2SrSVGwLunHSwliobc980NNYxgtNV
+         7KoTg5pXNDlDue+Qw95dB65tKTenO+yJoYpKMjA+pouECDFfbNgi/Gl3GphBAEx2jt
+         JIId1nbEsdrcgnMp1nLu2y0LwNlkZ7F/kd88h+53l3Wy2U7beVZi9x+0lCqdPuAiyn
+         xq4P1+iR/S7vXT/ZdlGa6TQaScQErK5xw4F96tYA3UgjBxvfSj1llEDfgf/+ZBEQh9
+         WQo1lz/K7CrLw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] kbuild: introduce ccflags-remove-y and asflags-remove-y
+Date:   Sun, 28 Jun 2020 10:50:41 +0900
+Message-Id: <20200628015041.1000002-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <f5c46547-3278-2226-e194-929fbfa95864@kwiboo.se>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas Karlman,
+CFLAGS_REMOVE_<file>.o works per object, that is, there is no
+convenient way to filter out flags for every object in a directory.
 
-在 2020/6/26 22:19, Jonas Karlman 写道:
-> On 2020-06-17 14:07, Huang Jiachai wrote:
->> Hi Jonas Karlman,
->>
->>       Is there an another yuv 10bit format with 4:4:4 sub-simpling but
->> has no padding?
->>
->>    Maybe we can call it DRM_FORMAT_NV30:
->>
->> { .format = DRM_FORMAT_NV30,		.depth = 0,
->>     .num_planes = 2, .char_per_block = { 5, 5, 0 },
->>     .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 1,
->>     .vsub = 1, .is_yuv = true },
->>
->> this format can supported by rockchip rk3288/rk3399... platform, can you
->> add this format at this series patches?
-> I will send a v2 including this 4:4:4 format later this weekend.
->
-> Is there any hw block on rk3288/rk3399 that can produce a buffer in such format?
-> If I am not mistaken rkvdec only support 10-bit h264 in 4:2:0/4:2:2 and
-> hevc 4:2:0 10-bit, those are the formats I have been able to test so far.
->
-> Regards,
-> Jonas
+Add ccflags-remove-y and asflags-remove-y to make it easily.
 
-yes,rockchip platform hw video decoder 10-bit yuv format only can 
-support 4:2:0/4:2:2 so far, but the software decoder path maybe output 
-4:4:4-10 format to VOP.
+Use ccflags-remove-y to clean up some Makefiles.
 
->
->> 在 2020/6/8 4:25, Jonas Karlman 写道:
->>> DRM_FORMAT_NV20 is a 2 plane format suitable for linear memory layout.
->>> The format is similar to P210 with 4:2:2 sub-sampling but has no padding
->>> between components. Instead, luminance and chrominance samples are grouped
->>> into 4s so that each group is packed into an integer number of bytes:
->>>
->>> YYYY = UVUV = 4 * 10 bits = 40 bits = 5 bytes
->>>
->>> The '20' suffix refers to the optimum effective bits per pixel which is
->>> achieved when the total number of luminance samples is a multiple of 4.
->>>
->>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>> ---
->>>    drivers/gpu/drm/drm_fourcc.c  | 4 ++++
->>>    include/uapi/drm/drm_fourcc.h | 1 +
->>>    2 files changed, 5 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
->>> index 722c7ebe4e88..2a9c8ae719ed 100644
->>> --- a/drivers/gpu/drm/drm_fourcc.c
->>> +++ b/drivers/gpu/drm/drm_fourcc.c
->>> @@ -278,6 +278,10 @@ const struct drm_format_info *__drm_format_info(u32 format)
->>>    		  .num_planes = 2, .char_per_block = { 5, 5, 0 },
->>>    		  .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 2,
->>>    		  .vsub = 2, .is_yuv = true },
->>> +		{ .format = DRM_FORMAT_NV20,		.depth = 0,
->>> +		  .num_planes = 2, .char_per_block = { 5, 5, 0 },
->>> +		  .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 2,
->>> +		  .vsub = 1, .is_yuv = true },
->>>    		{ .format = DRM_FORMAT_Q410,		.depth = 0,
->>>    		  .num_planes = 3, .char_per_block = { 2, 2, 2 },
->>>    		  .block_w = { 1, 1, 1 }, .block_h = { 1, 1, 1 }, .hsub = 0,
->>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->>> index b5bf1c0e630e..244d32433a67 100644
->>> --- a/include/uapi/drm/drm_fourcc.h
->>> +++ b/include/uapi/drm/drm_fourcc.h
->>> @@ -242,6 +242,7 @@ extern "C" {
->>>     * index 1 = Cr:Cb plane, [39:0] Cr1:Cb1:Cr0:Cb0 little endian
->>>     */
->>>    #define DRM_FORMAT_NV15		fourcc_code('N', 'V', '1', '5') /* 2x2 subsampled Cr:Cb plane */
->>> +#define DRM_FORMAT_NV20		fourcc_code('N', 'V', '2', '0') /* 2x1 subsampled Cr:Cb plane */
->>>    
->>>    /*
->>>     * 2 plane YCbCr MSB aligned
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ arch/arm/boot/compressed/Makefile | 6 +-----
+ arch/powerpc/xmon/Makefile        | 3 +--
+ arch/sh/boot/compressed/Makefile  | 5 +----
+ kernel/trace/Makefile             | 4 ++--
+ lib/Makefile                      | 5 +----
+ scripts/Makefile.lib              | 4 ++--
+ 6 files changed, 8 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 00602a6fba04..3d5691b23951 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -103,13 +103,9 @@ clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S hyp-stub.S
+ 
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
+-ifeq ($(CONFIG_FUNCTION_TRACER),y)
+-ORIG_CFLAGS := $(KBUILD_CFLAGS)
+-KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
+-endif
+-
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
+ 	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
++ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
+ asflags-y := -DZIMAGE
+ 
+ # Supply kernel BSS size to the decompressor via a linker symbol.
+diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+index 89c76ca35640..55cbcdd88ac0 100644
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -7,8 +7,7 @@ UBSAN_SANITIZE := n
+ KASAN_SANITIZE := n
+ 
+ # Disable ftrace for the entire directory
+-ORIG_CFLAGS := $(KBUILD_CFLAGS)
+-KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
++ccflags-remove-y += $(CC_FLAGS_FTRACE)
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ # clang stores addresses on the stack causing the frame size to blow
+diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compressed/Makefile
+index ad0e2403e56f..589d2d8a573d 100644
+--- a/arch/sh/boot/compressed/Makefile
++++ b/arch/sh/boot/compressed/Makefile
+@@ -28,10 +28,7 @@ IMAGE_OFFSET	:= $(shell /bin/bash -c 'printf "0x%08x" \
+ 			$(CONFIG_BOOT_LINK_OFFSET)]')
+ endif
+ 
+-ifeq ($(CONFIG_MCOUNT),y)
+-ORIG_CFLAGS := $(KBUILD_CFLAGS)
+-KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
+-endif
++ccflags-remove-$(CONFIG_MCOUNT) += -pg
+ 
+ LDFLAGS_vmlinux := --oformat $(ld-bfd) -Ttext $(IMAGE_OFFSET) -e startup \
+ 		   -T $(obj)/../../kernel/vmlinux.lds
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 6575bb0a0434..7492844a8b1b 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -2,9 +2,9 @@
+ 
+ # Do not instrument the tracer itself:
+ 
++ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
++
+ ifdef CONFIG_FUNCTION_TRACER
+-ORIG_CFLAGS := $(KBUILD_CFLAGS)
+-KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+ 
+ # Avoid recursion due to instrumentation.
+ KCSAN_SANITIZE := n
+diff --git a/lib/Makefile b/lib/Makefile
+index b1c42c10073b..b2ed4beddd68 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -3,10 +3,7 @@
+ # Makefile for some libs needed in the kernel.
+ #
+ 
+-ifdef CONFIG_FUNCTION_TRACER
+-ORIG_CFLAGS := $(KBUILD_CFLAGS)
+-KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+-endif
++ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+ 
+ # These files are disabled because they produce lots of non-interesting and/or
+ # flaky coverage that is not a function of syscall inputs. For example,
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 99ac59c59826..5da420f13f9b 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -113,10 +113,10 @@ modfile_flags  = -DKBUILD_MODFILE=$(call stringify,$(modfile))
+ 
+ orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) \
+                  $(ccflags-y) $(CFLAGS_$(target-stem).o)
+-_c_flags       = $(filter-out $(CFLAGS_REMOVE_$(target-stem).o), $(orig_c_flags))
++_c_flags       = $(filter-out $(ccflags-remove-y) $(CFLAGS_REMOVE_$(target-stem).o), $(orig_c_flags))
+ orig_a_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_AFLAGS) \
+                  $(asflags-y) $(AFLAGS_$(target-stem).o)
+-_a_flags       = $(filter-out $(AFLAGS_REMOVE_$(target-stem).o), $(orig_a_flags))
++_a_flags       = $(filter-out $(asflags-remove-y) $(AFLAGS_REMOVE_$(target-stem).o), $(orig_a_flags))
+ _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(target-stem).lds)
+ 
+ #
 -- 
-Best Regard
-
-黄家钗
-Sandy Huang
-Addr: 福州市鼓楼区铜盘路软件大道89号福州软件园A区21号楼(350003)
-       No. 21 Building, A District, No.89,software Boulevard 
-Fuzhou,Fujian,PRC
-Tel：+86 0591-87884919  8690
-E-mail：hjc@rock-chips.com
-
-
+2.25.1
 
