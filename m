@@ -2,151 +2,90 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C49AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 21:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C360EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 21:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F08D206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 21:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE1C206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 21:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gRnhdeR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgF1VXL (ORCPT
+        id S1726524AbgF1VZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 17:23:11 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34426 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgF1VXL (ORCPT
+        Sun, 28 Jun 2020 17:25:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43999 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726080AbgF1VZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 17:23:11 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d12so6313186ply.1;
-        Sun, 28 Jun 2020 14:23:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BpSg64nR1fToe5brQOkimu2K2EqU7NAiKxVPV21l0fw=;
-        b=q3JAOyuwXZ8KxgOESQgEgInfTR3VKHDR2EZimNjHpI2IHByxM28c/lwfQcSE0URt8T
-         c3foKBCaaRmSV+1afu9P3OBMQm4dDmq9R0k2c5PZNmpBHkL2LN4+eJNRQ8bEvuCI7LXL
-         neDO+8RP6Lxuyxxu6LbTXSsSS6yRfiXWkIMkd8R7WG3WlPVvJwcDadC0C43OAANgmmoL
-         bhetnmbiuJIM6OzUpmJAEvMM8sB2d30dQvT5sQ26R7L5tBE/BQHfgzvqV78MF80B7qiJ
-         g7sFDkWXscpF37j0XKRcDN2oytgOKHhR+Wx/d/XbTtrYwzXVf3HFFg1Zz4bukuJX+gdh
-         OUWg==
-X-Gm-Message-State: AOAM533/MeQ+CpB1tpy+34FRjkDYYwoa6PRv4+Ak+PJtFr34WerOClHg
-        Kz1dopX/ujSIWCgDfGv6/Z5KHAq0
-X-Google-Smtp-Source: ABdhPJyTiSom0cIG/bPULTKmL4EVdBhebzZWUx6MQpODvuljytbZlTX6rjMYGGP97MPSq8g1ro1C8g==
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr11342155pll.18.1593379390017;
-        Sun, 28 Jun 2020 14:23:10 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 73sm4691742pfy.24.2020.06.28.14.23.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Jun 2020 14:23:09 -0700 (PDT)
-Subject: Re: [PATCH 2/2] block: move request_queue member docs to kdoc
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        damien.lemoal@wdc.com, ming.lei@redhat.com,
-        martin.petersen@oracle.com, satyat@google.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200623220311.8033-1-mcgrof@kernel.org>
- <20200623220311.8033-3-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <b9c5acdd-aef5-46fa-ab80-0d4508289d54@acm.org>
-Date:   Sun, 28 Jun 2020 14:23:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 28 Jun 2020 17:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593379499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BPeaP/rBP+/gml896G+0M0duTqbKlN+mB8JvlB6tEuM=;
+        b=gRnhdeR8M9YLjzbbNkb1EuXm8tRulj2UzNmaMaig7WltFpVnte9NVjcdfjGUC7T3X904iX
+        IszKbv3sBvkM8sZm9S6l/NUL4o8YqwIbfCSv0I/3PuopvMhzSe4NL5F/BaKD9dheAVEyzE
+        t4zbgZlMnz5csmRQ3vOxlNbpo9nBb3M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-NKfc7Kf1N9KEXDgoCxPwnw-1; Sun, 28 Jun 2020 17:24:55 -0400
+X-MC-Unique: NKfc7Kf1N9KEXDgoCxPwnw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F00E107ACCA;
+        Sun, 28 Jun 2020 21:24:53 +0000 (UTC)
+Received: from krava (unknown [10.40.192.56])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 68E8B5D9CD;
+        Sun, 28 Jun 2020 21:24:49 +0000 (UTC)
+Date:   Sun, 28 Jun 2020 23:24:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 02/10] perf tools: Add struct expr_parse_data to keep
+ expr value
+Message-ID: <20200628212448.GI2988321@krava>
+References: <20200626194720.2915044-1-jolsa@kernel.org>
+ <20200626194720.2915044-3-jolsa@kernel.org>
+ <CAP-5=fVdSmPEYMqGqCEwZXfj=-wg6sJLQ=kuPTLaPdKiAiqTvg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623220311.8033-3-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVdSmPEYMqGqCEwZXfj=-wg6sJLQ=kuPTLaPdKiAiqTvg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-23 15:03, Luis Chamberlain wrote:
->  /**
->   * struct request_queue - block device driver request queue
-> + * @queue_ctx: software queue context
+On Fri, Jun 26, 2020 at 01:04:41PM -0700, Ian Rogers wrote:
+> On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Adding struct expr_parse_data to keep expr value
+> > instead of just simple double pointer, so we can
+> > store more data for ID in following changes.
+> 
+> Nit, expr_parse_data sounds a bit like data that is created just at
+> parse time. Perhaps id_data, for data associated with an id?
 
-To me the description "software queues" is much more clear than
-"software queue context". I wouldn't mind if the queue_ctx member
-variable would be renamed to make its role more clear.
+we should keep the expr prefix, expr_id_data ?
 
-Please also mention that there is one software queue per CPU.
+jirka
 
-> + * @queue_hw_ctx: hw dispatch queues
-
-How about mentioning that requests flow from software queues into
-hardware queues, from hardware queues to the storage controller and also
-that the block driver controls the number of hardware queues?
-
-> + * @queuedata: the queue owner gets to use this for whatever they like.
-> + *	ll_rw_blk doesn't touch it.
-
-How about changing "queue owner" into "block driver"? Please leave out
-the reference to ll_rw_blk since that source file was removed in 2008.
-See also commit a168ee84c90b ("block: first step of splitting ll_rw_blk,
-rename it").
-
-> + * @id: ida allocated id for this queue.  Used to index queues from ioctx.
-
-It seems to me that this ID is not only used to associate an ioctx with
-a request queue but also to associate a block cgroup with a request
-queue? See also blkg_lookup_slowpath().
-
-> + * @bounce_gfp: queue needs bounce pages for pages above this limit
-> + * @kobj: queue kobject
-
-Please mention the path of this object, namely /sys/block/${bdev}/queue.
-
-> + * @mq_kobj: mq queue kobject
-
-Please mention the path of this object too, namely /sys/block/${bdev}/mq.
-
-> + * @nr_requests: maximum number of of requests
-
-Double "of"? Please mention that this is the maximum number of requests
-per hardware queue. There is one set of tags per hardware queue and each
-hardware queue has 'nr_requests' tags. See also queue_requests_store()
-and blk_mq_update_nr_requests().
-
-> + * @ksm: Inline crypto capabilities
-> + * @nr_zones:
-> + * @nr_zones: total number of zones of the device. This is always 0 for regular
-> + *	block devices.
-
-"@nr_zones" occurs twice?
-
-> + * @debugfs_mutex: used to protect access to the @ebugfs_dir
->   * @debugfs_mutex: used to protect access to the @debugfs_dir
-
-Double "@debugfs_mutex"?
-
-Thanks,
-
-Bart.
