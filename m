@@ -2,113 +2,100 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A59C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D524CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BB720757
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzDgpAan"
+	by mail.kernel.org (Postfix) with ESMTP id B557C206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593369640;
+	bh=sP6+YCYJ3vJWTnRzzpXrg2RGyvltOS9AxzZrcg9wbK0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H4iKHu+/U6Yt+PnLRSfePLhsbb7wjkpM6nbS3sADzbossUo1gMne6eMLPam0ea+Bs
+	 mU1BVcXxVq6THv+IiPfp1qEW8N9g+wcFtbW8LGArMNz/cjyMgPPr1vEOUr26SmnBNT
+	 9WDqpjx7Vy5Suq5oDbQw/UBbORwSKOp+cAFfrnFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgF1Sjj (ORCPT
+        id S1726706AbgF1Skg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 14:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
+        Sun, 28 Jun 2020 14:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgF1Sjj (ORCPT
+        with ESMTP id S1726060AbgF1Skf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 14:39:39 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F276BC03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:39:38 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id b15so11039885edy.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:39:38 -0700 (PDT)
+        Sun, 28 Jun 2020 14:40:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF18C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:40:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f8so3408817ljc.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lm0EvFj5SQqQjjPPBO8iNtNM6ecOSgXLk09O7mbVMlw=;
-        b=AzDgpAan7U2t78PhMuTnRQwakm9/ua25ia2AGWFY6rYOUeUUiNEy9HDehVBbNLiPmU
-         wADNS+4eA9YrFDVIydHVvI3SCEU7HRYxR7+g58LfvzAlk9JGjy9G/44lWo+/b51GoLxZ
-         AsNcgQdQcDtiXscmmxcqEBgN0jQXl8Re6yuIFhifWqLONr1T9fPCEMZD+tBnjCJ4iAc5
-         ciNdDZPVUOYLny0Bhbk4tuFhdJApxf2Cr2TRGZbXMqLBcmhFQybpuNvDnWXhLSw2mXBD
-         F7jgBCFE61B9FDNbJVopmADEuubNvwfCLV80MQZunRcpyAMlHeCSYq7/aZTs/RgGPhpV
-         wq4w==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hCB3GF8caEOJFCpWHvqxldz66GMS9jafbuDojxYxgOo=;
+        b=aJkCsFPfDrze8xst0GQoBdbCucE8dsyeRBsSQbhsmXwA1SxPl++40aFoA9VRJeJlKT
+         wnO7c5E1wvdyCKwMfqlHCg4BKquBfqpwQIGjXH+dI1RiXT5SaZgPi5EOuFMsAA9HlGAc
+         9ih+mw491LGp3FB0uLXziV4cpcAVbxI1o1a10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lm0EvFj5SQqQjjPPBO8iNtNM6ecOSgXLk09O7mbVMlw=;
-        b=D+PwNp0/P9WRYoCnjHgV+aeyQAeOTKhvEJ1hMCkkBNZQKlqtoPqrgCCGYvHbwLzx7c
-         YklCgenL2zJeObH1T8Wf/llltPH3CMNDqepFIhkHdueUP+A63FX2LqlQn2sSxiLCrluH
-         v/JEqkRN6GK7LEcu7owcWy4C2lS/hD5D+awD3yzFkIMd1H6v3zjM7Au21tU66TVRpWW4
-         XWuudzTV3ypaoEm+uWlnOImgrkOanwQhVK7uzIiRH4OD7RVValxtihSbF1+1ECmC5otY
-         G5hv8BfyJsz6KD/oMwoRvRYQEzNfbZDJQJCogwUVXW1RsDVWbk/l3Q26LB6CKmccFH6t
-         P7IQ==
-X-Gm-Message-State: AOAM531bLgEFycZcR+HZCq3FvhfNCUn4kyoENzqMv5F6BFE5mEW2FpHh
-        EaAemxJCTQa5q49fmRKuNeE=
-X-Google-Smtp-Source: ABdhPJzkAToo93OpIPSXT3A97figlkjnzzRq/XOS6rmjm9XAFRSpYUlX+ZbyEr7BGtc3IuK4QptnAA==
-X-Received: by 2002:aa7:d297:: with SMTP id w23mr13400049edq.49.1593369577818;
-        Sun, 28 Jun 2020 11:39:37 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
-        by smtp.gmail.com with ESMTPSA id d20sm1016070edy.9.2020.06.28.11.39.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 11:39:37 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] staging: ks7010: fix ks_wlan_start_xmit()'s return type
-Date:   Sun, 28 Jun 2020 20:39:26 +0200
-Message-Id: <20200628183926.74908-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hCB3GF8caEOJFCpWHvqxldz66GMS9jafbuDojxYxgOo=;
+        b=oVqk3J9qQNeYQ6RPTFVRbaVPhU3qn/xmbBlWkJQswYPseEbBzQelibLWK9jrq9x0xP
+         4szemuEf5fnfzlcOBlTG4+tGKWPGn+YVtHn+Tx4GC6gpy0wQJAVrZkYjGj/19GnHoQmV
+         shpxF0d4FEH/cU9bsyWZRLR0xYb1vr0gSYoto0Ok/oTScIm7dJcVOEYeCd000FLH/t15
+         1zYB803Gi56dLfgkvZDQkimBlUbP7DJv357liXCcoQT/HQmKwSc1AwMJJ+0pyL+p8Ujo
+         UVHDxdZ/DtbBHhnA4/q9vG4ulTsJ4cx+LB9XE6y5fAqKKophIF/KY8qAAWh+dQqqMmmW
+         XoOA==
+X-Gm-Message-State: AOAM533YdPWW61N/R9phMA6xgvDppDc7qLmk+LQ8eNDtuLrCgxDbtFUa
+        IYuFTTOaM72H6NJYt0ES0PtvQ5tkwOI=
+X-Google-Smtp-Source: ABdhPJziaG8AlzcZqFbl5eKJFhhA32quLhuVTwa1K7t9EuvlSbBbZRrRHmBx9DB8GZB66ADFh77wPw==
+X-Received: by 2002:a2e:b0db:: with SMTP id g27mr6361271ljl.425.1593369633417;
+        Sun, 28 Jun 2020 11:40:33 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id q1sm6979902lji.71.2020.06.28.11.40.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jun 2020 11:40:32 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 9so15659751ljc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:40:32 -0700 (PDT)
+X-Received: by 2002:a2e:97c3:: with SMTP id m3mr6585240ljj.312.1593369632297;
+ Sun, 28 Jun 2020 11:40:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200628152342.GE18884@zn.tnic> <20200628181544.GB19572@gmail.com>
+In-Reply-To: <20200628181544.GB19572@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Jun 2020 11:40:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjqaq=otcxZfJrbRCJ31k_paP4RLOOkzLF6wwvW3aQd9A@mail.gmail.com>
+Message-ID: <CAHk-=wjqaq=otcxZfJrbRCJ31k_paP4RLOOkzLF6wwvW3aQd9A@mail.gmail.com>
+Subject: Re: [GIT PULL] sched/urgent for 5.8-rc3
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, but the implementation in this
-driver returns an 'int'.
+On Sun, Jun 28, 2020 at 11:15 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> I based sched/urgent on a tested-working merge commit, not on a random
+> interim commit - in this sense your rebase of 68f7b5cc835d was
+> somewhat unnecessary.
+>
+> I believe avoiding random merge commits is mostly relevant in the
+> merge window phase, when reliability of interim merge stages is
+> arguably low and same-day rebases were a disease a couple of years
+> ago.
 
-Fix this by returning 'netdev_tx_t' in this driver too and
-usind 'NETDEV_TX_OK' instead of 0 accordingly.
+Yes. And in general I'd prefer to not see rebases.
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- drivers/staging/ks7010/ks_wlan_net.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I took the rebased pull from Borislav already, though, so it's there now.
 
-diff --git a/drivers/staging/ks7010/ks_wlan_net.c b/drivers/staging/ks7010/ks_wlan_net.c
-index 211dd4a11cac..334ae1ded684 100644
---- a/drivers/staging/ks7010/ks_wlan_net.c
-+++ b/drivers/staging/ks7010/ks_wlan_net.c
-@@ -46,7 +46,7 @@ struct wep_key {
-  */
- static int ks_wlan_open(struct net_device *dev);
- static void ks_wlan_tx_timeout(struct net_device *dev, unsigned int txqueue);
--static int ks_wlan_start_xmit(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t ks_wlan_start_xmit(struct sk_buff *skb, struct net_device *dev);
- static int ks_wlan_close(struct net_device *dev);
- static void ks_wlan_set_rx_mode(struct net_device *dev);
- static struct net_device_stats *ks_wlan_get_stats(struct net_device *dev);
-@@ -2511,7 +2511,7 @@ void ks_wlan_tx_timeout(struct net_device *dev, unsigned int txqueue)
- }
- 
- static
--int ks_wlan_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+netdev_tx_t ks_wlan_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct ks_wlan_private *priv = netdev_priv(dev);
- 	int ret;
--- 
-2.27.0
-
+                  Linus
