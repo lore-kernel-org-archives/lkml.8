@@ -2,137 +2,140 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B451C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5945620772
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647AD20772
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="el1oruQZ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qpsbZ/oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgF1NlI (ORCPT
+        id S1726506AbgF1NnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 09:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgF1NlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 09:41:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E953C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 06:41:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id cv18so2419512pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 06:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=E7C2nlYyzEXhj0UodvzYvLRuLFmatdLU8PtxJ5GudS4=;
-        b=el1oruQZ1InEuxRcRFVe4P70xLPIM55B7PNfKTNw8XCA/vXEJkMcNv+NWynPeJGWN8
-         wtYT1MxeOAjB67syqKT37LoZVmLn2POZSwrXWCZOY8K3cMrOCZYRZ15xeXTr2jwPm7la
-         UrDVgm0KTnCd5utNgzhepWbgYsgpxIWbIMPvd4VuBDrQrrChhBGqUJXeAZD844czHQ7h
-         wBKvvrm+dTVYN2jouvM/3mAwJbGowfcx5NvCzOg72kAlZ0mApdzq6NZub7cJLnElVbG0
-         o6STn9sp7v6YJQVAKJClbLgAjRMtusz/CYrcCPV40BPucjiaMvtGYbCn/t3ItYV6SPsZ
-         P5bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=E7C2nlYyzEXhj0UodvzYvLRuLFmatdLU8PtxJ5GudS4=;
-        b=U3K45em5Dq3LW7eUruLjJnxHzqCN9TgyKzrmcglERnvQSbVjDI41EY8kkJ/S+TtUp2
-         G+u1VvJbj9MyadTmiqlottluXtj1opCEWAkMA7IQLCSdv1oBgWVCeBkIJxN5JVyPkfPb
-         PCJsTPy0fssLXJd9aYW+YcIfFijbAhq3W4LK/8kjjLyYKxNaW6XOxEbA+630VTygutqB
-         Sd7kZ4mlnRAVkLzSWexibIrcAT45smDuzAp+s1nHr8cB38dvJhRzrm74YK/wTnjP4xaA
-         XujuD7iHPOexrzsQEIS5gRvgaEPKe5cRGfJ4Mt3Jzq6sZdOe38HWb6HrLiO+Z/CtRoix
-         0TEQ==
-X-Gm-Message-State: AOAM531G7jfANtLl7J0S22t32GxzULWdYgOjQjPr9pIpqfh+PdwmcNtR
-        M8Q3Qp1TAFNkUE2TKtZw/9jVYw==
-X-Google-Smtp-Source: ABdhPJwNaOaSwE4mUP7Qbam7f76dNGDLoPL5jA3rPe5zbEfDgYD3wOckbQkQ94EFH1/xzXURxV7Nkw==
-X-Received: by 2002:a17:902:c1cb:: with SMTP id c11mr1408915plc.88.1593351666992;
-        Sun, 28 Jun 2020 06:41:06 -0700 (PDT)
-Received: from localhost ([2406:7400:73:ff29:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id c12sm3859003pfn.162.2020.06.28.06.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 06:41:05 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Sun, 28 Jun 2020 09:41:00 -0400
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "glider@google.com" <glider@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] init: main.c: Fixed a brace coding style issue.
-Message-ID: <20200628134100.mseebxf3dot56eia@pesu-pes-edu>
+        Sun, 28 Jun 2020 09:43:24 -0400
+Received: from mout.web.de ([217.72.192.78]:58559 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbgF1NnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 09:43:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1593351792;
+        bh=0LadQBb13X/BzAtdiFvRhyr4dZfLGKtUESMf8u5ROZ0=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=qpsbZ/oO/qptFmdyW3lNrHlcFQJHiOSnNH1C3Sc0XgaCrTQTTYMZZ6QJnf2fTfbZa
+         r9vVHTl/2EXJh98ASoNIvGllvyE0hGof8XzU4G3cp7zXJdNwqp278SAdrI8vu0cUDV
+         GAvvkcWk4eAF/we58bYr6Dp2zCkwJ19vPFj23JEA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.52.166]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lm4hJ-1jGTx313Mf-00Zh6A; Sun, 28
+ Jun 2020 15:43:12 +0200
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH] usb: gadget: function: printer: The device interface is
+ reset and should return error code
+To:     Zhang Qiang <qiang.zhang@windriver.com>, linux-usb@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <37bf94a0-92a0-ca4e-a4e4-5dd44aef2b88@web.de>
+Date:   Sun, 28 Jun 2020 15:43:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b6pzcdaahqypt7d2"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LI5UJ+zbj0bYeixBvXbqedE20bBiAwlUnEyzNKfPU1yvFHAfqLj
+ 7JrwblEIs8X0biK/YJy6v+4aFboXlkLoIe1kwBwNuIMSUEdfELH2k9hiFsAxCwmhrkA1Cfi
+ XFZ42fMdWPPJXOvpl6D0orgjYxDToNev2MmSqybmtlIZjFmNQyO787XuFSDwGrqKPx+0bIa
+ n5yCibiPgTCR7ZzcTtAwA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gwTutKXcGzM=:bUsHMNV99XmAt5XnGKYPh5
+ F3dMQoIQAR3Jle55l7tev8pR0A0H0v4stT46YitkO+cNMLTntIr8Kr4bcKEx1xZ/LTB0wdhaV
+ MaDAoaQnxA7ig8P+IvZyY2SF1RSUtI5usmZvtxIX0q/qTv+LhyUEtDHr4X7ZF+gjkaP4F7+/J
+ EU6Cc6mbCcJbgqViQw+uP88cuXrbcYr3JyoWdMs0T1hZ+6OzTd+cyKGp0X7/beKzHWf1NTAc0
+ OjLXMCPYVsgtNAbvCOTmsXpLo2H45HZvPIsj1EXeLSsnRliCmuVzbP76S4hlJtiNl0xV+4a33
+ eG2zbnhJmdwWXfHg0D5TarFNWRN0whArvlBOJJ6s2JmpnNutxlzbIoZ44hof8IyP2TpIW2oW6
+ xKCQL8zCSmhOwTs6FESk/iq7dWwGZzyyfZ6MgKf4IDf70+uomGT3jalTWbZyqVoV77nkn0kTk
+ oyI9ggxqpM+iqf5wOO0ZmlCl0EPgqHbt/JU0sOexzcUZUCbS4NA79/u4I5jm2A2TXlplfJWvu
+ M+Ut6wtMw1HbK/Isqf6DMDIbPMNVz8pIjmR9DXJJxCaUF3eRLcdHSBexASRDyDtzhG3H3jXjO
+ SJownnuXUKu8U5hSmFFXNIg9wQOWvkp7gDCRHOsjfoKCU/t/7wl3PyhG0BGCVjHlJslORfJYN
+ SJjJ9dIcAR2pnApgwCjgtv30vVCgLimRb1ExMGGZCA+ehJev7bBF2fPPdvNBEnPCtL5krE+Am
+ PqSW21/8VV24+FhyNZLF4NE9jUWAdn9QHJgjHcA8PLlm27TVZ8ngO+7CiE/UigsN42DTWe4qc
+ FVR51ypSfZnt8y3zztaOfHnm0RoSlP7Uzo9v7Esn4piqp1q4WvljcfjPnkW4La8607n5610se
+ bZrNT1XT6rmdpXr3uYfQKaLQF0rB4HAh34hJyI30sVaqrRmmbR/yCZFRuU3+8306crzPom5Cd
+ qlrN1NclLRgzysNVsoVI5U8SzhrjZpA+3EA6uvHwNdtZzBNa1J77e4mn2TmYMlyPqE8RQ3Yal
+ 9NL4buHehzLfGGXn2opZJkl2MhPldI3ktSmtILpa7d1EV2JjaXQ8oOE1PIxenhbaHKVLgI4mA
+ +eVrWQ4sS/ZC5qNU0DzwnGzsnsxaHxI78Vjzs+FbFW5H72NU6UxR4FXrLOYmOd1FyPV+60K0w
+ T7eutt+bQJ4vrVQUJIHOUr87QAWu9FmQb4qSxhSBFIyguDmcr3Ssv/Bmcgh+4ds43gC0clNUI
+ JkbYuxzY/eIo64kwt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---b6pzcdaahqypt7d2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Fixed a coding style issue.
-
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- init/main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/init/main.c b/init/main.c
-index 9127b240fd26..d8477fb95bec 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -385,11 +385,11 @@ static u32 boot_config_checksum(unsigned char *p, u32 size)
- static int __init bootconfig_params(char *param, char *val,
- 				    const char *unused, void *arg)
- {
--	if (strcmp(param, "bootconfig") == 0) {
-+	if (strcmp(param, "bootconfig") == 0)
- 		bootconfig_found = true;
--	} else if (strcmp(param, "--") == 0) {
-+	else if (strcmp(param, "--") == 0)
- 		initargs_found = true;
--	}
-+
- 	return 0;
- }
-
---
-2.20.1
+I suggest to choose a more succinct patch subject.
 
 
---b6pzcdaahqypt7d2
-Content-Type: application/pgp-signature; name="signature.asc"
+> After the device is disconnected from the host side, the interface of
+> the device is reset. If the userspace operates the device again,
+> an error code should be returned.
 
------BEGIN PGP SIGNATURE-----
+Please use an imperative wording for the commit message.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D719fdd32921fb7e3208db8832d=
+32ae1c2d68900f#n151
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl74newACgkQ471Q5AHe
-Z2q38Av/SdhDrBu3oSwjTsUQefl+Vf1E56ytJhBW/EgN6DftJKbTq1gNCK0lba98
-OJrlPXWlPRFZqy95KdnRO9UEsxKKVRjxoSkmJTbTLpLWAeohakv+VouPtHDiNCo/
-1jQ01PdDDZ+tQYxq4yMPT4j3VPz7sp7AhtLVmwhdUeyX+6Nnuh3RpArYPpTBFA0O
-v4dygyRTQKKOd2XWeD8zqncE791hcjWs44kme2vDyHGgwEnFKymm5PeMwl3hySpX
-iWiJqs0zSzXkKZSxdYhy568L7E8kZHpin7Mj3eAX3Z7yqk8v2H7emjf8g3R1GLHK
-HbJEb9XaFkcGCfIr1ICU1qMRPqxz81cKfgG5ximedk7c280QazTfKDFw1eN38SXJ
-u+BdZNCykFp53kb4+2b9naHA1UEKYT/aW13SjMudsZzjqL0Vn39GhOoathcccW8S
-32+1Y1Gfl8kfhjvFN3rfGpUcX7c46ole1bbnN66B9Kdb4v/VWgC1G91IvNbUmTEb
-Q+dNf2Ee
-=5uT2
------END PGP SIGNATURE-----
 
---b6pzcdaahqypt7d2--
+> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+
+Did you really specify your real name here?
+
+Regards,
+Markus
