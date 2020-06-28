@@ -2,110 +2,181 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8047C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7DC2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NrdRbuX3"
+	by mail.kernel.org (Postfix) with ESMTP id C8BCE20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgF1HU3 (ORCPT
+        id S1726177AbgF1HV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgF1HU3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 03:20:29 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BF6C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 00:20:28 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id z17so10044433edr.9
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 00:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xub4a6AcFrTLJc1anaBxsk4voZXRWtmdI1iROOwnz10=;
-        b=NrdRbuX3pVDMMvlHjYtKPK3ebtf11Bfb067WYZjUL0JCg1gU8YV71ZPjqpPGMxbtIL
-         TTeKMKQodKiPmoyPBR/fS05/+fbVTfYX6Sr3dSHO53WfHJlaCykqvCU3r5AIouoQVx5P
-         HExIIm65f2WA207uphRmhbFtblULmkx/AsXWDeay++HaC2pE8jp7ylkFZX3HaiUso7vP
-         q39Ook5yFFWg9I2rhoLrf24lIA3anIjkOB4zaui+cx9NqiUvB0RdPmxtAhw649xsBIAb
-         sRplVq8iqFWp0faFfduugEFAJZKVZaT/6tnY0dhjdmFqkdC1WhV5qNDdjUy8zRV0qK1R
-         pX6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xub4a6AcFrTLJc1anaBxsk4voZXRWtmdI1iROOwnz10=;
-        b=NwmO++3p89hJqJNjKukVl6bvqj3hdZ7XkBfCwCj0IIeFFHAP7rQJX2ygELyF4d03YF
-         Q5Y2Uxo/J8Hn7UsejvYrYtPC6O6ospVOkwd6wIdArNVex5RmxW1686Kh6ejvQNr071Wq
-         ymbU1i4UM6rRWwJBtPG/DyyqqAdyRQVXuotjXBA2NS+RVyNzRx8/J1jFp/JiFDJ6BnUO
-         wK8yv91RhSMV1XOCJeNtZSL0ApxVnY6XaUP5BpN3sU4CjawUG47avcHDGTldyzTUyJpp
-         7Nfef19yknFxwTYK9T7P2ZLnzPaTjwfCX4ghnuW3aH6eUykMSk9wM/LcPEYdigY5y7rC
-         BL7Q==
-X-Gm-Message-State: AOAM531f4seBk8nV9lXFsiaD/TUzkxGi+4kq66U7RV4mpMkoJ2EJWynC
-        xA3K9f4UKQHDcO+jCIxbjMui8Trh
-X-Google-Smtp-Source: ABdhPJzRUEFCL7kjuJ+gQryw1pI1XNjsIh2B/grnj10uZB5jTkDZZQ99xa516hVMOK/iAC4skZ3xrg==
-X-Received: by 2002:aa7:c15a:: with SMTP id r26mr11219231edp.21.1593328827189;
-        Sun, 28 Jun 2020 00:20:27 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f51f:7c31:2fc7:f95b])
-        by smtp.gmail.com with ESMTPSA id o14sm11911857eja.121.2020.06.28.00.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 00:20:26 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] sparse: use static inline for __chk_{user,io}_ptr()
-Date:   Sun, 28 Jun 2020 09:20:19 +0200
-Message-Id: <20200628072019.67107-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 28 Jun 2020 03:21:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16741 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgF1HV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 03:21:28 -0400
+IronPort-SDR: kmO6Uh3ymV3gzcDKEmidtOoWqX8TmG725XF5jAknHKccrRcQ7/aDxsMgay35A9iyR6gIxfheWq
+ lN/owuReXDXw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9665"; a="143994229"
+X-IronPort-AV: E=Sophos;i="5.75,290,1589266800"; 
+   d="scan'208";a="143994229"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2020 00:21:27 -0700
+IronPort-SDR: IcFOAvl6KFZkyrCzbo9qhkmaBVy5GW1j76+vdXmUpRGhKVQrl+AmyKS5HfWVPRs9CELwIZvvWr
+ t4FrXxeATvsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,290,1589266800"; 
+   d="scan'208";a="276770866"
+Received: from lkp-server02.sh.intel.com (HELO 1f25e51baad6) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 28 Jun 2020 00:21:25 -0700
+Received: from kbuild by 1f25e51baad6 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jpRcx-00003t-0J; Sun, 28 Jun 2020 07:21:23 +0000
+Date:   Sun, 28 Jun 2020 15:21:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ deda15a7ef44d5dab81aa6bf140a98feefef4e00
+Message-ID: <5ef844f1.hAzZynZTuczUXuBY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__chk_user_ptr() & __chk_io_ptr() are dummy extern functions which
-only exist to enforce the typechecking of __user or __iomem pointers
-in macros when using sparse.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: deda15a7ef44d5dab81aa6bf140a98feefef4e00  Merge branch 'linus'
 
-This typechecking is done by inserting a call to these functions.
-But the presence of these calls can inhibit some simplifications
-and so influence the result of sparse's analysis of context/locking.
+elapsed time: 724m
 
-Fix this by changing these calls into static inline calls with
-an empty body.
+configs tested: 111
+configs skipped: 1
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+powerpc                     mpc5200_defconfig
+m68k                            q40_defconfig
+arm                           tegra_defconfig
+mips                        vocore2_defconfig
+arm                          simpad_defconfig
+arm                         cm_x300_defconfig
+sh                         microdev_defconfig
+m68k                             allmodconfig
+powerpc                       ppc64_defconfig
+m68k                             alldefconfig
+nios2                         10m50_defconfig
+mips                     decstation_defconfig
+arm                       versatile_defconfig
+mips                          ath25_defconfig
+mips                        nlm_xlp_defconfig
+sparc                            allyesconfig
+arm                       netwinder_defconfig
+mips                    maltaup_xpa_defconfig
+powerpc                    gamecube_defconfig
+powerpc                      pasemi_defconfig
+riscv                             allnoconfig
+h8300                    h8300h-sim_defconfig
+nds32                             allnoconfig
+sparc64                          allmodconfig
+h8300                       h8s-sim_defconfig
+sh                          landisk_defconfig
+sh                          kfr2r09_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                         apsh4a3a_defconfig
+openrisc                    or1ksim_defconfig
+mips                           jazz_defconfig
+x86_64                           alldefconfig
+arm                         s3c2410_defconfig
+powerpc                     mpc512x_defconfig
+openrisc                 simple_smp_defconfig
+sh                           cayman_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
 ---
- include/linux/compiler_types.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index b67930216e45..a9b6699f3934 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -11,8 +11,8 @@
- # define __iomem	__attribute__((noderef, address_space(__iomem)))
- # define __percpu	__attribute__((noderef, address_space(__percpu)))
- # define __rcu		__attribute__((noderef, address_space(__rcu)))
--extern void __chk_user_ptr(const volatile void __user *);
--extern void __chk_io_ptr(const volatile void __iomem *);
-+static inline void __chk_user_ptr(const volatile void __user *ptr) { }
-+static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
- /* context/locking */
- # define __must_hold(x)	__attribute__((context(x,1,1)))
- # define __acquires(x)	__attribute__((context(x,0,1)))
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
