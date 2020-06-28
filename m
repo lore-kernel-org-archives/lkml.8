@@ -2,82 +2,121 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9548AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A386C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75557206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593373839;
-	bh=g+bMH3YB2ROaJ1m9B5DHD4PP1izygQc5rj5oqPF7RMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WHtI5ugs1lAo01p978Alko7+lFAbkcGadPSKeX6xqw+qh3DA/dBb+2dsBr9DsRZz2
-	 LpiV3LLd+2SNQWb/U8dyhd7xbuQCTcR3jlRFLdN5A14dhAnuxs7XhUQf2LV0EKUuDi
-	 FQddKwmb/GgqrfJIkormXdaw2Nly/uQdWc81qNh4=
+	by mail.kernel.org (Postfix) with ESMTP id 291172053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfxRlJ4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgF1Tuh (ORCPT
+        id S1726794AbgF1Txo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgF1Tuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:50:37 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB8432053B;
-        Sun, 28 Jun 2020 19:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593373837;
-        bh=g+bMH3YB2ROaJ1m9B5DHD4PP1izygQc5rj5oqPF7RMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=so9+QGwuY05Q1b1RGP3RYwsCzVrWaO/fBjcXaA37lU8bqyZbiLo4iprRdi6CwqxOW
-         sDZrXyoMIVCw2QR6Sj9NqT5sihdQfVh+eG4VKLzTn/4qvBO1/zaZsExDJlSlchwLrG
-         b7S1ZDxnogEFOC8XCLag1is5NjsrwMOCrDfPTB/0=
-Date:   Sun, 28 Jun 2020 12:50:35 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
-        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
-        George Cherian <gcherian@marvell.com>,
-        linux-crypto@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 1/3 v2] crypto: introduce the flag
- CRYPTO_ALG_ALLOCATES_MEMORY
-Message-ID: <20200628195035.GD11197@sol.localdomain>
-References: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
- <20200616173620.GA207319@gmail.com>
- <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626044534.GA2870@gondor.apana.org.au>
- <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626164617.GA211634@gmail.com>
- <20200626170039.GB211634@gmail.com>
- <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com>
+        Sun, 28 Jun 2020 15:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgF1Txn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 15:53:43 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82EAC03E979;
+        Sun, 28 Jun 2020 12:53:43 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a1so14492828ejg.12;
+        Sun, 28 Jun 2020 12:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XyJoAKzD2xMTmaGb+2U8hknfu7zNJd/hENwzynkwJW4=;
+        b=tfxRlJ4UIIdWSnEzUIW/lHNPIDZRbEKOVVQMpsqpQBijWQblZkXJz9RJXxbmY/D42f
+         zInCM3145BZV6LRJ/PTtWBquxMqeConvZoFI7xSaE/tP9Z9ab6TaPnCGygtQ/Omu++7y
+         8UR7rAjD1CVfq+n0lMSAEoZf0yrhUPEXuM47qjuBMYCn58NR3uXk21V2nAeNweOlyW2t
+         ZEwXHoHfe71RKg0dvJDxDFfGheQVXw/ATZXeOIwLS+lJimITqoBy00Zm1K5dXBIIs9Qq
+         zKWpj12dDLB+oUpSI9nIZ1+h/aMSvYSQkZtVrwUp9w0NKYCYKmyH1jZPLd7eKBhEQvqw
+         O/bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XyJoAKzD2xMTmaGb+2U8hknfu7zNJd/hENwzynkwJW4=;
+        b=sfr2F1mQnLp3NB0FoJ38hvhssCEQcZsZ0t4mbYWB7gvgU6Ogyo36q2hs235N1j5zoP
+         3VZNd/j07bo2e0GXiebK7fLhPRQt12zJ8afjLj6OSBx+YI3KR6VjmEDuGLAO4A0C3O5b
+         xlIzQrJ8gvVE95mJErSyh5a0SX+fVMqUQuTlPnUav93zu8UKJXIJPPPTrBo9qgOdCeu/
+         9ve+ScDsIBSMP1Saf1TMb7ug4YtRZCollpPddGbLneiZemKQqudDywTPzd+W6RDeR+ys
+         zzIfGao+JnH8tFcFtNFllHx3R39nBnHPZKkMoFK4CARnE+gliPveIGprC8dgSGKACFhw
+         CDrg==
+X-Gm-Message-State: AOAM5313VrsrTCM7tpPaiEa2llm04E8l1MtWh/Nm88L4t+linPBVRP19
+        F+0oT+WarjU8x45ncWeLx4k=
+X-Google-Smtp-Source: ABdhPJyU6tDnSk4Ih0ey/mu+oeXnr+wchrmQxcBYhsVi3h+82J7obYCNcdpzpszIFShD5lHQz+WdVQ==
+X-Received: by 2002:a17:906:fca4:: with SMTP id qw4mr10670632ejb.362.1593374022389;
+        Sun, 28 Jun 2020 12:53:42 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
+        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.53.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 12:53:41 -0700 (PDT)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: [PATCH 00/15] always use netdev_tx_t for xmit()'s return type
+Date:   Sun, 28 Jun 2020 21:53:22 +0200
+Message-Id: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 03:07:49PM -0400, Mikulas Patocka wrote:
-> 
-> > Also, "seqiv" instances can be created without CRYPTO_ALG_ALLOCATES_MEMORY set,
-> > despite seqiv_aead_encrypt() allocating memory.
-> > 
+The ndo_start_xmit() methods should return a 'netdev_tx_t', not
+an int, and so should return NETDEV_TX_OK, not 0.
+The patches in the series fix most of the remaning drivers and
+subsystems (those included in allyesconfig on x86).
 
-This comment wasn't addressed.
 
-- Eric
+Luc Van Oostenryck (15):
+  cail,hsi: fix cfhsi_xmit()'s return type
+  caif: fix caif_xmit()'s return type
+  caif: fix cfspi_xmit()'s return type
+  caif: fix cfv_netdev_tx()'s return type
+  net: aquantia: fix aq_ndev_start_xmit()'s return type
+  net: arc_emac: fix arc_emac_tx()'s return type
+  net: nb8800: fix nb8800_xmit()'s return type
+  net: nfp: fix nfp_net_tx()'s return type
+  net: pch_gbe: fix pch_gbe_xmit_frame()'s return type
+  net: dwc-xlgmac: fix xlgmac_xmit()'s return type
+  net: plip: fix plip_tx_packet()'s return type
+  usbnet: ipheth: fix ipheth_tx()'s return type
+  net/hsr: fix hsr_dev_xmit()'s return type
+  l2tp: fix l2tp_eth_dev_xmit()'s return type
+  cxgb4vf: fix t4vf_eth_xmit()'s return type
+
+ drivers/net/caif/caif_hsi.c                          | 6 +++---
+ drivers/net/caif/caif_serial.c                       | 2 +-
+ drivers/net/caif/caif_spi.c                          | 4 ++--
+ drivers/net/caif/caif_virtio.c                       | 2 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_main.c     | 2 +-
+ drivers/net/ethernet/arc/emac_main.c                 | 2 +-
+ drivers/net/ethernet/aurora/nb8800.c                 | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4vf/adapter.h       | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4vf/sge.c           | 2 +-
+ drivers/net/ethernet/netronome/nfp/nfp_net_common.c  | 2 +-
+ drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c | 2 +-
+ drivers/net/ethernet/synopsys/dwc-xlgmac-net.c       | 2 +-
+ drivers/net/plip/plip.c                              | 4 ++--
+ drivers/net/usb/ipheth.c                             | 2 +-
+ net/hsr/hsr_device.c                                 | 2 +-
+ net/l2tp/l2tp_eth.c                                  | 2 +-
+ 16 files changed, 20 insertions(+), 20 deletions(-)
+
+-- 
+2.27.0
+
