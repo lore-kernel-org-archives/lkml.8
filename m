@@ -2,81 +2,109 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C14C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E352BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E67E206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1E120720
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:26:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCAzAftw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgF1LXU (ORCPT
+        id S1726314AbgF1L0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 07:23:20 -0400
-Received: from mx139-tc.baidu.com ([61.135.168.139]:51103 "EHLO
-        tc-sys-mailedm01.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726225AbgF1LXU (ORCPT
+        Sun, 28 Jun 2020 07:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgF1L0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 07:23:20 -0400
-Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
-        by tc-sys-mailedm01.tc.baidu.com (Postfix) with ESMTP id 0772F2040055;
-        Sun, 28 Jun 2020 19:23:05 +0800 (CST)
-From:   Li RongQing <lirongqing@baidu.com>
-To:     tytso@mit.edu, arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: [PATCH] random: get rid of dead codes from credit_entropy_bits
-Date:   Sun, 28 Jun 2020 19:23:04 +0800
-Message-Id: <1593343384-1292-1-git-send-email-lirongqing@baidu.com>
-X-Mailer: git-send-email 1.7.1
+        Sun, 28 Jun 2020 07:26:08 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C1CC061794;
+        Sun, 28 Jun 2020 04:26:08 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so13679587wrm.4;
+        Sun, 28 Jun 2020 04:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=S+k6UtPIvO0vIYbrlMDk45zrIVwFhaRGOClzN9gbCgs=;
+        b=WCAzAftwg7qux9HBjIOiWi8WrC89fPVL6lvR7VK3RKs9uF+baZ8sp4sZSMqb3iOoCx
+         v8BB0oZbYz7bKozw8eMUtvYPbwcQuH0Nf44GK/t2E+oRm/aOxF3nXK9FZ7vvroShwghd
+         SyEsSa8CwLXWeSQpC4c+OsUHCQB19CK0F4D6ngjy8TseEAiQKLnbrEmgyEQqSr6aJqOo
+         yEafGR47cwC185jXi3IujhjuZKA+4wxncfRMbn1gDpn0tfSlKZ9evrtKqlQOQLOnqf5F
+         aUrcz2VBOJE8z1NJmKBNgDvREKP+/T/hHglJz/xkeuIKpT0NovSQv2l/QrpQJMaAId5T
+         AeoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=S+k6UtPIvO0vIYbrlMDk45zrIVwFhaRGOClzN9gbCgs=;
+        b=hYj6rIbhjaDBeTEXeSlkqjiW4eC0ffyKGTrla3eLcFzDuBAJsU+dwzNq8wKR8jqnzZ
+         TLkuAtwfIXC8dMIdGRcu/+Jiqrcyf3XbbGmeYA/abaB4O88A8FNZIoryXLqHiYl9I+lI
+         +/HF6oeTgIXD5rQstu19FQkbiy/lyJyWCcHwx35QqqmEYaEYiJaT3HiyczSOWKtTB91J
+         fByrVsFUsukqQokZSLoO5ZaYv97KFORBNXoANmFAVZjyvrR+o88tetNYLRY/1Rj3xRAe
+         dEvwBueC/XC9OuR4DNPvzEb7yEwSZZ41XFeQFDVzo5ERlVd0EBXUdCdIOX6bhNrEG/4j
+         2H3w==
+X-Gm-Message-State: AOAM532Oxspv6BXSo6xNsKs1wPtJZypUxk6a1kN+wWW+VdUvqoHAeQzQ
+        9kO9Sw5U0fx4g/9TK1IOw8d/E8UayEEo77UIum4=
+X-Google-Smtp-Source: ABdhPJxF/pjQBgCeBAbqhm4mgZrudZ1F7qiZE+sYiYJEnTaoqWG9BfQoEXfJqsnVtSNSHzDzlkgWDqOmSNUSnpMDgZw=
+X-Received: by 2002:a5d:6907:: with SMTP id t7mr12403926wru.329.1593343567163;
+ Sun, 28 Jun 2020 04:26:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn> <e419a2acea6c1977eaef5d049d607749@kernel.org>
+In-Reply-To: <e419a2acea6c1977eaef5d049d607749@kernel.org>
+From:   Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Date:   Sun, 28 Jun 2020 13:25:54 +0200
+Message-ID: <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 90ea1c6436d2 ("random: remove the blocking pool"),
-has_initialized is zero always, and initialized of struct
-entropy_store is not used
+=D1=81=D1=80=D0=B5, 24. =D1=98=D1=83=D0=BD 2020. =D1=83 10:40 Marc Zyngier =
+<maz@kernel.org> =D1=98=D0=B5 =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BE/=
+=D0=BB=D0=B0:
+>
+> On 2020-06-24 08:44, Tiezhu Yang wrote:
+> > [git send-email failed due to too many commands,
+> >  so only cc the major related email and resend it,
+> >  sorry for that]
+>
+> This is becoming majorly annoying.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- drivers/char/random.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+I don't think this is the right vocabulary to welcome newcomers,
+however "terrible" thinks they did.
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index a7cf6aa65908..288cc4464a69 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -500,7 +500,6 @@ struct entropy_store {
- 	unsigned short add_ptr;
- 	unsigned short input_rotate;
- 	int entropy_count;
--	unsigned int initialized:1;
- 	unsigned int last_data_init:1;
- 	__u8 last_data[EXTRACT_SIZE];
- };
-@@ -660,7 +659,7 @@ static void process_random_ready_list(void)
-  */
- static void credit_entropy_bits(struct entropy_store *r, int nbits)
- {
--	int entropy_count, orig, has_initialized = 0;
-+	int entropy_count, orig;
- 	const int pool_size = r->poolinfo->poolfracbits;
- 	int nfrac = nbits << ENTROPY_SHIFT;
- 
-@@ -717,11 +716,6 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
- 	if (cmpxchg(&r->entropy_count, orig, entropy_count) != orig)
- 		goto retry;
- 
--	if (has_initialized) {
--		r->initialized = 1;
--		kill_fasync(&fasync, SIGIO, POLL_IN);
--	}
--
- 	trace_credit_entropy_bits(r->name, nbits,
- 				  entropy_count >> ENTROPY_SHIFT, _RET_IP_);
- 
--- 
-2.16.2
+Rather, patience, calmness and clear and detailed explanations would
+work much better - and certainly be much more helpful and useful to
+the community in the long run.
 
+Regards,
+Aleksandar
+
+> Please fix your git setup
+> *before* dumping 57 emails for just 14 patches. You have done
+> the same thing yesterday, and I would hope you learned from your
+> mistakes.
+>
+> Also, do not repost a series more than once per week. You have
+> already exceeded your quota by quite a margin.
+>
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
