@@ -2,28 +2,29 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3595C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36778C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C029520768
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2176820768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgF1RSS (ORCPT
+        id S1726657AbgF1RSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 13:18:18 -0400
-Received: from out28-221.mail.aliyun.com ([115.124.28.221]:58010 "EHLO
-        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgF1RSR (ORCPT
+        Sun, 28 Jun 2020 13:18:23 -0400
+Received: from out28-172.mail.aliyun.com ([115.124.28.172]:55190 "EHLO
+        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgF1RST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 13:18:17 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4525175|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0220848-0.000517743-0.977398;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.Hu3fckw_1593364687;
+        Sun, 28 Jun 2020 13:18:19 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06436324|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.480657-0.00508796-0.514255;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.Hu3fckw_1593364687;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hu3fckw_1593364687)
           by smtp.aliyun-inc.com(10.147.42.197);
-          Mon, 29 Jun 2020 01:18:13 +0800
+          Mon, 29 Jun 2020 01:18:14 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -32,10 +33,12 @@ Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
         dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 0/3] Add functions to operate USB PHY related clock.
-Date:   Mon, 29 Jun 2020 01:15:40 +0800
-Message-Id: <20200628171543.51478-1-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v2 1/3] clk: JZ4780: Add functions for enable and disable USB PHY.
+Date:   Mon, 29 Jun 2020 01:15:41 +0800
+Message-Id: <20200628171543.51478-2-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200628171543.51478-1-zhouyanjie@wanyeetech.com>
+References: <20200628171543.51478-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,21 +47,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1->v2:
-1.Use "WARN()" instead "BUG()".
-2.Move the reformat part ot the new patch.
-3.Remove unnecessary get_parent/set_parent functions.
+Add new functions to "jz4780_otg_phy_ops" to enable or disable the
+USB PHY in the JZ4780 SoC.
 
-周琰杰 (Zhou Yanjie) (3):
-  clk: JZ4780: Add functions for enable and disable USB PHY.
-  clk: JZ4780: Reformat the code to align it.
-  clk: X1000: Add support for calculat REFCLK of USB PHY.
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
 
- drivers/clk/ingenic/jz4780-cgu.c | 155 ++++++++++++++++++++-------------------
- drivers/clk/ingenic/x1000-cgu.c  |  85 ++++++++++++++++++++-
- 2 files changed, 165 insertions(+), 75 deletions(-)
+Notes:
+    v1->v2:
+    1.Use "WARN()" instead "BUG()".
+    2.Move the reformat part ot the new patch.
+    3.Remove unnecessary get_parent/set_parent functions.
 
+ drivers/clk/ingenic/jz4780-cgu.c | 67 ++++++++++++++++++++++------------------
+ 1 file changed, 37 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 6c5b8029cc8a..e2e43bfe9697 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (c) 2013-2015 Imagination Technologies
+  * Author: Paul Burton <paul.burton@mips.com>
++ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+  */
+ 
+ #include <linux/clk-provider.h>
+@@ -59,6 +60,7 @@
+ #define USBPCR_VBUSVLDEXT	BIT(24)
+ #define USBPCR_VBUSVLDEXTSEL	BIT(23)
+ #define USBPCR_POR		BIT(22)
++#define USBPCR_SIDDQ		BIT(21)
+ #define USBPCR_OTG_DISABLE	BIT(20)
+ #define USBPCR_COMPDISTUNE_MASK	(0x7 << 17)
+ #define USBPCR_OTGTUNE_MASK	(0x7 << 14)
+@@ -68,6 +70,7 @@
+ #define USBPCR_TXHSXVTUNE_MASK	(0x3 << 4)
+ #define USBPCR_TXVREFTUNE_MASK	0xf
+ 
++
+ /* bits within the USBPCR1 register */
+ #define USBPCR1_REFCLKSEL_SHIFT	26
+ #define USBPCR1_REFCLKSEL_MASK	(0x3 << USBPCR1_REFCLKSEL_SHIFT)
+@@ -100,32 +103,6 @@
+ 
+ static struct ingenic_cgu *cgu;
+ 
+-static u8 jz4780_otg_phy_get_parent(struct clk_hw *hw)
+-{
+-	/* we only use CLKCORE, revisit if that ever changes */
+-	return 0;
+-}
+-
+-static int jz4780_otg_phy_set_parent(struct clk_hw *hw, u8 idx)
+-{
+-	unsigned long flags;
+-	u32 usbpcr1;
+-
+-	if (idx > 0)
+-		return -EINVAL;
+-
+-	spin_lock_irqsave(&cgu->lock, flags);
+-
+-	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
+-	usbpcr1 &= ~USBPCR1_REFCLKSEL_MASK;
+-	/* we only use CLKCORE */
+-	usbpcr1 |= USBPCR1_REFCLKSEL_CORE;
+-	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
+-
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+-	return 0;
+-}
+-
+ static unsigned long jz4780_otg_phy_recalc_rate(struct clk_hw *hw,
+ 						unsigned long parent_rate)
+ {
+@@ -149,7 +126,7 @@ static unsigned long jz4780_otg_phy_recalc_rate(struct clk_hw *hw,
+ 		return 19200000;
+ 	}
+ 
+-	BUG();
++	WARN();
+ 	return parent_rate;
+ }
+ 
+@@ -206,13 +183,43 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return 0;
+ }
+ 
+-static const struct clk_ops jz4780_otg_phy_ops = {
+-	.get_parent = jz4780_otg_phy_get_parent,
+-	.set_parent = jz4780_otg_phy_set_parent,
++static int jz4780_otg_phy_enable(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
++
++	writel(readl(reg_opcr) | OPCR_SPENDN0, reg_opcr);
++	writel(readl(reg_usbpcr) & ~USBPCR_OTG_DISABLE & ~USBPCR_SIDDQ, reg_usbpcr);
++	return 0;
++}
++
++static void jz4780_otg_phy_disable(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
+ 
++	writel(readl(reg_opcr) & ~OPCR_SPENDN0, reg_opcr);
++	writel(readl(reg_usbpcr) | USBPCR_OTG_DISABLE | USBPCR_SIDDQ, reg_usbpcr);
++}
++
++static int jz4780_otg_phy_is_enabled(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
++
++	return (readl(reg_opcr) & OPCR_SPENDN0) &&
++		!(readl(reg_usbpcr) & USBPCR_SIDDQ) &&
++		!(readl(reg_usbpcr) & USBPCR_OTG_DISABLE);
++}
++
++static const struct clk_ops jz4780_otg_phy_ops = {
+ 	.recalc_rate = jz4780_otg_phy_recalc_rate,
+ 	.round_rate = jz4780_otg_phy_round_rate,
+ 	.set_rate = jz4780_otg_phy_set_rate,
++
++	.enable		= jz4780_otg_phy_enable,
++	.disable	= jz4780_otg_phy_disable,
++	.is_enabled	= jz4780_otg_phy_is_enabled,
+ };
+ 
+ static int jz4780_core1_enable(struct clk_hw *hw)
 -- 
 2.11.0
-
 
