@@ -2,171 +2,120 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E135C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1378520672
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DDC20672
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSoQPHn8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JofmlLCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgF1WCO (ORCPT
+        id S1726548AbgF1WEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 18:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgF1WCO (ORCPT
+        Sun, 28 Jun 2020 18:04:16 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52687 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726080AbgF1WEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 18:02:14 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A7BC03E979;
-        Sun, 28 Jun 2020 15:02:14 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h22so7158570pjf.1;
-        Sun, 28 Jun 2020 15:02:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VqS8bhh7NwFVANMN9R3qApVh1yAOo5mpLwb4AxLehrs=;
-        b=pSoQPHn8B/aKIukyq684XfojXbHedNxAIZMz8csdJVWfnKT8rRpYl7Xg05MrMtyKxY
-         FE2qs/skTluTscm0tc5npNQwMOG/DKZooTZd7+/pFBXG4nfR79VPuBbhjNh4F3pLxmqM
-         mgPq5G0mkd8ZKsNXImsfUQO/vR1F2PufphUTXPu1/cy/+tE4Y4lXgDOmWU2zmrRHy3YI
-         Ig19n6i5NFcAIqd2UyME+9QMkG7LFUcqtnNjxnihoEbndbemMKjfKZv6ku/8oLCjbfD9
-         P8uP6CuYIDRBut49iWJOQMxntxjFpF9ugH+QlveancJV9OTzfGOS5OCzE6+mwaBj29ON
-         zgJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VqS8bhh7NwFVANMN9R3qApVh1yAOo5mpLwb4AxLehrs=;
-        b=j4Gu9wgQX7+ZQSHMuD/Aoyce3FLg1dJq7o2j6EGvczeiiT7MHUUwmVjhxP3tfv451P
-         WnUXSiimbNEf9ki3vXdqKLhjDRa4ixwImGVPiNhD5e37u0tyeWwW4PQz9h22sr3u7/yb
-         zVNA5KZk4m21L1FbmYZ+wh+d4y3aOMQi4HWnKX4vTsWuWbv1Sud7IQm9uTw9Sxrs4F4H
-         E3HX1phx2av2udKqiVG45PMQf8edXYOK9B+O/WiwDz1rieFbiaFkB6Vq5BD+AZrTVzeA
-         mQ7SIQ6wQI63HQFp4SYaHT2UgIlvXgd4TaN1GTS2NDwdYaA0XB56m9/U2K9iO0pZW9iL
-         hPeA==
-X-Gm-Message-State: AOAM530LXYheumkSjCN4zyf0jnzUiRAujDXXf9UxOQ0xK8Ogt9MQcaid
-        io7JMLP3dKleUBtJ6VY+LAs=
-X-Google-Smtp-Source: ABdhPJyYpBT/Hwn+BAItA3VjPPwHiNXJpf6HpsMFV91E5xL65/OYaRSP16zH/g+mwDzEr0KZFoS/Og==
-X-Received: by 2002:a17:90a:26c6:: with SMTP id m64mr391100pje.215.1593381733480;
-        Sun, 28 Jun 2020 15:02:13 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:616])
-        by smtp.gmail.com with ESMTPSA id m14sm17098356pjv.12.2020.06.28.15.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 15:02:12 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 15:02:09 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
- <20200624120408.12c8fa0d@oasis.local.home>
- <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
- <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
- <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
- <20200626181455.155912d9@oasis.local.home>
- <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
- <20200628144616.52f09152@oasis.local.home>
- <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
- <20200628154331.2c69d43e@oasis.local.home>
+        Sun, 28 Jun 2020 18:04:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593381854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SpuS39ZHyysAFTXqQFaKXgrz4rR7/fTFWJI3d8tjYg4=;
+        b=JofmlLCl37WXPo1SgcFHNlrLbT/drLcALD2etIPbvnkgJ1qbUZn6DbRQtgrV5Oy6RaUWPc
+        DQnFV9w45raGjRytOb/P0042xVxyim3yQvlhW1Jp/KFpluGVrS+ZXcjyWzJmj5yYKBkpDo
+        VhxBfED3SWjIOLPRLaJKSlmE/YbUH1Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-y_UC1SkyOOqW8X_3a75xOg-1; Sun, 28 Jun 2020 18:04:12 -0400
+X-MC-Unique: y_UC1SkyOOqW8X_3a75xOg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5F368015CB;
+        Sun, 28 Jun 2020 22:04:10 +0000 (UTC)
+Received: from krava (unknown [10.40.192.56])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 03067121B6B;
+        Sun, 28 Jun 2020 22:04:07 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 00:04:07 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 06/10] perf tools: Collect other metrics in struct egroup
+Message-ID: <20200628220407.GQ2988321@krava>
+References: <20200626194720.2915044-1-jolsa@kernel.org>
+ <20200626194720.2915044-7-jolsa@kernel.org>
+ <CAP-5=fW8Jhajhtt=kvinA=0+qiineG-yt11RN7w=X0yWCxprZA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200628154331.2c69d43e@oasis.local.home>
+In-Reply-To: <CAP-5=fW8Jhajhtt=kvinA=0+qiineG-yt11RN7w=X0yWCxprZA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 03:43:31PM -0400, Steven Rostedt wrote:
->  On Sun, 28 Jun 2020 12:21:07 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> 
-> > > Re-teach them, or are you finally admitting that the tracing system is
-> > > a permanent API?  This is the reason people are refusing to add trace
-> > > points into their subsystems. Because user space may make it required.
-> > > 
-> > > I see no reason why you can't create a dedicated BPF tracing instance
-> > > (you only need one) to add all your trace_array_printk()s to.  
-> > 
-> > All bpf helpers are stable api. We cannot remove bpf_trace_printk() and
-> > cannot change the fact that it has to print into /sys/kernel/debug/tracing/trace.
-> 
-> Then do a bpf trace event and enable it when a bpf_trace_printk() is
-> loaded. It will work the same for your users.
+On Fri, Jun 26, 2020 at 02:06:47PM -0700, Ian Rogers wrote:
 
-I'm not sure I follow. How that would preserve the expectation
-to see the output in /sys/kernel/debug/tracing/trace ?
+SNIP
 
-> > If we do so a lot of users will complain. Loudly.
-> > If you really want to see the flames, go ahead and rename 'trace_pipe'
-> > into something else.
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 85e7fa2e2707..f88fd667cc78 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -102,12 +102,20 @@ void metricgroup__rblist_exit(struct rblist *metric_events)
+> >         rblist__exit(metric_events);
+> >  }
+> >
+> > +struct eother {
+> > +       const char *metric_name;
+> > +       const char *metric_expr;
+> > +       struct list_head list;
+> > +};
+> > +
+> >  struct egroup {
+> >         struct list_head nd;
+> >         struct expr_parse_ctx pctx;
+> >         const char *metric_name;
+> >         const char *metric_expr;
+> >         const char *metric_unit;
+> > +       struct list_head other;
+> > +       int other_cnt;
+> >         int runtime;
+> >         bool has_constraint;
+> >  };
 > 
-> The layout of the tracefs system *is* a stable API. No argument there.
-> 
-> > This has nothing to do with tracing in general and tracepoints.
-> > Those come and go.
-> 
-> And in this case, trace_printk() is no different than any other trace
-> event. Obviously, your use case doesn't let it go. If some tool starts
-> relying on another trace event (say someone adds another bpf handler that
-> enables a trace event, and is documented) then under your scenario,
-> it's a stable API.
+> Nit, could we do better than egroup and eother for struct names?
+> egroup are nodes within the metric group with their associated values,
+> so would metric_group_node be more intention revealing? eother and
+> other are metrics referred to by the metric_group_node. Presumably the
+> metrics are on the same list as egroup? Perhaps eother could be
+> referenced_metrics?
 
-not quite. Documneting kprobe+bpf as an example and writing a blog and a book
-about it doesn't make it stable.
+ok, how about:
 
-> 
-> Hence, your "tracepoints come and go" is not universal, and there's no
-> telling which ones will end up being a stable API.
-> 
-> 
-> > If you really want to nuke trace_printk from the kernel we need time
-> > to work on replacement and give users at least few releases of helper
-> > deprecation time.
-> 
-> I never said I would nuke it. This patch in question makes it so those
-> that don't want that banner to ever show up can do so. A trace-printk()
-> is something to add via compiling. And since I and others use it
-> heavily for debugging, I would have this option not be a default, but
-> something that others can enable.
-> 
-> > We've never done in the past though.
-> > There could be flames even if we deprecate it gradually.
-> > Looking how unyielding you're about this banner I guess we have to start
-> > working on replacement sooner than later. Oh well.
-> 
-> Hmm, so you are happier to bully and burn bridges with me to deprecate
-> the trace_printk() interface, than to work with me and add an update to
-> look into an instance for the print instead of the top level? That's
-> not very collaborative.
+struct metric_group_node
+struct metric_ref
 
-I'm seeing it differently.
-I'm saying bpf users are complaining about misleading dmesg warning.
-You're saying 'screw your users I want to keep that warning'.
-Though the warning is lying with a straight face. The only thing happened
-is few pages were allocated that will never be freed. The kernel didn't
-suddenly become non-production. It didn't become slower. No debug features
-were turned on.
+jirka
+
