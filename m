@@ -6,64 +6,66 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAABC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A56C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5162074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C96D2065D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593381919;
-	bh=cawQOtmyuk51sj6DP9MmBQhH8A8uaxRQZAQti52v2HM=;
+	s=default; t=1593381925;
+	bh=Fnc9QOsASMf5/SbTLhYqgQ7Pg4bsdcxa7sFpscgc3o4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZYUaZ8kHjfEVa/KuGpW6J02Q1XKquwy4KZkrPh9UqO40SNKUOmE0U6OR4H7hXW8oM
-	 XYQ2AJoNWoQdOmr9xIih1Oy/SIyUKb0VOl4Nghf61ar9+q8Qw6mkwr/jTyUmSDlnG1
-	 l5POcUUVrXoHRcWpD8NBKMyihgEO9QBFHy8CYr0E=
+	b=Hq/o9mplBuBTGMGQq957MvrXV7vmz5RbpXxjWP+ReI5q8ivMkcFr2GdQx/zO9zQQC
+	 JSp6vCivjYbcVUH8egGVlIzaSZK7txnQym4ZtflgF5nM56X2kUbAhClUWCeLB5Jvq/
+	 mOZJdOfdghROv6wmpniUG/CBAv1tB09eTbRZrH6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgF1WFS (ORCPT
+        id S1726793AbgF1WFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 18:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43356 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 18:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgF1WFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 18:05:15 -0400
-Subject: Re: [GIT PULL] perf fix
+        id S1726711AbgF1WFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 18:05:16 -0400
+Subject: Re: [GIT PULL 2/2] ARM: OMAP fixes for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593381914;
-        bh=cawQOtmyuk51sj6DP9MmBQhH8A8uaxRQZAQti52v2HM=;
+        s=default; t=1593381916;
+        bh=Fnc9QOsASMf5/SbTLhYqgQ7Pg4bsdcxa7sFpscgc3o4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kiySRo9szAbQRDZ1SZlk0JGGoy4Zd09QqqXf6trw9ZxwaJYOYB+6t9sncOiECBtz1
-         b53uy/QrsSoTppo5mCw4l66powXPY14Cvls1BAS2dFu+o3qSaaKxjQwx2CLMpFaGOX
-         BFdZtkb9eAOESmjivx4HYBlTKFvp4x0L7TY5iiGw=
+        b=RXOxG6AGk1NM9DHi5wOl5XFdKUBF2eAun0qn7RUcJhimDs30G5YNzc5VEUXEpynqy
+         HJXCrEYPq1mN+YsRbzCsz2vdT0nqPWCcuWhSPgTUADm1JaWbbXPDoPNd9ZAQ8jQmDo
+         EjHGc4vRxNu1zWzSgFOT0aMcuFGcv4npyatRQf88=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200628183323.GA127831@gmail.com>
-References: <20200628183323.GA127831@gmail.com>
+In-Reply-To: <CAK8P3a1v63iuCqs66kik7UiojjCDAr157MsU9_4+2iP-ZCiUvw@mail.gmail.com>
+References: <CAK8P3a1rUGkoHanEGfc+o8bjgZO=T-40-e-wy+ECLxuU_pT97A@mail.gmail.com>
+ <CAK8P3a1pbjKE7EX5+UYZbzWMAZ9kjftodURZ+vgrCQ3Cn2vj+A@mail.gmail.com>
+ <CAK8P3a1v63iuCqs66kik7UiojjCDAr157MsU9_4+2iP-ZCiUvw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200628183323.GA127831@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- perf-urgent-2020-06-28
-X-PR-Tracked-Commit-Id: 16accae3d97f97d7f61c4ee5d0002bccdef59088
+X-PR-Tracked-Message-Id: <CAK8P3a1v63iuCqs66kik7UiojjCDAr157MsU9_4+2iP-ZCiUvw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git
+ tags/arm-omap-fixes-5.8-1
+X-PR-Tracked-Commit-Id: d528945d7762be94beca4c111bb95dcc9a9f39c0
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
-Message-Id: <159338191470.4690.3078221347882632930.pr-tracker-bot@kernel.org>
-Date:   Sun, 28 Jun 2020 22:05:14 +0000
-To:     Ingo Molnar <mingo@kernel.org>
+X-PR-Merge-Commit-Id: f7db192b2d71ea42627a32349d59a5f99f2aafcc
+Message-Id: <159338191611.4690.8999204724559676442.pr-tracker-bot@kernel.org>
+Date:   Sun, 28 Jun 2020 22:05:16 +0000
+To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
+        arm-soc <arm@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 28 Jun 2020 20:33:23 +0200:
+The pull request you sent on Sun, 28 Jun 2020 22:01:58 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2020-06-28
+> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-omap-fixes-5.8-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
+https://git.kernel.org/torvalds/c/f7db192b2d71ea42627a32349d59a5f99f2aafcc
 
 Thank you!
 
