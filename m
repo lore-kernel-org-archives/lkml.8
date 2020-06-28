@@ -2,249 +2,234 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394132071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F26720771
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593361259;
+	bh=RcEujEHL5VjBR1kogQARYLuzR1HyrB6e+JRCkRnS/yI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RP3mt6TVUXf9S/hcZCZfSzQQuJ3C4knZpfLqd1OC37bAXSC3AlWD53pzHQFVGxsAp
+	 1J+t2DO8Mn6uzTYUJio6wn+WouRLUqNJiwtNh5lsnMPOFN3Pvp/SkNRGOD24ErdP/u
+	 S1pFeuxNHYRQS0Qvhnl/MNCdUWeUfC5++bbV3ks0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgF1QS3 (ORCPT
+        id S1726397AbgF1QU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 12:18:29 -0400
-Received: from out28-50.mail.aliyun.com ([115.124.28.50]:50230 "EHLO
-        out28-50.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgF1QS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 12:18:28 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06436285|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.415329-0.00186716-0.582803;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.Hu2XuRk_1593361100;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hu2XuRk_1593361100)
-          by smtp.aliyun-inc.com(10.147.41.137);
-          Mon, 29 Jun 2020 00:18:21 +0800
-Subject: Re: [PATCH 2/2] clk: X1000: Add support for calculat REFCLK of USB
- PHY.
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-References: <20200626164844.25436-1-zhouyanjie@wanyeetech.com>
- <20200626164844.25436-3-zhouyanjie@wanyeetech.com>
- <AKNJCQ.6UUHR0DBDE8E2@crapouillou.net>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <b0a3a0b0-4ae8-3905-8d0c-50e44511fa95@wanyeetech.com>
-Date:   Mon, 29 Jun 2020 00:18:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sun, 28 Jun 2020 12:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbgF1QU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 12:20:57 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9339F20720;
+        Sun, 28 Jun 2020 16:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593361257;
+        bh=RcEujEHL5VjBR1kogQARYLuzR1HyrB6e+JRCkRnS/yI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=C/Oio8DzOhFrrKARKdRgXBi/+TB4qXh5w4eo3RkAfkIpkqOOWC3T1+5Vexa4tsrCL
+         pcVcLSXL9K+/yAgTmluXbOz8lK/nweg+HhmDuTorzedUrPXDtHIh8+Dihm6Hf5HOjU
+         UMwILB6pwjBtg4xcUbncNCpaEPqEKK2mvD6Ye/nA=
+Date:   Sun, 28 Jun 2020 18:20:53 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH] kconfig: qconf: make debug links work again
+Message-ID: <20200628182053.18bfe307@coco.lan>
+In-Reply-To: <CAK7LNARnDe0ToxYj9mMpocxzmrUvp6yf14iDRxgG8nGuGcxFKw@mail.gmail.com>
+References: <ff9d1c3369b96c1d14b1e898e3d5f64ad945b604.1593346883.git.mchehab+huawei@kernel.org>
+        <CAK7LNARnDe0ToxYj9mMpocxzmrUvp6yf14iDRxgG8nGuGcxFKw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <AKNJCQ.6UUHR0DBDE8E2@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Em Sun, 28 Jun 2020 23:41:46 +0900
+Masahiro Yamada <masahiroy@kernel.org> escreveu:
 
-在 2020/6/27 上午1:36, Paul Cercueil 写道:
-> Hi Zhou,
->
-> Le sam. 27 juin 2020 à 0:48, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> Add new functions to "x1000_otg_phy_ops" to calculat the rate of REFCLK,
->> which is needed by USB PHY in the Ingenic X1000 SoC.
->>
->> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>  drivers/clk/ingenic/x1000-cgu.c | 113 
->> ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 113 insertions(+)
->>
->> diff --git a/drivers/clk/ingenic/x1000-cgu.c 
->> b/drivers/clk/ingenic/x1000-cgu.c
->> index 453f3323cb99..a61c16f98a11 100644
->> --- a/drivers/clk/ingenic/x1000-cgu.c
->> +++ b/drivers/clk/ingenic/x1000-cgu.c
->> @@ -48,8 +48,114 @@
->>  #define USBPCR_SIDDQ        BIT(21)
->>  #define USBPCR_OTG_DISABLE    BIT(20)
->>
->> +/* bits within the USBPCR1 register */
->> +#define USBPCR1_REFCLKSEL_SHIFT    26
->> +#define USBPCR1_REFCLKSEL_MASK    (0x3 << USBPCR1_REFCLKSEL_SHIFT)
->> +#define USBPCR1_REFCLKSEL_CORE    (0x2 << USBPCR1_REFCLKSEL_SHIFT)
->> +#define USBPCR1_REFCLKDIV_SHIFT    24
->> +#define USBPCR1_REFCLKDIV_MASK    (0x3 << USBPCR1_REFCLKDIV_SHIFT)
->> +#define USBPCR1_REFCLKDIV_48    (0x2 << USBPCR1_REFCLKDIV_SHIFT)
->> +#define USBPCR1_REFCLKDIV_24    (0x1 << USBPCR1_REFCLKDIV_SHIFT)
->> +#define USBPCR1_REFCLKDIV_12    (0x0 << USBPCR1_REFCLKDIV_SHIFT)
->> +
->>  static struct ingenic_cgu *cgu;
->>
->> +static u8 x1000_otg_phy_get_parent(struct clk_hw *hw)
->> +{
->> +    /* we only use CLKCORE, revisit if that ever changes */
->> +    return 0;
->> +}
->> +
->> +static int x1000_otg_phy_set_parent(struct clk_hw *hw, u8 idx)
->> +{
->> +    unsigned long flags;
->> +    u32 usbpcr1;
->> +
->> +    if (idx > 0)
->> +        return -EINVAL;
->> +
->> +    spin_lock_irqsave(&cgu->lock, flags);
->> +
->> +    usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
->> +    usbpcr1 &= ~USBPCR1_REFCLKSEL_MASK;
->> +    /* we only use CLKCORE */
->> +    usbpcr1 |= USBPCR1_REFCLKSEL_CORE;
->> +    writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
->> +
->> +    spin_unlock_irqrestore(&cgu->lock, flags);
->> +    return 0;
->> +}
->
-> If you only support one parent, maybe set that bit in the 
-> x1000_cgu_init(), then you can drop the get_parent/set_parent.
->
+> On Sun, Jun 28, 2020 at 9:21 PM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> >
+> > The Qt5 conversion broke support for debug info links.
+> >
+> > Restore the behaviour added by changeset
+> > ab45d190fd4a ("kconfig: create links in info window").
+> >
+> > Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> 
+> I tested this patch, but this caused
+> segmentation fault.
+> 
+> 
+> I enabled 'Show Debug Info',
+> and then clicked
+> dep: <symbol name>.
+> 
+> Then, xconfig crashed.
+> 
+> (without this patch, it did not cause
+> segfault at least)
+> 
+> Did you see this?
 
-Sure.
+Could you please try the attached version? It should validate again the
+symbols, instead of relying on a pointer passed via an URL.
 
+This version still passes pointers via URLs for menus, though,
+as it doesn't implement any logic for seeking the menu->prompt
+string.
 
->> +
->> +static unsigned long x1000_otg_phy_recalc_rate(struct clk_hw *hw,
->> +                        unsigned long parent_rate)
->> +{
->> +    u32 usbpcr1;
->> +    unsigned refclk_div;
->> +
->> +    usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
->> +    refclk_div = usbpcr1 & USBPCR1_REFCLKDIV_MASK;
->> +
->> +    switch (refclk_div) {
->> +    case USBPCR1_REFCLKDIV_12:
->> +        return 12000000;
->> +
->> +    case USBPCR1_REFCLKDIV_24:
->> +        return 24000000;
->> +
->> +    case USBPCR1_REFCLKDIV_48:
->> +        return 48000000;
->> +    }
->
-> On your setup, what frequency is configured for the "otg" clock? Is it 
-> 48 MHz?
->
-> I believe CLKCORE is the OTG core's clock (aka "otg"), and I'm pretty 
-> sure that these fields only represent CLKCORE/4, CLKCORE/2, CLKCORE/1, 
-> but the doc expects CLKCORE==48MHz.
->
+With this version, if something bad happens when parsing a
+symbol internal URL, the code will print a message and ignore
+it.
 
-This is the REFCLKDIV in USBPCR1 reg, it's for the usb phy, so it is not 
-the otg clock. In X1000 and X1500 it is 24MHz, in JZ4780 it is 48MHz.
+Thanks,
+Mauro
 
+[PATCH] kconfig: qconf: make debug links work again
 
-> In that case the "otg_phy" should be parented to "otg", and the rate 
-> should be computed according to the parent rate and the divider 
-> configured.
->
->> +
->> +    BUG();
->
-> Don't use BUG() - it pisses off Linus :)
-> And it's reserved for bugs that will take the whole system down, I 
-> think. Better use WARN().
->
+The Qt5 conversion broke support for debug info links.
 
-Sure, I will change it in the next version.
+Restore the behaviour added by changeset
+ab45d190fd4a ("kconfig: create links in info window").
 
-Thanks and best regards!
+Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 631e19659504..7dae5c5989db 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -7,6 +7,7 @@
+ #include <QAction>
+ #include <QApplication>
+ #include <QCloseEvent>
++#include <QDebug>
+ #include <QDesktopWidget>
+ #include <QFileDialog>
+ #include <QLabel>
+@@ -1012,7 +1013,7 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
+ 	: Parent(parent), sym(0), _menu(0)
+ {
+ 	setObjectName(name);
+-
++	setOpenLinks(false);
+ 
+ 	if (!objectName().isEmpty()) {
+ 		configSettings->beginGroup(objectName());
+@@ -1085,7 +1086,7 @@ void ConfigInfoView::menuInfo(void)
+ 			if (sym->name) {
+ 				head += " (";
+ 				if (showDebug())
+-					head += QString().sprintf("<a href=\"s%p\">", sym);
++					head += QString().sprintf("<a href=\"s%s\">", sym->name);
+ 				head += print_filter(sym->name);
+ 				if (showDebug())
+ 					head += "</a>";
+@@ -1094,7 +1095,7 @@ void ConfigInfoView::menuInfo(void)
+ 		} else if (sym->name) {
+ 			head += "<big><b>";
+ 			if (showDebug())
+-				head += QString().sprintf("<a href=\"s%p\">", sym);
++				head += QString().sprintf("<a href=\"s%s\">", sym->name);
+ 			head += print_filter(sym->name);
+ 			if (showDebug())
+ 				head += "</a>";
+@@ -1217,13 +1218,56 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
+ 	QString str2 = print_filter(str);
+ 
+ 	if (sym && sym->name && !(sym->flags & SYMBOL_CONST)) {
+-		*text += QString().sprintf("<a href=\"s%p\">", sym);
++		*text += QString().sprintf("<a href=\"s%s\">", sym->name);
+ 		*text += str2;
+ 		*text += "</a>";
+ 	} else
+ 		*text += str2;
+ }
+ 
++void ConfigInfoView::clicked(const QUrl &url)
++{
++	QByteArray str = url.toEncoded();
++	const std::size_t count = str.size();
++	char *hex = new char[count + 1];
++	char type;
++	struct symbol **result;
++
++	if (count < 1) {
++		qInfo() << "Clicked link is empty";
++		return;
++	}
++
++	memcpy(hex, str.constData(), count);
++	type = hex[0];
++
++	if (type == 's') {
++		/* Seek for exact match */
++		hex[0] = '^';
++		strcat(hex, "$");
++		result = sym_re_search(hex);
++		if (!result) {
++			qInfo() << "Clicked symbol is invalid";
++			return;
++		}
++
++		sym = *result;
++		symbolInfo();
++	} else {
++		unsigned long p = (int)strtol(hex + 1, NULL, 16);
++		if (!p) {
++			qInfo() << "Clicked menu is invalid";
++			return;
++		}
++
++		struct menu *m = (struct menu *)p;
++
++		_menu = m;
++		menuInfo();
++	}
++	emit showDebugChanged(true);
++}
++
+ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+ {
+ 	QMenu* popup = Parent::createStandardContextMenu(pos);
+@@ -1497,6 +1541,9 @@ ConfigMainWindow::ConfigMainWindow(void)
+ 	helpMenu->addAction(showIntroAction);
+ 	helpMenu->addAction(showAboutAction);
+ 
++	connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
++		 helpText, SLOT (clicked (const QUrl &)) );
++
+ 	connect(configList, SIGNAL(menuChanged(struct menu *)),
+ 		helpText, SLOT(setInfo(struct menu *)));
+ 	connect(configList, SIGNAL(menuSelected(struct menu *)),
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index d913a02967ae..a193137f2314 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -250,6 +250,7 @@ public slots:
+ 	void setInfo(struct menu *menu);
+ 	void saveSettings(void);
+ 	void setShowDebug(bool);
++	void clicked (const QUrl &url);
+ 
+ signals:
+ 	void showDebugChanged(bool);
 
-> Cheers,
-> -Paul
->
->> +    return parent_rate;
->> +}
->> +
->> +static long x1000_otg_phy_round_rate(struct clk_hw *hw, unsigned 
->> long req_rate,
->> +                      unsigned long *parent_rate)
->> +{
->> +    if (req_rate < 18000000)
->> +        return 12000000;
->> +
->> +    if (req_rate < 36000000)
->> +        return 24000000;
->> +
->> +    return 48000000;
->> +}
->> +
->> +static int x1000_otg_phy_set_rate(struct clk_hw *hw, unsigned long 
->> req_rate,
->> +                   unsigned long parent_rate)
->> +{
->> +    unsigned long flags;
->> +    u32 usbpcr1, div_bits;
->> +
->> +    switch (req_rate) {
->> +    case 12000000:
->> +        div_bits = USBPCR1_REFCLKDIV_12;
->> +        break;
->> +
->> +    case 24000000:
->> +        div_bits = USBPCR1_REFCLKDIV_24;
->> +        break;
->> +
->> +    case 48000000:
->> +        div_bits = USBPCR1_REFCLKDIV_48;
->> +        break;
->> +
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +
->> +    spin_lock_irqsave(&cgu->lock, flags);
->> +
->> +    usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
->> +    usbpcr1 &= ~USBPCR1_REFCLKDIV_MASK;
->> +    usbpcr1 |= div_bits;
->> +    writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
->> +
->> +    spin_unlock_irqrestore(&cgu->lock, flags);
->> +    return 0;
->> +}
->> +
->>  static int x1000_usb_phy_enable(struct clk_hw *hw)
->>  {
->>      void __iomem *reg_opcr        = cgu->base + CGU_REG_OPCR;
->> @@ -80,6 +186,13 @@ static int x1000_usb_phy_is_enabled(struct clk_hw 
->> *hw)
->>  }
->>
->>  static const struct clk_ops x1000_otg_phy_ops = {
->> +    .get_parent = x1000_otg_phy_get_parent,
->> +    .set_parent = x1000_otg_phy_set_parent,
->> +
->> +    .recalc_rate = x1000_otg_phy_recalc_rate,
->> +    .round_rate = x1000_otg_phy_round_rate,
->> +    .set_rate = x1000_otg_phy_set_rate,
->> +
->>      .enable        = x1000_usb_phy_enable,
->>      .disable    = x1000_usb_phy_disable,
->>      .is_enabled    = x1000_usb_phy_is_enabled,
->> -- 
->> 2.11.0
->>
->
