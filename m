@@ -2,113 +2,122 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6226220757
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="So0J2207"
+	by mail.kernel.org (Postfix) with ESMTP id E6EFE20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgF1WSC (ORCPT
+        id S1726594AbgF1W2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 18:18:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49980 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726104AbgF1WSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 18:18:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593382680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=b03SREaTe9QCT+KgkDJM853mt5KM538Vl06aiF/oOIE=;
-        b=So0J2207Sps49gExQY8OTBtA7RnRPnghG+6eCWH2ERgtJufv2E9o4sBjd/VQpjc+SZpjmn
-        zV0qEG0I+MVPR3tMMdIGNv4hGr1D7BN2xDDMGwOG7jlWvP7F72rnmJiLxZWTRhYi/dqnM5
-        iO4KFt+CmIQ1Vl1CIDWVcu8K/ExzTAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-EPzhx4CSNp6F1Sb0FdLAfw-1; Sun, 28 Jun 2020 18:17:56 -0400
-X-MC-Unique: EPzhx4CSNp6F1Sb0FdLAfw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 28 Jun 2020 18:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgF1W2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 18:28:47 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D03D4107ACCA;
-        Sun, 28 Jun 2020 22:17:54 +0000 (UTC)
-Received: from krava (unknown [10.40.192.56])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8BE49121B6A;
-        Sun, 28 Jun 2020 22:17:51 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 00:17:50 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>, Ian Rogers <irogers@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
-Message-ID: <20200628221750.GT2988321@krava>
-References: <20200626194720.2915044-1-jolsa@kernel.org>
- <20200626212522.GF818054@tassilo.jf.intel.com>
- <CAP-5=fVMs4Ok3=gYmzheNTzbBUGGHbCr0cpJSm9TV45aeZb4Ng@mail.gmail.com>
- <20200626215759.GG818054@tassilo.jf.intel.com>
- <20200627124821.GF29008@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id A06CD206E9;
+        Sun, 28 Jun 2020 22:28:44 +0000 (UTC)
+Date:   Sun, 28 Jun 2020 18:28:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200628182842.2abb0de2@oasis.local.home>
+In-Reply-To: <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+        <20200624120408.12c8fa0d@oasis.local.home>
+        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+        <20200626181455.155912d9@oasis.local.home>
+        <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+        <20200628144616.52f09152@oasis.local.home>
+        <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
+        <20200628154331.2c69d43e@oasis.local.home>
+        <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627124821.GF29008@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:48:21AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 26, 2020 at 02:57:59PM -0700, Andi Kleen escreveu:
-> > > The name could be a metric or an event, the logic for each is quite
-> > 
-> > I would say collisions are unlikely. Event names follow quite structured
-> > patterns.
-> 
-> And when introducing a new metric the build process can detect that
-> clash and fail.
->  
-> > > different. You could look up an event and when it fails assume it was
-> > > a metric, but I like the simplicity of this approach.
->  
-> > I don't think it's simpler for the user.
-> 
-> Agreed.
->  
-> > > Maybe this
-> > > change could be adopted more widely with something like "perf stat -e
-> > > metric:IPC -a -I 1000" rather than the current "perf stat -M IPC -a -I
-> > > 1000".
-> > 
-> > I thought about just adding metrics to -e, without metric: of course.
-> 
-> Ditto.
-> 
-> - Arnaldo
-> 
+On Sun, 28 Jun 2020 15:02:09 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-I guess I wanted to clearly separate other metrics from the expression,
-also running through the whole lists of metrics for each id did not
-seem good.. but it's actualy not that bad (compared to other things we
-do ;-), and if you guys prefer not using a prefix I think it's ok
+> > 
+> > Then do a bpf trace event and enable it when a bpf_trace_printk() is
+> > loaded. It will work the same for your users.  
+> 
+> I'm not sure I follow. How that would preserve the expectation
+> to see the output in /sys/kernel/debug/tracing/trace ?
 
-thanks,
-jirka
+You create a bpf event just like you create any other event. When a bpf
+program that uses a bpf_trace_printk() is loaded, you can enable that
+event from within the kernel. Yes, there's internal interfaces to
+enabled and disable events just like echoing 1 into
+tracefs/events/system/event/enable. See trace_set_clr_event().
+
+Then the data of that event will appear in
+the /sys/kernel/tracing/trace file just like the trace_printk does.
+
+The difference is, if something in the kernel decides to use that
+event, I can easily disable it from user space, where trace_printk() I
+can't.
+
+
+> > 
+> > Hmm, so you are happier to bully and burn bridges with me to deprecate
+> > the trace_printk() interface, than to work with me and add an update to
+> > look into an instance for the print instead of the top level? That's
+> > not very collaborative.  
+> 
+> I'm seeing it differently.
+> I'm saying bpf users are complaining about misleading dmesg warning.
+> You're saying 'screw your users I want to keep that warning'.
+> Though the warning is lying with a straight face. The only thing happened
+> is few pages were allocated that will never be freed. The kernel didn't
+> suddenly become non-production. It didn't become slower. No debug features
+> were turned on.
+
+Come now Alexei. That banner was there from day one trace_printk() was
+added into the kernel. YOU used this knowing damn well that banner
+existed. If the bpf users should be upset with someone, it is you for
+not asking me for how to do this properly from the beginning.
+
+This is not a regression. trace_printk() always has shown this, and
+when I added trace_printk() I stated this is only for debugging a
+kernel, and not to be kept in mainline. That banner helped enforce
+that. If I didn't do that, there would be trace_printk()s all over the
+place, and there's no way to disable one without disabling all the
+others. This would have made trace_printk() become useless for
+debugging a kernel, as then you will have to deal with everyone's
+trace_printks() adding noise to what you want to debug.
+
+-- Steve
 
