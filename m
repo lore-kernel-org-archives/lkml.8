@@ -2,117 +2,193 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 10:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427B720771
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 10:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF7620768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 10:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOulqLsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgF1KfC (ORCPT
+        id S1726242AbgF1Kqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 06:35:02 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:41201 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725921AbgF1KfC (ORCPT
+        Sun, 28 Jun 2020 06:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgF1Kqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 06:35:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U0v-6Et_1593340497;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U0v-6Et_1593340497)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 28 Jun 2020 18:34:57 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] nvme-pci: Move the sg table allocation/free into init/exit_request
-Date:   Sun, 28 Jun 2020 18:34:46 +0800
-Message-Id: <4eedad1efab91f4529de19e14ba374da405aea3f.1593340208.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 28 Jun 2020 06:46:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CFBC03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 03:46:30 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u9so2378065pls.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 03:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TTtXa32uJyWj3FRcxIy4EyMjKYs5SGNE53PC4IscXDE=;
+        b=jOulqLsVlrSWBX+LT1abjIINRCsX/cnP1J7x71HAzH4RQh1LbA26mGKdjTYlzEuE66
+         LRjwsaONRcYMhDptwHb8IDkOl0DRcpGcq7B8Sn5ZiKueMqAnaxCjHR1g6v+bqF0agYYN
+         o8gV0Sl4X9LYHf+XtkPII832oOzQltEuq8w1422UU/7kZf5T7SO/OB0CMZUgODXeYze7
+         Ma4iM7vAFfox2wL5l8DELr3nPu97fFH6MYV32hh1lDHqGznOCFs6Qgk2cE4uH0gWANAf
+         3RL/E2ImJugwvJbU2GvLbHXc7M2E9jZ7HW3ha7+hiDP2m0eWliXQ6TnEijyz0DmTnyVc
+         bIgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TTtXa32uJyWj3FRcxIy4EyMjKYs5SGNE53PC4IscXDE=;
+        b=nUdItqXiE8AnPBPH456HXDp9QBQV3NgHoWZWgchYduEuwCAPBodacrSXle/WImKunH
+         pFi/0zWTFekKuXdjuNor6/RTnOwUuOgIAwn1Fu6ArYDknx13/NNej3g7K/7lT91+k79Q
+         nvMeUO7ptuOkZwSbkFaEVosLONtijVUVnAKFuj2pK2nRM+K+gojOyZoMvT/pQQF6YiWU
+         le/Wq9e1nFCHnsEqQM+QFU93bKvbmUHoW0m/dA+KNnXuRAIsQZscthBYbC0NmnMF216X
+         avWCa+jhrcjZgFLl17PXpF1qnVkNSqDv4yv6bUTdiLlJlB8cfDjpBwJg2XRif66drKHq
+         7auA==
+X-Gm-Message-State: AOAM531cPuJ0KhXMzaPYpUCo+c7TJQ5J4lBJ9L5+IyY856fJOYQII1ab
+        8XAOq7RZOQHYMZaUXLf8m7nx
+X-Google-Smtp-Source: ABdhPJySkC8UYu4uVLtRsEZKAK0N9fXaRefUcuzqmHHs2lLB4Wvq6N7U3XM0KIROl6KaHS9zGFVTyg==
+X-Received: by 2002:a17:90a:2dcb:: with SMTP id q11mr5157690pjm.135.1593341189484;
+        Sun, 28 Jun 2020 03:46:29 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:59f:de4a:a853:58c7:2fe6:68c8])
+        by smtp.gmail.com with ESMTPSA id j8sm2416598pfd.145.2020.06.28.03.46.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Jun 2020 03:46:28 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 16:16:23 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     bjorn.andersson@linaro.org
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: slab-out-of-bounds Read in qrtr_endpoint_post
+Message-ID: <20200628104623.GA3357@Mani-XPS-13-9360>
+References: <000000000000f728fc05a90ce9c9@google.com>
+ <000000000000e817ba05a91711b0@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e817ba05a91711b0@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the sg table allocation and free into the init_request() and
-exit_request(), instead of allocating sg table when queuing requests,
-which can benefit the IO performance.
+Hi Bjorn,
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- drivers/nvme/host/pci.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+On Sat, Jun 27, 2020 at 01:57:13PM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14b2b503100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b8fe393f999a291a9ea6
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109e6b55100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13671a3d100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in qrtr_endpoint_post+0xeeb/0x1010 net/qrtr/qrtr.c:462
+> Read of size 2 at addr ffff88809de50c48 by task syz-executor531/6806
+> 
+> CPU: 0 PID: 6806 Comm: syz-executor531 Not tainted 5.8.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>  qrtr_endpoint_post+0xeeb/0x1010 net/qrtr/qrtr.c:462
+>  qrtr_tun_write_iter+0xf5/0x180 net/qrtr/tun.c:92
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b1d18f0..cf7c997 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -410,9 +410,25 @@ static int nvme_init_request(struct blk_mq_tag_set *set, struct request *req,
- 	iod->nvmeq = nvmeq;
- 
- 	nvme_req(req)->ctrl = &dev->ctrl;
-+
-+	iod->sg = mempool_alloc(dev->iod_mempool, GFP_ATOMIC);
-+	if (!iod->sg)
-+		return -ENOMEM;
-+
-+	sg_init_table(iod->sg, NVME_MAX_SEGS);
- 	return 0;
- }
- 
-+static void nvme_exit_request(struct blk_mq_tag_set *set, struct request *req,
-+			      unsigned int hctx_idx)
-+{
-+	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
-+	struct nvme_dev *dev = set->driver_data;
-+
-+	mempool_free(iod->sg, dev->iod_mempool);
-+	iod->sg = NULL;
-+}
-+
- static int queue_irq_offset(struct nvme_dev *dev)
- {
- 	/* if we have more than 1 vec, admin queue offsets us by 1 */
-@@ -557,8 +573,6 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 		dma_pool_free(dev->prp_page_pool, addr, dma_addr);
- 		dma_addr = next_dma_addr;
- 	}
--
--	mempool_free(iod->sg, dev->iod_mempool);
- }
- 
- static void nvme_print_sgl(struct scatterlist *sgl, int nents)
-@@ -808,10 +822,6 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
- 	}
- 
- 	iod->dma_len = 0;
--	iod->sg = mempool_alloc(dev->iod_mempool, GFP_ATOMIC);
--	if (!iod->sg)
--		return BLK_STS_RESOURCE;
--	sg_init_table(iod->sg, blk_rq_nr_phys_segments(req));
- 	iod->nents = blk_rq_map_sg(req->q, req, iod->sg);
- 	if (!iod->nents)
- 		goto out;
-@@ -1557,6 +1567,7 @@ static int nvme_create_queue(struct nvme_queue *nvmeq, int qid, bool polled)
- 	.complete	= nvme_pci_complete_rq,
- 	.init_hctx	= nvme_admin_init_hctx,
- 	.init_request	= nvme_init_request,
-+	.exit_request	= nvme_exit_request,
- 	.timeout	= nvme_timeout,
- };
- 
-@@ -1566,6 +1577,7 @@ static int nvme_create_queue(struct nvme_queue *nvmeq, int qid, bool polled)
- 	.commit_rqs	= nvme_commit_rqs,
- 	.init_hctx	= nvme_init_hctx,
- 	.init_request	= nvme_init_request,
-+	.exit_request	= nvme_exit_request,
- 	.map_queues	= nvme_pci_map_queues,
- 	.timeout	= nvme_timeout,
- 	.poll		= nvme_poll,
--- 
-1.8.3.1
+Hmm. Is this due to the fact that we are not checking the length of the
+kbuf allocated in qrtr_tun_write_iter()? The length derived from
+'iov_iter_count(from)' gets used directly and that might be causing the
+out of bound access error here.
 
+Thanks,
+Mani
+
+>  call_write_iter include/linux/fs.h:1907 [inline]
+>  do_iter_readv_writev+0x567/0x780 fs/read_write.c:694
+>  do_iter_write+0x188/0x5f0 fs/read_write.c:999
+>  compat_writev+0x1ea/0x390 fs/read_write.c:1352
+>  do_compat_pwritev64+0x180/0x1b0 fs/read_write.c:1401
+>  do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
+>  __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
+>  do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
+>  entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
+> RIP: 0023:0xf7f8f569
+> Code: Bad RIP value.
+> RSP: 002b:00000000ffda5ffc EFLAGS: 00000292 ORIG_RAX: 000000000000014e
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000440
+> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000080bb528
+> RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> 
+> Allocated by task 6806:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  __do_kmalloc mm/slab.c:3656 [inline]
+>  __kmalloc+0x17a/0x340 mm/slab.c:3665
+>  kmalloc include/linux/slab.h:560 [inline]
+>  kzalloc include/linux/slab.h:669 [inline]
+>  qrtr_tun_write_iter+0x8a/0x180 net/qrtr/tun.c:83
+>  call_write_iter include/linux/fs.h:1907 [inline]
+>  do_iter_readv_writev+0x567/0x780 fs/read_write.c:694
+>  do_iter_write+0x188/0x5f0 fs/read_write.c:999
+>  compat_writev+0x1ea/0x390 fs/read_write.c:1352
+>  do_compat_pwritev64+0x180/0x1b0 fs/read_write.c:1401
+>  do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
+>  __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
+>  do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
+>  entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
+> 
+> Freed by task 1:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  kasan_set_free_info mm/kasan/common.c:316 [inline]
+>  __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x103/0x2c0 mm/slab.c:3757
+>  tomoyo_path_perm+0x234/0x3f0 security/tomoyo/file.c:842
+>  security_inode_getattr+0xcf/0x140 security/security.c:1278
+>  vfs_getattr fs/stat.c:121 [inline]
+>  vfs_statx+0x170/0x390 fs/stat.c:206
+>  vfs_lstat include/linux/fs.h:3301 [inline]
+>  __do_sys_newlstat+0x91/0x110 fs/stat.c:374
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> The buggy address belongs to the object at ffff88809de50c40
+>  which belongs to the cache kmalloc-32 of size 32
+> The buggy address is located 8 bytes inside of
+>  32-byte region [ffff88809de50c40, ffff88809de50c60)
+> The buggy address belongs to the page:
+> page:ffffea0002779400 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809de50fc1
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea000277e008 ffffea0002761c88 ffff8880aa0001c0
+> raw: ffff88809de50fc1 ffff88809de50000 000000010000003f 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff88809de50b00: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>  ffff88809de50b80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> >ffff88809de50c00: fb fb fb fb fc fc fc fc 04 fc fc fc fc fc fc fc
+>                                               ^
+>  ffff88809de50c80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>  ffff88809de50d00: fb fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
+> ==================================================================
+> 
