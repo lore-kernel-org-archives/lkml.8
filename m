@@ -2,194 +2,156 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B56206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="i7o08oxK"
+	by mail.kernel.org (Postfix) with ESMTP id 76EED206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593364989;
+	bh=SvTCp7lGAkbY1agYXc1vO5JUEFEVoz1JamVwaLi+tn8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Bs+k1k4c3kTPTTMQRpOHJcmgJ8a9aWPZRaj3zts/3ieudIMXutHSNSh2TUj+D3UUk
+	 +hYEhh1L4AQwBXgkEUwk3fzkfcvDcfCdJPu9XPCywnvgn1sjeALH9h/xowckEAmA62
+	 3UZe9jSeuKVGsjEAAF4b6Mg0c4KK5+E86EGxlePY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgF1RUt (ORCPT
+        id S1726627AbgF1RXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 13:20:49 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:53770 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726060AbgF1RUs (ORCPT
+        Sun, 28 Jun 2020 13:23:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39196 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgF1RXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 13:20:48 -0400
-Received: from iva8-d077482f1536.qloud-c.yandex.net (iva8-d077482f1536.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:2f26:0:640:d077:482f])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 53EF32E19C0;
-        Sun, 28 Jun 2020 20:20:45 +0300 (MSK)
-Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
-        by iva8-d077482f1536.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id pM0SH2ClET-Khn0egtc;
-        Sun, 28 Jun 2020 20:20:45 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1593364845; bh=kKRrfxb90VfzoXGfhNPYe5HmgW3st+L4rXe9X50lhVE=;
-        h=Message-Id:Date:Subject:To:From:Cc;
-        b=i7o08oxKIQ6LebaGj7RjcZEmSQ/jVIhZDVLMmqRI5fPe18FKATrS6E0JMF8eqIxrZ
-         XF6/8cgk8a3BSlMoAkM5sGF/Scgfdd0e5Rr6C6WZgOWK8K6cLHW9Gn/94/EyvsuU5J
-         SHA3MAurrEWt/OvZdYhzCX0cDPeOdCjVT/MGbacQ=
-Authentication-Results: iva8-d077482f1536.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from 95.108.174.193-red.dhcp.yndx.net (95.108.174.193-red.dhcp.yndx.net [95.108.174.193])
-        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id UGedWxu57L-KhhKEAMr;
-        Sun, 28 Jun 2020 20:20:43 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-From:   Dmitry Monakhov <dmonakhov@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        paolo.valente@linaro.org, khlebnikov@yandex-team.ru,
-        Dmitry Monakhov <dmonakhov@gmail.com>
-Subject: [PATCH] bfq: fix blkio cgroup leakage
-Date:   Sun, 28 Jun 2020 17:20:40 +0000
-Message-Id: <20200628172040.1869-1-dmonakhov@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 28 Jun 2020 13:23:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 18so13375160otv.6;
+        Sun, 28 Jun 2020 10:23:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lJ/7Mwdioa+LkvwxDevBww4xCE/dU3bIOQYsqm3j9ng=;
+        b=oSb8imbUlUT+MSUkhtwZwBrywq5pbdxjqJca3s8ZJomg+i8TFWb81E6lmQWyvZxQl6
+         dXnsX/KtTBVgLlMmMH2+EAOirRL73tRm7PbdyrIiHHiVvg/Ku0LeTScNuQLz7Olu4gku
+         qCaFu8DCIaw4akGTJs7L1Jz+ogw1Jj8/6Ct8fITjNsSkmysOcTxa8cYr2cH5rqewnlS5
+         f82q3XxaGsIGOcHQbjMiJ/1Ogl9LoJWt0OzYrb1RLzT0xHvnUOGUsz1MWRe4BwTggMyZ
+         w6sSzZauke828mN9/U6gI+r1L3sg7lIvjeVJxebUavfDZR80x7DFZS09tvkAxU2MR/jE
+         aAHw==
+X-Gm-Message-State: AOAM530GI+xI+JfioiQF0VJQXouRjgXGlibPKALH1lEKbkQgDfG7aFDT
+        fkirhJ8JVhUBYAtGSqX1r2aVDOS+49PsVsaQD3c=
+X-Google-Smtp-Source: ABdhPJxWeIRMAX90bePkgZ2eZsip3wobT0DgKId2QVtHye5EgsJU87W+GWkfAZOi33Iq2RFvZeSEGzQe1N1PGQe9zfE=
+X-Received: by 2002:a05:6830:10ca:: with SMTP id z10mr10078158oto.167.1593364986761;
+ Sun, 28 Jun 2020 10:23:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0h8Eg5_FVxz0COLDMK8cy72xxDk_2nFnXDJNUY-MvdBEQ@mail.gmail.com> <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com>
+In-Reply-To: <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 28 Jun 2020 19:22:55 +0200
+Message-ID: <CAJZ5v0i=SkqtgcXzq0oYNEAuYA-FvBEG-bm6fyidzAsYSNcEdQ@mail.gmail.com>
+Subject: Re: [PATCH 00/12] ACPI/NVDIMM: Runtime Firmware Activation
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Stable <stable@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
-introduce leak forbfq_group and blkcg_gq objects because of get/put
-imbalance. See trace balow:
--> blkg_alloc
-   -> bfq_pq_alloc
-     -> bfqg_get (+1)
-->bfq_activate_bfqq
-  ->bfq_activate_requeue_entity
-    -> __bfq_activate_entity
-       ->bfq_get_entity
-         ->bfqg_and_blkg_get (+1)  <==== : Note1
-->bfq_del_bfqq_busy
-  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
-    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
-      -> bfq_forget_entity(is_in_service = true)
-	 entity->on_st_or_in_serv = false   <=== :Note2
-	 if (is_in_service)
-	     return;  ==> do not touch reference
--> blkcg_css_offline
- -> blkcg_destroy_blkgs
-  -> blkg_destroy
-   -> bfq_pd_offline
-    -> __bfq_deactivate_entity
-         if (!entity->on_st_or_in_serv) /* true, because (Note2)
-		return false;
- -> bfq_pd_free
-    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
-So bfq_group and blkcg_gq  will leak forever, see test-case below.
-If fact bfq_group objects reference counting are quite different
-from bfq_queue. bfq_groups object are referenced by blkcg_gq via
-blkg_policy_data pointer, so  neither nor blkg_get() neither bfqg_get
-required here.
+On Fri, Jun 26, 2020 at 8:43 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Fri, Jun 26, 2020 at 7:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Fri, Jun 26, 2020 at 2:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > Quoting the documentation:
+> > >
+> > >     Some persistent memory devices run a firmware locally on the device /
+> > >     "DIMM" to perform tasks like media management, capacity provisioning,
+> > >     and health monitoring. The process of updating that firmware typically
+> > >     involves a reboot because it has implications for in-flight memory
+> > >     transactions. However, reboots are disruptive and at least the Intel
+> > >     persistent memory platform implementation, described by the Intel ACPI
+> > >     DSM specification [1], has added support for activating firmware at
+> > >     runtime.
+> > >
+> > >     [1]: https://docs.pmem.io/persistent-memory/
+> > >
+> > > The approach taken is to abstract the Intel platform specific mechanism
+> > > behind a libnvdimm-generic sysfs interface. The interface could support
+> > > runtime-firmware-activation on another architecture without need to
+> > > change userspace tooling.
+> > >
+> > > The ACPI NFIT implementation involves a set of device-specific-methods
+> > > (DSMs) to 'arm' individual devices for activation and bus-level
+> > > 'trigger' method to execute the activation. Informational / enumeration
+> > > methods are also provided at the bus and device level.
+> > >
+> > > One complicating aspect of the memory device firmware activation is that
+> > > the memory controller may need to be quiesced, no memory cycles, during
+> > > the activation. While the platform has mechanisms to support holding off
+> > > in-flight DMA during the activation, the device response to that delay
+> > > is potentially undefined. The platform may reject a runtime firmware
+> > > update if, for example a PCI-E device does not support its completion
+> > > timeout value being increased to meet the activation time. Outside of
+> > > device timeouts the quiesce period may also violate application
+> > > timeouts.
+> > >
+> > > Given the above device and application timeout considerations the
+> > > implementation defaults to hooking into the suspend path to trigger the
+> > > activation, i.e. that a suspend-resume cycle (at least up to the syscore
+> > > suspend point) is required.
+> >
+> > Well, that doesn't work if the suspend method for the system is set to
+> > suspend-to-idle (for example, via /sys/power/mem_sleep), because the
+> > syscore callbacks are not invoked in that case.
+> >
+> > Also you probably don't need the device power state toggling that
+> > happens during regular suspend/resume (you may not want it even for
+> > some devices).
+> >
+> > The hibernation freeze/thaw may be a better match and there is some
+> > test support in there already that may be kind of co-opted for your
+> > use case.
+>
+> Hmm, yes I guess freeze should be sufficient to quiesce most
+> device-DMA in the general case as applications will stop sending
+> requests.
 
+It is expected to be sufficient to quiesce all of them.
 
-This patch drop commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
-and add corresponding comment.
+If that is not the case, the integrity of the hibernation image cannot
+be guaranteed on the system in question.
 
-##TESTCASE_BEGIN:
-#!/bin/bash
+> I do expect some RDMA devices will happily keep on
+> transmitting, but that likely will need explicit mitigation. It also
+> appears the suspend callback for at least one RDMA device
+> mlx5_suspend() is rather violent as it appears to fully teardown the
+> device context, not just suspend operations.
+>
+> To be clear, what debug interface were you thinking I could glom onto
+> to just trigger firmware-activate at the end of the freeze phase?
 
-max_iters=${1:-100}
-#prep cgroup mounts
-mount -t tmpfs cgroup_root /sys/fs/cgroup
-mkdir /sys/fs/cgroup/blkio
-mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+Functionally, the same as for suspend, but using the hibernation
+interface, so "echo platform > /sys/power/pm_test" followed by "echo
+disk > /sys/power/state".
 
-# Prepare blkdev
-grep blkio /proc/cgroups
-truncate -s 1M img
-losetup /dev/loop0 img
-echo bfq > /sys/block/loop0/queue/scheduler
-
-grep blkio /proc/cgroups
-for ((i=0;i<max_iters;i++))
-do
-    mkdir -p /sys/fs/cgroup/blkio/a
-    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
-    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
-    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
-    rmdir /sys/fs/cgroup/blkio/a
-    grep blkio /proc/cgroups
-done
-##TESTCASE_END:
-
-Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
----
- block/bfq-cgroup.c  |  2 +-
- block/bfq-iosched.h |  1 -
- block/bfq-wf2q.c    | 15 +++++----------
- 3 files changed, 6 insertions(+), 12 deletions(-)
-
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 68882b9..b791e20 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
- 		kfree(bfqg);
- }
- 
--void bfqg_and_blkg_get(struct bfq_group *bfqg)
-+static void bfqg_and_blkg_get(struct bfq_group *bfqg)
- {
- 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
- 	bfqg_get(bfqg);
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index cd224aa..7038952 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -986,7 +986,6 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
- struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
- struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
- struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
--void bfqg_and_blkg_get(struct bfq_group *bfqg);
- void bfqg_and_blkg_put(struct bfq_group *bfqg);
- 
- #ifdef CONFIG_BFQ_GROUP_IOSCHED
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 34ad095..6a363bb 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -529,13 +529,14 @@ static void bfq_get_entity(struct bfq_entity *entity)
- {
- 	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
- 
-+	/* Grab reference only for bfq_queue's objects, bfq_group ones
-+	 * are owned by blkcg_gq
-+	 */
- 	if (bfqq) {
- 		bfqq->ref++;
- 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
- 			     bfqq, bfqq->ref);
--	} else
--		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
--					       entity));
-+	}
- }
- 
- /**
-@@ -649,14 +650,8 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
- 
- 	entity->on_st_or_in_serv = false;
- 	st->wsum -= entity->weight;
--	if (is_in_service)
--		return;
--
--	if (bfqq)
-+	if (bfqq && !is_in_service)
- 		bfq_put_queue(bfqq);
--	else
--		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
--					       entity));
- }
- 
- /**
--- 
-2.7.4
-
+But it might be cleaner to introduce a special "hibernation mode", ie.
+is one more item in /sys/power/disk, that will trigger what you need
+(in analogy with "test_resume").
