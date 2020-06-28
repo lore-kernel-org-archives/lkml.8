@@ -2,503 +2,211 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE211206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77DD206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFnjVPIT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sa/INWk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgF1LUu (ORCPT
+        id S1726330AbgF1LWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 07:20:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58046 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgF1LUu (ORCPT
+        Sun, 28 Jun 2020 07:22:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28211 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726225AbgF1LWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 07:20:50 -0400
+        Sun, 28 Jun 2020 07:22:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593343246;
+        s=mimecast20190719; t=1593343335;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vu/xPhpXSg5DWlbNBRmnYkvx+MKQ4n/k+uszgJydLbk=;
-        b=BFnjVPITv11RKTgMGi2kBmlDISstNpipnIwnOE7xXqWvoMF9BaTHjdu6CqJRH5ww3uT0rn
-        IONVNzkcwgik/yLEIlIdpcqis9u8qNZaU+Bt7ZnUBLEAl3W0j8GMPWPqa/cygga4l6eDoJ
-        8O1QE9wed4M1xajUBoMZ3/rN8JTxDjw=
+        bh=Z/WMKSGQI38TYlNW8WL946gfAiIfyGwK3d+9dBbUgPI=;
+        b=Sa/INWk/h39JOy6kOaCB08KgqMRqYUWcqOGSMFM5u/GppamqM5sb3R72HGEIdL1rF2ollk
+        Uu1Jux8c2Jd8bfqHUs6BQy6M+CPlIyxBgbgErww+4mc248mKVqYis7J04Dz7DvDh//sptr
+        BKow87zs1zaQv25Coph2W+5K0JZtJ7k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-TkBRKq3pN5exPWUtYliaMw-1; Sun, 28 Jun 2020 07:20:44 -0400
-X-MC-Unique: TkBRKq3pN5exPWUtYliaMw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-319-PZ547Fe_O26JmXhR9Zau-A-1; Sun, 28 Jun 2020 07:22:12 -0400
+X-MC-Unique: PZ547Fe_O26JmXhR9Zau-A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92CBF8015CE;
-        Sun, 28 Jun 2020 11:20:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5877ABFC0;
+        Sun, 28 Jun 2020 11:22:11 +0000 (UTC)
 Received: from starship (unknown [10.35.206.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A4175C1BD;
-        Sun, 28 Jun 2020 11:20:42 +0000 (UTC)
-Message-ID: <004fa015321d2e612c99eb9ba7954da8023816b7.camel@redhat.com>
-Subject: Re: Search function in xconfig is partially broken after recent
- changes
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D89B10013C2;
+        Sun, 28 Jun 2020 11:22:10 +0000 (UTC)
+Message-ID: <1b4f51c95a5c7c8c7c62c4e33d9c62584dbef3f2.camel@redhat.com>
+Subject: Re: Kernel issues with Radeon Pro WX4100 and DP->HDMI dongles
 From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Sun, 28 Jun 2020 14:20:41 +0300
-In-Reply-To: <20200628125421.12458086@coco.lan>
-References: <a98b0f0ebe0c23615a76f1d23f25fd0c84835e6b.camel@redhat.com>
-         <20200625125906.6b7688eb@coco.lan> <20200625131758.52dbdab7@coco.lan>
-         <855fea60f47c1a0dbcf0395a4cdbe5d9c57592c1.camel@redhat.com>
-         <20200625170546.270cf5fc@coco.lan>
-         <2d536ba419ffe76e031bd65375e5af6a401faec0.camel@redhat.com>
-         <20200628125421.12458086@coco.lan>
+To:     linux-kernel@vger.kernel.org
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Date:   Sun, 28 Jun 2020 14:22:09 +0300
+In-Reply-To: <5bd8ffcc829b71651adca7f16cd52c6800508149.camel@redhat.com>
+References: <5bd8ffcc829b71651adca7f16cd52c6800508149.camel@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-06-28 at 12:54 +0200, Mauro Carvalho Chehab wrote:
-> Em Sun, 28 Jun 2020 11:37:08 +0300
-> Maxim Levitsky <mlevitsk@redhat.com> escreveu:
+On Thu, 2020-06-25 at 10:14 +0300, Maxim Levitsky wrote:
+> Hi,
 > 
-> > On Thu, 2020-06-25 at 17:05 +0200, Mauro Carvalho Chehab wrote:
-> > > Em Thu, 25 Jun 2020 15:53:46 +0300
-> > > Maxim Levitsky <mlevitsk@redhat.com> escreveu:
-> > >   
-> > > > On Thu, 2020-06-25 at 13:17 +0200, Mauro Carvalho Chehab wrote:  
-> > > > > Em Thu, 25 Jun 2020 12:59:15 +0200
-> > > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
-> > > > >     
-> > > > > > Hi Maxim,
-> > > > > > 
-> > > > > > Em Thu, 25 Jun 2020 12:25:10 +0300
-> > > > > > Maxim Levitsky <mlevitsk@redhat.com> escreveu:
-> > > > > >     
-> > > > > > > Hi!
-> > > > > > > 
-> > > > > > > I noticed that on recent kernels the search function in xconfig is partially broken.
-> > > > > > > This means that when you select a found entry, it is not selected in the main window,
-> > > > > > > something that I often do to find some entry near the area I would like to modify,
-> > > > > > > and then use main window to navigate/explore that area.
-> > > > > > > 
-> > > > > > > Reverting these commits helps restore the original behavier:
-> > > > > > > 
-> > > > > > > b311142fcfd37b58dfec72e040ed04949eb1ac86 - kconfig: qconf: fix support for the split view mode
-> > > > > > > cce1faba82645fee899ccef5b7d3050fed3a3d10 - kconfig: qconf: fix the content of the main widget
-> > > > > > > 
-> > > > > > > I have Qt5 5.13.2 from fedora 31 (5.13.2-1.fc31)
-> > > > > > > 
-> > > > > > > Could you explain what these commits are supposed to fix?
-> > > > > > > I mostly use the split view mode too and it does appear to work for me with these commits reverted as well.
-> > > > > > >     
-> > > > > > 
-> > > > > > There are three view modes for qconf:
-> > > > > > 
-> > > > > > 	- Single
-> > > > > > 	- Split
-> > > > > > 	- Full
-> > > > > > 
-> > > > > > those got broken when gconf was converted to use Qt5, back on Kernel 3.14.
-> > > > > > Those patches restore the original behavior.    
-> > > > You mean xconfig/qconf? (gconf is another program that is GTK based as far as I know).  
-> > > 
-> > > Yeah, I meant the Qt one (qconfig).
-> > >   
-> > > > Could you expalin though what was broken? What exactly didn't work?  
-> > > 
-> > > Try to switch between the several modes and switch back. There used to
-> > > have several broken things there, because the Qt5 port was incomplete.
-> > > 
-> > > One of the things that got fixed on the Qt5 fixup series is the helper
-> > > window at the bottom. It should now have the same behavior as with the
-> > > old Qt3/Qt4 version.
-> > > 
-> > > Basically, on split mode, it should have 3 screen areas:
-> > > 
-> > > 	+------------+-------+
-> > > 	|            |       |
-> > > 	| Config     |  menu |
-> > > 	|            |       |
-> > > 	+------------+-------+
-> > > 	|                    |
-> > > 	| Config description +
-> > > 	|                    |
-> > > 	+--------------------+
-> > > 
-> > > The contents of the config description should follow up any changes at 
-> > > the "menu" part of the split mode, when an item is selected from "menu",
-> > > or follow what's selected at "config", when the active window is "config".  
-> > 
-> > Dunno. with the 2 b311142fcfd37b58dfec72e040ed04949eb1ac86 and cce1faba82645fee899ccef5b7d3050fed3a3d10,
-> > in split view, I wasn't able to make the 'config description' show anything wrong,
-> > in regard to currently selected item in 'config' and in 'menu'
+> I recently tried to connect my TV and WX4100 via two different DP->HDMI dongles.
+> One of them makes my main monitor to go dark, and system to lockup (I haven't yet debugged this futher), and the other one seems to work,
+> most of the time, but sometimes causes a kernel panic on 5.8.0-rc1:
 > 
-> Well, the problem was related to how the code calls those 3 areas
-> internally: configView, menuView and configInfoView. 
 > 
-> When it is outside the split view, it should hide the
-> menuView, in order to show just the configView and the configInfoView.
+> [  +0.000000] ---[ end trace 0ce8685fac3db6b5 ]---
+> [  +2.142125] [drm:dc_link_detect_helper [amdgpu]] *ERROR* No EDID read.
+> [  +0.065348] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.001002] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.006310] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.102119] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.000679] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [ +22.037707] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [ +16.202833] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.000685] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.053875] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.000351] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
+> [  +0.031764] ------------[ cut here ]------------
+> [  +0.000001] WARNING: CPU: 58 PID: 504 at drivers/gpu/drm/amd/amdgpu/../display/dc/gpio/gpio_base.c:66 dal_gpio_open_ex+0x1b/0x40 [amdgpu]
+> [  +0.000001] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio xfs rfcomm xt_MASQUERADE xt_conntrack ipt_REJECT iptable_mangle iptable_nat nf_nat ebtable_filter ebtables ip6table_filter
+> ip6_tables tun bridge pmbus cmac pmbus_core ee1004 jc42 bnep sunrpc vfat fat dm_mirror dm_region_hash dm_log iwlmvm wmi_bmof mac80211 kvm_amd kvm libarc4 uvcvideo iwlwifi btusb btrtl btbcm btintel
+> videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 snd_hda_codec_hdmi videobuf2_common snd_usb_audio bluetooth videodev input_leds snd_hda_intel cfg80211 snd_usbmidi_lib joydev snd_intel_dspcfg
+> snd_rawmidi mc snd_hda_codec xpad ff_memless snd_hwdep thunderbolt ecdh_generic snd_seq ecc snd_hda_core irqbypass rfkill i2c_nvidia_gpu efi_pstore pcspkr snd_seq_device bfq snd_pcm snd_timer zenpower
+> snd i2c_piix4 rtc_cmos tpm_crb tpm_tis tpm_tis_core tpm wmi button binfmt_misc dm_crypt sd_mod uas usb_storage hid_generic usbhid hid ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea
+> sysfillrect
+> [  +0.000018]  sysimgblt crc32_pclmul ahci crc32c_intel fb_sys_fops libahci igb ccp cec xhci_pci libata i2c_algo_bit rng_core nvme xhci_hcd drm nvme_core t10_pi nbd usbmon it87 hwmon_vid fuse i2c_dev
+> i2c_core ipv6 autofs4 [last unloaded: nvidia]
+> [  +0.000005] CPU: 58 PID: 504 Comm: kworker/58:1 Tainted: P        W  O      5.8.0-rc1.stable #118
+> [  +0.000001] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
+> [  +0.000000] Workqueue: events dm_irq_work_func [amdgpu]
+> [  +0.000001] RIP: 0010:dal_gpio_open_ex+0x1b/0x40 [amdgpu]
+> [  +0.000001] Code: 08 89 47 10 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 83 7f 08 00 75 0f 48 83 7f 18 00 74 15 89 77 20 e9 65 07 00 00 <0f> 0b e8 ae 5b 8a e0 b8 05 00 00 00 c3 0f 0b e8 a1
+> 5b 8a e0 b8 06
+> [  +0.000000] RSP: 0018:ffffc90002e93b90 EFLAGS: 00010282
+> [  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
+> [  +0.000000] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
+> [  +0.000001] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
+> [  +0.000000] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
+> [  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
+> [  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
+> [  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  +0.000001] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
+> [  +0.000000] Call Trace:
+> [  +0.000000]  dal_ddc_open+0x2d/0xe0 [amdgpu]
+> [  +0.000001]  ? dm_read_reg_func+0x33/0xa0 [amdgpu]
+> [  +0.000000]  dce_aux_transfer_raw+0xb4/0xa30 [amdgpu]
+> [  +0.000000]  ? hrtimer_try_to_cancel+0x28/0x100
+> [  +0.000001]  dm_dp_aux_transfer+0x8f/0xf0 [amdgpu]
+> [  +0.000000]  drm_dp_dpcd_access+0x6b/0x110 [drm_kms_helper]
+> [  +0.000000]  drm_dp_dpcd_read+0xb6/0xf0 [drm_kms_helper]
+> [  +0.000001]  dm_helpers_dp_read_dpcd+0x28/0x50 [amdgpu]
+> [  +0.000000]  core_link_read_dpcd.part.0+0x1f/0x30 [amdgpu]
+> [  +0.000000]  read_hpd_rx_irq_data+0x39/0x90 [amdgpu]
+> [  +0.000001]  dc_link_handle_hpd_rx_irq+0x74/0x7c0 [amdgpu]
+> [  +0.000000]  handle_hpd_rx_irq+0x62/0x2e0 [amdgpu]
+> [  +0.000000]  ? __schedule+0x252/0x6a0
+> [  +0.000001]  ? finish_task_switch+0x18d/0x280
+> [  +0.000000]  dm_irq_work_func+0x43/0x50 [amdgpu]
+> [  +0.000000]  process_one_work+0x1d2/0x390
+> [  +0.000000]  worker_thread+0x225/0x3b0
+> [  +0.000001]  ? process_one_work+0x390/0x390
+> [  +0.000000]  kthread+0xf9/0x130
+> [  +0.000000]  ? kthread_park+0x90/0x90
+> [  +0.000001]  ret_from_fork+0x1f/0x30
+> [  +0.000000] ---[ end trace 0ce8685fac3db6b6 ]---
+> [  +0.002807] int3: 0000 [#1] SMP
+> [  +0.000001] CPU: 58 PID: 504 Comm: kworker/58:1 Tainted: P        W  O      5.8.0-rc1.stable #118
+> [  +0.000001] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
+> [  +0.000000] Workqueue: events dm_irq_work_func [amdgpu]
+> [  +0.000001] RIP: 0010:kgdb_breakpoint+0x10/0x20
+> [  +0.000001] Code: 4d f9 ff eb c5 cc cc cc cc cc 0f 1f 44 00 00 31 c0 c3 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 f0 ff 05 3c be 3e 01 0f ae f8 cc <0f> ae f8 f0 ff 0d 2e be 3e 01 c3 0f 1f 44 00 00 0f
+> 1f 44 00 00 e8
+> [  +0.000000] RSP: 0018:ffffc90002e93b88 EFLAGS: 00000202
+> [  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
+> [  +0.000001] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
+> [  +0.000000] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
+> [  +0.000001] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
+> [  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
+> [  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
+> [  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  +0.000001] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
+> [  +0.000000] Call Trace:
+> [  +0.000001]  dal_gpio_open_ex+0x22/0x40 [amdgpu]
+> [  +0.000000]  dal_ddc_open+0x2d/0xe0 [amdgpu]
+> [  +0.000000]  ? dm_read_reg_func+0x33/0xa0 [amdgpu]
+> [  +0.000001]  dce_aux_transfer_raw+0xb4/0xa30 [amdgpu]
+> [  +0.000000]  ? hrtimer_try_to_cancel+0x28/0x100
+> [  +0.000000]  dm_dp_aux_transfer+0x8f/0xf0 [amdgpu]
+> [  +0.000001]  drm_dp_dpcd_access+0x6b/0x110 [drm_kms_helper]
+> [  +0.000000]  drm_dp_dpcd_read+0xb6/0xf0 [drm_kms_helper]
+> [  +0.000000]  dm_helpers_dp_read_dpcd+0x28/0x50 [amdgpu]
+> [  +0.000001]  core_link_read_dpcd.part.0+0x1f/0x30 [amdgpu]
+> [  +0.000000]  read_hpd_rx_irq_data+0x39/0x90 [amdgpu]
+> [  +0.000000]  dc_link_handle_hpd_rx_irq+0x74/0x7c0 [amdgpu]
+> [  +0.000001]  handle_hpd_rx_irq+0x62/0x2e0 [amdgpu]
+> [  +0.000000]  ? __schedule+0x252/0x6a0
+> [  +0.000000]  ? finish_task_switch+0x18d/0x280
+> [  +0.000001]  dm_irq_work_func+0x43/0x50 [amdgpu]
+> [  +0.000000]  process_one_work+0x1d2/0x390
+> [  +0.000000]  worker_thread+0x225/0x3b0
+> [  +0.000001]  ? process_one_work+0x390/0x390
+> [  +0.000000]  kthread+0xf9/0x130
+> [  +0.000000]  ? kthread_park+0x90/0x90
+> [  +0.000001]  ret_from_fork+0x1f/0x30
+> [  +0.000000] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio xfs rfcomm xt_MASQUERADE xt_conntrack ipt_REJECT iptable_mangle iptable_nat nf_nat ebtable_filter ebtables ip6table_filter
+> ip6_tables tun bridge pmbus cmac pmbus_core ee1004 jc42 bnep sunrpc vfat fat dm_mirror dm_region_hash dm_log iwlmvm wmi_bmof mac80211 kvm_amd kvm libarc4 uvcvideo iwlwifi btusb btrtl btbcm btintel
+> videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 snd_hda_codec_hdmi videobuf2_common snd_usb_audio bluetooth videodev input_leds snd_hda_intel cfg80211 snd_usbmidi_lib joydev snd_intel_dspcfg
+> snd_rawmidi mc snd_hda_codec xpad ff_memless snd_hwdep thunderbolt ecdh_generic snd_seq ecc snd_hda_core irqbypass rfkill i2c_nvidia_gpu efi_pstore pcspkr snd_seq_device bfq snd_pcm snd_timer zenpower
+> snd i2c_piix4 rtc_cmos tpm_crb tpm_tis tpm_tis_core tpm wmi button binfmt_misc dm_crypt sd_mod uas usb_storage hid_generic usbhid hid ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea
+> sysfillrect
+> [  +0.000018]  sysimgblt crc32_pclmul ahci crc32c_intel fb_sys_fops libahci igb ccp cec xhci_pci libata i2c_algo_bit rng_core nvme xhci_hcd drm nvme_core t10_pi nbd usbmon it87 hwmon_vid fuse i2c_dev
+> i2c_core ipv6 autofs4 [last unloaded: nvidia]
+> [  +0.021468] ---[ end trace 0ce8685fac3db6b7 ]---
+> [  +0.000000] RIP: 0010:kgdb_breakpoint+0x10/0x20
+> [  +0.000001] Code: 4d f9 ff eb c5 cc cc cc cc cc 0f 1f 44 00 00 31 c0 c3 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 f0 ff 05 3c be 3e 01 0f ae f8 cc <0f> ae f8 f0 ff 0d 2e be 3e 01 c3 0f 1f 44 00 00 0f
+> 1f 44 00 00 e8
+> [  +0.000000] RSP: 0018:ffffc90002e93b88 EFLAGS: 00000202
+> [  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
+> [  +0.000001] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
+> [  +0.000000] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
+> [  +0.000001] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
+> [  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
+> [  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
+> [  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  +0.000000] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
+> [  +0.000001] Kernel panic - not syncing: Fatal exception in interrupt
+> [  +0.001035] Kernel Offset: disabled
 > 
-> There were lots of weird stuff there. I suspect that, after the
-> half-done Qt5 conversion (that handled badly the menuView hiding
-> logic), some hacks were added, assuming the wrong window hiding 
-> logic. When I fixed it, other things stopped working. So, additional
-> fixup patches were needed.
 > 
-> > At that point this is mostly an academic interset for me since,
-> > the patch that you sent fixes search. Thank you very much!
+> The 'amdgpu_dm_irq_schedule_work FAILED src 8' errors were from previous plugs of this adapter.
 > 
-> Anytime!
+> On 5.7-rc7 kernel I also tried booting, I also see the 'amdgpu_dm_irq_schedule_work FAILED' errors
+> but it seems for now that the crash doesn't happen, but it might have beeing luck.
 > 
-> > BTW, I re-discovered another bug (I have seen it already but it didn't bother me that much),
-> > while trying to break the version with these commits reverted (but it happens 
-> > with them not reverted as well):
-> > 
-> > When I enable 'show debug info' to understand why I can't enable/disable some config
-> > option, the hyperlinks in the config description don't work - they make the config
-> > window to be empty.
-> 
-> It sounds that the creation of the search list for the QTextBrowser 
-> instantiated class (e. g. configInfoView) is not fine.
-> 
-> It sounds that it was supposed to call either setInfo() or
-> setMenuLink() when a debug info hyperlink is clicked:
-> 
-> 	info = new ConfigInfoView(split, name);
-> 	connect(list->list, SIGNAL(menuChanged(struct menu *)),
-> 		info, SLOT(setInfo(struct menu *)));
-> 
-> But this is not happening. Perhaps this also broke with the Qt5
-> conversion?
-> 
-> I suspect it should, instead, use a different signal to handle it.
-> 
-> See, with the enclosed patch, clicking on a link will now show:
-> 
-> 	Clicked on URL QUrl("s0x21c3f10")
-> 	QTextBrowser: No document for s0x21c3f10
-> 
-> Which helps to explain what's happening here.
-> 
-> See, when debug is turned on, it will create hyperlinks like:
-> 
-> 	head += QString().sprintf("<a href=\"s%p\">", sym);
-> 
-> It seems that the code needs something like:
-> 
-> 	connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
-> 			 helpText, SLOT (clicked (const QUrl &)) );
-> 
-> and a handler for this signal that would translate "s%p"
-> back into sym, using such value to update the menus.
-> 
-> Do you know if this used to work after Kernel 3.14?
-
-I don't know yet, but I can test it. 
-
-I didn't do much kernel developement for lot of time, so I only vaguely
-remember that once upon a time it did work. I don't use this feature much,
-so it might as well be broken back when conversion to Qt5 happened.
-Also worth noting that I probably used Qt4 untill recently when I updated
-to fedora 31, which looks like dropped Qt4 developement packages.
-
-I used to know a thing or two about Qt, long long ago, so on next weekend or so,
-I can also take a look at this.
+> On top of all this, I tried a 3rd dongle and it does appear to work flawlessly (no messages in dmesg).
+Disregard this. The 3rd dongle also caused my kernel to crash yestarday.
 
 Best regards,
 	Maxim Levitsky
 
 > 
-> Thanks,
-> Mauro
-> 
-> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> index b8f577c6e8aa..4d9bf9330c73 100644
-> --- a/scripts/kconfig/qconf.cc
-> +++ b/scripts/kconfig/qconf.cc
-> @@ -4,27 +4,19 @@
->   * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
->   */
->  
-> -#include <qglobal.h>
-> -
-> -#include <QMainWindow>
-> -#include <QList>
-> -#include <qtextbrowser.h>
->  #include <QAction>
-> +#include <QApplication>
-> +#include <QCloseEvent>
-> +#include <QDebug>
-> +#include <QDesktopWidget>
->  #include <QFileDialog>
-> +#include <QLabel>
-> +#include <QLayout>
-> +#include <QList>
->  #include <QMenu>
-> -
-> -#include <qapplication.h>
-> -#include <qdesktopwidget.h>
-> -#include <qtoolbar.h>
-> -#include <qlayout.h>
-> -#include <qsplitter.h>
-> -#include <qlineedit.h>
-> -#include <qlabel.h>
-> -#include <qpushbutton.h>
-> -#include <qmenubar.h>
-> -#include <qmessagebox.h>
-> -#include <qregexp.h>
-> -#include <qevent.h>
-> +#include <QMenuBar>
-> +#include <QMessageBox>
-> +#include <QToolBar>
->  
->  #include <stdlib.h>
->  
-> @@ -400,6 +392,8 @@ void ConfigList::updateSelection(void)
->  	struct menu *menu;
->  	enum prop_type type;
->  
-> +qInfo() << __FUNCTION__;
-> +
->  	if (mode == symbolMode)
->  		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
->  	else
-> @@ -536,6 +530,8 @@ void ConfigList::setRootMenu(struct menu *menu)
->  {
->  	enum prop_type type;
->  
-> +
-> +qInfo() << __FUNCTION__ << "menu:" << menu;
->  	if (rootEntry == menu)
->  		return;
->  	type = menu && menu->prompt ? menu->prompt->type : P_UNKNOWN;
-> @@ -1020,6 +1016,7 @@ void ConfigView::updateListAll(void)
->  ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
->  	: Parent(parent), sym(0), _menu(0)
->  {
-> +qInfo() << __FUNCTION__;
->  	setObjectName(name);
->  
->  
-> @@ -1033,6 +1030,7 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
->  
->  void ConfigInfoView::saveSettings(void)
->  {
-> +qInfo() << __FUNCTION__;
->  	if (!objectName().isEmpty()) {
->  		configSettings->beginGroup(objectName());
->  		configSettings->setValue("/showDebug", showDebug());
-> @@ -1042,6 +1040,7 @@ void ConfigInfoView::saveSettings(void)
->  
->  void ConfigInfoView::setShowDebug(bool b)
->  {
-> +qInfo() << __FUNCTION__;
->  	if (_showDebug != b) {
->  		_showDebug = b;
->  		if (_menu)
-> @@ -1054,6 +1053,8 @@ void ConfigInfoView::setShowDebug(bool b)
->  
->  void ConfigInfoView::setInfo(struct menu *m)
->  {
-> +qInfo() << __FUNCTION__ << "menu:" << m;
-> +
->  	if (_menu == m)
->  		return;
->  	_menu = m;
-> @@ -1068,6 +1069,8 @@ void ConfigInfoView::symbolInfo(void)
->  {
->  	QString str;
->  
-> +qInfo() << __FUNCTION__;
-> +
->  	str += "<big>Symbol: <b>";
->  	str += print_filter(sym->name);
->  	str += "</b></big><br><br>value: ";
-> @@ -1085,6 +1088,8 @@ void ConfigInfoView::menuInfo(void)
->  	struct symbol* sym;
->  	QString head, debug, help;
->  
-> +qInfo() << __FUNCTION__;
-> +
->  	sym = _menu->sym;
->  	if (sym) {
->  		if (_menu->prompt) {
-> @@ -1140,6 +1145,7 @@ QString ConfigInfoView::debug_info(struct symbol *sym)
->  {
->  	QString debug;
->  
-> +qInfo() << __FUNCTION__;
->  	debug += "type: ";
->  	debug += print_filter(sym_type_name(sym->type));
->  	if (sym_is_choice(sym))
-> @@ -1191,6 +1197,7 @@ QString ConfigInfoView::debug_info(struct symbol *sym)
->  
->  QString ConfigInfoView::print_filter(const QString &str)
->  {
-> +qInfo() << __FUNCTION__;
->  	QRegExp re("[<>&\"\\n]");
->  	QString res = str;
->  	for (int i = 0; (i = res.indexOf(re, i)) >= 0;) {
-> @@ -1225,6 +1232,7 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
->  	QString* text = reinterpret_cast<QString*>(data);
->  	QString str2 = print_filter(str);
->  
-> +qInfo() << __FUNCTION__;
->  	if (sym && sym->name && !(sym->flags & SYMBOL_CONST)) {
->  		*text += QString().sprintf("<a href=\"s%p\">", sym);
->  		*text += str2;
-> @@ -1233,11 +1241,17 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
->  		*text += str2;
->  }
->  
-> +void ConfigInfoView::clicked(const QUrl &url)
-> +{
-> +	qInfo() << "Clicked on URL" << url;
-> +}
-> +
->  QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
->  {
->  	QMenu* popup = Parent::createStandardContextMenu(pos);
->  	QAction* action = new QAction("Show Debug Info", popup);
->  
-> +qInfo() << __FUNCTION__;
->  	action->setCheckable(true);
->  	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
->  	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-> @@ -1249,6 +1263,7 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
->  
->  void ConfigInfoView::contextMenuEvent(QContextMenuEvent *e)
->  {
-> +qInfo() << __FUNCTION__;
->  	Parent::contextMenuEvent(e);
->  }
->  
-> @@ -1258,6 +1273,8 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow* parent, const char *nam
->  	setObjectName(name);
->  	setWindowTitle("Search Config");
->  
-> +qInfo() << __FUNCTION__ << "name:" << name;
-> +
->  	QVBoxLayout* layout1 = new QVBoxLayout(this);
->  	layout1->setContentsMargins(11, 11, 11, 11);
->  	layout1->setSpacing(6);
-> @@ -1506,6 +1523,9 @@ ConfigMainWindow::ConfigMainWindow(void)
->  	helpMenu->addAction(showIntroAction);
->  	helpMenu->addAction(showAboutAction);
->  
-> +	connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
-> +		 helpText, SLOT (clicked (const QUrl &)) );
-> +
->  	connect(configList, SIGNAL(menuChanged(struct menu *)),
->  		helpText, SLOT(setInfo(struct menu *)));
->  	connect(configList, SIGNAL(menuSelected(struct menu *)),
-> @@ -1603,6 +1623,7 @@ void ConfigMainWindow::saveConfigAs(void)
->  
->  void ConfigMainWindow::searchConfig(void)
->  {
-> +qInfo() << __FUNCTION__;
->  	if (!searchWindow)
->  		searchWindow = new ConfigSearchWindow(this, "search");
->  	searchWindow->show();
-> @@ -1610,6 +1631,11 @@ void ConfigMainWindow::searchConfig(void)
->  
->  void ConfigMainWindow::changeItens(struct menu *menu)
->  {
-> +qInfo() << __FUNCTION__ << "Changing to menu" << menu;
-> +
-> +	if (menu->flags & MENU_ROOT)
-> +		qInfo() << "Wrong type when changing item";
-> +
->  	configList->setRootMenu(menu);
->  
->  	if (configList->rootEntry->parent == &rootmenu)
-> @@ -1620,6 +1646,11 @@ void ConfigMainWindow::changeItens(struct menu *menu)
->  
->  void ConfigMainWindow::changeMenu(struct menu *menu)
->  {
-> +qInfo() << __FUNCTION__ << "Changing to menu" << menu;
-> +
-> +	if (!(menu->flags & MENU_ROOT))
-> +		qInfo() << "Wrong type when changing menu";
-> +
->  	menuList->setRootMenu(menu);
->  
->  	if (menuList->rootEntry->parent == &rootmenu)
-> @@ -1633,6 +1664,7 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
->  	struct menu *parent;
->  	ConfigList* list = NULL;
->  	ConfigItem* item;
-> +qInfo() << __FUNCTION__ << "Changing to menu" << menu;
->  
->  	if (configList->menuSkip(menu))
->  		return;
-> @@ -1681,6 +1713,7 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
->  
->  void ConfigMainWindow::listFocusChanged(void)
->  {
-> +qInfo() << __FUNCTION__;
->  	if (menuList->mode == menuMode)
->  		configList->clearSelection();
->  }
-> @@ -1689,6 +1722,7 @@ void ConfigMainWindow::goBack(void)
->  {
->  	ConfigItem* item, *oldSelection;
->  
-> +qInfo() << __FUNCTION__;
->  	configList->setParentMenu();
->  	if (configList->rootEntry == &rootmenu)
->  		backAction->setEnabled(false);
-> diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-> index c879d79ce817..a193137f2314 100644
-> --- a/scripts/kconfig/qconf.h
-> +++ b/scripts/kconfig/qconf.h
-> @@ -3,17 +3,17 @@
->   * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
->   */
->  
-> -#include <QTextBrowser>
-> -#include <QTreeWidget>
-> -#include <QMainWindow>
-> +#include <QCheckBox>
-> +#include <QDialog>
->  #include <QHeaderView>
-> -#include <qsettings.h>
-> +#include <QLineEdit>
-> +#include <QMainWindow>
->  #include <QPushButton>
->  #include <QSettings>
-> -#include <QLineEdit>
->  #include <QSplitter>
-> -#include <QCheckBox>
-> -#include <QDialog>
-> +#include <QTextBrowser>
-> +#include <QTreeWidget>
-> +
->  #include "expr.h"
->  
->  class ConfigView;
-> @@ -250,6 +250,7 @@ public slots:
->  	void setInfo(struct menu *menu);
->  	void saveSettings(void);
->  	void setShowDebug(bool);
-> +	void clicked (const QUrl &url);
->  
->  signals:
->  	void showDebugChanged(bool);
-> 
-> 
-> 
+> Best regards,
+> 	Maxim Levitsky
 
 
