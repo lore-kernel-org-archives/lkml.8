@@ -2,675 +2,133 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A87FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C0920760
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2978720674
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="eWBbOYTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgF1Mh7 (ORCPT
+        id S1726417AbgF1Mms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 08:37:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726373AbgF1MhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 08:37:23 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B8D9C2629D5D9774424;
-        Sun, 28 Jun 2020 20:37:21 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 28 Jun 2020 20:37:12 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-Subject: [PATCH net-next v4 2/5] hinic: add support to set and get irq coalesce
-Date:   Sun, 28 Jun 2020 20:36:21 +0800
-Message-ID: <20200628123624.600-3-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200628123624.600-1-luobin9@huawei.com>
-References: <20200628123624.600-1-luobin9@huawei.com>
+        Sun, 28 Jun 2020 08:42:48 -0400
+Received: from mout.web.de ([217.72.192.78]:46909 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbgF1Mmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 08:42:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1593348147;
+        bh=npulf07zoEOS6mrZ7kUQr1zyXg++JzWm5MGqz6djhHI=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=eWBbOYTxXxQGhJ/A6LAwtJdwE6LGv0kaE7c6GxyPftIRt1lpTrWkedgIhX+Rs+c18
+         Cyo5l/Fo1UN3/yLW/EgkCGXBIxMrMhqFPrV8+ZlzXcQVU0Ao/nB+kA1NZLHgLjHHza
+         HYc1EfMsCiw4z4QcBo1QFNeuJYGaUKj3rkq0Is6o=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.52.166]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MWj2N-1jJRyy2whv-00XsiD; Sun, 28
+ Jun 2020 14:42:27 +0200
+To:     jiangying8582@126.com, linux-ext4@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH] ext4: fix direct I/O read error
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f40db056-51de-8332-473a-f020d0976c0a@web.de>
+Date:   Sun, 28 Jun 2020 14:42:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DWIB516VUkxjxrUPS7ibzg4GoIkmnwlRrNMBdlzcOEWEQXZ6o/Y
+ lmtGEu+T2Cok+bFeFjVnZitEm+m2BpIOdB8U9rEAJI3rw5zlIrpVh2gdK8zbfFdJ1PMY7YV
+ qNsa1RZ4dlVWctXm7ogAJDri2LbC0tGTkBUSauo78z57adU7syxNXpZQCNQ7qw8a8k4OINE
+ R3ynD4fqPKq3A/wyPEvyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+R3qBd12JO0=:ncEQ7ERAS6GjgRYWiUDLPl
+ lk4MZ/zNxvzK2XTVDOGUp2djvPIDZwsa0kCqKgDXO7tkM1s8qjZZrJqo3k2/t7hrV2RAIF0rU
+ 1hCZnp5aWv1jvd//drEpQ1uddhnXdXjZ6WHSxpS9zx/VSizAb5uslRLhtXOlZSwZYBuOH6iCT
+ 7QUW4gdtc1ECgmdXU03olS9nuQFPFpwaRnHWOGJwNJgws+/QDIzj/VOU82BVWdHZTcUk4pukm
+ J/NY0N6wr1HQEtePlxstNE5nh/AKui6pJWPvYJoFYSqhe+Zohpn3NNw7NoOePPUNDZSJeMTNN
+ ZUip25mH8gFAM/aYIGAh1SLwnEnRsj1r+aFf26TDrAvwkFHAcj5a00sEDhlC5FN0YS2EqCz1Y
+ LmUtpx9roO6fphVAjgx9C6kKlxQUrGgUefkTNTMfCC9OASZBchMhAOux7mum7T0jYLGc0Rdn5
+ w5aO2/VYW1SpXfW4XQT7d716mojHtPUyWr5+JMQkl6tnsoPY0h7umy2ZQSjMskCAyx6c1rYa8
+ mZS3M1P3zKag8EAFSd3c17aO5DgkXcb6VSU2+UuzPss/1VsVjpzq7jydwVsamB5WrNkV/+ECf
+ thXIEImlrq+w9WO1pf628alREovv1fbj9iE0i3rRdY+5jdscUXqwld25I3Z7IEYPB9vvh5pMd
+ HG6ZPx5z939S8pCAA7FMq5wIZsXCronZLdrzSRQwhKUyWocrdRcY+Pt4mmz/1Mzh/eFe2eNUc
+ xiOpuEnPLNMLu/l89gWdAbckplpZvKiHjWQoNSLzsCwuEVghmPmXkhfU3RJDHPm4vE7/vkZ7E
+ UjKsi2ZFtXnqCGBW/yJ4VMXvMW/hHAMKqV5GEik6El9Kjx9cBFrpjXUmFZZ8XY7NxMnqRSyK6
+ IWegc90WMinZBwzeIICW8i4vQokHeztA8zQFOjYh6JT4ud938JUuCAK0uVHtYFp3BpPpS3eIA
+ Wtq4imWj67/bZ8tR1hfAfQg9qXbxstiawg8cpOuaWYqA0bJEecGvudReskdGFzbLrLcmNxBII
+ lhSrA9MRnuUNo6gwTOboIM1EjaN5mFuLmt9Op2lJYYJePjoV42JJ01akNB8/j+8kboC+92ylo
+ 3QS8VD0DJnj26JWrCy1ntcFW3bMRN5lDr7AWhkv3kiEH8ryCDIphoDR8nIIJVekkr16fXAeWu
+ n21gML1G9LIL3gER4dn1lze2pe1IkuTqzmKNopHmhYViifrEZQhtTzdYvmN5cLYvPtk3MuBuk
+ /TUeE0BujhFS32tlM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to set TX/RX irq coalesce params with ethtool -C and
-get these params with ethtool -c.
+> Signed-off-by: jiangying8582 <jiangying8582@126.com>
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- drivers/net/ethernet/huawei/hinic/hinic_dev.h |   8 +
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 234 ++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  62 +++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  21 ++
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   3 +
- .../net/ethernet/huawei/hinic/hinic_main.c    |  53 ++++
- drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  19 +-
- drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  19 ++
- 8 files changed, 418 insertions(+), 1 deletion(-)
+Please use the real name for your contributions.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D719fdd32921fb7e3208db8832d=
+32ae1c2d68900f#n431
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-index 48b40be3e84d..75d6dee948f5 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-@@ -49,6 +49,12 @@ enum hinic_rss_hash_type {
- 	HINIC_RSS_HASH_ENGINE_TYPE_MAX,
- };
- 
-+struct hinic_intr_coal_info {
-+	u8	pending_limt;
-+	u8	coalesce_timer_cfg;
-+	u8	resend_timer_cfg;
-+};
-+
- struct hinic_dev {
- 	struct net_device               *netdev;
- 	struct hinic_hwdev              *hwdev;
-@@ -82,6 +88,8 @@ struct hinic_dev {
- 	struct hinic_rss_type		rss_type;
- 	u8				*rss_hkey_user;
- 	s32				*rss_indir_user;
-+	struct hinic_intr_coal_info	*rx_intr_coalesce;
-+	struct hinic_intr_coal_info	*tx_intr_coalesce;
- 	struct hinic_sriov_info sriov_info;
- };
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index edd60c892ab2..8e5c326c7687 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -49,6 +49,13 @@
- #define ETHTOOL_ADD_ADVERTISED_LINK_MODE(ecmd, mode)	\
- 				((ecmd)->advertising |= ADVERTISED_##mode)
- 
-+#define COALESCE_PENDING_LIMIT_UNIT	8
-+#define	COALESCE_TIMER_CFG_UNIT		9
-+#define COALESCE_ALL_QUEUE		0xFFFF
-+#define COALESCE_MAX_PENDING_LIMIT	(255 * COALESCE_PENDING_LIMIT_UNIT)
-+#define COALESCE_MAX_TIMER_CFG		(255 * COALESCE_TIMER_CFG_UNIT)
-+#define OBJ_STR_MAX_LEN			32
-+
- struct hw2ethtool_link_mode {
- 	enum ethtool_link_mode_bit_indices link_mode_bit;
- 	u32 speed;
-@@ -614,6 +621,215 @@ static int hinic_set_ringparam(struct net_device *netdev,
- 	return 0;
- }
- 
-+static int __hinic_get_coalesce(struct net_device *netdev,
-+				struct ethtool_coalesce *coal, u16 queue)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_intr_coal_info *rx_intr_coal_info;
-+	struct hinic_intr_coal_info *tx_intr_coal_info;
-+
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		/* get tx/rx irq0 as default parameters */
-+		rx_intr_coal_info = &nic_dev->rx_intr_coalesce[0];
-+		tx_intr_coal_info = &nic_dev->tx_intr_coalesce[0];
-+	} else {
-+		if (queue >= nic_dev->num_qps) {
-+			netif_err(nic_dev, drv, netdev,
-+				  "Invalid queue_id: %d\n", queue);
-+			return -EINVAL;
-+		}
-+		rx_intr_coal_info = &nic_dev->rx_intr_coalesce[queue];
-+		tx_intr_coal_info = &nic_dev->tx_intr_coalesce[queue];
-+	}
-+
-+	/* coalesce_timer is in unit of 9us */
-+	coal->rx_coalesce_usecs = rx_intr_coal_info->coalesce_timer_cfg *
-+			COALESCE_TIMER_CFG_UNIT;
-+	/* coalesced_frames is in unit of 8 */
-+	coal->rx_max_coalesced_frames = rx_intr_coal_info->pending_limt *
-+			COALESCE_PENDING_LIMIT_UNIT;
-+	coal->tx_coalesce_usecs = tx_intr_coal_info->coalesce_timer_cfg *
-+			COALESCE_TIMER_CFG_UNIT;
-+	coal->tx_max_coalesced_frames = tx_intr_coal_info->pending_limt *
-+			COALESCE_PENDING_LIMIT_UNIT;
-+
-+	return 0;
-+}
-+
-+static int is_coalesce_exceed_limit(const struct ethtool_coalesce *coal)
-+{
-+	if (coal->rx_coalesce_usecs > COALESCE_MAX_TIMER_CFG ||
-+	    coal->rx_max_coalesced_frames > COALESCE_MAX_PENDING_LIMIT ||
-+	    coal->tx_coalesce_usecs > COALESCE_MAX_TIMER_CFG ||
-+	    coal->tx_max_coalesced_frames > COALESCE_MAX_PENDING_LIMIT)
-+		return -ERANGE;
-+
-+	return 0;
-+}
-+
-+static int set_queue_coalesce(struct hinic_dev *nic_dev, u16 q_id,
-+			      struct hinic_intr_coal_info *coal,
-+			      bool set_rx_coal)
-+{
-+	struct hinic_intr_coal_info *intr_coal = NULL;
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct net_device *netdev = nic_dev->netdev;
-+	u16 msix_idx;
-+	int err;
-+
-+	intr_coal = set_rx_coal ? &nic_dev->rx_intr_coalesce[q_id] :
-+		    &nic_dev->tx_intr_coalesce[q_id];
-+
-+	intr_coal->coalesce_timer_cfg = coal->coalesce_timer_cfg;
-+	intr_coal->pending_limt = coal->pending_limt;
-+
-+	/* netdev not running or qp not in using,
-+	 * don't need to set coalesce to hw
-+	 */
-+	if (!(nic_dev->flags & HINIC_INTF_UP) ||
-+	    q_id >= nic_dev->num_qps)
-+		return 0;
-+
-+	msix_idx = set_rx_coal ? nic_dev->rxqs[q_id].rq->msix_entry :
-+		   nic_dev->txqs[q_id].sq->msix_entry;
-+	interrupt_info.msix_index = msix_idx;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(nic_dev->hwdev, &interrupt_info);
-+	if (err)
-+		netif_warn(nic_dev, drv, netdev,
-+			   "Failed to set %s queue%d coalesce",
-+			   set_rx_coal ? "rx" : "tx", q_id);
-+
-+	return err;
-+}
-+
-+static int __set_hw_coal_param(struct hinic_dev *nic_dev,
-+			       struct hinic_intr_coal_info *intr_coal,
-+			       u16 queue, bool set_rx_coal)
-+{
-+	int err;
-+	u16 i;
-+
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		for (i = 0; i < nic_dev->max_qps; i++) {
-+			err = set_queue_coalesce(nic_dev, i, intr_coal,
-+						 set_rx_coal);
-+			if (err)
-+				return err;
-+		}
-+	} else {
-+		if (queue >= nic_dev->num_qps) {
-+			netif_err(nic_dev, drv, nic_dev->netdev,
-+				  "Invalid queue_id: %d\n", queue);
-+			return -EINVAL;
-+		}
-+		err = set_queue_coalesce(nic_dev, queue, intr_coal,
-+					 set_rx_coal);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __hinic_set_coalesce(struct net_device *netdev,
-+				struct ethtool_coalesce *coal, u16 queue)
-+{
-+	struct hinic_intr_coal_info *ori_rx_intr_coal = NULL;
-+	struct hinic_intr_coal_info *ori_tx_intr_coal = NULL;
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_intr_coal_info rx_intr_coal = {0};
-+	struct hinic_intr_coal_info tx_intr_coal = {0};
-+	char obj_str[OBJ_STR_MAX_LEN] = {0};
-+	bool set_rx_coal = false;
-+	bool set_tx_coal = false;
-+	int err;
-+
-+	err = is_coalesce_exceed_limit(coal);
-+	if (err)
-+		return err;
-+
-+	if (coal->rx_coalesce_usecs || coal->rx_max_coalesced_frames) {
-+		rx_intr_coal.coalesce_timer_cfg =
-+		(u8)(coal->rx_coalesce_usecs / COALESCE_TIMER_CFG_UNIT);
-+		rx_intr_coal.pending_limt = (u8)(coal->rx_max_coalesced_frames /
-+				COALESCE_PENDING_LIMIT_UNIT);
-+		set_rx_coal = true;
-+	}
-+
-+	if (coal->tx_coalesce_usecs || coal->tx_max_coalesced_frames) {
-+		tx_intr_coal.coalesce_timer_cfg =
-+		(u8)(coal->tx_coalesce_usecs / COALESCE_TIMER_CFG_UNIT);
-+		tx_intr_coal.pending_limt = (u8)(coal->tx_max_coalesced_frames /
-+		COALESCE_PENDING_LIMIT_UNIT);
-+		set_tx_coal = true;
-+	}
-+
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		ori_rx_intr_coal = &nic_dev->rx_intr_coalesce[0];
-+		ori_tx_intr_coal = &nic_dev->tx_intr_coalesce[0];
-+		err = snprintf(obj_str, OBJ_STR_MAX_LEN, "for netdev");
-+	} else {
-+		ori_rx_intr_coal = &nic_dev->rx_intr_coalesce[queue];
-+		ori_tx_intr_coal = &nic_dev->tx_intr_coalesce[queue];
-+		err = snprintf(obj_str, OBJ_STR_MAX_LEN, "for queue %d", queue);
-+	}
-+	if (err <= 0 || err >= OBJ_STR_MAX_LEN) {
-+		netif_err(nic_dev, drv, netdev, "Failed to snprintf string, function return(%d) and dest_len(%d)\n",
-+			  err, OBJ_STR_MAX_LEN);
-+		return -EFAULT;
-+	}
-+
-+	/* setting coalesce timer or pending limit to zero will disable
-+	 * coalesce
-+	 */
-+	if (set_rx_coal && (!rx_intr_coal.coalesce_timer_cfg ||
-+			    !rx_intr_coal.pending_limt))
-+		netif_warn(nic_dev, drv, netdev, "RX coalesce will be disabled\n");
-+	if (set_tx_coal && (!tx_intr_coal.coalesce_timer_cfg ||
-+			    !tx_intr_coal.pending_limt))
-+		netif_warn(nic_dev, drv, netdev, "TX coalesce will be disabled\n");
-+
-+	if (set_rx_coal) {
-+		err = __set_hw_coal_param(nic_dev, &rx_intr_coal, queue, true);
-+		if (err)
-+			return err;
-+	}
-+	if (set_tx_coal) {
-+		err = __set_hw_coal_param(nic_dev, &tx_intr_coal, queue, false);
-+		if (err)
-+			return err;
-+	}
-+	return 0;
-+}
-+
-+static int hinic_get_coalesce(struct net_device *netdev,
-+			      struct ethtool_coalesce *coal)
-+{
-+	return __hinic_get_coalesce(netdev, coal, COALESCE_ALL_QUEUE);
-+}
-+
-+static int hinic_set_coalesce(struct net_device *netdev,
-+			      struct ethtool_coalesce *coal)
-+{
-+	return __hinic_set_coalesce(netdev, coal, COALESCE_ALL_QUEUE);
-+}
-+
-+static int hinic_get_per_queue_coalesce(struct net_device *netdev, u32 queue,
-+					struct ethtool_coalesce *coal)
-+{
-+	return __hinic_get_coalesce(netdev, coal, queue);
-+}
-+
-+static int hinic_set_per_queue_coalesce(struct net_device *netdev, u32 queue,
-+					struct ethtool_coalesce *coal)
-+{
-+	return __hinic_set_coalesce(netdev, coal, queue);
-+}
-+
- static void hinic_get_pauseparam(struct net_device *netdev,
- 				 struct ethtool_pauseparam *pause)
- {
-@@ -1293,12 +1509,21 @@ static void hinic_get_strings(struct net_device *netdev,
- }
- 
- static const struct ethtool_ops hinic_ethtool_ops = {
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
-+				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_TX_USECS |
-+				     ETHTOOL_COALESCE_TX_MAX_FRAMES,
-+
- 	.get_link_ksettings = hinic_get_link_ksettings,
- 	.set_link_ksettings = hinic_set_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
-+	.get_coalesce = hinic_get_coalesce,
-+	.set_coalesce = hinic_set_coalesce,
-+	.get_per_queue_coalesce = hinic_get_per_queue_coalesce,
-+	.set_per_queue_coalesce = hinic_set_per_queue_coalesce,
- 	.get_pauseparam = hinic_get_pauseparam,
- 	.set_pauseparam = hinic_set_pauseparam,
- 	.get_channels = hinic_get_channels,
-@@ -1315,11 +1540,20 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- };
- 
- static const struct ethtool_ops hinicvf_ethtool_ops = {
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
-+				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_TX_USECS |
-+				     ETHTOOL_COALESCE_TX_MAX_FRAMES,
-+
- 	.get_link_ksettings = hinic_get_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
-+	.get_coalesce = hinic_get_coalesce,
-+	.set_coalesce = hinic_set_coalesce,
-+	.get_per_queue_coalesce = hinic_get_per_queue_coalesce,
-+	.set_per_queue_coalesce = hinic_set_per_queue_coalesce,
- 	.get_channels = hinic_get_channels,
- 	.set_channels = hinic_set_channels,
- 	.get_rxnfc = hinic_get_rxnfc,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 747d50b841ba..4de50e4ba4df 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -705,6 +705,68 @@ static int hinic_l2nic_reset(struct hinic_hwdev *hwdev)
- 	return 0;
- }
- 
-+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info)
-+{
-+	u16 out_size = sizeof(*interrupt_info);
-+	struct hinic_pfhwdev *pfhwdev;
-+	int err;
-+
-+	if (!hwdev || !interrupt_info)
-+		return -EINVAL;
-+
-+	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
-+
-+	interrupt_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
-+
-+	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+				HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
-+				interrupt_info, sizeof(*interrupt_info),
-+				interrupt_info, &out_size, HINIC_MGMT_MSG_SYNC);
-+	if (err || !out_size || interrupt_info->status) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Failed to get interrupt config, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, interrupt_info->status, out_size);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info)
-+{
-+	u16 out_size = sizeof(*interrupt_info);
-+	struct hinic_msix_config temp_info;
-+	struct hinic_pfhwdev *pfhwdev;
-+	int err;
-+
-+	if (!hwdev)
-+		return -EINVAL;
-+
-+	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
-+
-+	interrupt_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
-+
-+	err = hinic_get_interrupt_cfg(hwdev, &temp_info);
-+	if (err)
-+		return -EINVAL;
-+
-+	interrupt_info->lli_credit_cnt = temp_info.lli_timer_cnt;
-+	interrupt_info->lli_timer_cnt = temp_info.lli_timer_cnt;
-+
-+	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+				HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
-+				interrupt_info, sizeof(*interrupt_info),
-+				interrupt_info, &out_size, HINIC_MGMT_MSG_SYNC);
-+	if (err || !out_size || interrupt_info->status) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Failed to get interrupt config, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, interrupt_info->status, out_size);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * hinic_init_hwdev - Initialize the NIC HW
-  * @pdev: the NIC pci device
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index cc776ca2d737..ed3cc154ce18 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -285,6 +285,21 @@ struct hinic_cmd_l2nic_reset {
- 	u16	reset_flag;
- };
- 
-+struct hinic_msix_config {
-+	u8	status;
-+	u8	version;
-+	u8	rsvd0[6];
-+
-+	u16	func_id;
-+	u16	msix_index;
-+	u8	pending_cnt;
-+	u8	coalesce_timer_cnt;
-+	u8	lli_timer_cnt;
-+	u8	lli_credit_cnt;
-+	u8	resend_timer_cnt;
-+	u8	rsvd1[3];
-+};
-+
- struct hinic_hwdev {
- 	struct hinic_hwif               *hwif;
- 	struct msix_entry               *msix_entries;
-@@ -378,4 +393,10 @@ int hinic_hwdev_hw_ci_addr_set(struct hinic_hwdev *hwdev, struct hinic_sq *sq,
- void hinic_hwdev_set_msix_state(struct hinic_hwdev *hwdev, u16 msix_index,
- 				enum hinic_msix_state flag);
- 
-+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info);
-+
-+int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info);
-+
- #endif
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-index c2b142c08b0e..a3349ae30ff3 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-@@ -78,6 +78,9 @@ enum hinic_comm_cmd {
- 
- 	HINIC_COMM_CMD_CEQ_CTRL_REG_WR_BY_UP = 0x33,
- 
-+	HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
-+	HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
-+
- 	HINIC_COMM_CMD_L2NIC_RESET		= 0x4b,
- 
- 	HINIC_COMM_CMD_PAGESIZE_SET	= 0x50,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 76e3debfebe5..834a20a0043c 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -69,6 +69,10 @@ MODULE_PARM_DESC(rx_weight, "Number Rx packets for NAPI budget (default=64)");
- 
- #define HINIC_WAIT_SRIOV_CFG_TIMEOUT	15000
- 
-+#define HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT		2
-+#define HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG	32
-+#define HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG		7
-+
- static int change_mac_addr(struct net_device *netdev, const u8 *addr);
- 
- static int set_features(struct hinic_dev *nic_dev,
-@@ -1021,6 +1025,45 @@ static int set_features(struct hinic_dev *nic_dev,
- 	return 0;
- }
- 
-+static int hinic_init_intr_coalesce(struct hinic_dev *nic_dev)
-+{
-+	u64 size;
-+	u16 i;
-+
-+	size = sizeof(struct hinic_intr_coal_info) * nic_dev->max_qps;
-+	nic_dev->rx_intr_coalesce = kzalloc(size, GFP_KERNEL);
-+	if (!nic_dev->rx_intr_coalesce)
-+		return -ENOMEM;
-+	nic_dev->tx_intr_coalesce = kzalloc(size, GFP_KERNEL);
-+	if (!nic_dev->tx_intr_coalesce) {
-+		kfree(nic_dev->rx_intr_coalesce);
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < nic_dev->max_qps; i++) {
-+		nic_dev->rx_intr_coalesce[i].pending_limt =
-+			HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT;
-+		nic_dev->rx_intr_coalesce[i].coalesce_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG;
-+		nic_dev->rx_intr_coalesce[i].resend_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG;
-+		nic_dev->tx_intr_coalesce[i].pending_limt =
-+			HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT;
-+		nic_dev->tx_intr_coalesce[i].coalesce_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG;
-+		nic_dev->tx_intr_coalesce[i].resend_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG;
-+	}
-+
-+	return 0;
-+}
-+
-+static void hinic_free_intr_coalesce(struct hinic_dev *nic_dev)
-+{
-+	kfree(nic_dev->tx_intr_coalesce);
-+	kfree(nic_dev->rx_intr_coalesce);
-+}
-+
- /**
-  * nic_dev_init - Initialize the NIC device
-  * @pdev: the NIC pci device
-@@ -1156,6 +1199,12 @@ static int nic_dev_init(struct pci_dev *pdev)
- 
- 	SET_NETDEV_DEV(netdev, &pdev->dev);
- 
-+	err = hinic_init_intr_coalesce(nic_dev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Failed to init_intr_coalesce\n");
-+		goto err_init_intr;
-+	}
-+
- 	err = register_netdev(netdev);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to register netdev\n");
-@@ -1165,6 +1214,8 @@ static int nic_dev_init(struct pci_dev *pdev)
- 	return 0;
- 
- err_reg_netdev:
-+	hinic_free_intr_coalesce(nic_dev);
-+err_init_intr:
- err_set_pfc:
- err_set_features:
- 	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-@@ -1279,6 +1330,8 @@ static void hinic_remove(struct pci_dev *pdev)
- 
- 	unregister_netdev(netdev);
- 
-+	hinic_free_intr_coalesce(nic_dev);
-+
- 	hinic_port_del_mac(nic_dev, netdev->dev_addr, 0);
- 
- 	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index af20d0dd6de7..c9a65a1f0347 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -478,11 +478,15 @@ static irqreturn_t rx_irq(int irq, void *data)
- static int rx_request_irq(struct hinic_rxq *rxq)
- {
- 	struct hinic_dev *nic_dev = netdev_priv(rxq->netdev);
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct hinic_intr_coal_info *intr_coal = NULL;
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_qp *qp;
- 	int err;
- 
-+	qp = container_of(rq, struct hinic_qp, rq);
-+
- 	rx_add_napi(rxq);
- 
- 	hinic_hwdev_msix_set(hwdev, rq->msix_entry,
-@@ -490,13 +494,26 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 			     RX_IRQ_NO_LLI_TIMER, RX_IRQ_NO_CREDIT,
- 			     RX_IRQ_NO_RESEND_TIMER);
- 
-+	intr_coal = &nic_dev->rx_intr_coalesce[qp->q_id];
-+	interrupt_info.msix_index = rq->msix_entry;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(hwdev, &interrupt_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, rxq->netdev,
-+			  "Failed to set RX interrupt coalescing attribute\n");
-+		rx_del_napi(rxq);
-+		return err;
-+	}
-+
- 	err = request_irq(rq->irq, rx_irq, 0, rxq->irq_name, rxq);
- 	if (err) {
- 		rx_del_napi(rxq);
- 		return err;
- 	}
- 
--	qp = container_of(rq, struct hinic_qp, rq);
- 	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
- 	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
- }
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 4c66a0bc1b28..0f6d27f29de5 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -718,12 +718,17 @@ static irqreturn_t tx_irq(int irq, void *data)
- static int tx_request_irq(struct hinic_txq *txq)
- {
- 	struct hinic_dev *nic_dev = netdev_priv(txq->netdev);
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct hinic_intr_coal_info *intr_coal = NULL;
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_hwif *hwif = hwdev->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
- 	struct hinic_sq *sq = txq->sq;
-+	struct hinic_qp *qp;
- 	int err;
- 
-+	qp = container_of(sq, struct hinic_qp, sq);
-+
- 	tx_napi_add(txq, nic_dev->tx_weight);
- 
- 	hinic_hwdev_msix_set(nic_dev->hwdev, sq->msix_entry,
-@@ -731,6 +736,20 @@ static int tx_request_irq(struct hinic_txq *txq)
- 			     TX_IRQ_NO_LLI_TIMER, TX_IRQ_NO_CREDIT,
- 			     TX_IRQ_NO_RESEND_TIMER);
- 
-+	intr_coal = &nic_dev->tx_intr_coalesce[qp->q_id];
-+	interrupt_info.msix_index = sq->msix_entry;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(hwdev, &interrupt_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, txq->netdev,
-+			  "Failed to set TX interrupt coalescing attribute\n");
-+		tx_napi_del(txq);
-+		return err;
-+	}
-+
- 	err = request_irq(sq->irq, tx_irq, 0, txq->irq_name, txq);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to request Tx irq\n");
--- 
-2.17.1
 
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
+
+Regards,
+Markus
