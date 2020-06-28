@@ -2,77 +2,172 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02270C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBF6620708
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E2420708
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O3guhNgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgF1NK6 (ORCPT
+        id S1726459AbgF1NOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 09:10:58 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51411 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726342AbgF1NK6 (ORCPT
+        Sun, 28 Jun 2020 09:14:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28747 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726316AbgF1NOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 09:10:58 -0400
-Received: (qmail 367302 invoked by uid 1000); 28 Jun 2020 09:10:56 -0400
-Date:   Sun, 28 Jun 2020 09:10:56 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200628131056.GA366822@rowland.harvard.edu>
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <5c10d65c-14ba-d2d5-ee7f-c4579432823e@acm.org>
+        Sun, 28 Jun 2020 09:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593350088;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D80MHniFvVdP34Lif7QfAUEYjZEaAApyLQyjZ2F/dKc=;
+        b=O3guhNgq3U5Agz0zbukWwyionDizyGgAUsJPVT8UEPyLyZRclOp5a/5Rbaf8LfNQkPzB1J
+        jJlyEbKqneQRBpeulLUSOHD8fxC/gA5xhIVXW2ldOTRVgALOtw6UHfSyq998MuQY1ozQr/
+        EpBYDhocR9h/TKIHJoYZ5ejLjIIs9Lo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-chsEpeSbMFqmUuSsxSLDtQ-1; Sun, 28 Jun 2020 09:14:44 -0400
+X-MC-Unique: chsEpeSbMFqmUuSsxSLDtQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8348CBFC0;
+        Sun, 28 Jun 2020 13:14:42 +0000 (UTC)
+Received: from starship (unknown [10.35.206.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ABBB94B40;
+        Sun, 28 Jun 2020 13:14:40 +0000 (UTC)
+Message-ID: <bffe8da0944fad97c60bbd4e73dc970ee3a7a2c0.camel@redhat.com>
+Subject: Re: Commit 'fs: Do not check if there is a fsnotify watcher on
+ pseudo inodes' breaks chromium here
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Jun 2020 16:14:39 +0300
+In-Reply-To: <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
+References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
+         <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c10d65c-14ba-d2d5-ee7f-c4579432823e@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 07:37:54PM -0700, Bart Van Assche wrote:
-> On 2020-06-26 08:44, Alan Stern wrote:
-> > On Fri, Jun 26, 2020 at 08:07:51AM -0700, Bart Van Assche wrote:
-> >> As far as I know runtime power management support in the sd driver is working
-> >> fine and is being used intensively by the UFS driver. The following commit was
-> >> submitted to fix a bug encountered by an UFS developer: 05d18ae1cc8a ("scsi:
-> >> pm: Balance pm_only counter of request queue during system resume") # v5.7.
+On Sun, 2020-06-28 at 15:53 +0300, Amir Goldstein wrote:
+> On Sun, Jun 28, 2020 at 2:14 PM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+> > Hi,
 > > 
-> > I just looked at that commit for the first time.
+> > I just did usual kernel update and now chromium crashes on startup.
+> > It happens both in a KVM's VM (with virtio-gpu if that matters) and natively with amdgpu driver.
+> > Most likely not GPU related although I initially suspected that it is.
 > > 
-> > Instead of making the SCSI driver do the work of deciding what routine to 
-> > call, why not redefine blk_set_runtime_active(q) to simply call 
-> > blk_post_runtime_resume(q, 0)?  Or vice versa: if err == 0 have 
-> > blk_post_runtime_resume call blk_set_runtime_active?
+> > Chromium starts as a white rectangle, shows few white rectangles
+> > that resemble its notifications and then crashes.
 > > 
-> > After all, the two routines do almost the same thing -- and the bug 
-> > addressed by this commit was caused by the difference in their behaviors.
+> > The stdout output from chromium:
 > > 
-> > If the device was already runtime-active during the system suspend, doing 
-> > an extra clear of the pm_only counter won't hurt anything.
+> [...]
 > 
-> Hi Alan,
+> > Received signal 6
+> > #0 0x55f6da0120d9 base::debug::CollectStackTrace()
+> > #1 0x55f6d9f75246 base::debug::StackTrace::StackTrace()
+> > #2 0x55f6da01170a base::debug::(anonymous namespace)::StackDumpSignalHandler()
+> > #3 0x55f6da011cfe base::debug::(anonymous namespace)::StackDumpSignalHandler()
+> > #4 0x7ff46643ab20 (/usr/lib64/libpthread-2.30.so+0x14b1f)
+> > #5 0x7ff462d87625 __GI_raise
+> > #6 0x7ff462d708d9 __GI_abort
+> > #7 0x55f6da0112d5 base::debug::BreakDebugger()
+> > #8 0x55f6d9f86405 logging::LogMessage::~LogMessage()
+> > #9 0x55f6d7ed5488 content::(anonymous namespace)::IntentionallyCrashBrowserForUnusableGpuProcess()
+> > #10 0x55f6d7ed8479 content::GpuDataManagerImplPrivate::FallBackToNextGpuMode()
+> > #11 0x55f6d7ed4eef content::GpuDataManagerImpl::FallBackToNextGpuMode()
+> > #12 0x55f6d7ee0f41 content::GpuProcessHost::RecordProcessCrash()
+> > #13 0x55f6d7ee105d content::GpuProcessHost::OnProcessCrashed()
+> > #14 0x55f6d7cbe308 content::BrowserChildProcessHostImpl::OnChildDisconnected()
+> > #15 0x55f6da8b511a IPC::ChannelMojo::OnPipeError()
+> > #16 0x55f6da13cd62 mojo::InterfaceEndpointClient::NotifyError()
+> > #17 0x55f6da8c1f9d IPC::(anonymous namespace)::ChannelAssociatedGroupController::OnPipeError()
+> > #18 0x55f6da138968 mojo::Connector::HandleError()
+> > #19 0x55f6da15bce7 mojo::SimpleWatcher::OnHandleReady()
+> > #20 0x55f6da15c0fb mojo::SimpleWatcher::Context::CallNotify()
+> > #21 0x55f6d78eaa73 mojo::core::WatcherDispatcher::InvokeWatchCallback()
+> > #22 0x55f6d78ea38f mojo::core::Watch::InvokeCallback()
+> > #23 0x55f6d78e6efa mojo::core::RequestContext::~RequestContext()
+> > #24 0x55f6d78db76a mojo::core::NodeChannel::OnChannelError()
+> > #25 0x55f6d78f232a mojo::core::(anonymous namespace)::ChannelPosix::OnFileCanReadWithoutBlocking()
+> > #26 0x55f6da03345e base::MessagePumpLibevent::OnLibeventNotification()
+> > #27 0x55f6da0f9b2d event_base_loop
+> > #28 0x55f6da03316d base::MessagePumpLibevent::Run()
+> > #29 0x55f6d9fd79c9 base::sequence_manager::internal::ThreadControllerWithMessagePumpImpl::Run()
+> > #30 0x55f6d9fada7a base::RunLoop::Run()
+> > #31 0x55f6d7ce6324 content::BrowserProcessSubThread::IOThreadRun()
+> > #32 0x55f6d9fe0cb8 base::Thread::ThreadMain()
+> > #33 0x55f6da024705 base::(anonymous namespace)::ThreadFunc()
+> > #34 0x7ff46642f4e2 start_thread
+> > #35 0x7ff462e4c6a3 __GI___clone
+> >   r8: 0000000000000000  r9: 00007ff44e6a58d0 r10: 0000000000000008 r11: 0000000000000246
+> >  r12: 00007ff44e6a6b40 r13: 00007ff44e6a6d00 r14: 000000000000006d r15: 00007ff44e6a6b30
+> >   di: 0000000000000002  si: 00007ff44e6a58d0  bp: 00007ff44e6a5b20  bx: 00007ff44e6a9700
+> >   dx: 0000000000000000  ax: 0000000000000000  cx: 00007ff462d87625  sp: 00007ff44e6a58d0
+> >   ip: 00007ff462d87625 efl: 0000000000000246 cgf: 002b000000000033 erf: 0000000000000000
+> >  trp: 0000000000000000 msk: 0000000000000000 cr2: 0000000000000000
+> > [end of stack trace]
+> > Calling _exit(1). Core file will not be generated.
+> > 
+> > 
 > 
-> Do you want to submit a patch that implements this change or do you
-> perhaps expect me to do that?
+> I guess this answers our question whether we could disable fsnoitfy
+> watches on pseudo inodes....
+> 
+> From comments like these in chromium code:
+> https://chromium.googlesource.com/chromium/src/+/master/mojo/core/watcher_dispatcher.cc#77
+> https://chromium.googlesource.com/chromium/src/+/master/base/files/file_descriptor_watcher_posix.cc#176
+> https://chromium.googlesource.com/chromium/src/+/master/ipc/ipc_channel_mojo.cc#240
+> 
+> I am taking a wild guess that the missing FS_CLOSE event on anonymous pipes is
+> the cause for regression.
+> 
+> The motivation for the patch "fs: Do not check if there is a fsnotify
+> watcher on pseudo inodes"
+> was performance, but actually, FS_CLOSE and FS_OPEN events probably do
+> not impact
+> performance as FS_MODIFY and FS_ACCESS.
+> 
+> Mel,
+> 
+> Do your perf results support the claim above?
+> 
+> Jan/Linus,
+> 
+> Do you agree that dropping FS_MODIFY/FS_ACCESS events for FMODE_STREAM
+> files as a general rule should be safe?
+> 
+> Maxim, can you try if the attached patch fixes the chromium regression.
+> It is expected to leave the FS_OPEN/FS_CLOSE events on anonymous pipes
+> but drop the FS_MODIFY/FS_ACCESS events.
+Tested this (in the VM this time) and it works.
 
-I'll submit a patch in a few days.  I just wanted to check first that the 
-idea was sound.
+Best regards,
+	Maxim Levitsky
 
-Alan Stern
+> 
+> Thanks,
+> Amir.
+
+
