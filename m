@@ -2,114 +2,123 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2831C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E77520663
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="i1HCOhmR"
+	by mail.kernel.org (Postfix) with ESMTP id 9131020738
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgF1OA4 (ORCPT
+        id S1726503AbgF1OFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 10:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgF1OA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 10:00:56 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0418AC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 07:00:56 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id d6so6898813pjs.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 07:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ONqbasDyxWogZeTKAn4mK/woyA98Q/3ofEsG6iZPlpg=;
-        b=i1HCOhmR1tFnazLFHtuhOVYLNpnz+Gpm5AsH/86ONkWloYAmMt3GXFk0aU0i6z7k45
-         /xIvMDm0RqGzlZl6l1wNAjr/bsfCv1OltyHc/PZgTIqP9dhO6EkUDrE5qQpxkEH2dZpB
-         vo44+3mt9kYQGqtpll4NfE2H93jRIA0++bbi8gZfZHLmQNQCg/y0glpxnatWMlJw2bcn
-         w195gmdHBlyVY5Tun4sbcKllXVgxehneNJCvfk3cN92h2riE21iHFYMctVUT8Wxo+PnI
-         6LipXHfWqwBRgzmnFNnyDWOYZ6H5J6BC1oL0n+vuROuzTG6GKj5ffcFWg8sg1BEvEIX4
-         dxhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ONqbasDyxWogZeTKAn4mK/woyA98Q/3ofEsG6iZPlpg=;
-        b=CQhKR2VrBzjNOD3xEcM7o2XwC0MBsJQ2XGkCHSL8rBto2enO3JMV5DHYltmyKIZXxS
-         hogjZLaw81A6sq6Q797g4MY+uF21BxQyXDlKqJn0tuIf+8w77Datfzer/tEdVqdfMBgt
-         udqE+coGJAzb5Vlf1A+WJibr9EcBFqhCW1IW5bZ4y0/VctQ6Z9GXKt4sH7/Q1E0ZFHBg
-         bDFHWEqnrI6VBNVEeJDN/rVWEjKO6p55oOZf/rJvxQew84Brm09I7Cf6NgsWkzxYfCjQ
-         LL8Ih6aLB1h5iijdCg/lq765+/eWS2GaH4aJiX8j2AIO5mrwjwk4mjNGY27WcZdPC+AE
-         XxlA==
-X-Gm-Message-State: AOAM530P6hs2cDUCPe0wKiC/qK8Yj8Rq9hqnDN+Yymo5atWBxn2wgA41
-        Ytu8EJP8HtJGNzFIz3QCrLDyUFKwltH83Q==
-X-Google-Smtp-Source: ABdhPJyNtziaTqMpGn5TWMxl8uEIj37gpLxMNdAWeTPiR/7535ku0gUvIgKllHTttmyFij49P+JQIg==
-X-Received: by 2002:a17:90a:3e02:: with SMTP id j2mr3409194pjc.47.1593352854930;
-        Sun, 28 Jun 2020 07:00:54 -0700 (PDT)
-Received: from localhost ([2406:7400:73:ff29:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id n89sm12578553pjb.1.2020.06.28.07.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 07:00:53 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 10:00:46 -0400
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org
-Subject: [REPORT] False positive errors found while using
- scripts/checkpatch.pl
-Message-ID: <20200628140046.imqmf5vy2vvbwkzo@pesu-pes-edu>
+        Sun, 28 Jun 2020 10:05:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33266 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbgF1OFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 10:05:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D8F3CAC91;
+        Sun, 28 Jun 2020 14:05:29 +0000 (UTC)
+Date:   Sun, 28 Jun 2020 16:05:23 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] x86/entry for 5.8
+Message-ID: <20200628140523.GA18884@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="g4vybuynwhjz2ry6"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---g4vybuynwhjz2ry6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+please pull the x86/entry urgent pile which has accumulated since the
+merge window. It is not the smallest but considering the almost complete
+entry core rewrite, the amount of fixes to follow is somewhat higher
+than usual, which is to be expected.
 
-The following are reported while using checkpatch.pl on=20
-drivers/staging/fbtft/fbtft-bus.c
+Thx.
 
-ERROR: space prohibited before that close parenthesis ')'
-#65: FILE: drivers/staging/fbtft/fbtft-bus.c:65:
-+define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
+---
+The following changes since commit 8be3a53e18e0e1a98f288f6c7f5e9da3adbe9c49:
 
-ERROR: space prohibited before that close parenthesis ')'
-#67: FILE: drivers/staging/fbtft/fbtft-bus.c:67:
-+define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
+  Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs (2020-06-24 17:39:30 -0700)
 
-These are false positives as correcting these issues breaks the build.
+are available in the Git repository at:
 
---g4vybuynwhjz2ry6
-Content-Type: application/pgp-signature; name="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_entry_for_5.8
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to 2c92d787cc9fad57d05c96bd117782183768258a:
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl74oo4ACgkQ471Q5AHe
-Z2pNzAwAnrfOzbE5u7WWJfZnQD5GfjLtywSEm29NBnNk9XPFmEyJ3ZvPp3brXlw7
-W1DvH7RHWtI/vzy+VuIlXV0La1QBOGvbuq8zbN59nsWM0L/8apOGPDlTnfwcVWhs
-OYLPLQi4TZgM4bLngNj4NHI3PIAJesVD3ZMr9nEYl8CJ0sw0Sk/6PQRJIELrgLZV
-TtRSTOLqfMsGCtfb7jFVMaHiiGveTyu4LtxDyTcETn59EKIqsNgWhuhehZcL8NY7
-YYS4lNRQq9ANYOzfrVCOZfy2frW7FNyOy5HoO4wvCvDOCvK6KNHd2tjTH6ghrSNt
-iqF/FDCQXWE+5oSFLzdKh/ZTd4jBCHXLztuL4jjVAB+qmJLQK9ovUoMu5XMD4H/N
-NQJP2TD7qWlmmDDKSRL8YQgTHXLvwaDnAEeARSqma8Y5gt/hzZBV9cqdK/A8372R
-v+aYPXN+MU2NkeeJo9srlSTf4e+Bxluhk0tqw9LISDSCg42SEY43BbxW75yJL2cw
-42r/939h
-=37ir
------END PGP SIGNATURE-----
+  Merge branch 'linus' into x86/entry, to resolve conflicts (2020-06-26 12:24:42 +0200)
 
---g4vybuynwhjz2ry6--
+----------------------------------------------------------------
+Peter Zijlstra says:
+
+These patches address a number of instrumentation issues that were found after
+the x86/entry overhaul. When combined with rcu/urgent and objtool/urgent, these
+patches make UBSAN/KASAN/KCSAN happy again.
+
+Part of making this all work is bumping the minimum GCC version for KASAN
+builds to gcc-8.3, the reason for this is that the __no_sanitize_address
+function attribute is broken in GCC releases before that.
+
+No known GCC version has a working __no_sanitize_undefined, however because the
+only noinstr violation that results from this happens when an UB is found, we
+treat it like WARN. That is, we allow it to violate the noinstr rules in order
+to get the warning out.
+
+----------------------------------------------------------------
+Ingo Molnar (1):
+      Merge branch 'linus' into x86/entry, to resolve conflicts
+
+Marco Elver (4):
+      kasan: Bump required compiler version
+      compiler_types.h: Add __no_sanitize_{address,undefined} to noinstr
+      compiler_attributes.h: Support no_sanitize_undefined check with GCC 4
+      kasan: Fix required compiler version
+
+Peter Zijlstra (10):
+      x86, kcsan: Remove __no_kcsan_or_inline usage
+      kcsan: Remove __no_kcsan_or_inline
+      x86, kcsan: Add __no_kcsan to noinstr
+      x86/entry, cpumask: Provide non-instrumented variant of cpu_is_offline()
+      x86/entry, ubsan, objtool: Whitelist __ubsan_handle_*()
+      x86/entry, bug: Comment the instrumentation_begin() usage for WARN()
+      objtool: Don't consider vmlinux a C-file
+      x86/entry: Fixup bad_iret vs noinstr
+      x86/entry: Increase entry_stack size to a full page
+      x86/entry: Fix #UD vs WARN more
+
+ Documentation/dev-tools/kcsan.rst   |  6 ---
+ arch/x86/include/asm/bitops.h       |  6 +--
+ arch/x86/include/asm/bug.h          |  6 +++
+ arch/x86/include/asm/cpumask.h      | 18 +++++++++
+ arch/x86/include/asm/processor.h    |  2 +-
+ arch/x86/kernel/cpu/mce/core.c      |  2 +-
+ arch/x86/kernel/nmi.c               |  2 +-
+ arch/x86/kernel/traps.c             | 78 +++++++++++++++++++------------------
+ arch/x86/lib/memcpy_64.S            |  4 ++
+ include/linux/compiler-clang.h      |  8 ++++
+ include/linux/compiler-gcc.h        |  6 +++
+ include/linux/compiler_attributes.h |  1 +
+ include/linux/compiler_types.h      | 14 +++----
+ lib/Kconfig.kasan                   |  4 ++
+ tools/objtool/check.c               | 30 +++++++++++++-
+ 15 files changed, 126 insertions(+), 61 deletions(-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
