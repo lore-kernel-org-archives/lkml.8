@@ -2,95 +2,126 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9635C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 08:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B610C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 08:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9208320775
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 08:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEE720773
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 08:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoxSsu1c"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SYdIbHiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgF1ICj (ORCPT
+        id S1726178AbgF1IC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 04:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgF1ICi (ORCPT
+        Sun, 28 Jun 2020 04:02:59 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42932 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgF1IC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 04:02:38 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEA9C061794;
-        Sun, 28 Jun 2020 01:02:38 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dm19so3834336edb.13;
-        Sun, 28 Jun 2020 01:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ImT/z6HRlqF9wUIfKM7sD2bCnF81PCfYcsSDMaBnhGc=;
-        b=FoxSsu1cPWMqMvmeVSqteaMCX49HGWdG8tw5XWmMjTQ5VkJYnC8ZfO3OHO3NaNjP3L
-         GieCzjGP5IOxy2qrUCS939V6uAGuPRRRYKAdBRDO2GcUZu2WGHcVAEJk7HInpZGrpcPE
-         1Uid9r32oMOXA9k/nqVs1xNovcBHwDudpfzRJQmbiNRTNuEUJTRRflfwmmOpIYla9Nzy
-         pmEvJCyAZ85E1Kz7sAsuu4YoVMORHRulZZbTr6EO7hJo9gBujjuGiuziikA5q8QnPhA3
-         6xOBf2c7kcOXMh0ODMykXsq8ZV094iAdPdt4qVUdbCNfQnaBMhhzpyltdHedQ/MLWCGH
-         83Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ImT/z6HRlqF9wUIfKM7sD2bCnF81PCfYcsSDMaBnhGc=;
-        b=nHIPVKAdNPqsZGqrFNTHZBmqosIC3X4O0RvdxBZavPdlcPAv3Vc/a2P98XWqOiA0K+
-         q3Xo8AhPcA0emccx2nXf1aMH4Cx6a7OuY0vLILf5EK6VERDq9y+tbt6oS9aFanMJ7kuo
-         pHodc0QOTKsIe9KsREAAa3oTjMSDA8oWMcWZ/5Y9oMm9gVe+0GttMI+etYubzoczDF3Y
-         5SPeNyuw3gYbs97Ox1Nv/FLKKVCyyEm7Q/G6qWHYNUA1kc/G0wDADKwUGgoKHDqolNQ1
-         MjQU3TWCkmDq+8UT3v+9of3BkksX8Nd7b3YpEvitnBiV+WcactQTwmhF7Tx5v8w2fD6R
-         qcBQ==
-X-Gm-Message-State: AOAM530uVH6XNdtGu/BgSpKFZ3iHYCH/E+rR0l7DTSro+65DcjJAi+4w
-        NKMdArQDJ8lc/XNeFnGfXb5KNZswmNs7dTaA4Cc=
-X-Google-Smtp-Source: ABdhPJw96Fu/gzHDKV1//oEkAgNYwQo9MIDUh5woTzG9gNIQJFcnYK9CofMozqvVpHwOCNAwnwzuGsE+5X/oQFlnwAA=
-X-Received: by 2002:a50:ec8f:: with SMTP id e15mr11535293edr.70.1593331356976;
- Sun, 28 Jun 2020 01:02:36 -0700 (PDT)
+        Sun, 28 Jun 2020 04:02:58 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3BE854FB;
+        Sun, 28 Jun 2020 10:02:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593331376;
+        bh=nESMEEzOIRljPa7RAK8ux5xjY76qkCuwalXmm9dYPSo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SYdIbHiF9Bq1TVmfEgpI03wV7vnpqn34KS8O128xqXeK3NzTFCd2WZESfCf1WuJqJ
+         T3PTnIEPcI8mp4C/8tfyc827Z0tUoNECApMEfw9ijOV9GLywyXsiHq54f+ABU8MLKL
+         JWgeoyPs2lEZlqlYkU1OIUWNqyX69wli98bOzhBU=
+Date:   Sun, 28 Jun 2020 11:02:53 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] drm/panel-simple: Add missing BUS descriptions
+ for some panels
+Message-ID: <20200628080253.GD6954@pendragon.ideasonboard.com>
+References: <20200621222742.25695-1-digetx@gmail.com>
+ <20200621222742.25695-3-digetx@gmail.com>
+ <20200627204338.GL5966@pendragon.ideasonboard.com>
+ <dd1c5972-bbac-c2d8-76e8-08997b951e52@gmail.com>
+ <20200628070745.GC6954@pendragon.ideasonboard.com>
+ <20200628075245.GA128039@ravnborg.org>
 MIME-Version: 1.0
-References: <20200501203311.143934-1-konradybcio@gmail.com>
- <20200501203311.143934-2-konradybcio@gmail.com> <20200628073908.GA8343@dragon>
-In-Reply-To: <20200628073908.GA8343@dragon>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Sun, 28 Jun 2020 10:02:01 +0200
-Message-ID: <CAMS8qEWb6tZxVvy=bqNAt1th_WoqqCQSJjMy3kbBAv-ZCWVQoQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] thermal: qcom: tsens-v0_1: Add support for MSM8939
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200628075245.GA128039@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+Hi Sam,
 
-Thanks for your review.
+On Sun, Jun 28, 2020 at 09:52:45AM +0200, Sam Ravnborg wrote:
+> On Sun, Jun 28, 2020 at 10:07:45AM +0300, Laurent Pinchart wrote:
+> > On Sun, Jun 28, 2020 at 02:44:15AM +0300, Dmitry Osipenko wrote:
+> >> 27.06.2020 23:43, Laurent Pinchart пишет:
+> >>> On Mon, Jun 22, 2020 at 01:27:42AM +0300, Dmitry Osipenko wrote:
+> >>>> This patch adds missing BUS fields to the display panel descriptions of
+> >>>> the panels which are found on NVIDIA Tegra devices:
+> >>>>
+> >>>>   1. AUO B101AW03
+> >>>>   2. Chunghwa CLAA070WP03XG
+> >>>>   3. Chunghwa CLAA101WA01A
+> >>>>   4. Chunghwa CLAA101WB01
+> >>>>   5. Innolux N156BGE L21
+> >>>>   6. Samsung LTN101NT05
+> >>>>
+> >>>> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>> ---
+> >>>>  drivers/gpu/drm/panel/panel-simple.c | 12 ++++++++++++
+> >>>>  1 file changed, 12 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> >>>> index 87edd2bdf09a..986df9937650 100644
+> >>>> --- a/drivers/gpu/drm/panel/panel-simple.c
+> >>>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> >>>> @@ -698,6 +698,8 @@ static const struct panel_desc auo_b101aw03 = {
+> >>>>  		.width = 223,
+> >>>>  		.height = 125,
+> >>>>  	},
+> >>>> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> >>>> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+> >>> 
+> >>> Does DRM_BUS_FLAG_PIXDATA_DRIVE_* make sense for LVDS ?
+> >> 
+> >> To be honest I don't know whether it make sense or not for LVDS. I saw
+> >> that other LVDS panels in panel-simple.c use the PIXDATA flag and then
+> >> looked at what timing diagrams in the datasheets show.
+> > 
+> > I think we should drop DRM_BUS_FLAG_PIXDATA_DRIVE_* for LVDS panels.
+> > I'll submit a patch.
+> 
+> We should also clean up all the DRM_BUS_FLAG_* one day.
+> No need for the deprecated values, so a few files needs an update.
+> And we could document what flags makes sense for LVDS etc.
 
->For the record, I'm working my version of msm8939 tsens driver support,
->and I would highlight the things that differ from this patch.
+Where would you add that documentation ? The hardest part is to find a
+place that will be noticed by developers :-)
 
-I would be absolutely happy if you superseded that patch with your one, as
-I'm currently working on sdm630.
+I've just submitted a patch that adds a WARN_ON to catch similar issues
+in the panel-simple driver. It's not ideal as we really shouldn't have
+such code in the kernel, this is something that should be caught as part
+of the integration process.
 
-Otherwise, thanks for pointing out the stuff I got wrong in the first place.
+> On the TODO list...
+>
+> >>> The rest looks good, except the Samsung panel for which I haven't been
+> >>> able to locate a datasheet.
+> >>> 
+> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Regards
-Konrad
+-- 
+Regards,
+
+Laurent Pinchart
