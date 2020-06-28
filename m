@@ -2,137 +2,210 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB06C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB16CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898FE20775
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B398320768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="BrvlO/OZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rqJE4sGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgF1HT3 (ORCPT
+        id S1726131AbgF1HTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:19:29 -0400
-Received: from m1514.mail.126.com ([220.181.15.14]:54939 "EHLO
-        m1514.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgF1HT2 (ORCPT
+        Sun, 28 Jun 2020 03:19:40 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:10706 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgF1HTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 03:19:28 -0400
-X-Greylist: delayed 1889 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jun 2020 03:19:27 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=/EfVl
-        9jaErOonQ6lQzf9oi45csPLkH5eaVbWiGfOfuQ=; b=BrvlO/OZDrXHWDxY5mnrG
-        0Qsl/n9Mmaz4+FjNDUVn0U2ZPRXVOrV4h63rTSfg/jcT2bkik9V368kTnskfYhgU
-        hD7myh5Li70B4oOMg8vUkO5S2G/3UphK5iMM+6ToBJSZZ49/KT5RvOs+u7bKjc4Y
-        lFewl1wg4/DGZCPqxCv0u8=
-Received: from jiangying8582$126.com ( [103.37.140.35] ) by
- ajax-webmail-wmsvr14 (Coremail) ; Sun, 28 Jun 2020 14:47:43 +0800 (CST)
-X-Originating-IP: [103.37.140.35]
-Date:   Sun, 28 Jun 2020 14:47:43 +0800 (CST)
-From:   =?GBK?B?varTrQ==?= <jiangying8582@126.com>
-To:     tytso@mit.edu
-Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: fix direct I/O read error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
- Copyright (c) 2002-2020 www.mailtech.cn 126com
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
-MIME-Version: 1.0
-Message-ID: <7925c422.4205.172f9ae864d.Coremail.jiangying8582@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: DsqowACXPukRPfheEN3PAA--.28450W
-X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbi6AJRAFpEA+roqAABsN
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+        Sun, 28 Jun 2020 03:19:39 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200628071934epoutp036211e3f368d3595bc5943eabe64b1968~cpBQj8z5i1109211092epoutp039
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 07:19:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200628071934epoutp036211e3f368d3595bc5943eabe64b1968~cpBQj8z5i1109211092epoutp039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593328774;
+        bh=U5bCAylv9v74Vxh+t9kxZLZPnSAWCem1WQ1+eCTKR/k=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=rqJE4sGaEEgq3jDkh/xHkzGKEdwhC4pyHQlj10PbahYjovAqn2xS7Y7X+d+kFbRjp
+         +bnoJbtW5SKDDUDT3r+OvTdu4l5x9MwjA2GgZnb+SRmCLCj0Kh0RtiRyXSEOC+GmNx
+         gkU1jDM2/2ZVfnH4WuThE8u1EFxUGxkFfdK9Gl7Y=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200628071933epcas5p43dd0a4cc1855a0c5a848817359ebec08~cpBPUs9ng2628226282epcas5p4d;
+        Sun, 28 Jun 2020 07:19:33 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DB.25.09475.58448FE5; Sun, 28 Jun 2020 16:19:33 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200628071932epcas5p175059c085421a95de76202767bd132cf~cpBOM0jc60161501615epcas5p1c;
+        Sun, 28 Jun 2020 07:19:32 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200628071932epsmtrp2a6d9c4710c6850d21c61ca7ecdd1f1e5~cpBOMHmI72807428074epsmtrp2n;
+        Sun, 28 Jun 2020 07:19:32 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-d2-5ef844854459
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        52.8B.08382.38448FE5; Sun, 28 Jun 2020 16:19:31 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200628071930epsmtip240ad58abaf028fd4b1e3e2bf628603c8~cpBMvJ2nf1085610856epsmtip2h;
+        Sun, 28 Jun 2020 07:19:30 +0000 (GMT)
+From:   Tamseel Shams <m.shams@samsung.com>
+To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH v2] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Date:   Sun, 28 Jun 2020 12:30:07 +0530
+Message-Id: <20200628070007.36222-1-m.shams@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWy7bCmum6ry484gwWHuCwezNvGZtG8eD2b
+        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72S3uti5md+Dy2LSqk81j/9w1
+        7B6bl9R79G1ZxeixfstVFo/Pm+QC2KK4bFJSczLLUov07RK4MrbOES94KF3R/G81YwPjLLEu
+        Rk4OCQETiRl3DjB3MXJxCAnsZpR4dPkjI4TziVHi7sl97BDON0aJ1Q9Ps8G0PJ06kRUisZdR
+        4tb6q1D9LUwS6xauAurn4GAT0JQ4fp4bpEFEIETi3dktYGOZBU4ySuzd3MACkhAWiJbYcmMR
+        I4jNIqAq8f/HHLBeXgELid7ZmRDL5CVWb4C4T0LgFLtEw+k7TBAJF4lt61eyQNjCEq+Ob2GH
+        sKUkPr/bC3VpvsT8eauYIewKiZUX3kDZ9hIHrsxhAdnFDHTn+l36IGFmAT6J3t9PmEDCEgK8
+        Eh1tQhDVihL/d/dDTReXeLdiCiuE7SGx+cgssGuEBGIluk4dYpvAKDMLYegCRsZVjJKpBcW5
+        6anFpgXGeanlesWJucWleel6yfm5mxjBKUDLewfjowcf9A4xMnEwHmKU4GBWEuH9bP0tTog3
+        JbGyKrUoP76oNCe1+BCjNAeLkjiv0o8zcUIC6YklqdmpqQWpRTBZJg5OqQamaOtjjv9nMs37
+        EX77wNbI3S7Zhr/Pq845aeWjeeyaRNyPG/bmD4PUdu/sCGnebfu+tYD3zJKMv/UBrgKfLXZq
+        Li+vOrlumrqt5j5tSb7QuYksu9OmXVsY2uMhflYqfr+OZ6xltIn3/MiOLY+ad7Ef7t3j9Whe
+        wXTu6OxfFY92cItEHBCvZm/1quo2/LakqHvZp73n7XbUrikLedxTutxw3+m/X5a2rE0Ulf+9
+        OP+S5p07DE+fay/7VOvDtWr98dm65zZ/0j/a/Vzlxsz0q8rlvGc9rsTf05RzX/P7Zv1D8f9f
+        Gy7oRc21WZjT+pHtnhKjb09/XalAqK377P3hxnMV2G/1/yhdlpEYHiNiojtFiaU4I9FQi7mo
+        OBEAa5kbWnADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LZdlhJXrfZ5UecQe8+S4sH87axWTQvXs9m
+        MWXDByaL/sevmS3On9/AbrHp8TVWi8u75rBZzDi/j8nizOJedou7rYvZHbg8Nq3qZPPYP3cN
+        u8fmJfUefVtWMXqs33KVxePzJrkAtigum5TUnMyy1CJ9uwSujK1zxAseSlc0/1vN2MA4S6yL
+        kZNDQsBE4unUiaxdjFwcQgK7GSU+HLnOBpEQl5j2az8jhC0ssfLfc3aIoiYmiZVHVzB1MXJw
+        sAloShw/zw1iighESMz8WANSwixwnlFi5/HVTCC9wgKREss6NoDZLAKqEv9/zGEEqecVsJDo
+        nZ0JMV5eYvWGA8wTGHkWMDKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDjMtzR2M
+        21d90DvEyMTBeIhRgoNZSYT3s/W3OCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8NwoXxgkJpCeW
+        pGanphakFsFkmTg4pRqYjvUwxMXO6r/H/8Xgeq2eTd6Lp3+9TIznR/LEr3tadEfSvfL+U+We
+        14dcneM4Zd6kxzI84AovvB7XySBjkxg0W+oVx9snM6fs/DbL70aw4UTraWuDEziqDZyCUu78
+        mXmwIYH96jHl6MhDhU5FbzzWHSoLm/CrmlH3rk8p95xdtf6vhOYUe7ocihS3z8/MuSkx8dmX
+        xEy+/PvlRulX365RVg/rnJbf+KzUt7H2/Jn/OpPc/c6nnevlDNpU/j7oSOeywtnzvi88xhTq
+        zzKr8Put1BWWU288+HhmQkDe1kKpPPm9dfsmM11/9eAba+vjQ+t1v379Fmj6xPxvtkD+BaHO
+        DXP4nfcITXESzPq/4/0yJZbijERDLeai4kQAteDk3KICAAA=
+X-CMS-MailID: 20200628071932epcas5p175059c085421a95de76202767bd132cf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200628071932epcas5p175059c085421a95de76202767bd132cf
+References: <CGME20200628071932epcas5p175059c085421a95de76202767bd132cf@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogamlhbmd5aW5nODU4MiA8amlhbmd5aW5nODU4MkAxMjYuY29tPgpEYXRlOiBXZWQsIDI0
-IEp1biAyMDIwIDE5OjAyOjM0ICswODAwClN1YmplY3Q6IFtQQVRDSF0gZXh0NDogZml4IGRpcmVj
-dCBJL08gcmVhZCBlcnJvcgoKVGhpcyBwYXRjaCBpcyB1c2VkIHRvIGZpeCBleHQ0IGRpcmVjdCBJ
-L08gcmVhZCBlcnJvciB3aGVuCnRoZSByZWFkIHNpemUgaXMgbm90IGFsaWdubWVudCB3aXRoIGJs
-b2NrIHNpemUuIENvbXBhcmUgdGhlCnNpemUgYmV0d2VlbiByZWFkIG9mZnNldCB3aXRoIGZpbGUg
-c2l6ZSwgaWYgcmVhZCBvZmZzZXQgaXMKZ3JlYXRlciB0aGFuIGZpbGUgc2l6ZSwgdGhlbiByZXR1
-cm4gMC4KClRoZW4sIEkgd2lsbCB1c2UgYSB0ZXN0IHRvIGV4cGxhaW4gdGhlIGVycm9yLgooMSkg
-TWFrZSB0aGUgZmlsZSB0aGF0IGlzIG5vdCBhbGlnbm1lbnQgd2lodCBibG9jayBzaXplOgogICAg
-ICAgICRkZCBpZj0vZGV2L3plcm8gb2Y9Li90ZXN0LmphciBicz0xMDAwIGNvdW50PTMKCigyKSBJ
-IHdyb3RlIGEgdGVzdCBzY3JpcHQgbmFtZWQgImRpcmVjdF9pb19yZWFkX2ZpbGUuYyIgcyBmb2xs
-b3dpbmc6CgogICAgICAgICNpbmNsdWRlIDxzdGRpby5oPgogICAgICAgICNpbmNsdWRlIDxzdGRs
-aWIuaD4KICAgICAgICAjaW5jbHVkZSA8dW5pc3RkLmg+CiAgICAgICAgI2luY2x1ZGUgPHN5cy9m
-aWxlLmg+CiAgICAgICAgI2luY2x1ZGUgPHN5cy90eXBlcy5oPgogICAgICAgICNpbmNsdWRlIDxz
-eXMvc3RhdC5oPgogICAgICAgICNpbmNsdWRlIDxzdHJpbmcuaD4KICAgICAgICAjZGVmaW5lIEJV
-Rl9TSVpFIDEwMjQKCiAgICAgICAgaW50IG1haW4oKQogICAgICAgIHsKICAgICAgICAgICAgICAg
-IGludCBmZDsKICAgICAgICAgICAgICAgIGludCByZXQ7CgogICAgICAgICAgICAgICAgdW5zaWdu
-ZWQgY2hhciAqYnVmOwogICAgICAgICAgICAgICAgcmV0ID0gcG9zaXhfbWVtYWxpZ24oKHZvaWQg
-KiopJmJ1ZiwgNTEyLCBCVUZfU0laRSk7CiAgICAgICAgICAgICAgICBpZiAocmV0KSB7CiAgICAg
-ICAgICAgICAgICAgICAgICAgIHBlcnJvcigicG9zaXhfbWVtYWxpZ24gZmFpbGVkIik7CiAgICAg
-ICAgICAgICAgICAgICAgICAgIGV4aXQoMSk7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAg
-ICAgICBmZCA9IG9wZW4oIi4vdGVzdC5qYXIiLCBPX1JET05MWSB8IE9fRElSRUNULCAwNzU1KTsK
-ICAgICAgICAgICAgICAgIGlmIChmZCA8IDApewogICAgICAgICAgICAgICAgICAgICAgICBwZXJy
-b3IoIm9wZW4gLi90ZXN0LmphciBmYWlsZWQiKTsKICAgICAgICAgICAgICAgICAgICAgICAgZXhp
-dCgxKTsKICAgICAgICAgICAgICAgIH0KCiAgICAgICAgICAgICAgICBkbyB7CiAgICAgICAgICAg
-ICAgICAgICAgICAgIHJldCA9IHJlYWQoZmQsIGJ1ZiwgQlVGX1NJWkUpOwogICAgICAgICAgICAg
-ICAgICAgICAgICBwcmludGYoInJldD0lZFxuIixyZXQpOwogICAgICAgICAgICAgICAgICAgICAg
-ICBpZiAocmV0IDwgMCkgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBlcnJvcigi
-d3JpdGUgdGVzdC5qYXIgZmFpbGVkIik7CiAgICAgICAgICAgICAgICAgICAgICAgIH0KCiAgICAg
-ICAgICAgICAgICB9IHdoaWxlIChyZXQgPiAwKTsKCiAgICAgICAgICAgICAgICBmcmVlKGJ1Zik7
-CiAgICAgICAgICAgICAgICBjbG9zZShmZCk7CiAgICAgICAgfQoKKDMpIENvbXBpbGluZyB0aGUg
-c2NyaXB0OgogICAgICAgICRnY2MgZGlyZWN0X2lvX3JlYWRfZmlsZS5jIC1EX0dOVV9TT1VSQ0UK
-Cig0KSBFeGVjIHRoZSBzY3JpcHQ6CiAgICAgICAgJC4vYS5vdXQKCiAgICBUaGUgcmVzdWx0IGlz
-IGFzIGZvbGxvd2luZzoKICAgICAgICByZXQ9MTAyNAogICAgICAgIHJldD0xMDI0CiAgICAgICAg
-cmV0PTk1MgogICAgICAgIHJldD0tMQogICAgICAgIHdyaXRlIHJ0cy1zZWdtZW50ZXItMC4zLjcu
-Mi5qYXIgZmFpbGVkOiBJbnZhbGlkIGFyZ3VtZW50CgpJIGhhdmUgdGVzdGVkIHRoaXMgc2NyaXB0
-IG9uIFhGUyBmaWxlc3lzdGVtLCBYRlMgZG9lcyBub3QgaGF2ZQp0aGlzIHByb2JsZW0sIGJlY2F1
-c2UgWEZTIHVzZSBpb21hcF9kaW9fcncoKSB0byBkbyBkaXJlY3QgSS9PCnJlYWQuIEFuZCB0aGUg
-Y29tcGFyaW5nIGJldHdlZW4gcmVhZCBvZmZzZXQgYW5kIGZpbGUgc2l6ZSBpcyBkb25lCmlzIGlv
-bWFwX2Rpb19ydygpLCB0aGUgY29kZSBpcyBhcyBmb2xsb3dpbmc6CiAgICAgICAgaWYgKHBvcyA8
-IHNpemUpIHsKICAgICAgICAgICAgICAgIHJldHZhbCA9IGZpbGVtYXBfd3JpdGVfYW5kX3dhaXRf
-cmFuZ2UobWFwcGluZywgcG9zLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgcG9zICsgaW92X2xlbmd0aChpb3YsIG5yX3NlZ3MpIC0gMSk7CiAgICAgICAgICAgICAgICBp
-ZiAoIXJldHZhbCkgewogICAgICAgICAgICAgICAgICAgICAgICByZXR2YWwgPSBtYXBwaW5nLT5h
-X29wcy0+ZGlyZWN0X0lPKFJFQUQsIGlvY2IsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGlvdiwgcG9zLCBucl9zZWdzKTsKICAgICAgICAgICAgICAgIH0K
-ICAgICAgICAgICAgICAgIC4uLgogICAgICAgIH0KT25seSB3aGVuICJwb3MgPCBzaXplIiwgZGly
-ZWN0IEkvTyBjYW4gYmUgZG9uZSwgb3IgMCB3aWxsIGJlIHJldHVybi4KCkkgaGF2ZSB0ZXN0ZWQg
-bXkgZml4IHBhdGNoLCBpdCBpcyB1cCB0byB0aGUgbXVzdGFyZCBvZiBFSU5WQUwgaW4KbWFuMihy
-ZWFkKSBhcyBmb2xsb3dpbmc6CiAgICAgICAgI2luY2x1ZGUgPHVuaXN0ZC5oPgogICAgICAgIHNz
-aXplX3QgcmVhZChpbnQgZmQsIHZvaWQgKmJ1Ziwgc2l6ZV90IGNvdW50KTsKCiAgICAgICAgRUlO
-VkFMCiAgICAgICAgICAgICAgICBmZCBpcyBhdHRhY2hlZCB0byBhbiBvYmplY3Qgd2hpY2ggaXMg
-dW5zdWl0YWJsZSBmb3IgcmVhZGluZzsKICAgICAgICAgICAgICAgIG9yIHRoZSBmaWxlIHdhcyBv
-cGVuZWQgd2l0aCB0aGUgT19ESVJFQ1QgZmxhZywgYW5kIGVpdGhlciB0aGUKICAgICAgICAgICAg
-ICAgIGFkZHJlc3Mgc3BlY2lmaWVkIGluIGJ1ZiwgdGhlIHZhbHVlIHNwZWNpZmllZCBpbiBjb3Vu
-dCwgb3IgdGhlCiAgICAgICAgICAgICAgICBjdXJyZW50IGZpbGUgb2Zmc2V0IGlzIG5vdCBzdWl0
-YWJseSBhbGlnbmVkLgpTbyBJIHRoaW5rIHRoaXMgcGF0Y2ggY2FuIGJlIGFwcGxpZWQgdG8gZml4
-IGV4dDQgZGlyZWN0IEkvTyBwcm9ibGVtLgoKV2h5IHRoaXMgcHJvYmxlbSBjYW4gaGFwcGVuPyBJ
-IHRoaW5rCmNvbW1pdCA8OWZlNTVlZWE3ZTRiPiAoIkZpeCByYWNlIHdoZW4gY2hlY2tpbmcgaV9z
-aXplIG9uIGRpcmVjdCBpL28gcmVhZCIpCmNhdXNlZC4KCkhvd2V2ZXIgRXh0NCBpbnRyb2R1Y2Vz
-IGRpcmVjdCBJL08gcmVhZCB1c2luZyBpb21hcCBpbmZyYXN0cnVjdHVyZQpvbiBrZXJuZWwgNS41
-LCB0aGUgcGF0Y2ggaXMgY29tbWl0IDxiMWI0NzA1ZDU0YWI+CigiZXh0NDogaW50cm9kdWNlIGRp
-cmVjdCBJL08gcmVhZCB1c2luZyBpb21hcCBpbmZyYXN0cnVjdHVyZSIpLAp0aGVuIEV4dDQgd2ls
-bCBiZSB0aGUgc2FtZSBhcyBYRlMsIHRoZXkgYWxsIHVzZSBpb21hcF9kaW9fcncoKSB0byBkbyBk
-aXJlY3QKSS9PIHJlYWQuIFNvIHRoaXMgcHJvYmxlbSBkb2VzIG5vdCBleGlzdCBvbiBrZXJuZWwg
-NS41IGZvciBFeHQ0LgoKRnJvbSBhYm92ZSBkZXNjcmlwdGlvbiwgd2UgY2FuIHNlZSB0aGlzIHBy
-b2JsZW0gZXhpc3RzIG9uIGFsbCB0aGUga2VybmVsCnZlcnNpb25zIGJldHdlZW4ga2VybmVsIDMu
-MTQgYW5kIGtlcm5lbCA1LjQuIFBsZWFzZSBhcHBseSB0aGlzIHBhdGNoCm9uIHRoZXNlIGtlcm5l
-bCB2ZXJzaW9ucywgb3IgcGxlYXNlIHVzZSB0aGUgbWV0aG9kIG9uIGtlcm5lbCA1LjUgdG8gZml4
-CnRoaXMgcHJvYmxlbS4gVGhhbmtzLgoKU2lnbmVkLW9mZi1ieTogamlhbmd5aW5nODU4MiA8amlh
-bmd5aW5nODU4MkAxMjYuY29tPgotLS0KIGZzL2V4dDQvaW5vZGUuYyB8IDYgKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZnMvZXh0NC9pbm9kZS5j
-IGIvZnMvZXh0NC9pbm9kZS5jCmluZGV4IDUxNmZhYTIuLmQ1MTRmZjUgMTAwNjQ0Ci0tLSBhL2Zz
-L2V4dDQvaW5vZGUuYworKysgYi9mcy9leHQ0L2lub2RlLmMKQEAgLTM4MjEsNiArMzgyMSwxMiBA
-QCBzdGF0aWMgc3NpemVfdCBleHQ0X2RpcmVjdF9JT19yZWFkKHN0cnVjdCBraW9jYiAqaW9jYiwg
-c3RydWN0IGlvdl9pdGVyICppdGVyKQogICAgICAgIHN0cnVjdCBpbm9kZSAqaW5vZGUgPSBtYXBw
-aW5nLT5ob3N0OwogICAgICAgIHNpemVfdCBjb3VudCA9IGlvdl9pdGVyX2NvdW50KGl0ZXIpOwog
-ICAgICAgIHNzaXplX3QgcmV0OworICAgICAgIGxvZmZfdCBvZmZzZXQgPSBpb2NiLT5raV9wb3M7
-CisgICAgICAgbG9mZl90IHNpemU7CisKKyAgICAgICBzaXplID0gaV9zaXplX3JlYWQoaW5vZGUp
-OworICAgICAgIGlmIChvZmZzZXQgPj0gc2l6ZSkKKyAgICAgICAgICAgICAgIHJldHVybiAwOwoK
-ICAgICAgICAvKgogICAgICAgICAqIFNoYXJlZCBpbm9kZV9sb2NrIGlzIGVub3VnaCBmb3IgdXMg
-LSBpdCBwcm90ZWN0cyBhZ2FpbnN0IGNvbmN1cnJlbnQKLS0gCjEuOC4zLjEKCg==
+In few older Samsung SoCs like s3c2410, s3c2412
+and s3c2440, UART IP is having 2 interrupt lines.
+However, in other SoCs like s3c6400, s5pv210,
+exynos5433, and exynos4210 UART is having only 1
+interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+call in the driver gives the following warning:
+"IRQ index 1 not found" on recent platforms.
+
+This patch re-factors the IRQ resources handling for
+each platform and hence fixing the above warnings seen
+on some platforms.
+
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+---
+Removed the RFC tag and using 'platform_get_irq_optional'
+instead of 'platform_get_irq' as per comment received from
+Robin Murphy.
+
+ drivers/tty/serial/samsung_tty.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 6ef614d8648c..60554f42e208 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -60,6 +60,7 @@ struct s3c24xx_uart_info {
+ 	char			*name;
+ 	unsigned int		type;
+ 	unsigned int		fifosize;
++	unsigned int		irq_cnt;
+ 	unsigned long		rx_fifomask;
+ 	unsigned long		rx_fifoshift;
+ 	unsigned long		rx_fifofull;
+@@ -1908,10 +1909,13 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+ 	else {
+ 		port->irq = ret;
+ 		ourport->rx_irq = ret;
+-		ourport->tx_irq = ret + 1;
++		if (ourport->info->irq_cnt == 1)
++			ourport->tx_irq = ret;
++		else
++			ourport->tx_irq = ret + 1;
+ 	}
+ 
+-	ret = platform_get_irq(platdev, 1);
++	ret = platform_get_irq_optional(platdev, 1);
+ 	if (ret > 0)
+ 		ourport->tx_irq = ret;
+ 	/*
+@@ -2387,6 +2391,7 @@ static struct s3c24xx_serial_drv_data s3c2410_serial_drv_data = {
+ 		.name		= "Samsung S3C2410 UART",
+ 		.type		= PORT_S3C2410,
+ 		.fifosize	= 16,
++		.irq_cnt	= 2,
+ 		.rx_fifomask	= S3C2410_UFSTAT_RXMASK,
+ 		.rx_fifoshift	= S3C2410_UFSTAT_RXSHIFT,
+ 		.rx_fifofull	= S3C2410_UFSTAT_RXFULL,
+@@ -2414,6 +2419,7 @@ static struct s3c24xx_serial_drv_data s3c2412_serial_drv_data = {
+ 		.name		= "Samsung S3C2412 UART",
+ 		.type		= PORT_S3C2412,
+ 		.fifosize	= 64,
++		.irq_cnt	= 2,
+ 		.has_divslot	= 1,
+ 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+ 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+@@ -2443,6 +2449,7 @@ static struct s3c24xx_serial_drv_data s3c2440_serial_drv_data = {
+ 		.name		= "Samsung S3C2440 UART",
+ 		.type		= PORT_S3C2440,
+ 		.fifosize	= 64,
++		.irq_cnt	= 2,
+ 		.has_divslot	= 1,
+ 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+ 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+@@ -2471,6 +2478,7 @@ static struct s3c24xx_serial_drv_data s3c6400_serial_drv_data = {
+ 		.name		= "Samsung S3C6400 UART",
+ 		.type		= PORT_S3C6400,
+ 		.fifosize	= 64,
++		.irq_cnt	= 1,
+ 		.has_divslot	= 1,
+ 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+ 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+@@ -2498,6 +2506,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
+ 	.info = &(struct s3c24xx_uart_info) {
+ 		.name		= "Samsung S5PV210 UART",
+ 		.type		= PORT_S3C6400,
++		.irq_cnt	= 1,
+ 		.has_divslot	= 1,
+ 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
+ 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,
+@@ -2526,6 +2535,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
+ 	.info = &(struct s3c24xx_uart_info) {			\
+ 		.name		= "Samsung Exynos UART",	\
+ 		.type		= PORT_S3C6400,			\
++		.irq_cnt	= 1,				\
+ 		.has_divslot	= 1,				\
+ 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,	\
+ 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,	\
+-- 
+2.17.1
+
