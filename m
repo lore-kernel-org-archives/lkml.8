@@ -2,115 +2,93 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6897C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 00:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 00:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C02220768
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 00:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC0820857
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 00:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgF1Ay3 (ORCPT
+        id S1726806AbgF1A6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 20:54:29 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6839 "EHLO huawei.com"
+        Sat, 27 Jun 2020 20:58:37 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:53158 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbgF1Ay3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 20:54:29 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 976348C2E1FA1402C814;
-        Sun, 28 Jun 2020 08:54:25 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sun, 28 Jun 2020
- 08:54:24 +0800
-Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
-To:     Will Deacon <will@kernel.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200624165323.3dffcde5@canb.auug.org.au>
- <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
- <20200624105528.GB6134@willie-the-truck>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <6f5dd89a-17f3-8907-4494-da125823c3e2@hisilicon.com>
-Date:   Sun, 28 Jun 2020 08:54:24 +0800
+        id S1726101AbgF1A6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 20:58:37 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 67B594389C3CEA2ED45B;
+        Sun, 28 Jun 2020 08:58:33 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Sun, 28 Jun 2020 08:58:27 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sun, 28 Jun 2020 08:58:26 +0800
+Subject: Re: [PATCH net-next v3 0/5] hinic: add some ethtool ops support
+To:     David Miller <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+References: <20200627065242.26761-1-luobin9@huawei.com>
+ <20200627.175224.2220574097858458030.davem@davemloft.net>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <073f94da-c36c-e737-3b41-7671a942eb7b@huawei.com>
+Date:   Sun, 28 Jun 2020 08:58:26 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200624105528.GB6134@willie-the-truck>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
+In-Reply-To: <20200627.175224.2220574097858458030.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will£¬
-
-My apologies for reply later because of a short holiday in China.
-
-ÔÚ 2020/6/24 18:55, Will Deacon Ð´µÀ:
-> On Wed, Jun 24, 2020 at 05:08:56PM +0800, Shaokun Zhang wrote:
->> +Will Deacon,
->>
->> Hi Will,
->>
->> There's a build failure on arm64:
->>
->>   CALL    scripts/atomic/check-atomics.sh
->>   CALL    scripts/checksyscalls.sh
->>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
->> ld: unrecognized option '--no-eh-frame-hdr'
->> ld: use the --help option for usage information
->> arch/arm64/kernel/vdso/Makefile:64: recipe for target
->> 'arch/arm64/kernel/vdso/vdso.so.dbg' failed
->> make[1]: *** [arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
->> arch/arm64/Makefile:175: recipe for target 'vdso_prepare' failed
->> make: *** [vdso_prepare] Error 2
->>
->> GCC version is followed:
->> gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
->>
->> It seems caused by
->> 87676cfca141 arm64: vdso: Disable dwarf unwinding through the sigreturn
->> trampoline
+On 2020/6/28 8:52, David Miller wrote:
+> From: Luo bin <luobin9@huawei.com>
+> Date: Sat, 27 Jun 2020 14:52:37 +0800
 > 
-> Urgh, binutils quality strikes again. If you're able to reproduce locally,
-> can you try the diff below, please? All the linkers I have kicking around
-
-It works, I saw Jon has already tested it.
-Thanks your quick reply.
-
-Shaokun
-
-> seem to support --no-eh-frame-hdr.
+>> patch #1: support to set and get pause params with
+>>           "ethtool -A/a" cmd
+>> patch #2: support to set and get irq coalesce params with
+>>           "ethtool -C/c" cmd
+>> patch #3: support to do self test with "ethtool -t" cmd
+>> patch #4: support to identify physical device with "ethtool -p" cmd
+>> patch #5: support to get eeprom information with "ethtool -m" cmd
 > 
-> Will
+> In general,  I want you to decrease the amount of log messages.
 > 
-> --->8
+> You should only use them when the device or the kernel does something
+> unexpected which should be notifier to the user.
 > 
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index 1e5a940532da..97d3d3632093 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
->  # potential future proofing if we end up with internal calls to the exported
->  # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
->  # preparation in build-time C")).
-> -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
-> -               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
-> +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
-> +            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
-> +            $(btildflags-y) -T
->  
->  ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
->  ccflags-y += -DDISABLE_BRANCH_PROFILING
+> Kernel log messages are not for informating the user of limitations
+> of what they can perform with "ethtool".
 > 
+> For example, when setting pause paramenters, you complain in the logs
+> if the autonet setting is different.
 > 
+> This is completely inappropriate.
+> 
+> Then in patch #2 you have these crazy macros that print out state
+> changes with netdev_info().  That is also inappropriate.  The user
+> gets a success status, and they can query the settings later if
+> they like as well.
+> 
+> Please stop abusing kernel log messaging, it isn't a framework for
+> giving more detailed ethtool command result statuses.
+> 
+> Thank you.
 > .
 > 
-
+Okay, I'll remove these normal kernel logs. Thank you for your review.
