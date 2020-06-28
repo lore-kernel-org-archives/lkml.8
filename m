@@ -2,105 +2,123 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A75C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C54204EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948F6204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="dN0e/O1J";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="yVEUycbW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nx+0kA+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgF1ScS (ORCPT
+        id S1726697AbgF1Scm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 14:32:18 -0400
-Received: from fourecks.uuid.uk ([147.135.211.183]:53084 "EHLO
-        fourecks.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgF1ScS (ORCPT
+        Sun, 28 Jun 2020 14:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgF1Scm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 14:32:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EmGRDwzXYyrRKHmxgqMp+SlhJvcVmdcX/2jLPUH2gdY=; b=dN0e/O1JdmXcxE4WpKcOasWOJ2
-        bDhlDt85+BnvqFTDmM4XXu95ME3M/vX+NV7KgVW4xzyuB07zjruAwfCkoPeVAfE/tqLiGCbW84JU2
-        3lrYqdAPq8uJwkGdoCZXZuN4qqZrXVZSTNBWh9M6mWmFCuE4PKgHAM7QSG/OzqnotWKrLl0VKZnmR
-        1Q4QgbRF9TFsJaAF8+OWHPLz7NcckYuduT1wECdqX4GgMKB1YbCsjvIQV9Sv3yeqjsNmKc+v6s7va
-        xbp1C6SMZIS1rBjT347tNggTAPJwsm0VEzvm5Ispwjh8Oq9XHRpMR+uytM4+86xt2Vs+giuRfbhXi
-        b1G8mZSw==;
-Received: by fourecks.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jpc5y-000652-9A; Sun, 28 Jun 2020 19:32:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject;
-        bh=EmGRDwzXYyrRKHmxgqMp+SlhJvcVmdcX/2jLPUH2gdY=; b=yVEUycbW2baGmmDxnxjl/9efBf
-        UPCzJ4AL7NuLlANH6UuUqf2X1120C6if2ejKqe3JhHg94TQWllRebyywcJoegNs/+ZDiXPxsXhkWU
-        aC3Lkhmu6xxfCIPj6JIH+vJpooQjIimbhwdSwF+7UyXUzxrtp4sGafXi4zoGBUj8hPRBuJo3UDPhJ
-        iE+waX/kU4PjDUnJQ80LazUOUewxLFiZErcFHlblFRAhWxqVwDXnaW1/Y6SYMQfe1+MJdzzLvDzhv
-        jZku+jd/GUIEDOIZNCTcAjK6QCzHnUibxwmI7WD7NsNIPVjQvNqy60b5DD4dx8VdSJl25IzlM/c6i
-        bkVaRNcA==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jpc5t-0007O6-Ot; Sun, 28 Jun 2020 19:31:58 +0100
-Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
-To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200623204234.GA16156@khazad-dum.debian.net>
-From:   Simon Arlott <simon@octiron.net>
-Message-ID: <4e9c7e62-b1e4-80b0-8e22-9d57d3431f37@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Date:   Sun, 28 Jun 2020 19:31:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 28 Jun 2020 14:32:42 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCB1C03E979;
+        Sun, 28 Jun 2020 11:32:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l12so14378640ejn.10;
+        Sun, 28 Jun 2020 11:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/AWghi0ggAWezCdD0yzAwGjS2bjfVCfdqGQLJ4bXU8=;
+        b=nx+0kA+ECOlB14AL7pgiSQnrsiMxEe8HCxwIzpw2ZGRZowJfqoNOtpp4pqy2G/GB6j
+         deCGnBoDWpT4ikeuzV7fKfcpkUEp8TkaA2Y3TXvFf67w5CVhsD5dEZhkWCsjjLBxDXRL
+         z6+l3hUPdMtICfRpl+DLSCiKu4qCwytIdgzaU9mz1RMzLYFGh7acjLXtsqG0S4gSh9wp
+         EwXV8YyDfU6vbcvK+YxLVvx/UmGy0VeY8kwKXVrLDHzTUMNpzEVKmoge2UrFuTTQmJMv
+         b6oKji/Su81LhtZgzkiY3ax25ipANws3bsyOPolbymdqYSHBdM67i4mSsRKxju0eqTtx
+         4m1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/AWghi0ggAWezCdD0yzAwGjS2bjfVCfdqGQLJ4bXU8=;
+        b=DX4I/BLnP9vcMPOgKc0jVHBAS8kUFmQZfmJPIJOQONdSp9/074RbRjIyjeMsOfx45P
+         3o4v/tOQtzNZfi/Cu/xK3XsOh54v2kuct6uxsdKC6uBP1/y/6Y0ibM8V6pGtbSpKfH49
+         CBh8xhWoDn1ugcC5Wj/s9jC8+k5ApohleuCcBGRSwk8fOQMIUQegiUUIwG3sXxbSj0dS
+         LbR3gBXZrLcrc6zbIRz+joeqPT/lfO63gLptcqzitsv157HK+xfJ8c8A5o01CeUz0TCI
+         SnTJYACnzBegfUXJQWJJ18jTDfE1INVthgeX8+QwxXYTsPPxCsr2VM6mc27pDu2DZc/1
+         /6Hg==
+X-Gm-Message-State: AOAM533TSGiwFJFk+sRMkPzLzWyAVZO4t3z5qtbyleTEE97voffqMdUK
+        EHPeYF02pZHSTA3pjcGqK40=
+X-Google-Smtp-Source: ABdhPJyvwPcq95vvTuR+o/TTUFOP15mBB7xzZmq1WM82o9xgVvgxv4b43wqxyszfzIqe0nboQmjAdw==
+X-Received: by 2002:a17:906:2b0e:: with SMTP id a14mr10659475ejg.459.1593369160913;
+        Sun, 28 Jun 2020 11:32:40 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
+        by smtp.gmail.com with ESMTPSA id v5sm7349888ejj.61.2020.06.28.11.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 11:32:40 -0700 (PDT)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: [PATCH] staging/wilc1000: let wilc_mac_xmit() to NETDEV_TX_OK
+Date:   Sun, 28 Jun 2020 20:32:37 +0200
+Message-Id: <20200628183237.74749-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200623204234.GA16156@khazad-dum.debian.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 21:42, Henrique de Moraes Holschuh wrote:
-> [1] I have long lost the will and energy to pursue this, so *this* is a
-> throw-away anecdote for anyone that cares: I reported here a few years
-> ago that many models of *SATA* based SSDs from Crucial/Micron, Samsung
-> and Intel were complaining (through their SMART attributes) that Linux
-> was causing unsafe shutdowns.
-> 
-> https://lkml.org/lkml/2017/4/10/1181
-> 
-> TL;DR: wait one *extra* second after the SSD acknowleged the STOP
-> command as complete before you trust the SSD device is safe to be
-> powered down (i.e. before reboot, suspend, poweroff/shutdown, and device
-> removal/detach).  This worked around the issue for every vendor and
-> model of SSD we tested.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type defining 'NETDEV_TX_OK' but this
+driver returns '0' instead of 'NETDEV_TX_OK'.
 
-Looking through that thread, it looks like a simple 1 second delay on
-shutdown/reboot patch hasn't been proposed yet?
+Fix this by returning ''NETDEV_TX_OK' instead of 0.
 
-In my case none of the SSDs are recording unexpected power loss if they
-are stopped before the reboot, but the reboot won't necessarily be
-instantaneous after the last stop command returns.
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+---
+ drivers/staging/wilc1000/netdev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/staging/wilc1000/netdev.c b/drivers/staging/wilc1000/netdev.c
+index fda0ab97b02c..be3ae5486f44 100644
+--- a/drivers/staging/wilc1000/netdev.c
++++ b/drivers/staging/wilc1000/netdev.c
+@@ -678,14 +678,14 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	if (skb->dev != ndev) {
+ 		netdev_err(ndev, "Packet not destined to this device\n");
+-		return 0;
++		return NETDEV_TX_OK;
+ 	}
+ 
+ 	tx_data = kmalloc(sizeof(*tx_data), GFP_ATOMIC);
+ 	if (!tx_data) {
+ 		dev_kfree_skb(skb);
+ 		netif_wake_queue(ndev);
+-		return 0;
++		return NETDEV_TX_OK;
+ 	}
+ 
+ 	tx_data->buff = skb->data;
+@@ -710,7 +710,7 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		srcu_read_unlock(&wilc->srcu, srcu_idx);
+ 	}
+ 
+-	return 0;
++	return NETDEV_TX_OK;
+ }
+ 
+ static int wilc_mac_close(struct net_device *ndev)
 -- 
-Simon Arlott
+2.27.0
+
