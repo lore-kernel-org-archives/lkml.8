@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A19C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5B61206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FCC206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToEHJ4P7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEp23vW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgF1Tyg (ORCPT
+        id S1727074AbgF1Tyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
+        Sun, 28 Jun 2020 15:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726929AbgF1Tx7 (ORCPT
+        with ESMTP id S1726907AbgF1Txy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:53:59 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E08BC03E979;
-        Sun, 28 Jun 2020 12:53:59 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w6so14532467ejq.6;
-        Sun, 28 Jun 2020 12:53:58 -0700 (PDT)
+        Sun, 28 Jun 2020 15:53:54 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB4BC03E979;
+        Sun, 28 Jun 2020 12:53:53 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l12so14487870ejn.10;
+        Sun, 28 Jun 2020 12:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iZR0CLUeN8paQkiNldz9uiOSLfW0tnjjbz4UVcCADzk=;
-        b=ToEHJ4P779R3as4H8AN4Wawahh+8LXXwG4HKHeDHV1c49P+KFrJ1bwgDXNjy133HGY
-         +rwLKej7PyOUXnZDd7kYjy6bw7O3RYp1Hpo4YITt/KoLZXX5ANqEJ9g78tuBO3wPksWZ
-         xvoWFN9+/xbeqEOtLAVvxe8xMVLmYNXnGONnK32swszHyHLVkw5ARwmLtLpcTG3tJ8kJ
-         UfK1mXMjZUxdnfRnNHZunV3/QM30gl8nCv0kQA1qeGjmP91STJ9LcXZIXUqE4WrTyeBk
-         C3eEg3zxMVNcTAg9U+0oAquZLtWBO3NSU/jdmfLATl5LmSzDVy6diTJMAm37ZPuiDJqh
-         Qu7w==
+        bh=9BW29cs15R7y24DB/D3twWfQ+LOvEc1Her+NuICftwA=;
+        b=jEp23vW6KqKRrqBQt/cX+MQTam12WQdL1AQyBuNgvxSEDoWq2Ph1w4MmYxIe6XS4/7
+         +G5amB/Ru/D/ANYRS82Y8AunF0lkNwKgNNItKGiTaDy1Q0GD//TnAlOzwsQHO+F6sVix
+         eYAZz6y37wjr4RW5NWZJAKyE5Rakuc7c5/U727n48Uy/jT6kWm3tX8k8hYnPn65W5x9t
+         PBDUCras2XJ51sPocXMFT6bKdChBPpTYPU88W76lpYbbJcxRM/H6IqXm2mr3B7cmlKMH
+         54FHdyWSIR7iBa6IVUAl1XaJQ/EctrbC8j/ZUDINfjJC7KS+PU8ORT5SQnU2tMROec8a
+         owbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iZR0CLUeN8paQkiNldz9uiOSLfW0tnjjbz4UVcCADzk=;
-        b=SBWSIH6Dwqu7VrGe+o5+7/Ja9IMz78T9l7t6D/ch98VCGc4pGcfaa68m/MSvMnT5jY
-         Ng331j3sRjZlA2CEitVCfeNZcY2rhq2JOiaw9slHfUpKPP9wbXiOx9NGgflWdsVII/ha
-         R78UhJ6k1onikvWoRZk5ub+8ZJfnVz7peWHvLRYb3N8VjRSM0gjXbLGiRyUIsWIwIvj/
-         qj3P0hv8U3PKPo1tJQOBeMYLRBDSZGTy/50ujo0NbXQdw2ICEfZNw2gJQbqafj+3EWX3
-         0nxeh4L0OnzOdg2BMJvSprcrDGeLISPq0zeQ1prnCJrNA3GFOihR5BIBLy0v1u5bDpNq
-         J6Qw==
-X-Gm-Message-State: AOAM532fiDjlCcqJIQ0iUo+PbocuL73/A41azbE+UDAuizM9gs5q/2o8
-        K1vtO7LHBRNgqaem7cOoC5GLivyq
-X-Google-Smtp-Source: ABdhPJxpSRlCDWbL3AZhB0RUJyt8jD1tL5ru5iFy5rhG4IONxBHio2q7Q+X3Ig0aX7Tcmz1JFukjMQ==
-X-Received: by 2002:a17:906:9147:: with SMTP id y7mr10419402ejw.399.1593374037855;
-        Sun, 28 Jun 2020 12:53:57 -0700 (PDT)
+        bh=9BW29cs15R7y24DB/D3twWfQ+LOvEc1Her+NuICftwA=;
+        b=DalvYHApuNNv8Qc4e0V6GBQTXpm0X+L4sj0TBObRAwV9RaBNrzC7cvG6nBzpUgoSZX
+         VweMg75fg1Mv2pskeF0lhAvZVXrpwE5tsVWJMYUcKJ8Sg7d+d6FLXeXbQJJo8C/vRETH
+         h/5fKaRsNQlP84zUUL2b2XoxCjChir0cnSqVvRJ8PKxAIBPRlHgPblUCrRk+neTu34I+
+         g1b3C5nQJ7UXGoirZ+Eif9aXNvetiVaw1WuepW0oTALUe5pyhLjWuBB6dznKYb/Iox9i
+         Aro8qiYWfhcAUdcXOoR15ggsUJ1nI37PZ/AAWlwbKPayTtbuktqWDGT7aPrGRtmBNyhH
+         HD0Q==
+X-Gm-Message-State: AOAM531GMU1IEQGf+JNxC3HzCeHQWa88SR8KOivGxSW7u9tDvxdo2bB2
+        WyRT1+mcs94Xsw4yNffgvbU=
+X-Google-Smtp-Source: ABdhPJxljGTAylajN15yJTYN/mmctJCm+3Mk4kmPFb6iW2GTymn73lHe735BvC/L9+y0wS0ICXjfiA==
+X-Received: by 2002:a17:906:8417:: with SMTP id n23mr11119322ejx.192.1593374032709;
+        Sun, 28 Jun 2020 12:53:52 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
-        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.53.56
+        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.53.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 12:53:57 -0700 (PDT)
+        Sun, 28 Jun 2020 12:53:52 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         oss-drivers@netronome.com, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 13/15] net/hsr: fix hsr_dev_xmit()'s return type
-Date:   Sun, 28 Jun 2020 21:53:35 +0200
-Message-Id: <20200628195337.75889-14-luc.vanoostenryck@gmail.com>
+Subject: [PATCH 09/15] net: pch_gbe: fix pch_gbe_xmit_frame()'s return type
+Date:   Sun, 28 Jun 2020 21:53:31 +0200
+Message-Id: <20200628195337.75889-10-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
 References: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
@@ -87,22 +87,22 @@ Fix this by returning 'netdev_tx_t' in this driver too.
 
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- net/hsr/hsr_device.c | 2 +-
+ drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index cd99f548e440..7be85e024236 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -210,7 +210,7 @@ static netdev_features_t hsr_fix_features(struct net_device *dev,
- 	return hsr_features_recompute(hsr, features);
- }
- 
--static int hsr_dev_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t hsr_dev_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
+index 73ec195fbc30..23f7c76737c9 100644
+--- a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
++++ b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
+@@ -2064,7 +2064,7 @@ static int pch_gbe_stop(struct net_device *netdev)
+  *	- NETDEV_TX_OK:   Normal end
+  *	- NETDEV_TX_BUSY: Error end
+  */
+-static int pch_gbe_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t pch_gbe_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
  {
- 	struct hsr_priv *hsr = netdev_priv(dev);
- 	struct hsr_port *master;
+ 	struct pch_gbe_adapter *adapter = netdev_priv(netdev);
+ 	struct pch_gbe_tx_ring *tx_ring = adapter->tx_ring;
 -- 
 2.27.0
 
