@@ -2,164 +2,184 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F27C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8501C20702
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:12:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593324744;
-	bh=MaEKsg6egy9Wkdm/kWLie4m5P0W1BsCSneDgGcQBAgA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=H9x5/eeiu7T+4By1Evbu91pkM9dqeceSJEoOra34s8iSnD0JU8uhCpqUzXDODw2a5
-	 7c3g1NPvlWl9n7b5GeJtSAJZZ87H6uuvfZVcinMA4NiefiXAGEE5s1s4/pvGXKFwsm
-	 YHHrbJfwceVIpieLP9h0bNmGAbdI02c4OSQ3IJcM=
+	by mail.kernel.org (Postfix) with ESMTP id 33DE420702
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Zbnhwvcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgF1GMW (ORCPT
+        id S1726005AbgF1GRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgF1GMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:12:21 -0400
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFA68212CC;
-        Sun, 28 Jun 2020 06:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593324741;
-        bh=MaEKsg6egy9Wkdm/kWLie4m5P0W1BsCSneDgGcQBAgA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2pCwUgIshw5Jtg7FSTHrUAsO6kRgUWtBjQnrG4PHqZuG209tR0M/HEl7lJy/l3bZn
-         b6mh9um0+gZZzDvvMxA4eYO//saa3RTb4+A25vpywXFvYVqR8kPYzdNykzu9swHTQO
-         gAdy5TY3BWaypBMHp8CoRz+uA68e5rSHkljZb0R8=
-Received: by mail-lj1-f172.google.com with SMTP id h22so7258124lji.9;
-        Sat, 27 Jun 2020 23:12:20 -0700 (PDT)
-X-Gm-Message-State: AOAM5326eutAI0+DU9/rI++ZPbN2fZA+gIksqTst3roZmGAZ8Q+TdMS5
-        nYQUdktYzxPsRlVKlZqqZl0I1a7jr7pbfp/OxMQ=
-X-Google-Smtp-Source: ABdhPJwOLXYcVriN4WTovhjiJ8y+DUyBj9KfGoziRBbU0PTHaerO/enEPu+Wtu+nCnBa4bct3gK+/AmZ+XdmTiuWaZ4=
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr5541912ljq.265.1593324739220;
- Sat, 27 Jun 2020 23:12:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593274802-46332-1-git-send-email-guoren@kernel.org> <20200628115945.335b92c517cb8a8fa87be759@kernel.org>
-In-Reply-To: <20200628115945.335b92c517cb8a8fa87be759@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sun, 28 Jun 2020 14:12:07 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTCHMHp-+RoG8DoDhbJStzmOf5AK=Z3K26FUmd_hbgR=g@mail.gmail.com>
-Message-ID: <CAJF2gTTCHMHp-+RoG8DoDhbJStzmOf5AK=Z3K26FUmd_hbgR=g@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Fixup compile error BUILD_BUG_ON failed
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
+        Sun, 28 Jun 2020 02:17:31 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:21179 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgF1GRb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 02:17:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1593325045;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m5DGw2srTjGAfAegBLNLm8kQtSc40dBbbxgwlH3oaRo=;
+        b=Zbnhwvcm6PVVsWPaGd/gxF5WdWJuu1yn7TcagkTse+T/F6fZw5FSsIdBytnt2CU88x
+        Xj5cxXaBuMRr8ya4RaO7FdD/ghGT8KGGCqz9rbpBwj7yVzv8Ns8oWvR6579tHdD4jhsX
+        mwqtb3Fys689zyzsx+nAcWd0q+7KyDBloTVsG+hP5r+HZtaaY4jzTrkxnbt1VDwL3GJq
+        OLslCvikhZLPaHlbc8DEF+KNVLo8BxgLgMphAkUtB1inJRADeWQlZeTBHQ+elHZte2Ng
+        r9vkgXl0t0Kce1j2LnyuHCVgipIgxMROVCa8cJN5KO5VjtvxzCvaGOX1mhymZ/JuXV8L
+        YnyA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw47kDQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w5S6HBIFd
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sun, 28 Jun 2020 08:17:11 +0200 (CEST)
+Subject: Re: [PATCH] modpost: remove use of non-standard strsep() in HOSTCC code
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAK7LNATCLscXNDZ1RUmbnM5BeV-tvKjz9kQB8eo0SNp10WbjFQ@mail.gmail.com>
+Date:   Sun, 28 Jun 2020 08:17:10 +0200
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <2D851B90-5F85-4136-AF70-E764FDF4D7DD@goldelico.com>
+References: <11c1e65b393b4c3ca6118515c77bbf19524dab11.1593074472.git.hns@goldelico.com> <CAK7LNATCLscXNDZ1RUmbnM5BeV-tvKjz9kQB8eo0SNp10WbjFQ@mail.gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 10:59 AM Masami Hiramatsu <mhiramat@kernel.org> wro=
-te:
->
-> On Sat, 27 Jun 2020 16:20:02 +0000
-> guoren@kernel.org wrote:
->
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > Unfortunately, the current code couldn't be compiled, because
-> > BUILD_BUG_ON needs a static defined value, not a dynamic
-> > variable with a0 regs. Just use it inline as a solution.
-> >
-> >   CC      arch/riscv/kernel/patch.o
-> > In file included from ./include/linux/kernel.h:11,
-> >                  from ./include/linux/list.h:9,
-> >                  from ./include/linux/preempt.h:11,
-> >                  from ./include/linux/spinlock.h:51,
-> >                  from arch/riscv/kernel/patch.c:6:
-> > In function =E2=80=98fix_to_virt=E2=80=99,
-> >     inlined from =E2=80=98patch_map=E2=80=99 at arch/riscv/kernel/patch=
-.c:37:17:
-> > ./include/linux/compiler.h:392:38: error: call to =E2=80=98__compiletim=
-e_assert_205=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: i=
-dx >=3D __end_of_fixed_addresses
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
-> >                                       ^
-> > ./include/linux/compiler.h:373:4: note: in definition of macro =E2=80=
-=98__compiletime_assert=E2=80=99
-> >     prefix ## suffix();    \
-> >     ^~~~~~
-> > ./include/linux/compiler.h:392:2: note: in expansion of macro =E2=80=98=
-_compiletime_assert=E2=80=99
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
-> >   ^~~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:39:37: note: in expansion of macro =E2=80=
-=98compiletime_assert=E2=80=99
-> >  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >                                      ^~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98=
-BUILD_BUG_ON_MSG=E2=80=99
-> >   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> >   ^~~~~~~~~~~~~~~~
-> > ./include/asm-generic/fixmap.h:32:2: note: in expansion of macro =E2=80=
-=98BUILD_BUG_ON=E2=80=99
-> >   BUILD_BUG_ON(idx >=3D __end_of_fixed_addresses);
-> >   ^~~~~~~~~~~~
-> >
-> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/kernel/patch.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-> > index d4a64df..f8e84f2 100644
-> > --- a/arch/riscv/kernel/patch.c
-> > +++ b/arch/riscv/kernel/patch.c
-> > @@ -20,7 +20,7 @@ struct patch_insn {
-> >  };
-> >
-> >  #ifdef CONFIG_MMU
-> > -static void *patch_map(void *addr, int fixmap)
-> > +static inline void *patch_map(void *addr, int fixmap)
->
-> Would we be better to use "__always_inline" as same as fix_to_virt?
-Ok
+Hi,
 
-> And also, could you add a comment why we need to make it inline?
-I've mentioned in comment:
-> > BUILD_BUG_ON needs a static defined value, not a dynamic
-> > variable with a0 regs.
+> Am 28.06.2020 um 07:51 schrieb Masahiro Yamada <masahiroy@kernel.org>:
+>=20
+> On Thu, Jun 25, 2020 at 5:47 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>=20
+>> strsep() is neither standard C nor POSIX and used outside
+>> the kernel code here. Using it here requires that the
+>> build host supports it out of the box which is e.g.
+>> not true for a Darwin build host and using a cross-compiler.
+>> This leads to:
+>>=20
+>> scripts/mod/modpost.c:145:2: warning: implicit declaration of =
+function 'strsep' [-Wimplicit-function-declaration]
+>>  return strsep(stringp, "\n");
+>>  ^
+>>=20
+>> and a segfault when running MODPOST.
+>>=20
+>> See also: https://stackoverflow.com/a/7219504
+>>=20
+>> So let's add some lines of code separating the string at the
+>> next newline character instead of using strsep(). It does not
+>> hurt kernel size or speed since this code is run on the build host.
+>>=20
+>> Fixes: ac5100f5432967 ("modpost: add read_text_file() and get_line() =
+helpers")
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> scripts/mod/modpost.c | 7 ++++++-
+>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>> index 6aea65c65745..8fe63989c6e1 100644
+>> --- a/scripts/mod/modpost.c
+>> +++ b/scripts/mod/modpost.c
+>> @@ -138,11 +138,16 @@ char *read_text_file(const char *filename)
+>>=20
+>> char *get_line(char **stringp)
+>> {
+>> +       char *p;
+>>        /* do not return the unwanted extra line at EOF */
+>>        if (*stringp && **stringp =3D=3D '\0')
+>=20
+> This check does not make sense anymore.
+>=20
+> Previously, get_line(NULL) returns NULL.
+>=20
+> With your patch, get_line(NULL) crashes
+> due to NULL-pointer dereference.
 
-idx must be a const unsigned int or it will cause compile error with
-BUILD_BUG_ON.
+Well, that is original code.
 
-/*
- * 'index to address' translation. If anyone tries to use the idx
- * directly without translation, we catch the bug with a NULL-deference
- * kernel oops. Illegal ranges of incoming indices are caught too.
- */
-static __always_inline unsigned long fix_to_virt(const unsigned int idx)
-{
-        BUILD_BUG_ON(idx >=3D __end_of_fixed_addresses);
-        return __fix_to_virt(idx);
-}
+I have only replaced the strsep() function.
+But yes, it looks to be better in addition to
+my patch.
 
---=20
-Best Regards
- Guo Ren
+>=20
+>=20
+>=20
+>>                return NULL;
+>>=20
+>> -       return strsep(stringp, "\n");
+>> +       p =3D *stringp;
+>> +       while (**stringp !=3D '\n')
+>> +               (*stringp)++;
+>=20
+>=20
+> Is this a safe conversion?
+>=20
+> If the input file does not contain '\n' at all,
+> this while-loop continues running,
+> and results in the segmentation fault
+> due to buffer over-run.
 
-ML: https://lore.kernel.org/linux-csky/
+Ah, yes, you are right.
+
+We should use
+
++       while (**stringp && **stringp !=3D '\n')
+
+>=20
+>=20
+>=20
+>> +       *(*stringp)++ =3D '\0';
+>> +       return p;
+>> }
+>=20
+>=20
+>=20
+> How about this?
+>=20
+> char *get_line(char **stringp)
+> {
+>        char *orig =3D *stringp;
+
+^^^ this still segfaults with get_line(NULL)
+
+>        char *next;
+>=20
+>        /* do not return the unwanted extra line at EOF */
+>        if (!orig || *orig =3D=3D '\0')
+>                return NULL;
+>=20
+>        next =3D strchr(orig, '\n');
+>        if (next)
+>                *next++ =3D '\0';
+>=20
+>        *stringp =3D next;
+
+Yes, this code is easier to understand than my while loop.
+And strchr() is POSIX.
+
+So should I submit an updated patch or do you want to submit
+it (with a suggested-by: H. Nikolaus Schaller <hns@goldelico.com>)
+
+BR and thanks,
+Nikolaus Schaller
+
+
