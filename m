@@ -2,125 +2,141 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C41420768
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:44:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UPySdSgb"
+	by mail.kernel.org (Postfix) with ESMTP id 0F83520768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgF1Bod (ORCPT
+        id S1726899AbgF1Brl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 21:44:33 -0400
-Received: from mail-db8eur05on2085.outbound.protection.outlook.com ([40.107.20.85]:6160
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbgF1Boc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 21:44:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fkNi6TruPU09TMXUo0T/w1G4k9P48q0Udt33KnuMPKfFbmpSexUX0m2F3ZLiN6qaOhn7TqHi/GCWofZLMHXc6+dwPwvuxqffxSQ9K5rvs7cCVECwnMst2waz8EbmGbdq9OGeXeWDXYFnvOH8Fx+p4dpGPBPVTDN1leNGfO4Fw4T2qDJWFCkicyJBx4g4MRFVf/KJY0o4Ds3LBsJTl3FGxfgUHZvhWYxMUVEJVT5zn+l3Gds0vEQK+DNPVelijZpLvBCLDVfP72NfeWNwOJ4/K4BO9iV6osvo3qOvXWevgr7z4+Oh/SYnB5s6AQXgRCvlcjPeEe2aIIRkW68Xte6stg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kWe4grM1QFndulPu96VHnqFZOhhIifQyZYMyDZuUvp4=;
- b=V3kClsy5VRw6906w6kzjDB0tYrEd5FFMDQxuOCxa4fimZQVuq6ve3qhnB5NgYlUPzojj8oiOy86HqUaPgAdECV+PiPNcnab7Nk0fSonQFUyHB+tMImUDoD+ZWYB6dio7ejP1uyaTMfJdj0TJRM2/XWwmMT7t8sQ3HoJgj0phsHzx2gYhGGehuDYjHxlWyDOAejqlAGiUeS3m+8FPR84t2Zb6i5iLoLFlGgjwJaux90Z9qEA05wWWIO+7yp6znQbv78R4D71SharLJzZ+O1DSdIdQTOf0eNEaO+cWjbpNVZbRNp89dFSXinMUNJe25QwRu6A1Jgb4cG6wMqKx59GAUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kWe4grM1QFndulPu96VHnqFZOhhIifQyZYMyDZuUvp4=;
- b=UPySdSgb3hn6vUGM1j9Mcj/Mgj9nnl0WKiNGNsKg+QTAdLwwUiTpIq8e6AnV1PmIJMfNqzyAd0heQitt7vSmdVqNf3V+zfIcEW+r4PWxKsOQvlC7t2/qipAlasfzGCs6wKJ7n/e97hyFF5cmlnVE9pIP5SuwLYH5Vpn3Gt28vIg=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VI1PR04MB6029.eurprd04.prod.outlook.com (2603:10a6:803:101::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Sun, 28 Jun
- 2020 01:44:28 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3131.026; Sun, 28 Jun 2020
- 01:44:28 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     stephen@networkplumber.org, davem@davemloft.net, jhs@mojatatu.com,
-        vlad@buslov.dev, po.liu@nxp.com, claudiu.manoil@nxp.com,
-        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com
-Subject: [iproute2-next] action police: make 'mtu' could be set independently in police action
-Date:   Sun, 28 Jun 2020 09:46:02 +0800
-Message-Id: <20200628014602.13002-1-po.liu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0097.apcprd06.prod.outlook.com
- (2603:1096:3:14::23) To VE1PR04MB6496.eurprd04.prod.outlook.com
- (2603:10a6:803:11c::29)
+        Sat, 27 Jun 2020 21:47:41 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:37707 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgF1Brl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 21:47:41 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 05S1lQp5013284
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Sat, 27 Jun 2020 18:47:26 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 27 Jun 2020 18:47:10 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <felipe.balbi@linux.intel.com>
+CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: gadget: function: printer: The device interface is reset and should return error code
+Date:   Sun, 28 Jun 2020 09:57:31 +0800
+Message-ID: <20200628015731.16566-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR06CA0097.apcprd06.prod.outlook.com (2603:1096:3:14::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Sun, 28 Jun 2020 01:44:25 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e9874d3f-3dd2-4ae4-8e7b-08d81b04cba6
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6029:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6029F11922DE2DE56B3F9C0892910@VI1PR04MB6029.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0448A97BF2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dr9L0/v3t5hGYP9Sg+kezGFuFeyNKHMo7A7fP2Z3K5LFxqQ+SnVWngWI7hUgKZlhtm5b+XrpIITmgMJXY0iSVuU6mOVuTh6JQpVJQQYg94HbDWsd1QGQGSbajjISVhIgsxX1VciHFqULPbze4Arlxy4XD+q0o3M3GxancULSWiWPkq5cehuZVjMu1nqLmHrFJocHtZw4LClU9BqDEEhLrenf2m7lxyATRl98rn3ryw9CMrPyGj1yEfc6UVR7KZJW7FJ2D6mjyGT/X903mjhJMRpNXNO93Z2BEQZOritar9Dtzd5C5FMiUSU0/Zb9BzbjM3b3ss0Qm9QmBDsK09Vmrg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(376002)(136003)(366004)(346002)(2906002)(83380400001)(316002)(2616005)(6486002)(5660300002)(186003)(16526019)(8676002)(26005)(8936002)(478600001)(86362001)(66476007)(36756003)(44832011)(4326008)(4744005)(52116002)(1076003)(956004)(6512007)(6506007)(66556008)(66946007)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gpRVF2GvxnhPWuND3QA+N4w9KUr9CRj7kKDytjyjuxQVuRpge8KDxIUvqmH2KD6EqVDOd0X8d1C6XYYcwHa5u6+v0UXYOdHIPw4hcoy1uLlSXRzHv9a3PYGeINF+bWhPXXxd38XPD/CcB1ZUS9qxM5riqvEgreHbsBVTCzKrkaNmMRHw04sOzuOQSyCptAoB9sy8rJ1hHjFrOgJ/+XKUnNF0PX83xf8pj2qmDmUTMixeaxDVS3RvWJWWFaV/osUjc8zQKa7DLPOC7yctowHx31blFfuCaXRKSRyDJKNqYvfs8ngKCqetGWCuijLGnqGFcojsySuxmcUak0nLJYITguVssxImSBZGFKLTj8RRoHIer1MFjsW5BaR2IDv2BjOWFbbP+R3+VcreaXxjesvCgXceGg9Jz62ZwclG/+pE2lo4zZ2bZXNRpq9W0FWP2TPg8UIU0Swzyvc8e5ccQmT7kPjFMQbbL7Y2LEFf3wp48fo=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9874d3f-3dd2-4ae4-8e7b-08d81b04cba6
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6496.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2020 01:44:28.6902
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mgnzdYLrlOqz6W6+rZ3ZI97fWgw4NiaqmxD+B8rMZN4Pz/nc73wTCRE7amVxJMv3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6029
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current police action must set 'rate' and 'burst'. 'mtu' parameter
-set the max frame size and could be set alone without 'rate' and 'burst'
-in some situation. Offloading to hardware for example, 'mtu' could limit
-the flow max frame size.
+From: Zqiang <qiang.zhang@windriver.com>
 
-Signed-off-by: Po Liu <po.liu@nxp.com>
+After the device is disconnected from the host side, the interface of
+the device is reset. If the userspace operates the device again,
+an error code should be returned.
+
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
 ---
- tc/m_police.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_printer.c | 36 +++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/tc/m_police.c b/tc/m_police.c
-index a5bc20c0..89497f67 100644
---- a/tc/m_police.c
-+++ b/tc/m_police.c
-@@ -161,8 +161,8 @@ action_ctrl_ok:
- 		return -1;
+diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
+index 9c7ed2539ff7..2b45a61e4213 100644
+--- a/drivers/usb/gadget/function/f_printer.c
++++ b/drivers/usb/gadget/function/f_printer.c
+@@ -338,6 +338,11 @@ printer_open(struct inode *inode, struct file *fd)
  
- 	/* Must at least do late binding, use TB or ewma policing */
--	if (!rate64 && !avrate && !p.index) {
--		fprintf(stderr, "\"rate\" or \"avrate\" MUST be specified.\n");
-+	if (!rate64 && !avrate && !p.index && !mtu) {
-+		fprintf(stderr, "\"rate\" or \"avrate\" or \"mtu\"MUST be specified.\n");
- 		return -1;
- 	}
+ 	spin_lock_irqsave(&dev->lock, flags);
  
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		return -ENODEV;
++	}
++
+ 	if (!dev->printer_cdev_open) {
+ 		dev->printer_cdev_open = 1;
+ 		fd->private_data = dev;
+@@ -430,6 +435,12 @@ printer_read(struct file *fd, char __user *buf, size_t len, loff_t *ptr)
+ 	mutex_lock(&dev->lock_printer_io);
+ 	spin_lock_irqsave(&dev->lock, flags);
+ 
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		mutex_unlock(&dev->lock_printer_io);
++		return -ENODEV;
++	}
++
+ 	/* We will use this flag later to check if a printer reset happened
+ 	 * after we turn interrupts back on.
+ 	 */
+@@ -561,6 +572,12 @@ printer_write(struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ 	mutex_lock(&dev->lock_printer_io);
+ 	spin_lock_irqsave(&dev->lock, flags);
+ 
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		mutex_unlock(&dev->lock_printer_io);
++		return -ENODEV;
++	}
++
+ 	/* Check if a printer reset happens while we have interrupts on */
+ 	dev->reset_printer = 0;
+ 
+@@ -667,6 +684,13 @@ printer_fsync(struct file *fd, loff_t start, loff_t end, int datasync)
+ 
+ 	inode_lock(inode);
+ 	spin_lock_irqsave(&dev->lock, flags);
++
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		inode_unlock(inode);
++		return -ENODEV;
++	}
++
+ 	tx_list_empty = (likely(list_empty(&dev->tx_reqs)));
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 
+@@ -689,6 +713,13 @@ printer_poll(struct file *fd, poll_table *wait)
+ 
+ 	mutex_lock(&dev->lock_printer_io);
+ 	spin_lock_irqsave(&dev->lock, flags);
++
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		mutex_unlock(&dev->lock_printer_io);
++		return EPOLLERR | EPOLLHUP;
++	}
++
+ 	setup_rx_reqs(dev);
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 	mutex_unlock(&dev->lock_printer_io);
+@@ -722,6 +753,11 @@ printer_ioctl(struct file *fd, unsigned int code, unsigned long arg)
+ 
+ 	spin_lock_irqsave(&dev->lock, flags);
+ 
++	if (dev->interface < 0) {
++		spin_unlock_irqrestore(&dev->lock, flags);
++		return -ENODEV;
++	}
++
+ 	switch (code) {
+ 	case GADGET_GET_PRINTER_STATUS:
+ 		status = (int)dev->printer_status;
 -- 
-2.17.1
+2.24.1
 
