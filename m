@@ -2,179 +2,377 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4454FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D0C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C6D20768
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B288A20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PiWfS6Fb";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PiWfS6Fb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhjAkbPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgF1HiG (ORCPT
+        id S1726145AbgF1Hja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:38:06 -0400
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:42979
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbgF1HiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 03:38:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VZ21TKRGPQd9arDyP6leqZVj5seRfZjtpGmsVWzoApE=;
- b=PiWfS6FbkQUPUib161834aVW5SOXhl6KaNyuns2+xmUte6QV+Be5WO7rV/hac60GfVWjvE4qXNZWL1XYI/0m8b0aPcB2Zuz4F/52ud9KRcbBrOgh2rC+LKsv0L7sRT2t73iaeOo4GiMm0+cZgV8WcEBFEmWG2AwxhWKHu0EA0oE=
-Received: from MRXP264CA0038.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:14::26)
- by VI1PR08MB4368.eurprd08.prod.outlook.com (2603:10a6:803:fe::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Sun, 28 Jun
- 2020 07:37:58 +0000
-Received: from VE1EUR03FT012.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:14:cafe::c7) by MRXP264CA0038.outlook.office365.com
- (2603:10a6:500:14::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend
- Transport; Sun, 28 Jun 2020 07:37:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT012.mail.protection.outlook.com (10.152.18.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.20 via Frontend Transport; Sun, 28 Jun 2020 07:37:57 +0000
-Received: ("Tessian outbound 1e00bf306733:v60"); Sun, 28 Jun 2020 07:37:57 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from d1261a2c0069.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9E0C37DE-5DF2-4FC5-A687-C67B832FA256.1;
-        Sun, 28 Jun 2020 07:37:51 +0000
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id d1261a2c0069.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Sun, 28 Jun 2020 07:37:51 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JxL+NUol42yZ+B3YZWwtigYS0yNwEF8ykI56YTQ19rFQTteYj7O/5xGw+Kh09OBMYrTNOlTyT/7NwqaVU4J1Qu5OkhOdtqKhk5+YATCy4NJoW1+3Fk08FnPrx9FHl7k2jkN2tPM8XwNUqgfl651FhtED/4MpqIOym81+iTC71AzeVzj7CM1reVMoVz65FRHxSz7YuT0UT7KYvhJ7/4+mGJMXDTyJUEN6CZzKFThpp3LRnD0h8yrArAYoEsfACSNovjXu7BVPw5OC5rIgvyaHJaTQYW3AE3lDhRvvZC4JpBE9dTh2d28LQx5O6n2vMFwvzbkGqomp/phUKsm7mqzNag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VZ21TKRGPQd9arDyP6leqZVj5seRfZjtpGmsVWzoApE=;
- b=Eti/EEc8WvzKzlDWnVAsU6aUkiVPUFSYR5uUZAdTjAghOzjrdjWy/MOaDjUAK4l5of5+n3BQlu9nNDp5Tl7v0mX0b5wWin3/fNqR/XyNE3ozTwAIKttFSr/YWbkfIuoCFgO6yhEeT1qJeTtPLn9D9qKrZLnsvql49gm9TOGzzGhNq8JeF45hibuyPClpl4Y1DvLHvRyFc/T1v+y/XoBZcD2BD8VYdxvcN/4GGDLgJDsGHI52AGOzq1N369+y5v5ySUeKgAASqG7mnd48n0QKiBr0jAYbiI/RQf9dyJyU/PjS7T1PQOmf/5LFP9loxWF2Mjr0tn2XUyxjwLHDaqGdJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VZ21TKRGPQd9arDyP6leqZVj5seRfZjtpGmsVWzoApE=;
- b=PiWfS6FbkQUPUib161834aVW5SOXhl6KaNyuns2+xmUte6QV+Be5WO7rV/hac60GfVWjvE4qXNZWL1XYI/0m8b0aPcB2Zuz4F/52ud9KRcbBrOgh2rC+LKsv0L7sRT2t73iaeOo4GiMm0+cZgV8WcEBFEmWG2AwxhWKHu0EA0oE=
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
- by HE1PR0802MB2553.eurprd08.prod.outlook.com (2603:10a6:3:df::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Sun, 28 Jun
- 2020 07:37:48 +0000
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::9:c111:edc1:d65a]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::9:c111:edc1:d65a%6]) with mapi id 15.20.3131.026; Sun, 28 Jun 2020
- 07:37:47 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-CC:     "ericvh@gmail.com" <ericvh@gmail.com>,
-        "lucho@ionkov.net" <lucho@ionkov.net>,
-        "v9fs-developer@lists.sourceforge.net" 
-        <v9fs-developer@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        Wei Chen <Wei.Chen@arm.com>
-Subject: RE: [RFC PATCH 2/2] 9p: remove unused code in 9p
-Thread-Topic: [RFC PATCH 2/2] 9p: remove unused code in 9p
-Thread-Index: AQHWTPDBydmju/A/WUKh1sO640Qlb6jthqUAgAAQlGA=
-Date:   Sun, 28 Jun 2020 07:37:47 +0000
-Message-ID: <HE1PR0802MB255555FEE31EBF85981A2AC4F4910@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200628020608.36512-1-jianyong.wu@arm.com>
- <20200628020608.36512-3-jianyong.wu@arm.com> <20200628055210.GA13335@nautica>
-In-Reply-To: <20200628055210.GA13335@nautica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: d0a580d3-a78f-4211-a31f-be1436c9e5ac.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: codewreck.org; dkim=none (message not signed)
- header.d=none;codewreck.org; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [203.126.0.111]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 09577faa-23ce-449c-4fa7-08d81b362d71
-x-ms-traffictypediagnostic: HE1PR0802MB2553:|VI1PR08MB4368:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR08MB43681D62072AFA806B285F55F4910@VI1PR08MB4368.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:9508;
-x-forefront-prvs: 0448A97BF2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: kFBYeIKi2zfO9u6fMYm+CmNagX/dDOegj50rHsApPaW+EjtuCfmBNLVPJEGUcxplcCkl2704q4aXfd5/3m+a2KnWYBF/8TszTuQCzL1ZuNjGL6D3QAdNmc/reAAThnQop79Uu/jht/a6BiEu3H5IrTa4cT2Yxy1Vfbx4ZWIgsNBzEaYImA5PPN48oaVEJJnoMu5CqfRZdwNlykerehKnqnZKxSb6v5tQLoPq/WXeQ29Qnb0fNjCPYzj7RzJaH9zQCbes4EAPcmQPujRot/hMEbqQ8HrU8uF2NFVY8FpaQO+atwUEMP6zQQq2bLfnSoYVDs332VYIfV3x/IyiQjRaJg==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(39850400004)(136003)(366004)(4326008)(316002)(86362001)(7696005)(52536014)(5660300002)(6506007)(53546011)(478600001)(55016002)(66946007)(71200400001)(66446008)(64756008)(66556008)(66476007)(6916009)(76116006)(8676002)(26005)(33656002)(186003)(9686003)(83380400001)(2906002)(8936002)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: z5/Q6oz7+3HMMMqiZbuYftaTSIJ4u/et06amFuAdvlQFbARf340NQQkDA9I9Hq/qoj2H5DIgWhtg0qVoJwvELsDm8CGpHtzePdgexKkJdGTu04j4old87Wl05E7aOoFL86gHz9APwS6XbK7yuhMpenrUDrjmd/mkSf9OBPUarC+cdStjPGCR9HbT27XEa23YF1FZRU/WWvSbj+LhK7fgyjxiEhGhJ6W7VwU0f+qhygljzRI1GlpUeip++gTjMfNFYi6yOvpGw49QW1IOWDMdIzLW5C99Y7wtcRuWw2oXV7XRq9HTfymB5BRkJQPQj0p0Rzw5Rh5t7rYHa0eb6qnKvB6vwlkZ9RwL31h9B9XUDhI5zFWag4QSD+UbRn0x5sikbASxlgRwzvDt++Gust+Tk3W5SS598OceWkwyfD+gBZtyIx0sSzjmUoqSs8glrG1taSLz3qkTWWxtv7xUzyiOg1iv+wzGFPHZ9O38LPqN+iQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 28 Jun 2020 03:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgF1Hj2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 03:39:28 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC4EC03E97A
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 00:39:28 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b184so145243pfa.6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 00:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2gZ3Ey9dnbKR3FNjM+7Zu1K55QA2gC3RfP+X2lu2GFQ=;
+        b=hhjAkbPSZ2G+Ia6oYpc5FoYYq6gkyk5Rue08XBpliLylXFVSW8p9WbIy1C+KbV7v6h
+         DEkqJIFeAZxe+ofRlnt4zIOP+16UQ9T8qAVTu4zMSHJMpyxt0oTPKxrUrS4EKtLD7TAu
+         A8uHfZ6m08ZFxYtRUPaNAjS+b+rdKeFkaoxhCV/HK3sjD4MBtQ/BxT7lPcp0RhpUM2Q4
+         JHx0HOFESIzGij43bWhP+///OE2770rvnSEj+w+/Lw0thN9yya1+FCAB5oVhteDR4t66
+         FTBGyqVkcnbLIWc7UHHfKmtbHB8QbQ+W1e1kul6nK/D5ptuPCiHU4jRqRPQMjYbBFeuR
+         mdyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2gZ3Ey9dnbKR3FNjM+7Zu1K55QA2gC3RfP+X2lu2GFQ=;
+        b=E+CCCkZVCZEVGgqodaaxL1u866Kgqc1VXgEYZkyb6RVjqkScB4vCzo4NnLiEIEzU9S
+         foWdMM3pNFvMZwdyi94UmrTsVelxrnktYxrNVAL1k3GmVAroVZDXhpv9ncugFyXcMNi7
+         PajLbmmR6bLiI6rVdn9vREONhicgjxpvVHfGnlYS3hEaJNgJ/JpOHnxe9e/G1HtCDtPo
+         wAhTT2VVWHdwPDySV1ynyY7fNmB0AYIvcaKRVLMuQ2t2dMQis6CvWjebqiyWeDIGYwY4
+         45zlS/5eblNB2GMMxd+z8KGba3ENwHXsy3gVWBCBqvjm3CWzCxuWNDD3Ou5NuxU9JSsZ
+         iHNA==
+X-Gm-Message-State: AOAM531Pw/7cWJ9kHPt98lxg9m0+f5gYKPmbYWViIUtqHQUzZHZD9md2
+        1le4ExeIoP4iEuM3wAvp5Oqg+A==
+X-Google-Smtp-Source: ABdhPJyNaNhRqXdYQuKqkGHdNgpMFBF+e1dVuTwmHqBNi7WGek/K3vOZ0bjJq47xGjSCePRC2HITWw==
+X-Received: by 2002:a63:af01:: with SMTP id w1mr5908957pge.23.1593329967820;
+        Sun, 28 Jun 2020 00:39:27 -0700 (PDT)
+Received: from dragon ([80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id f29sm24451394pga.59.2020.06.28.00.39.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Jun 2020 00:39:27 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 15:39:10 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] thermal: qcom: tsens-v0_1: Add support for MSM8939
+Message-ID: <20200628073908.GA8343@dragon>
+References: <20200501203311.143934-1-konradybcio@gmail.com>
+ <20200501203311.143934-2-konradybcio@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2553
-Original-Authentication-Results: codewreck.org; dkim=none (message not signed)
- header.d=none;codewreck.org; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT012.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(39850400004)(136003)(46966005)(52536014)(86362001)(55016002)(36906005)(336012)(83380400001)(6862004)(54906003)(316002)(53546011)(33656002)(7696005)(5660300002)(9686003)(478600001)(6506007)(186003)(82310400002)(81166007)(26005)(4326008)(8936002)(356005)(2906002)(70586007)(82740400003)(8676002)(47076004)(70206006);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 5f2284b9-7b82-4df6-e0c6-08d81b362796
-X-Forefront-PRVS: 0448A97BF2
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3yYjKx367FRSJ3covTEf5f/9Ab6gt+ZcWn6aMOy+Yp011+MF5ow+AIuGdqulvsFDbzwIIGYKg3NuKIzZfGE+XE8vcgk1BDuyv6JKOMv2WDTmAk/jimKHTY8qUo95RTgM/jV0J76+CBQq9Y+5CyxurlDMel/mjZTGjI0B0IZlSC0mlBKDx579Lvnjp42OTUKQ7Ts9dmfCMwoRxdrkhBWl2Qqk42OiE6JeR8JH949ecqUC4PGZtU4kXdTHD07Iu0VoUWi0nu4GeFTOzOqeGqsB1rD80fcmOYCnAobzLSsAWFL6FsGZ+mzEe4X0NDidIhlwurdkHbLQ8PzOjPSO+rn9JkKhfV+zhBOmtybo/NFvBxmQW9NEaFAXAL9p43rAhoSk9YJIjCwUgxrb6H6+ivuXHQ==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2020 07:37:57.6380
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09577faa-23ce-449c-4fa7-08d81b362d71
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR03FT012.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4368
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501203311.143934-2-konradybcio@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRG9taW5pcXVlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERv
-bWluaXF1ZSBNYXJ0aW5ldCA8YXNtYWRldXNAY29kZXdyZWNrLm9yZz4NCj4gU2VudDogU3VuZGF5
-LCBKdW5lIDI4LCAyMDIwIDE6NTIgUE0NCj4gVG86IEppYW55b25nIFd1IDxKaWFueW9uZy5XdUBh
-cm0uY29tPg0KPiBDYzogZXJpY3ZoQGdtYWlsLmNvbTsgbHVjaG9AaW9ua292Lm5ldDsgdjlmcy0N
-Cj4gZGV2ZWxvcGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgU3RldmUNCj4gQ2FwcGVyIDxTdGV2ZS5DYXBwZXJAYXJtLmNvbT47IEthbHkgWGlu
-IDxLYWx5LlhpbkBhcm0uY29tPjsgSnVzdGluIEhlDQo+IDxKdXN0aW4uSGVAYXJtLmNvbT47IFdl
-aSBDaGVuIDxXZWkuQ2hlbkBhcm0uY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCAyLzJd
-IDlwOiByZW1vdmUgdW51c2VkIGNvZGUgaW4gOXANCj4NCj4gSmlhbnlvbmcgV3Ugd3JvdGUgb24g
-U3VuLCBKdW4gMjgsIDIwMjA6DQo+ID4gVGhlc2UgY29kZSBoYXMgYmVlbiBjb21tZW50ZWQgb3V0
-IHNpbmNlIDIwMDcgYW5kIGxpZWQgaW4ga2VybmVsIHNpbmNlDQo+ID4gdGhlbi4gaXQncyB0aW1l
-IHRvIHJlbW92ZSB0aGVzdCBubyB1c2VkIGNvZGUuDQo+DQo+IEdvb2QgcG9pbnQsIGhhcHB5IHRv
-IHRha2UgdGhpcyAtIHBsZWFzZSByZXNlbmQgd2l0aG91dCBSRkMgc2VwYXJhdGVseSAodGhlDQo+
-IHR3byBjb21taXRzIGFyZW4ndCByZWxhdGVkKSBhZnRlciBmaXhpbmcgdGhlIGNvbW1pdCBtZXNz
-YWdlIChsaWUvbGF5IGlzDQo+IGNvbXBsaWNhdGVkIGFuZCBJJ20gbm90IHN1cmUgd2hhdCBzaG91
-bGQgYmUgdXNlZCB0aGVyZSBidXQgbGllZCBkZWZpbml0ZWx5DQo+IGlzbid0IGNvcnJlY3QsIHRo
-ZSBxdWFsaWZpY2F0aW9uIGRvZXNuJ3QgcmVhbGx5IG1hdHRlciB0aG91Z2ggc28gcHJvYmFibHkN
-Cj4gc2ltcGxlciB0byByZW1vdmU7IGFuZCAndGhlc3Qgbm8gdXNlZCBjb2RlJyBkb2VzIG5vdA0K
-PiBwYXJzZSkNCj4NClRoYW5rcywgSSB0aGluayAibGF5IiBpcyByaWdodC4gSSB3aWxsIGZpeCBp
-dCBhbmQgcmVzZW5kLg0KDQpUaGFua3MNCkppYW55b25nDQoNCj4gLS0NCj4gRG9taW5pcXVlDQpJ
-TVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFj
-aG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlv
-dSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRl
-ciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3Ro
-ZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBp
-bmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo=
+On Fri, May 01, 2020 at 10:33:10PM +0200, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+
+For the record, I'm working my version of msm8939 tsens driver support,
+and I would highlight the things that differ from this patch.
+
+> ---
+>  drivers/thermal/qcom/tsens-v0_1.c | 142 +++++++++++++++++++++++++++++-
+>  drivers/thermal/qcom/tsens.c      |   3 +
+>  drivers/thermal/qcom/tsens.h      |   2 +-
+>  3 files changed, 145 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+> index 959a9371d205c..29b95886273b7 100644
+> --- a/drivers/thermal/qcom/tsens-v0_1.c
+> +++ b/drivers/thermal/qcom/tsens-v0_1.c
+> @@ -48,6 +48,64 @@
+>  #define MSM8916_CAL_SEL_MASK	0xe0000000
+>  #define MSM8916_CAL_SEL_SHIFT	29
+>  
+> +/* eeprom layout data for 8939 */
+> +#define MSM8939_BASE0_MASK           0x000000ff
+
+Tabs rather than spaces are used for indentation.
+
+> +#define MSM8939_BASE1_MASK           0xff000000
+> +#define MSM8939_BASE0_SHIFT
+
+This shift is 0.
+
+> +#define MSM8939_BASE1_SHIFT          24
+> +
+> +#define MSM8939_S0_P1_MASK         0x000001f8
+> +#define MSM8939_S1_P1_MASK         0x001f8000
+> +#define MSM8939_S2_P1_MASK_0_4     0xf8000000
+> +#define MSM8939_S2_P1_MASK_5       0x00000001
+
+This mask define is contradicting to MSM8939_S2_P1_SHIFT_5, and needs to
+be confirmed.
+
+> +#define MSM8939_S3_P1_MASK         0x00001f80
+> +#define MSM8939_S4_P1_MASK         0x01f80000
+> +#define MSM8939_S5_P1_MASK         0x00003f00
+> +#define MSM8939_S6_P1_MASK         0x03f00000
+> +#define MSM8939_S7_P1_MASK         0x0000003f
+> +#define MSM8939_S8_P1_MASK         0x0003f000
+> +#define MSM8939_S9_P1_MASK         0x07e00000
+> +
+> +#define MSM8939_S0_P2_MASK         0x00007e00
+> +#define MSM8939_S1_P2_MASK         0x07e00000
+> +#define MSM8939_S2_P2_MASK         0x0000007e
+> +#define MSM8939_S3_P2_MASK         0x0007e000
+> +#define MSM8939_S4_P2_MASK         0x7e000000
+> +#define MSM8939_S5_P2_MASK         0x000fc000
+> +#define MSM8939_S6_P2_MASK         0xfc000000
+> +#define MSM8939_S7_P2_MASK         0x00000fc0
+> +#define MSM8939_S8_P2_MASK         0x00fc0000
+> +#define MSM8939_S9_P2_MASK_0_4     0xf8000000
+> +#define MSM8939_S9_P2_MASK_5       0x00002000
+
+It's contradicting to MSM8939_S9_P2_SHIFT_5, and needs to be confirmed.
+
+> +
+> +#define MSM8939_CAL_SEL_MASK	0xc0000000
+
+Per downstream kernel, this mask is 0x7.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n370
+
+> +#define MSM8939_CAL_SEL_SHIFT	0
+> +
+> +
+> +#define MSM8939_S0_P1_SHIFT        3
+> +#define MSM8939_S1_P1_SHIFT        15
+> +#define MSM8939_S2_P1_SHIFT_0_4    27
+> +#define MSM8939_S2_P1_SHIFT_5      5
+> +#define MSM8939_S3_P1_SHIFT        7
+> +#define MSM8939_S4_P1_SHIFT        19
+> +#define MSM8939_S5_P1_SHIFT        8
+> +#define MSM8939_S6_P1_SHIFT        20
+> +//yes, 7 is missing in downstream
+
+The shift is not missing but just 0.
+
+> +#define MSM8939_S8_P1_SHIFT        12
+> +#define MSM8939_S9_P1_SHIFT        21
+> +
+> +#define MSM8939_S0_P2_SHIFT        9
+> +#define MSM8939_S1_P2_SHIFT        21
+> +#define MSM8939_S2_P2_SHIFT        1
+> +#define MSM8939_S3_P2_SHIFT        13
+> +#define MSM8939_S4_P2_SHIFT        25
+> +#define MSM8939_S5_P2_SHIFT        14
+> +#define MSM8939_S6_P2_SHIFT        26
+> +#define MSM8939_S7_P2_SHIFT        6
+> +#define MSM8939_S8_P2_SHIFT        18
+> +#define MSM8939_S9_P2_SHIFT_0_4    27
+> +#define MSM8939_S9_P2_SHIFT_5      8
+> +
+>  /* eeprom layout data for 8974 */
+>  #define BASE1_MASK		0xff
+>  #define S0_P1_MASK		0x3f00
+> @@ -189,6 +247,73 @@ static int calibrate_8916(struct tsens_priv *priv)
+>  	return 0;
+>  }
+>  
+> +static int calibrate_8939(struct tsens_priv *priv)
+> +{
+> +	int base0 = 0, base1 = 0, i;
+> +	u32 p1[11], p2[11];
+
+MSM8939 gets 10 sensors, so the arrays should be [10].
+
+> +	int mode = 0;
+> +	u32 *qfprom_cdata, *qfprom_csel;
+> +
+> +	qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
+> +	if (IS_ERR(qfprom_cdata))
+> +		return PTR_ERR(qfprom_cdata);
+> +
+> +	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+> +	if (IS_ERR(qfprom_csel)) {
+> +		kfree(qfprom_cdata);
+> +		return PTR_ERR(qfprom_csel);
+> +	}
+
+'calib_sel' is not separate from 'calib' bits on MSM8939.  I chose to
+read nvmem out as one go and map them to calibration data as below, per
+downstream kernel.
+
+	/* Mapping between qfprom nvmem and calibration data */
+	cdata[0] = qfprom_cdata[12];
+	cdata[1] = qfprom_cdata[13];
+	cdata[2] = qfprom_cdata[0];
+	cdata[3] = qfprom_cdata[1];
+	cdata[4] = qfprom_cdata[22];
+	cdata[5] = qfprom_cdata[21];
+
+	mode = (cdata[0] & MSM8939_CAL_SEL_MASK) >> MSM8939_CAL_SEL_SHIFT;
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1286
+
+We should support MSM8939 v3, as that's the mass production revision.
+
+> +
+> +	mode = (qfprom_csel[0] & MSM8939_CAL_SEL_MASK) >> MSM8939_CAL_SEL_SHIFT;
+> +	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+> +	switch (mode) {
+> +	case TWO_PT_CALIB:
+> +		base1 = (qfprom_cdata[1] & MSM8939_BASE1_MASK) >> MSM8939_BASE1_SHIFT;
+> +		p2[0] = (qfprom_cdata[0] & MSM8939_S0_P2_MASK) >> MSM8939_S0_P2_SHIFT;
+> +		p2[1] = (qfprom_cdata[0] & MSM8939_S1_P2_MASK) >> MSM8939_S1_P2_SHIFT;
+> +		p2[2] = (qfprom_cdata[1] & MSM8939_S2_P2_MASK) >> MSM8939_S2_P2_SHIFT;
+> +		p2[3] = (qfprom_cdata[1] & MSM8939_S3_P2_MASK) >> MSM8939_S3_P2_SHIFT;
+> +		p2[4] = (qfprom_cdata[1] & MSM8939_S4_P2_MASK) >> MSM8939_S4_P2_SHIFT;
+> +		p2[5] = (qfprom_cdata[1] & MSM8939_S5_P2_MASK) >> MSM8939_S5_P2_SHIFT;
+> +		p2[6] = (qfprom_cdata[1] & MSM8939_S6_P2_MASK) >> MSM8939_S6_P2_SHIFT;
+> +		p2[7] = (qfprom_cdata[1] & MSM8939_S7_P2_MASK) >> MSM8939_S7_P2_SHIFT;
+> +		p2[8] = (qfprom_cdata[1] & MSM8939_S8_P2_MASK) >> MSM8939_S8_P2_SHIFT;
+> +		p2[9] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_0_4) >> MSM8939_S9_P2_SHIFT_0_4;
+> +		p2[10] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_5) >> MSM8939_S9_P2_SHIFT_5;
+
+These do not really match downstream kernel.  My version look like:
+
+		base1 = (cdata[3] & MSM8939_BASE1_MASK) >> MSM8939_BASE1_SHIFT;
+		p2[0] = (cdata[0] & MSM8939_S0_P2_MASK) >> MSM8939_S0_P2_SHIFT;
+		p2[1] = (cdata[0] & MSM8939_S1_P2_MASK) >> MSM8939_S1_P2_SHIFT;
+		p2[2] = (cdata[1] & MSM8939_S2_P2_MASK) >> MSM8939_S2_P2_SHIFT;
+		p2[3] = (cdata[1] & MSM8939_S3_P2_MASK) >> MSM8939_S3_P2_SHIFT;
+		p2[4] = (cdata[1] & MSM8939_S4_P2_MASK) >> MSM8939_S4_P2_SHIFT;
+		p2[5] = (cdata[2] & MSM8939_S5_P2_MASK) >> MSM8939_S5_P2_SHIFT;
+		p2[6] = (cdata[2] & MSM8939_S6_P2_MASK) >> MSM8939_S6_P2_SHIFT;
+		p2[7] = (cdata[3] & MSM8939_S7_P2_MASK) >> MSM8939_S7_P2_SHIFT;
+		p2[8] = (cdata[3] & MSM8939_S8_P2_MASK) >> MSM8939_S8_P2_SHIFT;
+		p2[9] = (cdata[4] & MSM8939_S9_P2_MASK_0_4) >> MSM8939_S9_P2_SHIFT_0_4;
+		p2[9] |= (cdata[5] & MSM8939_S9_P2_MASK_5) >> MSM8939_S9_P2_SHIFT_5;
+
+> +		for (i = 0; i < priv->num_sensors; i++)
+> +			p2[i] = ((base1 + p2[i]) << 3);
+
+The left shift should be 2 per downstream kernel.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1407
+
+> +		/* Fall through */
+> +	case ONE_PT_CALIB2:
+> +		base0 = (qfprom_cdata[0] & MSM8939_BASE0_MASK);
+> +		p1[0] = (qfprom_cdata[0] & MSM8939_S0_P1_MASK) >> MSM8939_S0_P1_SHIFT;
+> +		p1[1] = (qfprom_cdata[0] & MSM8939_S1_P1_MASK) >> MSM8939_S1_P1_SHIFT;
+> +		p1[2] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_0_4) >> MSM8939_S2_P1_SHIFT_0_4;
+> +		p1[3] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_5) >> MSM8939_S2_P1_SHIFT_5;
+> +		p1[4] = (qfprom_cdata[1] & MSM8939_S3_P1_MASK) >> MSM8939_S3_P1_SHIFT;
+> +		p1[5] = (qfprom_cdata[1] & MSM8939_S4_P1_MASK) >> MSM8939_S4_P1_SHIFT;
+> +		p1[6] = (qfprom_cdata[1] & MSM8939_S5_P1_MASK) >> MSM8939_S5_P1_SHIFT;
+> +		p1[7] = (qfprom_cdata[1] & MSM8939_S6_P1_MASK) >> MSM8939_S6_P1_SHIFT;
+> +		//yes, 7 is missing in downstream
+
+Not really.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1331
+
+> +		p1[8] = (qfprom_cdata[1] & MSM8939_S8_P1_MASK) >> MSM8939_S8_P1_SHIFT;
+> +		p1[9] = (qfprom_cdata[1] & MSM8939_S9_P1_MASK) >> MSM8939_S9_P1_SHIFT;
+> +		for (i = 0; i < priv->num_sensors; i++)
+> +			p1[i] = (((base0) + p1[i]) << 3);
+> +		break;
+> +	default:
+> +		for (i = 0; i < priv->num_sensors; i++) {
+> +			p1[i] = 500;
+> +			p2[i] = 780;
+> +		}
+> +		break;
+> +	}
+> +
+> +	compute_intercept_slope(priv, p1, p2, mode);
+> +	kfree(qfprom_cdata);
+> +	kfree(qfprom_csel);
+> +
+> +	return 0;
+> +}
+> +
+>  static int calibrate_8974(struct tsens_priv *priv)
+>  {
+>  	int base1 = 0, base2 = 0, i;
+> @@ -325,7 +450,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>  	return 0;
+>  }
+>  
+> -/* v0.1: 8916, 8974 */
+> +/* v0.1: 8916, 8939, 8974 */
+>  
+>  static struct tsens_features tsens_v0_1_feat = {
+>  	.ver_major	= VER_0_1,
+> @@ -386,6 +511,21 @@ struct tsens_plat_data data_8916 = {
+>  	.fields	= tsens_v0_1_regfields,
+>  };
+>  
+> +static const struct tsens_ops ops_8939 = {
+> +	.init		= init_common,
+> +	.calibrate	= calibrate_8939,
+> +	.get_temp	= get_temp_common,
+> +};
+> +
+> +struct tsens_plat_data data_8939 = {
+> +	.num_sensors	= 10,
+> +	.ops		= &ops_8939,
+> +	.hw_ids		= (unsigned int []){0, 1, 2, 4, 5, 6, 7, 8, 9 },
+
+Should be { 0, 1, 2, 4, 5, 6, 7, 8, 9, 10 }.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom/msm8939-v3.0.dtsi?h=LA.BR.1.2.9.1_rb1.5#n670
+
+Shawn
+
+> +
+> +	.feat		= &tsens_v0_1_feat,
+> +	.fields	= tsens_v0_1_regfields,
+> +};
+> +
+>  static const struct tsens_ops ops_8974 = {
+>  	.init		= init_common,
+>  	.calibrate	= calibrate_8974,
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 2f77d235cf735..f654057e96ae1 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -59,6 +59,9 @@ static const struct of_device_id tsens_table[] = {
+>  	{
+>  		.compatible = "qcom,msm8916-tsens",
+>  		.data = &data_8916,
+> +	}, {
+> +		.compatible = "qcom,msm8939-tsens",
+> +		.data = &data_8939,
+>  	}, {
+>  		.compatible = "qcom,msm8974-tsens",
+>  		.data = &data_8974,
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 502acf0e68285..403b15546f648 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -590,7 +590,7 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data);
+>  extern struct tsens_plat_data data_8960;
+>  
+>  /* TSENS v0.1 targets */
+> -extern struct tsens_plat_data data_8916, data_8974;
+> +extern struct tsens_plat_data data_8916, data_8939, data_8974;
+>  
+>  /* TSENS v1 targets */
+>  extern struct tsens_plat_data data_tsens_v1, data_8976;
+> -- 
+> 2.26.1
+> 
