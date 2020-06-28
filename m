@@ -2,136 +2,142 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB50AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9F0207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593329239;
-	bh=dUqBBxgnP5eS6BruCJpKa8f5WXAIBflVt4Sm1RNBnwA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EFvrdON4JRQqpumnm83EZ+dx3i1z2F1HczE2RifOp5QiB0JWQprvqzAfoq5qd+2L+
-	 ywBov0W7QBzobKnsjcm5LV5WBPJX4GzDbVZPDKn4FMwo3WyrXRmHjOtIQKT8L5AvOp
-	 ZwcTxqOO6WP+Lrse8yDMmOSwpHCHsKW/7NBL5YIk=
+	by mail.kernel.org (Postfix) with ESMTP id 66EDB20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uOXm1rRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgF1H1S (ORCPT
+        id S1726152AbgF1H2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgF1H1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 03:27:17 -0400
-Received: from hump.s81c.com (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EFE420768;
-        Sun, 28 Jun 2020 07:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593329237;
-        bh=dUqBBxgnP5eS6BruCJpKa8f5WXAIBflVt4Sm1RNBnwA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eGKjm/8Spg2HXSxSoNvLXNgD5QW5W5kh022avLDwpc2rN+s9U8bLBT3kA3XMxoUFh
-         9tvSF+ENB444laMXd8nyL6gn5cIRn8wAwF6RRDnbqgco3wuy8EgtrgnbLqz8ku9Jwg
-         aQrWddyKY3yRzPJdc+beVndSmoknDG5HkGvCEVhs=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] sched: fix build with GCC_PLUGIN_RANDSTRUCT
-Date:   Sun, 28 Jun 2020 10:27:02 +0300
-Message-Id: <20200628072702.1249815-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        Sun, 28 Jun 2020 03:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgF1H2X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 03:28:23 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850F0C061794;
+        Sun, 28 Jun 2020 00:28:23 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C030C4FB;
+        Sun, 28 Jun 2020 09:28:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593329301;
+        bh=ck+LjAkxjFbi+T46BUzZf+XpAk4V6f33vhP8DfWZQHI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uOXm1rRxayXR+zKQy3KRDZgAUKQTQRWl8eKer9/zKORUNd5yFoInZcCU7aBUs+y6Y
+         YOr58xIXYiNhUT0myqyZxMLrTlYE7PeBX/ITh9unu3mm08hj0KPhRkuDwGD1NnIT71
+         ZdSA1chOyEZIx1s1yK9BircekQKa03LFbtHav0iw=
+Date:   Sun, 28 Jun 2020 10:28:19 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
+Message-ID: <20200628072819.GB8391@pendragon.ideasonboard.com>
+References: <20200320112205.7100-1-dev@pascalroeleven.nl>
+ <20200320112205.7100-3-dev@pascalroeleven.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200320112205.7100-3-dev@pascalroeleven.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Hi Pascal,
 
-Since the commit a148866489fb ("sched: Replace rq::wake_list")
-task_struct and CSD_TYPE_TTWU objects can be on the same queue and this
-requires that have layout similar enough.
+On Fri, Mar 20, 2020 at 12:21:33PM +0100, Pascal Roeleven wrote:
+> The KR070PE2T is a 7" panel with a resolution of 800x480.
+> 
+> KR070PE2T is the marking present on the ribbon cable. As this panel is
+> probably available under different brands, this marking will catch
+> most devices.
+> 
+> As I can't find a datasheet for this panel, the bus_flags are instead
+> from trial-and-error. The flags seem to be common for these kind of
+> panels as well.
+> 
+> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index e14c14ac6..b3d257257 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2842,6 +2842,32 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
+>  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+>  };
+>  
+> +static const struct drm_display_mode starry_kr070pe2t_mode = {
+> +	.clock = 33000,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 209,
+> +	.hsync_end = 800 + 209 + 1,
+> +	.htotal = 800 + 209 + 1 + 45,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 22,
+> +	.vsync_end = 480 + 22 + 1,
+> +	.vtotal = 480 + 22 + 1 + 22,
+> +	.vrefresh = 60,
+> +};
+> +
+> +static const struct panel_desc starry_kr070pe2t = {
+> +	.modes = &starry_kr070pe2t_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 152,
+> +		.height = 86,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
 
-This assumption is broken when CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled:
+I'm trying to fix inconsistencies in the panel-simple driver, and this
+caught my eyes. MEDIA_BUS_FMT_RGB888_1X24 isn't a correct format for
+LVDS panels. MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+MEDIA_BUS_FMT_RGB888_1X7X4_SPWG or MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+should be used instead. As I couldn't find documentation for the panel,
+I can't tell which format is correct. Could you please help ?
 
-  CHK     include/generated/compile.h
-  CC      kernel/smp.o
-In file included from arch/x86/include/asm/atomic.h:5,
-                 from include/linux/atomic.h:7,
-                 from include/linux/llist.h:51,
-                 from include/linux/irq_work.h:5,
-                 from kernel/smp.c:10:
-kernel/smp.c: In function ‘smp_init’:
-include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_157’ declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) != offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist)
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
-  373 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-kernel/smp.c:687:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
-      |  ^~~~~~~~~~~~
+> +};
+> +
+>  static const struct drm_display_mode starry_kr122ea0sra_mode = {
+>  	.clock = 147000,
+>  	.hdisplay = 1920,
+> @@ -3474,6 +3500,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "shelly,sca07010-bfn-lnn",
+>  		.data = &shelly_sca07010_bfn_lnn,
+> +	}, {
+> +		.compatible = "starry,kr070pe2t",
+> +		.data = &starry_kr070pe2t,
+>  	}, {
+>  		.compatible = "starry,kr122ea0sra",
+>  		.data = &starry_kr122ea0sra,
 
-Wrap 'wake_entry' and 'wake_entry_type' fiels of task_struct in an
-anonymous struct to keep their relative layout intact during
-randomization.
-
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
-
-v2: use anonymous struct as Steven suggested.
-
- include/linux/sched.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..7e30a09df616 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -654,8 +654,15 @@ struct task_struct {
- 	unsigned int			ptrace;
- 
- #ifdef CONFIG_SMP
--	struct llist_node		wake_entry;
--	unsigned int			wake_entry_type;
-+       /*
-+        * The layout of these fields must match the layout of CSD_TYPE_TTWU
-+        * so they can be on the same @call_single_queue
-+        */
-+	struct {
-+		struct llist_node		wake_entry;
-+		unsigned int			wake_entry_type;
-+	};
-+
- 	int				on_cpu;
- #ifdef CONFIG_THREAD_INFO_IN_TASK
- 	/* Current CPU: */
 -- 
-2.25.4
+Regards,
 
+Laurent Pinchart
