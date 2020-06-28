@@ -2,109 +2,123 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E352BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF27BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1E120720
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCAzAftw"
+	by mail.kernel.org (Postfix) with ESMTP id D15F220720
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 11:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgF1L0J (ORCPT
+        id S1726225AbgF1L3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 07:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgF1L0I (ORCPT
+        Sun, 28 Jun 2020 07:29:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:55261 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgF1L3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 07:26:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C1CC061794;
-        Sun, 28 Jun 2020 04:26:08 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so13679587wrm.4;
-        Sun, 28 Jun 2020 04:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=S+k6UtPIvO0vIYbrlMDk45zrIVwFhaRGOClzN9gbCgs=;
-        b=WCAzAftwg7qux9HBjIOiWi8WrC89fPVL6lvR7VK3RKs9uF+baZ8sp4sZSMqb3iOoCx
-         v8BB0oZbYz7bKozw8eMUtvYPbwcQuH0Nf44GK/t2E+oRm/aOxF3nXK9FZ7vvroShwghd
-         SyEsSa8CwLXWeSQpC4c+OsUHCQB19CK0F4D6ngjy8TseEAiQKLnbrEmgyEQqSr6aJqOo
-         yEafGR47cwC185jXi3IujhjuZKA+4wxncfRMbn1gDpn0tfSlKZ9evrtKqlQOQLOnqf5F
-         aUrcz2VBOJE8z1NJmKBNgDvREKP+/T/hHglJz/xkeuIKpT0NovSQv2l/QrpQJMaAId5T
-         AeoA==
+        Sun, 28 Jun 2020 07:29:18 -0400
+Received: by mail-il1-f200.google.com with SMTP id d18so10194023ill.21
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 04:29:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S+k6UtPIvO0vIYbrlMDk45zrIVwFhaRGOClzN9gbCgs=;
-        b=hYj6rIbhjaDBeTEXeSlkqjiW4eC0ffyKGTrla3eLcFzDuBAJsU+dwzNq8wKR8jqnzZ
-         TLkuAtwfIXC8dMIdGRcu/+Jiqrcyf3XbbGmeYA/abaB4O88A8FNZIoryXLqHiYl9I+lI
-         +/HF6oeTgIXD5rQstu19FQkbiy/lyJyWCcHwx35QqqmEYaEYiJaT3HiyczSOWKtTB91J
-         fByrVsFUsukqQokZSLoO5ZaYv97KFORBNXoANmFAVZjyvrR+o88tetNYLRY/1Rj3xRAe
-         dEvwBueC/XC9OuR4DNPvzEb7yEwSZZ41XFeQFDVzo5ERlVd0EBXUdCdIOX6bhNrEG/4j
-         2H3w==
-X-Gm-Message-State: AOAM532Oxspv6BXSo6xNsKs1wPtJZypUxk6a1kN+wWW+VdUvqoHAeQzQ
-        9kO9Sw5U0fx4g/9TK1IOw8d/E8UayEEo77UIum4=
-X-Google-Smtp-Source: ABdhPJxF/pjQBgCeBAbqhm4mgZrudZ1F7qiZE+sYiYJEnTaoqWG9BfQoEXfJqsnVtSNSHzDzlkgWDqOmSNUSnpMDgZw=
-X-Received: by 2002:a5d:6907:: with SMTP id t7mr12403926wru.329.1593343567163;
- Sun, 28 Jun 2020 04:26:07 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=esH9pYBPT18QteRNwywg+df/d1ux0Pe9Ptz6+tlWA00=;
+        b=Jy8mVG3wLnFI4gpLqHSpHoCFWHesTVUsKHZ+4nlL08WsuSbjAx72Pv0U7G1wsKzd4u
+         d6SDHFCHjSf6tVpLXMfxyeT5Frjj/26LgFn2Vq0Wbm2VAxV1vuHjPlyIjJF+HIVBsh7a
+         hzF4yPdVHPcvhboi9FcflP5HrBGckntdTYhf2H1GIJdrnokUjxHLqAeUizRRK1c0t4o2
+         /DUlsuSx/gVlnFhTQgws1wDav5jGpDQTQOSTytIW/2aGS6E+xdVsa/hjWaFnCW6FLxOn
+         PS1tx740hbIg8TyVhe8muGcV5ubwa6JnMKGy/h+PaMzLtk2xMfGmDft/qZWMgsqBvCMD
+         qtFQ==
+X-Gm-Message-State: AOAM531LZqKSHyzFjerdytXVwzsLBE13GTOTs0gn6R32zYN+7HbT7a7U
+        m6KTuR++nwNMj4N6kgvZlL5h/IDpH15du+LBiYA5+dfebHTQ
+X-Google-Smtp-Source: ABdhPJxpGcf5yUA8noMC/0MaagCzM6ZAWL9D190r3lVvw6xy+/6E9uPD9FjvhHT+JlVjAUr4Y/woSluACHEP/C4eId3ww2U+x0Qv
 MIME-Version: 1.0
-References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn> <e419a2acea6c1977eaef5d049d607749@kernel.org>
-In-Reply-To: <e419a2acea6c1977eaef5d049d607749@kernel.org>
-From:   Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Date:   Sun, 28 Jun 2020 13:25:54 +0200
-Message-ID: <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
+X-Received: by 2002:a5d:9313:: with SMTP id l19mr11900062ion.150.1593343757135;
+ Sun, 28 Jun 2020 04:29:17 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 04:29:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a6348d05a9234041@google.com>
+Subject: WARNING in tracepoint_add_func
+From:   syzbot <syzbot+721aa903751db87aa244@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, mathieu.desnoyers@polymtl.ca,
+        mingo@elte.hu, netdev@vger.kernel.org, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D1=81=D1=80=D0=B5, 24. =D1=98=D1=83=D0=BD 2020. =D1=83 10:40 Marc Zyngier =
-<maz@kernel.org> =D1=98=D0=B5 =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BE/=
-=D0=BB=D0=B0:
->
-> On 2020-06-24 08:44, Tiezhu Yang wrote:
-> > [git send-email failed due to too many commands,
-> >  so only cc the major related email and resend it,
-> >  sorry for that]
->
-> This is becoming majorly annoying.
+Hello,
 
-I don't think this is the right vocabulary to welcome newcomers,
-however "terrible" thinks they did.
+syzbot found the following crash on:
 
-Rather, patience, calmness and clear and detailed explanations would
-work much better - and certainly be much more helpful and useful to
-the community in the long run.
+HEAD commit:    7a64135f libbpf: Adjust SEC short cut for expected attach ..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=142782e3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=721aa903751db87aa244
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-Regards,
-Aleksandar
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> Please fix your git setup
-> *before* dumping 57 emails for just 14 patches. You have done
-> the same thing yesterday, and I would hope you learned from your
-> mistakes.
->
-> Also, do not repost a series more than once per week. You have
-> already exceeded your quota by quite a margin.
->
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+721aa903751db87aa244@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 16762 at kernel/tracepoint.c:243 tracepoint_add_func+0x254/0x880 kernel/tracepoint.c:243
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 16762 Comm: syz-executor.4 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+RIP: 0010:tracepoint_add_func+0x254/0x880 kernel/tracepoint.c:243
+Code: 44 24 20 48 8b 5b 08 80 38 00 0f 85 6b 05 00 00 48 8b 44 24 08 48 3b 58 08 0f 85 2d ff ff ff 41 bc ef ff ff ff e8 4c 78 fe ff <0f> 0b e8 45 78 fe ff 44 89 e0 48 83 c4 38 5b 5d 41 5c 41 5d 41 5e
+RSP: 0018:ffffc90001497a98 EFLAGS: 00010216
+RAX: 000000000000199a RBX: ffffffff89b99040 RCX: ffffc90011df4000
+RDX: 0000000000040000 RSI: ffffffff8174d824 RDI: ffff8880979adb30
+RBP: ffffffff814f1b80 R08: 0000000000000000 R09: ffffffff89bf9867
+R10: 000000000000000a R11: 0000000000000000 R12: 00000000ffffffef
+R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880979adb10
+ tracepoint_probe_register_prio kernel/tracepoint.c:315 [inline]
+ tracepoint_probe_register+0x9c/0xe0 kernel/tracepoint.c:335
+ trace_event_reg+0x28f/0x350 kernel/trace/trace_events.c:304
+ perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
+ perf_trace_event_init+0x532/0x9a0 kernel/trace/trace_event_perf.c:204
+ perf_trace_init+0x176/0x240 kernel/trace/trace_event_perf.c:228
+ perf_tp_event_init+0xa2/0x120 kernel/events/core.c:9330
+ perf_try_init_event+0x12a/0x560 kernel/events/core.c:10782
+ perf_init_event kernel/events/core.c:10834 [inline]
+ perf_event_alloc.part.0+0xdee/0x36f0 kernel/events/core.c:11110
+ perf_event_alloc kernel/events/core.c:11489 [inline]
+ __do_sys_perf_event_open+0x72c/0x2b50 kernel/events/core.c:11605
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb19
+Code: Bad RIP value.
+RSP: 002b:00007f2d99608c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00000000004fa640 RCX: 000000000045cb19
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000100
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000841 R14: 00000000004cb320 R15: 00007f2d996096d4
+Kernel Offset: disabled
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
