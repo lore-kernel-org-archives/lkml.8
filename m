@@ -2,151 +2,106 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A22C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479572053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEbamC6/"
+	by mail.kernel.org (Postfix) with ESMTP id 128EC2076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593367351;
+	bh=JazwLBHGAnbWAIyVgHUZkwcWVanOFEGcnRAZcJPCKHk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I8IlgW0SDd99U4jDT7sIm8VKIdRMhFYoJ931xFb9FMQAnOuYp+fWD8MtqCwP+EHrl
+	 6IePghN8kyn8BtrL1tVqa6zT6Eus24f6u0tXfX0vj2sz0TyA2vM8zDQ26Rr6eTS2iX
+	 0/+oy+gqA7lTwpt5wLPn+awzEN3JHX2jzNBaPQ+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgF1RqN (ORCPT
+        id S1726630AbgF1SC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 13:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
+        Sun, 28 Jun 2020 14:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgF1RqM (ORCPT
+        with ESMTP id S1726060AbgF1SC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 13:46:12 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78795C03E979;
-        Sun, 28 Jun 2020 10:46:12 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id z17so10969387edr.9;
-        Sun, 28 Jun 2020 10:46:12 -0700 (PDT)
+        Sun, 28 Jun 2020 14:02:28 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA94C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:02:28 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id b15so10996855edy.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 11:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R4NV7ZXUyGxQT+NbkPwPy+JARllPu6O11kPu6TTALnk=;
-        b=JEbamC6/5d34z41avnGchuvb/He/2xsnrG6xzmvifbDHhoDRIEfWrSjJ/pc0tC+r0q
-         x/cq1S3heyeIphZOUZ/sOiSFULZFO0eq18Ih7oKyAHykE/qZjsHE87PSIiHREVy9QxPo
-         V3nCty1jmZbgwrcpDjbLMUFX7UHMFFFq0xKCXy+5Pf3AMAnnsxNpxyt8St6aTpDI0pMY
-         MFQTi8qIhCZDwV47GjDiVYanPFzt57gaazsexxRIBr2H+7ixrUuqnbKaK+TQKWiOQcc9
-         xGbCfiZaZ/6WRShQCaZ9PXiCeI9LbeD4cWDZbi7qIwyA2XXWuy2oSwZQ2XosYBXRvIUZ
-         XBAA==
+         :content-disposition:in-reply-to;
+        bh=Ycf4p9QItE2wSoXopvfC4fLvCzxJ49eQgNZFIlZ34gA=;
+        b=P9xQBtB64hFNRHImpQEqPP9tN2Dnm2ZaeQjuoIqV8TP288dgaDWQcAz9ujxpanbWaI
+         2iyQeamqtvAT0WMrRSurc7DSLqY/5GN3kL0VFj1eJfd+NZxSCqbOqJsQvvDQhR+zV65+
+         4JQUgS5XFUyGWoJQZMuAFNPKiR7BgzrMcR7P/d2TX0q1igXXBNu/o0IVwBxMDbNrqnSP
+         Z+zMRtuYmcgif/hTfUH/b6modyk6saxDrxoxhp4mjKAYa1XkIXqVsNnn3hKGV4Y9yNQc
+         J7LTQxHPWQq2T0gPF5oLQadpLwdFOJ0yVZZyR6BOe58LNIrCp4mB5PbsZAXna8D5Y6uV
+         2tqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R4NV7ZXUyGxQT+NbkPwPy+JARllPu6O11kPu6TTALnk=;
-        b=dW2X8Hxv63S91zHSfqV7Bjw54TNDHg1W7OeQo9cX2rBS3HTuxdODjJKe8d6QhXill2
-         R0EKoBoWHGPMU6IrMvP2tjNNPsJOroMRrvJq7GUVyJvBdGkGmyc0suj2TdJwgH6OshHR
-         DPxHWtoRcTVEqmzUDMqTgiKbtwln0ZLd0MzB4x0u/AhEq2l3Eq3rbYVWoaIk7Wc8wHC6
-         Cn0lF+brssOgkZx563akO8r9zkiKgs+qFmrB3c8R7zxrxeoIobMka0285SH0t+aZkSFi
-         xF6V4FupbsbkgQ36LvYtZlDzElq+kszADVgzBT/uNdImYrJJDH362VNY0Sxm6/l58kiu
-         H41g==
-X-Gm-Message-State: AOAM532GWJMyppGRF786QFPk4/sbM8asO+UYl1IjSuwZvU79MxP/rtdh
-        vTD4RB7EZS5P6F9QaTGPXVeWhMr+8sc=
-X-Google-Smtp-Source: ABdhPJzAodcx4cnaOgTt2nCuM+DLcNI6Yju9NJx5mlCpxdlC74zw/l+TDTqJUVM7eUV3e0oJgnxULQ==
-X-Received: by 2002:a50:d78f:: with SMTP id w15mr14258228edi.245.1593366371211;
-        Sun, 28 Jun 2020 10:46:11 -0700 (PDT)
-Received: from dumbo (tor-exit-16.zbau.f3netze.de. [2a0b:f4c0:16c:16::1])
-        by smtp.gmail.com with ESMTPSA id v11sm12707549eja.113.2020.06.28.10.46.09
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Ycf4p9QItE2wSoXopvfC4fLvCzxJ49eQgNZFIlZ34gA=;
+        b=ncxuc+LOvwDIxbUvzFc9ifn3Rz6s+NRLkWzWuqsm3QVQbS14nAOFt3yNm/eVQ3xUMX
+         cJqW2lUmaYX+4XK5oqWzY1X9MyZ6kpGxMZ7vU4KH7yqGIelvBuf5RJVgpbyL5cfzA5jY
+         bh2z3uup418Q1ecCR6xa74ERH5HbAXOPbisPTahnd/e/Rzp6rDFfcpN9GPJWdzzwySyV
+         QwFK4r6QGFekNRcJk1G8orcGcmKkjsNS2nBB9sGq27Sc1m/l8shLEYn7MLeryhMCAr2n
+         OL9y5rfHBrF7kgH0BmkAFDAa5Jnmk05rkvTTC78UH1W706uxk0B1/6SE4a5+72N76o9F
+         jsmA==
+X-Gm-Message-State: AOAM533DY14hwEoRm3u6kFz9gpI0gxr1wHgfccIjUiRV26YtQB8sWbWK
+        z9ReZM9zj/DAVU8TXSjlYwI=
+X-Google-Smtp-Source: ABdhPJzrK4yRmYL8+cFUT49ZP+5d6D0O0dz3/p26FNVe6ydXFxSCkiBHXmlTYzkyH3m32Qkq6FBUkA==
+X-Received: by 2002:a50:d0dc:: with SMTP id g28mr13336746edf.169.1593367347208;
+        Sun, 28 Jun 2020 11:02:27 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id s23sm18299115ejz.53.2020.06.28.11.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 10:46:10 -0700 (PDT)
-Received: from cavok by dumbo with local (Exim 4.92)
-        (envelope-from <cavok@dumbo>)
-        id 1jpbNW-0005Ls-2V; Sun, 28 Jun 2020 19:46:06 +0200
-Date:   Sun, 28 Jun 2020 19:46:06 +0200
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2] kbuild: buildtar: add arm64 dtbs support
-Message-ID: <20200628174606.GA19923@dumbo>
-References: <5ef50e52.1c69fb81.b6cbd.bd8e@mx.google.com>
- <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
- <20200626214026.GB25753@dumbo>
- <CAK7LNASRL6jaaxZreFK+iDmFHuw6QLSS0n08gZNkyhcsNunAnw@mail.gmail.com>
- <20200627212112.GA18721@dumbo>
- <CAK7LNARhsyo0OoS+fibCn3tt4J7_iwfsSn8TvzjxZ4K_bwreUA@mail.gmail.com>
+        Sun, 28 Jun 2020 11:02:26 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 20:02:24 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] x86/entry for 5.8
+Message-ID: <20200628180224.GA19572@gmail.com>
+References: <20200628140523.GA18884@zn.tnic>
+ <CAHk-=wiu9wquJ1LO53sA7=9ZCmQkRpu1-hZwwopeu8OVzt4qsg@mail.gmail.com>
+ <20200628171816.GF18884@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARhsyo0OoS+fibCn3tt4J7_iwfsSn8TvzjxZ4K_bwreUA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200628171816.GF18884@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 12:46:28PM +0900, Masahiro Yamada wrote:
-> On Sun, Jun 28, 2020 at 6:21 AM Domenico Andreoli
-> <domenico.andreoli@linux.com> wrote:
-> >
-> > On Sat, Jun 27, 2020 at 09:02:52PM +0900, Masahiro Yamada wrote:
-> > > On Sat, Jun 27, 2020 at 6:40 AM Domenico Andreoli <domenico.andreoli@linux.com> wrote:
-> > > > On Fri, Jun 26, 2020 at 03:16:58PM +0900, Masahiro Yamada wrote:
-> > > > > On Fri, Jun 26, 2020 at 5:51 AM Domenico Andreoli <domenico.andreoli@linux.com> wrote:
-> >
-> > [...]
-> >
-> > > > > >
-> > > > > > +       arm64)
-> > > > > > +               make ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
-> > > > > > +               ;;
-> > > > > > +esac
-> > > > > > +
-> > > > >
-> > > > >
-> > > > > Or, you can use INSTALL_PATH="${tmpdir}/boot"
-> > > > > to make it shorter.
-> > > >
-> > > > This does not work, INSTALL_DTBS_PATH gets somehow defined along the
-> > > > twisted path to buildtar and therefore needs to be explicitly specified
-> > > > for the new destination.
-> > >
-> > > It works.
-> > >
-> > > See line 1002 of the top Makefile
-> > >
-> > > export INSTALL_DTBS_PATH ?= $(INSTALL_PATH)/dtbs/$(KERNELRELEASE)
-> >
-> > Exactly. INSTALL_DTBS_PATH is _exported_ in the top Makefile.
-> >
-> >
-> > This is what it seems to happen, in the order:
-> >
-> > 1. outer 'make dir-pkg'
-> >    INSTALL_DTBS_PATH is exported with some content
-> >
-> > 2. control arrives to buildtar
-> >    INSTALL_DTBS_PATH is there as environment variable
-> >
-> > 3. inner 'make INSTALL_PATH=${tmpdir}/boot dtbs_install'
-> >    INSTALL_DTBS_PATH is already set, therefore it is not modified
-> 
-> Sorry, I was wrong.
-> Your analysis is definitely right.
-> 
-> 
-> I will apply v4.
-> 
-> Thanks.
-> 
 
-Thanks to you!
+* Borislav Petkov <bp@suse.de> wrote:
 
-Domenico
+> On Sun, Jun 28, 2020 at 09:57:00AM -0700, Linus Torvalds wrote:
+> > Tssk. This has an unnecessary merge "to resolve conflicts". I'd much
+> > rather have seen the pull without that.
+> 
+> Yeah, reportedly because "Linus renamed probe_kernel_read() and [peterz]
+> removed a call". I guess they did that for linux-next's sake.
 
--- 
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+Yeah, I did the 2c92d787cc9f merge to have a clean integration - but 
+if the merge resolution is the tail commit of a branch, then I usually 
+strip it just before sending it to Linus, and let Linus resolve it 
+instead - a branch with a tail conflict merge commit is arguably ugly.
+
+> > Oh well. Pulled.
+> 
+> Thx.
+
+Thanks guys!
+
+	Ingo
