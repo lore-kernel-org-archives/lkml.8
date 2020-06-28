@@ -2,233 +2,142 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5347CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F67C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E4E206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593356379;
-	bh=AYelRfzaJcKalSujJzvmSbKORE68nn9z7/DMdkL8X4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OQdEshhVGxn7oWnkLcp39+/V9q3PyvLR+Umv0AAxCHmd93CiFkCJKWgr6KXKN74oQ
-	 zhiFnvW6CSJAZXBsz89adyEJcchXsDersstMIVdFpmvhxzOy+Jzx75LVmOSEae4GvP
-	 VSEFFMLuhD7R8JyhErNG6piM5dihZyVzYTLPIjj0=
+	by mail.kernel.org (Postfix) with ESMTP id 8FDEC206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JH5AUrY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgF1O7f (ORCPT
+        id S1726071AbgF1PSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 10:59:35 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:27341 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgF1O7f (ORCPT
+        Sun, 28 Jun 2020 11:18:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40723 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725970AbgF1PSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 10:59:35 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 05SEx3FM021744;
-        Sun, 28 Jun 2020 23:59:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 05SEx3FM021744
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593356344;
-        bh=8y+sYvvSlsPJkePBvt6b93o/5tiZNHK5j3ROt3+LDbs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gfV/cVSVyqGELOxkmM0ddlpJzfJFpck3dTVCA4ly/qTctqpOgCIt8KI/0GZQEwIpB
-         Dh5E0+44WOBbh5EzEmaDJTOy+nPCv9Ao3kYSIM6q+hJC5d8r7+GlqWGIL0kiMffB6t
-         2s3DpyYA9Ax2Sq97z0qWyYs2OE/sBmLBjGuPI3AoI3LgoqBTDfCrDFZWU6ZmIAukrC
-         47Ge9Cyfjj8oyAbh+gAzNTqsGTrVfarH4+aqZzHOm6MAfUF2vtYgvJ0yjbGIC+Twqx
-         6FUmzNZACWngYv//f0oAnoZVp/e7XgnA4FOK/snsM81iAAr74iLfmrIPANSU/CbhLT
-         1xWc7JGgj32mA==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id g44so4524769uae.12;
-        Sun, 28 Jun 2020 07:59:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533XXynDBHswid/CHUQ2p/gzZdIWUnLkQe5ziPrXAg/Z22qzXaA3
-        McAaBq9r7HumYBpeH6ltbDeqME9QsXVqfgrS6ms=
-X-Google-Smtp-Source: ABdhPJzk10ZsmGC+0M0P8bzA7VrZG8l8xO59Tn4JuDQ61DXvhrT8sTPgPSyCfs0ZJlUarc4D98BLZyDfrhOoX/2BOrE=
-X-Received: by 2002:ab0:5b91:: with SMTP id y17mr8257200uae.95.1593356342166;
- Sun, 28 Jun 2020 07:59:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <ff9d1c3369b96c1d14b1e898e3d5f64ad945b604.1593346883.git.mchehab+huawei@kernel.org>
- <CAK7LNARnDe0ToxYj9mMpocxzmrUvp6yf14iDRxgG8nGuGcxFKw@mail.gmail.com> <9ed32076053cd860900366dc9e12e5cb76d031b5.camel@redhat.com>
-In-Reply-To: <9ed32076053cd860900366dc9e12e5cb76d031b5.camel@redhat.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 28 Jun 2020 23:58:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARJ6VMX_NJ9_YncWe0HQvJgOxnzujC+S0ZB8cL0NCYMWg@mail.gmail.com>
-Message-ID: <CAK7LNARJ6VMX_NJ9_YncWe0HQvJgOxnzujC+S0ZB8cL0NCYMWg@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: qconf: make debug links work again
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 28 Jun 2020 11:18:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593357502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=VIiRpg2HMcYH3miez2YP0TJHh+8l2/Xf7TTOHwjLZVc=;
+        b=JH5AUrY6YV11wRbz1xBJ1h899Vtc3NdZSkdBLHbIZA9lWFmI/Wwmqe4hueflcvpWE2RlQy
+        0Y5M2YhKvAaJL8wcItywwiAVqhODiQk1yP9u8qBzIqbjh2npDtaGhOAcXFcJG3vmKALKDS
+        yZVfyg1YRkJrMYj09ky23gH8CusdZ+g=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-qnWlTHZjMfqC4rt6_IBwtQ-1; Sun, 28 Jun 2020 11:18:21 -0400
+X-MC-Unique: qnWlTHZjMfqC4rt6_IBwtQ-1
+Received: by mail-qk1-f198.google.com with SMTP id f4so2163181qkk.10
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 08:18:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VIiRpg2HMcYH3miez2YP0TJHh+8l2/Xf7TTOHwjLZVc=;
+        b=ibCbyogs3VwgjWcsU6g4MyX7HGw7n47SNX4X9oGA0dMZK0YDwAlbIZzLC0MyKQiUS0
+         vwSpBJd3dco5fG0vZm/6aNFn4VorTNStHN6uST4uUNOc7jh8LwkNUmBt4TKa88RcHDkg
+         /7lR6rg+WWM+FRCLd5VS6Ls6KsLgHQL6MdxDs1jgGdb448+/hmh57NxHCKtFyi3SVS7R
+         Whqk/jmzUxNqrVZWg91ojEcY6zVJdH91Oom2xVa9Z0lLC2D6paRbCib69SpNo3wlAsbO
+         +1cDFtsj3gZpTG/E/lQ0+4ZKa4gB0kgxrivTTFETwRzin/RKO5q8iJhgHM8jcfIW1ehH
+         OAew==
+X-Gm-Message-State: AOAM533fam+KfYf+KP5ysDABURTkH8PnTbVPuqFx/UhTPbPwTGot2oU/
+        kvjRJkmMNMofp6R7xGynS8fWB8iF8KONkymR1QB4eQ8ULXooqdZdwPGEe6x2CG7RGnHcwJOa3Tv
+        mIvIS6Eo7WGpzz071Xo2iMa+6
+X-Received: by 2002:a37:6388:: with SMTP id x130mr1227803qkb.220.1593357500168;
+        Sun, 28 Jun 2020 08:18:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzYwcyPZwjUj8AFBJ+MhLk2JfZrttXkDX3IvfuM3nkex36XoZj769AGHUhO6+omwCCFp/3c2g==
+X-Received: by 2002:a37:6388:: with SMTP id x130mr1227788qkb.220.1593357499916;
+        Sun, 28 Jun 2020 08:18:19 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id o15sm13755578qko.67.2020.06.28.08.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 08:18:19 -0700 (PDT)
+From:   trix@redhat.com
+To:     mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] fpga: dfl: improve configuration of dfl pci devices
+Date:   Sun, 28 Jun 2020 08:18:13 -0700
+Message-Id: <20200628151813.7679-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 11:48 PM Maxim Levitsky <mlevitsk@redhat.com> wrote:
->
-> On Sun, 2020-06-28 at 23:41 +0900, Masahiro Yamada wrote:
-> > On Sun, Jun 28, 2020 at 9:21 PM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > > The Qt5 conversion broke support for debug info links.
-> > >
-> > > Restore the behaviour added by changeset
-> > > ab45d190fd4a ("kconfig: create links in info window").
-> > >
-> > > Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> >
-> > I tested this patch, but this caused
-> > segmentation fault.
-> >
-> >
-> > I enabled 'Show Debug Info',
-> > and then clicked
-> > dep: <symbol name>.
-> >
-> > Then, xconfig crashed.
-> >
-> > (without this patch, it did not cause
-> > segfault at least)
-> >
-> > Did you see this?
->
-> Works for me - tested this again
-> (I have both patches applied on top on mainline master branch).
-> Maybe you have Qt4?
+From: Tom Rix <trix@redhat.com>
 
+To use a dfl pci device, several dfl configs need to be selected.
+This is tedious and error prone.
 
-I do not think so.
+So automagically select the needed configs when FPGA_DFL_PCI
+is selected.
 
-I checked scripts/kconfig/.qconf.cmd
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/fpga/Kconfig | 36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-qconf was linked with Qt5.
-
-
-$ cat scripts/kconfig/.qconf.cmd
-cmd_scripts/kconfig/qconf := g++   -o scripts/kconfig/qconf
-scripts/kconfig/images.o scripts/kconfig/confdata.o
-scripts/kconfig/expr.o scripts/kconfig/lexer.lex.o
-scripts/kconfig/parser.tab.o scripts/kconfig/preprocess.o
-scripts/kconfig/symbol.o scripts/kconfig/util.o
-scripts/kconfig/qconf.o   -lQt5Widgets -lQt5Gui -lQt5Core
-
-
-BTW, my machine runs ubuntu 20.04
-
-
-
-
->
-> One thing that I forgot to report is that when clicking on the symbol,
-> only config descripion updates and not config/menu windows.
-> It might even be always like that, I don't remember, but it would be nice if
-> these were updated too.
->
-> Best regards,
->         Maxim Levitsky
->
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> > > ---
-> > >  scripts/kconfig/qconf.cc | 35 ++++++++++++++++++++++++++++++++++-
-> > >  scripts/kconfig/qconf.h  |  1 +
-> > >  2 files changed, 35 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> > > index 631e19659504..03cadf27a376 100644
-> > > --- a/scripts/kconfig/qconf.cc
-> > > +++ b/scripts/kconfig/qconf.cc
-> > > @@ -1012,7 +1012,7 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
-> > >         : Parent(parent), sym(0), _menu(0)
-> > >  {
-> > >         setObjectName(name);
-> > > -
-> > > +       setOpenLinks(false);
-> > >
-> > >         if (!objectName().isEmpty()) {
-> > >                 configSettings->beginGroup(objectName());
-> > > @@ -1224,6 +1224,36 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
-> > >                 *text += str2;
-> > >  }
-> > >
-> > > +void ConfigInfoView::clicked(const QUrl &url)
-> > > +{
-> > > +       QByteArray str = url.toEncoded();
-> > > +       const std::size_t count = str.size();
-> > > +       char *hex = new char[count];
-> > > +       unsigned long p;
-> > > +
-> > > +       if (count < 1)
-> > > +               return;
-> > > +
-> > > +       memcpy(hex, str.constData(), count);
-> > > +       p = (int)strtol(hex + 1, NULL, 16);
-> > > +
-> > > +       if (!p)
-> > > +               return;
-> > > +
-> > > +       if (hex[0] == 's') {
-> > > +               struct symbol *s = (struct symbol *)p;
-> > > +
-> > > +               sym = s;
-> > > +               symbolInfo();
-> > > +       } else {
-> > > +               struct menu *m = (struct menu *)p;
-> > > +
-> > > +               _menu = m;
-> > > +               menuInfo();
-> > > +       }
-> > > +       emit showDebugChanged(true);
-> > > +}
-> > > +
-> > >  QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
-> > >  {
-> > >         QMenu* popup = Parent::createStandardContextMenu(pos);
-> > > @@ -1497,6 +1527,9 @@ ConfigMainWindow::ConfigMainWindow(void)
-> > >         helpMenu->addAction(showIntroAction);
-> > >         helpMenu->addAction(showAboutAction);
-> > >
-> > > +       connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
-> > > +                helpText, SLOT (clicked (const QUrl &)) );
-> > > +
-> > >         connect(configList, SIGNAL(menuChanged(struct menu *)),
-> > >                 helpText, SLOT(setInfo(struct menu *)));
-> > >         connect(configList, SIGNAL(menuSelected(struct menu *)),
-> > > diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-> > > index d913a02967ae..a193137f2314 100644
-> > > --- a/scripts/kconfig/qconf.h
-> > > +++ b/scripts/kconfig/qconf.h
-> > > @@ -250,6 +250,7 @@ public slots:
-> > >         void setInfo(struct menu *menu);
-> > >         void saveSettings(void);
-> > >         void setShowDebug(bool);
-> > > +       void clicked (const QUrl &url);
-> > >
-> > >  signals:
-> > >         void showDebugChanged(bool);
-> > > --
-> > > 2.26.2
-> > >
-> >
-> >
->
->
-
-
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 7cd5a29fc437..4b9e05af5426 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -138,6 +138,27 @@ config OF_FPGA_REGION
+ 	  Support for loading FPGA images by applying a Device Tree
+ 	  overlay.
+ 
++config FPGA_DFL_PCI
++	tristate "FPGA DFL PCIe Device Driver"
++	depends on PCI
++	select FPGA_DFL
++	select FPGA_DFL_FME
++	select FPGA_DFL_FME_MGR
++	select FPGA_DFL_FME_BRIDGE
++	select FPGA_DFL_FME_REGION
++	select FPGA_DFL_AFU
++	help
++	  Select this option to enable PCIe driver for PCIe-based
++	  Field-Programmable Gate Array (FPGA) solutions which implement
++	  the Device Feature List (DFL). This driver provides interfaces
++	  for userspace applications to configure, enumerate, open and access
++	  FPGA accelerators on the FPGA DFL devices, enables system level
++	  management functions such as FPGA partial reconfiguration, power
++	  management and virtualization with DFL framework and DFL feature
++	  device drivers.
++
++	  To compile this as a module, choose M here.
++
+ config FPGA_DFL
+ 	tristate "FPGA Device Feature List (DFL) support"
+ 	select FPGA_BRIDGE
+@@ -191,21 +212,6 @@ config FPGA_DFL_AFU
+ 	  to the FPGA infrastructure via a Port. There may be more than one
+ 	  Port/AFU per DFL based FPGA device.
+ 
+-config FPGA_DFL_PCI
+-	tristate "FPGA DFL PCIe Device Driver"
+-	depends on PCI && FPGA_DFL
+-	help
+-	  Select this option to enable PCIe driver for PCIe-based
+-	  Field-Programmable Gate Array (FPGA) solutions which implement
+-	  the Device Feature List (DFL). This driver provides interfaces
+-	  for userspace applications to configure, enumerate, open and access
+-	  FPGA accelerators on the FPGA DFL devices, enables system level
+-	  management functions such as FPGA partial reconfiguration, power
+-	  management and virtualization with DFL framework and DFL feature
+-	  device drivers.
+-
+-	  To compile this as a module, choose M here.
+-
+ config FPGA_MGR_ZYNQMP_FPGA
+ 	tristate "Xilinx ZynqMP FPGA"
+ 	depends on ZYNQMP_FIRMWARE || (!ZYNQMP_FIRMWARE && COMPILE_TEST)
 -- 
-Best Regards
-Masahiro Yamada
+2.18.1
+
