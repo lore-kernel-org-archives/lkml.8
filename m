@@ -2,122 +2,141 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4350C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A0F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C047206A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593373603;
+	bh=Ezo07td5DwwHp76rybCIqbuSLH9bu67PkKqFw8Mpmzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qUoqVuZi0udSj0dyUO98ZrOj01q8ecj8YGJ/iTF9F+CITZc564w4gmd/lP9yhnpG0
+	 JhFACPTDoCc8ctCIem3NGSJMzfG/fjvnVHVJINJ8HVTG1OmOYJmPrtWcaTbqy/qV9z
+	 ElTYri3anenCfZegxbSJ3PK1N6jkSA582NnaCBB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgF1Tng (ORCPT
+        id S1726751AbgF1Tqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 15:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgF1Tng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:43:36 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726675AbgF1Tql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 15:46:41 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FF9206A1;
-        Sun, 28 Jun 2020 19:43:33 +0000 (UTC)
-Date:   Sun, 28 Jun 2020 15:43:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200628154331.2c69d43e@oasis.local.home>
-In-Reply-To: <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
-        <20200624120408.12c8fa0d@oasis.local.home>
-        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
-        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
-        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
-        <20200626181455.155912d9@oasis.local.home>
-        <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
-        <20200628144616.52f09152@oasis.local.home>
-        <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 966E620578;
+        Sun, 28 Jun 2020 19:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593373600;
+        bh=Ezo07td5DwwHp76rybCIqbuSLH9bu67PkKqFw8Mpmzk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GqdbIERtsL/GPnLBRdl97fpH9pOHvdOYskVrXWx/vDagKGMJlGHDea/RKrpsfLbOk
+         iSplVvWXCk/yyifC3aPVnlUSiIl6gNXN3+LJhsZkgKbnhNYW6o2IE0l5mOG0QpIYk5
+         C+Kbokri1y/jvcupQY9aw63t5mhA0QVN5Q3fE1As=
+Date:   Sun, 28 Jun 2020 12:46:39 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        George Cherian <gcherian@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH 1/3 v2] crypto: introduce the flag
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200628194639.GC11197@sol.localdomain>
+References: <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200616173620.GA207319@gmail.com>
+ <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626044534.GA2870@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626164617.GA211634@gmail.com>
+ <alpine.LRH.2.02.2006281501230.347@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2006281501230.347@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- On Sun, 28 Jun 2020 12:21:07 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> > Re-teach them, or are you finally admitting that the tracing system is
-> > a permanent API?  This is the reason people are refusing to add trace
-> > points into their subsystems. Because user space may make it required.
+On Sun, Jun 28, 2020 at 03:04:22PM -0400, Mikulas Patocka wrote:
+> > > Index: linux-2.6/crypto/authenc.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/crypto/authenc.c	2020-06-26 17:24:03.566417000 +0200
+> > > +++ linux-2.6/crypto/authenc.c	2020-06-26 17:24:03.566417000 +0200
+> > > @@ -388,7 +388,8 @@ static int crypto_authenc_create(struct
+> > >  	if ((algt->type ^ CRYPTO_ALG_TYPE_AEAD) & algt->mask)
+> > >  		return -EINVAL;
+> > >  
+> > > -	mask = crypto_requires_sync(algt->type, algt->mask);
+> > > +	mask = crypto_requires_sync(algt->type, algt->mask) |
+> > > +	       crypto_requires_nomem(algt->type, algt->mask);
 > > 
-> > I see no reason why you can't create a dedicated BPF tracing instance
-> > (you only need one) to add all your trace_array_printk()s to.  
+> > As I suggested earlier, shouldn't there be a function that returns the mask for
+> > all inherited flags, rather than handling each flag individually?
 > 
-> All bpf helpers are stable api. We cannot remove bpf_trace_printk() and
-> cannot change the fact that it has to print into /sys/kernel/debug/tracing/trace.
+> Yes - I've created crypto_requires_inherited for this purpose.
 
-Then do a bpf trace event and enable it when a bpf_trace_printk() is
-loaded. It will work the same for your users.
+Since all callers pass in 'struct crypto_attr_type', a better helper might be:
 
-> If we do so a lot of users will complain. Loudly.
-> If you really want to see the flames, go ahead and rename 'trace_pipe'
-> into something else.
+static inline int crypto_algt_inherited_mask(struct crypto_attr_type *algt)
+{
+	return crypto_requires_off(algt->type, algt->mask,
+				   CRYPTO_ALG_INHERITED_FLAGS);
+}
 
-The layout of the tracefs system *is* a stable API. No argument there.
+> > > @@ -424,7 +425,7 @@ static int crypto_authenc_create(struct
+> > >  		goto err_free_inst;
+> > >  
+> > >  	inst->alg.base.cra_flags = (auth_base->cra_flags |
+> > > -				    enc->base.cra_flags) & CRYPTO_ALG_ASYNC;
+> > > +			enc->base.cra_flags) & CRYPTO_ALG_INHERITED_FLAGS;
+> > 
+> > Strange indentation here.  Likewise in most of the other files.
+> 
+> I was told that the code should be 80-characters wide.
 
-> This has nothing to do with tracing in general and tracepoints.
-> Those come and go.
+You could use:
 
-And in this case, trace_printk() is no different than any other trace
-event. Obviously, your use case doesn't let it go. If some tool starts
-relying on another trace event (say someone adds another bpf handler that
-enables a trace event, and is documented) then under your scenario,
-it's a stable API.
+	inst->alg.base.cra_flags =
+		(auth_base->cra_flags | enc->base.cra_flags) &
+		CRYPTO_ALG_INHERITED_FLAGS;
 
-Hence, your "tracepoints come and go" is not universal, and there's no
-telling which ones will end up being a stable API.
+Just a suggestion, it's not a big deal...  Your indentation of the continuation
+line just seems weird.
 
+> > > --- linux-2.6.orig/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
+> > > +++ linux-2.6/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
+> > > @@ -415,7 +415,7 @@ static int create(struct crypto_template
+> > >  	} else
+> > >  		goto err_free_inst;
+> > >  
+> > > -	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+> > > +	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_INHERITED_FLAGS;
+> > >  	inst->alg.base.cra_priority = alg->base.cra_priority;
+> > >  	inst->alg.base.cra_blocksize = XTS_BLOCK_SIZE;
+> > >  	inst->alg.base.cra_alignmask = alg->base.cra_alignmask |
+> > 
+> > Need to set the mask correctly in this file.
+> 
+> I don't know what do you mean.
 
-> If you really want to nuke trace_printk from the kernel we need time
-> to work on replacement and give users at least few releases of helper
-> deprecation time.
+I mean that the CRYPTO_ALG_ALLOCATES_MEMORY flag is not handled when the 'mask'
+variable is assigned to earlier in this function.
 
-I never said I would nuke it. This patch in question makes it so those
-that don't want that banner to ever show up can do so. A trace-printk()
-is something to add via compiling. And since I and others use it
-heavily for debugging, I would have this option not be a default, but
-something that others can enable.
+It should use your new helper function, like all the other places in this patch.
 
-> We've never done in the past though.
-> There could be flames even if we deprecate it gradually.
-> Looking how unyielding you're about this banner I guess we have to start
-> working on replacement sooner than later. Oh well.
-
-Hmm, so you are happier to bully and burn bridges with me to deprecate
-the trace_printk() interface, than to work with me and add an update to
-look into an instance for the print instead of the top level? That's
-not very collaborative.
-
--- Steve
+- Eric
