@@ -2,191 +2,156 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F727C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEF120760
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593309258;
-	bh=b5rNKyqd9zg8ODr9cRaqQ9RlYo/l30nAvQk8WOUQvKo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dLTdJDqjKKrsCe6QtTzNYxyVReA8nDs0FelVxQZxS/tHnwcmeuRzqSY939z1s6vWm
-	 TyI/mroNcmNb4UZZMCf8gV9mHQ7euS6sZrvHFBBkxa7eefLu6vWR2m+G8Ko0/nTUUY
-	 2z6t9EgVjNSioRW0wHjukRbOZ9+ZJhjPMUoo7mFE=
+	by mail.kernel.org (Postfix) with ESMTP id 46B8E207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n79FeKi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgF1ByR (ORCPT
+        id S1726895AbgF1B4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 21:54:17 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:50055 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgF1ByQ (ORCPT
+        Sat, 27 Jun 2020 21:56:39 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:16314 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgF1B4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 21:54:16 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 05S1oixP004742;
-        Sun, 28 Jun 2020 10:50:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 05S1oixP004742
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593309045;
-        bh=hkY77VUGXSYac7YbrIkUecBgq7WORaGieZmySJIL5UA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ahJ3uto2fhcnzsnIdLNU74S4vUyrlAQ4RsoPaFq9zt9MQ9rNbQLVQSS7jxeu5Q8si
-         hZ34tVZRnliSC5lwB2mp+XhuUvw+20+ogpJbv2SrSVGwLunHSwliobc980NNYxgtNV
-         7KoTg5pXNDlDue+Qw95dB65tKTenO+yJoYpKMjA+pouECDFfbNgi/Gl3GphBAEx2jt
-         JIId1nbEsdrcgnMp1nLu2y0LwNlkZ7F/kd88h+53l3Wy2U7beVZi9x+0lCqdPuAiyn
-         xq4P1+iR/S7vXT/ZdlGa6TQaScQErK5xw4F96tYA3UgjBxvfSj1llEDfgf/+ZBEQh9
-         WQo1lz/K7CrLw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] kbuild: introduce ccflags-remove-y and asflags-remove-y
-Date:   Sun, 28 Jun 2020 10:50:41 +0900
-Message-Id: <20200628015041.1000002-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Sat, 27 Jun 2020 21:56:39 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200628015636epoutp043c20dc9deeaab2047cc2682b48415067~cknRJIOvk2973529735epoutp04H
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 01:56:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200628015636epoutp043c20dc9deeaab2047cc2682b48415067~cknRJIOvk2973529735epoutp04H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593309396;
+        bh=6+zZ2sOipA1Lg8Fb+N3C/N+HBDK1ASbTTeVIKAsigmM=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=n79FeKi9YFx2ssBYhXdiv3j5t0QwwlRX4xsbLMzmX2Ugek6XjcQhBBMyX77VfaH7P
+         YD4WnJYS0Mn9un2H8HNbKC2Pwu9313dAVZSSk2OLgyIvDzb1S4r0nzhqEX+2IEF0hK
+         XEs0HPbZbcG62oV8dDG2EFpYl1ilTfqqs5Ty3b/c=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200628015634epcas5p1072d65e95e6f99584082dff66745c1ba~cknP5wup72537825378epcas5p1a;
+        Sun, 28 Jun 2020 01:56:34 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.35.09475.2D8F7FE5; Sun, 28 Jun 2020 10:56:34 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200628015634epcas5p476e8084c7e2d36c5d26d97e71802793e~cknPaB3tq0123901239epcas5p4I;
+        Sun, 28 Jun 2020 01:56:34 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200628015634epsmtrp22e8e3256357e1f0dc6be877392fbb983~cknPZNQpH1319613196epsmtrp2H;
+        Sun, 28 Jun 2020 01:56:34 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-06-5ef7f8d2e0d8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        36.8A.08303.2D8F7FE5; Sun, 28 Jun 2020 10:56:34 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200628015631epsmtip257e47784d63f8acc7c02fc76717745ca~cknMRkwAA0088400884epsmtip2u;
+        Sun, 28 Jun 2020 01:56:30 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>
+Cc:     "'Avri Altman'" <avri.altman@wdc.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kiwoong Kim'" <kwmad.kim@samsung.com>,
+        "'Wei Yongjun'" <weiyongjun1@huawei.com>,
+        <linux-scsi@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+In-Reply-To: <20200627175445.GG2571@kadam>
+Subject: RE: [PATCH] scsi: ufs: ufs-exynos: Remove an unnecessary NULL check
+Date:   Sun, 28 Jun 2020 07:26:29 +0530
+Message-ID: <041e01d64cef$5a166480$0e432d80$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQJZTJzG6GPUwl4om2Vud+BKbvKiigG4ppPqAkqZIKgCOdI8zqe1XE8A
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7bCmlu6lH9/jDDbftbB4+fMqm8Xrf9NZ
+        LBbd2MZksfWWtEX/49fMFufPb2C3uLnlKIvF5V1z2CxmnN/HZNF9fQebxfLj/5gsDn/ZxebA
+        49Fy5C2rx6ZVnWweExYdYPT4+PQWi0ffllWMHp83yXm0H+hmCmCP4rJJSc3JLEst0rdL4Mr4
+        f38Xa8Futordq+cxNTD+Zeli5OSQEDCRaDvTxgRiCwnsZpQ4tzeui5ELyP7EKLF+91F2COcz
+        o8SVT18ZYToe/tzFCpHYxSixcMd5NgjnDaPEnrmPmEGq2AR0JXYsbmMDsUUEDCTunXzBAlLE
+        LHCAWeJm/2OwIk4BLYlDZ2eBHSIs4CPRth/iKBYBVYm+k1fZQWxeAUuJiyfms0LYghInZz4B
+        q2EWkJfY/nYOM8RJChI/ny5jhYiLSxz92cMMsdhNonfua7DFEgInOCR2zXvBDtHgIrHjyzOo
+        f4QlXh3fAhWXkvj8bi/Q1RxAdrZEzy5jiHCNxNJ5x6ABZi9x4MocFpASZgFNifW79CHW8kn0
+        /n7CBNHJK9HRJgRRrSrR/O4qVKe0xMTublYI20PixuP3rBMYFWcheWwWksdmIXlmFsKyBYws
+        qxglUwuKc9NTi00LjPNSy/WKE3OLS/PS9ZLzczcxglOZlvcOxkcPPugdYmTiYDzEKMHBrCTC
+        +9n6W5wQb0piZVVqUX58UWlOavEhRmkOFiVxXqUfZ+KEBNITS1KzU1MLUotgskwcnFINTMoa
+        dlxbOZf+6938+NnOtKzzmteXlneaukglXfaRWjmpzn8OR4+HXxV7VMLajRnzCrTk/Lt6+kIX
+        rwuPSHj03nzDrJsrN7vm2ncnzfTYM3fn/ZC6zWf/PGRO1eK32hzOuXjCsnMiVw7qtny8YcQu
+        rfBkU5W3kde+KotfbpKp3ROPCMZvrj3RHXgoKPCYGHfJYsvsskgfwdCo5S+K07hX9NoGHv15
+        WnBWhLsZTyXjyu0dL8R2Zsx40iwhzBJ5J+jv403J1jwS2+1Zz0ad77RJevrje8f+KSbs9d8c
+        Jn+eIj3h9snFQbuWnu6Z53T51LNdDxydvr2REsmS2eywjPl686TFlQvXvY0T+VGcU+EYqsRS
+        nJFoqMVcVJwIAKf3uLPUAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSvO6lH9/jDJbeFbV4+fMqm8Xrf9NZ
+        LBbd2MZksfWWtEX/49fMFufPb2C3uLnlKIvF5V1z2CxmnN/HZNF9fQebxfLj/5gsDn/ZxebA
+        49Fy5C2rx6ZVnWweExYdYPT4+PQWi0ffllWMHp83yXm0H+hmCmCP4rJJSc3JLEst0rdL4Mr4
+        f38Xa8Futordq+cxNTD+Zeli5OSQEDCRePhzF2sXIxeHkMAORol1kzayQySkJa5vnABlC0us
+        /PecHaLoFaPE202NbCAJNgFdiR2L28BsEQEDiXsnX7CAFDELnGCW+PlgGRNExylGiedTToPt
+        4xTQkjh0dhaYLSzgI9G2H+IOFgFVib6TV8HW8QpYSlw8MZ8VwhaUODnzCVANB9BUPYm2jYwg
+        YWYBeYntb+cwQ1ynIPHz6TJWiLi4xNGfPcwQB7lJ9M59zTKBUXgWkkmzECbNQjJpFpLuBYws
+        qxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgmNSS2sH455VH/QOMTJxMB5ilOBgVhLh
+        /Wz9LU6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNITS1KzU1MLUotgskwcnFINTCyf
+        94qaZap7G0rM0ZH1eLw2bv+2tLNyF2obom3NPj3OZb7Rlz+L2SMucdruhYrSJTv/OTjkNETF
+        Sb5/qrupqvcEy3SDAE1Hac8zh4Pc3Bm9zp/MYej5PmvxMi6uYw/WJCUnBhhV3BHQvZ34eW0r
+        I//NiEM3z80QWXAj94N1YFClSd6M7mBGlQ6vbxwxGuJrV5dY1JZKvmjgnyqxs6VyVaW92fxl
+        N+6YbHFu1l9dvLnF4bTkm6M3ig2kUj0P6llO655/7vfnFPXpvrPjCiv6xQVsdp1K2VcuqLhG
+        dK935SV35VNb3211Zm/i0LVven2vbflC9nsSctk5/w+ta+lmXT794I9LbA4TjU+XfZRRYinO
+        SDTUYi4qTgQAjsnVYjgDAAA=
+X-CMS-MailID: 20200628015634epcas5p476e8084c7e2d36c5d26d97e71802793e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200626105156epcas5p191d18d66af6bd09a10635559461c0bc0
+References: <CGME20200626105156epcas5p191d18d66af6bd09a10635559461c0bc0@epcas5p1.samsung.com>
+        <20200626105133.GF314359@mwanda>
+        <041701d64ca7$70bafb80$5230f280$@samsung.com> <20200627175445.GG2571@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CFLAGS_REMOVE_<file>.o works per object, that is, there is no
-convenient way to filter out flags for every object in a directory.
+Hi Dan,
 
-Add ccflags-remove-y and asflags-remove-y to make it easily.
+> -----Original Message-----
+> From: Dan Carpenter <dan.carpenter@oracle.com>
+> On Sat, Jun 27, 2020 at 10:51:44PM +0530, Alim Akhtar wrote:
+> > Hi Dan
+> >
+> > > -----Original Message-----
+> > > The "head" pointer can't be NULL because it points to an address in
+the
+> > middle
+> > > of a ufs_hba struct.  Looking at this code, probably someone would
+wonder
+> > if
+> > > the intent was to check whether "hba" is NULL, but "hba"
+> > > isn't NULL and the check can just be removed.
+> > >
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > ---
+> > Please add Fixes: tag
+> > With that
+> > Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
+> 
+> It's not a bug fix it's just a cleanup.
+> 
+Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-Use ccflags-remove-y to clean up some Makefiles.
+Thanks!
 
-Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> regards,
+> dan carpenter
 
- arch/arm/boot/compressed/Makefile | 6 +-----
- arch/powerpc/xmon/Makefile        | 3 +--
- arch/sh/boot/compressed/Makefile  | 5 +----
- kernel/trace/Makefile             | 4 ++--
- lib/Makefile                      | 5 +----
- scripts/Makefile.lib              | 4 ++--
- 6 files changed, 8 insertions(+), 19 deletions(-)
-
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index 00602a6fba04..3d5691b23951 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -103,13 +103,9 @@ clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S hyp-stub.S
- 
- KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- 
--ifeq ($(CONFIG_FUNCTION_TRACER),y)
--ORIG_CFLAGS := $(KBUILD_CFLAGS)
--KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
--endif
--
- ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
- 	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
-+ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
- asflags-y := -DZIMAGE
- 
- # Supply kernel BSS size to the decompressor via a linker symbol.
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index 89c76ca35640..55cbcdd88ac0 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -7,8 +7,7 @@ UBSAN_SANITIZE := n
- KASAN_SANITIZE := n
- 
- # Disable ftrace for the entire directory
--ORIG_CFLAGS := $(KBUILD_CFLAGS)
--KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
-+ccflags-remove-y += $(CC_FLAGS_FTRACE)
- 
- ifdef CONFIG_CC_IS_CLANG
- # clang stores addresses on the stack causing the frame size to blow
-diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compressed/Makefile
-index ad0e2403e56f..589d2d8a573d 100644
---- a/arch/sh/boot/compressed/Makefile
-+++ b/arch/sh/boot/compressed/Makefile
-@@ -28,10 +28,7 @@ IMAGE_OFFSET	:= $(shell /bin/bash -c 'printf "0x%08x" \
- 			$(CONFIG_BOOT_LINK_OFFSET)]')
- endif
- 
--ifeq ($(CONFIG_MCOUNT),y)
--ORIG_CFLAGS := $(KBUILD_CFLAGS)
--KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
--endif
-+ccflags-remove-$(CONFIG_MCOUNT) += -pg
- 
- LDFLAGS_vmlinux := --oformat $(ld-bfd) -Ttext $(IMAGE_OFFSET) -e startup \
- 		   -T $(obj)/../../kernel/vmlinux.lds
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 6575bb0a0434..7492844a8b1b 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -2,9 +2,9 @@
- 
- # Do not instrument the tracer itself:
- 
-+ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
-+
- ifdef CONFIG_FUNCTION_TRACER
--ORIG_CFLAGS := $(KBUILD_CFLAGS)
--KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
- 
- # Avoid recursion due to instrumentation.
- KCSAN_SANITIZE := n
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..b2ed4beddd68 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -3,10 +3,7 @@
- # Makefile for some libs needed in the kernel.
- #
- 
--ifdef CONFIG_FUNCTION_TRACER
--ORIG_CFLAGS := $(KBUILD_CFLAGS)
--KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
--endif
-+ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
- 
- # These files are disabled because they produce lots of non-interesting and/or
- # flaky coverage that is not a function of syscall inputs. For example,
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 99ac59c59826..5da420f13f9b 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -113,10 +113,10 @@ modfile_flags  = -DKBUILD_MODFILE=$(call stringify,$(modfile))
- 
- orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) \
-                  $(ccflags-y) $(CFLAGS_$(target-stem).o)
--_c_flags       = $(filter-out $(CFLAGS_REMOVE_$(target-stem).o), $(orig_c_flags))
-+_c_flags       = $(filter-out $(ccflags-remove-y) $(CFLAGS_REMOVE_$(target-stem).o), $(orig_c_flags))
- orig_a_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_AFLAGS) \
-                  $(asflags-y) $(AFLAGS_$(target-stem).o)
--_a_flags       = $(filter-out $(AFLAGS_REMOVE_$(target-stem).o), $(orig_a_flags))
-+_a_flags       = $(filter-out $(asflags-remove-y) $(AFLAGS_REMOVE_$(target-stem).o), $(orig_a_flags))
- _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(target-stem).lds)
- 
- #
--- 
-2.25.1
 
