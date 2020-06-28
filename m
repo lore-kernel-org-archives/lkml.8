@@ -2,144 +2,239 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6301DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80305C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4041E206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565BB2065D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ad5CnB4m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHPa8nci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgF1XZy (ORCPT
+        id S1726604AbgF1XkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 19:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
+        Sun, 28 Jun 2020 19:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgF1XZu (ORCPT
+        with ESMTP id S1726205AbgF1XkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 19:25:50 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEA3C03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w3so1941079wmi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:50 -0700 (PDT)
+        Sun, 28 Jun 2020 19:40:11 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4539C03E979;
+        Sun, 28 Jun 2020 16:40:10 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so6720041wrs.0;
+        Sun, 28 Jun 2020 16:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QhGjrEQYz2RExGlQBxHl9gx9AzleuG0w4ut1ukiEZTk=;
-        b=ad5CnB4mH4HLlK9E+r+DYHmSdOzbMU6YHbWgaBNo8B8DlG+a01FYcFnXqET+oPknxs
-         49IX0fcLDzW0Fgd1OzNkY9LHClZYH8PqJmjZtwDHV2j3VCuFY/JfJmvQeut868ZPmHPT
-         IrKFLGzpk4Ig0gYCGLYVXAmbdDEeqzwno+rTnxcY1XK4mhQb7F1miEAWSmw4MtEX7zQ7
-         imAG/vV6VIeMniq/wqUOXyeUgo3ZWoPQGbWLA9t7QS0xzj9qrrt5xyzrU0YNahMEtUL9
-         3k2PutEzdQCAU9uFm1KLJ9RzlCFhrbYNSDUMhnZvDkh/YzjTlSZjPFZ6+Jo8llq8X3XS
-         yC6Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RNCJbGIKYfYYH6mEGJwQ5q1MGzI5m1G+vBtI454PIkw=;
+        b=QHPa8nci5cvqxkBigNa3jkizya+yn/ucUSRyudR8Oa1YwQnbaLlgbzEkEjNefCV3Pr
+         Utx0QWwqaCXu7A2dKNFe2LVmuaukxAbU4vYE1W8bF3QfaS8OGho7H+Xec4qU/pv8fVPj
+         GbCYPc8nmwM8OQdGIcOTrybDPB/Cb/oU6JJDtEt6p9FiiFOdMpqQ9mAQkMBKbopiOObZ
+         9PIXZ2wDjZw21hPU1MkuMuE3j+G2dVn+03kiwr25l91ZmNc4N49sQ1lbIXILp/3Y+1OM
+         PJO0CaVuUR3+kvDLHtj5qqkfmK9fM0wfK3VUErwN/FJ4gRR5AlSFSJ5lZG1qy+ONvnuU
+         8a3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QhGjrEQYz2RExGlQBxHl9gx9AzleuG0w4ut1ukiEZTk=;
-        b=nnZJ6fvvLJxUKaxGs5xdZ7K9MGjSTKerAOtvx8juHR3iCk1G8nI/ZkyS1ne+T1Ych7
-         BB6qUfNUE7D65HYEBbs+mXYiG8tz5qusx/zxRSnbapJgB/0nJNTdKMgDVxir28oNMRo8
-         JyQhutZ0b91dH5QKNMA53NYOKqP9sKzLdC36KJKn/zX8fMguX2WXrTNdCjpwZDQfOPQi
-         pZsSOe09YEInfTecrED+u249aWhX+T9L9Ka/wUqMjXE8rIoRHGQyF05/0z/QAiTf6wlK
-         PFcSA9oTSV6HB10fTsi2y89TtwNqw9gIA9DO6/rXyD75f/qZyuyqODDBCfqiCPFaCvBT
-         Ho8w==
-X-Gm-Message-State: AOAM530QA0fL9DIAuWcWN+/YggTqQgzX8tbgB24xR07CvNO0XzMmnjos
-        VGOO5PJhpttV+pV53t3iE+A09XgcHxlVbQ==
-X-Google-Smtp-Source: ABdhPJzrtYxVlqhHincdImYG9Bav7jztkQ5ft3KtkjZJHTieDGduXcmnivil2KRDR/OW6vueaKuvgg==
-X-Received: by 2002:a1c:7916:: with SMTP id l22mr6895420wme.115.1593386748608;
-        Sun, 28 Jun 2020 16:25:48 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:587:d870:1c00:d905:af8f:383:7f91])
-        by smtp.gmail.com with ESMTPSA id n8sm43396497wrj.44.2020.06.28.16.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 16:25:48 -0700 (PDT)
-From:   Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
-Subject: [PATCH 2/2] perf tools: use *SEC_PER_*SEC macros
-Date:   Mon, 29 Jun 2020 02:25:21 +0300
-Message-Id: <20200628232521.22686-3-emmanouil.maroudas@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
-References: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RNCJbGIKYfYYH6mEGJwQ5q1MGzI5m1G+vBtI454PIkw=;
+        b=AU38KiSBu5fpGHdWJaqp/rpeHbOVhG9J+4BhJKe2szN/cXgZCRQ7SigFYBITJbHa3N
+         7REkei/s3e63lzQsA+TEiGYCW/DMv3dVb4txXP1BdLG733Z549+RH4UMrHhi3H9CW0Op
+         DhgJjzgCwfdYao2+7/b1/a3ZjhIswvvNjPGtj3ZwJtFyIQ+NpcN4s1tAXzBbkeVaI8fF
+         pHvSwHF7uhIk+PxmYA4WQ9f5lQ29CkXSdwy9u0DFGBl6FRYmHtFZ58Ag8w7FkdY6CgTy
+         I/kNzOkUO7fhyOaTU8A5c6nvDy8BtsJpfiM2/5GqW7pOnU9g1SV8aj4Vom8R2goJjzmr
+         nQRA==
+X-Gm-Message-State: AOAM5334nVTfi4B0PK9l/WiW0PVXgjQI3kWH/FmWFdBSGVKcBJgmUznd
+        ctUXo0Ufe1yFa7/zFWUJJnUJU6q6QF3xtkh2KRs=
+X-Google-Smtp-Source: ABdhPJzumMJGCmidqJhrb/R2PAWtRCPlCU4rDJsj63UGdFXrZtPulHbdrfhl8TCYVsnR8CbbuzAINKgqkTYC7O+Y8NA=
+X-Received: by 2002:a5d:6907:: with SMTP id t7mr14380022wru.329.1593387609004;
+ Sun, 28 Jun 2020 16:40:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200519163234.226513-1-sashal@kernel.org> <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
+ <20200519203608.GG33628@sasha-vm>
+In-Reply-To: <20200519203608.GG33628@sasha-vm>
+From:   James Hilliard <james.hilliard1@gmail.com>
+Date:   Sun, 28 Jun 2020 17:39:58 -0600
+Message-ID: <CADvTj4rmk85yVvFmqCbW+tdXH697FJ4mzf5-CZ-v9ELTZH9OKA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "Wilson, Chris" <chris@chris-wilson.co.uk>,
+        "Syrjala, Ville" <ville.syrjala@linux.intel.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        spronovo@microsoft.com, Wei Liu <wei.liu@kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        iourit@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    builtin-stat.c: typecast macro to u64
-    see commit ea9eb1f456a0 ("perf stat: Fix duration_time value for higher intervals")
+On Tue, May 19, 2020 at 2:36 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> Hi Daniel,
+>
+> On Tue, May 19, 2020 at 09:21:15PM +0200, Daniel Vetter wrote:
+> >Hi Sasha
+> >
+> >So obviously great that Microsoft is trying to upstream all this, and
+> >very much welcome and all that.
+> >
+> >But I guess there's a bunch of rather fundamental issues before we
+> >look into any kind of code details. And that might make this quite a
+> >hard sell for upstream to drivers/gpu subsystem:
+>
+> Let me preface my answers by saying that speaking personally I very much
+> dislike that the userspace is closed and wish I could do something about
+> it.
+>
+> >- From the blog it sounds like the userspace is all closed. That
+> >includes the hw specific part and compiler chunks, all stuff we've
+> >generally expected to be able to look in the past for any kind of
+> >other driver. It's event documented here:
+> >
+> >https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+> >
+> >What's your plan here?
+>
+> Let me answer with a (genuine) question: does this driver have anything
+> to do with DRM even after we enable graphics on it? I'm still trying to
+> figure it out.
+>
+> There is an open source DX12 Galluim driver (that lives here:
+> https://gitlab.freedesktop.org/kusma/mesa/-/tree/msclc-d3d12) with open
+> source compiler and so on.
+>
+> The plan is for Microsoft to provide shims to allow the existing Linux
+> userspace interact with DX12; I'll explain below why we had to pipe DX12
+> all the way into the Linux guest, but this is *not* to introduce DX12
+> into the Linux world as competition. There is no intent for anyone in
+> the Linux world to start coding for the DX12 API.
+If that really is the case why is microsoft recommending developers to break
+compatibility with native Linux and use the DX12 API's here:
+https://devblogs.microsoft.com/directx/in-the-works-opencl-and-opengl-mapping-layers-to-directx/
 
-    No functional change intended.
+Quote:
+"Make it easier for developers to port their apps to D3D12. For developers
+looking to move from older OpenCL and OpenGL API versions to D3D12,
+the open source mapping layers will provide helpful example code on how
+to use the D3D12 Translation Layer library."
 
-Signed-off-by: Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
----
- tools/perf/builtin-record.c | 2 +-
- tools/perf/builtin-stat.c   | 4 ++--
- tools/perf/builtin-trace.c  | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+If developers of applications that use OpenCL and OpenGL API's were to
+follow this advice and transition to D3D12 their applications would no longer
+work on Linux systems unless using WSL2. Is Microsoft planning on creating
+a D3D12/DirectML frontend that doesn't depend on WSL2?
+>
+> This is why I'm not sure whether this touches DRM on the Linux side of
+> things. Nothing is actually rendered on Linux but rather piped to
+> Windows to be done there.
+>
+> >btw since the main goal here (at least at first) seems to be get
+> >compute and ML going the official work-around here is to relabel your
+> >driver as an accelerator driver (just sed -e s/vGPU/vaccel/ over the
+> >entire thing or so) and then Olof and Greg will take it into
+> >drivers/accel ...
+>
+> This submission is not a case of "we want it upstream NOW" but rather
+> "let's work together to figure out how to do it right" :)
+>
+> I thought about placing this driver in drivers/hyper-v/ given that it's
+> basically just a pipe between the host and the guest. There is no fancy
+> logic in this drivers. Maybe the right place is indeed drivers/accel or
+> drivers/hyper-v but I'd love if we agree on that rather than doing that
+> as a workaround and 6 months down the road enabling graphics.
+>
+> >- Next up (but that's not really a surprise for a fresh vendor driver)
+> >at a more technical level, this seems to reinvent the world, from
+> >device enumeration (why is this not exposed as /dev/dri/card0 so it
+> >better integrates with existing linux desktop stuff, in case that
+> >becomes a goal ever) down to reinvented kref_put_mutex (and please
+> >look at drm_device->struct_mutex for an example of how bad of a
+> >nightmare that locking pattern is and how many years it took us to
+> >untangle that one.
+>
+> I'd maybe note that neither of us here at Microsoft is an expert in the
+> Linux DRM world. Stuff might have been done in a certain way because we
+> didn't know better.
+>
+> >- Why DX12 on linux? Looking at this feels like classic divide and
+>
+> There is a single usecase for this: WSL2 developer who wants to run
+> machine learning on his GPU. The developer is working on his laptop,
+> which is running Windows and that laptop has a single GPU that Windows
+> is using.
+>
+> Since the GPU is being used by Windows, we can't assign it directly to
+> the Linux guest, but instead we can use GPU Partitioning to give the
+> guest access to the GPU. This means that the guest needs to be able to
+> "speak" DX12, which is why we pulled DX12 into Linux.
+>
+> >conquer (or well triple E from the 90s), we have vk, we have
+> >drm_syncobj, we have an entire ecosystem of winsys layers that work
+> >across vendors. Is the plan here that we get a dx12 driver for other
+> >hw mesa drivers from you guys, so this is all consistent and we have a
+> >nice linux platform? How does this integrate everywhere else with
+> >linux winsys standards, like dma-buf for passing stuff around,
+> >dma-fence/sync_file/drm_syncobj for syncing, drm_fourcc/modifiers for
+> >some idea how it all meshes together?
+>
+> Let me point you to this blog post that has more information about the
+> graphics side of things:
+> https://www.collabora.com/news-and-blog/news-and-events/introducing-opencl-and-opengl-on-directx.html
+> .
+>
+> The intent is to wrap DX12 with shims to work with the existing
+> ecosystem; DX12 isn't a new player on it's own and thus isn't trying to
+> divide/conquer anything.
+Shouldn't tensorflow/machine learning be going through the opencl
+compatibility layer/shims instead of talking directly to DX12/DirectML?
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e108d90ae2ed..c3c7823966bc 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -249,7 +249,7 @@ static int record__aio_sync(struct mmap *md, bool sync_all)
- {
- 	struct aiocb **aiocb = md->aio.aiocb;
- 	struct aiocb *cblocks = md->aio.cblocks;
--	struct timespec timeout = { 0, 1000 * 1000  * 1 }; /* 1ms */
-+	struct timespec timeout = { 0, NSEC_PER_MSEC * 1 }; /* 1ms */
- 	int i, do_suspend;
- 
- 	do {
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 6aa866e2d512..2f4fe1aee865 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -305,7 +305,7 @@ static int read_single_counter(struct evsel *counter, int cpu,
- 			       int thread, struct timespec *rs)
- {
- 	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
--		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
-+		u64 val = rs->tv_nsec + rs->tv_sec*(u64)NSEC_PER_SEC;
- 		struct perf_counts_values *count =
- 			perf_counts(counter->counts, cpu, thread);
- 		count->ena = count->run = val;
-@@ -471,7 +471,7 @@ static void process_interval(void)
- 	}
- 
- 	init_stats(&walltime_nsecs_stats);
--	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000ULL);
-+	update_stats(&walltime_nsecs_stats, stat_config.interval * (u64)NSEC_PER_MSEC);
- 	print_counters(&rs, 0, NULL);
- }
- 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 4cbb64edc998..db0a2369e2f2 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4043,7 +4043,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		perf_evlist__start_workload(evlist);
- 
- 	if (trace->opts.initial_delay) {
--		usleep(trace->opts.initial_delay * 1000);
-+		usleep(trace->opts.initial_delay * USEC_PER_MSEC);
- 		evlist__enable(evlist);
- 	}
- 
--- 
-2.17.1
-
+If tensorflow or any other machine learning software uses DX12 API's
+directly then they won't be compatible with Linux unless running on top
+of WSL2.
+>
+> >- There's been a pile of hallway track/private discussions about
+> >moving on from the buffer-based memory managed model to something more
+> >modern. That relates to your DXLOCK2 question, but there's a lot more
+> >to userspace managed gpu memory residency than just that. monitored
+> >fences are another part. Also, to avoid a platform split we need to
+> >figure out how to tie this back into the dma-buf and dma-fence
+> >(including various uapi flavours) or it'll be made of fail. dx12 has
+> >all that in some form, except 0 integration with the linux stuff we
+> >have (no surprise, since linux isn't windows). Finally if we go to the
+> >trouble of a completely revamped I think ioctls aren't a great idea,
+> >something like iouring (the gossip name is drm_uring) would be a lot
+> >better. Also for easier paravirt we'd need 0 cpu pointers in any such
+> >new interface. Adding a few people who've been involved in these
+> >discussions thus far, mostly under a drm/hmm.ko heading iirc.
+> >
+> >I think the above are the really big ticket items around what's the
+> >plan here and are we solving even the right problem.
+>
+> Part of the reason behind this implementation is simplicity. Again, no
+> objections around moving to uring and doing other improvements.
+>
+> --
+> Thanks,
+> Sasha
+>
+>
+>
