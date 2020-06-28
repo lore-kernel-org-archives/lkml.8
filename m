@@ -3,117 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D756C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A505C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFFD20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF4B20672
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593363327;
-	bh=yxqhXE99ff5R6TDvotiqw5qjZJmLlpF8TJ7Vm4dLUHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MChFXwksuH5lSFutoGwhv34Ymlg/4tyMHr4ZqY7jr0xp1EQ5Qm/QeYEK3n/QUvuXC
-	 rZ+sdswKKFf7LvyoctHFHe2P35QCXbf34TLtlTiAL7way+R9CBf3PZ9GEePdrrZ+oA
-	 pQQHR/CLTHGFdpCQ6R7QN1IqZh5nbbk1hB3G0flw=
+	s=default; t=1593363447;
+	bh=gKGcNZajPVPsnQhjiW4kXThy3p4NTGlKxXZvQXNX1Mw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XAOiE5Cn6MbDNawOaSg2ZKecE3anYWKetyu2jxuxxkXy0mhutrEEO6nTuq6CkC/tB
+	 h22QMKHJkmoqgUiX507BHb1tcb2UA2XAtmVcIAaNLTstrZqKncxwerNN3S5jU1bi3M
+	 9uH458T7Afc47YSiQH/5IoR5at6TWEvv9PeHEbW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgF1QzE (ORCPT
+        id S1726590AbgF1Q5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 12:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgF1QzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 12:55:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88217204EC;
-        Sun, 28 Jun 2020 16:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593363302;
-        bh=yxqhXE99ff5R6TDvotiqw5qjZJmLlpF8TJ7Vm4dLUHc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YxfnixxAFeN62jCrUcOAkR9jjpjYI4/uZmVV754G60smxHetVwGhaQ1A2zAcITK+1
-         EHKWgn7ODQPs0JMTlYjf1dx+msC9GQGOOXV8mkMEHYPZ7MINVO98gzDp+JosskZI8R
-         4xZvJxUbix9OZ7XaIsWP/QlslOn7sPjlPgehhPso=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jpaa4-0079D0-SX; Sun, 28 Jun 2020 17:55:01 +0100
+        Sun, 28 Jun 2020 12:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgF1Q5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 12:57:19 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E24EC03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 09:57:19 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id d21so7786282lfb.6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 09:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=omBBMjl+B302Rw2JiKwkQ9zS4lNXU0ecdG4/qHP0Un8=;
+        b=EUQzbA8Zrn/d30M/qaMkZYUcUZKHy4sBdYzVAkM+nv1Wn8ceTf++94Q7po+1ETadAq
+         RNAi/wYEsHs94lz6LlSAXJ4fF+Wk0cXEb6QWC1ZdvRfFqu41tPzppJqAdT5tCAD5bHb1
+         fcz5PamNcAvPVantPQZo1LICHNyIdp+gizV84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=omBBMjl+B302Rw2JiKwkQ9zS4lNXU0ecdG4/qHP0Un8=;
+        b=IpnMHaUNieayWJWeIZJTwY1nC9LJF8h6HsOp81RC4gwTCpw5/PpabNnxzOFqCyGFr6
+         Pf+zRu0/+Htw/3OBxmRjEsKF/Yl90X6fuYxt+146+wrPRn/oe9ZXIO1VuOFrwjRduQ7H
+         uxGRYDN4vfVH0DS8w+cP4LfKYP0DC+SnEulyT0adbqGjVBccQDwT2BXzrXjFLLeeOgIL
+         yeoXHcfFmdW2gpctHTWkAxUbH90m+70ChiqgybH+yw8tncwWCgBDGjn9ixgMohWpLs65
+         5T0d5fzYDTWaUFFVcAeCdP/W5RJ4Kl6g64+iOQ7gQZ2L+6/xlJwayZ12/x5+cdsD6YMY
+         2G+A==
+X-Gm-Message-State: AOAM530ejoPLLrYGkyBsydS2jYzJMV9/5lGk5238KaT6Qal6kOb4VxOJ
+        KQgySOuOVedtdzxpklLSqahTGBqke9c=
+X-Google-Smtp-Source: ABdhPJwrMne220CbKPUnO0vLbNPxPoT3P204VIxRffnTHnmm65B2yJCuIQOnV8cJnGaU+yDDP0Lg5A==
+X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr4931354lfq.76.1593363437840;
+        Sun, 28 Jun 2020 09:57:17 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id n25sm7983806lfe.39.2020.06.28.09.57.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jun 2020 09:57:16 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id s1so15533876ljo.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 09:57:16 -0700 (PDT)
+X-Received: by 2002:a2e:97c3:: with SMTP id m3mr6442417ljj.312.1593363435994;
+ Sun, 28 Jun 2020 09:57:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sun, 28 Jun 2020 17:55:00 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
-In-Reply-To: <CAHiYmc778AYK1UzOUnrU2VCyUExT3Zhu5nCSqeQOTZK2LbmFUg@mail.gmail.com>
-References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
- <e419a2acea6c1977eaef5d049d607749@kernel.org>
- <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
- <80132dff49a64d238f775aa0bafe29e1@kernel.org>
- <CAHiYmc778AYK1UzOUnrU2VCyUExT3Zhu5nCSqeQOTZK2LbmFUg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <e1c8747d684dbdf0f6acc2eea2025139@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: aleksandar.qemu.devel@gmail.com, yangtiezhu@loongson.cn, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, lixuefeng@loongson.cn
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200628140523.GA18884@zn.tnic>
+In-Reply-To: <20200628140523.GA18884@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Jun 2020 09:57:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiu9wquJ1LO53sA7=9ZCmQkRpu1-hZwwopeu8OVzt4qsg@mail.gmail.com>
+Message-ID: <CAHk-=wiu9wquJ1LO53sA7=9ZCmQkRpu1-hZwwopeu8OVzt4qsg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/entry for 5.8
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-28 13:48, Aleksandar Markovic wrote:
-> нед, 28. јун 2020. у 14:06 Marc Zyngier <maz@kernel.org> је написао/ла:
->> 
->> On 2020-06-28 12:25, Aleksandar Markovic wrote:
->> > сре, 24. јун 2020. у 10:40 Marc Zyngier <maz@kernel.org> је написао/ла:
->> >>
->> >> On 2020-06-24 08:44, Tiezhu Yang wrote:
->> >> > [git send-email failed due to too many commands,
->> >> >  so only cc the major related email and resend it,
->> >> >  sorry for that]
->> >>
->> >> This is becoming majorly annoying.
->> >
->> > I don't think this is the right vocabulary to welcome newcomers,
->> > however "terrible" thinks they did.
->> >
->> > Rather, patience, calmness and clear and detailed explanations would
->> > work much better - and certainly be much more helpful and useful to
->> > the community in the long run.
->> 
->> Pray tell how you would have handled this. I expressed *my* personal
->> frustration at a SNR hovering below the 25% mark. I have only 
->> indicated
->> that the current course of action was becoming a problem.
->> 
->> And instead of taking the moral high ground, maybe you could actually
->> share your wisdom with Teizhu and help him becoming a better
->> contributor?
->> 
-> 
-> He will improve. This initial clumsiness is normal. It could have been
-> avoided, true - for example, if he had had someone more experienced at
-> hand, preferably a co-worker. He obviously acts alone. It will be
-> better.
+On Sun, Jun 28, 2020 at 7:05 AM Borislav Petkov <bp@suse.de> wrote:
+>
+> please pull the x86/entry urgent pile which has accumulated since the
+> merge window. It is not the smallest but considering the almost complete
+> entry core rewrite, the amount of fixes to follow is somewhat higher
+> than usual, which is to be expected.
 
-I thank you for imparting your insight on us. You clearly have helped
-things moving forward, and I am sure Teizhu now knows a lot more about
-what he should have done.
+Tssk. This has an unnecessary merge "to resolve conflicts". I'd much
+rather have seen the pull without that.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Oh well. Pulled.
+
+             Linus
