@@ -2,177 +2,137 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC96C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007192080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEE9208B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593313192;
+	bh=sbQMZend8KSxiw8gOOfzjzEdTwk4tp9URNJS8mJYa+g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YmOeE2HGzBKKuW3Qgf4Guu1Bh/UC+ZjvJIyMxhj8uaFYQiIKGPXRy3Qao4A6ckG1B
+	 WtszzlyqT3w8j9GjML1ugAOm6Fklpaf9tT4+D17hDx7LflAwcv1NAtUpndEK/Kic5l
+	 3D65/eSsvCHahilGcFTwxX9xyzuTt6RRd0XRRAVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgF1C7H (ORCPT
+        id S1726047AbgF1C7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 22:59:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6321 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbgF1C7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 22:59:07 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8684C82A6CEB93331B4C;
-        Sun, 28 Jun 2020 10:59:03 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 28 Jun 2020 10:58:54 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2 5/5] f2fs: show more debug info for per-temperature log
-Date:   Sun, 28 Jun 2020 10:58:44 +0800
-Message-ID: <20200628025844.90785-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+        Sat, 27 Jun 2020 22:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbgF1C7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 22:59:50 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C449A2080C;
+        Sun, 28 Jun 2020 02:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593313190;
+        bh=sbQMZend8KSxiw8gOOfzjzEdTwk4tp9URNJS8mJYa+g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hGHAMylK7A0agHTX8RpBjZx86ofHLEMji07TlApTbh/WFsA0CNL6wtoBXChXIIvAO
+         5as3zBX/O2vShnD3N7ZDJOjbbVFKkqPTqwpnQO3ZACRdSmudz0PPHcJMEAkUwNPuMg
+         VeX0JJLsLQtmv6+lVXrzMYp+VIPp2Y0PLuAuq/Jc=
+Date:   Sun, 28 Jun 2020 11:59:45 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     guoren@kernel.org
+Cc:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] riscv: Fixup compile error BUILD_BUG_ON failed
+Message-Id: <20200628115945.335b92c517cb8a8fa87be759@kernel.org>
+In-Reply-To: <1593274802-46332-1-git-send-email-guoren@kernel.org>
+References: <1593274802-46332-1-git-send-email-guoren@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add to account and show per-log dirty_seg, full_seg and valid_blocks
-in debugfs.
-- reformat printed info.
+On Sat, 27 Jun 2020 16:20:02 +0000
+guoren@kernel.org wrote:
 
-    TYPE            segno    secno   zoneno  dirty_seg   full_seg  valid_blk
-  - COLD   data:     1523     1523     1523          1          0        399
-  - WARM   data:      769      769      769         20        255     133098
-  - HOT    data:      767      767      767          9          0        167
-  - Dir   dnode:       22       22       22          3          0         70
-  - File  dnode:      722      722      722         14         10       6505
-  - Indir nodes:        2        2        2          1          0          3
+> From: Guo Ren <guoren@linux.alibaba.com>
+> 
+> Unfortunately, the current code couldn't be compiled, because
+> BUILD_BUG_ON needs a static defined value, not a dynamic
+> variable with a0 regs. Just use it inline as a solution.
+> 
+>   CC      arch/riscv/kernel/patch.o
+> In file included from ./include/linux/kernel.h:11,
+>                  from ./include/linux/list.h:9,
+>                  from ./include/linux/preempt.h:11,
+>                  from ./include/linux/spinlock.h:51,
+>                  from arch/riscv/kernel/patch.c:6:
+> In function ‘fix_to_virt’,
+>     inlined from ‘patch_map’ at arch/riscv/kernel/patch.c:37:17:
+> ./include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_205’ declared with attribute error: BUILD_BUG_ON failed: idx >= __end_of_fixed_addresses
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>                                       ^
+> ./include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ./include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>   ^~~~~~~~~~~~~~~~
+> ./include/asm-generic/fixmap.h:32:2: note: in expansion of macro ‘BUILD_BUG_ON’
+>   BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
+>   ^~~~~~~~~~~~
+> 
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/patch.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+> index d4a64df..f8e84f2 100644
+> --- a/arch/riscv/kernel/patch.c
+> +++ b/arch/riscv/kernel/patch.c
+> @@ -20,7 +20,7 @@ struct patch_insn {
+>  };
+>  
+>  #ifdef CONFIG_MMU
+> -static void *patch_map(void *addr, int fixmap)
+> +static inline void *patch_map(void *addr, int fixmap)
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- account debug info for current segments.
- fs/f2fs/debug.c | 64 +++++++++++++++++++++++++++++++++++++++----------
- fs/f2fs/f2fs.h  |  3 +++
- 2 files changed, 55 insertions(+), 12 deletions(-)
+Would we be better to use "__always_inline" as same as fix_to_virt?
+And also, could you add a comment why we need to make it inline?
 
-diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
-index 0dbcb0f9c019..4276c0f79beb 100644
---- a/fs/f2fs/debug.c
-+++ b/fs/f2fs/debug.c
-@@ -174,6 +174,26 @@ static void update_general_status(struct f2fs_sb_info *sbi)
- 	for (i = META_CP; i < META_MAX; i++)
- 		si->meta_count[i] = atomic_read(&sbi->meta_count[i]);
- 
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		si->dirty_seg[i] = 0;
-+		si->full_seg[i] = 0;
-+		si->valid_blks[i] = 0;
-+	}
-+
-+	for (i = 0; i < MAIN_SEGS(sbi); i++) {
-+		int blks = get_seg_entry(sbi, i)->valid_blocks;
-+		int type = get_seg_entry(sbi, i)->type;
-+
-+		if (!blks)
-+			continue;
-+
-+		if (blks == sbi->blocks_per_seg)
-+			si->full_seg[type]++;
-+		else
-+			si->dirty_seg[type]++;
-+		si->valid_blks[type] += blks;
-+	}
-+
- 	for (i = 0; i < 2; i++) {
- 		si->segment_count[i] = sbi->segment_count[i];
- 		si->block_count[i] = sbi->block_count[i];
-@@ -329,30 +349,50 @@ static int stat_show(struct seq_file *s, void *v)
- 		seq_printf(s, "\nMain area: %d segs, %d secs %d zones\n",
- 			   si->main_area_segs, si->main_area_sections,
- 			   si->main_area_zones);
--		seq_printf(s, "  - COLD  data: %d, %d, %d\n",
-+		seq_printf(s, "    TYPE         %8s %8s %8s %10s %10s %10s\n",
-+			   "segno", "secno", "zoneno", "dirty_seg", "full_seg", "valid_blk");
-+		seq_printf(s, "  - COLD   data: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_COLD_DATA],
- 			   si->cursec[CURSEG_COLD_DATA],
--			   si->curzone[CURSEG_COLD_DATA]);
--		seq_printf(s, "  - WARM  data: %d, %d, %d\n",
-+			   si->curzone[CURSEG_COLD_DATA],
-+			   si->dirty_seg[CURSEG_COLD_DATA],
-+			   si->full_seg[CURSEG_COLD_DATA],
-+			   si->valid_blks[CURSEG_COLD_DATA]);
-+		seq_printf(s, "  - WARM   data: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_WARM_DATA],
- 			   si->cursec[CURSEG_WARM_DATA],
--			   si->curzone[CURSEG_WARM_DATA]);
--		seq_printf(s, "  - HOT   data: %d, %d, %d\n",
-+			   si->curzone[CURSEG_WARM_DATA],
-+			   si->dirty_seg[CURSEG_WARM_DATA],
-+			   si->full_seg[CURSEG_WARM_DATA],
-+			   si->valid_blks[CURSEG_WARM_DATA]);
-+		seq_printf(s, "  - HOT    data: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_HOT_DATA],
- 			   si->cursec[CURSEG_HOT_DATA],
--			   si->curzone[CURSEG_HOT_DATA]);
--		seq_printf(s, "  - Dir   dnode: %d, %d, %d\n",
-+			   si->curzone[CURSEG_HOT_DATA],
-+			   si->dirty_seg[CURSEG_HOT_DATA],
-+			   si->full_seg[CURSEG_HOT_DATA],
-+			   si->valid_blks[CURSEG_HOT_DATA]);
-+		seq_printf(s, "  - Dir   dnode: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_HOT_NODE],
- 			   si->cursec[CURSEG_HOT_NODE],
--			   si->curzone[CURSEG_HOT_NODE]);
--		seq_printf(s, "  - File   dnode: %d, %d, %d\n",
-+			   si->curzone[CURSEG_HOT_NODE],
-+			   si->dirty_seg[CURSEG_HOT_NODE],
-+			   si->full_seg[CURSEG_HOT_NODE],
-+			   si->valid_blks[CURSEG_HOT_NODE]);
-+		seq_printf(s, "  - File  dnode: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_WARM_NODE],
- 			   si->cursec[CURSEG_WARM_NODE],
--			   si->curzone[CURSEG_WARM_NODE]);
--		seq_printf(s, "  - Indir nodes: %d, %d, %d\n",
-+			   si->curzone[CURSEG_WARM_NODE],
-+			   si->dirty_seg[CURSEG_WARM_NODE],
-+			   si->full_seg[CURSEG_WARM_NODE],
-+			   si->valid_blks[CURSEG_WARM_NODE]);
-+		seq_printf(s, "  - Indir nodes: %8d %8d %8d %10u %10u %10u\n",
- 			   si->curseg[CURSEG_COLD_NODE],
- 			   si->cursec[CURSEG_COLD_NODE],
--			   si->curzone[CURSEG_COLD_NODE]);
-+			   si->curzone[CURSEG_COLD_NODE],
-+			   si->dirty_seg[CURSEG_COLD_NODE],
-+			   si->full_seg[CURSEG_COLD_NODE],
-+			   si->valid_blks[CURSEG_COLD_NODE]);
- 		seq_printf(s, "\n  - Valid: %d\n  - Dirty: %d\n",
- 			   si->main_area_segs - si->dirty_count -
- 			   si->prefree_count - si->free_segs,
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d8bf07ba159c..7fb2a1a33438 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3551,6 +3551,9 @@ struct f2fs_stat_info {
- 	int curseg[NR_CURSEG_TYPE];
- 	int cursec[NR_CURSEG_TYPE];
- 	int curzone[NR_CURSEG_TYPE];
-+	unsigned int dirty_seg[NR_CURSEG_TYPE];
-+	unsigned int full_seg[NR_CURSEG_TYPE];
-+	unsigned int valid_blks[NR_CURSEG_TYPE];
- 
- 	unsigned int meta_count[META_MAX];
- 	unsigned int segment_count[2];
+Thank you,
+
+>  {
+>  	uintptr_t uintaddr = (uintptr_t) addr;
+>  	struct page *page;
+> @@ -37,7 +37,6 @@ static void *patch_map(void *addr, int fixmap)
+>  	return (void *)set_fixmap_offset(fixmap, page_to_phys(page) +
+>  					 (uintaddr & ~PAGE_MASK));
+>  }
+> -NOKPROBE_SYMBOL(patch_map);
+>  
+>  static void patch_unmap(int fixmap)
+>  {
+> -- 
+> 2.7.4
+> 
+
+
 -- 
-2.26.2
-
+Masami Hiramatsu <mhiramat@kernel.org>
