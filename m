@@ -2,125 +2,113 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E582206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:21:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuoVAkH1"
+	by mail.kernel.org (Postfix) with ESMTP id C9554204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593372432;
+	bh=eWgU1bHWpQJKynygq8SlOlQDfursoSl2F7Isuu/6Qus=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Jft/hfzeagWNLdaM7SvtS4y0Qyd9J3tPG7mRGN4KC3dMeYQiSR9t0T89hTEqyxvkN
+	 pa/KM6wWyAf4yWNcqJOB2Am8pFc/vsTOgQS9n25FKciplcH8WDTC2WpndLMokAdm1r
+	 8P/ImF96eNEkRvOrnMSx4pBs5uQmHiMpylxpa+ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgF1TVM (ORCPT
+        id S1726740AbgF1T07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgF1TVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:21:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70942C03E979;
-        Sun, 28 Jun 2020 12:21:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p3so7309902pgh.3;
-        Sun, 28 Jun 2020 12:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=juNBvBEwxyhkL1BHcBnLnRlW48vC/9qZ2CQ7kLNxHj8=;
-        b=LuoVAkH1TyOzQ72WQFxBhyluYUsNToJnNWtpVAEiDWzcgPqAgRd0n3yQxCaT5gVF90
-         Wm/kTe8E0CTfcysF5FnovZCikh69WMoRQfaN5ZVzS5AyFevvRtMlrEJN/s+vJ6q8Q4MK
-         6EmO5iHP8EnS46SvuTEZxsxzXmb6WIdSd0OLMBeboSHgJaIyRXxUpDGzHiWDIPH97cMv
-         TiVjQXreeredizeQmMSDY5mL5aMuWUlEfoS85vIz1qKus4qZ/vT0fcWhhOVe+daB3o/9
-         EHOqyJS/xnAr6MYfN4VwcUh9PwRTDbERY+QZdc7vyK2p4tHb4ORqNy8IVL7CH5x2AMIg
-         pGrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=juNBvBEwxyhkL1BHcBnLnRlW48vC/9qZ2CQ7kLNxHj8=;
-        b=qMy66YSuhbl2rBKq1WKhsJHHkU1/gkab29ztpq/Kbc8IF7E0nQJx3vLMAaTtyCqZVM
-         Rq7AVOhHUfRw9PLnRopKfAHbxRg4srbBKo1mpFBC4lVJWN4HLPQWgZuRadQJLKa1HQTg
-         og2Vj2hEA0hjWj+WmoY72MUTVBy32mRhfdW/ihRXPMefCCHiIzlFUXcTHDBLZoDgEAUQ
-         TXeR2SZ32Xl881urqoRIrrAqx/Lzvfj9ZtRpZcuMjpD/R8iippY0K55/0p1m4q7uoBT7
-         Rm4Phns1hnTbHaZDGZ0N77Q9Mq/IrbbrUJ5wscMQWzoAy0wC5u1WRUpv7C3tygb6z0MB
-         jx3g==
-X-Gm-Message-State: AOAM531DmYvZ3XQXPtpKwKnoM5iVM0uiReCnlZzFBvCRB3+mSFGIgKm/
-        sxJqsyt7ye7KBxEkhxwCinc=
-X-Google-Smtp-Source: ABdhPJxVJbsx554JURqQb2p9V7LmwC7Z4Et1fKFei9olGuuLHMC1vWEBDB7O3SwXCDIPs1fQLip43w==
-X-Received: by 2002:a62:3303:: with SMTP id z3mr2774223pfz.59.1593372070760;
-        Sun, 28 Jun 2020 12:21:10 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:616])
-        by smtp.gmail.com with ESMTPSA id 83sm10139134pfu.60.2020.06.28.12.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 12:21:09 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 12:21:07 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
- <20200624120408.12c8fa0d@oasis.local.home>
- <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
- <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
- <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
- <20200626181455.155912d9@oasis.local.home>
- <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
- <20200628144616.52f09152@oasis.local.home>
+        Sun, 28 Jun 2020 15:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbgF1T06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 15:26:58 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C82206C3;
+        Sun, 28 Jun 2020 19:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593372417;
+        bh=eWgU1bHWpQJKynygq8SlOlQDfursoSl2F7Isuu/6Qus=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LbyoDRpY+UhUHP6xya03mwMz6oDtFM2dPXfOeC95PU28nxzOnKyUOyAgvahh4SCoX
+         Oov1mfKve0EmU4KUD1PjpJWoSTNR2TtML4otIW6vXcr/mf5iEw/j4TNHJjnMf7bbwe
+         dr4C1qAOdf68dXjjTQqSjBhc8f+mkZDFTqtlEgMQ=
+Received: by mail-ot1-f46.google.com with SMTP id m2so13532549otr.12;
+        Sun, 28 Jun 2020 12:26:57 -0700 (PDT)
+X-Gm-Message-State: AOAM533Nihk3+ZORS+uoOpiboGCl8aHjYSSGOnPNWNfRsGVch7ICpvL3
+        jhkvtoRVG5mOjsdK9q/NO1/LhdOElw6Z4OVcAvs=
+X-Google-Smtp-Source: ABdhPJzHm78KxQmwfUdKJ61L9yWPm+1u8mItRetBQKMqn1UtdPfgN72AKu4cuwEHkE6DARtuG77pEUnsfaHlMpAsJVY=
+X-Received: by 2002:a9d:688:: with SMTP id 8mr10661896otx.108.1593372417154;
+ Sun, 28 Jun 2020 12:26:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628144616.52f09152@oasis.local.home>
+References: <20200628182601.GA84577@gmail.com> <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun, 28 Jun 2020 21:26:45 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFfLb44ifgNqBR9WM5T6sT6ekqS8cYdvbuhvs5mqcD+tw@mail.gmail.com>
+Message-ID: <CAMj1kXFfLb44ifgNqBR9WM5T6sT6ekqS8cYdvbuhvs5mqcD+tw@mail.gmail.com>
+Subject: Re: [GIT PULL] EFI fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 02:46:16PM -0400, Steven Rostedt wrote:
-> > 
-> > By now everyone has learned to use bpf_trace_printk() and expects
-> > to see the output in /sys/kernel/debug/tracing/trace.
-> > It's documented in uapi/bpf.h and various docs.
-> 
-> Re-teach them, or are you finally admitting that the tracing system is
-> a permanent API?  This is the reason people are refusing to add trace
-> points into their subsystems. Because user space may make it required.
-> 
-> I see no reason why you can't create a dedicated BPF tracing instance
-> (you only need one) to add all your trace_array_printk()s to.
+On Sun, 28 Jun 2020 at 20:57, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Jun 28, 2020 at 11:26 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > - Fix build regression on v4.8 and older
+>
+> Interesting.
+>
+> It's perhaps yet another reason to just skip gcc-4.8 too, since
+> apparently 4.9 works.
+>
 
-All bpf helpers are stable api. We cannot remove bpf_trace_printk() and
-cannot change the fact that it has to print into /sys/kernel/debug/tracing/trace.
-If we do so a lot of users will complain. Loudly.
-If you really want to see the flames, go ahead and rename 'trace_pipe'
-into something else.
-This has nothing to do with tracing in general and tracepoints.
-Those come and go.
-If you really want to nuke trace_printk from the kernel we need time
-to work on replacement and give users at least few releases of helper
-deprecation time. We've never done in the past though.
-There could be flames even if we deprecate it gradually.
-Looking how unyielding you're about this banner I guess we have to start
-working on replacement sooner than later. Oh well.
++1
+
+> gcc-4.9 really has a lot of advantages. It's where (I think) gcc
+> basically supports all C11 things, including _Generic() but also
+> __auto_type.
+>
+> So if we just say that we only care about gcc-4.9 upwards, it frees us
+> to clean up some (really) old constructions where we've been using
+> macros with sizeof and/or typeof, and make the code potentially rather
+> more readable and often more compact.
+>
+> Yeah, I know we _just_ made the minimum compiler version be 4.8, but I
+> do get the feeling that we should just have bitten the bullet and gone
+> all the way to 4.9.
+>
+> Arnd, what was the reason for 4.8 support? I'm assuming there's some
+> sad unfortunate distro that still uses that ancient compiler..
+>
+
+Arnd may know more, but I know one of the reasons 4.8 is significant
+is because RHEL 7 uses it, which will go EOL in 2024.
+
+> Ok, ok, 4.9 isn't exactly new either (4.9.0 released May 2014, and
+> final 4.9 release was 2016), but 4.9 really from a feature angle is a
+> much saner thing than 4.8.
+>
+> Afaik, the main "interesting" part of gcc-4.8 was that it was when gcc
+> switched over to be built as C++. That's perhaps a huge milestone for
+> gcc itself, but not necessarily for the users..
+>
+> Arnd? You're the one who tends to keep track of these things..
+>
+>              Linus
