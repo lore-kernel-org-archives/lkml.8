@@ -2,93 +2,190 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA620C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0476BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4F4D207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D853E207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbgF1D17 (ORCPT
+        id S1726008AbgF1DbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 23:27:59 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43746 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbgF1D17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 23:27:59 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr94yDvheNnJLAA--.3271S3;
-        Sun, 28 Jun 2020 11:27:47 +0800 (CST)
-Subject: Re: [1/7] irqchip: Fix potential resource leaks
-To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
- <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
- <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
- <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
- <cc6b95ec-691e-f010-4a04-add39d706c4b@web.de>
- <423f83e0-c533-c346-ab8b-f2c6ccc828a2@loongson.cn>
- <37ff7ca4-dc7c-6a43-94a3-9628efe69b25@web.de>
- <8556e402-52ae-849f-2f6e-e56406057dce@loongson.cn>
- <c425c66a-d2fc-dad2-dc98-31659342a5fb@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <61c969d7-8647-56c1-8123-9b000036ae66@loongson.cn>
-Date:   Sun, 28 Jun 2020 11:27:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Sat, 27 Jun 2020 23:31:15 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:46303 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgF1DbO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 23:31:14 -0400
+Received: by mail-il1-f199.google.com with SMTP id d8so6422497ilc.13
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 20:31:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0xNYRJYAIHEjL9wq2M9xDbIQUfYFJfWWGqedzbOS0HA=;
+        b=o79nX4awihZhPctB+K+lr8cYHMOCQ09FOLIjvFFnrl2IF+HsQ6JM8qoUaNSDdpUN1u
+         Wr+DuPDBvMp3WV2EMdcxlxA9KR8its1iy37mHRn8gCUFcAtT8VDamKVsOAoLhmX+JFlg
+         o9sOD1g/zjTv/KIawi8YrQ+vXBXQdfPQO33b71/0ATHPBHabNP67SIGOgbMxWRoQ6d+m
+         mcboRak317AlMl34We4HzUj0Gc05ASAv9uLSPP9WdMJhG0BnbKTqCEnlzyn3C2M0tgyu
+         Dr+bcsgia+lNcge/OJVZ00+u6buyFkc/TMn0StWdVFCGz5kNBjEu11rKnemVRffUYsLd
+         HbTA==
+X-Gm-Message-State: AOAM533QD3804BwA7dlmopS0ajHIaEV/ySSn8jOm7EHQ7Juio47CG+di
+        KL/1Weq2zGa/zXvvBJ89HfSioCYPIqsDkNMsmdcLfGU9rRBP
+X-Google-Smtp-Source: ABdhPJyBHD9qb0wx18+r97n64RX4hsQwqokkX1lem1spwM9037Cwrof9IpNr27CpYGDDTS3nK1qykofr/VxcugC8OrB4eVFlWtqb
 MIME-Version: 1.0
-In-Reply-To: <c425c66a-d2fc-dad2-dc98-31659342a5fb@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr94yDvheNnJLAA--.3271S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYX7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
-        80aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-        M4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r
-        48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
-        Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
-        0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8
-        JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-        IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUco7NUUUUU
-        =
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Received: by 2002:a92:409a:: with SMTP id d26mr10516321ill.200.1593315073205;
+ Sat, 27 Jun 2020 20:31:13 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 20:31:13 -0700
+In-Reply-To: <000000000000880dcc0598bcfac9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f42b3b05a91c9223@google.com>
+Subject: Re: possible deadlock in process_measurement (2)
+From:   syzbot <syzbot+18a1619cceea30ed45af@syzkaller.appspotmail.com>
+To:     dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/2020 08:08 PM, Markus Elfring wrote:
->>> How do you think about to extend source code analysis tools accordingly?
->> I have no good idea,
->> maybe some simple match check tools can do this.
-> Would you like to help with any additional software development resources
-> (besides your current contribution)?
+syzbot has found a reproducer for the following crash on:
 
-I am glad to do it in my spare time.
+HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=164b959b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
+dashboard link: https://syzkaller.appspot.com/bug?extid=18a1619cceea30ed45af
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f43c5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17cbb239100000
 
->
-> Have you heard anything according to recent research (from computer science)
-> for this application domain?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+18a1619cceea30ed45af@syzkaller.appspotmail.com
 
-No.
+======================================================
+WARNING: possible circular locking dependency detected
+5.8.0-rc2-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor165/6816 is trying to acquire lock:
+ffff888092f48080 (&iint->mutex){+.+.}-{3:3}, at: process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
 
->
-> Regards,
-> Markus
+but task is already holding lock:
+ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1664 [inline]
+ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x45/0x90 fs/namespace.c:354
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (sb_writers#4){.+.+}-{0:0}:
+       lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
+       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
+       __sb_start_write+0x14b/0x410 fs/super.c:1672
+       sb_start_write include/linux/fs.h:1664 [inline]
+       mnt_want_write+0x45/0x90 fs/namespace.c:354
+       ovl_maybe_copy_up+0x117/0x180 fs/overlayfs/copy_up.c:961
+       ovl_open+0xa2/0x200 fs/overlayfs/file.c:145
+       do_dentry_open+0x813/0x1070 fs/open.c:828
+       vfs_open fs/open.c:942 [inline]
+       dentry_open+0xc6/0x120 fs/open.c:958
+       ima_calc_file_hash+0xfa/0x1f30 security/integrity/ima/ima_crypto.c:557
+       ima_collect_measurement+0x1fd/0x490 security/integrity/ima/ima_api.c:250
+       process_measurement+0xddf/0x18e0 security/integrity/ima/ima_main.c:324
+       ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
+       do_open fs/namei.c:3245 [inline]
+       path_openat+0x27d6/0x37f0 fs/namei.c:3360
+       do_filp_open+0x191/0x3a0 fs/namei.c:3387
+       do_sys_openat2+0x463/0x770 fs/open.c:1179
+       do_sys_open fs/open.c:1195 [inline]
+       ksys_open include/linux/syscalls.h:1388 [inline]
+       __do_sys_open fs/open.c:1201 [inline]
+       __se_sys_open fs/open.c:1199 [inline]
+       __x64_sys_open+0x1af/0x1e0 fs/open.c:1199
+       do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+-> #0 (&iint->mutex){+.+.}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:2496 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+       validate_chain+0x1b0c/0x8920 kernel/locking/lockdep.c:3218
+       __lock_acquire+0x116c/0x2c30 kernel/locking/lockdep.c:4380
+       lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
+       __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
+       process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
+       ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
+       do_open fs/namei.c:3245 [inline]
+       path_openat+0x27d6/0x37f0 fs/namei.c:3360
+       do_filp_open+0x191/0x3a0 fs/namei.c:3387
+       do_sys_openat2+0x463/0x770 fs/open.c:1179
+       do_sys_open fs/open.c:1195 [inline]
+       __do_sys_openat fs/open.c:1209 [inline]
+       __se_sys_openat fs/open.c:1204 [inline]
+       __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
+       do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_writers#4);
+                               lock(&iint->mutex);
+                               lock(sb_writers#4);
+  lock(&iint->mutex);
+
+ *** DEADLOCK ***
+
+1 lock held by syz-executor165/6816:
+ #0: ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1664 [inline]
+ #0: ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x45/0x90 fs/namespace.c:354
+
+stack backtrace:
+CPU: 1 PID: 6816 Comm: syz-executor165 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ print_circular_bug+0xc72/0xea0 kernel/locking/lockdep.c:1703
+ check_noncircular+0x1fb/0x3a0 kernel/locking/lockdep.c:1827
+ check_prev_add kernel/locking/lockdep.c:2496 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+ validate_chain+0x1b0c/0x8920 kernel/locking/lockdep.c:3218
+ __lock_acquire+0x116c/0x2c30 kernel/locking/lockdep.c:4380
+ lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
+ __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+ __mutex_lock kernel/locking/mutex.c:1103 [inline]
+ mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
+ process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
+ ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
+ do_open fs/namei.c:3245 [inline]
+ path_openat+0x27d6/0x37f0 fs/namei.c:3360
+ do_filp_open+0x191/0x3a0 fs/namei.c:3387
+ do_sys_openat2+0x463/0x770 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ __do_sys_openat fs/open.c:1209 [inline]
+ __se_sys_openat fs/open.c:1204 [inline]
+ __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446289
+Code: Bad RIP value.
+RSP: 002b:00007fc5eb6ccdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446289
+RDX: 000000000000275a RSI: 00000000200001c0 RDI: 00000000ffffff9c
+RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000
 
