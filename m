@@ -2,146 +2,169 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84159C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131E8206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:54:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RySqVmaj"
+	by mail.kernel.org (Postfix) with ESMTP id 631492071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 15:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593359901;
+	bh=DtSgSNZ/Y8U3u/G8yXdkRl6jp5GXV8zZCwtET5iW7YQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N+4QRcU7P35Dx+/uTymRrQ/sl2DW2kJccz5ACD1JPI8f6qiUAVJZ7FfzXieFdQh+2
+	 mLaV5WaDbgLTgr085gFWsNyAdxKs2u7pkgglAodKb9mqj1t2456R99AOcELFZfna2v
+	 6k2G3JzAGJH6uz9z6M0wFAv43aiAyvpiD8Swamgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgF1Pyw (ORCPT
+        id S1726374AbgF1P6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 11:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgF1Pyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 11:54:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2F9C03E979;
-        Sun, 28 Jun 2020 08:54:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g18so14218893wrm.2;
-        Sun, 28 Jun 2020 08:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sEfpGNC1wgHInVbFM/yJkO/397CoGeIpiR31ps+GqnY=;
-        b=RySqVmajWV6OJ+iQX3hGEZ4N8UoeksvAL7R8YX+DoCwaicjMoJaqy342V+OpKzHsqi
-         lPZ7R4qe5X2nZczwgkpCv3yI9NlZOSryVdb52+xYjoFqvQ9gX4b0HHd9IrC14w7Iklcb
-         uFEIsCZxQps4O0qGBKX5GgyhxoIvTaG+iEaNSPDGVt0qFgxXPOvaL5Tsj6rItoVy+C+A
-         6E2eeL/708cAfNpuCiYhdeOJY0/A59LoAS8QaDmWW3POhxp0K3i94z+/1ScJEqH6zpFr
-         D7KPM15Jsui4v9h53M6+2hRUX3Zb1b7Vcs2S+5po6Ixh2sPc5Ty8o7cmY/h4dELa4hwn
-         XsHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sEfpGNC1wgHInVbFM/yJkO/397CoGeIpiR31ps+GqnY=;
-        b=BhFCl2218dBr+fIiYNxL52MIlbv9pZwNQKrapZWXKr5jfaL7amDOjwcuryP2IZ7d/c
-         ia2z5NTXJYv/cK+AUjqLAJrCvCLXWffJTld0HJxKX13CNeUy6EQI5ZrAIZwA4Te4q1f1
-         U/teA2Vli1ziNMlXdgq2kqo2J0tH5XtaMYpx3rhH7BrV3wJo/YqwvB9ebZUZQ6tmtpf+
-         RFxc3yafD2eLS7kDC3oLJHAICfqJUDbI0HGtwulQQfCi35WC6iLYoUpCRg4TTmmXIhiB
-         pUDEeFdYkMVVhioi35PeqlnIQJmKn4RabSJSi1VsQ0P2Uh92IbR8cOigSEPtCxchvfw7
-         XYtQ==
-X-Gm-Message-State: AOAM533q9sPK4rHyTcaHXsKx4X1gDn+nRSp1uimNXmXTK30hAnE3VRUb
-        8MCvamTqGEJiYDVJURRjL6+UDf1vTNjNzXJ+tx4=
-X-Google-Smtp-Source: ABdhPJyXfnsc3DPdGe1IaBxe+LCRIZkifchnFRbAacIOGQqLZU0NIUnLM09Dp40041gsmjwm364kCA8GepFmOmc0YH0=
-X-Received: by 2002:a5d:55c9:: with SMTP id i9mr13066890wrw.404.1593359690077;
- Sun, 28 Jun 2020 08:54:50 -0700 (PDT)
+        Sun, 28 Jun 2020 11:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgF1P6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 11:58:19 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C5C212CC;
+        Sun, 28 Jun 2020 15:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593359898;
+        bh=DtSgSNZ/Y8U3u/G8yXdkRl6jp5GXV8zZCwtET5iW7YQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m/G/JA6T3ERyNd0FPHSgEKS8tTNRsohOE46yfF7HKb6YY6w4ZT0/9dyr+ZQBO+Rcy
+         5gBbOPMK/QF2j8Z2LUej1qJzRF3Ws9kW8GHyJAbvbC8yAx30F/Z/9mt3tFw8OYtyL6
+         CIpjJ3lKhW8+7iD4QmR0L7FWf66sYiVyjIhVoFYc=
+Received: by mail-lj1-f173.google.com with SMTP id n24so15377012lji.10;
+        Sun, 28 Jun 2020 08:58:18 -0700 (PDT)
+X-Gm-Message-State: AOAM532Hh8JVsloQY2bemMQhb3OzmPgF2uYiYR1Yy0AueFOqs8QRhn2M
+        51MpVwWJ7qHX9z1vX8zuygjOe8xmVn7kTud6lWQ=
+X-Google-Smtp-Source: ABdhPJw4kdL62d9Qc3oTqep1ffBfGno76ikBsgH8wOkGMZ5nl95LHD/hd+wQ0lUVl4czTIHBb//DO1un06L12zHH2/s=
+X-Received: by 2002:a2e:a0cc:: with SMTP id f12mr5820411ljm.250.1593359896350;
+ Sun, 28 Jun 2020 08:58:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200611100717.27506-1-bob.liu@oracle.com>
-In-Reply-To: <20200611100717.27506-1-bob.liu@oracle.com>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Sun, 28 Jun 2020 23:54:38 +0800
-Message-ID: <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
-To:     Bob Liu <bob.liu@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        open-iscsi@googlegroups.com, lduncan@suse.com,
-        michael.christie@oracle.com
+References: <1593274802-46332-1-git-send-email-guoren@kernel.org>
+ <20200628115945.335b92c517cb8a8fa87be759@kernel.org> <CAJF2gTTCHMHp-+RoG8DoDhbJStzmOf5AK=Z3K26FUmd_hbgR=g@mail.gmail.com>
+ <20200628235226.dbbe2256ea6e846abfb63feb@kernel.org>
+In-Reply-To: <20200628235226.dbbe2256ea6e846abfb63feb@kernel.org>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sun, 28 Jun 2020 23:58:04 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTaG6U-A9kwJotbgjYSkMUNsV=Wc-u4GM0i4zr2YCEX_A@mail.gmail.com>
+Message-ID: <CAJF2gTTaG6U-A9kwJotbgjYSkMUNsV=Wc-u4GM0i4zr2YCEX_A@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Fixup compile error BUILD_BUG_ON failed
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 6:29 PM Bob Liu <bob.liu@oracle.com> wrote:
+On Sun, Jun 28, 2020 at 10:52 PM Masami Hiramatsu <mhiramat@kernel.org> wro=
+te:
 >
-> Current code always set 'Unbound && max_active == 1' workqueues to ordered
-> implicitly, while this may be not an expected behaviour for some use cases.
+> On Sun, 28 Jun 2020 14:12:07 +0800
+> Guo Ren <guoren@kernel.org> wrote:
 >
-> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
-> to different cpu so as to get better isolation, but their cpumask can't be
-> changed because WQ_ORDERED is set implicitly.
+> > On Sun, Jun 28, 2020 at 10:59 AM Masami Hiramatsu <mhiramat@kernel.org>=
+ wrote:
+> > >
+> > > On Sat, 27 Jun 2020 16:20:02 +0000
+> > > guoren@kernel.org wrote:
+> > >
+> > > > From: Guo Ren <guoren@linux.alibaba.com>
+> > > >
+> > > > Unfortunately, the current code couldn't be compiled, because
+> > > > BUILD_BUG_ON needs a static defined value, not a dynamic
+> > > > variable with a0 regs. Just use it inline as a solution.
+> > > >
+> > > >   CC      arch/riscv/kernel/patch.o
+> > > > In file included from ./include/linux/kernel.h:11,
+> > > >                  from ./include/linux/list.h:9,
+> > > >                  from ./include/linux/preempt.h:11,
+> > > >                  from ./include/linux/spinlock.h:51,
+> > > >                  from arch/riscv/kernel/patch.c:6:
+> > > > In function =E2=80=98fix_to_virt=E2=80=99,
+> > > >     inlined from =E2=80=98patch_map=E2=80=99 at arch/riscv/kernel/p=
+atch.c:37:17:
+> > > > ./include/linux/compiler.h:392:38: error: call to =E2=80=98__compil=
+etime_assert_205=E2=80=99 declared with attribute error: BUILD_BUG_ON faile=
+d: idx >=3D __end_of_fixed_addresses
+> > > >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUN=
+TER__)
+> > > >                                       ^
+> > > > ./include/linux/compiler.h:373:4: note: in definition of macro =E2=
+=80=98__compiletime_assert=E2=80=99
+> > > >     prefix ## suffix();    \
+> > > >     ^~~~~~
+> > > > ./include/linux/compiler.h:392:2: note: in expansion of macro =E2=
+=80=98_compiletime_assert=E2=80=99
+> > > >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUN=
+TER__)
+> > > >   ^~~~~~~~~~~~~~~~~~~
+> > > > ./include/linux/build_bug.h:39:37: note: in expansion of macro =E2=
+=80=98compiletime_assert=E2=80=99
+> > > >  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), ms=
+g)
+> > > >                                      ^~~~~~~~~~~~~~~~~~
+> > > > ./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=
+=80=98BUILD_BUG_ON_MSG=E2=80=99
+> > > >   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+> > > >   ^~~~~~~~~~~~~~~~
+> > > > ./include/asm-generic/fixmap.h:32:2: note: in expansion of macro =
+=E2=80=98BUILD_BUG_ON=E2=80=99
+> > > >   BUILD_BUG_ON(idx >=3D __end_of_fixed_addresses);
+> > > >   ^~~~~~~~~~~~
+> > > >
+> > > > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > > Cc: Zong Li <zong.li@sifive.com>
+> > > > ---
+> > > >  arch/riscv/kernel/patch.c | 3 +--
+> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+> > > > index d4a64df..f8e84f2 100644
+> > > > --- a/arch/riscv/kernel/patch.c
+> > > > +++ b/arch/riscv/kernel/patch.c
+> > > > @@ -20,7 +20,7 @@ struct patch_insn {
+> > > >  };
+> > > >
+> > > >  #ifdef CONFIG_MMU
+> > > > -static void *patch_map(void *addr, int fixmap)
+> > > > +static inline void *patch_map(void *addr, int fixmap)
+> > >
+> > > Would we be better to use "__always_inline" as same as fix_to_virt?
+> > Ok
+> >
+> > > And also, could you add a comment why we need to make it inline?
+> > I've mentioned in comment:
+> > > > BUILD_BUG_ON needs a static defined value, not a dynamic
+> > > > variable with a0 regs.
+> >
+> > idx must be a const unsigned int or it will cause compile error with
+> > BUILD_BUG_ON.
+>
+> Ah, sorry for the confusion. I meant the comment line in the code.
+Ok.
 
-Hello
+> BTW, can we also use "const unsigned int" for the fixmap index so that
+> no one miss it anymore?
+Sure, actually I've done it in my patch V2. Thx for mention.
 
-If I read the code correctly, the reason why their cpumask can't
-be changed is because __WQ_ORDERED_EXPLICIT, not __WQ_ORDERED.
+--=20
+Best Regards
+ Guo Ren
 
->
-> This patch adds a flag __WQ_ORDERED_DISABLE and also
-> create_singlethread_workqueue_noorder() to offer an new option.
->
-> Signed-off-by: Bob Liu <bob.liu@oracle.com>
-> ---
->  include/linux/workqueue.h | 4 ++++
->  kernel/workqueue.c        | 4 +++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-> index e48554e..4c86913 100644
-> --- a/include/linux/workqueue.h
-> +++ b/include/linux/workqueue.h
-> @@ -344,6 +344,7 @@ enum {
->         __WQ_ORDERED            = 1 << 17, /* internal: workqueue is ordered */
->         __WQ_LEGACY             = 1 << 18, /* internal: create*_workqueue() */
->         __WQ_ORDERED_EXPLICIT   = 1 << 19, /* internal: alloc_ordered_workqueue() */
-> +       __WQ_ORDERED_DISABLE    = 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
->
->         WQ_MAX_ACTIVE           = 512,    /* I like 512, better ideas? */
->         WQ_MAX_UNBOUND_PER_CPU  = 4,      /* 4 * #cpus for unbound wq */
-> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
->  #define create_singlethread_workqueue(name)                            \
->         alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
->
-> +#define create_singlethread_workqueue_noorder(name)                    \
-> +       alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
-> +                       WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
-
-I think using __WQ_ORDERED without __WQ_ORDERED_EXPLICIT is what you
-need, in which case cpumask is allowed to be changed.
-
-Just use alloc_workqueue() with __WQ_ORDERED and max_active=1. It can
-be wrapped as a new function or macro, but I don't think
-create_singlethread_workqueue_noorder() is a good name for it.
-
->  extern void destroy_workqueue(struct workqueue_struct *wq);
->
->  struct workqueue_attrs *alloc_workqueue_attrs(void);
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index 4e01c44..2167013 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -4237,7 +4237,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
->          * on NUMA.
->          */
->         if ((flags & WQ_UNBOUND) && max_active == 1)
-> -               flags |= __WQ_ORDERED;
-> +               /* the caller may don't want __WQ_ORDERED to be set implicitly. */
-> +               if (!(flags & __WQ_ORDERED_DISABLE))
-> +                       flags |= __WQ_ORDERED;
->
->         /* see the comment above the definition of WQ_POWER_EFFICIENT */
->         if ((flags & WQ_POWER_EFFICIENT) && wq_power_efficient)
-> --
-> 2.9.5
->
+ML: https://lore.kernel.org/linux-csky/
