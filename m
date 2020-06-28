@@ -2,140 +2,119 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B06C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D91CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 619A3212CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593324052;
-	bh=e3cZQhFMOakSt2T5nuOCmPAjOAsn4veIuVAVBvTpyRg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q9a3HiE1KihiuxK4gxCrqaQCPkc++fF5uNWYv2G+3fGdd8/Bns0gCzzkuW7Mpfm+n
-	 IoQkFGMhBIf0cETxmUcewgR9JT2/HifqseovJ1LseeBjLT9M2PK0dNcfEPmzj1huvl
-	 N+aFkpwRGDgUlgrMAWvUFKCNzV4Xsoshu5r0H/J0=
+	by mail.kernel.org (Postfix) with ESMTP id 46EFC207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgF1GAv (ORCPT
+        id S1726015AbgF1GEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:00:51 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19303 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgF1GAu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:00:50 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05S60PuK008495;
-        Sun, 28 Jun 2020 15:00:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05S60PuK008495
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593324026;
-        bh=0Adi9oEkoNL+VTKk8ereW4+c8tkNY7OySZ7YBSe/YKA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ygVCF5vWbBSGukhyAOywf2WaTXP6fYyoAxX7QWOLXc+8IVvQ2G5qU9vgy2+yXttHC
-         Bk670axVR0NwtO9z9L7iQWjChSdxt6tY5xlDdwacItFuCGVcGiYKZcOSX1fkAPRoPi
-         kdFT7ixBknjCgX1CdZ8TH6rfpJ8DWSA5KR6iSSu5w05pczuMZZ9khc4G5FNAkPY5P6
-         ZxQ70d1BIVYbpu8B37urtIiWh8lklTP3w5xA5cXcmhpCng9E/H7fZaAZDWtQ0FFi2S
-         98iv/+N0VNBjzCkwR7JvNSJdfYAitaXW72n0JFgp2qn10kmHi2uwgk53z/SKtfUoyG
-         MaA3aKbYEIWyg==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id v1so7561923vsb.10;
-        Sat, 27 Jun 2020 23:00:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530k89AAmSs5jO+yfXAgJDXHO6BTsWN6W0TaZRYx5dxP4+7ZjY72
-        Xh2KkY3B6kF/PWm5PaRcj3xTyx1ct6fpV3KLddY=
-X-Google-Smtp-Source: ABdhPJxgrePNlmZbq4ODpdCqz51OGKwCFn/JnfhPPtPIn9WGJz+XI26wgi75kbSCrE2XC7QDCT/X8jAgUv6zb+cIVPk=
-X-Received: by 2002:a67:22c7:: with SMTP id i190mr7470079vsi.179.1593324024627;
- Sat, 27 Jun 2020 23:00:24 -0700 (PDT)
+        Sun, 28 Jun 2020 02:04:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:18773 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgF1GEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 02:04:32 -0400
+IronPort-SDR: JtBzqdWiJxblHfgFt7kXt1O/vcgQW7rZ+fu7HWsSnCzkU5i7duNgUH96ZzNR/NHv+BngpmMQaV
+ Ogf2Q98BzChw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9665"; a="210857816"
+X-IronPort-AV: E=Sophos;i="5.75,290,1589266800"; 
+   d="scan'208";a="210857816"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 23:04:31 -0700
+IronPort-SDR: Rp7G1qbm738fOTbwKesfNzmFHV5FpAUDq+4vqvR96X1hMDk/rvIk5setgE9GwLaDWq/opU4g+c
+ rmJarV4mG5yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,290,1589266800"; 
+   d="scan'208";a="276759770"
+Received: from lkp-server02.sh.intel.com (HELO 1f25e51baad6) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 27 Jun 2020 23:04:29 -0700
+Received: from kbuild by 1f25e51baad6 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jpQQX-00001x-1K; Sun, 28 Jun 2020 06:04:29 +0000
+Date:   Sun, 28 Jun 2020 14:04:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [RFC PATCH linus] drivers: thermal: tsens:
+ tsens_critical_irq_thread() can be static
+Message-ID: <20200628060359.GA29916@8567a11ddfea>
+References: <202006281417.GPpEXCGD%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200213122410.1605-1-masahiroy@kernel.org> <202002251057.C4E397A@keescook>
-In-Reply-To: <202002251057.C4E397A@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 28 Jun 2020 14:59:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASw0YT8_itaa0OeZi8toV1TUj6EKCMbg6rchdYub0cgww@mail.gmail.com>
-Message-ID: <CAK7LNASw0YT8_itaa0OeZi8toV1TUj6EKCMbg6rchdYub0cgww@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: fix gcc-plugins directory path in documentation
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006281417.GPpEXCGD%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 3:58 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Feb 13, 2020 at 09:24:10PM +0900, Masahiro Yamada wrote:
-> > Fix typos "plgins" -> "plugins".
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Thanks!
->
-> Acked-by: Kees Cook <keescook@chromium.org>
->
-> Jon, can you take this?
 
-I noticed this patch had fallen into a crack.
+Fixes: a7ff82976122 ("drivers: thermal: tsens: Merge tsens-common.c into tsens.c")
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+ tsens.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Applied to linux-kbuild now.
-Thanks.
-
-
-
-
-
-> -Kees
->
-> > ---
-> >
-> >  Documentation/kbuild/reproducible-builds.rst | 2 +-
-> >  scripts/gcc-plugins/Kconfig                  | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
-> > index 503393854e2e..3b25655e441b 100644
-> > --- a/Documentation/kbuild/reproducible-builds.rst
-> > +++ b/Documentation/kbuild/reproducible-builds.rst
-> > @@ -101,7 +101,7 @@ Structure randomisation
-> >
-> >  If you enable ``CONFIG_GCC_PLUGIN_RANDSTRUCT``, you will need to
-> >  pre-generate the random seed in
-> > -``scripts/gcc-plgins/randomize_layout_seed.h`` so the same value
-> > +``scripts/gcc-plugins/randomize_layout_seed.h`` so the same value
-> >  is used in rebuilds.
-> >
-> >  Debug info conflicts
-> > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> > index e3569543bdac..7b63c819610c 100644
-> > --- a/scripts/gcc-plugins/Kconfig
-> > +++ b/scripts/gcc-plugins/Kconfig
-> > @@ -86,7 +86,7 @@ config GCC_PLUGIN_RANDSTRUCT
-> >         source tree isn't cleaned after kernel installation).
-> >
-> >         The seed used for compilation is located at
-> > -       scripts/gcc-plgins/randomize_layout_seed.h.  It remains after
-> > +       scripts/gcc-plugins/randomize_layout_seed.h.  It remains after
-> >         a make clean to allow for external modules to be compiled with
-> >         the existing seed and will be removed by a make mrproper or
-> >         make distclean.
-> > --
-> > 2.17.1
-> >
->
-> --
-> Kees Cook
-
-
-
---
-Best Regards
-
-Masahiro Yamada
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 8d3e94d2a9ed4..39c4462e38f62 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -382,7 +382,7 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+  *
+  * Return: IRQ_HANDLED
+  */
+-irqreturn_t tsens_critical_irq_thread(int irq, void *data)
++static irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+ {
+ 	struct tsens_priv *priv = data;
+ 	struct tsens_irq_data d;
+@@ -452,7 +452,7 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+  *
+  * Return: IRQ_HANDLED
+  */
+-irqreturn_t tsens_irq_thread(int irq, void *data)
++static irqreturn_t tsens_irq_thread(int irq, void *data)
+ {
+ 	struct tsens_priv *priv = data;
+ 	struct tsens_irq_data d;
+@@ -520,7 +520,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-int tsens_set_trips(void *_sensor, int low, int high)
++static int tsens_set_trips(void *_sensor, int low, int high)
+ {
+ 	struct tsens_sensor *s = _sensor;
+ 	struct tsens_priv *priv = s->priv;
+@@ -557,7 +557,7 @@ int tsens_set_trips(void *_sensor, int low, int high)
+ 	return 0;
+ }
+ 
+-int tsens_enable_irq(struct tsens_priv *priv)
++static int tsens_enable_irq(struct tsens_priv *priv)
+ {
+ 	int ret;
+ 	int val = tsens_version(priv) > VER_1_X ? 7 : 1;
+@@ -570,7 +570,7 @@ int tsens_enable_irq(struct tsens_priv *priv)
+ 	return ret;
+ }
+ 
+-void tsens_disable_irq(struct tsens_priv *priv)
++static void tsens_disable_irq(struct tsens_priv *priv)
+ {
+ 	regmap_field_write(priv->rf[INT_EN], 0);
+ }
