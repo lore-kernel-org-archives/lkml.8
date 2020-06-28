@@ -2,184 +2,101 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A45B20738
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898FA20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CY2PnTJu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MkDMfaeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgF1NRf (ORCPT
+        id S1726507AbgF1NSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 09:17:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46531 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726411AbgF1NRe (ORCPT
+        Sun, 28 Jun 2020 09:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgF1NSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 09:17:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593350252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tJATFbaDQMEpe6MOWb32SzcaiULGBbD5r7kQBEp9Ztw=;
-        b=CY2PnTJuDl0mfzUBWRc6gz5LQ/z2jWESJf0eO5c90GGn4OY6WaxaAP9ScWnd35Y2i2Se1r
-        eqhXDpQ13rs6p0Sq32R62CjDyRVgZ45j9GWeaFPLkBdwLCnc/gXvOzlyZUglShqOvWVuRX
-        IjmcWn5LKxfJR1o5jORe9N1PO+gi+yc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-elkRecraMTaTGc5g9NtJQg-1; Sun, 28 Jun 2020 09:17:27 -0400
-X-MC-Unique: elkRecraMTaTGc5g9NtJQg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50A991800D42;
-        Sun, 28 Jun 2020 13:17:26 +0000 (UTC)
-Received: from starship (unknown [10.35.206.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 717B25C1D4;
-        Sun, 28 Jun 2020 13:17:24 +0000 (UTC)
-Message-ID: <d805dc9c56918a1fab5056a68165d34421f95ce7.camel@redhat.com>
-Subject: Re: Commit 'fs: Do not check if there is a fsnotify watcher on
- pseudo inodes' breaks chromium here
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Sun, 28 Jun 2020 09:18:46 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989CDC061794
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 06:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4FkqmwznxFHfXc9eXy8WGM1SAzAmqrth8n6MxSso8fM=; b=MkDMfaeOhuTr5CwvyU2BJQBJTV
+        dD8Q8zNWys4ennaQ/pe6qolrA2n6+ge6UL9jx8qh7agLrvfLTnegOzrc4wzIys3OyRFYtcOhNOCDs
+        pJiNPX3E3O1rsP6MpI5yW8yoB6ULfG5eWplj2jQqTtFgSNsBDsJALbDByxGWFL2CJrZUoNVmNN3kc
+        wmdp4wnqIhf05ogwAI91RULsfQv904I6YxCi8DJe7FQPfiXt99jcpp3o7jaK3yI5X4n7q4J9dQ+WT
+        /HH4u6RjQkZPbA2PfB1yYKR2rWnJJR825j07O70X00uOVsQuB+z5/rp3YkVP7Q60Qd7WUfomTJtW6
+        kQW4maYA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpXCK-0007rk-9K; Sun, 28 Jun 2020 13:18:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 334413013E5;
+        Sun, 28 Jun 2020 15:18:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 20DD221390E43; Sun, 28 Jun 2020 15:18:13 +0200 (CEST)
+Date:   Sun, 28 Jun 2020 15:18:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Nick Piggin <npiggin@gmail.com>,
         Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 28 Jun 2020 16:17:23 +0300
-In-Reply-To: <bffe8da0944fad97c60bbd4e73dc970ee3a7a2c0.camel@redhat.com>
-References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
-         <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
-         <bffe8da0944fad97c60bbd4e73dc970ee3a7a2c0.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Jan Kara <jack@suse.cz>, Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
+ wakeup?
+Message-ID: <20200628131813.GM4817@hirez.programming.kicks-ass.net>
+References: <20200624161142.GA12184@redhat.com>
+ <20200624162042.GA12238@redhat.com>
+ <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
+ <20200626154313.GI4817@hirez.programming.kicks-ass.net>
+ <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-06-28 at 16:14 +0300, Maxim Levitsky wrote:
-> On Sun, 2020-06-28 at 15:53 +0300, Amir Goldstein wrote:
-> > On Sun, Jun 28, 2020 at 2:14 PM Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> > > Hi,
-> > > 
-> > > I just did usual kernel update and now chromium crashes on startup.
-> > > It happens both in a KVM's VM (with virtio-gpu if that matters) and natively with amdgpu driver.
-> > > Most likely not GPU related although I initially suspected that it is.
-> > > 
-> > > Chromium starts as a white rectangle, shows few white rectangles
-> > > that resemble its notifications and then crashes.
-> > > 
-> > > The stdout output from chromium:
-> > > 
-> > [...]
-> > 
-> > > Received signal 6
-> > > #0 0x55f6da0120d9 base::debug::CollectStackTrace()
-> > > #1 0x55f6d9f75246 base::debug::StackTrace::StackTrace()
-> > > #2 0x55f6da01170a base::debug::(anonymous namespace)::StackDumpSignalHandler()
-> > > #3 0x55f6da011cfe base::debug::(anonymous namespace)::StackDumpSignalHandler()
-> > > #4 0x7ff46643ab20 (/usr/lib64/libpthread-2.30.so+0x14b1f)
-> > > #5 0x7ff462d87625 __GI_raise
-> > > #6 0x7ff462d708d9 __GI_abort
-> > > #7 0x55f6da0112d5 base::debug::BreakDebugger()
-> > > #8 0x55f6d9f86405 logging::LogMessage::~LogMessage()
-> > > #9 0x55f6d7ed5488 content::(anonymous namespace)::IntentionallyCrashBrowserForUnusableGpuProcess()
-> > > #10 0x55f6d7ed8479 content::GpuDataManagerImplPrivate::FallBackToNextGpuMode()
-> > > #11 0x55f6d7ed4eef content::GpuDataManagerImpl::FallBackToNextGpuMode()
-> > > #12 0x55f6d7ee0f41 content::GpuProcessHost::RecordProcessCrash()
-> > > #13 0x55f6d7ee105d content::GpuProcessHost::OnProcessCrashed()
-> > > #14 0x55f6d7cbe308 content::BrowserChildProcessHostImpl::OnChildDisconnected()
-> > > #15 0x55f6da8b511a IPC::ChannelMojo::OnPipeError()
-> > > #16 0x55f6da13cd62 mojo::InterfaceEndpointClient::NotifyError()
-> > > #17 0x55f6da8c1f9d IPC::(anonymous namespace)::ChannelAssociatedGroupController::OnPipeError()
-> > > #18 0x55f6da138968 mojo::Connector::HandleError()
-> > > #19 0x55f6da15bce7 mojo::SimpleWatcher::OnHandleReady()
-> > > #20 0x55f6da15c0fb mojo::SimpleWatcher::Context::CallNotify()
-> > > #21 0x55f6d78eaa73 mojo::core::WatcherDispatcher::InvokeWatchCallback()
-> > > #22 0x55f6d78ea38f mojo::core::Watch::InvokeCallback()
-> > > #23 0x55f6d78e6efa mojo::core::RequestContext::~RequestContext()
-> > > #24 0x55f6d78db76a mojo::core::NodeChannel::OnChannelError()
-> > > #25 0x55f6d78f232a mojo::core::(anonymous namespace)::ChannelPosix::OnFileCanReadWithoutBlocking()
-> > > #26 0x55f6da03345e base::MessagePumpLibevent::OnLibeventNotification()
-> > > #27 0x55f6da0f9b2d event_base_loop
-> > > #28 0x55f6da03316d base::MessagePumpLibevent::Run()
-> > > #29 0x55f6d9fd79c9 base::sequence_manager::internal::ThreadControllerWithMessagePumpImpl::Run()
-> > > #30 0x55f6d9fada7a base::RunLoop::Run()
-> > > #31 0x55f6d7ce6324 content::BrowserProcessSubThread::IOThreadRun()
-> > > #32 0x55f6d9fe0cb8 base::Thread::ThreadMain()
-> > > #33 0x55f6da024705 base::(anonymous namespace)::ThreadFunc()
-> > > #34 0x7ff46642f4e2 start_thread
-> > > #35 0x7ff462e4c6a3 __GI___clone
-> > >   r8: 0000000000000000  r9: 00007ff44e6a58d0 r10: 0000000000000008 r11: 0000000000000246
-> > >  r12: 00007ff44e6a6b40 r13: 00007ff44e6a6d00 r14: 000000000000006d r15: 00007ff44e6a6b30
-> > >   di: 0000000000000002  si: 00007ff44e6a58d0  bp: 00007ff44e6a5b20  bx: 00007ff44e6a9700
-> > >   dx: 0000000000000000  ax: 0000000000000000  cx: 00007ff462d87625  sp: 00007ff44e6a58d0
-> > >   ip: 00007ff462d87625 efl: 0000000000000246 cgf: 002b000000000033 erf: 0000000000000000
-> > >  trp: 0000000000000000 msk: 0000000000000000 cr2: 0000000000000000
-> > > [end of stack trace]
-> > > Calling _exit(1). Core file will not be generated.
-> > > 
-> > > 
-> > 
-> > I guess this answers our question whether we could disable fsnoitfy
-> > watches on pseudo inodes....
-> > 
-> > From comments like these in chromium code:
-> > https://chromium.googlesource.com/chromium/src/+/master/mojo/core/watcher_dispatcher.cc#77
-> > https://chromium.googlesource.com/chromium/src/+/master/base/files/file_descriptor_watcher_posix.cc#176
-> > https://chromium.googlesource.com/chromium/src/+/master/ipc/ipc_channel_mojo.cc#240
-> > 
-> > I am taking a wild guess that the missing FS_CLOSE event on anonymous pipes is
-> > the cause for regression.
-> > 
-> > The motivation for the patch "fs: Do not check if there is a fsnotify
-> > watcher on pseudo inodes"
-> > was performance, but actually, FS_CLOSE and FS_OPEN events probably do
-> > not impact
-> > performance as FS_MODIFY and FS_ACCESS.
-> > 
-> > Mel,
-> > 
-> > Do your perf results support the claim above?
-> > 
-> > Jan/Linus,
-> > 
-> > Do you agree that dropping FS_MODIFY/FS_ACCESS events for FMODE_STREAM
-> > files as a general rule should be safe?
-> > 
-> > Maxim, can you try if the attached patch fixes the chromium regression.
-> > It is expected to leave the FS_OPEN/FS_CLOSE events on anonymous pipes
-> > but drop the FS_MODIFY/FS_ACCESS events.
-> Tested this (in the VM this time) and it works.
+On Sat, Jun 27, 2020 at 10:39:20PM -0700, Linus Torvalds wrote:
 
+> Ugh.
 
-Note that this should be changed to 'return' since function returns void.
+Heh, I was afraid of that..
 
-+       if (file->f_mode & FMODE_STREAM)
-+               return 0;
-
-Best regards,
-	Maxim Levitsky
-
+> So how about the attached trivial two-liner? We solve the problem by
+> simply marking ourselves TASK_RUNNING, which means that we won't be
+> counted as an exclusive wakeup.
 > 
-> Best regards,
-> 	Maxim Levitsky
+> Ok, so the "one" line to do that is that is actually two lines:
 > 
-> > Thanks,
-> > Amir.
+>         __set_current_state(TASK_RUNNING);
+>         smp_mb__before_atomic();
+> 
+> and there's four lines of comments to go with it, but it really is
+> very simple: if we do that before we do the test_and_set_bit_lock(),
+> no wakeups will be lost, because we won't be sleeping for that wakeup.
+> 
+> I'm not entirely happy about that "smp_mb__before_atomic()". I think
+> it's right in practice that test_and_set_bit_lock() (when it actually
+> does a write) has at LEAST atomic seqmantics, so I think it's good.
+> But it's not pretty.
 
+Hurm... yes. I think I agree this solves it. However... the wait loop is
+'weird'. It isn't shaped like our other loops.
 
+On the one hand, who cares, that's just my OCD, on the other hand, it
+does mean you have to think harder every time you look at this thing.
