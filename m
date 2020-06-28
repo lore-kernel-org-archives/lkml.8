@@ -2,190 +2,151 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0476BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38839C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D853E207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138D220782
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593316049;
+	bh=+LTsSMPFtmac2AYTkxW+CL+ozMexRWej4ofclKF8EgM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IEdfDhRQpmta7DaNWDu4swDak7GjatkA3NjeEVKEdJgP/hD3U4/dLf6xGmoH17Hgt
+	 ulEY9DNQozxjtNyDr9AGgBibHqr8nRqaqJwZ4579SAfH+4pS6Nj8+NB9j3bVMczN+u
+	 0K5rTBRZ2mUHI1b4Vc00uVkReByy0JaWA7jvqsOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbgF1DbP (ORCPT
+        id S1726032AbgF1DrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 23:31:15 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:46303 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgF1DbO (ORCPT
+        Sat, 27 Jun 2020 23:47:23 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:38090 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgF1DrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 23:31:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id d8so6422497ilc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 20:31:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=0xNYRJYAIHEjL9wq2M9xDbIQUfYFJfWWGqedzbOS0HA=;
-        b=o79nX4awihZhPctB+K+lr8cYHMOCQ09FOLIjvFFnrl2IF+HsQ6JM8qoUaNSDdpUN1u
-         Wr+DuPDBvMp3WV2EMdcxlxA9KR8its1iy37mHRn8gCUFcAtT8VDamKVsOAoLhmX+JFlg
-         o9sOD1g/zjTv/KIawi8YrQ+vXBXQdfPQO33b71/0ATHPBHabNP67SIGOgbMxWRoQ6d+m
-         mcboRak317AlMl34We4HzUj0Gc05ASAv9uLSPP9WdMJhG0BnbKTqCEnlzyn3C2M0tgyu
-         Dr+bcsgia+lNcge/OJVZ00+u6buyFkc/TMn0StWdVFCGz5kNBjEu11rKnemVRffUYsLd
-         HbTA==
-X-Gm-Message-State: AOAM533QD3804BwA7dlmopS0ajHIaEV/ySSn8jOm7EHQ7Juio47CG+di
-        KL/1Weq2zGa/zXvvBJ89HfSioCYPIqsDkNMsmdcLfGU9rRBP
-X-Google-Smtp-Source: ABdhPJyBHD9qb0wx18+r97n64RX4hsQwqokkX1lem1spwM9037Cwrof9IpNr27CpYGDDTS3nK1qykofr/VxcugC8OrB4eVFlWtqb
+        Sat, 27 Jun 2020 23:47:23 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 05S3l5JJ006592;
+        Sun, 28 Jun 2020 12:47:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 05S3l5JJ006592
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593316026;
+        bh=B7QRYdTs+cbEfWY3NzTlfvGAcsr/cihzW3ryEOQC/Zs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XpUISCZXHoa1LTTiHZ30O0pGybv+avlet7CcpKAGqsPFx47TbFFHuGAxOjj7wDXCv
+         9ERXDY2u4YrgUHfsea+OWkE/OYcArvhlntXgbzGff6lKqTJXftN8LE71HBaUztqmDy
+         7h734EpyCySWrj4JXPUruHrsU11C9TS9cmNtUDapX98IsBMIUruUqgD8TIoXwwS09s
+         Xt57g3MRtBpEHwvT2PlMKvFMBJx1ZOquGPSRVZkv7dqSU/jqVV15euMmCBdPs3JD03
+         1uP99x+VL5dnEXr9Yc2RMD7aB1wPS6NwCWBnSAA13pDoeBs8ZEriqezucpFq4d2wuz
+         UpoNh9CorPnrw==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id x13so2768437vsx.13;
+        Sat, 27 Jun 2020 20:47:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530VTpjl2uHVI5n2YVtCeXDeImhkYA1mURkfVOwfwGPiO5Ym6KM2
+        saujwvHH7Ac2SOv9hOD2D/a++pju0PvftIC7V7w=
+X-Google-Smtp-Source: ABdhPJy6mstsBCRPDmM6qaKFGx1C544+eGw/4U6DuKhkf08CNdu0wQlix1f4gGX/FS7/mMTaTuepEW9puZGjPDX2q+I=
+X-Received: by 2002:a67:f813:: with SMTP id l19mr7115810vso.215.1593316024953;
+ Sat, 27 Jun 2020 20:47:04 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:409a:: with SMTP id d26mr10516321ill.200.1593315073205;
- Sat, 27 Jun 2020 20:31:13 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 20:31:13 -0700
-In-Reply-To: <000000000000880dcc0598bcfac9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f42b3b05a91c9223@google.com>
-Subject: Re: possible deadlock in process_measurement (2)
-From:   syzbot <syzbot+18a1619cceea30ed45af@syzkaller.appspotmail.com>
-To:     dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, zohar@linux.ibm.com
+References: <5ef50e52.1c69fb81.b6cbd.bd8e@mx.google.com> <CAK7LNASta=UfbK-C=6R+tT2nug8_MYyr9515J4CN8odWCh0CpA@mail.gmail.com>
+ <20200626214026.GB25753@dumbo> <CAK7LNASRL6jaaxZreFK+iDmFHuw6QLSS0n08gZNkyhcsNunAnw@mail.gmail.com>
+ <20200627212112.GA18721@dumbo>
+In-Reply-To: <20200627212112.GA18721@dumbo>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 28 Jun 2020 12:46:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARhsyo0OoS+fibCn3tt4J7_iwfsSn8TvzjxZ4K_bwreUA@mail.gmail.com>
+Message-ID: <CAK7LNARhsyo0OoS+fibCn3tt4J7_iwfsSn8TvzjxZ4K_bwreUA@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: buildtar: add arm64 dtbs support
+To:     Domenico Andreoli <domenico.andreoli@linux.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Sun, Jun 28, 2020 at 6:21 AM Domenico Andreoli
+<domenico.andreoli@linux.com> wrote:
+>
+> On Sat, Jun 27, 2020 at 09:02:52PM +0900, Masahiro Yamada wrote:
+> > On Sat, Jun 27, 2020 at 6:40 AM Domenico Andreoli <domenico.andreoli@linux.com> wrote:
+> > > On Fri, Jun 26, 2020 at 03:16:58PM +0900, Masahiro Yamada wrote:
+> > > > On Fri, Jun 26, 2020 at 5:51 AM Domenico Andreoli <domenico.andreoli@linux.com> wrote:
+>
+> [...]
+>
+> > > > >
+> > > > > +       arm64)
+> > > > > +               make ARCH="${ARCH}" -f ${srctree}/Makefile INSTALL_DTBS_PATH="${tmpdir}/boot/dtbs/${KERNELRELEASE}" dtbs_install
+> > > > > +               ;;
+> > > > > +esac
+> > > > > +
+> > > >
+> > > >
+> > > > Or, you can use INSTALL_PATH="${tmpdir}/boot"
+> > > > to make it shorter.
+> > >
+> > > This does not work, INSTALL_DTBS_PATH gets somehow defined along the
+> > > twisted path to buildtar and therefore needs to be explicitly specified
+> > > for the new destination.
+> >
+> > It works.
+> >
+> > See line 1002 of the top Makefile
+> >
+> > export INSTALL_DTBS_PATH ?= $(INSTALL_PATH)/dtbs/$(KERNELRELEASE)
+>
+> Exactly. INSTALL_DTBS_PATH is _exported_ in the top Makefile.
+>
+>
+> This is what it seems to happen, in the order:
+>
+> 1. outer 'make dir-pkg'
+>    INSTALL_DTBS_PATH is exported with some content
+>
+> 2. control arrives to buildtar
+>    INSTALL_DTBS_PATH is there as environment variable
+>
+> 3. inner 'make INSTALL_PATH=${tmpdir}/boot dtbs_install'
+>    INSTALL_DTBS_PATH is already set, therefore it is not modified
 
-HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=164b959b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
-dashboard link: https://syzkaller.appspot.com/bug?extid=18a1619cceea30ed45af
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f43c5100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17cbb239100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+18a1619cceea30ed45af@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.8.0-rc2-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor165/6816 is trying to acquire lock:
-ffff888092f48080 (&iint->mutex){+.+.}-{3:3}, at: process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
-
-but task is already holding lock:
-ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1664 [inline]
-ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x45/0x90 fs/namespace.c:354
-
-which lock already depends on the new lock.
+Sorry, I was wrong.
+Your analysis is definitely right.
 
 
-the existing dependency chain (in reverse order) is:
+I will apply v4.
 
--> #1 (sb_writers#4){.+.+}-{0:0}:
-       lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
-       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
-       __sb_start_write+0x14b/0x410 fs/super.c:1672
-       sb_start_write include/linux/fs.h:1664 [inline]
-       mnt_want_write+0x45/0x90 fs/namespace.c:354
-       ovl_maybe_copy_up+0x117/0x180 fs/overlayfs/copy_up.c:961
-       ovl_open+0xa2/0x200 fs/overlayfs/file.c:145
-       do_dentry_open+0x813/0x1070 fs/open.c:828
-       vfs_open fs/open.c:942 [inline]
-       dentry_open+0xc6/0x120 fs/open.c:958
-       ima_calc_file_hash+0xfa/0x1f30 security/integrity/ima/ima_crypto.c:557
-       ima_collect_measurement+0x1fd/0x490 security/integrity/ima/ima_api.c:250
-       process_measurement+0xddf/0x18e0 security/integrity/ima/ima_main.c:324
-       ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
-       do_open fs/namei.c:3245 [inline]
-       path_openat+0x27d6/0x37f0 fs/namei.c:3360
-       do_filp_open+0x191/0x3a0 fs/namei.c:3387
-       do_sys_openat2+0x463/0x770 fs/open.c:1179
-       do_sys_open fs/open.c:1195 [inline]
-       ksys_open include/linux/syscalls.h:1388 [inline]
-       __do_sys_open fs/open.c:1201 [inline]
-       __se_sys_open fs/open.c:1199 [inline]
-       __x64_sys_open+0x1af/0x1e0 fs/open.c:1199
-       do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Thanks.
 
--> #0 (&iint->mutex){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain+0x1b0c/0x8920 kernel/locking/lockdep.c:3218
-       __lock_acquire+0x116c/0x2c30 kernel/locking/lockdep.c:4380
-       lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
-       __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
-       __mutex_lock kernel/locking/mutex.c:1103 [inline]
-       mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
-       process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
-       ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
-       do_open fs/namei.c:3245 [inline]
-       path_openat+0x27d6/0x37f0 fs/namei.c:3360
-       do_filp_open+0x191/0x3a0 fs/namei.c:3387
-       do_sys_openat2+0x463/0x770 fs/open.c:1179
-       do_sys_open fs/open.c:1195 [inline]
-       __do_sys_openat fs/open.c:1209 [inline]
-       __se_sys_openat fs/open.c:1204 [inline]
-       __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
-       do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-other info that might help us debug this:
 
- Possible unsafe locking scenario:
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(sb_writers#4);
-                               lock(&iint->mutex);
-                               lock(sb_writers#4);
-  lock(&iint->mutex);
+>
+> To make the inner invocation work, I see these two options:
+>
+> 1. 'make INSTALL_DTBS_PATH= INSTALL_PATH=${tmpdir}/boot dtb_install' (untested)
+>
+> 2. 'make INSTALL_DTBS_PATH=${tmpdir}/boot/dtbs/${KERNELRELEASE} dtbs_install'
+>
+> I chose 2 but I can switch to 1, if you prefer. No problem.
+>
+>
+> Regards,
+> Domenico
+>
+> --
+> rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+> ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
 
- *** DEADLOCK ***
 
-1 lock held by syz-executor165/6816:
- #0: ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1664 [inline]
- #0: ffff888214040450 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write+0x45/0x90 fs/namespace.c:354
 
-stack backtrace:
-CPU: 1 PID: 6816 Comm: syz-executor165 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_circular_bug+0xc72/0xea0 kernel/locking/lockdep.c:1703
- check_noncircular+0x1fb/0x3a0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain+0x1b0c/0x8920 kernel/locking/lockdep.c:3218
- __lock_acquire+0x116c/0x2c30 kernel/locking/lockdep.c:4380
- lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
- __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
- __mutex_lock kernel/locking/mutex.c:1103 [inline]
- mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
- process_measurement+0x66d/0x18e0 security/integrity/ima/ima_main.c:247
- ima_file_check+0x9c/0xe0 security/integrity/ima/ima_main.c:492
- do_open fs/namei.c:3245 [inline]
- path_openat+0x27d6/0x37f0 fs/namei.c:3360
- do_filp_open+0x191/0x3a0 fs/namei.c:3387
- do_sys_openat2+0x463/0x770 fs/open.c:1179
- do_sys_open fs/open.c:1195 [inline]
- __do_sys_openat fs/open.c:1209 [inline]
- __se_sys_openat fs/open.c:1204 [inline]
- __x64_sys_openat+0x1c8/0x1f0 fs/open.c:1204
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446289
-Code: Bad RIP value.
-RSP: 002b:00007fc5eb6ccdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446289
-RDX: 000000000000275a RSI: 00000000200001c0 RDI: 00000000ffffff9c
-RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000
-
+-- 
+Best Regards
+Masahiro Yamada
