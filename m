@@ -2,170 +2,128 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6394AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA2B20672
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355CE20672
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P6lCAmsF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qmcbALNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgF1WBL (ORCPT
+        id S1726642AbgF1WB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 18:01:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28154 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726080AbgF1WBK (ORCPT
+        Sun, 28 Jun 2020 18:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgF1WB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 18:01:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593381669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E4aw2LV4QYh3CzKLGA3AMNwowiWBppLOoNKVxSBZvo4=;
-        b=P6lCAmsFNiqOBrq7vhW5fEm5zBxfYLhq0rjAEJ/8JbAXviW10Cbet4Zd0+tbqsyesecUFv
-        xp3J8FxRkV7umuiNEK0vZimCthvH8RhH/FPl0ehXJOlMTxUiqVD8JQasXTOPaexgsgWQ1Y
-        3pIwezcg7Em9Ig9TvUn8y/KMZU/KKlE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-SZJSy8bEMTyuRmVzYXGYNA-1; Sun, 28 Jun 2020 18:01:04 -0400
-X-MC-Unique: SZJSy8bEMTyuRmVzYXGYNA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D70CB804001;
-        Sun, 28 Jun 2020 22:01:02 +0000 (UTC)
-Received: from krava (unknown [10.40.192.56])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 022FF9CFD2;
-        Sun, 28 Jun 2020 22:00:59 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 00:00:59 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 10/10] perf tests: Add cache_miss_cycles to metric parse
- test
-Message-ID: <20200628220059.GP2988321@krava>
-References: <20200626194720.2915044-1-jolsa@kernel.org>
- <20200626194720.2915044-11-jolsa@kernel.org>
- <CAP-5=fXk6ZqWdXqVGtiKemn254wTOKW3m4UuwF1Qum+mZQhYPg@mail.gmail.com>
+        Sun, 28 Jun 2020 18:01:59 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8DEC03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 15:01:58 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t74so8027799lff.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 15:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bj6QkIDzzkCIfOkrIbu+GINbgYLt6UK0AtVxnJ8Cnxk=;
+        b=qmcbALNNsTXojxTBCj/5TWAKBWZ3Zf31GEiSNX8zonaIQvdLJ9pRonuNuVosdFTl+J
+         5JF+eFxYNgsQmp/cjq4lGnoYghAGRm/0gq3zW5w6domow3l5xbiinXbi8SFAPSA7lPos
+         wc+k1JjxZ0JXuMAE7cz/CpI+yUImvkeNf2lgRBlCHKdGjD18tzI67ujW+ynIRzJzy90C
+         jSMrYQXZQXWq2JXz8uCkpjAIlFGbroc3uLQmF/L//Eo9/+qjvqFovPlgIWYGECO5CwCd
+         /fCNMap1mlHj0XNmYVf9OFyBk9h9FV0f37wVTAuHBfRSGwTrW+oLA3TV+N8EWJNN0W6B
+         etBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bj6QkIDzzkCIfOkrIbu+GINbgYLt6UK0AtVxnJ8Cnxk=;
+        b=t5JHKXsapk/1S0RxxKlI6fTv72ZFOHn9BACdacimPkYeQfdETMgUioIFTFN8pd/crM
+         hOfBI6lZjc+IAaVbf670ZVuJTjUQjYhO9vi7+fzmKzeGYjlOCYykHzmTgIr1Q11NOd4t
+         8Tp1dCvMzYF3Xd9QhNFRk2HlLGFaJfkmYFj3qTzLcGR/3F9wEzBKIjwK4NL1gMtiuH80
+         aBUnil539A0m8HuyBzwfQ5ooTRNz55ah+qE+mQ3rINEeqduzVMF9yHqC/m6QXyRy47RF
+         HfJr9AMXqNl/ZgTKE9zGD6ItNDOHckt7OAWsfKYOSRUqPRLGnDVwCT9EadnY3ZBuh6s+
+         B7gA==
+X-Gm-Message-State: AOAM533kTqvexvRdL+63SKfCDHtsnRawiA/BW7Eb5JdsB9pQPXabx+nu
+        yiCei49aroje8jaufW8Kxl/Lxq2YkoE/XQ==
+X-Google-Smtp-Source: ABdhPJzlxfrAhq2FKIoGbL8Werl/DvfpJeChyF419Nedp+rKK/YSBA86PaQrcQ2xK01SHTJdPgitKg==
+X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr5355901lfq.76.1593381717215;
+        Sun, 28 Jun 2020 15:01:57 -0700 (PDT)
+Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id s62sm6723773lja.100.2020.06.28.15.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 15:01:56 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] clocksource: nomadik-mtu: Handle 32kHz clock
+Date:   Mon, 29 Jun 2020 00:01:53 +0200
+Message-Id: <20200628220153.67011-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXk6ZqWdXqVGtiKemn254wTOKW3m4UuwF1Qum+mZQhYPg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 02:40:34PM -0700, Ian Rogers wrote:
-> On Fri, Jun 26, 2020 at 12:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding test that compute metric with other metrics in it.
-> >
-> >   cache_miss_cycles = metric:dcache_miss_cpi + metric:icache_miss_cycles
-> >
-> 
-> This is really nice! Do we need to do anything in tests/pmu-events.c?
-> Presumably if a metric is referencing another metric the call to
-> expr__parse there will test the other metric is parseable. Just wanted
-> to sanity check.
+It happens on the U8420-sysclk Ux500 PRCMU firmware
+variant that the MTU clock is just 32768 Hz, and in this
+mode the minimum ticks is 5 rather than two.
 
-right, I did not realize that, but that test is passing for me,
-so I guess it's fine.. I'll double check
+I think this is simply so that there is enough time
+for the register write to propagate through the
+interconnect to the registers.
 
-thanks,
-jirka
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/clocksource/nomadik-mtu.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/tests/parse-metric.c | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> > index 8c48251425e1..feb97f7c90c8 100644
-> > --- a/tools/perf/tests/parse-metric.c
-> > +++ b/tools/perf/tests/parse-metric.c
-> > @@ -11,6 +11,8 @@
-> >  #include "debug.h"
-> >  #include "expr.h"
-> >  #include "stat.h"
-> > +#include <perf/cpumap.h>
-> > +#include <perf/evlist.h>
-> >
-> >  static struct pmu_event pme_test[] = {
-> >  {
-> > @@ -22,6 +24,18 @@ static struct pmu_event pme_test[] = {
-> >                           "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
-> >         .metric_name    = "Frontend_Bound_SMT",
-> >  },
-> > +{
-> > +       .metric_expr    = "l1d\\-loads\\-misses / inst_retired.any",
-> > +       .metric_name    = "dcache_miss_cpi",
-> > +},
-> > +{
-> > +       .metric_expr    = "l1i\\-loads\\-misses / inst_retired.any",
-> > +       .metric_name    = "icache_miss_cycles",
-> > +},
-> > +{
-> > +       .metric_expr    = "(metric:dcache_miss_cpi + metric:icache_miss_cycles)",
-> > +       .metric_name    = "cache_miss_cycles",
-> > +},
-> >  };
-> >
-> >  static struct pmu_events_map map = {
-> > @@ -162,9 +176,28 @@ static int test_frontend(void)
-> >         return 0;
-> >  }
-> >
-> > +static int test_cache_miss_cycles(void)
-> > +{
-> > +       double ratio;
-> > +       struct value vals[] = {
-> > +               { .event = "l1d-loads-misses",  .val = 300 },
-> > +               { .event = "l1i-loads-misses",  .val = 200 },
-> > +               { .event = "inst_retired.any",  .val = 400 },
-> > +               { 0 },
-> > +       };
-> > +
-> > +       TEST_ASSERT_VAL("failed to compute metric",
-> > +                       compute_metric("cache_miss_cycles", vals, &ratio) == 0);
-> > +
-> > +       TEST_ASSERT_VAL("cache_miss_cycles failed, wrong ratio",
-> > +                       ratio == 1.25);
-> > +       return 0;
-> > +}
-> > +
-> >  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
-> >         TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
-> > +       TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
-> >         return 0;
-> >  }
-> > --
-> > 2.25.4
-> >
-> 
+diff --git a/drivers/clocksource/nomadik-mtu.c b/drivers/clocksource/nomadik-mtu.c
+index f49a631d8f58..1cf3304652d6 100644
+--- a/drivers/clocksource/nomadik-mtu.c
++++ b/drivers/clocksource/nomadik-mtu.c
+@@ -186,6 +186,7 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
+ {
+ 	unsigned long rate;
+ 	int ret;
++	int min_ticks;
+ 
+ 	mtu_base = base;
+ 
+@@ -194,7 +195,8 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
+ 
+ 	/*
+ 	 * Tick rate is 2.4MHz for Nomadik and 2.4Mhz, 100MHz or 133 MHz
+-	 * for ux500.
++	 * for ux500, and in one specific Ux500 case 32768 Hz.
++	 *
+ 	 * Use a divide-by-16 counter if the tick rate is more than 32MHz.
+ 	 * At 32 MHz, the timer (with 32 bit counter) can be programmed
+ 	 * to wake-up at a max 127s a head in time. Dividing a 2.4 MHz timer
+@@ -230,7 +232,12 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
+ 		pr_err("%s: request_irq() failed\n", "Nomadik Timer Tick");
+ 	nmdk_clkevt.cpumask = cpumask_of(0);
+ 	nmdk_clkevt.irq = irq;
+-	clockevents_config_and_register(&nmdk_clkevt, rate, 2, 0xffffffffU);
++	if (rate < 100000)
++		min_ticks = 5;
++	else
++		min_ticks = 2;
++	clockevents_config_and_register(&nmdk_clkevt, rate, min_ticks,
++					0xffffffffU);
+ 
+ 	mtu_delay_timer.read_current_timer = &nmdk_timer_read_current_timer;
+ 	mtu_delay_timer.freq = rate;
+-- 
+2.26.2
 
