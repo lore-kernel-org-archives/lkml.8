@@ -2,173 +2,110 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B193020775
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDnJywNS"
+	by mail.kernel.org (Postfix) with ESMTP id C016920775
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgF1GVv (ORCPT
+        id S1726026AbgF1G2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:21:51 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46082 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725936AbgF1GVu (ORCPT
+        Sun, 28 Jun 2020 02:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgF1G2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:21:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593325308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ydPGKU0wBmZmxp53ZfzQQ4RSolY15yJxARcJFXOo5Tg=;
-        b=WDnJywNSnb51g8rP0+UmUw9JZtjVi5JT3SPFz3YL3X33bM0tUcS0v2zMvEGfixWAPOYunY
-        w7zvpS8MPxkWl0m/CegUfMr8yE1tjjq6/oqffllF9Y4ceaFtqJaY6vstkw1Z1Hzknm+BOY
-        f8y2gjd10fNsk8vgLMndsDWhKeNrhsc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-jrplHYykOrKSTXxU9WOO0w-1; Sun, 28 Jun 2020 02:21:41 -0400
-X-MC-Unique: jrplHYykOrKSTXxU9WOO0w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0F378015F5;
-        Sun, 28 Jun 2020 06:21:40 +0000 (UTC)
-Received: from [10.72.13.164] (ovpn-13-164.pek2.redhat.com [10.72.13.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 286C0121B12;
-        Sun, 28 Jun 2020 06:21:20 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] virtio: virtio_has_iommu_quirk ->
- virtio_has_dma_quirk
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-References: <20200624232035.704217-1-mst@redhat.com>
- <20200624232035.704217-3-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <95941961-1c75-e2a5-d49b-7d7e204b7a41@redhat.com>
-Date:   Sun, 28 Jun 2020 14:21:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 28 Jun 2020 02:28:41 -0400
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985B1C061794
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 23:28:41 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id D6CADC01A; Sun, 28 Jun 2020 08:28:39 +0200 (CEST)
+Date:   Sun, 28 Jun 2020 08:28:24 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+Cc:     ericvh@gmail.com, lucho@ionkov.net,
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        wei.chen@arm.com
+Subject: Re: [RFC PATCH 1/2] 9p: retrieve fid from file when file instance
+ exist.
+Message-ID: <20200628062824.GB13335@nautica>
+References: <20200628020608.36512-1-jianyong.wu@arm.com>
+ <20200628020608.36512-2-jianyong.wu@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624232035.704217-3-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200628020608.36512-2-jianyong.wu@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jianyong Wu wrote on Sun, Jun 28, 2020:
+> In the current setattr implementation in 9p, fid will always retrieved from
+> dentry no matter file instance exist or not when setattr. There will
+> be some info related to open file instance dropped. so it's better
+> to retrieve fid from file instance if file instance is passed to setattr.
+> 
+> for example:
+> fd=open("tmp", O_RDWR);
+> ftruncate(fd, 10);
+> 
+> the file context related with fd info will lost as fid will always be
+> retrieved from dentry, then the backend can't get the info of file context.
+> it is against the original intention of user and may lead to bug.
 
-On 2020/6/25 上午7:21, Michael S. Tsirkin wrote:
-> Now that the corresponding feature bit has been renamed,
-> rename the quirk too - it's about special ways to
-> do DMA, not necessarily about the IOMMU.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+I agree on principle, this makes more sense to use the file's fid.
+
+Just a comment below, but while I'm up in commit message I'll also be
+annoying with it -- please try to fix grammar mistakes for next
+patches/version (mostly missing some 'be' for future passive form; but I
+don't understand why you use future at all and some passive forms could
+probably be made active to simplify... Anyway we're not here to discuss
+English grammar but words missing out is sloppy and that gives a bad
+impression for no good reason)
+
+> 
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
 > ---
->   drivers/gpu/drm/virtio/virtgpu_object.c | 2 +-
->   drivers/gpu/drm/virtio/virtgpu_vq.c     | 4 ++--
->   drivers/virtio/virtio_ring.c            | 2 +-
->   include/linux/virtio_config.h           | 4 ++--
->   tools/virtio/linux/virtio_config.h      | 4 ++--
->   5 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 6ccbd01cd888..e8799ab0c753 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -141,7 +141,7 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
->   					struct virtio_gpu_mem_entry **ents,
->   					unsigned int *nents)
->   {
-> -	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
-> +	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
->   	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
->   	struct scatterlist *sg;
->   	int si, ret;
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 9e663a5d9952..53af60d484a4 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -599,7 +599,7 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
->   	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
->   	struct virtio_gpu_transfer_to_host_2d *cmd_p;
->   	struct virtio_gpu_vbuffer *vbuf;
-> -	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
-> +	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
->   	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
->   
->   	if (use_dma_api)
-> @@ -1015,7 +1015,7 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
->   	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
->   	struct virtio_gpu_transfer_host_3d *cmd_p;
->   	struct virtio_gpu_vbuffer *vbuf;
-> -	bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
-> +	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
->   	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
->   
->   	if (use_dma_api)
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index a1a5c2a91426..34253cb69cb8 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -240,7 +240,7 @@ static inline bool virtqueue_use_indirect(struct virtqueue *_vq,
->   
->   static bool vring_use_dma_api(struct virtio_device *vdev)
->   {
-> -	if (!virtio_has_iommu_quirk(vdev))
-> +	if (!virtio_has_dma_quirk(vdev))
->   		return true;
->   
->   	/* Otherwise, we are left to guess. */
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index f2cc2a0df174..3b4eae5ac5e3 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -162,10 +162,10 @@ static inline bool virtio_has_feature(const struct virtio_device *vdev,
->   }
->   
->   /**
-> - * virtio_has_iommu_quirk - determine whether this device has the iommu quirk
-> + * virtio_has_dma_quirk - determine whether this device has the DMA quirk
->    * @vdev: the device
->    */
-> -static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
-> +static inline bool virtio_has_dma_quirk(const struct virtio_device *vdev)
->   {
->   	/*
->   	 * Note the reverse polarity of the quirk feature (compared to most
-> diff --git a/tools/virtio/linux/virtio_config.h b/tools/virtio/linux/virtio_config.h
-> index f99ae42668e0..f2640e505c4e 100644
-> --- a/tools/virtio/linux/virtio_config.h
-> +++ b/tools/virtio/linux/virtio_config.h
-> @@ -42,10 +42,10 @@ static inline void __virtio_clear_bit(struct virtio_device *vdev,
->   	(__virtio_test_bit((dev), feature))
->   
->   /**
-> - * virtio_has_iommu_quirk - determine whether this device has the iommu quirk
-> + * virtio_has_dma_quirk - determine whether this device has the DMA quirk
->    * @vdev: the device
->    */
-> -static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
-> +static inline bool virtio_has_dma_quirk(const struct virtio_device *vdev)
->   {
->   	/*
->   	 * Note the reverse polarity of the quirk feature (compared to most
+>  fs/9p/vfs_inode.c      | 5 ++++-
+>  fs/9p/vfs_inode_dotl.c | 5 ++++-
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+> index c9255d399917..010869389523 100644
+> --- a/fs/9p/vfs_inode.c
+> +++ b/fs/9p/vfs_inode.c
+> @@ -1100,7 +1100,10 @@ static int v9fs_vfs_setattr(struct dentry *dentry, struct iattr *iattr)
+>  
+>  	retval = -EPERM;
+>  	v9ses = v9fs_dentry2v9ses(dentry);
+> -	fid = v9fs_fid_lookup(dentry);
+> +	if (iattr->ia_valid & ATTR_FILE)
+> +		fid = iattr->ia_file->private_data;
+
+hmm, normally setattr cannot happen on a file that hasn't been opened so
+private_data should always be set, but it doesn't cost much to play safe
+and check? e.g. something like this is more conservative:
+
+struct p9_fid *fid = NULL;
+...
+if (iattr->ia_valid & ATTR_FILE) {
+	fid = iattr->ia_file->private_data;
+	WARN_ON(!fid);
+}
+if (!fid)
+	fid = v9fs_fid_lookup(dentry);
 
 
-Acked-by: Jason Wang <jasowang@redhat.com>
 
+What do you think?
 
+-- 
+Dominique
