@@ -2,107 +2,94 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA33C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA64EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 20:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1F2206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N26PmMbX"
+	by mail.kernel.org (Postfix) with ESMTP id 9711A206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 20:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593374433;
+	bh=VVxMX2lDV09g2mF+EVY4UZ5ddjynnYgTOdUT9eAi10I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a1jY1kNenB+V6sGYt1mn7tC89eRaoBNyiFqMK7lRaTS+TFWsCUlhg14nUpY2mFDat
+	 nqCTPgSEi3ml2JGBBPeyNhtcFQngbIuVZQckyBRFoc5TvAPWSifBi/HAR6rOQNZsjU
+	 scgSlI02OpuMRLJLWQ36L25Pcx10rvvEDS0WRX2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgF1Tz0 (ORCPT
+        id S1726775AbgF1UAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgF1Txq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:53:46 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4B3C03E97A;
-        Sun, 28 Jun 2020 12:53:45 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w16so14530560ejj.5;
-        Sun, 28 Jun 2020 12:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fPjGvKjCW6dK/yqgmCOTvyeAHLhCf44/++vEZ5RXXKU=;
-        b=N26PmMbXjO9VvHE1IPZi79DwLxnuHcB5r05bGLEldj5dLdZ8/+uUMXW5UJlY8EKCeo
-         ZMmXjyquOspJC5T1GH/7rnVhpHQ6BUzZsgrbjYosAtC09AAaxsisBWvGeYEznNR4rxYa
-         AF8F3IQaWucFKA7lsaczsbG6x+rXkXhYP9TFa26Q43ZuAX5IzMydqEA1GZAmYF7KBDRo
-         IHQbpFOMygcwpxirsSnfQw3+MBVWkXuOHAHo5B61fBkTb7K0aAVWeVZi9Stqc2jExS/y
-         iVrjDtrsc92VYFzBHquc+V5nRs12CRdpNYo+XwNknWk5Lounx4XtwVxRYrNOlGZYFKkY
-         Lziw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fPjGvKjCW6dK/yqgmCOTvyeAHLhCf44/++vEZ5RXXKU=;
-        b=X5jkDFZEEnm0URzOsRvaUrrfhp3WvbQPKUymuXmW8m0HOiD54KJ8DsRYpsL+HMVMtx
-         iGT5Jrxx3aqLfxbuEg5nw1tenfjLVhU65RrJIY06HRYt73IvqHsXYUmpTmkfzNBmbta0
-         xTjen1WZv7vvumJizW1qrQEVdGzRYKKqyEMMw/j9yndV+wEe/dyWfhCohHPL2LQdPeUZ
-         HLGcwN6XqIwCYetEQCpRxOeF6G0bW6vsGOB1afx7M+QPoD+QCDUsWTieWhcwhRdsjO2P
-         sp8BTJ7y0e9Ptl4BKRxtCy0mDyG8+3E/w45K5OUcdICTVhVAQOcPWTX+b6rPVcbtZcFi
-         Z9Cg==
-X-Gm-Message-State: AOAM532Jw31Jt9M/h3qgKKSCQorkww1UK3HRXpp3jolc8c/foVTwZMen
-        VLcPty7Cx064AzOtfJWFIfE=
-X-Google-Smtp-Source: ABdhPJxxTdHTa56fOOFdq5+yu9QGRGlvURcWLD/3ueZenKrbEQKWCdITdgdnRJDxPaSpQH6u5op/Ng==
-X-Received: by 2002:a17:906:6410:: with SMTP id d16mr11845024ejm.376.1593374024492;
-        Sun, 28 Jun 2020 12:53:44 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
-        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 12:53:44 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 02/15] caif: fix caif_xmit()'s return type
-Date:   Sun, 28 Jun 2020 21:53:24 +0200
-Message-Id: <20200628195337.75889-3-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
-References: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
+        Sun, 28 Jun 2020 16:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726675AbgF1UAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 16:00:24 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7C85206C3;
+        Sun, 28 Jun 2020 20:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593374424;
+        bh=VVxMX2lDV09g2mF+EVY4UZ5ddjynnYgTOdUT9eAi10I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QUMvF0tURaxVQa9M353t/xbidOoVXPl6CjgsU6D5iLImfp0x89UQmOYQzZ0Zgstl0
+         H9URve8x7WBzNjbVCz1wqWMWKAkNbX2HzaQgJ60pni/5OabVf+Wb12gNf3EGAeBRnT
+         YAAO6JSCqEW9HqrHYt/f4zZTRZxE5x+7yuwrPuPk=
+Date:   Sun, 28 Jun 2020 13:00:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Mike Snitzer <msnitzer@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
+        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
+        George Cherian <gcherian@marvell.com>,
+        linux-crypto@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 1/3 v2] crypto: introduce the flag
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200628200022.GE11197@sol.localdomain>
+References: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200616173620.GA207319@gmail.com>
+ <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626044534.GA2870@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626164617.GA211634@gmail.com>
+ <20200626170039.GB211634@gmail.com>
+ <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, but the implementation in this
-driver returns an 'int'.
+On Sun, Jun 28, 2020 at 03:07:49PM -0400, Mikulas Patocka wrote:
+> > 
+> > cryptd_create_skcipher(), cryptd_create_hash(), cryptd_create_aead(), and
+> > crypto_rfc4309_create() are also missing setting the mask.
+> > 
+> > pcrypt_create_aead() is missing both setting the mask and inheriting the flags.
+> 
+> I added CRYPTO_ALG_ALLOCATES_MEMORY there.
 
-Fix this by returning 'netdev_tx_t' in this driver too.
+I don't see where the cryptd request processing functions allocate memory.
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- drivers/net/caif/caif_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It seems that cryptd should just inherit the flag, like most other templates.
 
-diff --git a/drivers/net/caif/caif_serial.c b/drivers/net/caif/caif_serial.c
-index d737ceb61203..bcc14c5875bf 100644
---- a/drivers/net/caif/caif_serial.c
-+++ b/drivers/net/caif/caif_serial.c
-@@ -266,7 +266,7 @@ static int handle_tx(struct ser_device *ser)
- 	return tty_wr;
- }
- 
--static int caif_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t caif_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct ser_device *ser;
- 
--- 
-2.27.0
+Likewise for pcrypt.
 
+And also likewise for rfc4309.
+
+Where are you seeing the memory allocations that would require
+CRYPTO_ALG_ALLOCATES_MEMORY to always be enabled for these?
+
+- Eric
