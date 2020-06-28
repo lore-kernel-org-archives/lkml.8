@@ -2,123 +2,159 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE00C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948F6204EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3E9204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nx+0kA+E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="P4a9ROh3";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="J239Wtw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgF1Scm (ORCPT
+        id S1726715AbgF1SdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 14:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgF1Scm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 14:32:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCB1C03E979;
-        Sun, 28 Jun 2020 11:32:42 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l12so14378640ejn.10;
-        Sun, 28 Jun 2020 11:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C/AWghi0ggAWezCdD0yzAwGjS2bjfVCfdqGQLJ4bXU8=;
-        b=nx+0kA+ECOlB14AL7pgiSQnrsiMxEe8HCxwIzpw2ZGRZowJfqoNOtpp4pqy2G/GB6j
-         deCGnBoDWpT4ikeuzV7fKfcpkUEp8TkaA2Y3TXvFf67w5CVhsD5dEZhkWCsjjLBxDXRL
-         z6+l3hUPdMtICfRpl+DLSCiKu4qCwytIdgzaU9mz1RMzLYFGh7acjLXtsqG0S4gSh9wp
-         EwXV8YyDfU6vbcvK+YxLVvx/UmGy0VeY8kwKXVrLDHzTUMNpzEVKmoge2UrFuTTQmJMv
-         b6oKji/Su81LhtZgzkiY3ax25ipANws3bsyOPolbymdqYSHBdM67i4mSsRKxju0eqTtx
-         4m1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C/AWghi0ggAWezCdD0yzAwGjS2bjfVCfdqGQLJ4bXU8=;
-        b=DX4I/BLnP9vcMPOgKc0jVHBAS8kUFmQZfmJPIJOQONdSp9/074RbRjIyjeMsOfx45P
-         3o4v/tOQtzNZfi/Cu/xK3XsOh54v2kuct6uxsdKC6uBP1/y/6Y0ibM8V6pGtbSpKfH49
-         CBh8xhWoDn1ugcC5Wj/s9jC8+k5ApohleuCcBGRSwk8fOQMIUQegiUUIwG3sXxbSj0dS
-         LbR3gBXZrLcrc6zbIRz+joeqPT/lfO63gLptcqzitsv157HK+xfJ8c8A5o01CeUz0TCI
-         SnTJYACnzBegfUXJQWJJ18jTDfE1INVthgeX8+QwxXYTsPPxCsr2VM6mc27pDu2DZc/1
-         /6Hg==
-X-Gm-Message-State: AOAM533TSGiwFJFk+sRMkPzLzWyAVZO4t3z5qtbyleTEE97voffqMdUK
-        EHPeYF02pZHSTA3pjcGqK40=
-X-Google-Smtp-Source: ABdhPJyvwPcq95vvTuR+o/TTUFOP15mBB7xzZmq1WM82o9xgVvgxv4b43wqxyszfzIqe0nboQmjAdw==
-X-Received: by 2002:a17:906:2b0e:: with SMTP id a14mr10659475ejg.459.1593369160913;
-        Sun, 28 Jun 2020 11:32:40 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
-        by smtp.gmail.com with ESMTPSA id v5sm7349888ejj.61.2020.06.28.11.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 11:32:40 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] staging/wilc1000: let wilc_mac_xmit() to NETDEV_TX_OK
-Date:   Sun, 28 Jun 2020 20:32:37 +0200
-Message-Id: <20200628183237.74749-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 28 Jun 2020 14:33:04 -0400
+Received: from chalk.uuid.uk ([51.68.227.198]:40200 "EHLO chalk.uuid.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgF1SdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 14:33:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Cc:To:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UPP6gukaexX7wrM9u2+d3aN4JoGVQpabllHG+ax6iC4=; b=P4a9ROh3EPZ966cceO9uIr/ws4
+        cDjT6wFy2mZK16+McYwR6V2meWKZnRos4gDdqFtHHK1NgieFeWY7AcIjwBuuJ+yvQ1cIu6PL6HpxQ
+        8ccl7drgd1QlDxQ6LTsNBZOO+AWUbKkJUafMCzlgUh6GfyhejyX+Ro+vIjaU6O5PH8zo4zGXd3hVT
+        yTJLgsDhAEiEb6BmRLO7Hhcmnc5wt++BZfK0C4CX7RFJKRnZM6ueidsTGEEk0xwUw+2gMlwu12Spk
+        GfTktW4C0vFrx/Pfy19GAD33MAxwYrdOhgPAoKVW1ezoC1HGXqKqnMqlGWDqSeRSWrwFIBDKiT055
+        N2DtURQw==;
+Received: by chalk.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jpc6n-0000Az-GF; Sun, 28 Jun 2020 19:32:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Cc:To:Subject:From;
+        bh=UPP6gukaexX7wrM9u2+d3aN4JoGVQpabllHG+ax6iC4=; b=J239Wtw/GzbBYC7vjs9SccvUos
+        55kndDxz5eavZKN9YFL/4IP/RN9xYySYmti/9USnJV3w11a22cDcApC7BsHV6Mmr9lC3j2i1CuiQ8
+        m9wSZGf04FS+0NZjwkqFTL40sWMFOBLdFbeh+wZe7ujZfTUdEkk91/mvQQA2oSSyZEwAq3a1A9uhB
+        vFzy8a2JSc6PLU+8zYrR1DiCva7SOUrAzyx6HNHN4aeSmy2mh5+JABmTvI4A5hKmIgqu+0y+7auS3
+        TQdx8RHQeotalH8cuT+e7XUJw/v0LTEaThVprjb3KLBItucosPEmPkt4iv7xQh9wq+BKq7vyBOKqt
+        28bISPSw==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jpc6l-0007Oy-Kv; Sun, 28 Jun 2020 19:32:52 +0100
+From:   Simon Arlott <simon@octiron.net>
+Subject: [PATCH (v2)] scsi: sd: add parameter to stop disks before reboot
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Message-ID: <e726ffd8-8897-4a79-c3d6-6271eda8aebb@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+Date:   Sun, 28 Jun 2020 19:32:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type defining 'NETDEV_TX_OK' but this
-driver returns '0' instead of 'NETDEV_TX_OK'.
+I need to use "reboot=p" on my desktop because one of the PCIe devices
+does not appear after a warm boot. This results in a very cold boot
+because the BIOS turns the PSU off and on.
 
-Fix this by returning ''NETDEV_TX_OK' instead of 0.
+The scsi sd shutdown process does not send a stop command to disks
+before the reboot happens (stop commands are only sent for a shutdown).
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+The result is that all of my SSDs experience a sudden power loss on
+every reboot, which is undesirable behaviour because it could cause data
+to be corrupted. These events are recorded in the SMART attributes.
+
+Add a "stop_before_reboot" module parameter that can be used to control
+the shutdown behaviour of disks before a reboot. The default will be
+the existing behaviour (disks are not stopped).
+
+  sd_mod.stop_before_reboot=<integer>
+    0 = disabled (default)
+    1 = enabled
+
+The behaviour on shutdown is unchanged: all disks are unconditionally
+stopped.
+
+Signed-off-by: Simon Arlott <simon@octiron.net>
 ---
- drivers/staging/wilc1000/netdev.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/scsi/scsi-parameters.rst |  5 +++++
+ drivers/scsi/sd.c                      | 14 +++++++++++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/netdev.c b/drivers/staging/wilc1000/netdev.c
-index fda0ab97b02c..be3ae5486f44 100644
---- a/drivers/staging/wilc1000/netdev.c
-+++ b/drivers/staging/wilc1000/netdev.c
-@@ -678,14 +678,14 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
+diff --git a/Documentation/scsi/scsi-parameters.rst b/Documentation/scsi/scsi-parameters.rst
+index 9aba897c97ac..324610870de5 100644
+--- a/Documentation/scsi/scsi-parameters.rst
++++ b/Documentation/scsi/scsi-parameters.rst
+@@ -101,6 +101,11 @@ parameters may be changed at runtime by the command
+ 			allowing boot to proceed.  none ignores them, expecting
+ 			user space to do the scan.
  
- 	if (skb->dev != ndev) {
- 		netdev_err(ndev, "Packet not destined to this device\n");
--		return 0;
-+		return NETDEV_TX_OK;
++	sd_mod.stop_before_reboot=
++			[SCSI] configure stop action for disks before a reboot
++			Format: <integer>
++			0 = disabled (default), 1 = enabled
++
+ 	sim710=		[SCSI,HW]
+ 			See header of drivers/scsi/sim710.c.
+ 
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index d90fefffe31b..506904bf15da 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -98,6 +98,12 @@ MODULE_ALIAS_SCSI_DEVICE(TYPE_MOD);
+ MODULE_ALIAS_SCSI_DEVICE(TYPE_RBC);
+ MODULE_ALIAS_SCSI_DEVICE(TYPE_ZBC);
+ 
++static unsigned int stop_before_reboot = 0;
++
++module_param(stop_before_reboot, uint, 0644);
++MODULE_PARM_DESC(stop_before_reboot,
++		 "stop disks before reboot");
++
+ #if !defined(CONFIG_DEBUG_BLOCK_EXT_DEVT)
+ #define SD_MINORS	16
+ #else
+@@ -3576,9 +3582,11 @@ static void sd_shutdown(struct device *dev)
+ 		sd_sync_cache(sdkp, NULL);
  	}
  
- 	tx_data = kmalloc(sizeof(*tx_data), GFP_ATOMIC);
- 	if (!tx_data) {
- 		dev_kfree_skb(skb);
- 		netif_wake_queue(ndev);
--		return 0;
-+		return NETDEV_TX_OK;
+-	if (system_state != SYSTEM_RESTART && sdkp->device->manage_start_stop) {
+-		sd_printk(KERN_NOTICE, sdkp, "Stopping disk\n");
+-		sd_start_stop_device(sdkp, 0);
++	if (sdkp->device->manage_start_stop) {
++		if (system_state != SYSTEM_RESTART || stop_before_reboot) {
++			sd_printk(KERN_NOTICE, sdkp, "Stopping disk\n");
++			sd_start_stop_device(sdkp, 0);
++		}
  	}
- 
- 	tx_data->buff = skb->data;
-@@ -710,7 +710,7 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		srcu_read_unlock(&wilc->srcu, srcu_idx);
- 	}
- 
--	return 0;
-+	return NETDEV_TX_OK;
  }
  
- static int wilc_mac_close(struct net_device *ndev)
 -- 
-2.27.0
+2.17.1
 
+-- 
+Simon Arlott
