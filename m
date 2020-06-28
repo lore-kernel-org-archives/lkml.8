@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18289C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC20FC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5867206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B14206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htM9hGW3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlgOiKYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgF1TyR (ORCPT
+        id S1726955AbgF1TyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        Sun, 28 Jun 2020 15:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbgF1TyD (ORCPT
+        with ESMTP id S1726834AbgF1Tx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:54:03 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B041DC03E979;
-        Sun, 28 Jun 2020 12:54:02 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dp18so14519539ejc.8;
-        Sun, 28 Jun 2020 12:54:02 -0700 (PDT)
+        Sun, 28 Jun 2020 15:53:57 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1966EC03E97B;
+        Sun, 28 Jun 2020 12:53:57 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id rk21so14544833ejb.2;
+        Sun, 28 Jun 2020 12:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IecnikxrmKwKRsrCTW9kdHFofcFntdDjZkZFdGb3EQE=;
-        b=htM9hGW3cBrcBx5OGriOoZ2Q7qb2kQCN4jBJM4mOX8cRyj2Fvt1fFBwLpHtarriC4Q
-         FLclMgfMwZb2vt5V0WuH3YNZf6Ac9JxXRbN2DE/pqISuwewWSA4ZzIqpKRWCDgdB4gGJ
-         W41F8SsLnxtkInh1/0RjcMDxWFkPqVi7kXDyZyPl/A6ZXSfaachwpt322k7R6ypgxW8F
-         NdApUcsygtNPKTm66vQo5pInfspM76rA3tsFgggFOgZFVRGGi+17G5SzlUIhhrPGw6Yq
-         F7XV6xpJa1pQWR8ugjJRm1e6Sd9ZbpxskMF/BYcrBJVfrlvMcxXzuWB8FALsLfXktnMB
-         gNew==
+        bh=b9kv/WRpFNxhscBQ0mp9gvC658NN3RHBgTIAlVk4Lmo=;
+        b=QlgOiKYmjXAmGMVksdlwj06M102fXqaDHrqcbFl74zJlTv0xwj1vrhjvDDCDfemqft
+         6mtYiVK5Cy2YLkLDAggsCVYz2TBEjdEY3SdynA3TPdSYDiEKgzl6N+4KvgcSqqnEEX2I
+         0KVY7m6X7KpY1uyEJYGswOrrQ8N2NkJOhVybIV5Wu9eITZ2V36IjxYuP3qCvDnxvhs72
+         rLrxYLM0fI2ybFkfLpYv3x5GKiXyhXyAtI652hAsFc8TZZvCFOHmH8UCzkn4fIMJzNri
+         VWhyIpet71q6XZMlp3daV6QbWbIqqDVDqc9kuexHxB5sf9el04dpqWc1bS+EJH6AFihL
+         4SHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IecnikxrmKwKRsrCTW9kdHFofcFntdDjZkZFdGb3EQE=;
-        b=dM/FUaqe8z77+KXmSWUbh0NdeCl9nCY4YlaA28cJE6BNOnljosJW0hebEFNyLacA6N
-         v4f8n1XwyCTrJk9Qc9O3+nexwlq8attafnCmAlHiJrZUmsy8gtT+DTdFWedcH0MR27br
-         qNfHu185agbY/n2gtbMcC1371z6DlkWBMOOBuJ1gqjhRae7EzU2e8YusfbRpnX4297s0
-         pcUN1ASBo1ZdMaA9hGxTmnlLssDvy5v4Liqom7s8yanC534zxrIDiwIU8mxHXPForKo0
-         uAcCBxL4mNqR0hr+f+U8IWGI5qFPq1NzUGxEDQodTz+mYS8uaORjDoeVW/OvjPJOJKBA
-         PI/g==
-X-Gm-Message-State: AOAM533GIsNOQSeT+TJTq5Ju02NorX3Eq4jmp5TaT02bG40SvvmhPQkj
-        7qJ3jG3MDNLGJbclfBzW9E0=
-X-Google-Smtp-Source: ABdhPJwS6a+/f3aFAtr06rNEF0lhYkFRfGEM+tY+SaUPjEqw/nfHIiS2VxdQx+1Az4I0Kf670fZiaw==
-X-Received: by 2002:a17:906:2e83:: with SMTP id o3mr7653587eji.261.1593374041507;
-        Sun, 28 Jun 2020 12:54:01 -0700 (PDT)
+        bh=b9kv/WRpFNxhscBQ0mp9gvC658NN3RHBgTIAlVk4Lmo=;
+        b=IoK+G4MkCupjatW1uV0dStl7CMJLZX18jwZqUXCW8+MmdduoHgZZI5v+HmQSRUoW7Q
+         8b1s7mSNAgX5Gr76nFx7rxQCo+on71eclQtcIshcmTYPfX6ErURWRWC4i7l0Xe/rgVns
+         EomQhrsEWx4Mb439ENH29IYn+KY2iT2sP1GXmf2tEKX0tKdhmTu3/JRaweLmONGGcpNQ
+         bv/UyVSeETXkpiQ+7/qAbpsAEUWbvMmaZfmp+2lldYcXH0J6/LLlL5UeW9Q1/KGtBzsG
+         lA2aD2Yg+bGNDPXnK+tfsrVPOFBepcOemt6lKhCsQTEZKdkQN3pIyGLeMH79jg9luo3X
+         FiSA==
+X-Gm-Message-State: AOAM533IcZhuMw6i5s4uKz66tB8l5msfnA66/5LN+elmILuWBfdh1h3z
+        I01NK1tin7tIPmuZtz+tXUY=
+X-Google-Smtp-Source: ABdhPJwz+/sfJQ25wk8u3i0JEQcC45AjemvN/kuwHpDeY34B7oXVJ0M5WF3iVu1gHiUUWHZPdCMUZg==
+X-Received: by 2002:a17:906:ce32:: with SMTP id sd18mr11630711ejb.228.1593374035852;
+        Sun, 28 Jun 2020 12:53:55 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f145:9a83:6418:5a5c])
-        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.54.00
+        by smtp.gmail.com with ESMTPSA id z8sm15669531eju.106.2020.06.28.12.53.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 12:54:01 -0700 (PDT)
+        Sun, 28 Jun 2020 12:53:55 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         oss-drivers@netronome.com, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 15/15] cxgb4vf: fix t4vf_eth_xmit()'s return type
-Date:   Sun, 28 Jun 2020 21:53:37 +0200
-Message-Id: <20200628195337.75889-16-luc.vanoostenryck@gmail.com>
+Subject: [PATCH 12/15] usbnet: ipheth: fix ipheth_tx()'s return type
+Date:   Sun, 28 Jun 2020 21:53:34 +0200
+Message-Id: <20200628195337.75889-13-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
 References: <20200628195337.75889-1-luc.vanoostenryck@gmail.com>
@@ -87,36 +87,22 @@ Fix this by returning 'netdev_tx_t' in this driver too.
 
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- drivers/net/ethernet/chelsio/cxgb4vf/adapter.h | 2 +-
- drivers/net/ethernet/chelsio/cxgb4vf/sge.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/ipheth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/adapter.h b/drivers/net/ethernet/chelsio/cxgb4vf/adapter.h
-index 3782e48dada2..f55105a4112f 100644
---- a/drivers/net/ethernet/chelsio/cxgb4vf/adapter.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4vf/adapter.h
-@@ -562,7 +562,7 @@ int t4vf_sge_alloc_eth_txq(struct adapter *, struct sge_eth_txq *,
- 			   unsigned int);
- void t4vf_free_sge_resources(struct adapter *);
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index c792d65dd7b4..b09b45382faf 100644
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -358,7 +358,7 @@ static int ipheth_close(struct net_device *net)
+ 	return 0;
+ }
  
--int t4vf_eth_xmit(struct sk_buff *, struct net_device *);
-+netdev_tx_t t4vf_eth_xmit(struct sk_buff *, struct net_device *);
- int t4vf_ethrx_handler(struct sge_rspq *, const __be64 *,
- 		       const struct pkt_gl *);
- 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/sge.c b/drivers/net/ethernet/chelsio/cxgb4vf/sge.c
-index f71c973398ec..46e50e25dbba 100644
---- a/drivers/net/ethernet/chelsio/cxgb4vf/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4vf/sge.c
-@@ -1154,7 +1154,7 @@ static inline void txq_advance(struct sge_txq *tq, unsigned int n)
-  *
-  *	Add a packet to an SGE Ethernet TX queue.  Runs with softirqs disabled.
-  */
--int t4vf_eth_xmit(struct sk_buff *skb, struct net_device *dev)
-+netdev_tx_t t4vf_eth_xmit(struct sk_buff *skb, struct net_device *dev)
+-static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
++static netdev_tx_t ipheth_tx(struct sk_buff *skb, struct net_device *net)
  {
- 	u32 wr_mid;
- 	u64 cntrl, *end;
+ 	struct ipheth_device *dev = netdev_priv(net);
+ 	struct usb_device *udev = dev->udev;
 -- 
 2.27.0
 
