@@ -2,151 +2,161 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 04:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD692C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 04:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D45E0212CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 04:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHP/WmwE"
+	by mail.kernel.org (Postfix) with ESMTP id AFD79208B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 04:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgF1EJF (ORCPT
+        id S1726027AbgF1ERR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 00:09:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39228 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725844AbgF1EJF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 00:09:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593317343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UHB77KARZdF1vV3ZfBH83U0JFNf2h7Rv/Mt18RREFk0=;
-        b=KHP/WmwEHztzSYrKMaMjHIoBy4oQxlSueTMeYfnd/MbMyYhC7E6p7xk/6pHF9lItRGgCWg
-        zqLesbI8NgifwmMDSRvp0owfdYfAccV+MJ3aBlycK0Ygp6F/Ii13eXJGixiq3ijszYmaJ2
-        IS0Gm+A+zU98+jYOLqdlnsFn7scbdZM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-505-bJQLMeiAOw-i5WaS6gap0A-1; Sun, 28 Jun 2020 00:09:00 -0400
-X-MC-Unique: bJQLMeiAOw-i5WaS6gap0A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2364BFC0;
-        Sun, 28 Jun 2020 04:08:59 +0000 (UTC)
-Received: from x1.home (ovpn-112-156.phx2.redhat.com [10.3.112.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A66A60BF1;
-        Sun, 28 Jun 2020 04:08:52 +0000 (UTC)
-Date:   Sat, 27 Jun 2020 22:08:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Wang, Haiyue" <haiyue.wang@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        David Marchand <david.marchand@redhat.com>,
-        Kevin Traynor <ktraynor@redhat.com>
-Subject: Re: [PATCH] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-Message-ID: <20200627220852.13b3fa7f@x1.home>
-In-Reply-To: <BN8PR11MB3795C3338B3C7F67A6EDB43AF7910@BN8PR11MB3795.namprd11.prod.outlook.com>
-References: <159310421505.27590.16617666489295503039.stgit@gimli.home>
-        <BN8PR11MB3795C3338B3C7F67A6EDB43AF7910@BN8PR11MB3795.namprd11.prod.outlook.com>
-Organization: Red Hat
+        Sun, 28 Jun 2020 00:17:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6323 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725844AbgF1ERQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 00:17:16 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 04CB66A1A87053D56211;
+        Sun, 28 Jun 2020 12:17:10 +0800 (CST)
+Received: from [127.0.0.1] (10.174.187.83) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Sun, 28 Jun 2020
+ 12:17:03 +0800
+Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
+ of data
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <willy@infradead.org>,
+        <wangxiongfeng2@huawei.com>, <wanghaibin.wang@huawei.com>,
+        <guoheyi@huawei.com>, <yebiaoxiang@huawei.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+References: <20200624232309.GA2601999@bjorn-Precision-5520>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <cf73da1d-aa6d-e2e0-36eb-ce30b83288a6@huawei.com>
+Date:   Sun, 28 Jun 2020 12:17:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200624232309.GA2601999@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Originating-IP: [10.174.187.83]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jun 2020 03:12:12 +0000
-"Wang, Haiyue" <haiyue.wang@intel.com> wrote:
+Hi Bjorn,
 
-> > -----Original Message-----
-> > From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf Of Alex Williamson
-> > Sent: Friday, June 26, 2020 00:57
-> > To: alex.williamson@redhat.com
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; maxime.coquelin@redhat.com
-> > Subject: [PATCH] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-> > 
-> > SR-IOV VFs do not implement the memory enable bit of the command
-> > register, therefore this bit is not set in config space after
-> > pci_enable_device().  This leads to an unintended difference
-> > between PF and VF in hand-off state to the user.  We can correct
-> > this by setting the initial value of the memory enable bit in our
-> > virtualized config space.  There's really no need however to
-> > ever fault a user on a VF though as this would only indicate an
-> > error in the user's management of the enable bit, versus a PF
-> > where the same access could trigger hardware faults.
-> > 
-> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > index 8746c943247a..d98843feddce 100644
-> > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > @@ -398,9 +398,15 @@ static inline void p_setd(struct perm_bits *p, int off, u32 virt, u32 write)
-> >  /* Caller should hold memory_lock semaphore */
-> >  bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
-> >  {
-> > +	struct pci_dev *pdev = vdev->pdev;
-> >  	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-> > 
-> > -	return cmd & PCI_COMMAND_MEMORY;
-> > +	/*
-> > +	 * SR-IOV VF memory enable is handled by the MSE bit in the
-> > +	 * PF SR-IOV capability, there's therefore no need to trigger
-> > +	 * faults based on the virtual value.
-> > +	 */
-> > +	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);  
+Sorry for the late reply, I had Dragon Boat Festival these days.
+
+On 2020/6/25 7:23, Bjorn Helgaas wrote:
+> On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
+>> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+>> device") suggests that the "pci_lock" is sufficient, and all the
+>> callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>
+>> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
+>> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
+>> are not safe anymore. This would cause kernel panic in a very low chance
+>> (See more detailed information from the below link). A "pci_lock" is
+>> insufficient and we need to hold an additional queue lock while read/write
+>> the wait queue.
+>>
+>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
+>> functionality around the "schedule()" function to avoid reintroducing
+>> the deadlock addressed by "cdcb33f98244".
 > 
-> Hi Alex,
+> I see that add_wait_queue() acquires the wq_head->lock, while
+> __add_wait_queue() does not.
 > 
-> After set up the initial copy of config space for memory enable bit for VF, is it worth
-> to trigger SIGBUS into the bad user space process which intentionally try to disable the
-> memory access command (even it is VF) then access the memory to trigger CVE-2020-12888 ?
-
-We're essentially only trying to catch the user in mismanaging the
-enable bit if we trigger a fault based on the virtualized enabled bit,
-right?  There's no risk that the VF would trigger a UR based on the
-state of our virtual enable bit.  So is it worth triggering a user
-fault when, for instance, the user might be aware that the device is a
-VF and know that the memory enable bit is not relative to the physical
-device?  Thanks,
-
-Alex
-
-> >  }
-> > 
-> >  /*
-> > @@ -1728,6 +1734,15 @@ int vfio_config_init(struct vfio_pci_device *vdev)
-> >  				 vconfig[PCI_INTERRUPT_PIN]);
-> > 
-> >  		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-> > +
-> > +		/*
-> > +		 * VFs do no implement the memory enable bit of the COMMAND
-> > +		 * register therefore we'll not have it set in our initial
-> > +		 * copy of config space after pci_enable_device().  For
-> > +		 * consistency with PFs, set the virtual enable bit here.
-> > +		 */
-> > +		*(__le16 *)&vconfig[PCI_COMMAND] |=
-> > +					cpu_to_le16(PCI_COMMAND_MEMORY);
-> >  	}
-> > 
-> >  	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)  
+> But I don't understand why the existing pci_lock is insufficient.  
+> pci_cfg_wait is only used in pci_wait_cfg() and
+> pci_cfg_access_unlock().
 > 
+> In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
+> are called while holding pci_lock, so that doesn't seem like the
+> problem.
+> 
+> In pci_cfg_access_unlock(), we have:
+> 
+>   pci_cfg_access_unlock
+>     wake_up_all(&pci_cfg_wait)
+>       __wake_up(&pci_cfg_wait, ...)
+>         __wake_up_common_lock(&pci_cfg_wait, ...)
+> 	  spin_lock(&pci_cfg_wait->lock)
+> 	  __wake_up_common(&pci_cfg_wait, ...)
+> 	    list_for_each_entry_safe_from(...)
+> 	      list_add_tail(...)                <-- problem?
+> 	  spin_unlock(&pci_cfg_wait->lock)
+> 
+> Is the problem that the wake_up_all() modifies the pci_cfg_wait list
+> without holding pci_lock?
+> 
+> If so, I don't quite see how the patch below fixes it.  Oh, wait,
+> maybe I do ... by using add_wait_queue(), we protect the list using
+> the *same* lock used by __wake_up_common_lock.  Is that it?
+> 
+
+Yes, my patch just protects the wait queue list by using add_wait_queue().
+Simply using the add_wait_queue() instead of __add_wait_queue() will reintroduce
+the deadlock addressed by "cdcb33f98244". So I move add_wait_queue() and
+remote_wait_queue() around schedule() since they don't need to hold pci_lock.
+
+
+>> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+>> Cc: Heyi Guo <guoheyi@huawei.com>
+>> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+>> Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/
+>> ---
+>>
+>> v3:
+>>   Improve the commit subject and message.
+>>
+>> v2:
+>>   Move the wait queue functionality around the "schedule()".
+>>
+>> ---
+>>  drivers/pci/access.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index 2fccb5762c76..09342a74e5ea 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+>>  {
+>>  	DECLARE_WAITQUEUE(wait, current);
+>>  
+>> -	__add_wait_queue(&pci_cfg_wait, &wait);
+>>  	do {
+>>  		set_current_state(TASK_UNINTERRUPTIBLE);
+>>  		raw_spin_unlock_irq(&pci_lock);
+>> +		add_wait_queue(&pci_cfg_wait, &wait);
+>>  		schedule();
+>> +		remove_wait_queue(&pci_cfg_wait, &wait);
+>>  		raw_spin_lock_irq(&pci_lock);
+>>  	} while (dev->block_cfg_access);
+>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
+>>  }
+>>  
+>>  /* Returns 0 on success, negative values indicate error. */
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
+> .
+> 
+
+-- 
+Thanks,
+Xiang
 
