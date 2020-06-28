@@ -2,128 +2,171 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355CE20672
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1378520672
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 22:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qmcbALNN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSoQPHn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgF1WB7 (ORCPT
+        id S1726678AbgF1WCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 18:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
+        Sun, 28 Jun 2020 18:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgF1WB7 (ORCPT
+        with ESMTP id S1726080AbgF1WCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 18:01:59 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8DEC03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 15:01:58 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t74so8027799lff.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 15:01:58 -0700 (PDT)
+        Sun, 28 Jun 2020 18:02:14 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A7BC03E979;
+        Sun, 28 Jun 2020 15:02:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h22so7158570pjf.1;
+        Sun, 28 Jun 2020 15:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bj6QkIDzzkCIfOkrIbu+GINbgYLt6UK0AtVxnJ8Cnxk=;
-        b=qmcbALNNsTXojxTBCj/5TWAKBWZ3Zf31GEiSNX8zonaIQvdLJ9pRonuNuVosdFTl+J
-         5JF+eFxYNgsQmp/cjq4lGnoYghAGRm/0gq3zW5w6domow3l5xbiinXbi8SFAPSA7lPos
-         wc+k1JjxZ0JXuMAE7cz/CpI+yUImvkeNf2lgRBlCHKdGjD18tzI67ujW+ynIRzJzy90C
-         jSMrYQXZQXWq2JXz8uCkpjAIlFGbroc3uLQmF/L//Eo9/+qjvqFovPlgIWYGECO5CwCd
-         /fCNMap1mlHj0XNmYVf9OFyBk9h9FV0f37wVTAuHBfRSGwTrW+oLA3TV+N8EWJNN0W6B
-         etBQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VqS8bhh7NwFVANMN9R3qApVh1yAOo5mpLwb4AxLehrs=;
+        b=pSoQPHn8B/aKIukyq684XfojXbHedNxAIZMz8csdJVWfnKT8rRpYl7Xg05MrMtyKxY
+         FE2qs/skTluTscm0tc5npNQwMOG/DKZooTZd7+/pFBXG4nfR79VPuBbhjNh4F3pLxmqM
+         mgPq5G0mkd8ZKsNXImsfUQO/vR1F2PufphUTXPu1/cy/+tE4Y4lXgDOmWU2zmrRHy3YI
+         Ig19n6i5NFcAIqd2UyME+9QMkG7LFUcqtnNjxnihoEbndbemMKjfKZv6ku/8oLCjbfD9
+         P8uP6CuYIDRBut49iWJOQMxntxjFpF9ugH+QlveancJV9OTzfGOS5OCzE6+mwaBj29ON
+         zgJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bj6QkIDzzkCIfOkrIbu+GINbgYLt6UK0AtVxnJ8Cnxk=;
-        b=t5JHKXsapk/1S0RxxKlI6fTv72ZFOHn9BACdacimPkYeQfdETMgUioIFTFN8pd/crM
-         hOfBI6lZjc+IAaVbf670ZVuJTjUQjYhO9vi7+fzmKzeGYjlOCYykHzmTgIr1Q11NOd4t
-         8Tp1dCvMzYF3Xd9QhNFRk2HlLGFaJfkmYFj3qTzLcGR/3F9wEzBKIjwK4NL1gMtiuH80
-         aBUnil539A0m8HuyBzwfQ5ooTRNz55ah+qE+mQ3rINEeqduzVMF9yHqC/m6QXyRy47RF
-         HfJr9AMXqNl/ZgTKE9zGD6ItNDOHckt7OAWsfKYOSRUqPRLGnDVwCT9EadnY3ZBuh6s+
-         B7gA==
-X-Gm-Message-State: AOAM533kTqvexvRdL+63SKfCDHtsnRawiA/BW7Eb5JdsB9pQPXabx+nu
-        yiCei49aroje8jaufW8Kxl/Lxq2YkoE/XQ==
-X-Google-Smtp-Source: ABdhPJzlxfrAhq2FKIoGbL8Werl/DvfpJeChyF419Nedp+rKK/YSBA86PaQrcQ2xK01SHTJdPgitKg==
-X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr5355901lfq.76.1593381717215;
-        Sun, 28 Jun 2020 15:01:57 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id s62sm6723773lja.100.2020.06.28.15.01.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VqS8bhh7NwFVANMN9R3qApVh1yAOo5mpLwb4AxLehrs=;
+        b=j4Gu9wgQX7+ZQSHMuD/Aoyce3FLg1dJq7o2j6EGvczeiiT7MHUUwmVjhxP3tfv451P
+         WnUXSiimbNEf9ki3vXdqKLhjDRa4ixwImGVPiNhD5e37u0tyeWwW4PQz9h22sr3u7/yb
+         zVNA5KZk4m21L1FbmYZ+wh+d4y3aOMQi4HWnKX4vTsWuWbv1Sud7IQm9uTw9Sxrs4F4H
+         E3HX1phx2av2udKqiVG45PMQf8edXYOK9B+O/WiwDz1rieFbiaFkB6Vq5BD+AZrTVzeA
+         mQ7SIQ6wQI63HQFp4SYaHT2UgIlvXgd4TaN1GTS2NDwdYaA0XB56m9/U2K9iO0pZW9iL
+         hPeA==
+X-Gm-Message-State: AOAM530LXYheumkSjCN4zyf0jnzUiRAujDXXf9UxOQ0xK8Ogt9MQcaid
+        io7JMLP3dKleUBtJ6VY+LAs=
+X-Google-Smtp-Source: ABdhPJyYpBT/Hwn+BAItA3VjPPwHiNXJpf6HpsMFV91E5xL65/OYaRSP16zH/g+mwDzEr0KZFoS/Og==
+X-Received: by 2002:a17:90a:26c6:: with SMTP id m64mr391100pje.215.1593381733480;
+        Sun, 28 Jun 2020 15:02:13 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:616])
+        by smtp.gmail.com with ESMTPSA id m14sm17098356pjv.12.2020.06.28.15.02.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 15:01:56 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] clocksource: nomadik-mtu: Handle 32kHz clock
-Date:   Mon, 29 Jun 2020 00:01:53 +0200
-Message-Id: <20200628220153.67011-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Sun, 28 Jun 2020 15:02:12 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 15:02:09 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+ <20200624120408.12c8fa0d@oasis.local.home>
+ <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+ <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+ <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+ <20200626181455.155912d9@oasis.local.home>
+ <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+ <20200628144616.52f09152@oasis.local.home>
+ <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
+ <20200628154331.2c69d43e@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200628154331.2c69d43e@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It happens on the U8420-sysclk Ux500 PRCMU firmware
-variant that the MTU clock is just 32768 Hz, and in this
-mode the minimum ticks is 5 rather than two.
+On Sun, Jun 28, 2020 at 03:43:31PM -0400, Steven Rostedt wrote:
+>  On Sun, 28 Jun 2020 12:21:07 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> 
+> > > Re-teach them, or are you finally admitting that the tracing system is
+> > > a permanent API?  This is the reason people are refusing to add trace
+> > > points into their subsystems. Because user space may make it required.
+> > > 
+> > > I see no reason why you can't create a dedicated BPF tracing instance
+> > > (you only need one) to add all your trace_array_printk()s to.  
+> > 
+> > All bpf helpers are stable api. We cannot remove bpf_trace_printk() and
+> > cannot change the fact that it has to print into /sys/kernel/debug/tracing/trace.
+> 
+> Then do a bpf trace event and enable it when a bpf_trace_printk() is
+> loaded. It will work the same for your users.
 
-I think this is simply so that there is enough time
-for the register write to propagate through the
-interconnect to the registers.
+I'm not sure I follow. How that would preserve the expectation
+to see the output in /sys/kernel/debug/tracing/trace ?
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/clocksource/nomadik-mtu.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+> > If we do so a lot of users will complain. Loudly.
+> > If you really want to see the flames, go ahead and rename 'trace_pipe'
+> > into something else.
+> 
+> The layout of the tracefs system *is* a stable API. No argument there.
+> 
+> > This has nothing to do with tracing in general and tracepoints.
+> > Those come and go.
+> 
+> And in this case, trace_printk() is no different than any other trace
+> event. Obviously, your use case doesn't let it go. If some tool starts
+> relying on another trace event (say someone adds another bpf handler that
+> enables a trace event, and is documented) then under your scenario,
+> it's a stable API.
 
-diff --git a/drivers/clocksource/nomadik-mtu.c b/drivers/clocksource/nomadik-mtu.c
-index f49a631d8f58..1cf3304652d6 100644
---- a/drivers/clocksource/nomadik-mtu.c
-+++ b/drivers/clocksource/nomadik-mtu.c
-@@ -186,6 +186,7 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
- {
- 	unsigned long rate;
- 	int ret;
-+	int min_ticks;
- 
- 	mtu_base = base;
- 
-@@ -194,7 +195,8 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
- 
- 	/*
- 	 * Tick rate is 2.4MHz for Nomadik and 2.4Mhz, 100MHz or 133 MHz
--	 * for ux500.
-+	 * for ux500, and in one specific Ux500 case 32768 Hz.
-+	 *
- 	 * Use a divide-by-16 counter if the tick rate is more than 32MHz.
- 	 * At 32 MHz, the timer (with 32 bit counter) can be programmed
- 	 * to wake-up at a max 127s a head in time. Dividing a 2.4 MHz timer
-@@ -230,7 +232,12 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
- 		pr_err("%s: request_irq() failed\n", "Nomadik Timer Tick");
- 	nmdk_clkevt.cpumask = cpumask_of(0);
- 	nmdk_clkevt.irq = irq;
--	clockevents_config_and_register(&nmdk_clkevt, rate, 2, 0xffffffffU);
-+	if (rate < 100000)
-+		min_ticks = 5;
-+	else
-+		min_ticks = 2;
-+	clockevents_config_and_register(&nmdk_clkevt, rate, min_ticks,
-+					0xffffffffU);
- 
- 	mtu_delay_timer.read_current_timer = &nmdk_timer_read_current_timer;
- 	mtu_delay_timer.freq = rate;
--- 
-2.26.2
+not quite. Documneting kprobe+bpf as an example and writing a blog and a book
+about it doesn't make it stable.
 
+> 
+> Hence, your "tracepoints come and go" is not universal, and there's no
+> telling which ones will end up being a stable API.
+> 
+> 
+> > If you really want to nuke trace_printk from the kernel we need time
+> > to work on replacement and give users at least few releases of helper
+> > deprecation time.
+> 
+> I never said I would nuke it. This patch in question makes it so those
+> that don't want that banner to ever show up can do so. A trace-printk()
+> is something to add via compiling. And since I and others use it
+> heavily for debugging, I would have this option not be a default, but
+> something that others can enable.
+> 
+> > We've never done in the past though.
+> > There could be flames even if we deprecate it gradually.
+> > Looking how unyielding you're about this banner I guess we have to start
+> > working on replacement sooner than later. Oh well.
+> 
+> Hmm, so you are happier to bully and burn bridges with me to deprecate
+> the trace_printk() interface, than to work with me and add an update to
+> look into an instance for the print instead of the top level? That's
+> not very collaborative.
+
+I'm seeing it differently.
+I'm saying bpf users are complaining about misleading dmesg warning.
+You're saying 'screw your users I want to keep that warning'.
+Though the warning is lying with a straight face. The only thing happened
+is few pages were allocated that will never be freed. The kernel didn't
+suddenly become non-production. It didn't become slower. No debug features
+were turned on.
