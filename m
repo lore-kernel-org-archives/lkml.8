@@ -2,259 +2,280 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C98AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F905C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0770C2080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNaweh3H"
+	by mail.kernel.org (Postfix) with ESMTP id 500EC2080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 01:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgF1BUS (ORCPT
+        id S1726795AbgF1B0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 21:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgF1BUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 21:20:18 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE07C061794
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 18:20:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d12so5716745ply.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 18:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ADblPSq86OjGG37gyR91IwAkXUOUtCp03c3Wk/CiyCc=;
-        b=CNaweh3HeWfOy/hpR45M/qwXA2oASO+Ykng/qG4hEIgQQgjuQbeyik7C8E2zJGguSz
-         qUOmo/XGXrP385TMRxdm5NAKib77BkINnD1rf9xSAuIfP+ro+nsHYLUi0JujuS1U+vou
-         wbTVkyu+rnsWv3e9JTt0sXHpc2YJi8eOziy+RSZzlfVivwE4TmvPtMwLt0ErC/lKIFoE
-         +wNUt4th9/Ghf2tSmygTVSYbaFLRpFRs1slKzyfSa6uJ7WMhA789TTalUiqyexglz4+0
-         aBtejcgs+O1Q064cKwnuOzLtXL9Cyx/YzUm0owdU4BhIgjhVjlJl4EB+QbJe927u0RFj
-         lxUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ADblPSq86OjGG37gyR91IwAkXUOUtCp03c3Wk/CiyCc=;
-        b=LaXnNQZNp8eDS+eSaLf6XCQ1eR6sIo6He8+6wwc53IwBQ9EIHZJTw+EeOib/obgMZC
-         2x58cCq8H8Ds2nuazAs1pOxKvmspafGrs9YmmrgTbdWTNL97VPWUDCTm6h6phtRxU1pK
-         +9atA5Al5oLVnEGjmo+SSMdgI8BLyOvZ0lnDnYR+w+48ndBALDy+YC6D5+i1qabh2NXP
-         5PYe/lc9OwDWFaKFxIdvB9ocjPOZKy8S7krfmjQKscKbzjSRyNRL3AeF2E4p/6D+Oqhe
-         k/48+e/6Qs6tsR2Dfh5LE8LrsKNhUNYv8AsUZYFuiExavVYiLn+Q//YkvxN39wJCQk83
-         i6Ng==
-X-Gm-Message-State: AOAM532+z/tJTyI2jRH+tLUiD/xBkaDzMP08u1fpuvfcoP6urkdhsVed
-        VpFzuaTW20NglSbYoEMI+SNpO81u
-X-Google-Smtp-Source: ABdhPJwOxdmN+eTveHIKqBesK3VNYxLzBIE7a8vI8E4Tr/KRgz59uwETo458QLW6SIVPUfryMw2oQw==
-X-Received: by 2002:a17:90a:ad48:: with SMTP id w8mr11243344pjv.191.1593307217444;
-        Sat, 27 Jun 2020 18:20:17 -0700 (PDT)
-Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id e16sm1444491pff.180.2020.06.27.18.20.16
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sat, 27 Jun 2020 18:20:16 -0700 (PDT)
-From:   Bin Meng <bmeng.cn@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Bin Meng <bin.meng@windriver.com>
-Subject: [RESEND PATCH v2] arm: Drop CONFIG_MTD_M25P80 in various defconfig files
-Date:   Sat, 27 Jun 2020 18:19:27 -0700
-Message-Id: <1593307167-27235-1-git-send-email-bmeng.cn@gmail.com>
-X-Mailer: git-send-email 1.7.1
+        Sat, 27 Jun 2020 21:26:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52564 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726530AbgF1B0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 21:26:13 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C4A0A5F68A77E0CBA138;
+        Sun, 28 Jun 2020 09:26:09 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sun, 28 Jun
+ 2020 09:26:06 +0800
+Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
+ <20200618235932.GA227771@google.com>
+ <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
+ <20200619054922.GC227771@google.com>
+ <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
+ <20200619224755.GA60059@google.com>
+ <3f49539a-7be1-be90-d13a-2f66a8483458@huawei.com>
+ <20200621163834.GA36924@google.com>
+ <da9df754-2e19-132c-9791-cac0361a1aad@huawei.com>
+ <20200624155555.GA215264@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <27e196fe-276c-e88f-75a9-cd21c873ffd7@huawei.com>
+Date:   Sun, 28 Jun 2020 09:26:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200624155555.GA215264@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Meng <bin.meng@windriver.com>
+On 2020/6/24 23:55, Jaegeuk Kim wrote:
+> On 06/22, Chao Yu wrote:
+>> On 2020/6/22 0:38, Jaegeuk Kim wrote:
+>>> On 06/20, Chao Yu wrote:
+>>>> On 2020/6/20 6:47, Jaegeuk Kim wrote:
+>>>>> On 06/19, Chao Yu wrote:
+>>>>>> On 2020/6/19 13:49, Jaegeuk Kim wrote:
+>>>>>>> On 06/19, Chao Yu wrote:
+>>>>>>>> Hi Jaegeuk,
+>>>>>>>>
+>>>>>>>> On 2020/6/19 7:59, Jaegeuk Kim wrote:
+>>>>>>>>> Hi Chao,
+>>>>>>>>>
+>>>>>>>>> On 06/18, Chao Yu wrote:
+>>>>>>>>>> to make page content stable for special device like raid.
+>>>>>>>>>
+>>>>>>>>> Could you elaborate the problem a bit?
+>>>>>>>>
+>>>>>>>> Some devices like raid5 wants page content to be stable, because
+>>>>>>>> it will calculate parity info based page content, if page is not
+>>>>>>>> stable, parity info could be corrupted, result in data inconsistency
+>>>>>>>> in stripe.
+>>>>>>>
+>>>>>>> I don't get the point, since those pages are brand new pages which were not
+>>>>>>> modified before. If it's on writeback, we should not modify them regardless
+>>>>>>> of whatever raid configuration. For example, f2fs_new_node_page() waits for
+>>>>>>> writeback. Am I missing something?
+>>>>>>
+>>>>>> I think we should use f2fs_bug_on(, PageWriteback()) rather than
+>>>>>> f2fs_wait_on_page_writeback() for brand new page which is allocated just now.
+>>>>>> For other paths, we can keep rule that waiting for writeback before updating.
+>>>>>>
+>>>>>> How do you think?
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>>>>>> ---
+>>>>>>>>>>  fs/f2fs/dir.c          |  2 ++
+>>>>>>>>>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
+>>>>>>>>>>  fs/f2fs/f2fs.h         |  2 +-
+>>>>>>>>>>  fs/f2fs/file.c         |  1 +
+>>>>>>>>>>  fs/f2fs/inline.c       |  2 ++
+>>>>>>>>>>  fs/f2fs/inode.c        |  3 +--
+>>>>>>>>>>  6 files changed, 16 insertions(+), 12 deletions(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+>>>>>>>>>> index d35976785e8c..91e86747a604 100644
+>>>>>>>>>> --- a/fs/f2fs/dir.c
+>>>>>>>>>> +++ b/fs/f2fs/dir.c
+>>>>>>>>>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
+>>>>>>>>>>  	if (IS_ERR(dentry_page))
+>>>>>>>>>>  		return PTR_ERR(dentry_page);
+>>>>>>>>>>  
+>>>>>>>>>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
+>>>>>>>>>> +
+>>>>>>>>>>  	dentry_blk = page_address(dentry_page);
+>>>>>>>>>>  
+>>>>>>>>>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
+>>>>>>>>>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+>>>>>>>>>> index e60078460ad1..686c68b98610 100644
+>>>>>>>>>> --- a/fs/f2fs/extent_cache.c
+>>>>>>>>>> +++ b/fs/f2fs/extent_cache.c
+>>>>>>>>>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
+>>>>>>>>>>  }
+>>>>>>>>>>  
+>>>>>>>>>>  /* return true, if inode page is changed */
+>>>>>>>>>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>>>>>>>>>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>>>>>>>>>  {
+>>>>>>>>>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>>>>>>>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
+>>>>>>>>>>  	struct extent_tree *et;
+>>>>>>>>>>  	struct extent_node *en;
+>>>>>>>>>>  	struct extent_info ei;
+>>>>>>>>>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>>>>>>>>>  	if (!f2fs_may_extent_tree(inode)) {
+>>>>>>>>>>  		/* drop largest extent */
+>>>>>>>>>>  		if (i_ext && i_ext->len) {
+>>>>>>>>>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+>>>>>>>>>>  			i_ext->len = 0;
+>>>>>>>>>> -			return true;
+>>>>>>>>>> +			set_page_dirty(ipage);
+>>>>>>>>>> +			return;
+>>>>>>>>>>  		}
+>>>>>>>>>> -		return false;
+>>>>>>>>>> +		return;
+>>>>>>>>>>  	}
+>>>>>>>>>>  
+>>>>>>>>>>  	et = __grab_extent_tree(inode);
+>>>>>>>>>>  
+>>>>>>>>>>  	if (!i_ext || !i_ext->len)
+>>>>>>>>>> -		return false;
+>>>>>>>>>> +		return;
+>>>>>>>>>>  
+>>>>>>>>>>  	get_extent_info(&ei, i_ext);
+>>>>>>>>>>  
+>>>>>>>>>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
+>>>>>>>>>>  	}
+>>>>>>>>>>  out:
+>>>>>>>>>>  	write_unlock(&et->lock);
+>>>>>>>>>> -	return false;
+>>>>>>>>>>  }
+>>>>>>>>>>  
+>>>>>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
+>>>>>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
+>>>>>>>>>>  {
+>>>>>>>>>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
+>>>>>>>>>> +	__f2fs_init_extent_tree(inode, ipage);
+>>>>>>>>>>  
+>>>>>>>>>>  	if (!F2FS_I(inode)->extent_tree)
+>>>>>>>>>>  		set_inode_flag(inode, FI_NO_EXTENT);
+>>>>>>>>>> -
+>>>>>>>>>> -	return ret;
+>>>>>>>>>>  }
+>>>>>>>>>>  
+>>>>>>>>>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
+>>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>>>>> index b35a50f4953c..326c12fa0da5 100644
+>>>>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>>>>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
+>>>>>>>>>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
+>>>>>>>>>>  						struct rb_root_cached *root);
+>>>>>>>>>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
+>>>>>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
+>>>>>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
+>>>>>>>>>>  void f2fs_drop_extent_tree(struct inode *inode);
+>>>>>>>>>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
+>>>>>>>>>>  void f2fs_destroy_extent_tree(struct inode *inode);
+>>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>>>>>> index 3268f8dd59bb..1862073b96d2 100644
+>>>>>>>>>> --- a/fs/f2fs/file.c
+>>>>>>>>>> +++ b/fs/f2fs/file.c
+>>>>>>>>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+>>>>>>>>>>  				f2fs_put_page(psrc, 1);
+>>>>>>>>>>  				return PTR_ERR(pdst);
+>>>>>>>>>>  			}
+>>>>>>>>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+>>>>>
+>>>>> Do you mean pdst can be under writeback?
+>>>>
+>>>> Use f2fs_bug_on(, dirty || writeback) here?
+>>>>
+>>>>>
+>>>>>>>>>>  			f2fs_copy_page(psrc, pdst);
+>>>>>>>>>>  			set_page_dirty(pdst);
+>>>>>>>>>>  			f2fs_put_page(pdst, 1);
+>>>>>>>>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+>>>>>>>>>> index dbade310dc79..4bcbc486c9e2 100644
+>>>>>>>>>> --- a/fs/f2fs/inline.c
+>>>>>>>>>> +++ b/fs/f2fs/inline.c
+>>>>>>>>>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+>>>>>>>>>>  	struct f2fs_dentry_ptr d;
+>>>>>>>>>>  	void *inline_dentry;
+>>>>>>>>>>  
+>>>>>>>>>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+>>>>
+>>>> f2fs_bug_on(, writeback)?
+>>>
+>>> So, which case do you suspect unstable page for raid?
+>>
+>> - gc_node_segment
+>>  - f2fs_move_node_page
+>>   - __write_node_page
+>>    - set_page_writeback
+>>
+>> - do_read_inode
+>>  - f2fs_init_extent_tree
+>>   - __f2fs_init_extent_tree
+>>     i_ext->len = 0;
+> 
+> Could you please add wait_on_writeback on this specific case only
+> with this backtrace in the description?
 
-Drop CONFIG_MTD_M25P80 that was removed in
-commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+Sure, :)
 
-Signed-off-by: Bin Meng <bin.meng@windriver.com>
+Thanks,
 
----
-
-Changes in v2:
-- add CONFIG_MTD_SPI_NOR=y in axm55xx_defconfig
-
- arch/arm/configs/axm55xx_defconfig     | 2 +-
- arch/arm/configs/davinci_all_defconfig | 1 -
- arch/arm/configs/dove_defconfig        | 1 -
- arch/arm/configs/imx_v6_v7_defconfig   | 1 -
- arch/arm/configs/keystone_defconfig    | 1 -
- arch/arm/configs/mvebu_v5_defconfig    | 1 -
- arch/arm/configs/mvebu_v7_defconfig    | 1 -
- arch/arm/configs/mxs_defconfig         | 1 -
- arch/arm/configs/pxa_defconfig         | 1 -
- arch/arm/configs/qcom_defconfig        | 1 -
- arch/arm/configs/sama5_defconfig       | 1 -
- arch/arm/configs/socfpga_defconfig     | 1 -
- arch/arm/configs/tegra_defconfig       | 1 -
- 13 files changed, 1 insertion(+), 13 deletions(-)
-
-diff --git a/arch/arm/configs/axm55xx_defconfig b/arch/arm/configs/axm55xx_defconfig
-index 4607521..a7a0635 100644
---- a/arch/arm/configs/axm55xx_defconfig
-+++ b/arch/arm/configs/axm55xx_defconfig
-@@ -88,7 +88,7 @@ CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_PHYSMAP=y
- CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_M25P80=y
-+CONFIG_MTD_SPI_NOR=y
- CONFIG_PROC_DEVICETREE=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_BLK_DEV_RAM=y
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index e849367..4d8f6f6 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -75,7 +75,6 @@ CONFIG_MTD_CFI=m
- CONFIG_MTD_CFI_INTELEXT=m
- CONFIG_MTD_CFI_AMDSTD=m
- CONFIG_MTD_PHYSMAP=m
--CONFIG_MTD_M25P80=m
- CONFIG_MTD_RAW_NAND=m
- CONFIG_MTD_NAND_DAVINCI=m
- CONFIG_MTD_SPI_NOR=m
-diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
-index e70c997..546afaf 100644
---- a/arch/arm/configs/dove_defconfig
-+++ b/arch/arm/configs/dove_defconfig
-@@ -44,7 +44,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_PHYSMAP=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_BLK_DEV_RAM=y
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 87e6400..5b5ae58 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -110,7 +110,6 @@ CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_PHYSMAP_OF=y
- CONFIG_MTD_DATAFLASH=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPMI_NAND=y
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 84a3b05..ddf8414 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -121,7 +121,6 @@ CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_PLATRAM=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_DAVINCI=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
-index 226f2e9..1859097 100644
---- a/arch/arm/configs/mvebu_v5_defconfig
-+++ b/arch/arm/configs/mvebu_v5_defconfig
-@@ -75,7 +75,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_PHYSMAP=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_ORION=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-index cddce57..c8f4723 100644
---- a/arch/arm/configs/mvebu_v7_defconfig
-+++ b/arch/arm/configs/mvebu_v7_defconfig
-@@ -50,7 +50,6 @@ CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_MARVELL=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index a9c6f32..1322ebd 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -46,7 +46,6 @@ CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_DATAFLASH=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPMI_NAND=y
-diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-index e6559e3..10c1e1d 100644
---- a/arch/arm/configs/pxa_defconfig
-+++ b/arch/arm/configs/pxa_defconfig
-@@ -179,7 +179,6 @@ CONFIG_MTD_RAM=m
- CONFIG_MTD_ROM=m
- CONFIG_MTD_COMPLEX_MAPPINGS=y
- CONFIG_MTD_PXA2XX=m
--CONFIG_MTD_M25P80=m
- CONFIG_MTD_BLOCK2MTD=y
- CONFIG_MTD_DOCG3=m
- CONFIG_MTD_RAW_NAND=m
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index c882167..0a90c8d 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -62,7 +62,6 @@ CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_MTD=y
- CONFIG_MTD_BLOCK=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_QCOM=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index 8e1f78c..95c38b1 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -63,7 +63,6 @@ CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_CFI=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_ATMEL=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-index e73c97b..04c8bd3 100644
---- a/arch/arm/configs/socfpga_defconfig
-+++ b/arch/arm/configs/socfpga_defconfig
-@@ -48,7 +48,6 @@ CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_MTD=y
- CONFIG_MTD_BLOCK=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_DENALI_DT=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index aa94369..6a7988a 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -76,7 +76,6 @@ CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEGRA_GMI=y
- CONFIG_MTD=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_AD525X_DPOT=y
--- 
-2.7.4
-
+> 
+> Thanks,
+> 
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>>>>>> +
+>>>>>>>>>>  	inline_dentry = inline_data_addr(inode, ipage);
+>>>>>>>>>>  
+>>>>>>>>>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
+>>>>>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>>>>>>>>>> index 44582a4db513..7c156eb26dd7 100644
+>>>>>>>>>> --- a/fs/f2fs/inode.c
+>>>>>>>>>> +++ b/fs/f2fs/inode.c
+>>>>>>>>>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
+>>>>>>>>>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
+>>>>>>>>>>  	fi->i_dir_level = ri->i_dir_level;
+>>>>>>>>>>  
+>>>>>>>>>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
+>>>>>>>>>> -		set_page_dirty(node_page);
+>>>>>>>>>> +	f2fs_init_extent_tree(inode, node_page);
+>>>>>>>>>>  
+>>>>>>>>>>  	get_inline_info(inode, ri);
+>>>>>>>>>>  
+>>>>>>>>>> -- 
+>>>>>>>>>> 2.18.0.rc1
+>>>>>>>>> .
+>>>>>>>>>
+>>>>>>> .
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
