@@ -2,144 +2,125 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48696C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5AE206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E582206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ILzlmwOE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuoVAkH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgF1TIE (ORCPT
+        id S1726710AbgF1TVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:08:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28391 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726740AbgF1TID (ORCPT
+        Sun, 28 Jun 2020 15:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgF1TVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:08:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593371282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=808YBhmAcPYX0BlfP0ReMxTnZzyESxUCQ1m9Cs1fVs0=;
-        b=ILzlmwOEVOMK4h8HpmM2RtGq3mxhNp/m/jzUVoDZ4xOGtT1KCNHsaV2ibYcddqfIlYCkM0
-        2Zl5l4enUUvJN9MrVkea8tgaddgfwML+nBz0a2PkB6EHmpe+LXJJhsQxhtG+27M/2QVuxh
-        mrQ41rzy7nkjBdpN1HhzXNk13rCGp7g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-R1Xja-j8Ppe6RRr2BPxMEw-1; Sun, 28 Jun 2020 15:07:54 -0400
-X-MC-Unique: R1Xja-j8Ppe6RRr2BPxMEw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA5528010C4;
-        Sun, 28 Jun 2020 19:07:52 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E50935C1D2;
-        Sun, 28 Jun 2020 19:07:49 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05SJ7n1T003745;
-        Sun, 28 Jun 2020 15:07:49 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05SJ7nbm003741;
-        Sun, 28 Jun 2020 15:07:49 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Sun, 28 Jun 2020 15:07:49 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Zaibo Xu <xuzaibo@Huawei.com>, linux-kernel@vger.kernel.org,
-        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
-        George Cherian <gcherian@marvell.com>,
-        linux-crypto@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 1/3 v2] crypto: introduce the flag
- CRYPTO_ALG_ALLOCATES_MEMORY
-In-Reply-To: <20200626170039.GB211634@gmail.com>
-Message-ID: <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20200610121106.GA23137@gondor.apana.org.au> <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616173620.GA207319@gmail.com>
- <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com> <20200626044534.GA2870@gondor.apana.org.au> <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com> <20200626164617.GA211634@gmail.com> <20200626170039.GB211634@gmail.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Sun, 28 Jun 2020 15:21:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70942C03E979;
+        Sun, 28 Jun 2020 12:21:11 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p3so7309902pgh.3;
+        Sun, 28 Jun 2020 12:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=juNBvBEwxyhkL1BHcBnLnRlW48vC/9qZ2CQ7kLNxHj8=;
+        b=LuoVAkH1TyOzQ72WQFxBhyluYUsNToJnNWtpVAEiDWzcgPqAgRd0n3yQxCaT5gVF90
+         Wm/kTe8E0CTfcysF5FnovZCikh69WMoRQfaN5ZVzS5AyFevvRtMlrEJN/s+vJ6q8Q4MK
+         6EmO5iHP8EnS46SvuTEZxsxzXmb6WIdSd0OLMBeboSHgJaIyRXxUpDGzHiWDIPH97cMv
+         TiVjQXreeredizeQmMSDY5mL5aMuWUlEfoS85vIz1qKus4qZ/vT0fcWhhOVe+daB3o/9
+         EHOqyJS/xnAr6MYfN4VwcUh9PwRTDbERY+QZdc7vyK2p4tHb4ORqNy8IVL7CH5x2AMIg
+         pGrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=juNBvBEwxyhkL1BHcBnLnRlW48vC/9qZ2CQ7kLNxHj8=;
+        b=qMy66YSuhbl2rBKq1WKhsJHHkU1/gkab29ztpq/Kbc8IF7E0nQJx3vLMAaTtyCqZVM
+         Rq7AVOhHUfRw9PLnRopKfAHbxRg4srbBKo1mpFBC4lVJWN4HLPQWgZuRadQJLKa1HQTg
+         og2Vj2hEA0hjWj+WmoY72MUTVBy32mRhfdW/ihRXPMefCCHiIzlFUXcTHDBLZoDgEAUQ
+         TXeR2SZ32Xl881urqoRIrrAqx/Lzvfj9ZtRpZcuMjpD/R8iippY0K55/0p1m4q7uoBT7
+         Rm4Phns1hnTbHaZDGZ0N77Q9Mq/IrbbrUJ5wscMQWzoAy0wC5u1WRUpv7C3tygb6z0MB
+         jx3g==
+X-Gm-Message-State: AOAM531DmYvZ3XQXPtpKwKnoM5iVM0uiReCnlZzFBvCRB3+mSFGIgKm/
+        sxJqsyt7ye7KBxEkhxwCinc=
+X-Google-Smtp-Source: ABdhPJxVJbsx554JURqQb2p9V7LmwC7Z4Et1fKFei9olGuuLHMC1vWEBDB7O3SwXCDIPs1fQLip43w==
+X-Received: by 2002:a62:3303:: with SMTP id z3mr2774223pfz.59.1593372070760;
+        Sun, 28 Jun 2020 12:21:10 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:616])
+        by smtp.gmail.com with ESMTPSA id 83sm10139134pfu.60.2020.06.28.12.21.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 12:21:09 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 12:21:07 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+ <20200624120408.12c8fa0d@oasis.local.home>
+ <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+ <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+ <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+ <20200626181455.155912d9@oasis.local.home>
+ <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+ <20200628144616.52f09152@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200628144616.52f09152@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Fri, 26 Jun 2020, Eric Biggers wrote:
-
-> On Fri, Jun 26, 2020 at 09:46:17AM -0700, Eric Biggers wrote:
-> > On Fri, Jun 26, 2020 at 12:16:33PM -0400, Mikulas Patocka wrote:
-> > > +/*
-> > > + * Pass these flags down through the crypto API.
-> > > + */
-> > > +#define CRYPTO_ALG_INHERITED_FLAGS	(CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY)
+On Sun, Jun 28, 2020 at 02:46:16PM -0400, Steven Rostedt wrote:
 > > 
-> > This comment is useless.  How about:
-> > 
-> > /*
-> >  * When an algorithm uses another algorithm (e.g., if it's an instance of a
-> >  * template), these are the flags that always get set on the "outer" algorithm
-> >  * if any "inner" algorithm has them set.  In some cases other flags are
-> >  * inherited too; these are just the flags that are *always* inherited.
-> >  */
-> > #define CRYPTO_ALG_INHERITED_FLAGS	(CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY)
-> > 
-> > Also I wonder about the case where the inner algorithm is a fallback rather than
-> > part of a template instance.  This patch only handles templates, not fallbacks.
-> > Is that intentional?  Isn't that technically a bug?
+> > By now everyone has learned to use bpf_trace_printk() and expects
+> > to see the output in /sys/kernel/debug/tracing/trace.
+> > It's documented in uapi/bpf.h and various docs.
 > 
-> Also is CRYPTO_ALG_ALLOCATES_MEMORY meant to apply for algorithms of type
-> "cipher" and "shash"?  The code doesn't handle those, so presumably not?
+> Re-teach them, or are you finally admitting that the tracing system is
+> a permanent API?  This is the reason people are refusing to add trace
+> points into their subsystems. Because user space may make it required.
 > 
-> What about "akcipher"?
+> I see no reason why you can't create a dedicated BPF tracing instance
+> (you only need one) to add all your trace_array_printk()s to.
 
-Yes - the patch should apply for these cases, but I don't know how to do 
-it. Please, do it.
-
-> > > Index: linux-2.6/crypto/xts.c
-> > > ===================================================================
-> > > --- linux-2.6.orig/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
-> > > +++ linux-2.6/crypto/xts.c	2020-06-26 17:24:03.566417000 +0200
-> > > @@ -415,7 +415,7 @@ static int create(struct crypto_template
-> > >  	} else
-> > >  		goto err_free_inst;
-> > >  
-> > > -	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
-> > > +	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_INHERITED_FLAGS;
-> > >  	inst->alg.base.cra_priority = alg->base.cra_priority;
-> > >  	inst->alg.base.cra_blocksize = XTS_BLOCK_SIZE;
-> > >  	inst->alg.base.cra_alignmask = alg->base.cra_alignmask |
-> > 
-> > Need to set the mask correctly in this file.
-> 
-> cryptd_create_skcipher(), cryptd_create_hash(), cryptd_create_aead(), and
-> crypto_rfc4309_create() are also missing setting the mask.
-> 
-> pcrypt_create_aead() is missing both setting the mask and inheriting the flags.
-
-I added CRYPTO_ALG_ALLOCATES_MEMORY there.
-
-> Also, "seqiv" instances can be created without CRYPTO_ALG_ALLOCATES_MEMORY set,
-> despite seqiv_aead_encrypt() allocating memory.
-> 
-> - Eric
-
-Mikulas
-
+All bpf helpers are stable api. We cannot remove bpf_trace_printk() and
+cannot change the fact that it has to print into /sys/kernel/debug/tracing/trace.
+If we do so a lot of users will complain. Loudly.
+If you really want to see the flames, go ahead and rename 'trace_pipe'
+into something else.
+This has nothing to do with tracing in general and tracepoints.
+Those come and go.
+If you really want to nuke trace_printk from the kernel we need time
+to work on replacement and give users at least few releases of helper
+deprecation time. We've never done in the past though.
+There could be flames even if we deprecate it gradually.
+Looking how unyielding you're about this banner I guess we have to start
+working on replacement sooner than later. Oh well.
