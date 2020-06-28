@@ -2,171 +2,118 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B11C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D756C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A062078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFFD20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 16:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593363327;
+	bh=yxqhXE99ff5R6TDvotiqw5qjZJmLlpF8TJ7Vm4dLUHc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MChFXwksuH5lSFutoGwhv34Ymlg/4tyMHr4ZqY7jr0xp1EQ5Qm/QeYEK3n/QUvuXC
+	 rZ+sdswKKFf7LvyoctHFHe2P35QCXbf34TLtlTiAL7way+R9CBf3PZ9GEePdrrZ+oA
+	 pQQHR/CLTHGFdpCQ6R7QN1IqZh5nbbk1hB3G0flw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgF1QnQ (ORCPT
+        id S1726382AbgF1QzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 12:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 12:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgF1QnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 12:43:15 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726040AbgF1QzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 12:55:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2E12076C;
-        Sun, 28 Jun 2020 16:43:13 +0000 (UTC)
-Date:   Sun, 28 Jun 2020 12:43:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/3] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200628124311.047fb1a2@oasis.local.home>
-In-Reply-To: <20200629012323.2db839ccff81021b7b28af9f@kernel.org>
-References: <20200627010041.517736087@goodmis.org>
-        <20200627011349.653601969@goodmis.org>
-        <20200629012323.2db839ccff81021b7b28af9f@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88217204EC;
+        Sun, 28 Jun 2020 16:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593363302;
+        bh=yxqhXE99ff5R6TDvotiqw5qjZJmLlpF8TJ7Vm4dLUHc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YxfnixxAFeN62jCrUcOAkR9jjpjYI4/uZmVV754G60smxHetVwGhaQ1A2zAcITK+1
+         EHKWgn7ODQPs0JMTlYjf1dx+msC9GQGOOXV8mkMEHYPZ7MINVO98gzDp+JosskZI8R
+         4xZvJxUbix9OZ7XaIsWP/QlslOn7sPjlPgehhPso=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jpaa4-0079D0-SX; Sun, 28 Jun 2020 17:55:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sun, 28 Jun 2020 17:55:00 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
+In-Reply-To: <CAHiYmc778AYK1UzOUnrU2VCyUExT3Zhu5nCSqeQOTZK2LbmFUg@mail.gmail.com>
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+ <e419a2acea6c1977eaef5d049d607749@kernel.org>
+ <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
+ <80132dff49a64d238f775aa0bafe29e1@kernel.org>
+ <CAHiYmc778AYK1UzOUnrU2VCyUExT3Zhu5nCSqeQOTZK2LbmFUg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <e1c8747d684dbdf0f6acc2eea2025139@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: aleksandar.qemu.devel@gmail.com, yangtiezhu@loongson.cn, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, lixuefeng@loongson.cn
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 01:23:23 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > Here's the design of this solution:
-> > 
-> >  All this is per cpu, and only needs to worry about nested events (not
-> >  parallel events).
-> >  
+On 2020-06-28 13:48, Aleksandar Markovic wrote:
+> нед, 28. јун 2020. у 14:06 Marc Zyngier <maz@kernel.org> је написао/ла:
+>> 
+>> On 2020-06-28 12:25, Aleksandar Markovic wrote:
+>> > сре, 24. јун 2020. у 10:40 Marc Zyngier <maz@kernel.org> је написао/ла:
+>> >>
+>> >> On 2020-06-24 08:44, Tiezhu Yang wrote:
+>> >> > [git send-email failed due to too many commands,
+>> >> >  so only cc the major related email and resend it,
+>> >> >  sorry for that]
+>> >>
+>> >> This is becoming majorly annoying.
+>> >
+>> > I don't think this is the right vocabulary to welcome newcomers,
+>> > however "terrible" thinks they did.
+>> >
+>> > Rather, patience, calmness and clear and detailed explanations would
+>> > work much better - and certainly be much more helpful and useful to
+>> > the community in the long run.
+>> 
+>> Pray tell how you would have handled this. I expressed *my* personal
+>> frustration at a SNR hovering below the 25% mark. I have only 
+>> indicated
+>> that the current course of action was becoming a problem.
+>> 
+>> And instead of taking the moral high ground, maybe you could actually
+>> share your wisdom with Teizhu and help him becoming a better
+>> contributor?
+>> 
 > 
-> This looks basically good to me, but I have some comments below.
-> (just a clean up)
+> He will improve. This initial clumsiness is normal. It could have been
+> avoided, true - for example, if he had had someone more experienced at
+> hand, preferably a co-worker. He obviously acts alone. It will be
+> better.
 
-Thanks Masami!
+I thank you for imparting your insight on us. You clearly have helped
+things moving forward, and I am sure Teizhu now knows a lot more about
+what he should have done.
 
->  
-> > The players:
-> > 
-> >  write_tail: The index in the buffer where new events can be written to.
-> >      It is incremented via local_add() to reserve space for a new event.
-> > 
-> >  before_stamp: A time stamp set by all events before reserving space.
-> > 
-> >  write_stamp: A time stamp updated by events after it has successfully
-> >      reserved space.  
-> 
-> So these stamps works like a seq-lock to detect interruption (from both
-> interrupted process and interrpting process)
-
-Yes.
-
-> 
-> > 
-> >  next_write: A copy of "write_tail" used to help with races.  
-> 
-> It seems this player does nothing.
-
-Bah, you're right. With removing the one path that Mathieu suggested,
-took this player out of the game. Will remove in v2. Thanks for
-pointing this out.
-
-> 
-> > 
-> > 	/* Save the current position of write */
-> >  [A]	w = local_read(write_tail);
-> > 	barrier();
-> > 	/* Read both before and write stamps before touching anything */
-> > 	before = READ_ONCE(before_stamp);
-> > 	after = local_read(write_stamp);  
-> 
-> Are there any reason to use READ_ONCE() and local_read()?
-> (In the code, both are local64_read())
-
-Thanks for pointing this out. before_stamp was originally just a normal
-variable, but in discussions with Mathieu, it became apparent that it
-needed to be atomic as well.
-
-I'll update the change log in v2.
-
-
-> 
-> > 	barrier();
-> > 
-> > 	/*
-> > 	 * If before and after are the same, then this event is not
-> > 	 * interrupting a time update. If it is, then reserve space for adding
-> > 	 * a full time stamp (this can turn into a time extend which is
-> > 	 * just an extended time delta but fill up the extra space).
-> > 	 */
-> > 	if (after != before)
-> > 		abs = true;
-> > 
-> > 	ts = clock();
-> > 
-> > 	/* Now update the before_stamp (everyone does this!) */
-> >  [B]	WRITE_ONCE(before_stamp, ts);
-> > 
-> > 	/* Read the current next_write and update it to what we want write
-> > 	 * to be after we reserve space. */
-> >  	next = READ_ONCE(next_write);
-> > 	WRITE_ONCE(next_write, w + len);  
-> 
-> This seems meaningless, because neither "next" nor "next_write"
-> are not refered.
-
-and they are now meaningless, but wasn't in the RFC. I'll remove it.
-
-> 
-> > 
-> > 	/* Now reserve space on the buffer */
-> >  [C]	write = local_add_return(len, write_tail);
-> > 
-> > 	/* Set tail to be were this event's data is */
-> > 	tail = write - len;
-
-[...]
-
-> >  
-> > -	/* Don't let the compiler play games with cpu_buffer->tail_page */
-> > -	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
-> > -	write = local_add_return(info->length, &tail_page->write);
-> > +	next = READ_ONCE(cpu_buffer->next_write);
-> > +	WRITE_ONCE(cpu_buffer->next_write, w + info->length);  
-> 
-> So, this next may have no effect.
-
-And I'll remove them.
-
-Thanks for reviewing!
-
--- Steve
+         M.
+-- 
+Jazz is not dead. It just smells funny...
