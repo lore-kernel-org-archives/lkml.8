@@ -2,93 +2,107 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4712C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 09:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1464C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 09:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC2820771
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 09:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F39A206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 09:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nx+risdC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USs1td2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgF1JtH (ORCPT
+        id S1726206AbgF1Jum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 05:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
+        Sun, 28 Jun 2020 05:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgF1JtH (ORCPT
+        with ESMTP id S1725928AbgF1Jul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 05:49:07 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F9DC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 02:49:06 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id dr13so13377900ejc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 02:49:06 -0700 (PDT)
+        Sun, 28 Jun 2020 05:50:41 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8FFC061794;
+        Sun, 28 Jun 2020 02:50:41 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dp18so13361871ejc.8;
+        Sun, 28 Jun 2020 02:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KmKamB0F0GgOEkWla27jfPS/bwTrioDp0P+TVLvUBrM=;
-        b=Nx+risdCkjMrgQLB9R8v01kO+dtXnPeJURtoCoGSr0HBDvgO1CjvLjWAOqFXKcLTy0
-         oxjKY1vWaLWrePi5AFkPR5AM5ZASOHEbb40/5y3HxHRonljyvhNgl8es9gp6WZx2/OE7
-         sPm7yOJ3cnp1WXQO5/UC4uLSI3y1fhuygQMPv9Qv/w6QniZ8DxOXBhYbMByOo0M8KUFs
-         cew6jyjol1maoqqqJ2vrvrmaPELhfv65F4x9ouXB2WLZ9Co1+Vj+LpFKuFhZII65hyJh
-         51j8zW6Qj0Ux98Wn6dhpGjP92QgaRLYJspoBJ8P3vMF4Z40JF8ClfXxaYS3wwo0QkLik
-         FnXA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bfr2aGGQYCi1OBcYJwYVyRR0s+ow2RNYRbf369d5eIM=;
+        b=USs1td2Ju7+gYidHoQNcqMMzmJ6RgRroMs0GEn1BoBqWpMHzT+o7bALH696lXDro3J
+         M9anXAQEa3I97vT/oN/yLZSck0hkAGtQt7YlLwbD4eDoOChldaFzKAkXi+Ra2cqH+xMk
+         zEwfwu6dXZjYqHPyTGuJdnFWKFw83wsZ0owAvaRu+E+FpHRH6Zs0vfV6oa0t+OHrX/KI
+         nei9fHxeu0hgRbGtwzypG3pE8vdChSl4lTJhO5QAgUrEHUbUrs01Q8zRXOZSRE+CGyv/
+         IgkrkNAfFgQ02svtR2pEhbeFrYNxK3mHa1ASi3GSZJ//I8WQzD6A1lgWkRkgGmhkeUIX
+         9Bag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KmKamB0F0GgOEkWla27jfPS/bwTrioDp0P+TVLvUBrM=;
-        b=ng0f3DoDTSkMJnsV8VpI2U6wY444TK+R9h/EYImDGws088q79WSQxG9Vcri55eNkS9
-         rM/0n9SiVqj7y8WI6JPfiE05bM9SvnC8IAMo2NEM/aZIJBPCIu6BuCW9fu8OIiQAkD0+
-         P4y9k6AE9QC3GBAJRwdoMXN4W6RInbt8z+/clTwDmDn4fVSvqGpN7bQF6hqhWJlkMZrN
-         DcFQd/sqGhySfnTsFl7UxcHXgv/YOLAsnbAjORTb4ZczNhkuihLnfqQaJm6ABHpEm9Dk
-         vyZVfCbALloGmL2+TY19capcLuDvU+T9F76Ez0xCmqwtEQHcC0rwyTyZDOxzf4nTSp06
-         A2eA==
-X-Gm-Message-State: AOAM5320p/MalAlxLbC08ZbQg6Mg758nk/jT00MIFPqXvOS4LBnwPD2W
-        f60pN85sbeFCUOS3K7u5axajtGKX
-X-Google-Smtp-Source: ABdhPJw2x5qLWVpH292RdAsV9jwrHtfJEci3LndXhGW22ErTEYndBHbUU56XGlVuABz1fnV6HjiHgA==
-X-Received: by 2002:a17:907:7290:: with SMTP id dt16mr9350075ejc.63.1593337745527;
-        Sun, 28 Jun 2020 02:49:05 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:f51f:7c31:2fc7:f95b])
-        by smtp.gmail.com with ESMTPSA id sd15sm14829893ejb.66.2020.06.28.02.49.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bfr2aGGQYCi1OBcYJwYVyRR0s+ow2RNYRbf369d5eIM=;
+        b=HbrSwwApPpOymNaLQiVHvQhbWK5DeVSL8F13vKaizFeHKItX1Obz0CUHPmu1dLd598
+         2P02kjzCCOaED2oGedxeJGSys7epU1H/B9d/JvX5kf5oBArpGgohThxURa8LbHUqQhWS
+         5XnaOtriKY1PWRrlrgASyvJSL1IwaKwX1GR1j5mua50U+leUUifWOTeWjvY95UtGpzbW
+         WmPmbgDkECpUGnwx+KCTSWOzs1VdPCXGiNAAFXPv7PWDIlLnUEyCWSce/FOMwWERAnRd
+         AtDtqtH1iAT/dxk9QKLFvgn84dq0SLMGk49APajvBnJGYPevCkWpPoj0cZXnyyFwomRa
+         r60Q==
+X-Gm-Message-State: AOAM5329816ts2FaD7wZLr+KmyNzOg8QO4l5XUX1aoizvMsy4AYwxeQC
+        /T08C+Oep4/GhcWxiAJ9Wdo=
+X-Google-Smtp-Source: ABdhPJwGhhv5So5Hz7j9nfv2pcFu2L2HkphZe/Oww+j5SM8cnSXf5iXUrD2FWhSiOJ+9z1VaQzdqlw==
+X-Received: by 2002:a17:906:c285:: with SMTP id r5mr9332627ejz.153.1593337839901;
+        Sun, 28 Jun 2020 02:50:39 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:f51f:7c31:2fc7:f95b])
+        by smtp.gmail.com with ESMTPSA id s21sm2327055edw.37.2020.06.28.02.50.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 02:49:04 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 11:49:03 +0200
+        Sun, 28 Jun 2020 02:50:39 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: update URL for sparse's tarballs
-Message-ID: <20200628094903.jpj6lq4qguglcady@ltop.local>
-References: <20200621153330.54480-1-luc.vanoostenryck@gmail.com>
- <20200626112349.1292a654@lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: [PATCH] doc: add link to sparse's home page/internal docs
+Date:   Sun, 28 Jun 2020 11:50:34 +0200
+Message-Id: <20200628095034.69520-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200626112349.1292a654@lwn.net>
+References: <20200626112349.1292a654@lwn.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:23:49AM -0600, Jonathan Corbet wrote:
-> 
-> I've applied this, but it also seems like we're losing some information by
-> going from a wiki straight to a directory listing.  It seems maybe we need
-> a link to the new documentation site in here as well?
+Sparse's home page used to be a wiki (sparse.wiki.kernel.org)
+but this wiki only contained a short intro and the release notes.
+But nowadays, sparse's main page is sparse.docs.kernel.org,
+which contains all what was in the wiki but also other documentation,
+mainly oriented about sparse's internals.
 
-Yes. I hesitated to do this because:
-- the wiki contained very very few useful informations
-- the new documentation doesn't contain for a user / kernel
-  dev perspective.
+So, add a link to this in the kernel documentation.
 
-I'm sending a new patch that can be applied separately
-or be squashed with this one if you prefer so.
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+---
+ Documentation/dev-tools/sparse.rst | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
+index 6f4870528226..e20b8b8b78ed 100644
+--- a/Documentation/dev-tools/sparse.rst
++++ b/Documentation/dev-tools/sparse.rst
+@@ -9,6 +9,8 @@ Sparse is a semantic checker for C programs; it can be used to find a
+ number of potential problems with kernel code.  See
+ https://lwn.net/Articles/689907/ for an overview of sparse; this document
+ contains some kernel-specific sparse information.
++More information on sparse, mainly about its internals, can be found in
++its official pages at https://sparse.docs.kernl.org.
  
-Thanks,
--- Luc
+ 
+ Using sparse for typechecking
+-- 
+2.27.0
+
