@@ -2,109 +2,140 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02877C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 05:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B06C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1FEE207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 05:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619A3212CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593324052;
+	bh=e3cZQhFMOakSt2T5nuOCmPAjOAsn4veIuVAVBvTpyRg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q9a3HiE1KihiuxK4gxCrqaQCPkc++fF5uNWYv2G+3fGdd8/Bns0gCzzkuW7Mpfm+n
+	 IoQkFGMhBIf0cETxmUcewgR9JT2/HifqseovJ1LseeBjLT9M2PK0dNcfEPmzj1huvl
+	 N+aFkpwRGDgUlgrMAWvUFKCNzV4Xsoshu5r0H/J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgF1Fzh (ORCPT
+        id S1726003AbgF1GAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 01:55:37 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:54444 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725913AbgF1Fzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 01:55:37 -0400
-Received: from localhost.localdomain (unknown [10.192.85.18])
-        by mail-app4 (Coremail) with SMTP id cS_KCgB3GeTLMPheA2ZTAg--.48479S4;
-        Sun, 28 Jun 2020 13:55:27 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] media: venus: core: Fix runtime PM imbalance in venus_probe
-Date:   Sun, 28 Jun 2020 13:55:23 +0800
-Message-Id: <20200628055523.19148-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgB3GeTLMPheA2ZTAg--.48479S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1furyfAr15Zw4xZwb_yoW8WFyfpr
-        40gFWIyFy8W39rKw18Aw17XF9xu3yrtFW5GryDu3Wxu34rJ3Z8tF1FyFyayF1UuFWDJa4U
-        J3ySq3y3ZFWFqF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv
-        6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoDBlZdtO0x6gAgsk
+        Sun, 28 Jun 2020 02:00:51 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:19303 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgF1GAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 02:00:50 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05S60PuK008495;
+        Sun, 28 Jun 2020 15:00:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05S60PuK008495
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593324026;
+        bh=0Adi9oEkoNL+VTKk8ereW4+c8tkNY7OySZ7YBSe/YKA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ygVCF5vWbBSGukhyAOywf2WaTXP6fYyoAxX7QWOLXc+8IVvQ2G5qU9vgy2+yXttHC
+         Bk670axVR0NwtO9z9L7iQWjChSdxt6tY5xlDdwacItFuCGVcGiYKZcOSX1fkAPRoPi
+         kdFT7ixBknjCgX1CdZ8TH6rfpJ8DWSA5KR6iSSu5w05pczuMZZ9khc4G5FNAkPY5P6
+         ZxQ70d1BIVYbpu8B37urtIiWh8lklTP3w5xA5cXcmhpCng9E/H7fZaAZDWtQ0FFi2S
+         98iv/+N0VNBjzCkwR7JvNSJdfYAitaXW72n0JFgp2qn10kmHi2uwgk53z/SKtfUoyG
+         MaA3aKbYEIWyg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id v1so7561923vsb.10;
+        Sat, 27 Jun 2020 23:00:25 -0700 (PDT)
+X-Gm-Message-State: AOAM530k89AAmSs5jO+yfXAgJDXHO6BTsWN6W0TaZRYx5dxP4+7ZjY72
+        Xh2KkY3B6kF/PWm5PaRcj3xTyx1ct6fpV3KLddY=
+X-Google-Smtp-Source: ABdhPJxgrePNlmZbq4ODpdCqz51OGKwCFn/JnfhPPtPIn9WGJz+XI26wgi75kbSCrE2XC7QDCT/X8jAgUv6zb+cIVPk=
+X-Received: by 2002:a67:22c7:: with SMTP id i190mr7470079vsi.179.1593324024627;
+ Sat, 27 Jun 2020 23:00:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200213122410.1605-1-masahiroy@kernel.org> <202002251057.C4E397A@keescook>
+In-Reply-To: <202002251057.C4E397A@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 28 Jun 2020 14:59:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASw0YT8_itaa0OeZi8toV1TUj6EKCMbg6rchdYub0cgww@mail.gmail.com>
+Message-ID: <CAK7LNASw0YT8_itaa0OeZi8toV1TUj6EKCMbg6rchdYub0cgww@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: fix gcc-plugins directory path in documentation
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Emese Revfy <re.emese@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced. For other error
-paths after this call, things are the same.
+On Wed, Feb 26, 2020 at 3:58 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Feb 13, 2020 at 09:24:10PM +0900, Masahiro Yamada wrote:
+> > Fix typos "plgins" -> "plugins".
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Thanks!
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
+>
+> Jon, can you take this?
 
-Fix this by adding pm_runtime_put_noidle() after 'err_runtime_disable'
-label. But in this case, the error path after pm_runtime_put_sync()
-will decrease PM usage counter twice. Thus add an extra
-pm_runtime_get_noresume() in this path to balance PM counter.
+I noticed this patch had fallen into a crack.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+Applied to linux-kbuild now.
+Thanks.
 
-Changelog:
 
-v2: - Add pm_runtime_get_noresume() on failure of
-      pm_runtime_put_sync() to balance PM counter instead of
-      releasing everything here.
 
-v3: - Refine commit message.
----
- drivers/media/platform/qcom/venus/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 203c6538044f..b0b932bf8c02 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
- 		goto err_core_deinit;
- 
- 	ret = pm_runtime_put_sync(dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_get_noresume(dev);
- 		goto err_dev_unregister;
-+	}
- 
- 	return 0;
- 
-@@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
- err_venus_shutdown:
- 	venus_shutdown(core);
- err_runtime_disable:
-+	pm_runtime_put_noidle(dev);
- 	pm_runtime_set_suspended(dev);
- 	pm_runtime_disable(dev);
- 	hfi_destroy(core);
--- 
-2.17.1
 
+> -Kees
+>
+> > ---
+> >
+> >  Documentation/kbuild/reproducible-builds.rst | 2 +-
+> >  scripts/gcc-plugins/Kconfig                  | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
+> > index 503393854e2e..3b25655e441b 100644
+> > --- a/Documentation/kbuild/reproducible-builds.rst
+> > +++ b/Documentation/kbuild/reproducible-builds.rst
+> > @@ -101,7 +101,7 @@ Structure randomisation
+> >
+> >  If you enable ``CONFIG_GCC_PLUGIN_RANDSTRUCT``, you will need to
+> >  pre-generate the random seed in
+> > -``scripts/gcc-plgins/randomize_layout_seed.h`` so the same value
+> > +``scripts/gcc-plugins/randomize_layout_seed.h`` so the same value
+> >  is used in rebuilds.
+> >
+> >  Debug info conflicts
+> > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+> > index e3569543bdac..7b63c819610c 100644
+> > --- a/scripts/gcc-plugins/Kconfig
+> > +++ b/scripts/gcc-plugins/Kconfig
+> > @@ -86,7 +86,7 @@ config GCC_PLUGIN_RANDSTRUCT
+> >         source tree isn't cleaned after kernel installation).
+> >
+> >         The seed used for compilation is located at
+> > -       scripts/gcc-plgins/randomize_layout_seed.h.  It remains after
+> > +       scripts/gcc-plugins/randomize_layout_seed.h.  It remains after
+> >         a make clean to allow for external modules to be compiled with
+> >         the existing seed and will be removed by a make mrproper or
+> >         make distclean.
+> > --
+> > 2.17.1
+> >
+>
+> --
+> Kees Cook
+
+
+
+--
+Best Regards
+
+Masahiro Yamada
