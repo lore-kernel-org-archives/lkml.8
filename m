@@ -2,201 +2,103 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD193C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96CAF20702
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2300220702
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKcSq+AO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEhlXiHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgF1OsT (ORCPT
+        id S1726610AbgF1OuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 10:48:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39593 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726576AbgF1OsS (ORCPT
+        Sun, 28 Jun 2020 10:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgF1OuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 10:48:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593355696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=82qSMqnQIxtm9RO80DF49vRKylVY7TBxv5Jeswhd/Z0=;
-        b=FKcSq+AOkBYmHxo4K3BFmKJafOJ3zHmxWQQlahBTed0fvem3jcbtyV4UrBYPNHSW7F+qYV
-        7nntTcTwiNxSlfenyvBEc/7zq44eaOV4ZwbhQsaYhthSPGf7Oe5TKdF6FVn9PUczsGl2//
-        I6TbPQxScpcjOdxrzYsBsz2FkvFVWGc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-RQbvHIngOyOU1dHs64vcGw-1; Sun, 28 Jun 2020 10:48:12 -0400
-X-MC-Unique: RQbvHIngOyOU1dHs64vcGw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8BEE1800D42;
-        Sun, 28 Jun 2020 14:48:10 +0000 (UTC)
-Received: from starship (unknown [10.35.206.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4FA7A9CFD0;
-        Sun, 28 Jun 2020 14:48:09 +0000 (UTC)
-Message-ID: <9ed32076053cd860900366dc9e12e5cb76d031b5.camel@redhat.com>
-Subject: Re: [PATCH] kconfig: qconf: make debug links work again
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sun, 28 Jun 2020 17:48:08 +0300
-In-Reply-To: <CAK7LNARnDe0ToxYj9mMpocxzmrUvp6yf14iDRxgG8nGuGcxFKw@mail.gmail.com>
-References: <ff9d1c3369b96c1d14b1e898e3d5f64ad945b604.1593346883.git.mchehab+huawei@kernel.org>
-         <CAK7LNARnDe0ToxYj9mMpocxzmrUvp6yf14iDRxgG8nGuGcxFKw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Sun, 28 Jun 2020 10:50:06 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D2DC03E979;
+        Sun, 28 Jun 2020 07:50:05 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o18so9621692eje.7;
+        Sun, 28 Jun 2020 07:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1zigYgRRO0ONYXURNqrQgGhLyNX6ERoSrFBybbOwfo=;
+        b=nEhlXiHrnPi4V+nRv+KfSN0zz+t0kobmoVztNqOuEcqjB0YXMoCl4YvSWMXwPdGl6i
+         yPUpIpSEKcY/8VnhpN/hfEmphkSeDqRsYayaFW1T75UgjfGPmS6MjSLYueBCVsvxba5p
+         GTdfa66dYHoOC3pmmfKuxJQyDTAZPl2BTl7f7nHC0crQ0QF68OUlmLjFttVxO4akMS2L
+         R7RWnQJLeok2CoN5du4eCArkihMxwe+U10fy4L2+99fbZKRzY5awlIm+gG52BwD9ctVT
+         jyziXCK+kXpY5YI3YGpbt7XMGR1CMB0JVMrGRDzX6JORv8foEbl09SFFcrxLu8s3taT4
+         2T5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1zigYgRRO0ONYXURNqrQgGhLyNX6ERoSrFBybbOwfo=;
+        b=Zlq6aETGMWKsaJq9kSM/Nx+75gIDmfUepyJlDHBeRFNXgBF3nR3xevA8KvX4U1jn+a
+         Qgn6+uz3slkNzcgHtqu+4ylcbYM5z9bZFuv09PQ4/QmqaTQSMv4APgMd0LCieupu6ukO
+         vWIx8emsZuL9zG+NZuWEbIEviGCn4CYWg7iy86vhDTvkTjgl22OjC0wZ1KtiWrgLiq6g
+         QT2z8xkQRHkjoWklTdYjbeSEr83gCHcTBTff829CmPJShi+6ry2lvq2jLqVL9mbIKIv7
+         X9oD7PfW6gavsZjDp7V7DS0CKYwVyKdnoDky8PiPBSCdyGoxwYTCq7IOj8FjpXaJX1Iu
+         3Buw==
+X-Gm-Message-State: AOAM5309FSh1ckO6qAPihAB6hnmauW87HD0re9gFsi6olW3o9j9f8w3K
+        80tDONl31DgO/21ptO2tBzLskaZa
+X-Google-Smtp-Source: ABdhPJyhbKCsNh6t45fFwW3y8KDtdmQRNureOQv/4kYFR7sVB4xgCZel1lwDUkEMYtfHoiohspnBNQ==
+X-Received: by 2002:a17:906:1db1:: with SMTP id u17mr4994044ejh.72.1593355804429;
+        Sun, 28 Jun 2020 07:50:04 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.56.128])
+        by smtp.gmail.com with ESMTPSA id qc16sm6859768ejb.33.2020.06.28.07.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 07:50:03 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH net] lib: packing: add documentation for pbuflen argument
+Date:   Sun, 28 Jun 2020 17:49:35 +0300
+Message-Id: <20200628144935.700891-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-06-28 at 23:41 +0900, Masahiro Yamada wrote:
-> On Sun, Jun 28, 2020 at 9:21 PM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> > The Qt5 conversion broke support for debug info links.
-> > 
-> > Restore the behaviour added by changeset
-> > ab45d190fd4a ("kconfig: create links in info window").
-> > 
-> > Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> 
-> I tested this patch, but this caused
-> segmentation fault.
-> 
-> 
-> I enabled 'Show Debug Info',
-> and then clicked
-> dep: <symbol name>.
-> 
-> Then, xconfig crashed.
-> 
-> (without this patch, it did not cause
-> segfault at least)
-> 
-> Did you see this?
+Fixes sparse warning:
 
-Works for me - tested this again 
-(I have both patches applied on top on mainline master branch).
-Maybe you have Qt4?
+Function parameter or member 'pbuflen' not described in 'packing'
 
-One thing that I forgot to report is that when clicking on the symbol,
-only config descripion updates and not config/menu windows.
-It might even be always like that, I don't remember, but it would be nice if 
-these were updated too.
+Fixes: 554aae35007e ("lib: Add support for generic packing operations")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+Hi David, since the original "packing" submission went in through your
+tree, could you please take this patch as well?
 
-Best regards,
-	Maxim Levitsky
+ lib/packing.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> > ---
-> >  scripts/kconfig/qconf.cc | 35 ++++++++++++++++++++++++++++++++++-
-> >  scripts/kconfig/qconf.h  |  1 +
-> >  2 files changed, 35 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> > index 631e19659504..03cadf27a376 100644
-> > --- a/scripts/kconfig/qconf.cc
-> > +++ b/scripts/kconfig/qconf.cc
-> > @@ -1012,7 +1012,7 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
-> >         : Parent(parent), sym(0), _menu(0)
-> >  {
-> >         setObjectName(name);
-> > -
-> > +       setOpenLinks(false);
-> > 
-> >         if (!objectName().isEmpty()) {
-> >                 configSettings->beginGroup(objectName());
-> > @@ -1224,6 +1224,36 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
-> >                 *text += str2;
-> >  }
-> > 
-> > +void ConfigInfoView::clicked(const QUrl &url)
-> > +{
-> > +       QByteArray str = url.toEncoded();
-> > +       const std::size_t count = str.size();
-> > +       char *hex = new char[count];
-> > +       unsigned long p;
-> > +
-> > +       if (count < 1)
-> > +               return;
-> > +
-> > +       memcpy(hex, str.constData(), count);
-> > +       p = (int)strtol(hex + 1, NULL, 16);
-> > +
-> > +       if (!p)
-> > +               return;
-> > +
-> > +       if (hex[0] == 's') {
-> > +               struct symbol *s = (struct symbol *)p;
-> > +
-> > +               sym = s;
-> > +               symbolInfo();
-> > +       } else {
-> > +               struct menu *m = (struct menu *)p;
-> > +
-> > +               _menu = m;
-> > +               menuInfo();
-> > +       }
-> > +       emit showDebugChanged(true);
-> > +}
-> > +
-> >  QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
-> >  {
-> >         QMenu* popup = Parent::createStandardContextMenu(pos);
-> > @@ -1497,6 +1527,9 @@ ConfigMainWindow::ConfigMainWindow(void)
-> >         helpMenu->addAction(showIntroAction);
-> >         helpMenu->addAction(showAboutAction);
-> > 
-> > +       connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
-> > +                helpText, SLOT (clicked (const QUrl &)) );
-> > +
-> >         connect(configList, SIGNAL(menuChanged(struct menu *)),
-> >                 helpText, SLOT(setInfo(struct menu *)));
-> >         connect(configList, SIGNAL(menuSelected(struct menu *)),
-> > diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-> > index d913a02967ae..a193137f2314 100644
-> > --- a/scripts/kconfig/qconf.h
-> > +++ b/scripts/kconfig/qconf.h
-> > @@ -250,6 +250,7 @@ public slots:
-> >         void setInfo(struct menu *menu);
-> >         void saveSettings(void);
-> >         void setShowDebug(bool);
-> > +       void clicked (const QUrl &url);
-> > 
-> >  signals:
-> >         void showDebugChanged(bool);
-> > --
-> > 2.26.2
-> > 
-> 
-> 
-
+diff --git a/lib/packing.c b/lib/packing.c
+index 50d1e9f2f5a7..6ed72dccfdb5 100644
+--- a/lib/packing.c
++++ b/lib/packing.c
+@@ -73,6 +73,7 @@ static void adjust_for_msb_right_quirk(u64 *to_write, int *box_start_bit,
+  * @endbit: The index (in logical notation, compensated for quirks) where
+  *	    the packed value ends within pbuf. Must be smaller than, or equal
+  *	    to, startbit.
++ * @pbuflen: The length in bytes of the packed buffer pointed to by @pbuf.
+  * @op: If PACK, then uval will be treated as const pointer and copied (packed)
+  *	into pbuf, between startbit and endbit.
+  *	If UNPACK, then pbuf will be treated as const pointer and the logical
+-- 
+2.25.1
 
