@@ -2,137 +2,139 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7852071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593364161;
-	bh=ujRD1vrl6K6aQJKih4SurpWBWFGITPMpqSClkMjLQqE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iVj0xJhQsomd4++uSHXRhEfqECrYXgCoxpoa9TDYT5B7Igapp8yyKk6js++CUiIkJ
-	 AosDmkCrKObRw8s2422Zf4SxFxqDSb02FJ+OT8ja4Ynu8rWQ8b7vArYrjoHCEEBxq1
-	 Iw+NTfTLD+pxHlnK65a6ezFD7AcgckRY2kCYN5Mw=
+	by mail.kernel.org (Postfix) with ESMTP id A49FB20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgF1RJU (ORCPT
+        id S1726618AbgF1RQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 13:09:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39078 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgF1RJT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 13:09:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 18so13355758otv.6;
-        Sun, 28 Jun 2020 10:09:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aHBo9wbaRoVXLY9NDJVIGwtnv5GehbPHBWMQ1wY/EhI=;
-        b=fItJCqm4myUgd2+LuL/Q9OFRg+1GmcR5hcKD4e++SFrvLEDXb3WUD2GyKUDqf4qYHs
-         9KeeNyxv2Vk2kUuW9f6/mtxIvEZLOuqy2+ups2AbpSc4JImtBSa842fb4g0Cotn/OcRg
-         5ohhvfubaXMRyF+x9y6ewbnwpRzvKOGNUyiV/lG95dmceSGZVtucj5I8Q/tPYRM9xXGI
-         HJMpbkl3FMRzJ1XTZhKgQNbr5v0iJ6FD5KJNUUJPUHxBU+agSIqeVdj9oR7ghOuEdxCR
-         ayss1uwj9xnrqTDhWfKgVLQrBULYa9vYeZGG9iDJsLB96FYaZa4z3W4et1yMTQtggJKa
-         qwTg==
-X-Gm-Message-State: AOAM532aN7+1CLPympg6Yn8fB4QPAZn+W9g7qawXNtU8q5E3etxdk3az
-        65Kg7rLidxl329AWgZq2AMTBBy4WdfdkeDyibxY=
-X-Google-Smtp-Source: ABdhPJwaNxLa9utWgL4ulKbbgtv/kdZW4Bdg8bFZ+HQwwb00UUCEe4sYvKeUlGn7UPuAH99xcAgVC20KCp9+4PA8z0M=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr10130090otn.118.1593364158371;
- Sun, 28 Jun 2020 10:09:18 -0700 (PDT)
+        Sun, 28 Jun 2020 13:16:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15923 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgF1RQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 13:16:40 -0400
+IronPort-SDR: Tc5u38z0Rg0j4+DX+3gFuSTzd5U6V9JP54N5FQEAG/70xmUqDw67VZyEIF49FSxZgLXLrdKOpy
+ Epyqpz9iB+2g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134173291"
+X-IronPort-AV: E=Sophos;i="5.75,291,1589266800"; 
+   d="scan'208";a="134173291"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2020 10:16:38 -0700
+IronPort-SDR: s/CaFswzkV9uLr+zFxqweD+BHz4N478o0Avg93xSnrVl+Mvwb54GAnFPN8KiQhUTMFnXdTGpBB
+ 1JKO8wlMnqdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,291,1589266800"; 
+   d="scan'208";a="453934416"
+Received: from unknown (HELO btopel-mobl.ger.intel.com) ([10.252.54.42])
+  by orsmga005.jf.intel.com with ESMTP; 28 Jun 2020 10:16:34 -0700
+Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
+To:     Christoph Hellwig <hch@lst.de>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, davem@davemloft.net,
+        konrad.wilk@oracle.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        maximmi@mellanox.com, magnus.karlsson@intel.com,
+        jonathan.lemon@gmail.com
+References: <20200626134358.90122-1-bjorn.topel@gmail.com>
+ <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net>
+ <20200627070406.GB11854@lst.de>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Message-ID: <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
+Date:   Sun, 28 Jun 2020 19:16:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher> <CAPcyv4hXkzpTr3bif7zyVx5EqoWTwLgYrt87Aj2=gVMo+jtUyg@mail.gmail.com>
-In-Reply-To: <CAPcyv4hXkzpTr3bif7zyVx5EqoWTwLgYrt87Aj2=gVMo+jtUyg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 28 Jun 2020 19:09:07 +0200
-Message-ID: <CAJZ5v0h4Hj4ax1mmMJn3z3VGtVWkoXzO0kOQ7CYnFKJV2cUGzw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v3 0/4] ACPI: ACPICA / OSL: Avoid unmapping ACPI
- memory inside of the AML interpreter
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200627070406.GB11854@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 8:41 PM Dan Williams <dan.j.williams@intel.com> wrote:
+
+On 2020-06-27 09:04, Christoph Hellwig wrote:
+> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
+>> Given there is roughly a ~5 weeks window at max where this removal could
+>> still be applied in the worst case, could we come up with a fix / proposal
+>> first that moves this into the DMA mapping core? If there is something that
+>> can be agreed upon by all parties, then we could avoid re-adding the 9%
+>> slowdown. :/
+> 
+> I'd rather turn it upside down - this abuse of the internals blocks work
+> that has basically just missed the previous window and I'm not going
+> to wait weeks to sort out the API misuse.  But we can add optimizations
+> back later if we find a sane way.
 >
-> On Fri, Jun 26, 2020 at 10:34 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > Hi All,
-> >
-> > On Monday, June 22, 2020 3:50:42 PM CEST Rafael J. Wysocki wrote:
-> > > Hi All,
-> > >
-> > > This series is to address the problem with RCU synchronization occurring,
-> > > possibly relatively often, inside of acpi_ex_system_memory_space_handler(),
-> > > when the namespace and interpreter mutexes are held.
-> > >
-> > > Like I said before, I had decided to change the approach used in the previous
-> > > iteration of this series and to allow the unmap operations carried out by
-> > > acpi_ex_system_memory_space_handler() to be deferred in the first place,
-> > > which is done in patches [1-2/4].
-> >
-> > In the meantime I realized that calling syncrhonize_rcu_expedited() under the
-> > "tables" mutex within ACPICA is not quite a good idea too and that there is no
-> > reason for any users of acpi_os_unmap_memory() in the tree to use the "sync"
-> > variant of unmapping.
-> >
-> > So, unless I'm missing something, acpi_os_unmap_memory() can be changed to
-> > always defer the final unmapping and the only ACPICA change needed to support
-> > that is the addition of the acpi_os_release_unused_mappings() call to get rid
-> > of the unused mappings when leaving the interpreter (module the extra call in
-> > the debug code for consistency).
-> >
-> > So patches [1-2/4] have been changed accordingly.
-> >
-> > > However, it turns out that the "fast-path" mapping is still useful on top of
-> > > the above to reduce the number of ioremap-iounmap cycles for the same address
-> > > range and so it is introduced by patches [3-4/4].
-> >
-> > Patches [3-4/4] still do what they did, but they have been simplified a bit
-> > after rebasing on top of the new [1-2/4].
-> >
-> > The below information is still valid, but it applies to the v3, of course.
-> >
-> > > For details, please refer to the patch changelogs.
-> > >
-> > > The series is available from the git branch at
-> > >
-> > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> > >  acpica-osl
-> > >
-> > > for easier testing.
-> >
-> > Also the series have been tested locally.
->
-> Ok, I'm still trying to get the original reporter to confirm this
-> reduces the execution time for ASL routines with a lot of OpRegion
-> touches. Shall I rebuild that test kernel with these changes, or are
-> the results from the original RFT still interesting?
 
-I'm mostly interested in the results with the v3 applied.
+I'm not super excited about the performance loss, but I do get
+Christoph's frustration about gutting the DMA API making it harder for
+DMA people to get work done. Lets try to solve this properly using
+proper DMA APIs.
 
-Also it would be good to check the impact of the first two patches
-alone relative to all four.
 
-Thanks!
+> That being said I really can't see how this would make so much of a
+> difference.  What architecture and what dma_ops are you using for
+> those measurements?  What is the workload?
+> 
+
+The 9% is for an AF_XDP (Fast raw Ethernet socket. Think AF_PACKET, but 
+faster.) benchmark: receive the packet from the NIC, and drop it. The 
+DMA syncs stand out in the perf top:
+
+   28.63%  [kernel]                   [k] i40e_clean_rx_irq_zc
+   17.12%  [kernel]                   [k] xp_alloc
+    8.80%  [kernel]                   [k] __xsk_rcv_zc
+    7.69%  [kernel]                   [k] xdp_do_redirect
+    5.35%  bpf_prog_992d9ddc835e5629  [k] bpf_prog_992d9ddc835e5629
+    4.77%  [kernel]                   [k] xsk_rcv.part.0
+    4.07%  [kernel]                   [k] __xsk_map_redirect
+    3.80%  [kernel]                   [k] dma_direct_sync_single_for_cpu
+    3.03%  [kernel]                   [k] dma_direct_sync_single_for_device
+    2.76%  [kernel]                   [k] i40e_alloc_rx_buffers_zc
+    1.83%  [kernel]                   [k] xsk_flush
+...
+
+For this benchmark the dma_ops are NULL (dma_is_direct() == true), and
+the main issue is that SWIOTLB is now unconditionally enabled [1] for
+x86, and for each sync we have to check that if is_swiotlb_buffer()
+which involves a some costly indirection.
+
+That was pretty much what my hack avoided. Instead we did all the checks
+upfront, since AF_XDP has long-term DMA mappings, and just set a flag
+for that.
+
+Avoiding the whole "is this address swiotlb" in
+dma_direct_sync_single_for_{cpu, device]() per-packet
+would help a lot.
+
+Somewhat related to the DMA API; It would have performance benefits for
+AF_XDP if the DMA range of the mapped memory was linear, i.e. by IOMMU
+utilization. I've started hacking a thing a little bit, but it would be
+nice if such API was part of the mapping core.
+
+Input: array of pages Output: array of dma addrs (and obviously dev,
+flags and such)
+
+For non-IOMMU len(array of pages) == len(array of dma addrs)
+For best-case IOMMU len(array of dma addrs) == 1 (large linear space)
+
+But that's for later. :-)
+
+
+Björn
+
+
+[1] commit: 09230cbc1bab ("swiotlb: move the SWIOTLB config symbol to 
+lib/Kconfig")
+
