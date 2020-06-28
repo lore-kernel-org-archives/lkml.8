@@ -2,69 +2,157 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E29520702
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593369932;
-	bh=gb1bW97m7h1ccsRszhA/CR2eqm9vibiIpHfPlKaHDZ0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=eOww/kEY94Rqd0JarUWAOY1kUMv0ayvuW0w7JMah54grHcN2Fu+IYqhzZA+C0KZsI
-	 XimWf/K+twzzbR/2n0G8Rjk0utc+LK0Y3Jxmhb0PFXIgx6VQD2rRybDyYplT3HzYNW
-	 NyQLLCvA98yYC0BuZ6+vCSFF9be7EEdc4dQ000Ik=
+	by mail.kernel.org (Postfix) with ESMTP id 89A6F206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgF1Spa (ORCPT
+        id S1726760AbgF1SqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 14:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 14:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgF1SpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 14:45:13 -0400
-Subject: Re: [GIT PULL] objtool/urgent for 5.8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593369913;
-        bh=gb1bW97m7h1ccsRszhA/CR2eqm9vibiIpHfPlKaHDZ0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1vowzsmw6lRsG4sySgH2d1uz4LU3fffOiHbfU0IvcUdsWDzNIPZOg1szk/8/3KAT6
-         1aClQftn8shJDqn0vSeu340ODK5YxI/MKn8wKHrAjiR4a7r3GJ5IBY+z4QeySZzFfs
-         LueJrbCS8vHkj8szIxkTvc5RK+KepN6WVz3tSx3U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200628141245.GB18884@zn.tnic>
-References: <20200628141245.GB18884@zn.tnic>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200628141245.GB18884@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- tags/objtool_urgent_for_5.8_rc3
-X-PR-Tracked-Commit-Id: 0f1441b44e823a74f3f3780902a113e07c73fbf6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7ecb59a56666506ebb1197f89ca7d587bd83309e
-Message-Id: <159336991308.7125.4223248816804002931.pr-tracker-bot@kernel.org>
-Date:   Sun, 28 Jun 2020 18:45:13 +0000
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        id S1726636AbgF1SqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 14:46:20 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5523206C0;
+        Sun, 28 Jun 2020 18:46:17 +0000 (UTC)
+Date:   Sun, 28 Jun 2020 14:46:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200628144616.52f09152@oasis.local.home>
+In-Reply-To: <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+        <20200624120408.12c8fa0d@oasis.local.home>
+        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+        <20200626181455.155912d9@oasis.local.home>
+        <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 28 Jun 2020 16:12:45 +0200:
+On Sun, 28 Jun 2020 10:27:00 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/objtool_urgent_for_5.8_rc3
+> On Fri, Jun 26, 2020 at 06:14:55PM -0400, Steven Rostedt wrote:
+> > On Wed, 24 Jun 2020 20:59:13 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >   
+> > > > >
+> > > > > Nack.  
+> > 
+> > I nack your nack ;-)  
+> 
+> ok. let's take it up to Linus to decide.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7ecb59a56666506ebb1197f89ca7d587bd83309e
+I'm fine with that.
 
-Thank you!
+> 
+> >   
+> > > > > The message is bogus. It's used in production kernels.
+> > > > > bpf_trace_printk() calls it.    
+> > > > 
+> > > > Interesting. BTW, the same information (trace_printk is for debugging
+> > > > only) is repeated all over the place, including where bpf_trace_printk
+> > > > is documented:
+> > > > https://elixir.bootlin.com/linux/latest/source/include/linux/kernel.h#L757
+> > > > https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/bpf.h#L706
+> > > > https://elixir.bootlin.com/linux/latest/source/kernel/trace/trace.c#L3157
+> > > > 
+> > > > Steven added that warning (2184db46e425c ("tracing: Print nasty banner
+> > > > when trace_printk() is in use")), so maybe he can confirm if it's
+> > > > still relevant.    
+> > > 
+> > > The banner is nasty and it's actively causing harm.  
+> > 
+> > And it's doing exactly what it was intended on doing!  
+> 
+> I disagree. The message is _lying_ about the state of the kernel.
+> It's not a debug kernel and it's absolutely fine for production.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+No it is not!
+
+It causes the trace buffer to be filled with crap that can not be
+easily disabled. That's the reason I only allowed trace_printk() for
+debug kernels. And the only way to prevent people from sticking it in
+their code and making an API out of it was for this banner.
+
+I refuse to remove that banner. It's my API!
+
+> > 
+> > Now I do have an answer for you that I believe is a great compromise.
+> > 
+> > There's something you can call (and even call it from a module). It's
+> > called "trace_array_vprintk()". But has one caveat, and that is, you
+> > can not write to the main top level trace buffer with it (I have
+> > patches for the next merge window to enforce that). And that's what
+> > I've been trying to avoid trace_printk() from doing, as that's what it
+> > does by default. It writes to /sys/kernel/tracing/trace.
+> > 
+> > Now what you can do, is have bpf create
+> > a /sys/kernel/tracing/instances/bpf_trace/ instance, and use
+> > trace_array_printk(), to print into that, and you will never have to
+> > see that warning again! It shows up in your own
+> > tracefs/instances/bpf_trace/trace file!
+> > 
+> > If you need more details, let me know, and I can give you all you need
+> > to know to create you very own trace instance (that can enable events,
+> > kprobe events, uprobe events, function tracing, and soon function graph
+> > tracing). And the bonus, you get trace_array_vprintk() and no more
+> > complaining. :-) :-) :-)  
+> 
+> We added a bunch of code to libbcc in the past to support instances,
+> but eventually removed it all due to memory overhead per instance.
+> If I recall it was ~8Mbyte per instance. That was couple years ago.
+
+I'd like to see where that 8 MB per instance came from. You can control
+the size of the instance buffers. If size is still an issue, I'll be
+happy to work with you to fix it.
+
+
+> 
+> By now everyone has learned to use bpf_trace_printk() and expects
+> to see the output in /sys/kernel/debug/tracing/trace.
+> It's documented in uapi/bpf.h and various docs.
+
+Re-teach them, or are you finally admitting that the tracing system is
+a permanent API?  This is the reason people are refusing to add trace
+points into their subsystems. Because user space may make it required.
+
+I see no reason why you can't create a dedicated BPF tracing instance
+(you only need one) to add all your trace_array_printk()s to.
+
+-- Steve
+
