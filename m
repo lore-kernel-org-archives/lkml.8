@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96187C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC96C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7992080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007192080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgF1C6i (ORCPT
+        id S1726016AbgF1C7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 22:58:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44796 "EHLO huawei.com"
+        Sat, 27 Jun 2020 22:59:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6321 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbgF1C6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 22:58:37 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C0C51489BF0EB5B79EAD;
-        Sun, 28 Jun 2020 10:58:34 +0800 (CST)
+        id S1725880AbgF1C7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 22:59:07 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8684C82A6CEB93331B4C;
+        Sun, 28 Jun 2020 10:59:03 +0800 (CST)
 Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 28 Jun 2020 10:58:27 +0800
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 28 Jun 2020 10:58:54 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2 1/5] f2fs: fix to wait page writeback before update
-Date:   Sun, 28 Jun 2020 10:58:17 +0800
-Message-ID: <20200628025817.90623-1-yuchao0@huawei.com>
+Subject: [PATCH v2 5/5] f2fs: show more debug info for per-temperature log
+Date:   Sun, 28 Jun 2020 10:58:44 +0800
+Message-ID: <20200628025844.90785-1-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,116 +45,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Filesystem including f2fs should support stable page for special
-device like software raid, however there is one missing path that
-page could be updated while it is writeback state as below, fix
-this.
+- Add to account and show per-log dirty_seg, full_seg and valid_blocks
+in debugfs.
+- reformat printed info.
 
-- gc_node_segment
- - f2fs_move_node_page
-  - __write_node_page
-   - set_page_writeback
-
-- do_read_inode
- - f2fs_init_extent_tree
-  - __f2fs_init_extent_tree
-    i_ext->len = 0;
+    TYPE            segno    secno   zoneno  dirty_seg   full_seg  valid_blk
+  - COLD   data:     1523     1523     1523          1          0        399
+  - WARM   data:      769      769      769         20        255     133098
+  - HOT    data:      767      767      767          9          0        167
+  - Dir   dnode:       22       22       22          3          0         70
+  - File  dnode:      722      722      722         14         10       6505
+  - Indir nodes:        2        2        2          1          0          3
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
 v2:
-- add call path into message.
-- remove unrelated changes.
- fs/f2fs/extent_cache.c | 18 +++++++++---------
- fs/f2fs/f2fs.h         |  2 +-
- fs/f2fs/inode.c        |  3 +--
- 3 files changed, 11 insertions(+), 12 deletions(-)
+- account debug info for current segments.
+ fs/f2fs/debug.c | 64 +++++++++++++++++++++++++++++++++++++++----------
+ fs/f2fs/f2fs.h  |  3 +++
+ 2 files changed, 55 insertions(+), 12 deletions(-)
 
-diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-index e60078460ad1..686c68b98610 100644
---- a/fs/f2fs/extent_cache.c
-+++ b/fs/f2fs/extent_cache.c
-@@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
- }
+diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+index 0dbcb0f9c019..4276c0f79beb 100644
+--- a/fs/f2fs/debug.c
++++ b/fs/f2fs/debug.c
+@@ -174,6 +174,26 @@ static void update_general_status(struct f2fs_sb_info *sbi)
+ 	for (i = META_CP; i < META_MAX; i++)
+ 		si->meta_count[i] = atomic_read(&sbi->meta_count[i]);
  
- /* return true, if inode page is changed */
--static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-+static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-+	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
- 	struct extent_tree *et;
- 	struct extent_node *en;
- 	struct extent_info ei;
-@@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
- 	if (!f2fs_may_extent_tree(inode)) {
- 		/* drop largest extent */
- 		if (i_ext && i_ext->len) {
-+			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
- 			i_ext->len = 0;
--			return true;
-+			set_page_dirty(ipage);
-+			return;
- 		}
--		return false;
-+		return;
- 	}
- 
- 	et = __grab_extent_tree(inode);
- 
- 	if (!i_ext || !i_ext->len)
--		return false;
-+		return;
- 
- 	get_extent_info(&ei, i_ext);
- 
-@@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
- 	}
- out:
- 	write_unlock(&et->lock);
--	return false;
- }
- 
--bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-+void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
- {
--	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
-+	__f2fs_init_extent_tree(inode, ipage);
- 
- 	if (!F2FS_I(inode)->extent_tree)
- 		set_inode_flag(inode, FI_NO_EXTENT);
--
--	return ret;
- }
- 
- static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		si->dirty_seg[i] = 0;
++		si->full_seg[i] = 0;
++		si->valid_blks[i] = 0;
++	}
++
++	for (i = 0; i < MAIN_SEGS(sbi); i++) {
++		int blks = get_seg_entry(sbi, i)->valid_blocks;
++		int type = get_seg_entry(sbi, i)->type;
++
++		if (!blks)
++			continue;
++
++		if (blks == sbi->blocks_per_seg)
++			si->full_seg[type]++;
++		else
++			si->dirty_seg[type]++;
++		si->valid_blks[type] += blks;
++	}
++
+ 	for (i = 0; i < 2; i++) {
+ 		si->segment_count[i] = sbi->segment_count[i];
+ 		si->block_count[i] = sbi->block_count[i];
+@@ -329,30 +349,50 @@ static int stat_show(struct seq_file *s, void *v)
+ 		seq_printf(s, "\nMain area: %d segs, %d secs %d zones\n",
+ 			   si->main_area_segs, si->main_area_sections,
+ 			   si->main_area_zones);
+-		seq_printf(s, "  - COLD  data: %d, %d, %d\n",
++		seq_printf(s, "    TYPE         %8s %8s %8s %10s %10s %10s\n",
++			   "segno", "secno", "zoneno", "dirty_seg", "full_seg", "valid_blk");
++		seq_printf(s, "  - COLD   data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_COLD_DATA],
+ 			   si->cursec[CURSEG_COLD_DATA],
+-			   si->curzone[CURSEG_COLD_DATA]);
+-		seq_printf(s, "  - WARM  data: %d, %d, %d\n",
++			   si->curzone[CURSEG_COLD_DATA],
++			   si->dirty_seg[CURSEG_COLD_DATA],
++			   si->full_seg[CURSEG_COLD_DATA],
++			   si->valid_blks[CURSEG_COLD_DATA]);
++		seq_printf(s, "  - WARM   data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_WARM_DATA],
+ 			   si->cursec[CURSEG_WARM_DATA],
+-			   si->curzone[CURSEG_WARM_DATA]);
+-		seq_printf(s, "  - HOT   data: %d, %d, %d\n",
++			   si->curzone[CURSEG_WARM_DATA],
++			   si->dirty_seg[CURSEG_WARM_DATA],
++			   si->full_seg[CURSEG_WARM_DATA],
++			   si->valid_blks[CURSEG_WARM_DATA]);
++		seq_printf(s, "  - HOT    data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_HOT_DATA],
+ 			   si->cursec[CURSEG_HOT_DATA],
+-			   si->curzone[CURSEG_HOT_DATA]);
+-		seq_printf(s, "  - Dir   dnode: %d, %d, %d\n",
++			   si->curzone[CURSEG_HOT_DATA],
++			   si->dirty_seg[CURSEG_HOT_DATA],
++			   si->full_seg[CURSEG_HOT_DATA],
++			   si->valid_blks[CURSEG_HOT_DATA]);
++		seq_printf(s, "  - Dir   dnode: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_HOT_NODE],
+ 			   si->cursec[CURSEG_HOT_NODE],
+-			   si->curzone[CURSEG_HOT_NODE]);
+-		seq_printf(s, "  - File   dnode: %d, %d, %d\n",
++			   si->curzone[CURSEG_HOT_NODE],
++			   si->dirty_seg[CURSEG_HOT_NODE],
++			   si->full_seg[CURSEG_HOT_NODE],
++			   si->valid_blks[CURSEG_HOT_NODE]);
++		seq_printf(s, "  - File  dnode: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_WARM_NODE],
+ 			   si->cursec[CURSEG_WARM_NODE],
+-			   si->curzone[CURSEG_WARM_NODE]);
+-		seq_printf(s, "  - Indir nodes: %d, %d, %d\n",
++			   si->curzone[CURSEG_WARM_NODE],
++			   si->dirty_seg[CURSEG_WARM_NODE],
++			   si->full_seg[CURSEG_WARM_NODE],
++			   si->valid_blks[CURSEG_WARM_NODE]);
++		seq_printf(s, "  - Indir nodes: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_COLD_NODE],
+ 			   si->cursec[CURSEG_COLD_NODE],
+-			   si->curzone[CURSEG_COLD_NODE]);
++			   si->curzone[CURSEG_COLD_NODE],
++			   si->dirty_seg[CURSEG_COLD_NODE],
++			   si->full_seg[CURSEG_COLD_NODE],
++			   si->valid_blks[CURSEG_COLD_NODE]);
+ 		seq_printf(s, "\n  - Valid: %d\n  - Dirty: %d\n",
+ 			   si->main_area_segs - si->dirty_count -
+ 			   si->prefree_count - si->free_segs,
 diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index cba9c0129f09..54cde692d88d 100644
+index d8bf07ba159c..7fb2a1a33438 100644
 --- a/fs/f2fs/f2fs.h
 +++ b/fs/f2fs/f2fs.h
-@@ -3821,7 +3821,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
- bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
- 						struct rb_root_cached *root);
- unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
--bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
-+void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
- void f2fs_drop_extent_tree(struct inode *inode);
- unsigned int f2fs_destroy_extent_node(struct inode *inode);
- void f2fs_destroy_extent_tree(struct inode *inode);
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 33affa788588..66969ae852b9 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
- 	fi->i_pino = le32_to_cpu(ri->i_pino);
- 	fi->i_dir_level = ri->i_dir_level;
+@@ -3551,6 +3551,9 @@ struct f2fs_stat_info {
+ 	int curseg[NR_CURSEG_TYPE];
+ 	int cursec[NR_CURSEG_TYPE];
+ 	int curzone[NR_CURSEG_TYPE];
++	unsigned int dirty_seg[NR_CURSEG_TYPE];
++	unsigned int full_seg[NR_CURSEG_TYPE];
++	unsigned int valid_blks[NR_CURSEG_TYPE];
  
--	if (f2fs_init_extent_tree(inode, &ri->i_ext))
--		set_page_dirty(node_page);
-+	f2fs_init_extent_tree(inode, node_page);
- 
- 	get_inline_info(inode, ri);
- 
+ 	unsigned int meta_count[META_MAX];
+ 	unsigned int segment_count[2];
 -- 
 2.26.2
 
