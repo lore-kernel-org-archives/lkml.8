@@ -2,121 +2,192 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16978C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BFE207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF24B207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgF1Ch6 (ORCPT
+        id S1725975AbgF1CrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 22:37:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42686 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgF1Ch5 (ORCPT
+        Sat, 27 Jun 2020 22:47:16 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:43500 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgF1CrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 22:37:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e9so6737465pgo.9;
-        Sat, 27 Jun 2020 19:37:57 -0700 (PDT)
+        Sat, 27 Jun 2020 22:47:16 -0400
+Received: by mail-il1-f198.google.com with SMTP id y13so9590251ila.10
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jun 2020 19:47:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ApaT5mQiC8dLYKF7pAl+GBx+g0XuFrutiTFXiajlTbc=;
-        b=HcLXENjpX9NOIlhYVxo7+91//rdfKaR8U9tafxD8/P+cw2w2+G3Pgz7XEL4tIsZ2tf
-         /xDyQyz5HvOvF3b6mFvRe/jgR2tYJ80c9RCXAMu3wX9zWO52A/ew8IB62rHeaeJFHLjr
-         BwJqH9JGTFeS3qluspFAFW+f/F2WaJf4H9y/kuO6vvyv1lds+CVqN7ucZaWij3I6GVbD
-         U3vBArmHLOZaZrti4kUskBT33Fe1a6nRIX7UlqDsFml/ZqA0gjiCOAi7SNhW9HY3DSqQ
-         PstnwVyp0nxMJP7BncYV8YziTv4TptqCxDFogQ+GHOwr7I6GeHlstNIx+ghB5qLYsHM5
-         pvIQ==
-X-Gm-Message-State: AOAM533TyDbtG4lagBmqDTi46q6uzc6yo1a4KPcc65adyutF/WkXiyNL
-        wAs6j+eHVnD0y7C6Y/glOBU=
-X-Google-Smtp-Source: ABdhPJySqv6Aj7fPV9OuSBdIfBeylZZk/RmSNNvXNSuez1iqbw6tjEiTGvJs2ZjoD62pJz+e7HqcDQ==
-X-Received: by 2002:a65:6415:: with SMTP id a21mr5158350pgv.129.1593311876540;
-        Sat, 27 Jun 2020 19:37:56 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id t24sm26283053pgm.10.2020.06.27.19.37.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jun 2020 19:37:55 -0700 (PDT)
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <5c10d65c-14ba-d2d5-ee7f-c4579432823e@acm.org>
-Date:   Sat, 27 Jun 2020 19:37:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=c1GKZ6J1NGU57Y1YR1YuMj5khvHg20R1XXcT4R4FFeI=;
+        b=GSylYko6W2yQG5zWAD9AnFCyRyUhFQ7R7UnhtkBFlsqtIw1GK9cAssHPHcj97CibfI
+         zOO/Ah8Cax3MZyn8kDNlIY/ceSnRToQle/xrN+KB1bN29qvV4tyj7MkcMCaf4DrATWj5
+         BFQ5ZDbw7EfNLijmmylDSCmvx3QCOqID6GGbN9sfhF3ECE+DmQMAWpU9+ljKJ2UAUxuU
+         kx9XaU88jZ4yXZtv6lRqn0h1ipawX5AiVBeOyj+v3W7437kS27kWS5oiOFPXAEKGlbqw
+         Af0GRzbbwDIrf8Eq1LJ6jO7Gz9pu1LPzqa44xgoTKgD2SGs9sUdj8tsR7irhpHieduOp
+         cl2A==
+X-Gm-Message-State: AOAM530YGYxMPcg0ropLh6iB2sMHtiRLtCTlDa0ZohliyJa5EbtdYL1V
+        TWBZFusagYCf5ULJqMBamAzTUOcLKqLAoO9K15upUu3UjVv8
+X-Google-Smtp-Source: ABdhPJyS9KZ9H5jXc55MM7nSDRyoQ39AMmRehTQnBu4C5jfXq5WQkBSF79QO9nqilAdOoQjC2A4JxkkgsL0hAe75D61wEIM/QIZj
 MIME-Version: 1.0
-In-Reply-To: <20200626154441.GA296771@rowland.harvard.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:d2:: with SMTP id r18mr10557876ilq.263.1593312434826;
+ Sat, 27 Jun 2020 19:47:14 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 19:47:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b1b74105a91bf53d@google.com>
+Subject: KASAN: use-after-free Read in macvlan_dev_get_iflink
+From:   syzbot <syzbot+95eec132c4bd9b1d8430@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-26 08:44, Alan Stern wrote:
-> On Fri, Jun 26, 2020 at 08:07:51AM -0700, Bart Van Assche wrote:
->> As far as I know runtime power management support in the sd driver is working
->> fine and is being used intensively by the UFS driver. The following commit was
->> submitted to fix a bug encountered by an UFS developer: 05d18ae1cc8a ("scsi:
->> pm: Balance pm_only counter of request queue during system resume") # v5.7.
-> 
-> I just looked at that commit for the first time.
-> 
-> Instead of making the SCSI driver do the work of deciding what routine to 
-> call, why not redefine blk_set_runtime_active(q) to simply call 
-> blk_post_runtime_resume(q, 0)?  Or vice versa: if err == 0 have 
-> blk_post_runtime_resume call blk_set_runtime_active?
-> 
-> After all, the two routines do almost the same thing -- and the bug 
-> addressed by this commit was caused by the difference in their behaviors.
-> 
-> If the device was already runtime-active during the system suspend, doing 
-> an extra clear of the pm_only counter won't hurt anything.
+Hello,
 
-Hi Alan,
+syzbot found the following crash on:
 
-Do you want to submit a patch that implements this change or do you
-perhaps expect me to do that?
+HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1070059b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
+dashboard link: https://syzkaller.appspot.com/bug?extid=95eec132c4bd9b1d8430
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1559e6e5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16aadd29100000
 
-Thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+95eec132c4bd9b1d8430@syzkaller.appspotmail.com
 
-Bart.
+==================================================================
+BUG: KASAN: use-after-free in macvlan_dev_get_iflink+0x6a/0x70 drivers/net/macvlan.c:1137
+Read of size 4 at addr ffff88808b62a100 by task syz-executor984/7033
+
+CPU: 0 PID: 7033 Comm: syz-executor984 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ macvlan_dev_get_iflink+0x6a/0x70 drivers/net/macvlan.c:1137
+ default_operstate net/core/link_watch.c:41 [inline]
+ rfc2863_policy+0x11f/0x2a0 net/core/link_watch.c:53
+ linkwatch_do_dev+0x3a/0x160 net/core/link_watch.c:160
+ netdev_wait_allrefs net/core/dev.c:9678 [inline]
+ netdev_run_todo+0x2c8/0xc90 net/core/dev.c:9774
+ rtnl_unlock net/core/rtnetlink.c:112 [inline]
+ rtnetlink_rcv_msg+0x890/0xd40 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446e69
+Code: Bad RIP value.
+RSP: 002b:00007f7fa3a46d98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dbc98 RCX: 0000000000446e69
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000006
+RBP: 00000000006dbc90 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000000a R11: 0000000000000246 R12: 00000000006dbc9c
+R13: 0000000000000000 R14: 0000000000000000 R15: 0705001000000048
+
+Allocated by task 7001:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0x81/0x110 mm/util.c:574
+ kvmalloc include/linux/mm.h:753 [inline]
+ kvzalloc include/linux/mm.h:761 [inline]
+ alloc_netdev_mqs+0x86/0xf90 net/core/dev.c:9938
+ rtnl_create_link+0x242/0x9c0 net/core/rtnetlink.c:3067
+ __rtnl_newlink net/core/rtnetlink.c:3329 [inline]
+ rtnl_newlink+0x12a2/0x1bf0 net/core/rtnetlink.c:3397
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5460
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 7001:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ device_release+0x70/0x1a0 drivers/base/core.c:1555
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x15b/0x220 lib/kobject.c:739
+ netdev_run_todo+0xb17/0xc90 net/core/dev.c:9797
+ rtnl_unlock net/core/rtnetlink.c:112 [inline]
+ rtnetlink_rcv_msg+0x890/0xd40 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88808b62a000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 256 bytes inside of
+ 4096-byte region [ffff88808b62a000, ffff88808b62b000)
+The buggy address belongs to the page:
+page:ffffea00022d8a80 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00022d8a80 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002a12288 ffffea0002462c08 ffff8880aa402000
+raw: 0000000000000000 ffff88808b62a000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808b62a000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88808b62a080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88808b62a100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff88808b62a180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88808b62a200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
