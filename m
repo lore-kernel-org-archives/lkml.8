@@ -2,142 +2,167 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05432C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B85C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7C4206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08ABD2065D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aIRA8JX4"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="D6gkX8cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgF1Npk (ORCPT
+        id S1726479AbgF1NuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 09:45:40 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:54709 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgF1Npj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 09:45:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593351939; x=1624887939;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7RgpyIwXfH1tGTnb6OuRYjHUr8PyMUze0ylIcWVy050=;
-  b=aIRA8JX4uhQeRaaoOmxcYadKXNp4G2JfPML5mEAJIAWe2d/RH5tgMpA0
-   wpbf3AIS32MnNxojDC1/MJGkCdrxzCQhY8lbW5wKRdBGJtEY+kvMdKBqJ
-   4+xAfilEHYZFRcObHW5bFCAwr+x2PCGoOzjwlmWWoLiav8eoQhxCW1Rli
-   qrvJbNwZZoVxLu64vOHaQC5j+7JqAS+CwgX8ZFnZF67/f0hzwUX20sDX3
-   Dp3NCW7UkRC/rDlFHFzcpYX89XNpstiiEs6VpYNEFiN2FJbQXYUBiyxHG
-   kei1MmHdbS1QkYe4rYtE90tA3jfi946pIXTygXdrQjFjB3/r4I+qL+j/H
-   g==;
-IronPort-SDR: OVssuD8TyFMFJZ+fDdLO9UMF8nEIUZUpRFdECzTxA7fweo34Kg3OOjzNE1xDDbZ/eyr/qiUfY4
- K6e4hNY6imKODGnvLUCIR6hsbq9qeuDscgwTYnu40Ma7MWIpScYrCPeGpRScO1CP7roYgHq1dy
- z6lfJt4/2JB87WFz2CxTbTAqx9F20SQ9mKXa3v7ob34+/YEPDHCsi4ObHLOVJYuK6qpGyDOT/s
- nLrYMeRGW0lckIeJSL3cfHdDSMNn7IHn1Q5ma00iUTla78zbivEHdOBWme6tEkUm9Bjeu5bQUu
- izQ=
-X-IronPort-AV: E=Sophos;i="5.75,291,1589266800"; 
-   d="scan'208";a="81833628"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2020 06:45:39 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 28 Jun 2020 06:45:38 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Sun, 28 Jun 2020 06:45:35 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH net] bridge: mrp: Fix endian conversion and some other warnings
-Date:   Sun, 28 Jun 2020 15:45:16 +0200
-Message-ID: <20200628134516.3767607-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.26.2
+        Sun, 28 Jun 2020 09:50:18 -0400
+Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:12353
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726344AbgF1NuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 09:50:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VX4NO+2QefpPiLY9mVoLr/yAUn1vaP/s3+0fqRBOipZayLbtzhmvTP68UplpZJ8F07givaf15QfnZ5cDJAGe3bnEtge1vu8dlJSd7iMbrGRF7ZhXQNvXX+Nu8/ppsUTuT/vXsOrAE8PPsxNMNdLKFopAxI4QGTIa/XuHV3Q0dI7z1A7lSxsT/H5OyXZOJKCtJzibhsT+M0Ay/PSZHBHV7VQbj+ENQOcWiNwzH/8MGNB1/JeKPNbhaCd4sBe637ZQBjQAaD1ua2AFl0uBDHxaQT1KzdJ72g5RJwa61gGezMlTwlUjCHm2xFp9b1euYz5TEKfDeugeT+FaVyT6ve2n7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MVyY4PtiefelYoXosk1WKVAlsoMUecVd4Ow0u6teA4w=;
+ b=TCfqNlTSb0tu24IUORt2ldwWcplYn8NyhPMyCmn7BEjf7+UxBmjBK+a5kyKqzHTpM/HElBoEDiQfwOtbZOnlOb8h7Yf6Hjjreffm77sp+QeEVSTkS1/DUU9lhIkAgyFHQVaPVFuXWVl/IL1iE+5UHDT81/v21+EPLY7QbxSqOgDxlFjDlKkHFXgbRmhVyDVhB9+QyQhcdTBRhOZ3OHIXR2lac2DGroKKf5S7OTsXUjoMVcOKanwSKSBvCFCYXBUt5uL+eAAzkuBYwpYDeT++WKiecvfUKSyhps3vk41OoKtZZ7F9a2LxpCYJUxNH2sVavLdbXOzk1AOFmJS0WjgyoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MVyY4PtiefelYoXosk1WKVAlsoMUecVd4Ow0u6teA4w=;
+ b=D6gkX8cc4oPxMlXYUqKEOJbVDlVN4h/nqlVveIrniDRb6Awmr2TuIIEeUSlNt/FuRg+CXpN381c9AcyAG6Svnm7OjtO87qvktYb6Ge/jVDPolwaH/rP482LggF8onD8tOav+VzLO7wT8czBHoRuYWfV73bNsk7aQVWvJMpNt+7Q=
+Received: from AM6PR05MB6168.eurprd05.prod.outlook.com (2603:10a6:20b:2a::21)
+ by AM6PR05MB5078.eurprd05.prod.outlook.com (2603:10a6:20b:12::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Sun, 28 Jun
+ 2020 13:50:14 +0000
+Received: from AM6PR05MB6168.eurprd05.prod.outlook.com
+ ([fe80::a5c8:67a9:1634:8a08]) by AM6PR05MB6168.eurprd05.prod.outlook.com
+ ([fe80::a5c8:67a9:1634:8a08%3]) with mapi id 15.20.3131.026; Sun, 28 Jun 2020
+ 13:50:14 +0000
+From:   Michael Shych <michaelsh@mellanox.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+CC:     "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/2] i2c: mlxcpld: check correct size of maximum
+ RECV_LEN packet
+Thread-Topic: [RFC PATCH 1/2] i2c: mlxcpld: check correct size of maximum
+ RECV_LEN packet
+Thread-Index: AQHWTUKphTsXSb6mkkaM23FqIchUdKjuCozg
+Date:   Sun, 28 Jun 2020 13:50:14 +0000
+Message-ID: <AM6PR05MB61688309AFCF832CA4D67696D9910@AM6PR05MB6168.eurprd05.prod.outlook.com>
+References: <20200628115245.9638-1-wsa+renesas@sang-engineering.com>
+ <20200628115245.9638-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200628115245.9638-2-wsa+renesas@sang-engineering.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: sang-engineering.com; dkim=none (message not signed)
+ header.d=none;sang-engineering.com; dmarc=none action=none
+ header.from=mellanox.com;
+x-originating-ip: [109.186.100.168]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 73a1c4e0-0962-4c45-6db0-08d81b6a2f03
+x-ms-traffictypediagnostic: AM6PR05MB5078:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB5078E3BF3029AC6879B39E07D9910@AM6PR05MB5078.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0448A97BF2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 12XXaOow/Qv74lHwDzRY4YF26KHQZ7M4m9u0pveI9F+Ci97rOJQa8jFUL07XkVPtgv0y+I+rmxUx8lR33IrxJHmOf7R4TXUG2Na2D3X+7jXcE6mxRYbSj8FAUOCJsQhJDsFoWYidUXO5CXgX6sZPRCtxvMeuHAexppSIc26SXr8WowPMrjA2HbkkAO76MWXnYbrn+mBRbAN2oPL4jO2lkzOjCS1yoAHioZukBsTXXBXGl+w8yTiFz4e/v5oX2pW98E4UX+oquQyK2LECqT3wcoxYdTKoc6DnDKAGHyyXfWg6kMciZHwfQAmNUrUDQb/PU/tEzktGU5VJeKt5N39rMnCLldJP/MtVNA7fEG6GyB7/Sw2bfYc5Ca4zDIf76oV1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6168.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(366004)(136003)(396003)(9686003)(66476007)(186003)(66946007)(52536014)(76116006)(66556008)(64756008)(66446008)(71200400001)(26005)(7696005)(8936002)(33656002)(53546011)(4326008)(8676002)(5660300002)(83380400001)(478600001)(2906002)(55016002)(54906003)(316002)(86362001)(110136005)(6506007)(133343001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: q4gm8pvwoXLlwdpk+5DTGU0jwKeKK9pfIE3b6hTXzGQR24I91sGhdxC6yp4D1sDTqpsZc97dODRXhonu3z2JYbgEu0nh9w8OfHOfJGJI9aaqTevwp9iYqwdkSTe7rdWvZBfmnfxciD3UOfeGq+sEGg3crxEIYAuvYjvhZ2mm52lpfgEIGgEiMlpox2RChYHBBEt8z2huBTp4+4EusbVsu8OF/INkjPPY2ao4DrYiUg5iBhf3cr0dDOC6X5Fulwxak4f4JXxdqgj8SqUJXvS7vdr1J5c9pvUVCQAFhPAqwoiWunJvcROoPl7smygo5lk4Sx/wK2MoSTkZovhSIRdAaZunT9WcXXStsqmNJy41M2TpGAdWeeA1fjbSByGQL0sOrMI5kuYIBjMDSKAumUmrm4YVvucAxNtnhKHwF4DiWl6LpWbyr/FmwzO/gi3dwcJY//KQxLnB41WQNL9WEE26kL2kKHjEfkslX3FF56wMVPHmzY8lGegFfM/Z+AfwGvtk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6168.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73a1c4e0-0962-4c45-6db0-08d81b6a2f03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2020 13:50:14.1372
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7kBgOUcFHN/445Iqd8WR/jn8j1yGNyK9WUXerYNGUnVb1kH9zVHhXqSAbKjR0XHKsJP54yV4RXOiAMzLxkcWtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following sparse warnings are fixed:
-net/bridge/br_mrp.c:106:18: warning: incorrect type in assignment (different base types)
-net/bridge/br_mrp.c:106:18:    expected unsigned short [usertype]
-net/bridge/br_mrp.c:106:18:    got restricted __be16 [usertype]
-net/bridge/br_mrp.c:281:23: warning: incorrect type in argument 1 (different modifiers)
-net/bridge/br_mrp.c:281:23:    expected struct list_head *entry
-net/bridge/br_mrp.c:281:23:    got struct list_head [noderef] *
-net/bridge/br_mrp.c:332:28: warning: incorrect type in argument 1 (different modifiers)
-net/bridge/br_mrp.c:332:28:    expected struct list_head *new
-net/bridge/br_mrp.c:332:28:    got struct list_head [noderef] *
-net/bridge/br_mrp.c:332:40: warning: incorrect type in argument 2 (different modifiers)
-net/bridge/br_mrp.c:332:40:    expected struct list_head *head
-net/bridge/br_mrp.c:332:40:    got struct list_head [noderef] *
-net/bridge/br_mrp.c:682:29: warning: incorrect type in argument 1 (different modifiers)
-net/bridge/br_mrp.c:682:29:    expected struct list_head const *head
-net/bridge/br_mrp.c:682:29:    got struct list_head [noderef] *
+Hi Wolfram,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 2f1a11ae11d222 ("bridge: mrp: Add MRP interface.")
-Fixes: 4b8d7d4c599182 ("bridge: mrp: Extend bridge interface")
-Fixes: 9a9f26e8f7ea30 ("bridge: mrp: Connect MRP API with the switchdev API")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp.c         | 2 +-
- net/bridge/br_private.h     | 2 +-
- net/bridge/br_private_mrp.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+You are right, +1 isn't required.
+Checked your patch also on HW. It works OK.
 
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index 779e1eb754430..90592af9db619 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -86,7 +86,7 @@ static struct sk_buff *br_mrp_skb_alloc(struct net_bridge_port *p,
- {
- 	struct ethhdr *eth_hdr;
- 	struct sk_buff *skb;
--	u16 *version;
-+	__be16 *version;
- 
- 	skb = dev_alloc_skb(MRP_MAX_FRAME_LENGTH);
- 	if (!skb)
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 2130fe0194e64..e0ea6dbbc97ed 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -430,7 +430,7 @@ struct net_bridge {
- 	struct hlist_head		fdb_list;
- 
- #if IS_ENABLED(CONFIG_BRIDGE_MRP)
--	struct list_head		__rcu mrp_list;
-+	struct list_head		mrp_list;
- #endif
- };
- 
-diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-index 33b255e38ffec..315eb37d89f0f 100644
---- a/net/bridge/br_private_mrp.h
-+++ b/net/bridge/br_private_mrp.h
-@@ -8,7 +8,7 @@
- 
- struct br_mrp {
- 	/* list of mrp instances */
--	struct list_head		__rcu list;
-+	struct list_head		list;
- 
- 	struct net_bridge_port __rcu	*p_port;
- 	struct net_bridge_port __rcu	*s_port;
--- 
-2.26.2
+Thank you,
+    Michael.
+
+> -----Original Message-----
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Sent: Sunday, June 28, 2020 2:53 PM
+> To: linux-i2c@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org; Wolfram Sang <wsa+renesas@sang-
+> engineering.com>; Vadim Pasternak <vadimp@mellanox.com>; Michael Shych
+> <michaelsh@mellanox.com>; Wolfram Sang <wsa@kernel.org>; linux-
+> kernel@vger.kernel.org
+> Subject: [RFC PATCH 1/2] i2c: mlxcpld: check correct size of maximum RECV=
+_LEN
+> packet
+>=20
+> I2C_SMBUS_BLOCK_MAX defines already the maximum number as defined in
+> the
+> SMBus 2.0 specs. I don't see a reason to add 1 here. Also, fix the errno
+> to what is suggested for this error.
+>=20
+> Fixes: c9bfdc7c16cb ("i2c: mlxcpld: Add support for smbus block read
+> transaction")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>=20
+> Only build tested, I don't have the HW. Please let me know if I
+> overlooked something, but to the best of my knowledge, this +1 is wrong.
+>=20
+>  drivers/i2c/busses/i2c-mlxcpld.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-mlxcpld.c b/drivers/i2c/busses/i2c-ml=
+xcpld.c
+> index 2fd717d8dd30..71d7bae2cbca 100644
+> --- a/drivers/i2c/busses/i2c-mlxcpld.c
+> +++ b/drivers/i2c/busses/i2c-mlxcpld.c
+> @@ -337,9 +337,9 @@ static int mlxcpld_i2c_wait_for_tc(struct mlxcpld_i2c=
+_priv
+> *priv)
+>  		if (priv->smbus_block && (val &
+> MLXCPLD_I2C_SMBUS_BLK_BIT)) {
+>  			mlxcpld_i2c_read_comm(priv,
+> MLXCPLD_LPCI2C_NUM_DAT_REG,
+>  					      &datalen, 1);
+> -			if (unlikely(datalen > (I2C_SMBUS_BLOCK_MAX + 1))) {
+> +			if (unlikely(datalen > I2C_SMBUS_BLOCK_MAX)) {
+>  				dev_err(priv->dev, "Incorrect smbus block read
+> message len\n");
+> -				return -E2BIG;
+> +				return -EPROTO;
+>  			}
+>  		} else {
+>  			datalen =3D priv->xfer.data_len;
+> --
+> 2.20.1
 
