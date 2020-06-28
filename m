@@ -2,88 +2,98 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F89C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C871206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BAC206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 19:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgF1TAT (ORCPT
+        id S1726714AbgF1TCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 15:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 15:02:23 -0400
+Received: from mail.keff.org ([45.154.255.110]:56868 "EHLO mail.keff.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgF1TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 15:00:18 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94A6E206C0;
-        Sun, 28 Jun 2020 19:00:16 +0000 (UTC)
-Date:   Sun, 28 Jun 2020 15:00:15 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200628150015.363009dd@oasis.local.home>
-In-Reply-To: <20200628144616.52f09152@oasis.local.home>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
-        <20200624120408.12c8fa0d@oasis.local.home>
-        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
-        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
-        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
-        <20200626181455.155912d9@oasis.local.home>
-        <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
-        <20200628144616.52f09152@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726585AbgF1TCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 15:02:21 -0400
+X-Greylist: delayed 374 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jun 2020 15:02:20 EDT
+Received: from [172.17.2.124] (unknown [45.154.255.254])
+        by mail.keff.org (Postfix) with ESMTPSA id 645003E3CABC
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:55:44 +0200 (CEST)
+To:     linux-kernel@vger.kernel.org
+From:   Sebastian Hyrwall <sh@keff.org>
+Subject: BTRFS/EXT4 Data Corruption
+Message-ID: <f87dcf1e-5a8a-36c2-a864-88099a66d220@keff.org>
+Date:   Mon, 29 Jun 2020 01:55:40 +0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X--MailScanner-Information: Please contact the ISP for more information
+X--MailScanner-ID: 645003E3CABC.AF4E3
+X--MailScanner: Found to be clean
+X--MailScanner-From: sh@keff.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jun 2020 14:46:16 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi
 
-> > We added a bunch of code to libbcc in the past to support instances,
-> > but eventually removed it all due to memory overhead per instance.
-> > If I recall it was ~8Mbyte per instance. That was couple years ago.  
-> 
-> I'd like to see where that 8 MB per instance came from. You can control
-> the size of the instance buffers. If size is still an issue, I'll be
-> happy to work with you to fix it.
+Sorry if this is not the right place for this email but I can't think of 
+another place (might be linux-fsdevel)
+Someone here is ought to be an expert in this.
 
-Looks to be the duplication of the event directory tree. There's a lot
-of duplicate data there. Instead of just punting and saying "instances
-are too large" perhaps you could get someone to look at a way to
-consolidate that data? I'm sure there's a lot of ways to help here.
+It all started as having file corruptions inside VMs that then led to 
+alot of testing that
+resulted in replicatable results on the backend NAS.
 
-Or you can just create a new event called bpf_printk() that passes in
-and records a string and enable that automatically when a bpf module
-has it. That could work as well.
+Tests where done by generating 100 1GB files from /dev/urandom to 
+"volume1" (both BTRFS and EXT4 tested).
+MD5 hashing the files and then copying the files to "volume2". 2-4% of 
+the files would fail the hash match every time
+the test was done.
 
-In either case, your use of trace_printk() is an abuse of its purpose.
+After alot of fiddling around it turned out that the problem goes away 
+if doing "cp --sparse=never"
+when copying the files. This would to me exclude any hardware errors and 
+feels more like something
+deeper inside the kernel.
 
--- Steve
+The box runs Kernel 3.10.105. Version >4 seems unaffected (not 100% 
+confirmed, too few testboxes).
+
+Here is a diff between a hexdump of a failed file,
+
+43861581c43861581
+< 29d464c0: aca0 d68f 0ff4 0bad fa4M-5 1339 8148 30e8 .........E.9.H0.
+---
+ > 29d464c0: aca0 d68f 0ff4 0bad fa45 1339 8148 30e8 .........E.9.H0.
+55989446c55989446
+< 35654c50: 31f4 f7b5 40be 2188 c539 043b 35b4 abb5 1...@.!..9.;5...
+---
+ > 35654c50: 3174 f7b5 40be 2188 c539 043b 35b4 abb5 1t..@.!..9.;5...
+
+As you can see it's a single flipped bit (31f4, 3174). I'm not sure 
+about "fa4M-5". Never seen "M-" before.
+
+
+Details,
+
+Linux 3.10.105,
+Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz,
+Volume ontop of lvm and md-raid,
+md2 : active raid5 sda3[0] sdj3[5] sdi3[4] sdf3[3] sde3[2] sdb3[1]
+       39046022720 blocks super 1.2 level 5, 64k chunk, algorithm 2 
+[6/6] [UUUUUU],
+cp (GNU coreutils) 8.24
+
+BTRFS and EXT4 default mount options.
+
+
+
+// Sebastian H
+
