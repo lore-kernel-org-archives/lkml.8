@@ -2,156 +2,128 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76EED206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593364989;
-	bh=SvTCp7lGAkbY1agYXc1vO5JUEFEVoz1JamVwaLi+tn8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Bs+k1k4c3kTPTTMQRpOHJcmgJ8a9aWPZRaj3zts/3ieudIMXutHSNSh2TUj+D3UUk
-	 +hYEhh1L4AQwBXgkEUwk3fzkfcvDcfCdJPu9XPCywnvgn1sjeALH9h/xowckEAmA62
-	 3UZe9jSeuKVGsjEAAF4b6Mg0c4KK5+E86EGxlePY=
+	by mail.kernel.org (Postfix) with ESMTP id C60A2206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 17:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="g5yBfQ3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgF1RXI (ORCPT
+        id S1726611AbgF1RZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 13:23:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39196 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgF1RXH (ORCPT
+        Sun, 28 Jun 2020 13:25:37 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:44860 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgF1RZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 13:23:07 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 18so13375160otv.6;
-        Sun, 28 Jun 2020 10:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJ/7Mwdioa+LkvwxDevBww4xCE/dU3bIOQYsqm3j9ng=;
-        b=oSb8imbUlUT+MSUkhtwZwBrywq5pbdxjqJca3s8ZJomg+i8TFWb81E6lmQWyvZxQl6
-         dXnsX/KtTBVgLlMmMH2+EAOirRL73tRm7PbdyrIiHHiVvg/Ku0LeTScNuQLz7Olu4gku
-         qCaFu8DCIaw4akGTJs7L1Jz+ogw1Jj8/6Ct8fITjNsSkmysOcTxa8cYr2cH5rqewnlS5
-         f82q3XxaGsIGOcHQbjMiJ/1Ogl9LoJWt0OzYrb1RLzT0xHvnUOGUsz1MWRe4BwTggMyZ
-         w6sSzZauke828mN9/U6gI+r1L3sg7lIvjeVJxebUavfDZR80x7DFZS09tvkAxU2MR/jE
-         aAHw==
-X-Gm-Message-State: AOAM530GI+xI+JfioiQF0VJQXouRjgXGlibPKALH1lEKbkQgDfG7aFDT
-        fkirhJ8JVhUBYAtGSqX1r2aVDOS+49PsVsaQD3c=
-X-Google-Smtp-Source: ABdhPJxWeIRMAX90bePkgZ2eZsip3wobT0DgKId2QVtHye5EgsJU87W+GWkfAZOi33Iq2RFvZeSEGzQe1N1PGQe9zfE=
-X-Received: by 2002:a05:6830:10ca:: with SMTP id z10mr10078158oto.167.1593364986761;
- Sun, 28 Jun 2020 10:23:06 -0700 (PDT)
+        Sun, 28 Jun 2020 13:25:36 -0400
+Received: from [192.168.254.4] (unknown [50.34.202.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail3.candelatech.com (Postfix) with ESMTPSA id 490EC13C2B1;
+        Sun, 28 Jun 2020 10:25:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 490EC13C2B1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1593365136;
+        bh=RSXDKa6OlffLkH4jXYtrInoE8VFv1UeIibxEquQKUVA=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=g5yBfQ3ohwywTjkcsrBgigTKa6J72KYWtBjvZDS4YyP7bp8kbygZoAzHnCMfxz+cO
+         llUWvfuV1dqO3UyY+6SjFtEpsdO3Hl2U7m7wigIRXPQ6jch1/sg1cuXab0u6MXuAVf
+         hbGGVuNqEWlDTCBP0oFHUUnJ1xBofvFYkPAi2AVc=
+Subject: Re: [PATCH] ath10k: Add history for tracking certain events
+To:     Rakesh Pillai <pillair@codeaurora.org>, ath10k@lists.infradead.org
+References: <1593238973-23237-1-git-send-email-pillair@codeaurora.org>
+ <926301ed-e27f-0d8f-0177-6484bfffa40c@candelatech.com>
+ <000201d64d0a$b3d39d10$1b7ad730$@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <859a8ffb-6108-81f3-b379-4a0adfa064fe@candelatech.com>
+Date:   Sun, 28 Jun 2020 10:25:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0h8Eg5_FVxz0COLDMK8cy72xxDk_2nFnXDJNUY-MvdBEQ@mail.gmail.com> <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com>
-In-Reply-To: <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 28 Jun 2020 19:22:55 +0200
-Message-ID: <CAJZ5v0i=SkqtgcXzq0oYNEAuYA-FvBEG-bm6fyidzAsYSNcEdQ@mail.gmail.com>
-Subject: Re: [PATCH 00/12] ACPI/NVDIMM: Runtime Firmware Activation
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Stable <stable@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000201d64d0a$b3d39d10$1b7ad730$@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 8:43 PM Dan Williams <dan.j.williams@intel.com> wrote:
+
+
+On 06/27/2020 10:12 PM, Rakesh Pillai wrote:
 >
-> On Fri, Jun 26, 2020 at 7:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 2:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > Quoting the documentation:
-> > >
-> > >     Some persistent memory devices run a firmware locally on the device /
-> > >     "DIMM" to perform tasks like media management, capacity provisioning,
-> > >     and health monitoring. The process of updating that firmware typically
-> > >     involves a reboot because it has implications for in-flight memory
-> > >     transactions. However, reboots are disruptive and at least the Intel
-> > >     persistent memory platform implementation, described by the Intel ACPI
-> > >     DSM specification [1], has added support for activating firmware at
-> > >     runtime.
-> > >
-> > >     [1]: https://docs.pmem.io/persistent-memory/
-> > >
-> > > The approach taken is to abstract the Intel platform specific mechanism
-> > > behind a libnvdimm-generic sysfs interface. The interface could support
-> > > runtime-firmware-activation on another architecture without need to
-> > > change userspace tooling.
-> > >
-> > > The ACPI NFIT implementation involves a set of device-specific-methods
-> > > (DSMs) to 'arm' individual devices for activation and bus-level
-> > > 'trigger' method to execute the activation. Informational / enumeration
-> > > methods are also provided at the bus and device level.
-> > >
-> > > One complicating aspect of the memory device firmware activation is that
-> > > the memory controller may need to be quiesced, no memory cycles, during
-> > > the activation. While the platform has mechanisms to support holding off
-> > > in-flight DMA during the activation, the device response to that delay
-> > > is potentially undefined. The platform may reject a runtime firmware
-> > > update if, for example a PCI-E device does not support its completion
-> > > timeout value being increased to meet the activation time. Outside of
-> > > device timeouts the quiesce period may also violate application
-> > > timeouts.
-> > >
-> > > Given the above device and application timeout considerations the
-> > > implementation defaults to hooking into the suspend path to trigger the
-> > > activation, i.e. that a suspend-resume cycle (at least up to the syscore
-> > > suspend point) is required.
-> >
-> > Well, that doesn't work if the suspend method for the system is set to
-> > suspend-to-idle (for example, via /sys/power/mem_sleep), because the
-> > syscore callbacks are not invoked in that case.
-> >
-> > Also you probably don't need the device power state toggling that
-> > happens during regular suspend/resume (you may not want it even for
-> > some devices).
-> >
-> > The hibernation freeze/thaw may be a better match and there is some
-> > test support in there already that may be kind of co-opted for your
-> > use case.
 >
-> Hmm, yes I guess freeze should be sufficient to quiesce most
-> device-DMA in the general case as applications will stop sending
-> requests.
-
-It is expected to be sufficient to quiesce all of them.
-
-If that is not the case, the integrity of the hibernation image cannot
-be guaranteed on the system in question.
-
-> I do expect some RDMA devices will happily keep on
-> transmitting, but that likely will need explicit mitigation. It also
-> appears the suspend callback for at least one RDMA device
-> mlx5_suspend() is rather violent as it appears to fully teardown the
-> device context, not just suspend operations.
+>> -----Original Message-----
+>> From: Ben Greear <greearb@candelatech.com>
+>> Sent: Saturday, June 27, 2020 8:58 PM
+>> To: Rakesh Pillai <pillair@codeaurora.org>; ath10k@lists.infradead.org
+>> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH] ath10k: Add history for tracking certain events
+>>
+>>
+>>
+>> On 06/26/2020 11:22 PM, Rakesh Pillai wrote:
+>>> For debugging many issues, a history of the
+>>> below mentioned events can help get an idea
+>>> of what exactly was going on just before any
+>>> issue occurred in the system. These event
+>>> history will be collected only when the host
+>>> driver is run in debug mode (i.e. with the
+>>> config ATH10K_DEBUG enabled).
+>>
+>> This should be disabled by default unless user specifically pokes some
+>> debugfs
+>> value to turn it on so that it does not impact performance.
 >
-> To be clear, what debug interface were you thinking I could glom onto
-> to just trigger firmware-activate at the end of the freeze phase?
+> Hi Ben,
+> This history is enabled only if the user compiles the kernel with
+> ATH10K_DEBUG.
+> Making it runtime, adds a lot of "if" conditions for this history record.
+> Do you suggest to add support to enable/disable it runtime even in
+> ATH10K_DEBUG ?
 
-Functionally, the same as for suspend, but using the hibernation
-interface, so "echo platform > /sys/power/pm_test" followed by "echo
-disk > /sys/power/state".
+Yes, because you are adding lots of locks/unlocks.  That is way more expensive
+than an if statement.  You can add an 'unlikely' to the if check as well, so
+compiler will optimize for this feature not being enabled.
 
-But it might be cleaner to introduce a special "hibernation mode", ie.
-is one more item in /sys/power/disk, that will trigger what you need
-(in analogy with "test_resume").
+Thanks,
+Ben
+
+>
+>>
+>> Thanks,
+>> Ben
+>>
+>>>
+>>> Add history for tracking the below events
+>>> - register read
+>>> - register write
+>>> - IRQ trigger
+>>> - IRQ Enable
+>>> - IRQ Disable
+>>> - NAPI poll
+>>> - CE service
+>>> - WMI cmd
+>>> - WMI event
+>>> - WMI tx completion
+>>>
+>>> This will help in debugging any crash or any
+>>> improper behaviour.
+>>
+>>
+>> --
+>> Ben Greear <greearb@candelatech.com>
+>> Candela Technologies Inc  http://www.candelatech.com
+>
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
