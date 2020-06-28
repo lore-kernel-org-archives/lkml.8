@@ -2,308 +2,93 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB28C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA620C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3517920782
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a4ZWzeKp"
+	by mail.kernel.org (Postfix) with ESMTP id C4F4D207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 03:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgF1DZH (ORCPT
+        id S1726060AbgF1D17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 23:25:07 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60419 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725909AbgF1DZH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 23:25:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593314704;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=S0pvCr6xYviO/Gl4YLybPyItBDcQpJUX7Dh/ouU8HqA=;
-        b=a4ZWzeKpO0xF2B1HidE2CN6akDEq1nCi1Fn4zMOX3cnlxgRGeZzx2vlzeDSdhyygXetuWZ
-        w6MngAm5TCNt5lZL4+QldV7A1n7zxKp2bllSYjNnXbBdev2Y3R15nTdOFHX+zd83guCZh/
-        JrUb+Ka299Liql/EMZ1PrXudcJ3jz/I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-GCz90PWgP3OhCmIwVohPJw-1; Sat, 27 Jun 2020 23:25:00 -0400
-X-MC-Unique: GCz90PWgP3OhCmIwVohPJw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0A7F1800D42;
-        Sun, 28 Jun 2020 03:24:58 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D83D5D9CD;
-        Sun, 28 Jun 2020 03:24:49 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        eparis@parisplace.org, tgraf@infradead.org,
-        dan.carpenter@oracle.com, Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak124 v3fix] audit: add gfp parameter to audit_log_nfcfg
-Date:   Sat, 27 Jun 2020 23:24:19 -0400
-Message-Id: <3eda864fb69977252a061c8c3ccd2d8fcd1f3a9b.1593278952.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Sat, 27 Jun 2020 23:27:59 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43746 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725897AbgF1D17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 23:27:59 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr94yDvheNnJLAA--.3271S3;
+        Sun, 28 Jun 2020 11:27:47 +0800 (CST)
+Subject: Re: [1/7] irqchip: Fix potential resource leaks
+To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
+ <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
+ <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
+ <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
+ <cc6b95ec-691e-f010-4a04-add39d706c4b@web.de>
+ <423f83e0-c533-c346-ab8b-f2c6ccc828a2@loongson.cn>
+ <37ff7ca4-dc7c-6a43-94a3-9628efe69b25@web.de>
+ <8556e402-52ae-849f-2f6e-e56406057dce@loongson.cn>
+ <c425c66a-d2fc-dad2-dc98-31659342a5fb@web.de>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <61c969d7-8647-56c1-8123-9b000036ae66@loongson.cn>
+Date:   Sun, 28 Jun 2020 11:27:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <c425c66a-d2fc-dad2-dc98-31659342a5fb@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxr94yDvheNnJLAA--.3271S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYX7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
+        80aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        M4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r
+        48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+        Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
+        0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8
+        JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+        IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUco7NUUUUU
+        =
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed an inconsistent use of GFP flags in nft_obj_notify() that used
-GFP_KERNEL when a GFP flag was passed in to that function.  Given this
-allocated memory was then used in audit_log_nfcfg() it led to an audit
-of all other GFP allocations in net/netfilter/nf_tables_api.c and a
-modification of audit_log_nfcfg() to accept a GFP parameter.
+On 06/24/2020 08:08 PM, Markus Elfring wrote:
+>>> How do you think about to extend source code analysis tools accordingly?
+>> I have no good idea,
+>> maybe some simple match check tools can do this.
+> Would you like to help with any additional software development resources
+> (besides your current contribution)?
 
-Reported-by: Dan Carptenter <dan.carpenter@oracle.com>
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
-Passes audit-testsuite.
+I am glad to do it in my spare time.
 
- include/linux/audit.h           |  8 ++++----
- kernel/auditsc.c                |  4 ++--
- net/bridge/netfilter/ebtables.c |  6 +++---
- net/netfilter/nf_tables_api.c   | 33 +++++++++++++++++++++------------
- net/netfilter/x_tables.c        |  5 +++--
- 5 files changed, 33 insertions(+), 23 deletions(-)
+>
+> Have you heard anything according to recent research (from computer science)
+> for this application domain?
 
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 604ede630580..d93739f7a35a 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -404,7 +404,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
- extern void __audit_tk_injoffset(struct timespec64 offset);
- extern void __audit_ntp_log(const struct audit_ntp_data *ad);
- extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
--			      enum audit_nfcfgop op);
-+			      enum audit_nfcfgop op, gfp_t gfp);
- 
- static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
- {
-@@ -542,10 +542,10 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
- 
- static inline void audit_log_nfcfg(const char *name, u8 af,
- 				   unsigned int nentries,
--				   enum audit_nfcfgop op)
-+				   enum audit_nfcfgop op, gfp_t gfp)
- {
- 	if (audit_enabled)
--		__audit_log_nfcfg(name, af, nentries, op);
-+		__audit_log_nfcfg(name, af, nentries, op, gfp);
- }
- 
- extern int audit_n_rules;
-@@ -683,7 +683,7 @@ static inline void audit_ptrace(struct task_struct *t)
- 
- static inline void audit_log_nfcfg(const char *name, u8 af,
- 				   unsigned int nentries,
--				   enum audit_nfcfgop op)
-+				   enum audit_nfcfgop op, gfp_t gfp)
- { }
- 
- #define audit_n_rules 0
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 3a9100e95fda..eae1a599ffe3 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -2572,12 +2572,12 @@ void __audit_ntp_log(const struct audit_ntp_data *ad)
- }
- 
- void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
--		       enum audit_nfcfgop op)
-+		       enum audit_nfcfgop op, gfp_t gfp)
- {
- 	struct audit_buffer *ab;
- 	char comm[sizeof(current->comm)];
- 
--	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
-+	ab = audit_log_start(audit_context(), gfp, AUDIT_NETFILTER_CFG);
- 	if (!ab)
- 		return;
- 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index c83ffe912163..b13b49b9f75c 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1047,7 +1047,7 @@ static int do_replace_finish(struct net *net, struct ebt_replace *repl,
- 	vfree(counterstmp);
- 
- 	audit_log_nfcfg(repl->name, AF_BRIDGE, repl->nentries,
--			AUDIT_XT_OP_REPLACE);
-+			AUDIT_XT_OP_REPLACE, GFP_KERNEL);
- 	return ret;
- 
- free_unlock:
-@@ -1123,7 +1123,7 @@ static void __ebt_unregister_table(struct net *net, struct ebt_table *table)
- 	list_del(&table->list);
- 	mutex_unlock(&ebt_mutex);
- 	audit_log_nfcfg(table->name, AF_BRIDGE, table->private->nentries,
--			AUDIT_XT_OP_UNREGISTER);
-+			AUDIT_XT_OP_UNREGISTER, GFP_KERNEL);
- 	EBT_ENTRY_ITERATE(table->private->entries, table->private->entries_size,
- 			  ebt_cleanup_entry, net, NULL);
- 	if (table->private->nentries)
-@@ -1218,7 +1218,7 @@ int ebt_register_table(struct net *net, const struct ebt_table *input_table,
- 	}
- 
- 	audit_log_nfcfg(repl->name, AF_BRIDGE, repl->nentries,
--			AUDIT_XT_OP_REGISTER);
-+			AUDIT_XT_OP_REGISTER, GFP_KERNEL);
- 	return ret;
- free_unlock:
- 	mutex_unlock(&ebt_mutex);
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 164700273947..f7ff91479647 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -702,7 +702,8 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
- 			ctx->table->use,
- 			event == NFT_MSG_NEWTABLE ?
- 				AUDIT_NFT_OP_TABLE_REGISTER :
--				AUDIT_NFT_OP_TABLE_UNREGISTER);
-+				AUDIT_NFT_OP_TABLE_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (!ctx->report &&
-@@ -1448,7 +1449,8 @@ static void nf_tables_chain_notify(const struct nft_ctx *ctx, int event)
- 			ctx->chain->use,
- 			event == NFT_MSG_NEWCHAIN ?
- 				AUDIT_NFT_OP_CHAIN_REGISTER :
--				AUDIT_NFT_OP_CHAIN_UNREGISTER);
-+				AUDIT_NFT_OP_CHAIN_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (!ctx->report &&
-@@ -2724,7 +2726,8 @@ static void nf_tables_rule_notify(const struct nft_ctx *ctx,
- 			rule->handle,
- 			event == NFT_MSG_NEWRULE ?
- 				AUDIT_NFT_OP_RULE_REGISTER :
--				AUDIT_NFT_OP_RULE_UNREGISTER);
-+				AUDIT_NFT_OP_RULE_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (!ctx->report &&
-@@ -3737,7 +3740,8 @@ static void nf_tables_set_notify(const struct nft_ctx *ctx,
- 			set->field_count,
- 			event == NFT_MSG_NEWSET ?
- 				AUDIT_NFT_OP_SET_REGISTER :
--				AUDIT_NFT_OP_SET_UNREGISTER);
-+				AUDIT_NFT_OP_SET_UNREGISTER,
-+			gfp_flags);
- 	kfree(buf);
- 
- 	if (!ctx->report &&
-@@ -4864,7 +4868,8 @@ static void nf_tables_setelem_notify(const struct nft_ctx *ctx,
- 			set->handle,
- 			event == NFT_MSG_NEWSETELEM ?
- 				AUDIT_NFT_OP_SETELEM_REGISTER :
--				AUDIT_NFT_OP_SETELEM_UNREGISTER);
-+				AUDIT_NFT_OP_SETELEM_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (!ctx->report && !nfnetlink_has_listeners(net, NFNLGRP_NFTABLES))
-@@ -5956,7 +5961,8 @@ static int nf_tables_dump_obj(struct sk_buff *skb, struct netlink_callback *cb)
- 				audit_log_nfcfg(buf,
- 						family,
- 						obj->handle,
--						AUDIT_NFT_OP_OBJ_RESET);
-+						AUDIT_NFT_OP_OBJ_RESET,
-+						GFP_KERNEL);
- 				kfree(buf);
- 			}
- 
-@@ -6071,13 +6077,14 @@ static int nf_tables_getobj(struct net *net, struct sock *nlsk,
- 		reset = true;
- 
- 	if (reset) {
--		char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-+		char *buf = kasprintf(GFP_ATOMIC, "%s:%llu;?:0",
- 				      table->name, table->handle);
- 
- 		audit_log_nfcfg(buf,
- 				family,
- 				obj->handle,
--				AUDIT_NFT_OP_OBJ_RESET);
-+				AUDIT_NFT_OP_OBJ_RESET,
-+				GFP_KERNEL);
- 		kfree(buf);
- 	}
- 
-@@ -6156,7 +6163,7 @@ void nft_obj_notify(struct net *net, const struct nft_table *table,
- {
- 	struct sk_buff *skb;
- 	int err;
--	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-+	char *buf = kasprintf(gfp, "%s:%llu;?:0",
- 			      table->name, table->handle);
- 
- 	audit_log_nfcfg(buf,
-@@ -6164,7 +6171,8 @@ void nft_obj_notify(struct net *net, const struct nft_table *table,
- 			obj->handle,
- 			event == NFT_MSG_NEWOBJ ?
- 				AUDIT_NFT_OP_OBJ_REGISTER :
--				AUDIT_NFT_OP_OBJ_UNREGISTER);
-+				AUDIT_NFT_OP_OBJ_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (!report &&
-@@ -6954,7 +6962,8 @@ static void nf_tables_flowtable_notify(struct nft_ctx *ctx,
- 			flowtable->hooknum,
- 			event == NFT_MSG_NEWFLOWTABLE ?
- 				AUDIT_NFT_OP_FLOWTABLE_REGISTER :
--				AUDIT_NFT_OP_FLOWTABLE_UNREGISTER);
-+				AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,
-+			GFP_KERNEL);
- 	kfree(buf);
- 
- 	if (ctx->report &&
-@@ -7078,7 +7087,7 @@ static void nf_tables_gen_notify(struct net *net, struct sk_buff *skb,
- 	int err;
- 
- 	audit_log_nfcfg("?:0;?:0", 0, net->nft.base_seq,
--			AUDIT_NFT_OP_GEN_REGISTER);
-+			AUDIT_NFT_OP_GEN_REGISTER, GFP_KERNEL);
- 
- 	if (nlmsg_report(nlh) &&
- 	    !nfnetlink_has_listeners(net, NFNLGRP_NFTABLES))
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index 99a468be4a59..9ad8f3ff66f5 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1410,7 +1410,8 @@ struct xt_table_info *
- 
- 	audit_log_nfcfg(table->name, table->af, private->number,
- 			!private->number ? AUDIT_XT_OP_REGISTER :
--					   AUDIT_XT_OP_REPLACE);
-+					   AUDIT_XT_OP_REPLACE,
-+			GFP_KERNEL);
- 	return private;
- }
- EXPORT_SYMBOL_GPL(xt_replace_table);
-@@ -1473,7 +1474,7 @@ void *xt_unregister_table(struct xt_table *table)
- 	list_del(&table->list);
- 	mutex_unlock(&xt[table->af].mutex);
- 	audit_log_nfcfg(table->name, table->af, private->number,
--			AUDIT_XT_OP_UNREGISTER);
-+			AUDIT_XT_OP_UNREGISTER, GFP_KERNEL);
- 	kfree(table);
- 
- 	return private;
--- 
-1.8.3.1
+No.
+
+>
+> Regards,
+> Markus
 
