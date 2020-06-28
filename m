@@ -2,81 +2,135 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF13320675
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AA520757
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 18:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgF1SUW (ORCPT
+        id S1726676AbgF1SUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 14:20:22 -0400
-Received: from sauhun.de ([88.99.104.3]:34542 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgF1SUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 14:20:21 -0400
-Received: from localhost (p54b335b3.dip0.t-ipconnect.de [84.179.53.179])
-        by pokefinder.org (Postfix) with ESMTPSA id 543AA2C0095;
-        Sun, 28 Jun 2020 20:20:19 +0200 (CEST)
-Date:   Sun, 28 Jun 2020 20:20:15 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     =?utf-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: core: check returned size of emulated smbus block
- read
-Message-ID: <20200628182015.GA1274@ninjato>
-References: <20200613104109.2989-1-mans@mansr.com>
- <20200626082208.GA4559@kunai>
- <yw1x1rm2vtml.fsf@mansr.com>
+        Sun, 28 Jun 2020 14:20:49 -0400
+Received: from smtprelay0188.hostedemail.com ([216.40.44.188]:47112 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgF1SUt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 14:20:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 1FEA61AAE7;
+        Sun, 28 Jun 2020 18:20:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: elbow02_571416026e68
+X-Filterd-Recvd-Size: 4116
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 28 Jun 2020 18:20:46 +0000 (UTC)
+Message-ID: <131b9e2f6caeb46770374ffcb743a9541b51c2ce.camel@perches.com>
+Subject: Re: [PATCH] mm: util: update the kerneldoc for kstrdup_const()
+From:   Joe Perches <joe@perches.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sun, 28 Jun 2020 11:20:45 -0700
+In-Reply-To: <CAMRc=MciqbwHBPJf1w2m3xa6ZxbX7=Ca9ucEeyVaKa+FWPzu7A@mail.gmail.com>
+References: <20200628152500.17916-1-brgl@bgdev.pl>
+         <693db5a878ac09994e2a27c64cb14c0e552f3f50.camel@perches.com>
+         <CAMRc=MciqbwHBPJf1w2m3xa6ZxbX7=Ca9ucEeyVaKa+FWPzu7A@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Content-Disposition: inline
-In-Reply-To: <yw1x1rm2vtml.fsf@mansr.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 2020-06-28 at 20:06 +0200, Bartosz Golaszewski wrote:
+> On Sun, Jun 28, 2020 at 7:37 PM Joe Perches <joe@perches.com> wrote:
+> > On Sun, 2020-06-28 at 17:25 +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > 
+> > > Memory allocated with kstrdup_const() must not be passed to regular
+> > > krealloc() as it is not aware of the possibility of the chunk residing
+> > > in .rodata. Since there are no potential users of krealloc_const()
+> > > at the moment, let's just update the doc to make it explicit.
+> > 
+> > Another option would be to return NULL if it's
+> > used from krealloc with a pointer into rodata
+> > ---
+> >  mm/slab_common.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 37d48a56431d..f8b49656171b 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -1683,6 +1683,9 @@ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+> >   * @new_size: how many bytes of memory are required.
+> >   * @flags: the type of memory to allocate.
+> >   *
+> > + * If the object pointed to is in rodata (likely from kstrdup_const)
+> > + * %NULL is returned.
+> > + *
+> >   * The contents of the object pointed to are preserved up to the
+> >   * lesser of the new and old sizes.  If @p is %NULL, krealloc()
+> >   * behaves exactly like kmalloc().  If @new_size is 0 and @p is not a
+> > @@ -1694,6 +1697,9 @@ void *krealloc(const void *p, size_t new_size, gfp_t flags)
+> >  {
+> >         void *ret;
+> > 
+> > +       if (unlikely(is_kernel_rodata((unsigned long)p)))
+> > +               return NULL;
+> > +
+> >         if (unlikely(!new_size)) {
+> >                 kfree(p);
+> >                 return ZERO_SIZE_PTR;
+> > 
+> > 
+> > 
+> 
+> In that case we should probably add a WARN_ON() - otherwise the user
+> will be baffled by krealloc() failing.
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Maybe:
+---
+ mm/slab_common.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index a143a8c8f874..06c2714ab8c9 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1073,6 +1073,9 @@ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+  * @new_size: how many bytes of memory are required.
+  * @flags: the type of memory to allocate.
+  *
++ * If the object pointed to is in rodata (likely from kstrdup_const)
++ * %NULL is returned.
++ *
+  * The contents of the object pointed to are preserved up to the
+  * lesser of the new and old sizes.  If @p is %NULL, krealloc()
+  * behaves exactly like kmalloc().  If @new_size is 0 and @p is not a
+@@ -1084,6 +1087,14 @@ void *krealloc(const void *p, size_t new_size, gfp_t flags)
+ {
+ 	void *ret;
+ 
++	if (unlikely(is_kernel_rodata((unsigned long)p))) {
++		if (!(flags & __GFP_NOWARN)) {
++			printk(KERN_DEFAULT "invalid use of krealloc with const rodata\n");
++			dump_stack();
++		}
++		return NULL;
++	}
++
+ 	if (unlikely(!new_size)) {
+ 		kfree(p);
+ 		return ZERO_SIZE_PTR;
 
 
-> I saw it with the mv64xxx (Allwinner) and omap (Beaglebone) drivers.
-> From a quick look, it seems like quite a few others have the same
-> problem.
-
-Okay, well, to be fair, both drivers don't advertise
-I2C_SMBUS_BLOCK_DATA. The client driver should check for that. Anyhow,
-it makes sense to have your additional check in the core as fallback
-safety.
-
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7431sACgkQFA3kzBSg
-KbZ8lhAAsFt5LNhF1SI2Icc//SnkzxmhFirxO/4jucUpvTQqt+jMRK5oCskj7Cdp
-p2SKK6JqCA5zNSWVy/rNV/GDyIPy90qjuaxn0jgWii8O+HQj1FI07aOIGoLvix1r
-aZaKala71kODJQR/0mp8qnw4gSHfyCilvZWfCtDVR6TLHWVyN24EIES1KsZgtXe6
-CVFIbcaKUgz9pTDzy6teTX81/FJWAcW8ifhYKiFOKgz0WR/tJThZ6wEwXbEQoPGR
-fBGyczzw8Q5cKCBy38+i2bTOotWwN1wfMkpJktNb/yG/uj65eOPv/qlh3pgEe+Hc
-RLWCtgHaNN1QcI0jnUTaiI+poDvWGA3I4SAjVVDO5uoQKTO2S11SE6F1FDVXQaXS
-DD22nOWTPpSb4NA/asaxk4ZM7v9k0Ugayp3IWBHqb+BF9xKKhhfoXzWH3MO3fTBn
-+7WBZmynlmI8S5F1+7jtd+1FBPW5/BDhWq+JeVKVpyIFJ+hWIS9wTDWJjSR1DhVv
-m8QWu1HJAiYWrMzQyDEUg/Y1CNdwlyQH7/o4cyN4rTJ0r4/K8KTeD7vYxcSvaHcY
-gUrXesYmtMyrnxu5ch3cdOFqSmM3sD8++1/czqo4DGYzp+UbAuHX24FdQZ7dwuT1
-eqIryR6y5iUmh0RDBc/i2cvoO63uRrNnuU5+yTqYrz74IVPfSp4=
-=oRHU
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
