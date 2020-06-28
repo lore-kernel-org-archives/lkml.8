@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2899BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E363214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A5C20702
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593324641;
-	bh=zRFRnZHsu8UqKgRipuT2ilTa85dm6dD+2rTnXyb6J/I=;
+	s=default; t=1593324645;
+	bh=gRgayTRJ5OsbWbGZUwN7yGHPV5KREu495tZWeMC74TA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pa8+GcedooFG/aLUENV4dvbi232voXmxOt6p5ZGShYtyu7SiNvgbQ6FA0NJhLzgUi
-	 jdRqSl6bK67c7VBjmNx0E2g0cw0Q/2H91rypavID/2eY2kUm8SDn6GOOWReQLwv0mN
-	 Rnlp8hvCCeZaCuV5WeRStS18hzkaENRsmlXzEj0M=
+	b=ZacqKWugsSiYnRwZpaCH+Gei7hQwGxNi1Hv9x/eX089SjYM/dbHqKkxi+N7p5zPB+
+	 hL0Phzd/j79zSe+0hJvzklif6JGLbxqkgEDCmKoXt7ubbubZdJrMZ3KYg23nbFhMtg
+	 V+ujaTZ8UgT26FHCFkz5V1fazPFpyJdSpoV/dv8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgF1GKk (ORCPT
+        id S1726126AbgF1GKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 02:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgF1GKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:10:35 -0400
+        id S1726074AbgF1GKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 02:10:37 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD5F2070A;
-        Sun, 28 Jun 2020 06:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409EA21473;
+        Sun, 28 Jun 2020 06:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593324634;
-        bh=zRFRnZHsu8UqKgRipuT2ilTa85dm6dD+2rTnXyb6J/I=;
+        s=default; t=1593324636;
+        bh=gRgayTRJ5OsbWbGZUwN7yGHPV5KREu495tZWeMC74TA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhPGksD6L55r+If240YgFFLbucUtAzcblC42feZjzCgBSuYQQghPP7TKTErsMy/c/
-         zkanAXQ9DltLswIK0Fbm/iXN46gIb2uy5KWTvp3Lc4ihLuvGmB219OY7jlnW1TjQGq
-         43BtsGf8QPG/F9nHU3LbCSUEjKXR2fFrrqvrmic8=
+        b=Zf0XYX/yluiK6jnfRAwQTfK0H6Q/6R2ffPmSOEqjlG0KTZ7XikFpBgOouRaKWwO6i
+         XMhEE0gcSCUXQ9+9acAe/3ttDf2giYHf5KOP12rC8Sz/6rauwJf0ZBfFohn8Lemhhk
+         Y51kAoRxecVoGjttLOVq15oMRncgrccHp5JJ/EuA=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-fsdevel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Subject: [PATCH 1/6] fs/minix: check return value of sb_getblk()
-Date:   Sat, 27 Jun 2020 23:08:40 -0700
-Message-Id: <20200628060846.682158-2-ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH 6/6] fs/minix: remove expected error message in block_to_path()
+Date:   Sat, 27 Jun 2020 23:08:45 -0700
+Message-Id: <20200628060846.682158-7-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200628060846.682158-1-ebiggers@kernel.org>
 References: <20200628060846.682158-1-ebiggers@kernel.org>
@@ -61,52 +59,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-sb_getblk() can fail, so check its return value.
+When truncating a file to a size within the last allowed logical block,
+block_to_path() is called with the *next* block.  This exceeds the
+limit, causing the "block %ld too big" error message to be printed.
 
-This fixes a NULL pointer dereference.
+This case isn't actually an error; there are just no more blocks past
+that point.  So, remove this error message.
 
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Originally-from: Qiujun Huang <anenbupt@gmail.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- fs/minix/itree_common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/minix/itree_v1.c | 12 ++++++------
+ fs/minix/itree_v2.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/minix/itree_common.c b/fs/minix/itree_common.c
-index 043c3fdbc8e7..446148792f41 100644
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -75,6 +75,7 @@ static int alloc_branch(struct inode *inode,
- 	int n = 0;
- 	int i;
- 	int parent = minix_new_block(inode);
-+	int err = -ENOSPC;
- 
- 	branch[0].key = cpu_to_block(parent);
- 	if (parent) for (n = 1; n < num; n++) {
-@@ -85,6 +86,11 @@ static int alloc_branch(struct inode *inode,
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, nr);
-+			err = -ENOMEM;
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
-@@ -103,7 +109,7 @@ static int alloc_branch(struct inode *inode,
- 		bforget(branch[i].bh);
- 	for (i = 0; i < n; i++)
- 		minix_free_block(inode, block_to_cpu(branch[i].key));
--	return -ENOSPC;
-+	return err;
- }
- 
- static inline int splice_branch(struct inode *inode,
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index 405573a79aab..1fed906042aa 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,12 +29,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, inode->i_sb->s_bdev);
+-	} else if (block < 7) {
++		return 0;
++	}
++	if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes)
++		return 0;
++
++	if (block < 7) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= 7) < 512) {
+ 		offsets[n++] = 7;
+diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
+index ee8af2f9e282..9d00f31a2d9d 100644
+--- a/fs/minix/itree_v2.c
++++ b/fs/minix/itree_v2.c
+@@ -32,12 +32,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, sb->s_bdev);
+-	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, sb->s_bdev);
+-	} else if (block < DIRCOUNT) {
++		return 0;
++	}
++	if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes)
++		return 0;
++
++	if (block < DIRCOUNT) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= DIRCOUNT) < INDIRCOUNT(sb)) {
+ 		offsets[n++] = DIRCOUNT;
 -- 
 2.27.0
 
