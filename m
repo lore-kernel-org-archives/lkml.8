@@ -2,51 +2,57 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A77AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3494C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA657214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E48214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593324637;
-	bh=Obir8NWpVyRdOF2tK7j8Pz3Unoae8GMKId/DtUm05yg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zQ6FNooGWklynGFUQc9TowaoGsRBGcN8FiEpMn45B4PpOglvxQ0LQehScBtdrSmxH
-	 xz/xOqjxageqPc+o6/SI8y+8JV+lbJnBn//4dwmmYQF30JknIHkmEmjhVL9CBDKrOa
-	 CSEcB8zkaWis3WQMlS6qgxsmLsbsqZsTWlCMp0O8=
+	s=default; t=1593324639;
+	bh=4KTwlwAS3yf9rIisW3dStoZMc/64VWd7yIvASpVgF40=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y6/KUvguJAmk4EbMB7Iwn37mc4s/5ycz9nhEv0us6Cz4UG1guH4oewNDxEH/YuKZE
+	 z6Lo5W++HRcHTJbTUoDMfoejCtx6eRcXDqtfKp1b0c8NW04Ywq7k/RmacQymJ9DjVK
+	 34dS9FtyvAs8bwPPpVDbxVmjffXzoFifFhkVlG/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgF1GKf (ORCPT
+        id S1726084AbgF1GKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41960 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 02:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgF1GKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:10:34 -0400
+        id S1725913AbgF1GKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 02:10:35 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205F220702;
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CF22071A;
         Sun, 28 Jun 2020 06:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593324634;
-        bh=Obir8NWpVyRdOF2tK7j8Pz3Unoae8GMKId/DtUm05yg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yN31eNYNzzLXSVQ1AuUz0ZUY1jN4jmlCZRGBtVP+t9qaHgQH53VNhIsp6QcgvUIVQ
-         8eMD2+2mJ0DkJ/WPQDHbawydb81lHKUy5OyDdGCb+OZgklHmObvuIwjaat2re4tYyp
-         fgYQBBHPhbEfibW+RKScSVHvjrDkFwSgwR8YlpY8=
+        s=default; t=1593324635;
+        bh=4KTwlwAS3yf9rIisW3dStoZMc/64VWd7yIvASpVgF40=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tys1hkuGTt37lRSXE/p9UQUesp1Q878EE0/Bh+8Rr1uBrMOLeeQuoHS07uJ9+Xejn
+         wYzY1rOxJEaJkR0jPswIE1d2ygau1oCcvrZmR+CFkKwaAVtvmmpffNjjxCM98vYE4/
+         BmDoz86MXWDaSEKqc70KxAswCR9MLwvR4r7SRS2g=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-fsdevel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH 0/6] fs/minix: fix syzbot bugs and set s_maxbytes
-Date:   Sat, 27 Jun 2020 23:08:39 -0700
-Message-Id: <20200628060846.682158-1-ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
+        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Subject: [PATCH 2/6] fs/minix: don't allow getting deleted inodes
+Date:   Sat, 27 Jun 2020 23:08:41 -0700
+Message-Id: <20200628060846.682158-3-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200628060846.682158-1-ebiggers@kernel.org>
+References: <20200628060846.682158-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,37 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series fixes all syzbot bugs in the minix filesystem:
+From: Eric Biggers <ebiggers@google.com>
 
-	KASAN: null-ptr-deref Write in get_block
-	KASAN: use-after-free Write in get_block
-	KASAN: use-after-free Read in get_block
-	WARNING in inc_nlink
-	KMSAN: uninit-value in get_block
-	WARNING in drop_nlink
+If an inode has no links, we need to mark it bad rather than allowing it
+to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink()
+when doing directory operations on a fuzzed filesystem.
 
-It also fixes the minix filesystem to set s_maxbytes correctly, so that
-userspace sees the correct behavior when exceeding the max file size.
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/minix/inode.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Al or Andrew: one of you will need to take these patches, since no one
-is maintaining this filesystem.
-
-
-Eric Biggers (6):
-  fs/minix: check return value of sb_getblk()
-  fs/minix: don't allow getting deleted inodes
-  fs/minix: reject too-large maximum file size
-  fs/minix: set s_maxbytes correctly
-  fs/minix: fix block limit check for V1 filesystems
-  fs/minix: remove expected error message in block_to_path()
-
- fs/minix/inode.c        | 42 +++++++++++++++++++++++++++++++++++++----
- fs/minix/itree_common.c |  8 +++++++-
- fs/minix/itree_v1.c     | 12 ++++++------
- fs/minix/itree_v2.c     | 13 ++++++-------
- fs/minix/minix.h        |  1 -
- 5 files changed, 57 insertions(+), 19 deletions(-)
-
+diff --git a/fs/minix/inode.c b/fs/minix/inode.c
+index 7cb5fd38eb14..2bca95abe8f4 100644
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -468,6 +468,13 @@ static struct inode *V1_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -501,6 +508,13 @@ static struct inode *V2_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
 -- 
 2.27.0
 
