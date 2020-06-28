@@ -2,61 +2,63 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281E6C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E501C433E1
 	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01120206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FBA206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LW+eWHBj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udIuqj7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgF1XZr (ORCPT
+        id S1726640AbgF1XZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 19:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
+        Sun, 28 Jun 2020 19:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgF1XZr (ORCPT
+        with ESMTP id S1726213AbgF1XZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 19:25:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A040BC03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:46 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k6so14775867wrn.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:46 -0700 (PDT)
+        Sun, 28 Jun 2020 19:25:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CBFEC03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so14706972wrj.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 16:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jd1oUmsw7qGCe3zJwrNPzneUBgaH8UuHmFFNjsoAHY0=;
-        b=LW+eWHBjgnEzf/Eah3WfMdCn2VBm3OJGM065dQQy6sCLWEz2TsfHS0jyHoMFImJ3YO
-         bGTbsN2Tr2KxeeeR204Ead+lzWU+dknUaJLQFozWBM8DCfRBg5BWyMoH3yMnfPFrk53R
-         UEqHoqY8qRwzxTTWLuz0g9cEcpqxWklftuTFvil6e1IGy2WDsxQ5ch7g6MTFtDR+iWhe
-         +fQErPkNefS+CNqZdud8dVKSr0wm7sXZ35TaTYmI1kgozntbAKbyQZCBcDuu5bRnO5IY
-         RClhFPRpyDVcpoWlw4583qM26e6IjZZ4Pw+cNArual+o5LdfNQo6JfcqcBSjxEjrb+Lv
-         Y9ZQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=7WTi4TUq7voaRdDxu7BvpLKt/UshizP8z9Yd6bSgaC4=;
+        b=udIuqj7RD3bvJ1fJBU9iUsF9YYUPq+58gszIe3Ze3/ihamcZySrMgHRINu/PS6MWgB
+         E2SaUgwj1oGURKBSIUyTlNvUcWnk5ZnbyvUM2VqEN3rTABkBnffYc52PVWdm5GXxQG5e
+         KmC8R1Kvpy7WXZLmVn/tilRQyqmGxCpicFnGU+oYBaG6pbQxc6opTJC8KzbsOBm8xXFH
+         1IDRW20PNat82LzTdcAvowh8fPg4QFS4RM+mKmNzYWYTxGi4UpGB/jg/YxnLVzgh32Aw
+         ac9mdIept3nrrpAPjHApg4fy1ELvUYoXzN/KshrfS9pbwRZ9repAyy9fj7cIaxbJCPZn
+         vRRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jd1oUmsw7qGCe3zJwrNPzneUBgaH8UuHmFFNjsoAHY0=;
-        b=gD2XOYgiJGZw9Y2vPzlf5vqPmgvaCjJBmU7T2cIXsWpJ8M37KD4PmpYRNiQ6PfRPay
-         sVVixzAXjoKzkxkZWl2f5yxeI0PbqK14H1ds9dGgdNBcFz/bk4zpKYq7EoNafCGNsqCS
-         EuBZbQDVh5hQb9Y/t3306IJ2xX7MVO6Pjok6pekges2+7xHIh3xShH56QydKOijvGxmp
-         nKghAsADpa+mRUVJEKSCgs6ws8gjqUtlLe+cxWWszLEeiTy0Tqog4i36G8l5KsA5nl7T
-         4s5yMYhZ6vEjabZPqlLwOKSTowz1cMvnPeQPUWFPl4pgg73LL/LsD+HnNsRGh+rJoSTi
-         MvYw==
-X-Gm-Message-State: AOAM533C6QsSEYyUbVz1etRJAtbhZhzxE3NDBz34Yr5Cy3K6NvaMtF4w
-        ayhEp6+xXBo3O5bzECjwX9ofHjti6ndBiQ==
-X-Google-Smtp-Source: ABdhPJy568Qsqwbuz5bYN8jJIlSqACcEZ5H3bie51V4NfXH8jak3sDol1z7frPBfJRgt9n8qQBMIHg==
-X-Received: by 2002:adf:e7c2:: with SMTP id e2mr15301110wrn.179.1593386744663;
-        Sun, 28 Jun 2020 16:25:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=7WTi4TUq7voaRdDxu7BvpLKt/UshizP8z9Yd6bSgaC4=;
+        b=KKJ0g8RtsCGhCx670MMEIAhEMFJvuGs8ugFuJ8AMtNYGpb4Z+J8tPj3aTLJXlDEZsj
+         BfK29fg47x0tsDliyE3cFSth1O5nRmnvQcuvLcOhbAlSFuJP9TTotdkJjdDvb111wePm
+         MqBGe47+E9cQBG21R3F37wrcD4xkJD/6cvlytc3cs9mJ7TI/RIM4wv2axGNlMZhVWqLM
+         n9ATDtGQ+cMjOxkET/byciHMN8HLmvEeC586C8+IU8TqAtGfHTYhDdUWc0y5rDshNSxy
+         74mz/YLr7oEq+LK1oOkhSTRf1/BMfGQFfeniqCwOBlxKbe+eDan7rhC2tmSzUP8AJoMR
+         3zYg==
+X-Gm-Message-State: AOAM532Rz3AABC6E1kIvMPbhAmIzerimLJ9Tl+GMK4rlfQhZ6XnpbnBl
+        J0Ane5e9MIJ0OX7O9oo8OnLq8aRee1kaLg==
+X-Google-Smtp-Source: ABdhPJxBKTFttn5aIKqbTDiSInztCWcyyoiKgGClDSiwSd6jpFQ928V25iOcZDNxhATKzCKQ8pToFQ==
+X-Received: by 2002:adf:f388:: with SMTP id m8mr14922466wro.338.1593386746514;
+        Sun, 28 Jun 2020 16:25:46 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:587:d870:1c00:d905:af8f:383:7f91])
-        by smtp.gmail.com with ESMTPSA id n8sm43396497wrj.44.2020.06.28.16.25.43
+        by smtp.gmail.com with ESMTPSA id n8sm43396497wrj.44.2020.06.28.16.25.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 16:25:44 -0700 (PDT)
+        Sun, 28 Jun 2020 16:25:46 -0700 (PDT)
 From:   Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -67,41 +69,50 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
-Subject: [PATCH 0/2] perf tools: minor fixes regarding macro usage
-Date:   Mon, 29 Jun 2020 02:25:19 +0300
-Message-Id: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
+Subject: [PATCH 1/2] perf stat: use proper macro for time conversions
+Date:   Mon, 29 Jun 2020 02:25:20 +0300
+Message-Id: <20200628232521.22686-2-emmanouil.maroudas@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
+References: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    Hello,
+    The values of interval and timeout are in msecs as documented in the
+    -I and --timeout options.
 
-    Here are some minor fixes for perf tools regarding *SEC_PER*SEC macro usage,
-    found while reading the code.
+    Use MSEC_PER_SEC instead USEC_PER_MSEC to convert to struct timespec.
+    Both macros have the same value 1000L (see tools/include/linux/time64.h).
 
-    Patch 1 replaces a macro with a more suitable one (same value, different name).
-    Patch 2 converts some hardcoded values (which seem appropriate IMHO) with their
-    respective macros.
+    No functional change intended.
 
-    Based on v5.8-rc3.
+Signed-off-by: Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
+---
+ tools/perf/builtin-stat.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-    No functionality change. The final perf binary is the same, before and after
-    these patches.
-
-    Thanks,
-    Emmanouil Maroudas
-
-Emmanouil Maroudas (2):
-  perf stat: use proper macro for time conversions
-  perf tools: use *SEC_PER_*SEC macros
-
- tools/perf/builtin-record.c |  2 +-
- tools/perf/builtin-stat.c   | 12 ++++++------
- tools/perf/builtin-trace.c  |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 9be020e0098a..6aa866e2d512 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -613,11 +613,11 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	bool second_pass = false;
+ 
+ 	if (interval) {
+-		ts.tv_sec  = interval / USEC_PER_MSEC;
+-		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
++		ts.tv_sec  = interval / MSEC_PER_SEC;
++		ts.tv_nsec = (interval % MSEC_PER_SEC) * NSEC_PER_MSEC;
+ 	} else if (timeout) {
+-		ts.tv_sec  = timeout / USEC_PER_MSEC;
+-		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
++		ts.tv_sec  = timeout / MSEC_PER_SEC;
++		ts.tv_nsec = (timeout % MSEC_PER_SEC) * NSEC_PER_MSEC;
+ 	} else {
+ 		ts.tv_sec  = 1;
+ 		ts.tv_nsec = 0;
 -- 
 2.17.1
 
