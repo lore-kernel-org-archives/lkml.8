@@ -2,184 +2,256 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DE420702
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839DF20775
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 06:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Zbnhwvcm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmlALT1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgF1GRb (ORCPT
+        id S1726032AbgF1GVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:17:31 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:21179 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgF1GRb (ORCPT
+        Sun, 28 Jun 2020 02:21:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32833 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725936AbgF1GVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 02:17:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1593325045;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=m5DGw2srTjGAfAegBLNLm8kQtSc40dBbbxgwlH3oaRo=;
-        b=Zbnhwvcm6PVVsWPaGd/gxF5WdWJuu1yn7TcagkTse+T/F6fZw5FSsIdBytnt2CU88x
-        Xj5cxXaBuMRr8ya4RaO7FdD/ghGT8KGGCqz9rbpBwj7yVzv8Ns8oWvR6579tHdD4jhsX
-        mwqtb3Fys689zyzsx+nAcWd0q+7KyDBloTVsG+hP5r+HZtaaY4jzTrkxnbt1VDwL3GJq
-        OLslCvikhZLPaHlbc8DEF+KNVLo8BxgLgMphAkUtB1inJRADeWQlZeTBHQ+elHZte2Ng
-        r9vkgXl0t0Kce1j2LnyuHCVgipIgxMROVCa8cJN5KO5VjtvxzCvaGOX1mhymZ/JuXV8L
-        YnyA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw47kDQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id V07054w5S6HBIFd
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sun, 28 Jun 2020 08:17:11 +0200 (CEST)
-Subject: Re: [PATCH] modpost: remove use of non-standard strsep() in HOSTCC code
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAK7LNATCLscXNDZ1RUmbnM5BeV-tvKjz9kQB8eo0SNp10WbjFQ@mail.gmail.com>
-Date:   Sun, 28 Jun 2020 08:17:10 +0200
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2D851B90-5F85-4136-AF70-E764FDF4D7DD@goldelico.com>
-References: <11c1e65b393b4c3ca6118515c77bbf19524dab11.1593074472.git.hns@goldelico.com> <CAK7LNATCLscXNDZ1RUmbnM5BeV-tvKjz9kQB8eo0SNp10WbjFQ@mail.gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Sun, 28 Jun 2020 02:21:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593325269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qXEDHyjjxb2rXqbcuhJROWnkr8If4Nsba+ifr6k/PsA=;
+        b=XmlALT1lUNNcx4DWDccNjDleakdBt9WVe4sUxF+kxXwWcpibospAV3If+Qbgw2poEgdeve
+        w/bkrSHg+242/lcivYI4wzUysnkarqyO2uZCpOzUR9PIi7j5FRSzxMvyaS1spx/zdB3IeV
+        vnm+gGqd2glOyv1dA4+rHbIZq55+7IU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-inwYdt1qNTuKEJE-ZQKttw-1; Sun, 28 Jun 2020 02:21:04 -0400
+X-MC-Unique: inwYdt1qNTuKEJE-ZQKttw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10F4880183C;
+        Sun, 28 Jun 2020 06:21:03 +0000 (UTC)
+Received: from [10.72.13.164] (ovpn-13-164.pek2.redhat.com [10.72.13.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 029C35D9DD;
+        Sun, 28 Jun 2020 06:20:47 +0000 (UTC)
+Subject: Re: [PATCH] virtio: VIRTIO_F_IOMMU_PLATFORM ->
+ VIRTIO_F_ACCESS_PLATFORM
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-um@lists.infradead.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200624222540.584772-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <98668518-8641-38f9-6f38-af1a2a75b9d8@redhat.com>
+Date:   Sun, 28 Jun 2020 14:20:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200624222540.584772-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-> Am 28.06.2020 um 07:51 schrieb Masahiro Yamada <masahiroy@kernel.org>:
->=20
-> On Thu, Jun 25, 2020 at 5:47 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->> strsep() is neither standard C nor POSIX and used outside
->> the kernel code here. Using it here requires that the
->> build host supports it out of the box which is e.g.
->> not true for a Darwin build host and using a cross-compiler.
->> This leads to:
->>=20
->> scripts/mod/modpost.c:145:2: warning: implicit declaration of =
-function 'strsep' [-Wimplicit-function-declaration]
->>  return strsep(stringp, "\n");
->>  ^
->>=20
->> and a segfault when running MODPOST.
->>=20
->> See also: https://stackoverflow.com/a/7219504
->>=20
->> So let's add some lines of code separating the string at the
->> next newline character instead of using strsep(). It does not
->> hurt kernel size or speed since this code is run on the build host.
->>=20
->> Fixes: ac5100f5432967 ("modpost: add read_text_file() and get_line() =
-helpers")
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> scripts/mod/modpost.c | 7 ++++++-
->> 1 file changed, 6 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->> index 6aea65c65745..8fe63989c6e1 100644
->> --- a/scripts/mod/modpost.c
->> +++ b/scripts/mod/modpost.c
->> @@ -138,11 +138,16 @@ char *read_text_file(const char *filename)
->>=20
->> char *get_line(char **stringp)
->> {
->> +       char *p;
->>        /* do not return the unwanted extra line at EOF */
->>        if (*stringp && **stringp =3D=3D '\0')
->=20
-> This check does not make sense anymore.
->=20
-> Previously, get_line(NULL) returns NULL.
->=20
-> With your patch, get_line(NULL) crashes
-> due to NULL-pointer dereference.
+On 2020/6/25 上午6:25, Michael S. Tsirkin wrote:
+> Rename the bit to match latest virtio spec.
+> Add a compat macro to avoid breaking existing userspace.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   arch/um/drivers/virtio_uml.c       |  2 +-
+>   drivers/vdpa/ifcvf/ifcvf_base.h    |  2 +-
+>   drivers/vdpa/vdpa_sim/vdpa_sim.c   |  4 ++--
+>   drivers/vhost/net.c                |  4 ++--
+>   drivers/vhost/vdpa.c               |  2 +-
+>   drivers/virtio/virtio_balloon.c    |  2 +-
+>   drivers/virtio/virtio_ring.c       |  2 +-
+>   include/linux/virtio_config.h      |  2 +-
+>   include/uapi/linux/virtio_config.h | 10 +++++++---
+>   tools/virtio/linux/virtio_config.h |  2 +-
+>   10 files changed, 18 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+> index 351aee52aca6..a6c4bb6c2c01 100644
+> --- a/arch/um/drivers/virtio_uml.c
+> +++ b/arch/um/drivers/virtio_uml.c
+> @@ -385,7 +385,7 @@ static irqreturn_t vu_req_interrupt(int irq, void *data)
+>   		}
+>   		break;
+>   	case VHOST_USER_SLAVE_IOTLB_MSG:
+> -		/* not supported - VIRTIO_F_IOMMU_PLATFORM */
+> +		/* not supported - VIRTIO_F_ACCESS_PLATFORM */
+>   	case VHOST_USER_SLAVE_VRING_HOST_NOTIFIER_MSG:
+>   		/* not supported - VHOST_USER_PROTOCOL_F_HOST_NOTIFIER */
+>   	default:
+> diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
+> index f4554412e607..24af422b5a3e 100644
+> --- a/drivers/vdpa/ifcvf/ifcvf_base.h
+> +++ b/drivers/vdpa/ifcvf/ifcvf_base.h
+> @@ -29,7 +29,7 @@
+>   		 (1ULL << VIRTIO_F_VERSION_1)			| \
+>   		 (1ULL << VIRTIO_NET_F_STATUS)			| \
+>   		 (1ULL << VIRTIO_F_ORDER_PLATFORM)		| \
+> -		 (1ULL << VIRTIO_F_IOMMU_PLATFORM)		| \
+> +		 (1ULL << VIRTIO_F_ACCESS_PLATFORM)		| \
+>   		 (1ULL << VIRTIO_NET_F_MRG_RXBUF))
+>   
+>   /* Only one queue pair for now. */
+> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+> index c7334cc65bb2..a9bc5e0fb353 100644
+> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
+> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+> @@ -55,7 +55,7 @@ struct vdpasim_virtqueue {
+>   
+>   static u64 vdpasim_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
+>   			      (1ULL << VIRTIO_F_VERSION_1)  |
+> -			      (1ULL << VIRTIO_F_IOMMU_PLATFORM);
+> +			      (1ULL << VIRTIO_F_ACCESS_PLATFORM);
+>   
+>   /* State of each vdpasim device */
+>   struct vdpasim {
+> @@ -450,7 +450,7 @@ static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
+>   	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+>   
+>   	/* DMA mapping must be done by driver */
+> -	if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
+> +	if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
+>   		return -EINVAL;
+>   
+>   	vdpasim->features = features & vdpasim_features;
+> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+> index e992decfec53..8e0921d3805d 100644
+> --- a/drivers/vhost/net.c
+> +++ b/drivers/vhost/net.c
+> @@ -73,7 +73,7 @@ enum {
+>   	VHOST_NET_FEATURES = VHOST_FEATURES |
+>   			 (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
+>   			 (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
+> -			 (1ULL << VIRTIO_F_IOMMU_PLATFORM)
+> +			 (1ULL << VIRTIO_F_ACCESS_PLATFORM)
+>   };
+>   
+>   enum {
+> @@ -1653,7 +1653,7 @@ static int vhost_net_set_features(struct vhost_net *n, u64 features)
+>   	    !vhost_log_access_ok(&n->dev))
+>   		goto out_unlock;
+>   
+> -	if ((features & (1ULL << VIRTIO_F_IOMMU_PLATFORM))) {
+> +	if ((features & (1ULL << VIRTIO_F_ACCESS_PLATFORM))) {
+>   		if (vhost_init_device_iotlb(&n->dev, true))
+>   			goto out_unlock;
+>   	}
+> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+> index a54b60d6623f..18869a35d408 100644
+> --- a/drivers/vhost/vdpa.c
+> +++ b/drivers/vhost/vdpa.c
+> @@ -31,7 +31,7 @@ enum {
+>   		(1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
+>   		(1ULL << VIRTIO_F_ANY_LAYOUT) |
+>   		(1ULL << VIRTIO_F_VERSION_1) |
+> -		(1ULL << VIRTIO_F_IOMMU_PLATFORM) |
+> +		(1ULL << VIRTIO_F_ACCESS_PLATFORM) |
+>   		(1ULL << VIRTIO_F_RING_PACKED) |
+>   		(1ULL << VIRTIO_F_ORDER_PLATFORM) |
+>   		(1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 1f157d2f4952..fc7301406540 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -1120,7 +1120,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+>   	else if (!virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON))
+>   		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+>   
+> -	__virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> +	__virtio_clear_bit(vdev, VIRTIO_F_ACCESS_PLATFORM);
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index 58b96baa8d48..a1a5c2a91426 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -2225,7 +2225,7 @@ void vring_transport_features(struct virtio_device *vdev)
+>   			break;
+>   		case VIRTIO_F_VERSION_1:
+>   			break;
+> -		case VIRTIO_F_IOMMU_PLATFORM:
+> +		case VIRTIO_F_ACCESS_PLATFORM:
+>   			break;
+>   		case VIRTIO_F_RING_PACKED:
+>   			break;
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index bb4cc4910750..f2cc2a0df174 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -171,7 +171,7 @@ static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
+>   	 * Note the reverse polarity of the quirk feature (compared to most
+>   	 * other features), this is for compatibility with legacy systems.
+>   	 */
+> -	return !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> +	return !virtio_has_feature(vdev, VIRTIO_F_ACCESS_PLATFORM);
+>   }
+>   
+>   static inline
+> diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
+> index ff8e7dc9d4dd..b5eda06f0d57 100644
+> --- a/include/uapi/linux/virtio_config.h
+> +++ b/include/uapi/linux/virtio_config.h
+> @@ -67,13 +67,17 @@
+>   #define VIRTIO_F_VERSION_1		32
+>   
+>   /*
+> - * If clear - device has the IOMMU bypass quirk feature.
+> - * If set - use platform tools to detect the IOMMU.
+> + * If clear - device has the platform DMA (e.g. IOMMU) bypass quirk feature.
+> + * If set - use platform DMA tools to access the memory.
+>    *
+>    * Note the reverse polarity (compared to most other features),
+>    * this is for compatibility with legacy systems.
+>    */
+> -#define VIRTIO_F_IOMMU_PLATFORM		33
+> +#define VIRTIO_F_ACCESS_PLATFORM	33
+> +#ifndef __KERNEL__
+> +/* Legacy name for VIRTIO_F_ACCESS_PLATFORM (for compatibility with old userspace) */
+> +#define VIRTIO_F_IOMMU_PLATFORM		VIRTIO_F_ACCESS_PLATFORM
+> +#endif /* __KERNEL__ */
+>   
+>   /* This feature indicates support for the packed virtqueue layout. */
+>   #define VIRTIO_F_RING_PACKED		34
+> diff --git a/tools/virtio/linux/virtio_config.h b/tools/virtio/linux/virtio_config.h
+> index dbf14c1e2188..f99ae42668e0 100644
+> --- a/tools/virtio/linux/virtio_config.h
+> +++ b/tools/virtio/linux/virtio_config.h
+> @@ -51,7 +51,7 @@ static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
+>   	 * Note the reverse polarity of the quirk feature (compared to most
+>   	 * other features), this is for compatibility with legacy systems.
+>   	 */
+> -	return !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> +	return !virtio_has_feature(vdev, VIRTIO_F_ACCESS_PLATFORM);
+>   }
+>   
+>   static inline bool virtio_is_little_endian(struct virtio_device *vdev)
 
-Well, that is original code.
 
-I have only replaced the strsep() function.
-But yes, it looks to be better in addition to
-my patch.
-
->=20
->=20
->=20
->>                return NULL;
->>=20
->> -       return strsep(stringp, "\n");
->> +       p =3D *stringp;
->> +       while (**stringp !=3D '\n')
->> +               (*stringp)++;
->=20
->=20
-> Is this a safe conversion?
->=20
-> If the input file does not contain '\n' at all,
-> this while-loop continues running,
-> and results in the segmentation fault
-> due to buffer over-run.
-
-Ah, yes, you are right.
-
-We should use
-
-+       while (**stringp && **stringp !=3D '\n')
-
->=20
->=20
->=20
->> +       *(*stringp)++ =3D '\0';
->> +       return p;
->> }
->=20
->=20
->=20
-> How about this?
->=20
-> char *get_line(char **stringp)
-> {
->        char *orig =3D *stringp;
-
-^^^ this still segfaults with get_line(NULL)
-
->        char *next;
->=20
->        /* do not return the unwanted extra line at EOF */
->        if (!orig || *orig =3D=3D '\0')
->                return NULL;
->=20
->        next =3D strchr(orig, '\n');
->        if (next)
->                *next++ =3D '\0';
->=20
->        *stringp =3D next;
-
-Yes, this code is easier to understand than my while loop.
-And strchr() is POSIX.
-
-So should I submit an updated patch or do you want to submit
-it (with a suggested-by: H. Nikolaus Schaller <hns@goldelico.com>)
-
-BR and thanks,
-Nikolaus Schaller
+Acked-by: Jason Wang <jasowang@redhat.com>
 
 
