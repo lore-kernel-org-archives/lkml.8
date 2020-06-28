@@ -2,151 +2,127 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15408C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C86520702
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC24420702
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="k9Faz/Er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgF1M7F (ORCPT
+        id S1726475AbgF1M72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 08:59:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726316AbgF1M7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 08:59:05 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 71F73490504BFFE6F6BC;
-        Sun, 28 Jun 2020 20:59:03 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Sun, 28 Jun 2020
- 20:58:59 +0800
-Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug
- capable devices
-To:     Jay Vosburgh <jay.vosburgh@canonical.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <25283.1591332444@famine> <3400.1593024778@famine>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <25d4ec0f-71a3-a3d8-a4e8-b44ea4326e82@hisilicon.com>
-Date:   Sun, 28 Jun 2020 20:59:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Sun, 28 Jun 2020 08:59:28 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:7373 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbgF1M71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 08:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593349167; x=1624885167;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C7iLwWRBNIiE1Z5P3HM5arpORAu2RBCVGY2pNOudQek=;
+  b=k9Faz/ErcmjkWIq9v7i35L4QF4TE/pat3vEvFPU0j93pNcX0RJbl652a
+   P1Qsfy3p4Kuv+itKIlgIvJxBojOpSx4WURFvbRYDPU4R/1qVIHOtQP3Qz
+   40ZvYwvGqDjs+bCQLHkSBF6EtH+wplBuJe5Km9/gCeJC9t2wzrutaXq9W
+   JCw1oIAm/BzHStW0ISP19g7HqyVTEor4/m8bwsl9UzT2OAJMXmIg2wgc0
+   b2uPoU6eJPQMQN4s4j/dDlomHZQak9QV6kranV6N2d3IUM9DljmGh9BTw
+   kKdOfwunQ/XGZF+fQMnmHAf6PwY/LBArDk5pRLWw+IcEKGKKkfBmpJAcz
+   w==;
+IronPort-SDR: WYb1sCuzIdr1wLYoPcho54i/r7QExhBNB8qS9MjO8GZ+yDtxmyNP2rai0bimIH0WjcAgJ1zxPr
+ IWY3Fh8x8ekRS+qJuIjgzAiqg/oTtZysn3F8xuSiKv7kPRlfah6+v574Uxg8HFC310Qw3+n5cG
+ Xx0rLLTTqzB3ey0DLtszq3Uj+wWnTAf2ylaFcURRNdRBcXA44rjexnH9DSmIAI2FKCZpo22ZIi
+ hA1lgR/cIqOj6RguSc6AQ7jFWTxLTPcU5bT8jAJ63YYtHhFF040sAANL4NBfREInpZSNW8Fbkg
+ aBo=
+X-IronPort-AV: E=Sophos;i="5.75,291,1589266800"; 
+   d="scan'208";a="81831637"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2020 05:59:27 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 28 Jun 2020 05:59:26 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Sun, 28 Jun 2020 05:59:10 -0700
+Date:   Sun, 28 Jun 2020 14:59:25 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next v3 0/2] bridge: mrp: Extend MRP netlink
+ interface with IFLA_BRIDGE_MRP_CLEAR
+Message-ID: <20200628125925.gmc6ct34lnv6nrzu@soft-dev3.localdomain>
+References: <20200626073349.3495526-1-horatiu.vultur@microchip.com>
+ <20200626.130029.89317239393030387.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <3400.1593024778@famine>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200626.130029.89317239393030387.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jay,
+The 06/26/2020 13:00, David Miller wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> From: Horatiu Vultur <horatiu.vultur@microchip.com>
+> Date: Fri, 26 Jun 2020 09:33:47 +0200
+> 
+> > This patch series extends MRP netlink interface with IFLA_BRIDGE_MRP_CLEAR.
+> > To allow the userspace to clear all MRP instances when is started. The
+> > second patch in the series fix different sparse warnings.
+> >
+> > v3:
+> >   - add the second patch to fix sparse warnings
 
-I've tested the patches on my board, and they work well.
+Hi,
+> 
+> These changes are completely unrelated.
+> 
+> The sparse stuff should probably be submitted to 'net'.
 
-Thanks,
-Yicong
+I will send a patch for this to 'net'.
 
+> 
+> And I have to ask why you really need a clear operation. 
 
-On 2020/6/25 2:52, Jay Vosburgh wrote:
-> Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
->
->> sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> Fatal (DPC) error recovery is currently broken for non-hotplug
->>> capable devices. With current implementation, after successful
->>> fatal error recovery, non-hotplug capable device state won't be
->>> restored properly. You can find related issues in following links.
->>>
->>> https://lkml.org/lkml/2020/5/27/290
->>> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
->>> https://lkml.org/lkml/2020/3/28/328
->>>
->>> Current fatal error recovery implementation relies on hotplug handler
->>> for detaching/re-enumerating the affected devices/drivers on DLLSC
->>> state changes. So when dealing with non-hotplug capable devices,
->>> recovery code does not restore the state of the affected devices
->>> correctly. Correct implementation should call report_slot_reset()
->>> function after resetting the link to restore the state of the
->>> device/driver.
->>>
->>> So use PCI_ERS_RESULT_NEED_RESET as error status for successful
->>> reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
->>> case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
->>> is called after reset link operation which will also fix the above
->>> mentioned issue.
->>>
->>> [original patch is from jay.vosburgh@canonical.com]
->>> [original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
->>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> 	I've tested this patch set on one of our test machines, and it
->> resolves the issue.  I plan to test with other systems tomorrow.
-> 	I've done testing on two different systems that exhibit the
-> original issue and this patch set appears to behave as expected.
->
-> 	Has anyone else (Yicong?) had an opportunity to test this?
->
-> 	Can this be considered for acceptance, or is additional feedback
-> or review needed?
->
-> 	-J
->
->>> ---
->>> drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
->>> 1 file changed, 22 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>> index 14bb8f54723e..5fe8561c7185 100644
->>> --- a/drivers/pci/pcie/err.c
->>> +++ b/drivers/pci/pcie/err.c
->>> @@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>> 	pci_dbg(dev, "broadcast error_detected message\n");
->>> 	if (state == pci_channel_io_frozen) {
->>> 		pci_walk_bus(bus, report_frozen_detected, &status);
->>> -		status = reset_link(dev);
->>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
->>> +		/*
->>> +		 * After resetting the link using reset_link() call, the
->>> +		 * possible value of error status is either
->>> +		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
->>> +		 * PCI_ERS_RESULT_NEED_RESET (success case).
->>> +		 * So ignore the return value of report_error_detected()
->>> +		 * call for fatal errors. Instead use
->>> +		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
->>> +		 *
->>> +		 * Ignoring the status return value of report_error_detected()
->>> +		 * call will also help in case of EDR mode based error
->>> +		 * recovery. In EDR mode AER and DPC Capabilities are owned by
->>> +		 * firmware and hence report_error_detected() call will possibly
->>> +		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
->>> +		 * the return value of report_error_detected() then
->>> +		 * pcie_do_recovery() would report incorrect status after
->>> +		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
->>> +		 * in non EDR case should not have any functional impact.
->>> +		 */
->>> +		status = PCI_ERS_RESULT_NEED_RESET;
->>> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->>> +			status = PCI_ERS_RESULT_DISCONNECT;
->>> 			pci_warn(dev, "link reset failed\n");
->>> 			goto failed;
->>> 		}
->>> -- 
->>> 2.17.1
-> ---
-> 	-Jay Vosburgh, jay.vosburgh@canonical.com
-> .
->
+Because we didn't have any way for the userspace to know what ports are
+part of the MRP ring. I thought the easiest way would be for the daemon
+to clear everything when is started.
 
+> Routing
+> daemons come up and see what routes are installed, and update their
+> internal SW tables to match.  This not only allows efficient restart
+> after a crash, but it also allows multiple daemons to work
+> cooperatively as an agent for the same forwarding/routing table.
+
+I think it would be possible to have something similar for the MRP
+daemon. But I still have problems to see how to have multiple MRP
+daemons running at the same time. Because each deamon implements MRP
+state machine. So for example if the link of one of the MRP ports is
+changing then each daemon is notified about this change so then each
+daemon will send some frames, and that would mean that we have duplicate
+frames in the network.
+
+> 
+> Your usage model limits one daemon to manage the table and that
+> limitation is completely unnecessary.
+> 
+> Furthermore, even in a one-daemon scenerio, it's wasteful to throw
+> away all the work the previous daemon did to load the MRP entries into
+> the bridge.
+> 
+> Thanks.
+> 
+
+-- 
+/Horatiu
