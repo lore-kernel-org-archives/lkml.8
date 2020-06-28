@@ -2,104 +2,138 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0151C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20752C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE90120772
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593345975;
-	bh=YYpHynDUNbdyuzPWVqciXZ3BfY5jlxoPDbM5nSOJXgc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=c+VF1L/5ntVTkVkFs3FwGM6lQ7R4YWNFn5A0wJv+Gioiych4kGHBnsBg29LZsJDjf
-	 iPpPfBggPFZNRbWvlaeQUtgftDafqaH9OtVcVO8bIU1TwSygZhFOxQi/FuKiPncmkM
-	 mu2Aw3qcfgfO07jXHa8Z8s9Z6n96emzTBCEB0FIc=
+	by mail.kernel.org (Postfix) with ESMTP id F323E20772
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 12:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="L1D9jDfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgF1MGN (ORCPT
+        id S1726392AbgF1MSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 08:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 08:18:31 -0400
+Received: from mout.web.de ([217.72.192.78]:55449 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgF1MGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 08:06:13 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5411320720;
-        Sun, 28 Jun 2020 12:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593345972;
-        bh=YYpHynDUNbdyuzPWVqciXZ3BfY5jlxoPDbM5nSOJXgc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MJ4h4ObkgzM2MfOImYkM2zDBkG8CxbBBgA0xPCZ5EAjJQRCRZjnP4bx475Eiw8Gdq
-         VejtKMpVRWGt6XOPG3o2o+p3n1LN48HQtEII9cYGSEAMXkMff/RNODtvN9UMmZfeLs
-         I2jN4YxVvaGY4pm1Ey6dJNsRjEU2fesXuLz2Nbp0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jpW4Y-00760i-K6; Sun, 28 Jun 2020 13:06:10 +0100
+        id S1726250AbgF1MSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 08:18:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1593346703;
+        bh=zUPzMZfZvkkDhdKPlTQ5hjBU1MqvHKi9Zqx9vf1H5TM=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=L1D9jDfIWSF5iLfpv0pONFmRQudt4iTkmablIrSmXNM3OxRMOZhxPOJOfKwvThGwi
+         TtkVTQ3xrVGc+6c7z9dweErIUEASKtgWYSkvq2sekbJs1JzhQWuZLMbmzLaXEZSTta
+         1keBiQB+mUcNr+NMf9LcGB4aw+wZNDxZ8+FrIZAE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.52.166]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M73WL-1iveSQ0cLd-00wpWv; Sun, 28
+ Jun 2020 14:18:23 +0200
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH] kconfig: qconf: Fix find on split mode
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9048b1ca-87aa-dfee-2be3-2f399d2b7fe6@web.de>
+Date:   Sun, 28 Jun 2020 14:18:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sun, 28 Jun 2020 13:06:10 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
-In-Reply-To: <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
-References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
- <e419a2acea6c1977eaef5d049d607749@kernel.org>
- <CAHiYmc6wmgHYm688pTFEAoyzD+nE68SPeJgCOcZLb2yRRgwGRg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <80132dff49a64d238f775aa0bafe29e1@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: aleksandar.qemu.devel@gmail.com, yangtiezhu@loongson.cn, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, lixuefeng@loongson.cn
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ShA9GLipEFEA+AXkaXlRHcmkJCpRKI7fPGKud4xvipMpWpXR/xv
+ hqb5wbMnAzGQ7QmbMnaI5Z19iivxnbM7lVw/d6p17DTa/m5NUNkQq/N2ZmnTEzaWZ+JDtD9
+ jxP0vvByxwM490WnrumbIImCIvnhtDlVFXH+WKhvQasLA/ChTWckjntKluDaeyugHk8CWK0
+ UJy4cdCbn5YrMT9oIZ9Uw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yN64QDTkQzA=:37KK6KXl8pWMOoKtBPTdgU
+ jnZXXDFT3pu7TTeAekS6Q4QZ2umE69TOR/xXSS5wvRhrXgu9H6YvuttuoRiW3ZQH/ureyJoO5
+ /OChVluNfd41YkdGFGh2fLIIwsX6ESsGetioNgIc6zKoMn+ygKwACwIPXf/BF1xH1+Nu4dg/o
+ 1r1pXp0PeznxzrjXWcHgNzcYM5XNH0bKYJvEXMKw5CEU4e8nbWKe4PnYiAgJjT0wyd6ysCDxw
+ 9X2GnKypozLk4XCYn+PN2KSG77Gu07QXC81C1PN9khaii/6D5deUe9ESZiax6a6wtnQkwURQj
+ qA5F/vnkeg/gvztKK030IYEXc22quigtSbIHKj1ShqWu2mAZfv+gZsfz0sCQFLiXX8KRMxyKA
+ VLrtq19BKEYBZrPVVQDKNkiYrAn1T551xs0ND30NsruaTlOl0pXLIcLDJ1pfX2xuSZk+LqYU+
+ R2F0+HwXCPVtE05e62djGon0RIrh4z0ducFx3vr+H3Z4wXifERRY6M5Pn3iLP3j5+SQCG8NX2
+ 1vW7Uc3Vvu5xPzF7AafrsXQUDwS3g0f4JkICTqSqMmghnA/cV+FbDltzknbk8vxkAbW8vFvk9
+ BqQGJTgt+NKqfTIqMm/E2cfum/tsIT985qCBQdxVrHrAtZUHuxOZlwy3RPnFjRaUU3pLP0Zac
+ TbeOR+UuGXFJvA8p8ZeUor6dgr3wTc35/MTCTZvlxnhhewe3J2PoIjFJ0M6oxrysggSMlizmD
+ iER9TD2fs/JstmO+0wM7O10REv+WVxfuunky+NaECeoA1id5K/cxWyrfiXm3fUlBuPCXpccI+
+ RhNV4Mg83tR6rEjGH+NLbIQGlc0rLv4x9qEC0jN/8DLG2MbMCXUpZKQfukBcOR7GIYoXofJmw
+ fyIgMtHkzi0HYkG0IEs4NF0PJdB0D0KIAK2aaGBX0BF+DmCYQIlx4k1JiL99XYeBTq1kF1Lp8
+ NT7yzhyYgF1f+noGrL3LYZFpebk7H7cBNJtndESAAsL/Y1nEfdqdG8TUKsfgh1+CyzO4bgqNg
+ m46M6L3WMqYzh8EobWZaA2a31TVjzp7RLoIMZE/J1ZVgl2J/CPuc/7zbr72pfhU/gGcMxRgea
+ 0rsYByuXVvlLLbFia5g26rzYO3tuEcBSlS1slXiom8uPZmqbmSoRXvLIkfj0G0JH15dqhWDES
+ OIr+AA4RRNWpEocu1OoOVOdF2TmQJNRXdXQ/ZcsIrVlzj33QxosZwiXupBmSBtvrTnrDKBYEX
+ lQBVeGEExT20G5NIX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-28 12:25, Aleksandar Markovic wrote:
-> сре, 24. јун 2020. у 10:40 Marc Zyngier <maz@kernel.org> је написао/ла:
->> 
->> On 2020-06-24 08:44, Tiezhu Yang wrote:
->> > [git send-email failed due to too many commands,
->> >  so only cc the major related email and resend it,
->> >  sorry for that]
->> 
->> This is becoming majorly annoying.
-> 
-> I don't think this is the right vocabulary to welcome newcomers,
-> however "terrible" thinks they did.
-> 
-> Rather, patience, calmness and clear and detailed explanations would
-> work much better - and certainly be much more helpful and useful to
-> the community in the long run.
+> The logic handling find on split mode is currently broken.
 
-Pray tell how you would have handled this. I expressed *my* personal
-frustration at a SNR hovering below the 25% mark. I have only indicated
-that the current course of action was becoming a problem.
+* Is there a word missing in this change description?
 
-And instead of taking the moral high ground, maybe you could actually
-share your wisdom with Teizhu and help him becoming a better 
-contributor?
+* Can any information become clearer another bit?
 
-Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> Fix it, =E2=80=A6
+
+Please replace the beginning of this sentence with the tag =E2=80=9CFixes=
+=E2=80=9D.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D719fdd32921fb7e3208db8832d=
+32ae1c2d68900f#n183
+
+Regards,
+Markus
