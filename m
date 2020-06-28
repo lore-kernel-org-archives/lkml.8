@@ -2,114 +2,142 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9021C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE12F20720
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD0620720
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 14:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593355431;
+	bh=y4TREBMKHu9uDH3gKJLMlptmgrA82DKwrjb+LbW6ib4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w/qaIlOtSaszmQfJ9kRE8Dmawou8XAdxjW5rJCoHg6qDsUezzYu3uqUznTmaNk2fE
+	 XYUPY8hoZwFWYJN6fkblgew+Qiz51KZ9mtuN0zlCrjhwAu+O+xr9plijTRCuQ4WWVa
+	 SchYku0u4ltN+4lm7pv1zUTn+Ndu0FPQndvG2Oxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgF1OnV (ORCPT
+        id S1726586AbgF1Onu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 10:43:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38440 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgF1OnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 10:43:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5E305ACBD;
-        Sun, 28 Jun 2020 14:43:19 +0000 (UTC)
-Date:   Sun, 28 Jun 2020 16:43:19 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86/urgent for 5.8-rc3
-Message-ID: <20200628144319.GD18884@zn.tnic>
+        Sun, 28 Jun 2020 10:43:50 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:58484 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgF1Ont (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 10:43:49 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05SEhPEU018380;
+        Sun, 28 Jun 2020 23:43:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05SEhPEU018380
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593355406;
+        bh=Zf7SkASOX3zOYNjzpboDOaQtt5ag7MRuNwmEO4LCFJg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h7OmUbwWfTN6StZpJzqF9R46GokNIQBfrUe6hCefnZdXQceK9VzyJa8QxtgcqRkUS
+         vNrxtOmkkemWMPayDpFQsUIsH8nGVQIm7CvIocWgj0ValZRqZxvO/gy7jwKglPH06b
+         QZZRCfwbpItcDHG2FlfBZ+KdtB2gcFpsvoTHvRKip3AhCjSuzfVpJ4fa650N+phBvW
+         Hez+3ms+APP9fQ3ai11nJXISlUmWSSe28ten2mp8Yp9gnMvpgOp9ruf9sORXyfzqd2
+         VrjF3/LNMiO/0o4iZpTumBz4XQ2a7P39VtPHUGUSuVFYSo6IeoH0299jw2DpxyT5Da
+         Ira/x8boaevLg==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id z47so4532142uad.5;
+        Sun, 28 Jun 2020 07:43:26 -0700 (PDT)
+X-Gm-Message-State: AOAM531BywM3pDFPOae26X4o9E0jCRP6EkBHqZ1qj49r5WNGd7CkTIuE
+        3qPzaSq+zlTZO68thYMkHq4y0jHKBOSaXNR5Eso=
+X-Google-Smtp-Source: ABdhPJwmnCX2prKemL199Z0LF+nsENJFY+MpLBnoBNPVkKtHukvEm12rwB8/5oQqWLhvsJQUFUUAuBXp3VgjJLvbh/4=
+X-Received: by 2002:ab0:71d3:: with SMTP id n19mr8188868uao.25.1593355405102;
+ Sun, 28 Jun 2020 07:43:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200625154226.25692cd1@coco.lan> <371f4815f6daac50e90057520d5f2b40a6ca3a74.1593096720.git.mchehab+huawei@kernel.org>
+ <c3c58115168c983eb1d441daa7cc84378cf33f39.camel@redhat.com>
+In-Reply-To: <c3c58115168c983eb1d441daa7cc84378cf33f39.camel@redhat.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 28 Jun 2020 23:42:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT5meMz0LF3C-2FnA6S8dettg4uJO-=FvsnCZ3H6+CVng@mail.gmail.com>
+Message-ID: <CAK7LNAT5meMz0LF3C-2FnA6S8dettg4uJO-=FvsnCZ3H6+CVng@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: qconf: Fix find on split mode
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, Jun 28, 2020 at 5:40 PM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+>
+> On Thu, 2020-06-25 at 16:52 +0200, Mauro Carvalho Chehab wrote:
+> > The logic handling find on split mode is currently broken.
+> > Fix it, making it work again as expected.
+>
+> I tested this patch and it works well.
+> There is one really small cosmetic issue:
+>
+> If you select search result, and then select another search result
+> which happens not to update the 'menu', then both the results are
+> selected (that is the old one doesn't clear its selection)
 
-please pull the x86/urgent pile which has nothing but clear fixes.
+I see this too.
+So, this can be improved somehow...
 
-Thx.
 
----
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+>
+> Best regards,
+>         Maxim Levitsky
+>
+> >
+> > Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  scripts/kconfig/qconf.cc | 19 +++++++++----------
+> >  1 file changed, 9 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+> > index c0ac8f7b5f1a..b8f577c6e8aa 100644
+> > --- a/scripts/kconfig/qconf.cc
+> > +++ b/scripts/kconfig/qconf.cc
+> > @@ -1645,22 +1645,21 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
+> >                       return;
+> >               list->setRootMenu(parent);
+> >               break;
+> > -     case symbolMode:
+> > +     case menuMode:
+> >               if (menu->flags & MENU_ROOT) {
+> > -                     configList->setRootMenu(menu);
+> > +                     menuList->setRootMenu(menu);
+> >                       configList->clearSelection();
+> > -                     list = menuList;
+> > -             } else {
+> >                       list = configList;
+> > +             } else {
+> > +                     configList->setRootMenu(menu);
+> > +                     configList->clearSelection();
+> > +
+> >                       parent = menu_get_parent_menu(menu->parent);
+> >                       if (!parent)
+> >                               return;
+> > -                     item = menuList->findConfigItem(parent);
+> > -                     if (item) {
+> > -                             item->setSelected(true);
+> > -                             menuList->scrollToItem(item);
+> > -                     }
+> > -                     list->setRootMenu(parent);
+> > +                     menuList->setRootMenu(parent);
+> > +
+> > +                     list = menuList;
+> >               }
+> >               break;
+> >       case fullMode:
+>
+>
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_urgent_for_5.8_rc3
-
-for you to fetch changes up to bb5570ad3b54e7930997aec76ab68256d5236d94:
-
-  x86/asm/64: Align start of __clear_user() loop to 16-bytes (2020-06-19 18:32:11 +0200)
-
-----------------------------------------------------------------
-* AMD Memory bandwidth counter width fix, by Babu Moger.
-
-* Use the proper length type in the 32-bit truncate() syscall variant,
-by Jiri Slaby.
-
-* Reinit IA32_FEAT_CTL during wakeup to fix the case where after
-resume, VMXON would #GP due to VMX not being properly enabled, by Sean
-Christopherson.
-
-* Fix a static checker warning in the resctrl code, by Dan Carpenter.
-
-* Add a CR4 pinning mask for bits which cannot change after boot, by
-Kees Cook.
-
-* Align the start of the loop of __clear_user() to 16 bytes, to improve
-performance on AMD zen1 and zen2 microarchitectures, by Matt Fleming.
-
-----------------------------------------------------------------
-Babu Moger (1):
-      x86/resctrl: Fix memory bandwidth counter width for AMD
-
-Dan Carpenter (1):
-      x86/resctrl: Fix a NULL vs IS_ERR() static checker warning in rdt_cdp_peer_get()
-
-Jiri Slaby (1):
-      syscalls: Fix offset type of ksys_ftruncate()
-
-Kees Cook (1):
-      x86/cpu: Use pinning mask for CR4 bits needing to be 0
-
-Matt Fleming (1):
-      x86/asm/64: Align start of __clear_user() loop to 16-bytes
-
-Sean Christopherson (1):
-      x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
-
- arch/x86/include/asm/cpu.h             |  5 +++++
- arch/x86/kernel/cpu/centaur.c          |  1 +
- arch/x86/kernel/cpu/common.c           | 24 ++++++++++++------------
- arch/x86/kernel/cpu/cpu.h              |  4 ----
- arch/x86/kernel/cpu/resctrl/core.c     |  8 ++++----
- arch/x86/kernel/cpu/resctrl/internal.h |  1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |  1 +
- arch/x86/kernel/cpu/zhaoxin.c          |  1 +
- arch/x86/lib/usercopy_64.c             |  1 +
- arch/x86/power/cpu.c                   |  6 ++++++
- include/linux/syscalls.h               |  2 +-
- 11 files changed, 33 insertions(+), 21 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+Best Regards
+Masahiro Yamada
