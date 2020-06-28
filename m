@@ -2,148 +2,184 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B505C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664C920708
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A45B20738
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 13:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZE5jaibu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CY2PnTJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgF1NQs (ORCPT
+        id S1726509AbgF1NRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 09:16:48 -0400
-Received: from mout.web.de ([212.227.17.12]:41135 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbgF1NQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 09:16:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593350184;
-        bh=EqxHBeHO+Tcgfao9vs+nIoCPeWasPgn4GNv8r3qLK60=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=ZE5jaibu89cSS8qSvhOepM/nqhU7MuuWi1jHl3AkX/HKHk7tMKqBZs2kQmTNGqgIe
-         WZdtUIdj3D7OIGlw1DI4TB/klmN2/noKDqy9cDwslKQJ7R50s4OQkTYkAoJC94oXyE
-         I7WKgYzJ8yBKWAi5NKfNG1ESsRyG6t/ePfbd+aVk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.52.166]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M7sw0-1iuFiq1hk8-00vMid; Sun, 28
- Jun 2020 15:16:24 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Aditya Pakki <pakki001@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Andy Gross <agross@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3] media: venus: core: Fix runtime PM imbalance in
- venus_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org
-Message-ID: <9797fb44-e10e-61b5-b2cc-82d94cc98a3c@web.de>
-Date:   Sun, 28 Jun 2020 15:16:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 28 Jun 2020 09:17:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46531 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726411AbgF1NRe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 09:17:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593350252;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJATFbaDQMEpe6MOWb32SzcaiULGBbD5r7kQBEp9Ztw=;
+        b=CY2PnTJuDl0mfzUBWRc6gz5LQ/z2jWESJf0eO5c90GGn4OY6WaxaAP9ScWnd35Y2i2Se1r
+        eqhXDpQ13rs6p0Sq32R62CjDyRVgZ45j9GWeaFPLkBdwLCnc/gXvOzlyZUglShqOvWVuRX
+        IjmcWn5LKxfJR1o5jORe9N1PO+gi+yc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-elkRecraMTaTGc5g9NtJQg-1; Sun, 28 Jun 2020 09:17:27 -0400
+X-MC-Unique: elkRecraMTaTGc5g9NtJQg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50A991800D42;
+        Sun, 28 Jun 2020 13:17:26 +0000 (UTC)
+Received: from starship (unknown [10.35.206.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 717B25C1D4;
+        Sun, 28 Jun 2020 13:17:24 +0000 (UTC)
+Message-ID: <d805dc9c56918a1fab5056a68165d34421f95ce7.camel@redhat.com>
+Subject: Re: Commit 'fs: Do not check if there is a fsnotify watcher on
+ pseudo inodes' breaks chromium here
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Jun 2020 16:17:23 +0300
+In-Reply-To: <bffe8da0944fad97c60bbd4e73dc970ee3a7a2c0.camel@redhat.com>
+References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
+         <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
+         <bffe8da0944fad97c60bbd4e73dc970ee3a7a2c0.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KIRbQCMV/EzqTBbzldYJ/H7U/4NiicXp2MQF5WWl0FcUTjRbaeG
- in+EjpwuFFhG84F5zsYid4S9dh6lkVe9uUo+xxHEuMFW5eWQBTTR0yapxisTpFf/yW+HsU1
- sEX6fbwRf7aOY7FQdR9v/udHFt8SVooPNhJwh2RRgYvMeZk6w8Zkq8CVCtsiM8dupOTF2Ui
- u5QuuylbDJoLGjLyDglKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/xv4OkJ0LB4=:T5ap9vGgddIYtrN5OSJJKU
- HwHWrXmzvbbay5yMNLqwntMH2Qw38WW8XTeCBmvQoTC+fSst/12OSDUZjR4Tw5iPa1p+6b4+p
- o0zHWCQ7JZPyPAYy5xfSCRxfybsS71fF2gsMEd8qxDFHGyBEjGSWtf02MPnf2wBzYoGL0JlTU
- Mv7xSMfuwzeQ2eo4tbbceG8K5EL0A1q0O+igAnX30Buj71pqA7GVt6HGCcp7kzvWBrPU4hcNr
- jTt9H7RQyFvpbZDbEUrsF9+Q5js9AUIBo9uZbeuKW7eH+rFSXBXh9gsWHprfV8Ke8SpgWWCih
- Dvhve7in8ejUWveEVhDNhMwLojBMfJnUTyC+DPlR1o6AiE5X8RHGHC0LbvSWFfR0WQalWOqqZ
- eWrcMsNU50MvlhmZNf8Da/LZu8jqEKzEl5oL1lpvt6vswLYMbrHF0954pJEeSX94YsQe9wPSP
- 1t+l/wwSZrY46Jw81KhxWtyp4YU39DOF93XFLl+/PG9CwEZZEkxaGiOIxoxXaI7bd/Jc7jHFJ
- mdnTgTFi2lLT0GnfNGjNwPb5h8WdiLQ/aD4Zqw8QNPTPfFqDOwO2GUszW9qPAwnd8f0sx1ED3
- ZnpPvtBbMoMopPzho4qK5cTD4onc0Iw5joISkyap4I1BSfTOmrJ13U72kyd3lcYNQ1CsJOo9i
- NdlWgKg8PJCNmDtR2O3J7rX2YKMJabMRwbQQyJM1l8QyCmnMzeMI5bhcVnMVEmMN/uHyGgrFi
- lhHKnnQt/LqAH42YUb270gky+BQu9EDtWV47Fwhfp+q9F4TgPiOy3Y7XGuWZSyp6OR3xpuE5s
- MS/xLXw1K4G/CVhPvv1/Nj0K7KHcXLFOZM7VmmiveU8+iVxHuPLQoZoyMWqdxtnL9jXbfHpcu
- Eu6WnG/si6hiQ4/Ji4VIsLMRDGhVG4Z2f8xRHIA3OAyJB/8aBHd0uJMolJ9/SsY5ANau/4Pj1
- 59jBvAUiwBMWneB/Bb9W3u5w+XHS7lQv9SAneE3EpdSrxPpIE8pIaxIAkLVe91009M89nbxNe
- Cze4Uqsz4OFYWXdkYBJqzbwiLpFUtqyZBgvAKYamkGQ8w3wOYmlaLKUHDmca/8W8a4YFBt8c2
- MsVMMxNHO+A/VaReydMrpB4QLyGtfCxIlU03acIHroCBMjHI87thcajqtgf/AnZW+YHLcXNqN
- ldR4ANr2Cd8mCxOPXmD6cYIBvhe32tKnB77Paypzbj4s8U1QVOzhtZilwn0vrl7ydpg0G6kzM
- SHPsGswyEeBi96ah8
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> when it returns an error code. Thus a pairing decrement is needed on
+On Sun, 2020-06-28 at 16:14 +0300, Maxim Levitsky wrote:
+> On Sun, 2020-06-28 at 15:53 +0300, Amir Goldstein wrote:
+> > On Sun, Jun 28, 2020 at 2:14 PM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+> > > Hi,
+> > > 
+> > > I just did usual kernel update and now chromium crashes on startup.
+> > > It happens both in a KVM's VM (with virtio-gpu if that matters) and natively with amdgpu driver.
+> > > Most likely not GPU related although I initially suspected that it is.
+> > > 
+> > > Chromium starts as a white rectangle, shows few white rectangles
+> > > that resemble its notifications and then crashes.
+> > > 
+> > > The stdout output from chromium:
+> > > 
+> > [...]
+> > 
+> > > Received signal 6
+> > > #0 0x55f6da0120d9 base::debug::CollectStackTrace()
+> > > #1 0x55f6d9f75246 base::debug::StackTrace::StackTrace()
+> > > #2 0x55f6da01170a base::debug::(anonymous namespace)::StackDumpSignalHandler()
+> > > #3 0x55f6da011cfe base::debug::(anonymous namespace)::StackDumpSignalHandler()
+> > > #4 0x7ff46643ab20 (/usr/lib64/libpthread-2.30.so+0x14b1f)
+> > > #5 0x7ff462d87625 __GI_raise
+> > > #6 0x7ff462d708d9 __GI_abort
+> > > #7 0x55f6da0112d5 base::debug::BreakDebugger()
+> > > #8 0x55f6d9f86405 logging::LogMessage::~LogMessage()
+> > > #9 0x55f6d7ed5488 content::(anonymous namespace)::IntentionallyCrashBrowserForUnusableGpuProcess()
+> > > #10 0x55f6d7ed8479 content::GpuDataManagerImplPrivate::FallBackToNextGpuMode()
+> > > #11 0x55f6d7ed4eef content::GpuDataManagerImpl::FallBackToNextGpuMode()
+> > > #12 0x55f6d7ee0f41 content::GpuProcessHost::RecordProcessCrash()
+> > > #13 0x55f6d7ee105d content::GpuProcessHost::OnProcessCrashed()
+> > > #14 0x55f6d7cbe308 content::BrowserChildProcessHostImpl::OnChildDisconnected()
+> > > #15 0x55f6da8b511a IPC::ChannelMojo::OnPipeError()
+> > > #16 0x55f6da13cd62 mojo::InterfaceEndpointClient::NotifyError()
+> > > #17 0x55f6da8c1f9d IPC::(anonymous namespace)::ChannelAssociatedGroupController::OnPipeError()
+> > > #18 0x55f6da138968 mojo::Connector::HandleError()
+> > > #19 0x55f6da15bce7 mojo::SimpleWatcher::OnHandleReady()
+> > > #20 0x55f6da15c0fb mojo::SimpleWatcher::Context::CallNotify()
+> > > #21 0x55f6d78eaa73 mojo::core::WatcherDispatcher::InvokeWatchCallback()
+> > > #22 0x55f6d78ea38f mojo::core::Watch::InvokeCallback()
+> > > #23 0x55f6d78e6efa mojo::core::RequestContext::~RequestContext()
+> > > #24 0x55f6d78db76a mojo::core::NodeChannel::OnChannelError()
+> > > #25 0x55f6d78f232a mojo::core::(anonymous namespace)::ChannelPosix::OnFileCanReadWithoutBlocking()
+> > > #26 0x55f6da03345e base::MessagePumpLibevent::OnLibeventNotification()
+> > > #27 0x55f6da0f9b2d event_base_loop
+> > > #28 0x55f6da03316d base::MessagePumpLibevent::Run()
+> > > #29 0x55f6d9fd79c9 base::sequence_manager::internal::ThreadControllerWithMessagePumpImpl::Run()
+> > > #30 0x55f6d9fada7a base::RunLoop::Run()
+> > > #31 0x55f6d7ce6324 content::BrowserProcessSubThread::IOThreadRun()
+> > > #32 0x55f6d9fe0cb8 base::Thread::ThreadMain()
+> > > #33 0x55f6da024705 base::(anonymous namespace)::ThreadFunc()
+> > > #34 0x7ff46642f4e2 start_thread
+> > > #35 0x7ff462e4c6a3 __GI___clone
+> > >   r8: 0000000000000000  r9: 00007ff44e6a58d0 r10: 0000000000000008 r11: 0000000000000246
+> > >  r12: 00007ff44e6a6b40 r13: 00007ff44e6a6d00 r14: 000000000000006d r15: 00007ff44e6a6b30
+> > >   di: 0000000000000002  si: 00007ff44e6a58d0  bp: 00007ff44e6a5b20  bx: 00007ff44e6a9700
+> > >   dx: 0000000000000000  ax: 0000000000000000  cx: 00007ff462d87625  sp: 00007ff44e6a58d0
+> > >   ip: 00007ff462d87625 efl: 0000000000000246 cgf: 002b000000000033 erf: 0000000000000000
+> > >  trp: 0000000000000000 msk: 0000000000000000 cr2: 0000000000000000
+> > > [end of stack trace]
+> > > Calling _exit(1). Core file will not be generated.
+> > > 
+> > > 
+> > 
+> > I guess this answers our question whether we could disable fsnoitfy
+> > watches on pseudo inodes....
+> > 
+> > From comments like these in chromium code:
+> > https://chromium.googlesource.com/chromium/src/+/master/mojo/core/watcher_dispatcher.cc#77
+> > https://chromium.googlesource.com/chromium/src/+/master/base/files/file_descriptor_watcher_posix.cc#176
+> > https://chromium.googlesource.com/chromium/src/+/master/ipc/ipc_channel_mojo.cc#240
+> > 
+> > I am taking a wild guess that the missing FS_CLOSE event on anonymous pipes is
+> > the cause for regression.
+> > 
+> > The motivation for the patch "fs: Do not check if there is a fsnotify
+> > watcher on pseudo inodes"
+> > was performance, but actually, FS_CLOSE and FS_OPEN events probably do
+> > not impact
+> > performance as FS_MODIFY and FS_ACCESS.
+> > 
+> > Mel,
+> > 
+> > Do your perf results support the claim above?
+> > 
+> > Jan/Linus,
+> > 
+> > Do you agree that dropping FS_MODIFY/FS_ACCESS events for FMODE_STREAM
+> > files as a general rule should be safe?
+> > 
+> > Maxim, can you try if the attached patch fixes the chromium regression.
+> > It is expected to leave the FS_OPEN/FS_CLOSE events on anonymous pipes
+> > but drop the FS_MODIFY/FS_ACCESS events.
+> Tested this (in the VM this time) and it works.
 
-* I find it more appropriate to use the word =E2=80=9Ccorresponding=E2=80=
-=9D here
-  (if you do still not like previous wording suggestions).
 
-* Will it become helpful to add the tag =E2=80=9CFixes=E2=80=9D to the com=
-mit message?
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?id=3D719fdd32921fb7e3208db883=
-2d32ae1c2d68900f#n183
+Note that this should be changed to 'return' since function returns void.
 
-* Would you like to improve the change description any more?
++       if (file->f_mode & FMODE_STREAM)
++               return 0;
+
+Best regards,
+	Maxim Levitsky
+
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> > Thanks,
+> > Amir.
 
 
-> ---
->  drivers/media/platform/qcom/venus/core.c | 5 ++++-
-
-I suggest replace the triple dashes before this diffstat by a blank line.
-
-Regards,
-Markus
