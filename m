@@ -2,188 +2,131 @@ Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B05C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2889F20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J8SOs+gS"
+	by mail.kernel.org (Postfix) with ESMTP id BB5CC207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 02:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgF1C2h (ORCPT
+        id S1725950AbgF1Cff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jun 2020 22:28:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34910 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725866AbgF1C2g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jun 2020 22:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593311314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5ZFRO/u+x4EdsO5u8emjhqCb2/M7dbDUc3NXXTSf+Fs=;
-        b=J8SOs+gSM+bnRPSvmC+aBF7mTKPemUU65QN7KpSjyjXAhTI6zUuaWVHjvBsIqXVVINVd1j
-        53tBfXAlEUK/kGSMxMIxADs8POHxs39pZr5viJnozeS5IBSAvLC9loVL9jm8Idq5Qd3D8W
-        1fzFY6m0HBuj/PcQ07VKxJf0NcZmIdo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-vtl253alMKOLKF33rfYbEg-1; Sat, 27 Jun 2020 22:28:30 -0400
-X-MC-Unique: vtl253alMKOLKF33rfYbEg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8343A804002;
-        Sun, 28 Jun 2020 02:28:27 +0000 (UTC)
-Received: from [10.72.8.17] (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 768C71C94D;
-        Sun, 28 Jun 2020 02:28:18 +0000 (UTC)
-Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
- while locating memory hole
-To:     Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
-Cc:     Kexec-ml <kexec@lists.infradead.org>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-From:   piliu <piliu@redhat.com>
-Message-ID: <ed94a357-16aa-9f17-aa5f-5aab6617ed68@redhat.com>
-Date:   Sun, 28 Jun 2020 10:28:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Sat, 27 Jun 2020 22:35:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6842 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725880AbgF1Cfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jun 2020 22:35:34 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9B1649CC2879B92F08CD;
+        Sun, 28 Jun 2020 10:35:32 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sun, 28 Jun
+ 2020 10:35:27 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: avoid readahead race condition
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+References: <20200624012148.180050-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <368cf853-0411-c237-f0ad-481f78a1eef3@huawei.com>
+Date:   Sun, 28 Jun 2020 10:35:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200624012148.180050-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hari,
-
-If in [4/11],  get_exclude_memory_ranges() turns out to be unnecessary
-,then this patch is abundant either. As my understanding, memblock has
-already helped to achieved the purpose that get_exclude_memory_ranges()
-wants.
-
-Thanks,
-Pingfan
-
-On 06/27/2020 03:04 AM, Hari Bathini wrote:
-> Some archs can have special memory regions, within the given memory
-> range, which can't be used for the buffer in a kexec segment. As
-> kexec_add_buffer() function is being called from generic code as well,
-> add weak arch_kexec_add_buffer definition for archs to override & take
-> care of special regions before trying to locate a memory hole.
+On 2020/6/24 9:21, Jaegeuk Kim wrote:
+> If two readahead threads having same offset enter in readpages, every read
+> IOs are split and issued to the disk which giving lower bandwidth.
 > 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> This patch tries to avoid redundant readahead calls.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > ---
->  include/linux/kexec.h |    5 +++++
->  kernel/kexec_file.c   |   37 +++++++++++++++++++++++++++++++++----
->  2 files changed, 38 insertions(+), 4 deletions(-)
+>  fs/f2fs/data.c  | 15 +++++++++++++++
+>  fs/f2fs/f2fs.h  |  1 +
+>  fs/f2fs/super.c |  2 ++
+>  3 files changed, 18 insertions(+)
 > 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 1776eb2..1237682 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -195,6 +195,11 @@ int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
->  					const Elf_Shdr *relsec,
->  					const Elf_Shdr *symtab);
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index dfd3225153570..1886d83bc5f15 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2292,6 +2292,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	unsigned nr_pages = rac ? readahead_count(rac) : 1;
+>  	unsigned max_nr_pages = nr_pages;
+>  	int ret = 0;
+> +	bool drop_ra = false;
 >  
-> +extern int arch_kexec_add_buffer(struct kexec_buf *kbuf);
-> +
-> +/* arch_kexec_add_buffer calls this when it is ready */
-> +extern int __kexec_add_buffer(struct kexec_buf *kbuf);
-> +
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  	map.m_pblk = 0;
+>  	map.m_lblk = 0;
+> @@ -2302,6 +2303,17 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	map.m_seg_type = NO_CHECK_TYPE;
+>  	map.m_may_create = false;
 >  
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index bb05fd5..a0b4f7f 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -669,10 +669,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->   */
->  int kexec_add_buffer(struct kexec_buf *kbuf)
->  {
-> -
-> -	struct kexec_segment *ksegment;
-> -	int ret;
-> -
->  	/* Currently adding segment this way is allowed only in file mode */
->  	if (!kbuf->image->file_mode)
->  		return -EINVAL;
-> @@ -696,6 +692,25 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
->  	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
->  
-> +	return arch_kexec_add_buffer(kbuf);
-> +}
+> +	/*
+> +	 * Two readahead threads for same address range can cause race condition
+> +	 * which fragments sequential read IOs. So let's avoid each other.
+> +	 */
+> +	if (rac && readahead_count(rac)) {
+> +		if (F2FS_I(inode)->ra_offset == readahead_index(rac))
+> +			drop_ra = true;
+
+I guess you missed to return at somewhere when drop_ra is true?
+
+thanks,
+
+> +		else
+> +			F2FS_I(inode)->ra_offset = readahead_index(rac);
+> +	}
 > +
-> +/**
-> + * __kexec_add_buffer - arch_kexec_add_buffer would call this function after
-> + *                      updating kbuf, to place a buffer in a kexec segment.
-> + * @kbuf:               Buffer contents and memory parameters.
-> + *
-> + * This function assumes that kexec_mutex is held.
-> + * On successful return, @kbuf->mem will have the physical address of
-> + * the buffer in memory.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __kexec_add_buffer(struct kexec_buf *kbuf)
-> +{
-> +	struct kexec_segment *ksegment;
-> +	int ret;
+>  	for (; nr_pages; nr_pages--) {
+>  		if (rac) {
+>  			page = readahead_page(rac);
+> @@ -2368,6 +2380,9 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	}
+>  	if (bio)
+>  		__submit_bio(F2FS_I_SB(inode), bio, DATA);
 > +
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
->  	ret = kexec_locate_mem_hole(kbuf);
->  	if (ret)
-> @@ -711,6 +726,20 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	return 0;
+> +	if (rac && readahead_count(rac) && !drop_ra)
+> +		F2FS_I(inode)->ra_offset = -1;
+>  	return ret;
 >  }
 >  
-> +/**
-> + * arch_kexec_add_buffer - Some archs have memory regions within the given
-> + *                         range that can't be used to place a kexec segment.
-> + *                         Such archs can override this function to take care
-> + *                         of them before trying to locate the memory hole.
-> + * @kbuf:                  Buffer contents and memory parameters.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __weak arch_kexec_add_buffer(struct kexec_buf *kbuf)
-> +{
-> +	return __kexec_add_buffer(kbuf);
-> +}
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 7fb2a1a334388..753782426feac 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -809,6 +809,7 @@ struct f2fs_inode_info {
+>  	struct list_head inmem_pages;	/* inmemory pages managed by f2fs */
+>  	struct task_struct *inmem_task;	/* store inmemory task */
+>  	struct mutex inmem_lock;	/* lock for inmemory pages */
+> +	pgoff_t ra_offset;		/* ongoing readahead offset */
+>  	struct extent_tree *extent_tree;	/* cached extent_tree entry */
+>  
+>  	/* avoid racing between foreground op and gc */
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 7326522057378..80cb7cd358f84 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1015,6 +1015,8 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>  	/* Will be used by directory only */
+>  	fi->i_dir_level = F2FS_SB(sb)->dir_level;
+>  
+> +	fi->ra_offset = -1;
 > +
->  /* Calculate and store the digest of segments */
->  static int kexec_calculate_store_digests(struct kimage *image)
->  {
+>  	return &fi->vfs_inode;
+>  }
+>  
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
