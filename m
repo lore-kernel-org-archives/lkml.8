@@ -4,173 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA38FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ACCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59C52063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8382063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466852;
-	bh=HcI2xoslyx35NhmXNHGQ6SltaGNwVVmR149tf8bukok=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=fXlMhCRSBf03cZqGyLnpqjbhAzCnISo/zg3khLYcDQq4nvHw7lbWBmSOr67BWnKwB
-	 ivIuCCuW41NNLU+9rvxVUQ2DZwA/aW/mz1ZAX3uvd8R+Gwz1doHb6lufWBUGaA89V5
-	 DS83CGYL1CSiaDt02wuP9zKaEyH5D0ksu+Rp19Qc=
+	s=default; t=1593466854;
+	bh=4HcPOWPJZGNE3U8X8zCydG6eyp7N0fJNEm8i+L7BItA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n0fq35sZPQ92pMAACj0a7q/4TI7jowgmqPYEUk0dJBOF6AZYyabDwnkxBo2TllgDR
+	 PPbDoU3bR86SvOAvHGBH/0lGXII3OliB06dKrZ6hTJV+8TEe97tYGZzeMODsOU5fvs
+	 qPVcDWKUNFm0xraPY3HCCduSvkKWx+6E1jcq0A8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391368AbgF2Vkv (ORCPT
+        id S2391333AbgF2Vkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgF2SkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728190AbgF2SkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:22 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93344239EB;
-        Mon, 29 Jun 2020 10:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F292404C;
+        Mon, 29 Jun 2020 15:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593428270;
-        bh=HcI2xoslyx35NhmXNHGQ6SltaGNwVVmR149tf8bukok=;
+        s=default; t=1593443918;
+        bh=4HcPOWPJZGNE3U8X8zCydG6eyp7N0fJNEm8i+L7BItA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6ZvW0Q2Zji1S022ZPEy0rHL9G0AiIAbnzvM1O+PwWKleo95q6udALhwSKjsSf+/q
-         jtPd3P+BH8MsMr6fBUgVJKgKpL0XVHfY7dM5DpcgDtfvAI3ZGdxj/S8T9KRjysoxl1
-         T4tbDH1Nczj8GcPWIrCYTFzAz1MeOTNOs9f8E0eM=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jprTw-006kPP-F2; Mon, 29 Jun 2020 12:57:48 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: qconf: re-implement setSelected()
-Date:   Mon, 29 Jun 2020 12:57:45 +0200
-Message-Id: <7778611fde57d3e221cc1ed077c7b78bedb3cbd7.1593428163.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593423060.git.mchehab+huawei@kernel.org>
-References: <cover.1593423060.git.mchehab+huawei@kernel.org>
+        b=XirVlwBSXF38aH1snAjaSmtZ+fF+/y0mOk6yHp4ue2nr3Hcc3Ppidk5pDEpJ1vPXn
+         t4O5NGlRzIErNDxAGWPMeDRztvULrciVR9fnAsg7JGm9lvTFowAPLDkgbXiK4uiB4x
+         5ZkR3Ca2uELAgg3XC66IqnPCLvdTokDRZWLVsCzQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 019/265] rocker: fix incorrect error handling in dma_rings_init
+Date:   Mon, 29 Jun 2020 11:14:12 -0400
+Message-Id: <20200629151818.2493727-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default implementation for setSelected() at QTreeWidgetItem
-allows multiple items to be selected.
+From: Aditya Pakki <pakki001@umn.edu>
 
-Well, this should never be possible for the configItem lists.
+[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
 
-So, implement a function that will automatically clean any
-previous selection. This simplifies the logic somewhat, while
-making the selection logic to be applied atomically, avoiding
-future issues on that.
+In rocker_dma_rings_init, the goto blocks in case of errors
+caused by the functions rocker_dma_cmd_ring_waits_alloc() and
+rocker_dma_ring_create() are incorrect. The patch fixes the
+order consistent with cleanup in rocker_dma_rings_fini().
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This is a followup patch after the series I sent previously.
-
-I noticed that there are still some situations where it might be
-possible to have multiple lines selected at the config lists.
-
-This patch addresses it on a different way, ensuring that it shouldn't
-be possible anymore to have more than one lines selected.
-
- scripts/kconfig/qconf.cc | 22 ++++------------------
- scripts/kconfig/qconf.h  | 14 ++++++++++----
- 2 files changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index d8870b15a178..0ba373a3cdd4 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -537,7 +537,7 @@ void ConfigList::setRootMenu(struct menu *menu)
- 	rootEntry = menu;
- 	updateListAll();
- 	if (currentItem()) {
--		currentItem()->setSelected(hasFocus());
-+		setSelected(currentItem(), hasFocus());
- 		scrollToItem(currentItem());
- 	}
- }
-@@ -865,7 +865,7 @@ void ConfigList::focusInEvent(QFocusEvent *e)
- 
- 	ConfigItem* item = (ConfigItem *)currentItem();
- 	if (item) {
--		item->setSelected(true);
-+		setSelected(item, true);
- 		menu = item->menu;
- 	}
- 	emit gotFocus(menu);
-@@ -1696,17 +1696,10 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 			if (!parent)
- 				return;
- 
--			/* Clear an already-selected item */
--			if (!configList->selectedItems().isEmpty()) {
--				item = (ConfigItem*)configList->selectedItems().first();
--				if (item)
--					item->setSelected(false);
--			}
--
- 			/* Select the config view */
- 			item = configList->findConfigItem(parent);
- 			if (item) {
--				item->setSelected(true);
-+				configList->setSelected(item, true);
- 				configList->scrollToItem(item);
- 			}
- 
-@@ -1723,16 +1716,9 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 	}
- 
- 	if (list) {
--		/* Clear an already-selected item */
--		if (!list->selectedItems().isEmpty()) {
--			item = (ConfigItem*)list->selectedItems().first();
--			if (item)
--				item->setSelected(false);
--		}
--
- 		item = list->findConfigItem(menu);
- 		if (item) {
--			item->setSelected(true);
-+			list->setSelected(item, true);
- 			list->scrollToItem(item);
- 			list->setFocus();
- 			helpText->setInfo(menu);
-diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index a193137f2314..fb9e9729266f 100644
---- a/scripts/kconfig/qconf.h
-+++ b/scripts/kconfig/qconf.h
-@@ -45,11 +45,17 @@ class ConfigList : public QTreeWidget {
- public:
- 	ConfigList(ConfigView* p, const char *name = 0);
- 	void reinit(void);
--	ConfigView* parent(void) const
--	{
--		return (ConfigView*)Parent::parent();
--	}
- 	ConfigItem* findConfigItem(struct menu *);
-+	ConfigView* parent(void) const
-+	{
-+		return (ConfigView*)Parent::parent();
-+	}
-+	void setSelected(QTreeWidgetItem *item, bool enable) {
-+		for (int i = 0; i < selectedItems().size(); i++)
-+			selectedItems().at(i)->setSelected(false);
-+
-+		item->setSelected(enable);
-+	}
- 
- protected:
- 	void keyPressEvent(QKeyEvent *e);
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 7585cd2270ba4..fc99e7118e494 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -647,10 +647,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
+ err_dma_event_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
+ err_dma_event_ring_create:
++	rocker_dma_cmd_ring_waits_free(rocker);
++err_dma_cmd_ring_waits_alloc:
+ 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
+ 				  PCI_DMA_BIDIRECTIONAL);
+-err_dma_cmd_ring_waits_alloc:
+-	rocker_dma_cmd_ring_waits_free(rocker);
+ err_dma_cmd_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
+ 	return err;
 -- 
-2.26.2
-
+2.25.1
 
