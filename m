@@ -2,300 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCCC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1280204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E18D1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="VEtU5b+E";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L6DQtBRb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Iw9YeMPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgF2Svu (ORCPT
+        id S1729689AbgF2Svw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:51:50 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35733 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726831AbgF2Sva (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:30 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 14CE6580597;
-        Mon, 29 Jun 2020 11:21:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 29 Jun 2020 11:21:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=krUOveEdR6vT0SBK3qtfa5n706o
-        ryNuDtBLGwOel0Fo=; b=VEtU5b+EqJvRVoGcecDwOgK9INc1igaqGpNTrbyWjp7
-        t4GknrXv7tKctUi5JWrH2p6O6uYYIDpxpq2pM/8mTaxmakYjDGs2EQutbHreQYwd
-        fJv+kZaW3ewSRuY8FVsI1HEbFNUwl4erX42gfLwEeTg1ns00ICau45mAoNseOhbC
-        8kD0h8BGjs8fPp3YjhpxkYlwLEC/2n2D77Szii/1UwuSkmfTTqEGQnnsoyY3GpIl
-        EHBhoY9KmtyUnCsveKv0MW5JG2xy2qCB6TaqQxf0mcFwx0IB64WHhkgiQN6O0lpn
-        DT8q0Ta5pesXagJSN5DYMMpMFpbUCjfwZIr1JA4Z/0w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=krUOve
-        EdR6vT0SBK3qtfa5n706oryNuDtBLGwOel0Fo=; b=L6DQtBRbaLn4l3ffIzF0Bw
-        bJfxa6fVOnQh9qO0p0mJrmSfuq9FDhIP89CuSO4gemX0ANlp8rukEIP6+d25PuP6
-        a3QSGPxF/k+Xcx7uqFlMQ2P4OF4kTh9ELsXnA5re3hD2MOlpZgMYXre6ehH5kS4a
-        cCxOeIagn8x5pSEn1VwUNGpbyjjxxHPsAy6Hdca09MtGrRJpAf6loosOhXjVBlR3
-        Ny+o5D6hqOsFi534Rc4VwRjOE/iQBXI0yjAY/wmsvZwTjr3/tXfURRfYZhIh+Mk8
-        hd14z5Ml3RtHtEw0mRB/nAAy5xb04b4c9LOIvEKkmyqZj/VrfLGJuhd6ky+jhXhA
-        ==
-X-ME-Sender: <xms:6Qb6Xs5A65jiVMk-TBJ7E6MWYyS4QOEbvSnIUioCEO_-3JMTBBRYfA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudelledgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:6Qb6Xt7HQSIAah0eJg07s37QLKiq_njkDArZ0GZNou-AaxfXfxeVWA>
-    <xmx:6Qb6Xrflm2twAlFg4vyHYS5sN91S-uNRTR0cQNey4cTSqfSaVfk9JA>
-    <xmx:6Qb6XhKlWp2txSt5ptrbZvHChxtJtnYggh9FY3iKjY9qUnbEHvLN1w>
-    <xmx:7Qb6Xg7aRoYgPeksuOqXA0bw-zrOHrTGsRA0vVtbBGtdnNedV-Vj5g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 83B73328005E;
-        Mon, 29 Jun 2020 11:21:13 -0400 (EDT)
-Date:   Mon, 29 Jun 2020 17:21:12 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
-        sboyd@kernel.org, srinivas.kandagatla@linaro.org,
-        linus.walleij@linaro.org, anarsoul@gmail.com,
-        tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
-Subject: Re: [PATCH v2 09/11] arm64: allwinner: A100: add the basical
- Allwinner A100 DTSI file
-Message-ID: <20200629152112.fo3kgcztlutj66hc@gilmour.lan>
-References: <20200622025907.32574-1-frank@allwinnertech.com>
- <20200622025907.32574-10-frank@allwinnertech.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lbejoaecuizw4km4"
-Content-Disposition: inline
-In-Reply-To: <20200622025907.32574-10-frank@allwinnertech.com>
+        Mon, 29 Jun 2020 14:51:52 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:61738 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727073AbgF2Svo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:51:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456704; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=j1u5QBULuJKFUyNxaQAkdzuQVerFj62srXNJ8V0Lrak=; b=Iw9YeMPR/GP7xHQg/vE0nTGBNjF3pEGHUQ2YWt41ZQI3p6VI8YWAxsSWIqq5GSScTL7KDYQj
+ c7ETvHEqO6lMrLSzC6mCn24jTRUY5tEqX89qAowS0cDIyNnqcyTzez4+yKC6wSbgCXZPj3Ke
+ f5rtsrB77AOQKD6QGDv7b4ru/a8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
+ 5efa19593a8a8b20b8968ca8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59024C433C8; Mon, 29 Jun 2020 16:39:53 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A60C5C43391;
+        Mon, 29 Jun 2020 16:39:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A60C5C43391
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 2/9] bus: mhi: core: Abort suspends due to outgoing pending packets
+Date:   Mon, 29 Jun 2020 09:39:35 -0700
+Message-Id: <1593448782-8385-3-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the missing check to abort suspends if a client has pending outgoing
+packets to send to the device. This allows better utilization of the MHI
+bus wherein clients on the host are not left waiting for longer suspend
+or resume cycles to finish for data transfers.
 
---lbejoaecuizw4km4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+---
+ drivers/bus/mhi/core/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Hi,
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 7960980..661d704 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -686,7 +686,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
+ 		return -EIO;
+ 
+ 	/* Return busy if there are any pending resources */
+-	if (atomic_read(&mhi_cntrl->dev_wake))
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts))
+ 		return -EBUSY;
+ 
+ 	/* Take MHI out of M2 state */
+@@ -712,7 +713,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
+ 
+ 	write_lock_irq(&mhi_cntrl->pm_lock);
+ 
+-	if (atomic_read(&mhi_cntrl->dev_wake)) {
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts)) {
+ 		write_unlock_irq(&mhi_cntrl->pm_lock);
+ 		return -EBUSY;
+ 	}
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-On Mon, Jun 22, 2020 at 10:59:05AM +0800, Frank Lee wrote:
-> Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
-> the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
-> and UART support.
->=20
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 337 +++++++++++++++++++=
-++++++
->  1 file changed, 337 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-a100.dtsi
-> new file mode 100644
-> index 0000000..5133897
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> @@ -0,0 +1,337 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/sun50i-a100-ccu.h>
-> +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
-> +#include <dt-bindings/reset/sun50i-a100-ccu.h>
-> +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
-> +
-> +/ {
-> +	interrupt-parent =3D <&gic>;
-> +	#address-cells =3D <2>;
-> +	#size-cells =3D <2>;
-> +
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			compatible =3D "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <0x0>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu@1 {
-> +			compatible =3D "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <0x1>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu@2 {
-> +			compatible =3D "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <0x2>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu@3 {
-> +			compatible =3D "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <0x3>;
-> +			enable-method =3D "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible =3D "arm,psci-1.0";
-> +		method =3D "smc";
-> +	};
-> +
-> +	iosc: internal-osc-clk {
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <16000000>;
-> +		clock-accuracy =3D <300000000>;
-> +		clock-output-names =3D "iosc";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	dcxo24M: dcxo24M_clk {
-
-You shouldn't have underscores in the node names.
-
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <24000000>;
-> +		clock-output-names =3D "dcxo24M";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	osc32k: osc32k_clk {
-
-Same thing here
-
-Also, ordering by node name here would be nice
-
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <32768>;
-> +		clock-output-names =3D "osc32k";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	timer {
-> +		compatible =3D "arm,armv8-timer";
-> +		interrupts =3D <GIC_PPI 13
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-
-Does it suffer from the same time instability than the one in the A64?
-If so, you probably want to enable the workaround too.
-
-> +	soc: soc {
-
-Do you really need a label for that node?
-
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-
-Why do you need cells with 2 items here? You don't seem to be using
-them.
-
-> +		r_i2c0: i2c@7081400 {
-> +			compatible =3D "allwinner,sun6i-a31-i2c";
-> +			reg =3D <0x0 0x07081400 0x0 0x400>;
-> +			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&ccu CLK_BUS_I2C0>;
-> +			resets =3D <&ccu RST_BUS_I2C0>;
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&r_i2c0_pins>;
-> +			status =3D "disabled";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +		};
-> +
-> +		r_i2c1: i2c@7081800 {
-> +			compatible =3D "allwinner,sun6i-a31-i2c";
-> +			reg =3D <0x0 0x07081800 0x0 0x400>;
-> +			interrupts =3D <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&ccu CLK_BUS_I2C1>;
-> +			resets =3D <&ccu RST_BUS_I2C1>;
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&r_i2c1_pins>;
-> +			status =3D "disabled";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +		};
-> +	};
-
-The clocks and resets phandles and IDs don't look right
-
-> +	thermal-zones {
-> +		cpu_thermal_zone {
-> +			polling-delay-passive =3D <0>;
-> +			polling-delay =3D <0>;
-> +			thermal-sensors =3D <&ths 0>;
-> +		};
-
-Please add a new line here
-
-> +		gpu_thermal_zone{
-
-You should have a space here    ^=20
-
-> +			polling-delay-passive =3D <0>;
-> +			polling-delay =3D <0>;
-> +			thermal-sensors =3D <&ths 1>;
-> +		};
-
-newline
-
-> +		ddr_thermal_zone{
-
-space                           ^=20
-
-Thanks!
-Maxime
-
---lbejoaecuizw4km4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvoG6AAKCRDj7w1vZxhR
-xRRCAQCSyQ9nHql6TEykxi9l3Cj8dRiNVK0CnZJ3fTQSc1l2AAD/fJV1R7VkbxZi
-OFU2QxjJ1CZU81YE8OkmeFr/wMlCsw8=
-=kgim
------END PGP SIGNATURE-----
-
---lbejoaecuizw4km4--
