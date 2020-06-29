@@ -2,102 +2,124 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C48C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E841C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC2C62065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC802076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468187;
-	bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1/YdFumBc1NqcB6m9sEWUSLNRLfzuOFrEPl6BvHlcQOYT1r8VFh8Nc/thKlVECTGj
-	 Gt78nUwMOAtcbkx94R1+xXb44wsBwssLA+1ZohKpi2IDQtbmreFh8xDuYM8cQvgssU
-	 q/+n+b/BXZNl38Cfm8WQ5L21eVIrde9KKleJb5m8=
+	s=default; t=1593468192;
+	bh=VYq1lNey2fUgvALFz3SVmrQzywX/IIBoBeJKA6zhCz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cVBo5my2zsbo5e6YV2rJLHr45pNbydfZS6I7Y3kfWvPVO3qzgAHpCxX4FhrgJgfoF
+	 amB58JiXOJbw9+aBwZbTrACd+x0e37Sa/6VbA5KVoJ4GuVYKH5RBvGetjbQJDlFj4h
+	 GsD8Ylrg4CaGd6275QkgIQnQBH2Df57IkmrGyy7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbgF2WC6 (ORCPT
+        id S2390486AbgF2WDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2517A24769;
-        Mon, 29 Jun 2020 15:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444083;
-        bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xc4DIldNNt9tT+ej7s+3Nts8Y2SiZgN4+6UX6L953SCl9htu6aCgx9TpczQYUKs9x
-         tNyGzK0RM1nDqgqf6nVF4bnuRsbiO7ErmMUaVB5g+U57cSyUgFSB5oaEKsmUEgbjQc
-         T5lFSgK0A+Yf0XAiIr6aiCX9I4EKnLOdXS95BYz0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
+        Mon, 29 Jun 2020 18:03:10 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33983 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgF2WDA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:03:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id m81so18904143ioa.1;
+        Mon, 29 Jun 2020 15:03:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qeDnTuAisnNg9/O14eqv1V2d4bV/j01IJYJfWygBKh0=;
+        b=DASQe9TWevNWg1Vn/H8vEWvgzHPDnwTN0KdN1sK1nVh2td2aZqmgdnstNGxb3V0Yz7
+         xFD1+zyThQMfBORXqBMeNVa4fBtI4FXjvG/u1MYS54jdH76+vU14OQzfN8auC/Blg+mg
+         sPZVnsyIyRVhsQ0dslf54tDCdp+CMy72BhiHl34RYJ/xMrGX6GxPg8LzmYYH4Wcje4Wd
+         yZXh9sPCIJ1/1zzp3brVs4X9dNSRmDlR3p7HPhaPWSTyIQ3lAHXclZ+EAa0BVXy0LicS
+         qGczzkzdtas5e7P519WVtoClfIhh8weaT8O0WqN3C1XzpCJenNa6wAZb5tbRNtLFwYRL
+         5S3Q==
+X-Gm-Message-State: AOAM530UBoRg9e7bqGDQBHxVqC/N39JxdiNflBJgjJHQBb+M1eadT4XD
+        qEyoP+eP2DFxfLi6FJb7Sg==
+X-Google-Smtp-Source: ABdhPJzJ5YH3Vs6Vibf5Q6Ji55Ezz3QnGARqFca/oQxAeka0ngDHcH9kK7ABYD+UNidUKik6XfPh0w==
+X-Received: by 2002:a02:9041:: with SMTP id y1mr20056027jaf.143.1593468179688;
+        Mon, 29 Jun 2020 15:02:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id q5sm602363ilm.73.2020.06.29.15.02.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 15:02:59 -0700 (PDT)
+Received: (nullmailer pid 3016912 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:02:57 -0000
+Date:   Mon, 29 Jun 2020 16:02:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 193/265] pinctrl: tegra: Use noirq suspend/resume callbacks
-Date:   Mon, 29 Jun 2020 11:17:06 -0400
-Message-Id: <20200629151818.2493727-194-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Bhushan Shah <bshah@kde.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Martijn Braam <martijn@brixit.nl>,
+        dri-devel@lists.freedesktop.org,
+        Purism Kernel Team <kernel@puri.sm>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 02/13] dt-bindings: panel: Convert rocktech,
+ jh057n00900 to yaml
+Message-ID: <20200629220257.GA3016084@bogus>
+References: <20200626005601.241022-1-megous@megous.com>
+ <20200626005601.241022-3-megous@megous.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626005601.241022-3-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+On Fri, 26 Jun 2020 02:55:50 +0200, Ondrej Jirman wrote:
+> Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
+>  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
+>  2 files changed, 66 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> 
 
-[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
 
-Use noirq suspend/resume callbacks as other drivers which implement
-noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
-configure the signals used by their respective devices in the noirq phase.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml:  while scanning a block scalar
+  in "<unicode string>", line 51, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 58, column 1
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 21661f6490d68..195cfe557511b 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
- }
- 
- const struct dev_pm_ops tegra_pinctrl_pm = {
--	.suspend = &tegra_pinctrl_suspend,
--	.resume = &tegra_pinctrl_resume
-+	.suspend_noirq = &tegra_pinctrl_suspend,
-+	.resume_noirq = &tegra_pinctrl_resume
- };
- 
- static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
--- 
-2.25.1
+
+See https://patchwork.ozlabs.org/patch/1317299
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
