@@ -2,258 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E234207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="wzHj9+Bu"
+	by mail.kernel.org (Postfix) with ESMTP id B1B70208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgF2TmD (ORCPT
+        id S2387944AbgF2TmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387919AbgF2Tlv (ORCPT
+        Mon, 29 Jun 2020 15:42:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:53093 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387848AbgF2Tlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:41:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CF2C03E97E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:41:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id h28so14003439edz.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6a8cX4N7tIU78Bd4F2J28aUNQpAoW/gTIhMzNFxYwFY=;
-        b=wzHj9+BuUUyCxdkKKiVEO9Ay5o9qtrK16ExaJLYOzw9UjAZQdvSNNgtbBCPwpsy/DK
-         oOPPisPG3Jp6HMjyAM88YEmbc4MDI7lDa7lekQFpo9RI9gN3n9mARHGJEwrNKi9kC38r
-         Ce3aUZZ+nEMx9yRyJBLUvGZbk5xaDb6NWnMGjIj16rwPeBiYEbInz0zi20nb9qNOgstC
-         wNZrkFMkycFHtcxYH+4vMjgNQZrnLfYkT3RQ4NcC0f5LkbXSt4M6eGqtfetmnqe8GV8S
-         2fNCPhZVLkcIeUdVeVcXi5koewbAqwpWVD8ZaYMi7h6Gy4t3JE8Mkz7HXMGVRP9Gzk9j
-         D2+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6a8cX4N7tIU78Bd4F2J28aUNQpAoW/gTIhMzNFxYwFY=;
-        b=Oc+mkTpkZkd+7HdZLx1MgyYYMiYHS89cIGyUcdnwxHLxCEmhrorAH/gAFyKr3RnmRs
-         5PdE3naWmX2I/cJyoMmG0rnMy2Yq12Y/WCMGfMc9IVtZMaG4f90CJDyhXYb8vUAxzYyk
-         RDKnqUlP5A3HZwl7D0oyQzZmd9kzVjFXM+gFxv/B+xDaFoL39weCz7uYpV79f0nourSq
-         /zHAjFxLzvKi7c1sRoDRagpUe/VwP2LnQUNbLf3pxqMb5GmFFnC7NIdUI8SdMXp0VyX/
-         abszDirtJK4nSzCA3h9zJpufwntUDe2uuC5f4Gre2TFOvKrkEIBhGstghxScospb2rS0
-         fAYg==
-X-Gm-Message-State: AOAM533E781Dp4tKj6TO2LKqyRyOo2CEANE822McbAD2UlF6iGRz7NJr
-        L7j0LQdtPEHVCmT1s6m6CBRWaA==
-X-Google-Smtp-Source: ABdhPJwaQcnwY52SximMvE4NidS6hrc6E1VXJzI8qyuuYEC11lN320FeP2VQ2lnXILPB7F8de+Ejfw==
-X-Received: by 2002:a50:8467:: with SMTP id 94mr18907410edp.249.1593459709993;
-        Mon, 29 Jun 2020 12:41:49 -0700 (PDT)
-Received: from localhost (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
-        by smtp.gmail.com with ESMTPSA id l18sm599845eds.46.2020.06.29.12.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:41:49 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:41:48 +0200
-From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
-To:     Niklas Cassel <niklas.cassel@wdc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/2] block: add max_open_zones to blk-sysfs
-Message-ID: <20200629194148.vaifnt4fhr2t5bi2@MacBook-Pro.localdomain>
-References: <20200616102546.491961-1-niklas.cassel@wdc.com>
- <20200616102546.491961-2-niklas.cassel@wdc.com>
+        Mon, 29 Jun 2020 15:41:49 -0400
+Received: from oxbsgw01.schlund.de ([172.19.248.2]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MAwoL-1jfEO91yHZ-00BIvF; Mon, 29 Jun 2020 17:31:28 +0200
+Date:   Mon, 29 Jun 2020 17:31:27 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Federico Vaga <federico.vaga@cern.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Message-ID: <1069735883.1017676.1593444687939@mailbusiness.ionos.de>
+In-Reply-To: <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+ <84270660.632865.1593072688966@mailbusiness.ionos.de>
+ <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616102546.491961-2-niklas.cassel@wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:dABFUE9hOYEeaSPGRIAHWnjrmhG8vVCmzLaqIdCeOnnh1tiEHQI
+ vdkFa/eFxsOt4s3Zfi3svuvVqRBm3WW8D/fuRMTYhg+PL9WB0KdnpooNPV03KpC6qvD5E6g
+ Gz4bVWEYiyJZEpcxqPirT+lx/Ub3foXXxtgVJLcrEM+GHCgPZqj+bG/loMydZA8pNh1ojXc
+ XOv4GGvT9EdYNlpQdzTQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y7lIeaDHkvM=:jK0VZSZpSE43lB6t8f0jwC
+ EKx9/u9HKjqiuANOvdCd5NxZJRSUdIeJZtKILBv9fh0Mez/Evkywa5SzbjiQ0DXCN/ggM3EI1
+ NCZVsyM57982j1icauTCx+2Wy/aICTIufkT7DsdpbYdcyL8592YlOIh+rLpGjj4JyOqzVdqIZ
+ kM/soseAEykH7IjIOG5bihBpxY3Clmuon/3WuKnBWYfMuwutepTt7KdFMNzkzUg7yfuDwXIZQ
+ udjjWOztZnbRt6DgvF98Kgo/Cd9VvSb+GGyYbVbL548vW/c+imL2PmYjQ5Dwos/c64PYkPShL
+ wzD1ltuxxUTeDrlNsUmPn00DtpxfOB3IXFh04dCjEHnwjgByUyIrxlzyaVAIhE7TLvThlE8U4
+ 5PAwjtPpMG5z05SjR9DS3KRY0bP3WGNQVTQlVh07FttswcCJoKYSmtSl50TdcFd6yb5SjeZpr
+ Igf2JHv6faIYyQO/MqTsYPOBR4KuScVo9r76atNRA3jtflcPq3vA5YcJSgjXKSPXZ6q3KvQUS
+ BjqTd9uDrNouQwhPHgD681/oNZ0khOCX9YTCKdU/gBR5oKY8nh1CIBqYShep0xYYh/DeAQKId
+ ZF7oVAr+OOONzyKwxeRxWDvm6JO0r/mbHEGaafU7R4eX4NU1zY0nfU7KLUnmw9ojoHeLoKjqs
+ W4VwPiUBrEUr6wN0pi/imb59dZj8A9TiDJPIIe5TOm5tde9S1mBNvinuSuwwhgJmdp4BmNRjY
+ Ssi5nCiw5qwneZbD2hj/DwIwiK4QRxTFV9yxMN6WPz4V8fKBRNsM7OJIV4CKfsMHE8CJeCdse
+ ibSoDv3AnozUoTGGDvYhspytf4eZ67bXlRYllLYCI+FAqgAPec=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.06.2020 12:25, Niklas Cassel wrote:
->Add a new max_open_zones definition in the sysfs documentation.
->This definition will be common for all devices utilizing the zoned block
->device support in the kernel.
->
->Export max open zones according to this new definition for NVMe Zoned
->Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
->the kernel), and ZBC SCSI devices.
->
->Add the new max_open_zones struct member to the request_queue, rather
->than as a queue limit, since this property cannot be split across stacking
->drivers.
->
->Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
->---
-> Documentation/block/queue-sysfs.rst |  7 +++++++
-> block/blk-sysfs.c                   | 15 +++++++++++++++
-> drivers/nvme/host/zns.c             |  1 +
-> drivers/scsi/sd_zbc.c               |  4 ++++
-> include/linux/blkdev.h              | 20 ++++++++++++++++++++
-> 5 files changed, 47 insertions(+)
->
->diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
->index 6a8513af9201..f01cf8530ae4 100644
->--- a/Documentation/block/queue-sysfs.rst
->+++ b/Documentation/block/queue-sysfs.rst
->@@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
-> data that will be submitted by the block layer core to the associated
-> block driver.
->
->+max_open_zones (RO)
->+-------------------
->+For zoned block devices (zoned attribute indicating "host-managed" or
->+"host-aware"), the sum of zones belonging to any of the zone states:
->+EXPLICIT OPEN or IMPLICIT OPEN, is limited by this value.
->+If this value is 0, there is no limit.
->+
-> max_sectors_kb (RW)
-> -------------------
-> This is the maximum number of kilobytes that the block layer will allow
->diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
->index 02643e149d5e..fa42961e9678 100644
->--- a/block/blk-sysfs.c
->+++ b/block/blk-sysfs.c
->@@ -305,6 +305,11 @@ static ssize_t queue_nr_zones_show(struct request_queue *q, char *page)
-> 	return queue_var_show(blk_queue_nr_zones(q), page);
-> }
->
->+static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
->+{
->+	return queue_var_show(queue_max_open_zones(q), page);
->+}
->+
-> static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
-> {
-> 	return queue_var_show((blk_queue_nomerges(q) << 1) |
->@@ -667,6 +672,11 @@ static struct queue_sysfs_entry queue_nr_zones_entry = {
-> 	.show = queue_nr_zones_show,
-> };
->
->+static struct queue_sysfs_entry queue_max_open_zones_entry = {
->+	.attr = {.name = "max_open_zones", .mode = 0444 },
->+	.show = queue_max_open_zones_show,
->+};
->+
-> static struct queue_sysfs_entry queue_nomerges_entry = {
-> 	.attr = {.name = "nomerges", .mode = 0644 },
-> 	.show = queue_nomerges_show,
->@@ -765,6 +775,7 @@ static struct attribute *queue_attrs[] = {
-> 	&queue_nonrot_entry.attr,
-> 	&queue_zoned_entry.attr,
-> 	&queue_nr_zones_entry.attr,
->+	&queue_max_open_zones_entry.attr,
-> 	&queue_nomerges_entry.attr,
-> 	&queue_rq_affinity_entry.attr,
-> 	&queue_iostats_entry.attr,
->@@ -792,6 +803,10 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
-> 		(!q->mq_ops || !q->mq_ops->timeout))
-> 			return 0;
->
->+	if (attr == &queue_max_open_zones_entry.attr &&
->+	    !blk_queue_is_zoned(q))
->+		return 0;
->+
-> 	return attr->mode;
-> }
->
->diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
->index c08f6281b614..af156529f3b6 100644
->--- a/drivers/nvme/host/zns.c
->+++ b/drivers/nvme/host/zns.c
->@@ -82,6 +82,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
->
-> 	q->limits.zoned = BLK_ZONED_HM;
-> 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
->+	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);
-> free_data:
-> 	kfree(id);
-> 	return status;
->diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
->index 183a20720da9..aa3564139b40 100644
->--- a/drivers/scsi/sd_zbc.c
->+++ b/drivers/scsi/sd_zbc.c
->@@ -717,6 +717,10 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
-> 	/* The drive satisfies the kernel restrictions: set it up */
-> 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
-> 	blk_queue_required_elevator_features(q, ELEVATOR_F_ZBD_SEQ_WRITE);
->+	if (sdkp->zones_max_open == U32_MAX)
->+		blk_queue_max_open_zones(q, 0);
->+	else
->+		blk_queue_max_open_zones(q, sdkp->zones_max_open);
-> 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
->
-> 	/* READ16/WRITE16 is mandatory for ZBC disks */
->diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->index 8fd900998b4e..2f332f00501d 100644
->--- a/include/linux/blkdev.h
->+++ b/include/linux/blkdev.h
->@@ -520,6 +520,7 @@ struct request_queue {
-> 	unsigned int		nr_zones;
-> 	unsigned long		*conv_zones_bitmap;
-> 	unsigned long		*seq_zones_wlock;
->+	unsigned int		max_open_zones;
-> #endif /* CONFIG_BLK_DEV_ZONED */
->
-> 	/*
->@@ -729,6 +730,17 @@ static inline bool blk_queue_zone_is_seq(struct request_queue *q,
-> 		return true;
-> 	return !test_bit(blk_queue_zone_no(q, sector), q->conv_zones_bitmap);
-> }
->+
->+static inline void blk_queue_max_open_zones(struct request_queue *q,
->+		unsigned int max_open_zones)
->+{
->+	q->max_open_zones = max_open_zones;
->+}
->+
->+static inline unsigned int queue_max_open_zones(const struct request_queue *q)
->+{
->+	return q->max_open_zones;
->+}
-> #else /* CONFIG_BLK_DEV_ZONED */
-> static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
-> {
->@@ -744,6 +756,14 @@ static inline unsigned int blk_queue_zone_no(struct request_queue *q,
-> {
-> 	return 0;
-> }
->+static inline void blk_queue_max_open_zones(struct request_queue *q,
->+		unsigned int max_open_zones)
->+{
->+}
->+static inline unsigned int queue_max_open_zones(const struct request_queue *q)
->+{
->+	return 0;
->+}
-> #endif /* CONFIG_BLK_DEV_ZONED */
->
-> static inline bool rq_is_sync(struct request *rq)
->-- 
->2.26.2
->
->
->_______________________________________________
->linux-nvme mailing list
->linux-nvme@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-nvme
 
-Looks good to me.
+> On 26 June 2020 at 22:08 Ira Weiny <ira.weiny@intel.com> wrote:
+> 
+> 
+> On Thu, Jun 25, 2020 at 10:11:28AM +0200, Thomas Ruf wrote:
+> > 
+> > > On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
+> > > 
+> > > 
+> > > 
+> > > 
+> > > On 6/21/2020 12:24 AM, Vinod Koul wrote:
+> > > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > > >>
+> > > >>
+> > > >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > > >>> Hello,
+> > > >>>
+> > > >>> is there the possibility of using a DMA engine channel from userspace?
+> > > >>>
+> > > >>> Something like:
+> > > >>> - configure DMA using ioctl() (or whatever configuration mechanism)
+> > > >>> - read() or write() to trigger the transfer
+> > > >>>
+> > > >>
+> > > >> I may have supposedly promised Vinod to look into possibly providing
+> > > >> something like this in the future. But I have not gotten around to do that
+> > > >> yet. Currently, no such support.
+> > > > 
+> > > > And I do still have serious reservations about this topic :) Opening up
+> > > > userspace access to DMA does not sound very great from security point of
+> > > > view.
+> > > 
+> > > What about doing it with DMA engine that supports PASID? That way the user can 
+> > > really only trash its own address space and kernel is protected.
+> > 
+> > Sounds interesting! Not sure if this is really needed in that case...
+> > I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
+> 
+> FWIW there is a new pin_user_pages_fast()/unpin_user_page() interface now.
 
-Reviewed-by: Javier González <javier@javigon.com>
+Thanks for that info. But at the moment we are mainly interested in a solution which can be easily backported to Xilinix Release 2020.1 with kernel 5.4.x where i could not find that new functionality.
+
+> > But i will do some checks if my code is really suitable to avoid misusage.
+
+Did some basic tests today and was not able to break out of my own checks done via follow_pfn() respectively get_user_pages_fast(). If this stands "advanced attacks" my proxy driver shouldn't be more dangerous as an ordinary memcpy, i know that there will always remain some doubts ;-)
+
+best regards,
+Thomas
