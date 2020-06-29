@@ -2,182 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A93020776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5692620776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sLMbOT6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgF2XLR (ORCPT
+        id S1729407AbgF2XMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:11:17 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:50191 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgF2XLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:11:14 -0400
-Received: by mail-il1-f198.google.com with SMTP id l17so13393228ilj.17
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:11:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=scxQ3olKSlbD2dbdxyeSE7jRyJ9lJyRe3hVz8jvF9ow=;
-        b=EpSecKiKriSr5XSIXKrpAaBqF1gly1fUDIXTmepXEJQaVTNSRxr4oAnl4AzsLUy/Xw
-         UB02bWI6pJ2ixJzhJrrpr4vNgyTP2Ry4XxNfCfywtgYj9jIqlTfT5lxldAOtlW4LGZQj
-         +JMZXcAKN8/IT/faENabCNNiV3rf24dA7dxCx5i6+g5RAsvRgy/WALv5VymSDEn/hONe
-         Ma6/MrNk9sXEEOYYjhXsWIjSwiZg6BCgVvYviUKylTxLKRxYPTgnOAItvzTPAbO8pvFO
-         neENjE2bARsCKiMBpA5QgIBv2qkd1b4c4ifi8KS5OjiyZzKiM1K69FCdKBD+74lFdT7Q
-         cNjg==
-X-Gm-Message-State: AOAM530oFZBYEJSXbvxuGwc3zrYlKu9FM6jIvzps6JaizNXqbDnd7u8B
-        l36WkwbD7KAQu5+62B/OnA4xVbGtPke1sIIOfFXH3KB0qdjD
-X-Google-Smtp-Source: ABdhPJx6hW4JpWu7xneEQCiHNeHEXyoCY16K9PPGVpQTWUp1dg1xDaKn7ah0VhFOgIgt4YT/p0ew9JG20fSp4FFidx1Smbq0Ak8v
+        Mon, 29 Jun 2020 19:12:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgF2XMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:12:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wjtX2TZzz9s6w;
+        Tue, 30 Jun 2020 09:12:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593472325;
+        bh=941EdfoYDRZUrkZYne4BILEiumD128Dyv5nWhLt38Wc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sLMbOT6wQ3hn2zT7RtTkfHIS9I9MK5SK0XLE+DE+ooG1LgQcEekhbNTX/JQ5HbaDk
+         7QDWgcXu4C9BzGOYD7KcTBRqyvvzpeb/mG4rNK062CMNXwOxAr4rxya7HCsD1fJW4x
+         5VC3b+hMVe9whHbjzbd9wlLUpl5r6MjEA0dbfSvFuechCeYEi6VyChxgjb3QK8vSKQ
+         3KGHuVr+C8Rio/hfn9CS39Mb0RDYu4QeZWZFUncFwkyOMGeMQJHphXkY6CvDl+whLL
+         fu05tmZNgeVyHv1je3224wbTRpP4uacBfsI2PwoNvuDVxNSu9+2QNAL9mN4FP1EmjA
+         EAqeE2a9Bmm9g==
+Date:   Tue, 30 Jun 2020 09:12:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 1/2] Explicitly include linux/major.h where it is
+ needed
+Message-ID: <20200630091203.55cdd5d9@canb.auug.org.au>
+In-Reply-To: <20200617055843.GB25631@kroah.com>
+References: <20200617092614.7897ccb2@canb.auug.org.au>
+        <20200617092747.0cadb2de@canb.auug.org.au>
+        <20200617055843.GB25631@kroah.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:13cd:: with SMTP id v13mr9732535ilj.15.1593472272869;
- Mon, 29 Jun 2020 16:11:12 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 16:11:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c8af7205a9412c5b@google.com>
-Subject: KASAN: use-after-free Read in dev_get_by_name
-From:   syzbot <syzbot+86e957379663a156cd31@syzkaller.appspotmail.com>
-To:     Jason@zx2c4.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/BCTuQZc6gP7JPm+u0nl1Qal";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/BCTuQZc6gP7JPm+u0nl1Qal
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi Greg,
 
-HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1013cb29100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
-dashboard link: https://syzkaller.appspot.com/bug?extid=86e957379663a156cd31
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1689e8f5100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144f07bb100000
+On Wed, 17 Jun 2020 07:58:43 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
+te:
+>
+> On Wed, Jun 17, 2020 at 09:27:47AM +1000, Stephen Rothwell wrote:
+> > This is in preparation for removing the include of major.h where it is
+> > not needed.
+> >=20
+> > These files were found using
+> >=20
+> > 	grep -E -L '[<"](uapi/)?linux/major\.h' $(git grep -l -w -f /tmp/xx)
+> >=20
+> > where /tmp/xx contains all the symbols defined in major.h.  There were
+> > a couple of files in that list that did not need the include since the
+> > references are in comments.
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au> =20
+>=20
+> Any reason this had an RFC, but patch 2/2 did not?
+>=20
+> They look good to me, I will be glad to take these, but do you still
+> want reviews from others for this?  It seems simple enough to me...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+86e957379663a156cd31@syzkaller.appspotmail.com
+I am going to do another round of this patchset splitting out most of
+the "safe" removals that can be done anytime so other maintainers can
+take them.  Then there will be the left over order dependent changes at
+the end.
 
-==================================================================
-BUG: KASAN: use-after-free in strnlen+0x63/0x80 lib/string.c:561
-Read of size 1 at addr ffff88809f3e9c18 by task syz-executor276/7264
+--=20
+Cheers,
+Stephen Rothwell
 
-CPU: 0 PID: 7264 Comm: syz-executor276 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- strnlen+0x63/0x80 lib/string.c:561
- dev_name_hash net/core/dev.c:208 [inline]
- netdev_name_node_lookup_rcu net/core/dev.c:290 [inline]
- dev_get_by_name_rcu net/core/dev.c:883 [inline]
- dev_get_by_name+0x9b/0x2a0 net/core/dev.c:905
- lookup_interface drivers/net/wireguard/netlink.c:63 [inline]
- wg_get_device_start+0x1fb/0x2d0 drivers/net/wireguard/netlink.c:203
- genl_start+0x390/0x570 net/netlink/genetlink.c:556
- __netlink_dump_start+0x3d2/0x700 net/netlink/af_netlink.c:2343
- genl_family_rcv_msg_dumpit net/netlink/genetlink.c:638 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0xb03/0xe00 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x44a809
-Code: Bad RIP value.
-RSP: 002b:00007fed6f920da8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a809
-RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000004
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 0000000000000000 R14: 0000000000316777 R15: 0000000000000000
+--Sig_/BCTuQZc6gP7JPm+u0nl1Qal
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Allocated by task 7265:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xde/0x4f0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x7b2/0xd70 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+-----BEGIN PGP SIGNATURE-----
 
-Freed by task 7265:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb+0x56/0x1c0 net/core/skbuff.c:678
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x78e/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl76dUMACgkQAVBC80lX
+0GwhGQgAhvHebmqV9c+voc8vdC1Luf8C7PWLbdIb6f1iaY+N1bSNKmatpFwTZ1Up
+yf4+QbGQUZbKdTwc7VvNADVmLtek6h9aPVEF+hNKSMFPwCiBCOhpMGCSx4bXFRsj
+irlLoWruvzaAywFE6Qh8GOYbp+SSnW0T6KGnwfrn965opehsULzWBbBOoWY2euF8
+73/adQZJiKUYpTQpvGDKdDBogQRAYs6AFer+7NUxXnH6FN9Zv4wicjMcSpWqss73
+apAKvefLfTY0y+HD7JMoui4msRP+oP9AX7szdZQG81Ns7N26Kl6Uz09DsQCxp5mT
+s5688o6hb+MACM2k5TVUFdQd+GE74g==
+=aVuJ
+-----END PGP SIGNATURE-----
 
-The buggy address belongs to the object at ffff88809f3e9c00
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 24 bytes inside of
- 512-byte region [ffff88809f3e9c00, ffff88809f3e9e00)
-The buggy address belongs to the page:
-page:ffffea00027cfa40 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000294b388 ffffea00029e4388 ffff8880aa400a80
-raw: 0000000000000000 ffff88809f3e9000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809f3e9b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88809f3e9b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88809f3e9c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff88809f3e9c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809f3e9d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--Sig_/BCTuQZc6gP7JPm+u0nl1Qal--
