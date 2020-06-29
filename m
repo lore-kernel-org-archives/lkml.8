@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4B020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252172067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462507;
-	bh=tQrJ7xXyHSuWsbMexpBpMnmj87YrtGVDi36GBSGUga4=;
+	s=default; t=1593462515;
+	bh=Z+lOGaPeEiSVC2XbgGFRsgc+lOH7cZOhLcUrKI7FS/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEjHlrKJPQMytgMeISl3Xr1VuDYCSLak01zuYYtZHG61+5L/e0tt7mRsLyQ2d9Fni
-	 1VAyqmtVo4X8njv1K0ctLgIaWhq3kf+sZ6KcbtHRHUnsUA10KlT+UD19TX2nMnifL4
-	 UHzc3DBW0/y0JxRde15PIhKZx4AjbfNUS46s/LQA=
+	b=BGTjMxvoUOdReZcXLyP75zDg3+b9aFkL38qgVL81+9dfgqCOqD98tjvyZ8eNCTtwM
+	 fS5KnzEFgHkWOyvkknpE4gb4rJripjFaueg3Q5ZVZeAd8mjK2yU2FlXZ4jEPerC/76
+	 HsYXj8EybtVz8l/OJPt4Q8h8PE/kYRn7dZk8a+nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389093AbgF2U2Z (ORCPT
+        id S1732790AbgF2U2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732502AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732501AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A22D2544D;
-        Mon, 29 Jun 2020 15:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6891D253E2;
+        Mon, 29 Jun 2020 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445401;
-        bh=tQrJ7xXyHSuWsbMexpBpMnmj87YrtGVDi36GBSGUga4=;
+        s=default; t=1593445325;
+        bh=Z+lOGaPeEiSVC2XbgGFRsgc+lOH7cZOhLcUrKI7FS/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4zPsFu6tVPuzGkkopxxI6ETiKjHXv+tly7FPz2PLR0Z8XRDENOTBCRGtEqXJi6Mj
-         8ouy69YXFbXPY5rw82yADgh3kLEOMTtEoMPtE69T+E62UwomHJxxgvWrNlPx2GQz89
-         0xQcMcAanm7rJ9wXHZoNlb5qLZ+kHNC2SyDfGkaA=
+        b=ckYvKjGPVUjZ3Se+7r4ewinvsdxtzCbG26gAaSgx/yzjUt0AsrYdo2RxYMvYwWgbR
+         qI7aXnMEHD9LIfeP0BCgrZa43Xa9M6TN6X4ZgHVtphUDq8QgxoDhr9Ou9CzLYfPLUg
+         PbzbrGlZgP5e4I1K/FN/cDW+1WpCZAZbAHJ41/Ps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc:     Eric Biggers <ebiggers@google.com>, Mike Gerow <gerow@google.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        =?UTF-8?q?Kai=20L=C3=BCke?= <kai@kinvolk.io>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 153/191] xhci: Fix enumeration issue when setting max packet size for FS devices.
-Date:   Mon, 29 Jun 2020 11:39:29 -0400
-Message-Id: <20200629154007.2495120-154-sashal@kernel.org>
+Subject: [PATCH 4.9 091/191] crypto: algboss - don't wait during notifier callback
+Date:   Mon, 29 Jun 2020 11:38:27 -0400
+Message-Id: <20200629154007.2495120-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.9.y
@@ -65,46 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
+commit 77251e41f89a813b4090f5199442f217bbf11297 upstream.
 
-Unable to complete the enumeration of a USB TV Tuner device.
+When a crypto template needs to be instantiated, CRYPTO_MSG_ALG_REQUEST
+is sent to crypto_chain.  cryptomgr_schedule_probe() handles this by
+starting a thread to instantiate the template, then waiting for this
+thread to complete via crypto_larval::completion.
 
-Per XHCI spec (4.6.5), the EP state field of the input context shall
-be cleared for a set address command. In the special case of an FS
-device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
-not do this before evaluating the context. With an XHCI controller
-that checks the EP state field for parameter context error this
-causes a problem in cases such as the device getting reset again
-after enumeration.
+This can deadlock because instantiating the template may require loading
+modules, and this (apparently depending on userspace) may need to wait
+for the crc-t10dif module (lib/crc-t10dif.c) to be loaded.  But
+crc-t10dif's module_init function uses crypto_register_notifier() and
+therefore takes crypto_chain.rwsem for write.  That can't proceed until
+the notifier callback has finished, as it holds this semaphore for read.
 
-When that field is cleared, the problem does not occur.
+Fix this by removing the wait on crypto_larval::completion from within
+cryptomgr_schedule_probe().  It's actually unnecessary because
+crypto_alg_mod_lookup() calls crypto_larval_wait() itself after sending
+CRYPTO_MSG_ALG_REQUEST.
 
-This was found and fixed by Sasi Kumar.
+This only actually became a problem in v4.20 due to commit b76377543b73
+("crc-t10dif: Pick better transform if one becomes available"), but the
+unnecessary wait was much older.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207159
+Reported-by: Mike Gerow <gerow@google.com>
+Fixes: 398710379f51 ("crypto: algapi - Move larval completion into algboss")
+Cc: <stable@vger.kernel.org> # v3.6+
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: Kai Lüke <kai@kinvolk.io>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/host/xhci.c | 1 +
- 1 file changed, 1 insertion(+)
+ crypto/algboss.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index baacc442ec6a2..4ef019152613e 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1347,6 +1347,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
- 				xhci->devs[slot_id]->out_ctx, ep_index);
+diff --git a/crypto/algboss.c b/crypto/algboss.c
+index 6e39d9c05b98a..5cbc588555ca0 100644
+--- a/crypto/algboss.c
++++ b/crypto/algboss.c
+@@ -194,8 +194,6 @@ static int cryptomgr_schedule_probe(struct crypto_larval *larval)
+ 	if (IS_ERR(thread))
+ 		goto err_put_larval;
  
- 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
-+		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
- 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
- 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+-	wait_for_completion_interruptible(&larval->completion);
+-
+ 	return NOTIFY_STOP;
  
+ err_put_larval:
 -- 
 2.25.1
 
