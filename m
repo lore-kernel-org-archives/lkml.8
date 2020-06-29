@@ -2,111 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDB220775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88ED320775
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464998;
+	bh=X2/nW0/ATkt/O4jFYk04z1KIG21LoVAKHQ/fYuqldp0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Oyj8xkkFRKXVDx9+48IRp+625+TgV7X+ioo/rV7PhW478Lqb+MRTDpkLHwrTJhbsA
+	 Z41n40vJUQaGUP7XLdVdG0OwNton2dRY4TMcBf+SKLcjHWDez8AsRfC4D+Igb8vRgR
+	 pKCz/ICugJ7tablsLV73oh745CkCVV6rrSrCR584=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390235AbgF2VJl (ORCPT
+        id S2390319AbgF2VJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:34015 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390473AbgF2VJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:09:28 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M4s8v-1jrFTq3scJ-001xiw for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 13:41:46 +0200
-Received: by mail-qk1-f175.google.com with SMTP id e11so14907359qkm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:41:45 -0700 (PDT)
-X-Gm-Message-State: AOAM530sasEil8ERRVXJh5zFKP1CdrVns+7gvM+HvUKJIpZdPyYxNSib
-        bX128uWEDQ9oUqMRrgwIQpYpOk2AWicmkyr1piM=
-X-Google-Smtp-Source: ABdhPJyLhYoeBgzSA7MmAOwFTB9Sh+/zmsg8s7//3A8nJfIgT+w1yf4DFF1bfEfMRnermkkMST/HbKNPG8frHLqR+GA=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr14552649qke.286.1593430904740;
- Mon, 29 Jun 2020 04:41:44 -0700 (PDT)
+        Mon, 29 Jun 2020 17:09:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730317AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C98B25547;
+        Mon, 29 Jun 2020 15:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446112;
+        bh=X2/nW0/ATkt/O4jFYk04z1KIG21LoVAKHQ/fYuqldp0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iE6jXckER5Rdh32ddGVH2lLfZBUjxB61GuS53rTct7CKvLXVFtZ++GmvWy9OmBaqK
+         744R8XRX0aazbOkKv3g13ZV29FIHyPyntKrWHPCvEuJ8sJN4bQH2TSBBeCBJv/GVPE
+         a0W05hTIrU/wj5uKmQcSxFG9jTz6oXvDwq1SKsC0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 103/135] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
+Date:   Mon, 29 Jun 2020 11:52:37 -0400
+Message-Id: <20200629155309.2495516-104-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
- <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com> <DB3PR0402MB3916ADD54CB167B8ED10076DF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916ADD54CB167B8ED10076DF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 13:41:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1mCD1JFg80HSos9hp0ye1vu_hk79wFGz6YZ3kj10XACg@mail.gmail.com>
-Message-ID: <CAK8P3a1mCD1JFg80HSos9hp0ye1vu_hk79wFGz6YZ3kj10XACg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] reset: imx7: Support module build
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:33+CLiKFpT3UwZb3REktnSgLhRP+TGYP0n/qx2LjY7hgPxhJAs2
- Pp3vKZfLmKdVlv+ITRF0uFDiLRTXRwl/S6xx4y3v6eO0JktCgeYJBybd/CXHT6FsSFW9H8h
- Bxsk6XNBAa2NWgPMZCWr4X93/t2P2qwqlwlZfCt+0u7l5uI6jYVF/f2QTfDf1KtoX7do+qT
- CE32p7T+OInySAmP7P0vA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:14PJPh03Tpw=:+oF22SLQQmREumaoa5GRLe
- 4qt78LSb+I/Xqs07uVD8KMw2x8Q9lrkZOTXyhWInIAEG8ai6/mnvRlAFDknTG6LdYoTOdhk/5
- 4Kv6KmQfv1gd9UD7bIizWAX5l3Xm9bPnzJ17i3bXrgqUNsHWm1oJz9ue8J9cdWbr1XQ3xfK66
- 9LaSJHYtTsugrjnHiOknqk1lsrVHfm5auPX73WoP/84xX7ARhxU+gFjAFaD5H19+Jy8HfxfaA
- /sGBexzMi0MKOXmvzOFrD4T9cghzSlf2H0hm+IdhIol+13o4dKyrs3HJIuaBuxwTdvzu63gRR
- 1NWOpLloDJUBKRPmnUbbk3ctIM+n7GJBO1kaXNni9hKDpM24zd5Y1OS0vUUiqfSYzQQaHZDZ6
- hV4Cp3VhWJy88nGRKqSaKnpXS6qkirLUZoXlSKNRnU6SL76gzn4rtg4JXFx1ttgh9Z3mMt7dk
- SF9WAy6M8mV+jbt3WZTD9eTKuYexIydpOVv6aoIMy4cpsdABUnfA7lp7CescAeORTWwgF6+SV
- 8mZoS9P43BLiXT0WdHt6gGfYOYYKVw1CTChk6svkUkWH9gFccR3llF/TRQOICrRyGpMqX+HLm
- tzFvXXQqmAQUfYuFszPq1Kqv8OyZpJ3sKt9HZWy+jDaKfjJwRDZ2AxfjUlVbjH3IdZo0DA1RC
- 4V33ebPOw4UVYvutowfV6L4mMiYkaTa2Kd5t6GeeD+JjCLRU+1O8/a0mbOZLaBVdWue4vqOil
- u1ZPZ3ujUt0s/9QYIaT8WJqz+CNqP3gsWXvDBo0ud+rZ55o4mK/JfqXuccth3K4dA8i5w8+9b
- qJdlRdN4nqZNEz6GFC7rEf355pdqV9WnRAFg10DWOg7C/Lf3gs=
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 1:32 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH 1/3] reset: imx7: Support module build
-> >
-> > On Mon, Jun 29, 2020 at 12:45 PM Anson Huang <anson.huang@nxp.com>
-> > wrote:
-> > > > Subject: Re: [PATCH 1/3] reset: imx7: Support module build On Mon,
-> > > > Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
-> > >
-> > > The reset driver normally won't be removed since it is necessary for
-> > > drivers which need it, it is just for Android GKI support, in this
-> > > case, do we need to change it to module_platform_driver()?
-> >
-> > Please at least try to do it, or explain in the changelog what went wrong if it
-> > doesn't work.
-> >
-> > I don't think "because Android GKI" should ever be the sole justification for a
-> > patch. Making drivers loadable module is a good idea regardless of GKI, and if
-> > you do that, then make it behave like any other loadable module.
-> >
->
-> OK, will do it in V2, BTW, I think there is nothing need to be done for .remove() callback,
-> can I just skip it or need to add a blank callback anyway?
+From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
 
-I think if everything is done through devm_() calls you should be able to
-have no .remove() callback at all, but I have not tried that.
+commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
 
-     Arnd
+USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
+causing garbage chars on the TTY causing stray input to the shell
+and/or login prompt.
+
+Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+Cc: stable@vger.kernel.org
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/usb/class/cdc-acm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
+index 04fd6c8e3090d..515839034dfbc 100644
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1684,6 +1684,8 @@ static int acm_reset_resume(struct usb_interface *intf)
+ 
+ static const struct usb_device_id acm_ids[] = {
+ 	/* quirky and broken devices */
++	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
++	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
+ 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
+ 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
+ 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
+-- 
+2.25.1
+
