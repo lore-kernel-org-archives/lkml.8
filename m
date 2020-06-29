@@ -2,53 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9637206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035DC20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465351;
-	bh=S08nYrekJmBOyeiTsbZtC3oLsNMFUCdDZY8lMIQKECY=;
+	s=default; t=1593465356;
+	bh=Jo8In8pOuQGqnMtj6T+n6gTtyibSKsc+LNmmeZu4R8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeflS5aSXPlbvWum3oUsINAOLEqls2rb6wIsOgYuUAguwDzWEPxfatcQgPnK9IWfi
-	 w8KU+CpGRMvlhkz9y78LFUXq81cWXvhO69Y1BY0PD8+9bgMpVu33vHQeNMSeqB7owh
-	 p3MpHSp9oMAOC0EkA8CrpWDgRBz2mxXq3XZ39Z08=
+	b=aBcsWmO8yiiVwa+mJFbKd4whh1UMLfoziFfaH0s8XjFHo3n8z30nc/0adstitHFwz
+	 5TN3kjNsYO/Y/zUxcxqvaDT+erUsCXhuTDfBoIibIXp9SGe0PoSB/TbTqwyEe7sNrJ
+	 U99Ak5ZQwIt00GIwZdBKrNLzg97lHmKXfQdObKWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390669AbgF2VPv (ORCPT
+        id S2390675AbgF2VPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729955AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ACB225299;
-        Mon, 29 Jun 2020 15:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A8525569;
+        Mon, 29 Jun 2020 15:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446119;
-        bh=S08nYrekJmBOyeiTsbZtC3oLsNMFUCdDZY8lMIQKECY=;
+        s=default; t=1593446128;
+        bh=Jo8In8pOuQGqnMtj6T+n6gTtyibSKsc+LNmmeZu4R8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tg8c7WLq1bbc5FuszN/URA+GWyDvgdjF3cPTUUZLbNlQKhAN/W6zbQ0Zo8kNbhfXU
-         1qYl+Tsi2dDl28Kqp/2Myu3xUGBJ7p+XK2AusV/OLWzqDlvun14XmKISR/MdU0GVOB
-         74F8c0YCmOzdMmFMrdebH0Rs8aNOZQaZ0ZLIEJdg=
+        b=yMDGvTXD5gOJ0EloMKNQ64W8Jsh7qpZzyzFoSDCjJ4fRRD5k943hFmUoJKjjaYQMX
+         jcXmiEuSXHOBG8KFXm+85RaMZh76PjJV7uH4g0HgCvgMiQOtxrmP3JuLJFxNpBI8zJ
+         t+Rih80sOG2GrgqhqT9/cwnL4ImOUlLaMcGAZCJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 110/135] cifs/smb3: Fix data inconsistent when zero file range
-Date:   Mon, 29 Jun 2020 11:52:44 -0400
-Message-Id: <20200629155309.2495516-111-sashal@kernel.org>
+Subject: [PATCH 4.4 119/135] blktrace: break out of blktrace setup on concurrent calls
+Date:   Mon, 29 Jun 2020 11:52:53 -0400
+Message-Id: <20200629155309.2495516-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,47 +66,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 6b69040247e14b43419a520f841f2b3052833df9 ]
+[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
 
-CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page cache not update, then the data
-inconsistent with server, which leads the xfstest generic/008 failed.
+We use one blktrace per request_queue, that means one per the entire
+disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
+or just two calls on /dev/vda.
 
-So we need to remove the local page caches before send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
-re-cache it.
+We check for concurrent setup only at the very end of the blktrace setup though.
 
-Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
+If we try to run two concurrent blktraces on the same block device the
+second one will fail, and the first one seems to go on. However when
+one tries to kill the first one one will see things like this:
+
+The kernel will show these:
+
+```
+debugfs: File 'dropped' in directory 'nvme1n1' already present!
+debugfs: File 'msg' in directory 'nvme1n1' already present!
+debugfs: File 'trace0' in directory 'nvme1n1' already present!
+``
+
+And userspace just sees this error message for the second call:
+
+```
+blktrace /dev/nvme1n1
+BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
+```
+
+The first userspace process #1 will also claim that the files
+were taken underneath their nose as well. The files are taken
+away form the first process given that when the second blktrace
+fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
+This means that even if go-happy process #1 is waiting for blktrace
+data, we *have* been asked to take teardown the blktrace.
+
+This can easily be reproduced with break-blktrace [0] run_0005.sh test.
+
+Just break out early if we know we're already going to fail, this will
+prevent trying to create the files all over again, which we know still
+exist.
+
+[0] https://github.com/mcgrof/break-blktrace
+
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/blktrace.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 870b7e763bab9..087261ca6d463 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1145,6 +1145,12 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
- 	inode = d_inode(cfile->dentry);
- 	cifsi = CIFS_I(inode);
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 6737564680193..8ac3663e0012d 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -15,6 +15,9 @@
+  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  *
+  */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/blkdev.h>
+ #include <linux/blktrace_api.h>
+@@ -481,6 +484,16 @@ int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	 */
+ 	strreplace(buts->name, '/', '_');
  
 +	/*
-+	 * We zero the range through ioctl, so we need remove the page caches
-+	 * first, otherwise the data may be inconsistent with the server.
++	 * bdev can be NULL, as with scsi-generic, this is a helpful as
++	 * we can be.
 +	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
++	if (q->blk_trace) {
++		pr_warn("Concurrent blktraces are not allowed on %s\n",
++			buts->name);
++		return -EBUSY;
++	}
 +
- 	/* if file not oplocked can't be sure whether asking to extend size */
- 	if (!CIFS_CACHE_READ(cifsi))
- 		if (keep_size == false)
+ 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+ 	if (!bt)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
