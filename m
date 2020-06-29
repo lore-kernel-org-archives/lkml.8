@@ -2,51 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E61C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90DD7207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A0D207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461351;
-	bh=nQhk4ferhdpSiVYEziuRKJniwPCP21C39LLTWy0DsMY=;
+	s=default; t=1593461355;
+	bh=g5GMusCJAl+kxwQXLRfhojISqOeZ1LeALycbFAuhyU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYoSCYMELPCm6AQWD67DNL0jgtbplG26OcfmUNw09fGUFaxN0ZZIChhlX8ncqM76G
-	 jcqigkRAJoM0H5lErHBkHTMZXUqBff/YImBRhqxp19fYj0CwKG6cLojLg65Ugri1BU
-	 nyTd0GxrWk8uKTopHsMHYRvrfGx81/jt30pgM3oA=
+	b=NCTlwe3NRxhNK2PAGxVmGGSfApWPAp0hdIsEPYNGkBA+akNXTkHrkImkY27YIZkVq
+	 qYzpkq2JzjIayBqmHynIhaSPS/P/ZxvwBKUMkMUrIW2vh3fwvrdoNgkIXV1ctSd2zN
+	 Wkc30sRFDku4SHMwQoTd2Ql+pOvmVWBhaCbgmzkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgF2UJJ (ORCPT
+        id S1726808AbgF2UJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732930AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732941AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2CF251F3;
-        Mon, 29 Jun 2020 15:35:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36A1325253;
+        Mon, 29 Jun 2020 15:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444912;
-        bh=nQhk4ferhdpSiVYEziuRKJniwPCP21C39LLTWy0DsMY=;
+        s=default; t=1593444965;
+        bh=g5GMusCJAl+kxwQXLRfhojISqOeZ1LeALycbFAuhyU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWWNiIM/KB4Mm6FvomLCFaIEEy8RzcXrTf69YlUYddPsa8szMVhefGdFK+uxzvjLu
-         3OodYE49KsS7enrvDcyqGELn93slGKQ/NlIw12CdlPyF+Beh1BKMv/gLy9h+/tPobk
-         yfXR5LA60+OQSdGzVMzwag0U5FCK2xEYtGFYYIyM=
+        b=qpCWMayGXukkhsVVGc9V4Fp8GSYSJa59TkGMVy/XkwTrLtU1zwkSDjEzKEmqu82WC
+         /jFzuaK9hvDKSEBT8PRRyNjfEKLV4ne2slV6pNqRpk57iIr4XSl3pIsfzQTDoYXV6R
+         8J6p0do1vIGlrEjNcir4m81nOpjgpi829bBFcK78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Christophe Meynard <Christophe.Meynard@ign.fr>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/131] i2c: tegra: Cleanup kerneldoc comments
-Date:   Mon, 29 Jun 2020 11:32:59 -0400
-Message-Id: <20200629153502.2494656-9-sashal@kernel.org>
+Subject: [PATCH 4.19 064/131] regualtor: pfuze100: correct sw1a/sw2 on pfuze3000
+Date:   Mon, 29 Jun 2020 11:33:55 -0400
+Message-Id: <20200629153502.2494656-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,75 +66,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit c990bbafdb11c608bba2d529f72ded9bdff88678 ]
+[ Upstream commit 6f1cf5257acc6e6242ddf2f52bc7912aed77b79f ]
 
-Some of the kerneldoc uses a strange spelling for abbreviations. Turn
-them into all-uppercase and clean up some whitespace issues while at it.
+PFUZE100_SWB_REG is not proper for sw1a/sw2, because enable_mask/enable_reg
+is not correct. On PFUZE3000, sw1a/sw2 should be the same as sw1a/sw2 on
+pfuze100 except that voltages are not linear, so add new PFUZE3000_SW_REG
+and pfuze3000_sw_regulator_ops which like the non-linear PFUZE100_SW_REG
+and pfuze100_sw_regulator_ops.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 1dced996ee70 ("regulator: pfuze100: update voltage setting for pfuze3000 sw1a")
+Reported-by: Christophe Meynard <Christophe.Meynard@ign.fr>
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/1592171648-8752-1-git-send-email-yibin.gong@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/regulator/pfuze100-regulator.c | 60 +++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 47d196c026ba6..9a6b9a1b88aef 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -145,8 +145,8 @@ enum msg_end_type {
-  * @has_continue_xfer_support: Continue transfer supports.
-  * @has_per_pkt_xfer_complete_irq: Has enable/disable capability for transfer
-  *		complete interrupt per packet basis.
-- * @has_single_clk_source: The i2c controller has single clock source. Tegra30
-- *		and earlier Socs has two clock sources i.e. div-clk and
-+ * @has_single_clk_source: The I2C controller has single clock source. Tegra30
-+ *		and earlier SoCs have two clock sources i.e. div-clk and
-  *		fast-clk.
-  * @has_config_load_reg: Has the config load register to load the new
-  *		configuration.
-@@ -155,7 +155,6 @@ enum msg_end_type {
-  *		applicable if there is no fast clock source i.e. single clock
-  *		source.
-  */
--
- struct tegra_i2c_hw_feature {
- 	bool has_continue_xfer_support;
- 	bool has_per_pkt_xfer_complete_irq;
-@@ -170,22 +169,22 @@ struct tegra_i2c_hw_feature {
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index 69a377ab26041..30e92a9cc97e9 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -196,6 +196,19 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
+ 
  };
  
- /**
-- * struct tegra_i2c_dev	- per device i2c context
-+ * struct tegra_i2c_dev - per device I2C context
-  * @dev: device reference for power management
-- * @hw: Tegra i2c hw feature.
-- * @adapter: core i2c layer adapter information
-- * @div_clk: clock reference for div clock of i2c controller.
-- * @fast_clk: clock reference for fast clock of i2c controller.
-+ * @hw: Tegra I2C HW feature
-+ * @adapter: core I2C layer adapter information
-+ * @div_clk: clock reference for div clock of I2C controller
-+ * @fast_clk: clock reference for fast clock of I2C controller
-  * @base: ioremapped registers cookie
-- * @cont_id: i2c controller id, used for for packet header
-- * @irq: irq number of transfer complete interrupt
-- * @is_dvc: identifies the DVC i2c controller, has a different register layout
-+ * @cont_id: I2C controller ID, used for packet header
-+ * @irq: IRQ number of transfer complete interrupt
-+ * @is_dvc: identifies the DVC I2C controller, has a different register layout
-  * @msg_complete: transfer completion notifier
-  * @msg_err: error code for completed message
-  * @msg_buf: pointer to current message data
-  * @msg_buf_remaining: size of unsent data in the message buffer
-  * @msg_read: identifies read transfers
-- * @bus_clk_rate: current i2c bus clock rate
-+ * @bus_clk_rate: current I2C bus clock rate
-  */
- struct tegra_i2c_dev {
- 	struct device *dev;
++static const struct regulator_ops pfuze3000_sw_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_ascend,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.set_ramp_delay = pfuze100_set_ramp_delay,
++
++};
++
+ #define PFUZE100_FIXED_REG(_chip, _name, base, voltage)	\
+ 	[_chip ## _ ## _name] = {	\
+ 		.desc = {	\
+@@ -305,23 +318,28 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
+ 	.stby_mask = 0x20,	\
+ }
+ 
+-
+-#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
+-	.desc = {	\
+-		.name = #_name,\
+-		.n_voltages = ((max) - (min)) / (step) + 1,	\
+-		.ops = &pfuze100_sw_regulator_ops,	\
+-		.type = REGULATOR_VOLTAGE,	\
+-		.id = _chip ## _ ## _name,	\
+-		.owner = THIS_MODULE,	\
+-		.min_uV = (min),	\
+-		.uV_step = (step),	\
+-		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
+-		.vsel_mask = 0x7,	\
+-	},	\
+-	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
+-	.stby_mask = 0x7,	\
+-}
++/* No linar case for the some switches of PFUZE3000 */
++#define PFUZE3000_SW_REG(_chip, _name, base, mask, voltages)	\
++	[_chip ## _ ##  _name] = {	\
++		.desc = {	\
++			.name = #_name,	\
++			.n_voltages = ARRAY_SIZE(voltages),	\
++			.ops = &pfuze3000_sw_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = _chip ## _ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.volt_table = voltages,	\
++			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
++			.vsel_mask = (mask),	\
++			.enable_reg = (base) + PFUZE100_MODE_OFFSET,	\
++			.enable_mask = 0xf,	\
++			.enable_val = 0x8,	\
++			.enable_time = 500,	\
++		},	\
++		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
++		.stby_mask = (mask),	\
++		.sw_reg = true,		\
++	}
+ 
+ #define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
+ 	.desc = {	\
+@@ -377,9 +395,9 @@ static struct pfuze_regulator pfuze200_regulators[] = {
+ };
+ 
+ static struct pfuze_regulator pfuze3000_regulators[] = {
+-	PFUZE100_SWB_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
++	PFUZE3000_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
+ 	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
+-	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
++	PFUZE3000_SW_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
+ 	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
+ 	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
+ 	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
+@@ -393,8 +411,8 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
+ };
+ 
+ static struct pfuze_regulator pfuze3001_regulators[] = {
+-	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
+-	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
++	PFUZE3000_SW_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
++	PFUZE3000_SW_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
+ 	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
+ 	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
+ 	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
 -- 
 2.25.1
 
