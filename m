@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF96BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D87207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88CB207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461391;
-	bh=rgjFd7XLbY3wbJEkO8jXFp/dzki2gWM5Ij7g6djwNOM=;
+	s=default; t=1593461394;
+	bh=6FQOpK2Gl9FPOH/Zv2HvhQOSAiGCPIPIg99k4N738II=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gu9E9jjm0iaFUmIjt60i/crwSr5iJL7GOdIJ/GlzO9VOBYPgPitCPJQKfcSh1TIjA
-	 I5moKxJEZwA9FBcdNTAAcdYXmtkf8jUxTgM5Z+uq6VzNebSMlaKoej/yTvQLT7v8rv
-	 o5SJ8E3OvbhZKDIFDjWffJxfsA5CkA1N1gy50HK4=
+	b=hafx4diK4jNTX4IuMsK2mSVmSDpRAGhkBEubQbE6zborE1Qi+nKTHmQnzPYhTcoiw
+	 ewjd+XzFsl9qWRjttYRc5qWokYsEhemG4uNrOfMjaslzccf3YOcp+PxV4PcNQWTLN+
+	 zLE/Bs94zKnDrL1DFaAh1mfIDfSy5UQLjLPOSPhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgF2UJu (ORCPT
+        id S1728132AbgF2UJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732915AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732923AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599A5252B4;
-        Mon, 29 Jun 2020 15:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA7625201;
+        Mon, 29 Jun 2020 15:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445025;
-        bh=rgjFd7XLbY3wbJEkO8jXFp/dzki2gWM5Ij7g6djwNOM=;
+        s=default; t=1593444923;
+        bh=6FQOpK2Gl9FPOH/Zv2HvhQOSAiGCPIPIg99k4N738II=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tYC1augFz9mWbntBqcjtJW5JMOYBEFWygauOP/tk56JC8qqSbtASXGzNSaLXGgRsV
-         h2E9GvFei3nplB5l0Py5XdOhLKe/pUTVImdu6jC2V1FM4cyvQl7dvYYo1K7OT+mZNk
-         S5RbqW6qu5cP+Z6APIev9YBLWGRXWRecQXqekHEE=
+        b=dmzULtm8DDVcMTBvEgkxbE+Us/1PrNcbx/SajO/9hHMDQE/ky2I0m+aZOkQWiIKmx
+         fnDkUOVyzlRQ9ptWmfu7+u3+y7leGNfaaRp2uyGcFHaAmcoXGzDSBn2lU1ijwE6JAg
+         JpnIDXugCxP3Mu7TpKQwRHzH00+hYQq6ZSEXwXAk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Thomas Martitz <t.martitz@avm.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Felix Fietkau <nbd@nbd.name>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 123/131] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
-Date:   Mon, 29 Jun 2020 11:34:54 -0400
-Message-Id: <20200629153502.2494656-124-sashal@kernel.org>
+Subject: [PATCH 4.19 019/131] net: bridge: enfore alignment for ethernet address
+Date:   Mon, 29 Jun 2020 11:33:10 -0400
+Message-Id: <20200629153502.2494656-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,43 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Thomas Martitz <t.martitz@avm.de>
 
-commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
+[ Upstream commit db7202dec92e6caa2706c21d6fc359af318bde2e ]
 
-The "ie_len" variable is in the 0-255 range and it comes from the
-network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
-lead to memory corruption.
+The eth_addr member is passed to ether_addr functions that require
+2-byte alignment, therefore the member must be properly aligned
+to avoid unaligned accesses.
 
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
+The problem is in place since the initial merge of multicast to unicast:
+commit 6db6f0eae6052b70885562e1733896647ec1d807 bridge: multicast to unicast
+
+Fixes: 6db6f0eae605 ("bridge: multicast to unicast")
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Martitz <t.martitz@avm.de>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/bridge/br_private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index 2c65af319a604..6c6bf03ac38aa 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -1856,12 +1856,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
- 	if (!pIE)
- 		return _FAIL;
-+	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
-+		return _FAIL;
+diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+index 11ed2029985fd..33b8222db75c4 100644
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -202,8 +202,8 @@ struct net_bridge_port_group {
+ 	struct rcu_head			rcu;
+ 	struct timer_list		timer;
+ 	struct br_ip			addr;
++	unsigned char			eth_addr[ETH_ALEN] __aligned(2);
+ 	unsigned char			flags;
+-	unsigned char			eth_addr[ETH_ALEN];
+ };
  
- 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
- 	supportRateNum = ie_len;
- 
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
--	if (pIE)
-+	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
- 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
- 
- 	return _SUCCESS;
+ struct net_bridge_mdb_entry
 -- 
 2.25.1
 
