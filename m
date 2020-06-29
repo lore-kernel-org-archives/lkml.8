@@ -2,127 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B83C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B00C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A86204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5B920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qxupq2wL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xjvp/Ruc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgF2Sym (ORCPT
+        id S1727881AbgF2Syr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
+        Mon, 29 Jun 2020 14:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729804AbgF2Swv (ORCPT
+        with ESMTP id S1729807AbgF2Sww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DACC02E2C8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so16252078wml.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:52 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9B7C031C7A;
+        Mon, 29 Jun 2020 11:15:17 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z2so13590859qts.5;
+        Mon, 29 Jun 2020 11:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D4QVWBt78fjc/zXuQ5WSrvh+bVzw9oMxw1mvQFTNt5A=;
-        b=qxupq2wL0vtzmROyM6U/2Nn/WQWmm2e6F12+dsmst5VVlWuoK6gtTr3MIXepH5bo7N
-         Si7Pq+RVqNpQiFxQ2RbG+oCRPYq/cAsadGi/Cx5C0m2OH32nEKmkCgw6kIWLdzlkO8sz
-         eASMM3fslN2LgCjhj34gtUu9hg9uPAn/UhPI1o2umQb7efYohrsJs3Mvj+Q1zve0pRm5
-         nICui8Id6ipARNed0tcwgPy8yFVwW04/m0h4bIMwEzATPNfgcaOKdekX6DREKRSEIaEU
-         bQMqCj8IctrGk5rNU1bbS38PhOQyP25s7K4pFFZrVVRLaG0eRTvOwK2WSKw+NvLReQYV
-         0e0w==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ksn6KEgSSy4O04+EmiHmLNcv0njEAGgzFW6T11ji+vI=;
+        b=Xjvp/RucTJD7ys4so77HqyBdKQg72774rOpK0Iy63xJF5nLNOOILQoRIXkvOl8GSiV
+         +dq1LOTSqRzP649aH77rs+eXXLE6NrmWrR2ZfZCPcZIIXq+sCkRejxszABRcdazkcaLO
+         sosTZdgioDe0Awvmhn8VQ9Xq7tdlEZdqFPTfi0ICfdG4ZOw15yRKYNYyr7GlNnUU/Jc6
+         j+yXaf+nXfjR9kDYWQi3iHL2zZJ08F13kaTJcXndLsH6fIgDkpVttULkAJxaKMU4AZTG
+         otU+pDZSB+sDNIHb74V0Qlsb3g2ppZAYET8gjxxd9JFf9PRwuZVBIXjVJQHbrkmo8MjZ
+         lAEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D4QVWBt78fjc/zXuQ5WSrvh+bVzw9oMxw1mvQFTNt5A=;
-        b=M9MMF48gSWtMVUTkCkokMe/J/eVM/KehtXdpLLfco3n6DHmCYlFEZcuTCorgHh8zSv
-         5NCGkHD6+PqI96GaBlxA42aON39P/Kz1/Uz8HYCrTa2jJFaUFl8hQ6TLhBp4/ohoLOwI
-         poo71qwdaSNJt6gUOMkb/K3I5vvaZtbHLZfPzw5QgHq1i8HpvkuwxdIbhdn2kclHcRW8
-         B5u0fN4rsCvYrPVg0GRMcqc+qjZPMNfQEQe5cSg4OrD6TNULmCdgJERmSf7wHD57W56K
-         0qwN3l7Es6oKgIVUclVO6xFaYHsLC2eJbJa411flvm93zXkc141Pqmp0DCxIxaMT6X2x
-         yaww==
-X-Gm-Message-State: AOAM530jqQf/1ZEOWo6FAH/433nL0MbIXZTFTYo+bOItDVLULdM0LD3Y
-        hGy1bboO2nWsEFny/qQv09T3Kw==
-X-Google-Smtp-Source: ABdhPJyp48RXpvoyDA2gEGM2KF9GnBJlHMy5DHzF0QNr7HDDu6Tv7Xsp8Ip73vOozav0VKOAuIk7HA==
-X-Received: by 2002:a1c:9ad8:: with SMTP id c207mr15916307wme.45.1593439486087;
-        Mon, 29 Jun 2020 07:04:46 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.44
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ksn6KEgSSy4O04+EmiHmLNcv0njEAGgzFW6T11ji+vI=;
+        b=MMCFgfFy9XnVzlCnOmLXySRIJgDwwaAj3tfCJEP31d9kQcaS9N9s1aLPJeQJhQvxE+
+         3SRMx35eiwg5VzdZH60FFBN5CbgZ5KcZobnftXPg3HbGkyoznqcd8lp5p9RThLhLr01h
+         3NzspdNOa9bTIjExPT0NysjWKc/fTEqr4DWl0stTG7/Z9aV3cFLQbHgE09rj0NfZ1kEs
+         naM2suTJS37VlRM7S8QUsUj2uBFy34PjijFIkeyC29bKWJepv99TJC/rpbV2t64K88ua
+         q0uLpEwwqJ/QsgY/vak953jOQ9hJpK938DYmqNY+9YigJtuZQsEl9V90RUuhxKPl8ToV
+         MhBw==
+X-Gm-Message-State: AOAM532ECWZ/23VgLyHR8ClfLpqlvHPq6zguAWeTv/2/v5t3pFttUnoH
+        +P6Lp7caVaj2RH1UsbMqys0=
+X-Google-Smtp-Source: ABdhPJzHr+OXXpT2ladJEzyIUGa3Qh7oKbbNWJhQOzQ+NHJbTju9YGsvUo+VZ1jPBQ+dsZ58uYQ4Zw==
+X-Received: by 2002:ac8:7242:: with SMTP id l2mr16374761qtp.320.1593454516576;
+        Mon, 29 Jun 2020 11:15:16 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z17sm592545qth.24.2020.06.29.11.15.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:04:45 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/20] Fix a bunch more W=1 warnings in Misc
-Date:   Mon, 29 Jun 2020 15:04:22 +0100
-Message-Id: <20200629140442.1043957-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Mon, 29 Jun 2020 11:15:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 29 Jun 2020 14:15:14 -0400
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 14/17] arm/build: Warn on orphan section placement
+Message-ID: <20200629181514.GA1046442@rani.riverdale.lan>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-15-keescook@chromium.org>
+ <20200629155401.GB900899@rani.riverdale.lan>
+ <20200629180703.GX1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200629180703.GX1551@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attempting to clean-up W=1 kernel builds, which are currently
-overwhelmingly riddled with niggly little warnings.
+On Mon, Jun 29, 2020 at 07:07:04PM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Jun 29, 2020 at 11:54:01AM -0400, Arvind Sankar wrote:
+> > On Sun, Jun 28, 2020 at 11:18:37PM -0700, Kees Cook wrote:
+> > > We don't want to depend on the linker's orphan section placement
+> > > heuristics as these can vary between linkers, and may change between
+> > > versions. All sections need to be explicitly named in the linker
+> > > script.
+> > > 
+> > > Specifically, this would have made a recently fixed bug very obvious:
+> > > 
+> > > ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
+> > > 
+> > > Discard unneeded sections .iplt, .rel.iplt, .igot.plt, and .modinfo.
+> > > 
+> > > Add missing text stub sections .vfp11_veneer and .v4_bx.
+> > > 
+> > > Add debug sections explicitly.
+> > > 
+> > > Finally enable orphan section warning.
+> > 
+> > This is unrelated to this patch as such, but I noticed that ARM32/64 places
+> > the .got section inside .text -- is that expected on ARM?
+> 
+> Do you mean in general, in the kernel vmlinux, in the decompressor
+> vmlinux or ... ?
+> 
 
-Lee Jones (20):
-  misc: pti: Repair kerneldoc formatting issues
-  misc: pti: Remove unparsable empty line in function header
-  misc: habanalabs: firmware_if: Add missing 'fw_name' and 'dst' entries
-    to function header
-  misc: habanalabs: pci: Fix a variety of kerneldoc issues
-  misc: habanalabs: irq: Repair kerneldoc formatting issues
-  misc: habanalabs: goya: Omit pointless check ensuring addr is >=0
-  misc: habanalabs: pci: Scrub documentation for non-present function
-    argument
-  misc: habanalabs: goya: goya_coresight: Remove set but unused variable
-    'val'
-  misc: habanalabs: gaudi: Remove ill placed asterisk from kerneldoc
-    header
-  misc: habanalabs: gaudi: gaudi_security: Repair incorrectly named
-    function arg
-  misc: enclosure: Fix some kerneldoc anomalies
-  misc: lattice-ecp3-config: Remove set but clearly unused variable
-    'ret'
-  misc: pch_phub: Provide descriptions for 'chip' argument
-  misc: pch_phub: Remove superfluous descriptions to non-existent args
-    'offset_address'
-  misc: enclosure: Update enclosure_remove_device() documentation to
-    match reality
-  misc: genwqe: card_base: Remove set but unused variable 'rc'
-  misc: genwqe: card_base: Do not	pass unused argument 'fatal_err'
-  misc: genwqe: card_base: Whole host of kerneldoc fixes
-  misc: genwqe: card_dev: Whole host of kerneldoc fixes
-  misc: genwqe: card_utils: Whole a plethora of documentation issues
-
- drivers/misc/enclosure.c                      |  8 ++--
- drivers/misc/genwqe/card_base.c               | 46 ++++++++++---------
- drivers/misc/genwqe/card_dev.c                | 24 +++++++---
- drivers/misc/genwqe/card_utils.c              | 30 ++++++++++--
- drivers/misc/habanalabs/firmware_if.c         |  3 ++
- drivers/misc/habanalabs/gaudi/gaudi.c         |  2 +-
- .../misc/habanalabs/gaudi/gaudi_security.c    |  3 +-
- drivers/misc/habanalabs/goya/goya.c           | 16 +++----
- drivers/misc/habanalabs/goya/goya_coresight.c |  3 +-
- drivers/misc/habanalabs/irq.c                 | 22 ++++-----
- drivers/misc/habanalabs/pci.c                 | 13 ++++--
- drivers/misc/lattice-ecp3-config.c            | 19 ++++----
- drivers/misc/pch_phub.c                       |  9 +++-
- drivers/misc/pti.c                            | 11 ++---
- 14 files changed, 126 insertions(+), 83 deletions(-)
-
--- 
-2.25.1
-
+Sorry, in the kernel vmlinux. ARM_TEXT includes *(.got) for 32-bit, and
+the 64-bit vmlinux.lds.S includes it in .text as well. The decompressor
+for 32-bit keeps it separate for non-EFI stub kernel and puts it inside
+.data for EFI stub.
