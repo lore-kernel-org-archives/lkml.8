@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01FA1206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EF9206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467923;
-	bh=KxMLodaL9VRmXU3o6wjS4X4aIDtMS1Hm+31sE0FPM9o=;
+	s=default; t=1593467925;
+	bh=PPoFicczah2+Cv9aeNEK0ooYF25MkmA+rcIgIUfURK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SzHQ6QR+aSkyFz+RvRfW/Oem1G1lVWG4Ot1QURIR4QDwRbTMRiy8CThl3IxDreKeo
-	 idzPhHgfH3hsWEVU79p6Om4gqoKVBmI++NAHNOOYrQ8devyxg/jQSCBPM3gogAfqlr
-	 tyONirCKbFeQPL9uXVPpF4RRnA+g0/QOYc5k+CjE=
+	b=AUvoSkN1QhgxZo1XsvK0gorSPXbcCGQmw/lBxAP2ugdhGy3+kxfdDDCQk9QtfWB86
+	 JfKZOKtWycwHL78QYwhyf7eDXwMOjM+cJq1GlnM3FV/6Tm+ZlKzhWhNMnF6O90aDVb
+	 3WKh12OxGwdQXsSWWuJqZxhL76oOpTLXU58OpbgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391669AbgF2V6l (ORCPT
+        id S2404651AbgF2V6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726465AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7850C247D8;
-        Mon, 29 Jun 2020 15:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DBB246E7;
+        Mon, 29 Jun 2020 15:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444146;
-        bh=KxMLodaL9VRmXU3o6wjS4X4aIDtMS1Hm+31sE0FPM9o=;
+        s=default; t=1593444031;
+        bh=PPoFicczah2+Cv9aeNEK0ooYF25MkmA+rcIgIUfURK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCpTWII19VTejB1w78fKHDavcR3/tjQHKRG1AybL0Xi5cfKIYSkSKprd9pXoHE2UN
-         BKUFmL23GtJNPL9BOQ2rtqnlL/CZTYaMcCpckHIdEvsKXRPqkmAM1mKcaItomf9Z9n
-         /RRKIhOmbdnjKy/tNXavx8yf6DQu4XiEUtRakRF4=
+        b=iIVxnAOj69spV+TCQt7YpGQcqn9cMhl3ExzFN1f3Z9ehTViP0zKn9Fy9XWyA06JUG
+         ayd/KZHoHC+DrRwF7BMix0IPJF5swy30mfSw3UtXRnpEJbpUwj9IWFvOD6T6y29iDO
+         5uzhK8TC+eDsD3QnP8+hW4t/QtCL8CRppPWnfREc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 251/265] drm/panel-simple: fix connector type for newhaven_nhd_43_480272ef_atxl
-Date:   Mon, 29 Jun 2020 11:18:04 -0400
-Message-Id: <20200629151818.2493727-252-sashal@kernel.org>
+Cc:     Fan Guo <guofan5@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 138/265] RDMA/mad: Fix possible memory leak in ib_mad_post_receive_mads()
+Date:   Mon, 29 Jun 2020 11:16:11 -0400
+Message-Id: <20200629151818.2493727-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,34 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Fan Guo <guofan5@huawei.com>
 
-commit 8a4f5e1185db61bce6ce3a5dce6381a77bcf94e6 upstream.
+[ Upstream commit a17f4bed811c60712d8131883cdba11a105d0161 ]
 
-Add connector type for newhaven_nhd_43_480272ef_atxl, as
-drm_panel_bridge_add() requires connector type to be set.
+If ib_dma_mapping_error() returns non-zero value,
+ib_mad_post_receive_mads() will jump out of loops and return -ENOMEM
+without freeing mad_priv. Fix this memory-leak problem by freeing mad_priv
+in this case.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200609102809.753203-1-tomi.valkeinen@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
+Link: https://lore.kernel.org/r/20200612063824.180611-1-guofan5@huawei.com
+Signed-off-by: Fan Guo <guofan5@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 1 +
+ drivers/infiniband/core/mad.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 3ad828eaefe1c..00c1a8dc4ce8f 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2465,6 +2465,7 @@ static const struct panel_desc newhaven_nhd_43_480272ef_atxl = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
- 		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_DPI,
- };
- 
- static const struct display_timing nlt_nl192108ac18_02d_timing = {
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index f7626ebcf31cf..049c9cdc10dec 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -2941,6 +2941,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
+ 						 DMA_FROM_DEVICE);
+ 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
+ 						  sg_list.addr))) {
++			kfree(mad_priv);
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
 -- 
 2.25.1
 
