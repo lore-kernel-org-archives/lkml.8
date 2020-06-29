@@ -2,133 +2,182 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6882BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51150207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45750207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461404;
+	bh=q3h5egUTDUu4nchMMHNC5L2+LU1fvxivBpyhRBRbWHk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LonG9/ZP81dJmK5BdT9Yv5W71S17/gysQcDJGF5M1l6h2NHe2/iZHvF3Iw1PlPMVa
+	 H4EgsTqZgSCDE7iMrKwNlHX02+N0gIy9gzo66W8HIPZb1tzoSZs4nAJj7D6R6cSJX4
+	 oLoHUzavs2HysTJKfmakWS9yGLs1ava7OEPAA7M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgF2UJ6 (ORCPT
+        id S1728537AbgF2UKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54907 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgF2UJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:09:43 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MeTwa-1jHcPb2lSG-00aYIt for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 12:41:59 +0200
-Received: by mail-qv1-f42.google.com with SMTP id d12so7406122qvn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:41:59 -0700 (PDT)
-X-Gm-Message-State: AOAM531IRWmpD969Z1ecFt2fo+Ss3QMOeHBQjkbNU3Ym+gLRpOjicqJk
-        VMOadaFq+TO2h40w2V+3/6qXlG7nAEV5PXMwMLU=
-X-Google-Smtp-Source: ABdhPJyXGIgZiGgvN0EsrksSo2lM83Ci2s2TJb1sNWGDAMxwSeFYJKystJ4+IQb407S9hGS8mH8Jabv4FTX43lMIILk=
-X-Received: by 2002:a0c:a992:: with SMTP id a18mr5722120qvb.211.1593427318599;
- Mon, 29 Jun 2020 03:41:58 -0700 (PDT)
+        Mon, 29 Jun 2020 16:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732919AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC1C2528D;
+        Mon, 29 Jun 2020 15:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444999;
+        bh=q3h5egUTDUu4nchMMHNC5L2+LU1fvxivBpyhRBRbWHk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C51WYO98l/tu5jCWPZJb/ziPbcI6bNmYGGjWljRtcfVjS09NXeD6FbEz5r3Mzv8kS
+         V4b9h6LyKGbShIMth6z8yuCv/bW4kifW6vT6t6a6ftGD6YrHUQpyEyuN8pu0EYjEWQ
+         Yu1EdOZ8XsIyKI0/4u7sUbTwZlaHK24Y6uEQtWis=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 099/131] s390/vdso: fix vDSO clock_getres()
+Date:   Mon, 29 Jun 2020 11:34:30 -0400
+Message-Id: <20200629153502.2494656-100-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 12:41:41 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
-Message-ID: <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] reset: imx7: Support module build
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        oleksandr.suvorov@toradex.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NAY8EhN6ws1T8Pazpdgrd7VWDeFxjiun8491ZtLnnw6d9VxKLS6
- 8DhsBQstA4iN6jv0o/5SRRp03jhV6SdWjyG1/+7nPRFlpPQxXFyZUG9c0dsABx1dN9NHUE7
- 6Kwyb9j1hiysI0AZr4d9AtFC0uMX4jt+BHCaAWvPhd3mRjxPDpkipH6/oI91JpkMLGu6m/w
- 37TCB8UYsUgDcuf9b40eg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o9rlWcobsXs=:RKRYtyb7Zd9/IfkC2YkpQq
- 4UAIsigLxcA7tdPJinfrtehW0L+FE4cfx8LzBLiTEFbbPrwsRgYeJKGoYBLcFvk/zOOzt1R/U
- YMORbeKYrI6yR3hH4ISFevBnvI2VAQr8kvF0tQGlSHUTwpEoRf1dpz9bE8uzNnmAyX0306nJa
- xK7ao7r5tjjpeXklY81NYsLJKa6FR6LftjAaeoKmbuiJ72f4WDJ/hjgW5+9phs78cwZS22aI2
- xaruYZ4XwcOXyF+PulviQw54SM7d2vC/NNLK+rmD9OGvM+LTqEkKxL3eJOmWNF5qzy9J4DHaW
- 7Rd1hEfNMUzgpmjbM2Vne9WCF+zb6bCJwbT5ox9XTrxgteJnl8StZZ6Iws/IkEvfooNKj8tXq
- jrmVBbhDiNDekt8fK/9CJOVTV95HIHMPxnfLoaEmOq56P9Jd080nK5nJW9m/ZvVvPJEzIf0Lc
- gOWnzBdQTJHmDZBaT/GEXyJBA2SEU6tX4ro/XoV6E0pUK2Z+PWQ2k6ARWeU6/CMa03vM4iQgs
- u8T1fo+476MA1ImYGQD/c7dzUoTzNnZDqG3+ze6VqWJDde05N66IXJYepGh3UVMR0bNPdV8aE
- 4teYiDIlAa+hOmtxLD5eEjS5BBiP06rZdPKJrjB3Myaw3GOH/cPfVAAMgU0nvRLEAT78jyoCl
- j9A9F0AXRf87iUbDOmX/w7W/U/tXvhkgrXewCLHZdCahC9n0YE9cclSTA1eFsjowIxY23GfLo
- lGKAU5XSRkph2xcAwOMrTVHM4p7RBus+0Y3u2IOV4OMi7WulqxCoU8fs1rgl4YM2M4Vchf2Rf
- Dikl0x5HPC78q8zktJu3E3SATVESHsuaBSQIJq9v0/Fqi/zfJZObwpVLIuS7Ug0TGDn0SXW
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Add module device table, module license to support module build.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/reset/Kconfig      | 4 ++--
->  drivers/reset/reset-imx7.c | 4 +++-
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index d9efbfd..033ab60 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -65,9 +65,9 @@ config RESET_HSDK
->           This enables the reset controller driver for HSDK board.
->
->  config RESET_IMX7
-> -       bool "i.MX7/8 Reset Driver" if COMPILE_TEST
-> +       tristate "i.MX7/8 Reset Driver"
->         depends on HAS_IOMEM
-> -       default SOC_IMX7D || (ARM64 && ARCH_MXC)
-> +       depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
->         select MFD_SYSCON
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-You are dropping the 'default' line, so the driver is now disabled
-in a defconfig build, which is not mentioned in the patch description.
+[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
 
-Maybe make it 'default m'?
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-config RESET_IMX7
-       tristate "i.MX7/8 Reset Driver"
-       depends on HAS_IOMEM
-       depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
-       default m if (SOC_IMX7D || (ARM64 && ARCH_MXC))
-       select MFD_SYSCON
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
 
-> @@ -395,3 +396,4 @@ static struct platform_driver imx7_reset_driver = {
->         },
->  };
->  builtin_platform_driver(imx7_reset_driver);
-> +MODULE_LICENSE("GPL v2");
+Fix the s390 vdso implementation of clock_getres keeping a copy of
+hrtimer_resolution in vdso data and using that directly.
 
-Generally speaking: when you add a MODULE_LICENSE tag, please also
-add MODULE_AUTHOR and MODULE_DESCRIPTION.
+Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/include/asm/vdso.h           |  1 +
+ arch/s390/kernel/asm-offsets.c         |  2 +-
+ arch/s390/kernel/time.c                |  1 +
+ arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-The 'builtin_platform_driver()' should work correctly but prevent unloading the
-module. Ideally please changed to 'module_platform_driver()' and add a
-.remove function for the platform_driver.
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 169d7604eb804..f3ba84fa9bd18 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -36,6 +36,7 @@ struct vdso_data {
+ 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
+ 	__u32 ts_dir;			/* TOD steering direction	0x64 */
+ 	__u64 ts_end;			/* TOD steering end		0x68 */
++	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
+ };
+ 
+ struct vdso_per_cpu_data {
+diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
+index 66e830f1c7bfe..e9d09f6e81d25 100644
+--- a/arch/s390/kernel/asm-offsets.c
++++ b/arch/s390/kernel/asm-offsets.c
+@@ -75,6 +75,7 @@ int main(void)
+ 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
+ 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
+ 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
++	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
+ 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
+ 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
+ 	OFFSET(__VDSO_CPU_NR, vdso_per_cpu_data, cpu_nr);
+@@ -86,7 +87,6 @@ int main(void)
+ 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+ 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+ 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
+-	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+ 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
+ 	BLANK();
+ 	/* idle data offsets */
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index e8766beee5ad8..8ea9db599d38d 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -310,6 +310,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 
+ 	vdso_data->tk_mult = tk->tkr_mono.mult;
+ 	vdso_data->tk_shift = tk->tkr_mono.shift;
++	vdso_data->hrtimer_res = hrtimer_resolution;
+ 	smp_wmb();
+ 	++vdso_data->tb_update_count;
+ }
+diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
+index 081435398e0a1..0c79caa32b592 100644
+--- a/arch/s390/kernel/vdso64/clock_getres.S
++++ b/arch/s390/kernel/vdso64/clock_getres.S
+@@ -17,12 +17,14 @@
+ 	.type  __kernel_clock_getres,@function
+ __kernel_clock_getres:
+ 	CFI_STARTPROC
+-	larl	%r1,4f
++	larl	%r1,3f
++	lg	%r0,0(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+ 	je	0f
+-	larl	%r1,3f
++	larl	%r1,_vdso_data
++	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC
+@@ -36,7 +38,6 @@ __kernel_clock_getres:
+ 	jz	2f
+ 0:	ltgr	%r3,%r3
+ 	jz	1f				/* res == NULL */
+-	lg	%r0,0(%r1)
+ 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
+ 	stg	%r0,8(%r3)			/* store tp->tv_usec */
+ 1:	lghi	%r2,0
+@@ -45,6 +46,5 @@ __kernel_clock_getres:
+ 	svc	0
+ 	br	%r14
+ 	CFI_ENDPROC
+-3:	.quad	__CLOCK_REALTIME_RES
+-4:	.quad	__CLOCK_COARSE_RES
++3:	.quad	__CLOCK_COARSE_RES
+ 	.size	__kernel_clock_getres,.-__kernel_clock_getres
+-- 
+2.25.1
 
-
-       Arnd
