@@ -2,287 +2,223 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97486C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73FD5208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C42208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r13LcPYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgF2V1D (ORCPT
+        id S2391101AbgF2V1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38412 "EHLO
+        Mon, 29 Jun 2020 17:27:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgF2Smp (ORCPT
+        with ESMTP id S1729079AbgF2Smp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:45 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AABC033C21;
-        Mon, 29 Jun 2020 11:26:33 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyUB-002Dw3-VL; Mon, 29 Jun 2020 18:26:31 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 28/41] ia64: switch to ->get2()
-Date:   Mon, 29 Jun 2020 19:26:15 +0100
-Message-Id: <20200629182628.529995-28-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3437CC031C6D
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:03:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u5so8228327pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jcOa7nLCMvwvBvn+lXefiaEhY1cnw7datfi9VffahTk=;
+        b=r13LcPYkVT0QvwJZmwPVtSiSE821D8z+loelig4JyhWpIr2GDIKdMpwQEoIwTQy2oH
+         TmbsgQgAdaNwDNSMupvVB0Q5lBpVn0GlcrJ/QltbLA7O4hd371LAsV7U/bNWwKh3fjjJ
+         Emnx6ima91VS1Q/Coc13JQiR6B7PeqtzMdSDveDWWXo/TbrU5lZ5CmGyIrdrbcZWayMf
+         y5tlvmSbbV4sJ7OYjoxYDJRYvf+h2fgbUczNYJDoheq4vWjGcQK+JZouEgO6tEIKjP0J
+         qf5p0fOOrT1TcBV7dXPpqhhkYuiuUNN8qlWdn2JY+3bmJ/GIeRZAVv+AqO4ojiijs4Uj
+         JfJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jcOa7nLCMvwvBvn+lXefiaEhY1cnw7datfi9VffahTk=;
+        b=HDHvjRDZG4Wj1pa9fnffQdDbMbjQBMKwzUEG/RoEurJsF3bDN3myuD/MfxHtZil0Wv
+         PPsubGg/Ahme8tzPYP+NhCVB5R/FrtTkBcokCvgEw1hFUfPlM7yTQJznLfd1a3X7n+l6
+         AKi4Hc3rSftI8IdpIDhkFIzXdW3BP+MOEVoWJHGpxlF0RR0itsbOnmEor/SH9b5giCKs
+         CcZI+thv6DbYEleS5gx5PF5iEeW8UxGvMhkcByeeDQKWLiLjYvUPn5VvHdrPtcyJk8mk
+         sUezGjS2JsWLkXfVB8h9jR3ppkAQjqwNiR3+DQY/veob4VZmMCvmxkl+t0GMdMF0ynV3
+         yLOA==
+X-Gm-Message-State: AOAM532kODE0gVVy9m6GhNlvQez6YRR8XUECUn237yIZYNwMOBtvWnZ4
+        UDI8l9Wv/TllUiG49UELh2TRDAiVv/lAhFVvMGV83Q==
+X-Google-Smtp-Source: ABdhPJz9+i4D45iNpvDJAjy8t0TCOs03y2uc7EK1ApuKtEPPpmNHtDv8UmtRzYb/Tg4Esq7LtMnkj4tJsm1tUYBKEnc=
+X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr15661788pfu.169.1593453782335;
+ Mon, 29 Jun 2020 11:03:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-6-keescook@chromium.org> <CAMj1kXE+toCd=Bx-zw7D9bvDRNB2aPn5-_7CY7MOKcVGA-azVg@mail.gmail.com>
+ <202006290806.3BDE2A8@keescook>
+In-Reply-To: <202006290806.3BDE2A8@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Jun 2020 11:02:51 -0700
+Message-ID: <CAKwvOd=DMfmvfiEX7KDPLs75SbNz+LAGSwC3V_=LgGH3kjtE=g@mail.gmail.com>
+Subject: Re: [PATCH v4 05/17] ctype: Work around Clang -mbranch-protection=none
+ bug
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Mon, Jun 29, 2020 at 8:06 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 10:15:47AM +0200, Ard Biesheuvel wrote:
+> > On Mon, 29 Jun 2020 at 08:18, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > In preparation for building efi/libstub with -mbranch-protection=none
+> > > (EFI does not support branch protection features[1]), add no-op code
+> > > to work around a Clang bug that emits an unwanted .note.gnu.property
+> > > section for object files without code[2].
+> > >
+> > > [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
+> > > [2] https://bugs.llvm.org/show_bug.cgi?id=46480
+> > >
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > Cc: clang-built-linux@googlegroups.com
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  lib/ctype.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/lib/ctype.c b/lib/ctype.c
+> > > index c819fe269eb2..21245ed57d90 100644
+> > > --- a/lib/ctype.c
+> > > +++ b/lib/ctype.c
+> > > @@ -36,3 +36,13 @@ _L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,     /* 224-239 */
+> > >  _L,_L,_L,_L,_L,_L,_L,_P,_L,_L,_L,_L,_L,_L,_L,_L};      /* 240-255 */
+> > >
+> > >  EXPORT_SYMBOL(_ctype);
+> > > +
+> > > +/*
+> > > + * Clang will generate .note.gnu.property sections for object files
+> > > + * without code, even in the presence of -mbranch-protection=none.
+> > > + * To work around this, define an unused static function.
+> > > + * https://bugs.llvm.org/show_bug.cgi?id=46480
+> > > + */
+> > > +#ifdef CONFIG_CC_IS_CLANG
+> > > +void __maybe_unused __clang_needs_code_here(void) { }
+> > > +#endif
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > I take it we don't need this horrible hack if we build the EFI stub
+> > with branch protections and filter out the .note.gnu.property section
+> > explicitly?
+> >
+> > Sorry to backpedal, but that is probably a better approach after all,
+> > given that the instructions don't hurt, and we will hopefully be able
+> > to arm them once UEFI (as well as PE/COFF) gets around to describing
+> > this in a way that both the firmware and the OS can consume.
+>
+> How does this look?
+>
+>
+> commit 051ef0b75a386c3fe2f216d16246468147a48c5b
+> Author: Kees Cook <keescook@chromium.org>
+> Date:   Tue Jun 23 18:02:56 2020 -0700
+>
+>     efi/libstub: Disable -mbranch-protection
+>
+>     In preparation for adding --orphan-handling=warn to more architectures,
+>     disable -mbranch-protection, as EFI does not yet support it[1].  This was
+>     noticed due to it producing unwanted .note.gnu.property sections (prefixed
+>     with .init due to the objcopy build step).
+>
+>     However, we must also work around a bug in Clang where the section is
+>     still emitted for code-less object files[2], so also remove the section
+>     during the objcopy.
+>
+>     [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
+>     [2] https://bugs.llvm.org/show_bug.cgi?id=46480
+>
+>     Cc: Ard Biesheuvel <ardb@kernel.org>
+>     Cc: Arvind Sankar <nivedita@alum.mit.edu>
+>     Cc: Atish Patra <atish.patra@wdc.com>
+>     Cc: linux-efi@vger.kernel.org
+>     Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 75daaf20374e..f9f1922f8f28 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -18,7 +18,8 @@ cflags-$(CONFIG_X86)          += -m$(BITS) -D__KERNEL__ \
+>  # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
+>  # disable the stackleak plugin
+>  cflags-$(CONFIG_ARM64)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> -                                  -fpie $(DISABLE_STACKLEAK_PLUGIN)
+> +                                  -fpie $(DISABLE_STACKLEAK_PLUGIN) \
+> +                                  $(call cc-option,-mbranch-protection=none)
+>  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+>                                    -fno-builtin -fpic \
+>                                    $(call cc-option,-mno-single-pic-base)
+> @@ -66,6 +67,12 @@ lib-$(CONFIG_X86)            += x86-stub.o
+>  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>
+> +# Even when -mbranch-protection=none is set, Clang will generate a
+> +# .note.gnu.property for code-less object files (like lib/ctype.c),
+> +# so work around this by explicitly removing the unwanted section.
+> +# https://bugs.llvm.org/show_bug.cgi?id=46480
+> +STUBCOPY_FLAGS-y               += --remove-section=.note.gnu.property
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/ia64/kernel/ptrace.c | 149 ++++++++++++++++++----------------------------
- 1 file changed, 58 insertions(+), 91 deletions(-)
+This is definitely better than the empty function.  Though a patch is
+posted for fixing this in LLVM. Assuming that lands before this, we
+might not actually need this workaround?
 
-diff --git a/arch/ia64/kernel/ptrace.c b/arch/ia64/kernel/ptrace.c
-index eae7b094f608..990ac8caae8c 100644
---- a/arch/ia64/kernel/ptrace.c
-+++ b/arch/ia64/kernel/ptrace.c
-@@ -1489,9 +1489,17 @@ access_elf_reg(struct task_struct *target, struct unw_frame_info *info,
- 		return access_elf_areg(target, info, addr, data, write_access);
- }
- 
-+struct regset_membuf {
-+	struct membuf to;
-+	int ret;
-+};
-+
- void do_gpregs_get(struct unw_frame_info *info, void *arg)
- {
--	struct regset_getset *dst = arg;
-+	struct regset_membuf *dst = arg;
-+	struct membuf to = dst->to;
-+	unsigned int n;
-+	elf_greg_t reg;
- 
- 	if (unw_unwind_to_user(info) < 0)
- 		return;
-@@ -1509,35 +1517,13 @@ void do_gpregs_get(struct unw_frame_info *info, void *arg)
- 
- 
- 	/* Skip r0 */
--	if (dst->count > 0 && dst->pos < ELF_GR_OFFSET(1)) {
--		dst->ret = user_regset_copyout_zero(&dst->pos, &dst->count,
--						      &dst->u.get.kbuf,
--						      &dst->u.get.ubuf,
--						      0, ELF_GR_OFFSET(1));
--		if (dst->ret)
-+	membuf_zero(&to, 8);
-+	for (n = 8; to.left && n < ELF_AR_END_OFFSET; n += 8) {
-+		if (access_elf_reg(info->task, info, n, &reg, 0) < 0) {
-+			dst->ret = -EIO;
- 			return;
--	}
--
--	while (dst->count && dst->pos < ELF_AR_END_OFFSET) {
--		unsigned int n, from, to;
--		elf_greg_t tmp[16];
--
--		from = dst->pos;
--		to = from + min(dst->count, (unsigned)sizeof(tmp));
--		if (to > ELF_AR_END_OFFSET)
--			to = ELF_AR_END_OFFSET;
--		for (n = 0; from < to; from += sizeof(elf_greg_t), n++) {
--			if (access_elf_reg(dst->target, info, from,
--						&tmp[n], 0) < 0) {
--				dst->ret = -EIO;
--				return;
--			}
- 		}
--		dst->ret = user_regset_copyout(&dst->pos, &dst->count,
--				&dst->u.get.kbuf, &dst->u.get.ubuf, tmp,
--				dst->pos, to);
--		if (dst->ret)
--			return;
-+		membuf_store(&to, reg);
- 	}
- }
- 
-@@ -1588,60 +1574,36 @@ void do_gpregs_set(struct unw_frame_info *info, void *arg)
- 
- void do_fpregs_get(struct unw_frame_info *info, void *arg)
- {
--	struct regset_getset *dst = arg;
--	struct task_struct *task = dst->target;
--	elf_fpreg_t tmp[30];
--	int index, min_copy, i;
-+	struct task_struct *task = info->task;
-+	struct regset_membuf *dst = arg;
-+	struct membuf to = dst->to;
-+	elf_fpreg_t reg;
-+	unsigned int n;
- 
- 	if (unw_unwind_to_user(info) < 0)
- 		return;
- 
- 	/* Skip pos 0 and 1 */
--	if (dst->count > 0 && dst->pos < ELF_FP_OFFSET(2)) {
--		dst->ret = user_regset_copyout_zero(&dst->pos, &dst->count,
--						      &dst->u.get.kbuf,
--						      &dst->u.get.ubuf,
--						      0, ELF_FP_OFFSET(2));
--		if (dst->count == 0 || dst->ret)
--			return;
--	}
-+	membuf_zero(&to, 2 * sizeof(elf_fpreg_t));
- 
- 	/* fr2-fr31 */
--	if (dst->count > 0 && dst->pos < ELF_FP_OFFSET(32)) {
--		index = (dst->pos - ELF_FP_OFFSET(2)) / sizeof(elf_fpreg_t);
--
--		min_copy = min(((unsigned int)ELF_FP_OFFSET(32)),
--				dst->pos + dst->count);
--		for (i = dst->pos; i < min_copy; i += sizeof(elf_fpreg_t),
--				index++)
--			if (unw_get_fr(info, i / sizeof(elf_fpreg_t),
--					 &tmp[index])) {
--				dst->ret = -EIO;
--				return;
--			}
--		dst->ret = user_regset_copyout(&dst->pos, &dst->count,
--				&dst->u.get.kbuf, &dst->u.get.ubuf, tmp,
--				ELF_FP_OFFSET(2), ELF_FP_OFFSET(32));
--		if (dst->count == 0 || dst->ret)
-+	for (n = 2; to.left && n < 32; n++) {
-+		if (unw_get_fr(info, n, &reg)) {
-+			dst->ret = -EIO;
- 			return;
-+		}
-+		membuf_write(&to, &reg, sizeof(reg));
- 	}
- 
- 	/* fph */
--	if (dst->count > 0) {
--		ia64_flush_fph(dst->target);
--		if (task->thread.flags & IA64_THREAD_FPH_VALID)
--			dst->ret = user_regset_copyout(
--				&dst->pos, &dst->count,
--				&dst->u.get.kbuf, &dst->u.get.ubuf,
--				&dst->target->thread.fph,
--				ELF_FP_OFFSET(32), -1);
--		else
--			/* Zero fill instead.  */
--			dst->ret = user_regset_copyout_zero(
--				&dst->pos, &dst->count,
--				&dst->u.get.kbuf, &dst->u.get.ubuf,
--				ELF_FP_OFFSET(32), -1);
--	}
-+	if (!to.left)
-+		return;
-+
-+	ia64_flush_fph(task);
-+	if (task->thread.flags & IA64_THREAD_FPH_VALID)
-+		membuf_write(&to, &task->thread.fph, 96 * sizeof(reg));
-+	else
-+		membuf_zero(&to, 96 * sizeof(reg));
- }
- 
- void do_fpregs_set(struct unw_frame_info *info, void *arg)
-@@ -1717,6 +1679,20 @@ void do_fpregs_set(struct unw_frame_info *info, void *arg)
- 	}
- }
- 
-+static void
-+unwind_and_call(void (*call)(struct unw_frame_info *, void *),
-+	       struct task_struct *target, void *data)
-+{
-+	if (target == current)
-+		unw_init_running(call, data);
-+	else {
-+		struct unw_frame_info info;
-+		memset(&info, 0, sizeof(info));
-+		unw_init_from_blocked_task(&info, target);
-+		(*call)(&info, data);
-+	}
-+}
-+
- static int
- do_regset_call(void (*call)(struct unw_frame_info *, void *),
- 	       struct task_struct *target,
-@@ -1728,27 +1704,18 @@ do_regset_call(void (*call)(struct unw_frame_info *, void *),
- 				 .pos = pos, .count = count,
- 				 .u.set = { .kbuf = kbuf, .ubuf = ubuf },
- 				 .ret = 0 };
--
--	if (target == current)
--		unw_init_running(call, &info);
--	else {
--		struct unw_frame_info ufi;
--		memset(&ufi, 0, sizeof(ufi));
--		unw_init_from_blocked_task(&ufi, target);
--		(*call)(&ufi, &info);
--	}
--
-+	unwind_and_call(call, target, &info);
- 	return info.ret;
- }
- 
- static int
- gpregs_get(struct task_struct *target,
- 	   const struct user_regset *regset,
--	   unsigned int pos, unsigned int count,
--	   void *kbuf, void __user *ubuf)
-+	   struct membuf to)
- {
--	return do_regset_call(do_gpregs_get, target, regset, pos, count,
--		kbuf, ubuf);
-+	struct regset_membuf info = {.to = to};
-+	unwind_and_call(do_gpregs_get, target, &info);
-+	return info.ret;
- }
- 
- static int gpregs_set(struct task_struct *target,
-@@ -1790,11 +1757,11 @@ fpregs_active(struct task_struct *target, const struct user_regset *regset)
- 
- static int fpregs_get(struct task_struct *target,
- 		const struct user_regset *regset,
--		unsigned int pos, unsigned int count,
--		void *kbuf, void __user *ubuf)
-+		struct membuf to)
- {
--	return do_regset_call(do_fpregs_get, target, regset, pos, count,
--		kbuf, ubuf);
-+	struct regset_membuf info = {.to = to};
-+	unwind_and_call(do_fpregs_get, target, &info);
-+	return info.ret;
- }
- 
- static int fpregs_set(struct task_struct *target,
-@@ -2033,14 +2000,14 @@ static const struct user_regset native_regsets[] = {
- 		.core_note_type = NT_PRSTATUS,
- 		.n = ELF_NGREG,
- 		.size = sizeof(elf_greg_t), .align = sizeof(elf_greg_t),
--		.get = gpregs_get, .set = gpregs_set,
-+		.get2 = gpregs_get, .set = gpregs_set,
- 		.writeback = gpregs_writeback
- 	},
- 	{
- 		.core_note_type = NT_PRFPREG,
- 		.n = ELF_NFPREG,
- 		.size = sizeof(elf_fpreg_t), .align = sizeof(elf_fpreg_t),
--		.get = fpregs_get, .set = fpregs_set, .active = fpregs_active
-+		.get2 = fpregs_get, .set = fpregs_set, .active = fpregs_active
- 	},
- };
- 
+arch/arm64/Kconfig
+1625 config ARM64_BTI_KERNEL
+...
+1633   # https://reviews.llvm.org/rGb8ae3fdfa579dbf366b1bb1cbfdbf8c51db7fa55
+1634   depends on !CC_IS_CLANG || CLANG_VERSION >= 100001
+
+So if Daniel's patch lands AND is backported into the clang 10.0.1
+release, then we might not need to carry this workaround?  Either way,
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> +
+>  #
+>  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+>  # .bss section, so the .bss section of the EFI stub needs to be included in the
+>
+> --
+> Kees Cook
+
 -- 
-2.11.0
-
+Thanks,
+~Nick Desaulniers
