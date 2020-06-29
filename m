@@ -2,186 +2,300 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD983C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A67C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91CD720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A316120724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="DbOoHUOm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EJevnq1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389626AbgF2UmB (ORCPT
+        id S2389631AbgF2UmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        Mon, 29 Jun 2020 16:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731667AbgF2TOF (ORCPT
+        with ESMTP id S2389625AbgF2UmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C2FC08C5F5
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:38:13 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so15119721wrm.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:38:13 -0700 (PDT)
+        Mon, 29 Jun 2020 16:42:01 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EE8C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id e11so16614868qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w5TN/E+I/toiXQHven0Tzugxh2KMUYh+rGvqZtXPFqc=;
-        b=DbOoHUOmfQBZBfBNFane+FwAaHv/bwA4VJs02OP7/NQNzlgmAGGz8UAXpjyqJYWkWO
-         lm3GQYeLEBYB3MeEeqbQ8mIgKzaeoKai8O7tfiiBvcCtspXG+x/4tAOj78h5r6vHLvJi
-         yWpC08Obs+4iBuqHftKl3Bn3SfBNIuigiw29OI0yJdgRBhoTj+or98IuAdcphVqfYb3m
-         HGv2tyNo26cQpy9n3zw2l/Zt7w/Z/D9LFKvVh10U+JkrO8gIm2hm18bn7L1OyF4/x29E
-         2bMCmsg58kYdvLQ7G4AexzjVTQyP9usYuuFQhVnufbsrxs7ANsbczV299xhg5jKhi7hE
-         o2XQ==
+        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
+        b=EJevnq1Qm1fMrGg9QqwoGUo74xXnWz+OPLe22wYa8z9X7/EESR/StW4NBOVZUvfATX
+         AHN4aZzjhhGvyeJsncj0H3Q3U/a7FxJYRBUijeZOnNB1p4Tp3HUxx0EbjmjSmr9TIjP0
+         7/n3h2c0RV8GVI6qG0UNAxaWURnlnXhz3fM7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w5TN/E+I/toiXQHven0Tzugxh2KMUYh+rGvqZtXPFqc=;
-        b=npYs03amu7Yl+dP9dUp4Bg6SsRC71nEGlqLTHklyK95Ls8cTH3KtuWzOdxWKvPh1Gj
-         AsAw4UiUNW3K0BrTj4qapwGN/WXvNDacfE2GcUW7BH1lvD7m76qYUU24Jzmqv5x+CjXm
-         J/UpPwAicF395700Hbmpg/eDBK9qEN74LbKGggJIMsDnCX8otAC1afwap2Na/oi4yIjs
-         dGz2bAvPJM/loExiQ5rx6a9xV81JVTrcE0ZRUPhchlK/OWPHAklAtFwd6YtfR7jeMmQg
-         6KZDJB3OZKXp9myXGUkT4YezSuWqBf9gmsBIWOveI5L9TQbQF3qfYg3WHUBmwN4Nv70j
-         6gVA==
-X-Gm-Message-State: AOAM5321rUyJRSPXa1DV+jhT0pIZrUPHZJAjU7OqGZvM1GEpLEf5FG/t
-        Cc6tqBnrNfj6fXxT0T5VG7XvGILg12pfBZxkYwpi/g==
-X-Google-Smtp-Source: ABdhPJy4WGmlk07GX6E9BZevxe5hBGPhKL9rkFE7Ij8SPwuxHaxD6xGk7gGNB8l0qXzYGYzsZnvtJDPKE2OVK9ewiCA=
-X-Received: by 2002:a5d:4107:: with SMTP id l7mr15738900wrp.144.1593405491943;
- Sun, 28 Jun 2020 21:38:11 -0700 (PDT)
+        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
+        b=UWz38DBSbog1IyshznUjGcpg1Xeun6oSTWG7X4tG8wMPwa30yjN9HeVHYhFmWTlT7L
+         jJp/XYcmcVYbGIA41nn+mdFYS4Dylkzrgy9Y4E1MkFXEkXud68v6QmotmLiezQvRknZ6
+         HhBh204WhKHv+JytuJ8F4W/r/tlZl3GcqUFg3BTFjHsZfzZgM8b5vvH6JAYDawHnhKUw
+         gFbQ7ev0ysIU8vJu0GnU6Y4pNvGQNSfB1AWDvaUtQmbrsvX1iPyVUFHr0O+XAeZ6qquS
+         oamzAFR5l5ZSsswOq6m4P9C1iXOjRUJzrTXcl/B9fM0ofkjcMTPtlH+jp0RHQX6KC7J/
+         Ii4Q==
+X-Gm-Message-State: AOAM533lRR3qTutkGSfWjlUIHHltY0rJt0ffQy4qPkPLoHDiKsHXgLX1
+        y2v/gQ6VVN6/K1R6NBV4kGehfr5OAblTcIdAOZPmlA==
+X-Google-Smtp-Source: ABdhPJz8hrXiqyvgz2TipcXO+EtwvIq9Y5rsREXLGe5IM9Sztn7Oq3J3mOBRjpZf7CxTfMsRqJxG2qEVfDufAZ2LwDI=
+X-Received: by 2002:a37:b341:: with SMTP id c62mr16343321qkf.128.1593463320086;
+ Mon, 29 Jun 2020 13:42:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <3de3a480517d167a3faae086aa8ab0c0c7141d99.1593397455.git.zong.li@sifive.com>
- <CAAhSdy3VBUTMg_b2tO12cTYuvHYtH=4dj9-qT-at35Whf3w_7w@mail.gmail.com> <CANXhq0pV87oSzyAt80ySoXGRXp26bCnahPW0r27J+wjj5yc=nw@mail.gmail.com>
-In-Reply-To: <CANXhq0pV87oSzyAt80ySoXGRXp26bCnahPW0r27J+wjj5yc=nw@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 29 Jun 2020 10:07:57 +0530
-Message-ID: <CAAhSdy3BUfPCS+LUWp9GKdnf960N-UkxtUtRArgkVd-1cGZxhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] dt-bindings: riscv: Add YAML documentation for PMU
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com> <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 29 Jun 2020 13:41:48 -0700
+Message-ID: <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Rob Herring <robh@kernel.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:58 AM Zong Li <zong.li@sifive.com> wrote:
->
-> On Mon, Jun 29, 2020 at 12:09 PM Anup Patel <anup@brainfault.org> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > Add device tree bindings for performance monitor unit. And it passes the
-> > > dt_binding_check verification.
-> > >
-> > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > ---
-> > >  .../devicetree/bindings/riscv/pmu.yaml        | 59 +++++++++++++++++++
-> > >  1 file changed, 59 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/riscv/pmu.yaml b/Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > new file mode 100644
-> > > index 000000000000..f55ccbc6c685
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > @@ -0,0 +1,59 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/riscv/pmu.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: RISC-V Performance Monitor Units
-> > > +
-> > > +maintainers:
-> > > +  - Zong Li <zong.li@sifive.com>
-> > > +  - Paul Walmsley <paul.walmsley@sifive.com>
-> > > +  - Palmer Dabbelt <palmer@dabbelt.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - const: riscv,pmu
-> > > +
-> > > +  riscv,width-base-cntr:
-> > > +    description: The width of cycle and instret CSRs.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +
-> > > +  riscv,width-event-cntr:
-> > > +    description: The width of hpmcounter CSRs.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > The terms "base" and "event" is confusing because
-> > we only have counters with no interrupt associated with it.
-> >
-> > The RISC-V spec defines 3 counters and rest are all
-> > implementation specific counters.
->
-> As I know, there are 2 counters of spec definition: cycle and instret.
-> What is the 3rd counter you mentioned?
+Hi Rob,
 
-TIME is a counter CSR.
+Just following up on this. Would the below example align better with
+OF graph requirements?
 
+Example begins at <example_start>, but in summary:
+- port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
+goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
+role switch)
+- port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
+mode switch, 1 = goes to orientation switch)
+-These end points can go through arbitrarily long paths (including
+retimers) as long as they end up at the following devices:
+    a. device with compatible string "typec-mode-switch" for endpoint 0.
+    b. device with compatible string "typec-orientation-switch" for endpoint 1.
+    c. device with compatible string "typec-data-role-switch" for endpoint 2.
+- Connector class framework will perform the traversal from
+usb-c-connector port endpoints to the "*-switch" devices.
+
+Best regards,
+
+On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
 >
-> >
-> > I suggest using the terms "spec counters" and "impl counters"
-> > instead of "base counters" and "event counters".
+> Hi Rob,
 >
-> OK, they are good to me. Let me change it.
+> Thanks as always for your help in reviewing this proposal!
 >
+> Kindly see inline
 >
-> >
-> > Further, "riscv,width" properties are redundant because
-> > RISC-V spec clearly tells that counters are 64bit for both
-> > RV32 and RV64.
-> >
-> > > +
-> > > +  riscv,n-event-cntr:
-> > > +    description: The number of hpmcounter CSRs.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +
-> > > +  riscv,hw-event-map:
-> > > +    description: The mapping of generic hardware events. Default is no mapping.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +
-> > > +  riscv,hw-cache-event-map:
-> > > +    description: The mapping of generic hardware cache events.
-> > > +      Default is no mapping.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - riscv,width-base-cntr
-> > > +  - riscv,width-event-cntr
-> > > +  - riscv,n-event-cntr
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    pmu {
-> > > +      compatible = "riscv,pmu";
-> > > +      riscv,width-base-cntr = <64>;
-> > > +      riscv,width-event-cntr = <40>;
-> > > +      riscv,n-event-cntr = <2>;
-> > > +      riscv,hw-event-map = <0x0 0x0 0x1 0x1 0x3 0x0202 0x4 0x4000>;
-> > > +      riscv,hw-cache-event-map = <0x010201 0x0102 0x010204 0x0802>;
-> > > +    };
-> > > +
-> > > +...
-> > > --
-> > > 2.27.0
+> (Trimming text);
+> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
+> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
 > > >
+> > > Hi Rob,
+> > >
+> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > >
+> > > I think the updated example handles this grouping (port@1 going to a
+> > > "SS mux") although as you said it should probably be a group of muxes,
+> > > but I think the example illustrates the point. Is that assessment
+> > > correct?
 > >
-> > Regards,
-> > Anup
+> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+>
+> Ack.
+>
+> Let's go with "-switch" ? That's what the connector class uses and it
+> conveys the meaning (unless that is a reserved keyword in DT).
+>
+> >
+> > > Would this block the addition of the "*-switch" properties? IIUC the
+> > > two are related but not dependent on each other.
+> > >
+> > > The *-switch properties are phandles which the Type C connector class
+> > > framework expects (and uses to get handles to those switches).
+> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
+> >
+> > You don't need them though. Walk the graph. You get the connector
+> > port@1 remote endpoint and then get its parent.
+> >
+>
+> I see; would it be something along the lines of this? (DT example
+> follows; search for "example_end" to jump to bottom):
+>
+> <example_start>
+>
+> connector@0 {
+>     compatible = "usb-c-connector";
+>     reg = <0>;
+>     power-role = "dual";
+>     data-role = "dual";
+>     try-power-role = "source";
+>     ....
+>     ports {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>
+>         port@0 {
+>             reg = <0>;
+>             usb_con_hs: endpoint {
+>                 remote-endpoint = <&foo_usb_hs_controller>;
+>             };
+>         };
+>
+>         port@1 {
+>             reg = <1>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>
+>             usb_con0_ss_mode: endpoint@0 {
+>                 reg = <0>
+>                 remote-endpoint = <&mode_switch_ss_in>;
+>             };
+>
+>             usb_con0_ss_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_ss_in>;
+>             };
+>
+>             usb_con0_ss_data_role: endpoint@2 {
+>                         reg = <2>
+>                         remote-endpoint = <&data_role_switch_in>;
+>             };
+>         };
+>
+>         port@2 {
+>             reg = <2>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             usb_con0_sbu_mode: endpoint@0 {
+>                         reg = <0>
+>                         remote-endpoint = <&mode_switch_sbu_in>;
+>             };
+>             usb_con0_sbu_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_sbu_in>;
+>             };
+>         };
+>     };
+> };
+>
+> mode_switch {
+>     compatible = "typec-mode-switch";
+>     mux-controls = <&mode_mux_controller>;
+>     mux-control-names = "mode";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+>
+>     port@0 {
+>         reg = <0>;
+>         mode_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_mode>
+>         };
+>     };
+>
+>     port@1 {
+>         reg = <1>;
+>         mode_switch_out_usb3: endpoint {
+>             remote-endpoint = <&usb3_0_ep>
+>         };
+>     };
+>
+>     port@2 {
+>         reg = <2>;
+>         mode_switch_out_dp: endpoint {
+>             remote-endpoint = <&dp0_out_ep>
+>         };
+>     };
+>
+>     port@3 {
+>         reg = <3>;
+>         mode_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_mode>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+>
+> orientation_switch {
+>     compatible = "typec-orientation-switch";
+>     mux-controls = <&orientation_mux_controller>;
+>     mux-control-names = "orientation";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+>
+>     port@0 {
+>         reg = <0>;
+>         orientation_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_orientation>
+>         };
+>     };
+>
+>     port@1
+>         reg = <1>;
+>         orientation_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_orientation>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+>
+> data_role_switch {
+>     compatible = "typec-data-role-switch";
+>     mux-controls = <&data_role_switch_controller>;
+>     mux-control-names = "data_role";
+>
+>     port {
+>         data_role_switch_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_data_role>
+>         };
+>     };
+> };
+>
+> <example_end>
+>
+> Would this be conformant to OF graph and usb-connector bindings
+> requirements? We'll certainly send out a format PATCH/RFC series for
+> this, but I was hoping to gauge whether we're thinking along the right lines.
+>
+> So, in effect this would mean:
+> - New bindings(and compatible strings) to be added for:
+>   typec-{orientation,data-role,mode}-switch.
+> - Handling in Type C connector class to parse switches from OF graph.
+> - Handling in Type C connector class for distinct switches for port@1
+>   (SS lines) and port@2 (SBU lines).
+>
+> The only thing I'm confused about is how we can define these switch
+> remote-endpoint bindings in usb-connector.yaml; the port can have an
+> remote-endpoint, but can we specify what the parent of the remote-endpoint
+> should have as a compatible string? Or do we not need to?
+>
+> Best regards,
+>
+> -Prashant
+>
