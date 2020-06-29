@@ -2,128 +2,139 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0000C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D8A20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16447207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461312;
+	bh=FbsyZAhJvfUOWhPPwBgeTSgcr/m6g4f3eecPANG7AKE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iWoYj7pvzNzojm9JOP1FsqAvF3Iq1lhwrC2MequpZRgbcmDEzX468+uOb6eRisBvW
+	 Vw/f2EXYOgbeHHGEzUtlSn1gXa3gy6kX5eFfe3Nd5JrlHj4FwjYYwzrvGJwt5nuiD8
+	 KwGWCzdRtdgzGb4e6LdSj2VlMThi41a0vkeK8cEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbgF2UIT (ORCPT
+        id S2387623AbgF2UIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:08:19 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:36630 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732373AbgF2UIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:08:15 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq04c-0003ZM-3v; Mon, 29 Jun 2020 14:08:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq04b-0000Ts-2E; Mon, 29 Jun 2020 14:08:13 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
+        Mon, 29 Jun 2020 16:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732932AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05CF8252B1;
+        Mon, 29 Jun 2020 15:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445022;
+        bh=FbsyZAhJvfUOWhPPwBgeTSgcr/m6g4f3eecPANG7AKE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HVsGgKRS2rkiRQ2rBxyBIeji1dhXO5gY19hlWQ48WZRfno6428iX72+ykXvWHKk4Y
+         qduoVUS6G8fX3W5C7R+dI5OoISQ9G0vjdl8ctsRaMBM2fyIWeA5Sq8gw84kVY730eN
+         LGe6g2MpJTdpXWbcqyO7eJBcAfeX1hQu/FPHjs0k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:03:41 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <87r1tx4p2a.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tom Zanussi <zanussi@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 120/131] ring-buffer: Zero out time extend if it is nested and not absolute
+Date:   Mon, 29 Jun 2020 11:34:51 -0400
+Message-Id: <20200629153502.2494656-121-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq04b-0000Ts-2E;;;mid=<87r1tx4p2a.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19IX0qdGDHj2d42J790qFSa6SiJQNy2ip4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 09/15] umh: Stop calling do_execve_file
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-With the user mode driver code changed to not set subprocess_info.file
-there are no more users of subproces_info.file.  Remove this field
-from struct subprocess_info and remove the only user in
-call_usermodehelper_exec_async that would call do_execve_file instead
-of do_execve if file was set.
+commit 097350d1c6e1f5808cae142006f18a0bbc57018d upstream.
 
-Link: https://lkml.kernel.org/r/877dvuf0i7.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Currently the ring buffer makes events that happen in interrupts that preempt
+another event have a delta of zero. (Hopefully we can change this soon). But
+this is to deal with the races of updating a global counter with lockless
+and nesting functions updating deltas.
+
+With the addition of absolute time stamps, the time extend didn't follow
+this rule. A time extend can happen if two events happen longer than 2^27
+nanoseconds appart, as the delta time field in each event is only 27 bits.
+If that happens, then a time extend is injected with 2^59 bits of
+nanoseconds to use (18 years). But if the 2^27 nanoseconds happen between
+two events, and as it is writing the event, an interrupt triggers, it will
+see the 2^27 difference as well and inject a time extend of its own. But a
+recent change made the time extend logic not take into account the nesting,
+and this can cause two time extend deltas to happen moving the time stamp
+much further ahead than the current time. This gets all reset when the ring
+buffer moves to the next page, but that can cause time to appear to go
+backwards.
+
+This was observed in a trace-cmd recording, and since the data is saved in a
+file, with trace-cmd report --debug, it was possible to see that this indeed
+did happen!
+
+  bash-52501   110d... 81778.908247: sched_switch:         bash:52501 [120] S ==> swapper/110:0 [120] [12770284:0x2e8:64]
+  <idle>-0     110d... 81778.908757: sched_switch:         swapper/110:0 [120] R ==> bash:52501 [120] [509947:0x32c:64]
+ TIME EXTEND: delta:306454770 length:0
+  bash-52501   110.... 81779.215212: sched_swap_numa:      src_pid=52501 src_tgid=52388 src_ngid=52501 src_cpu=110 src_nid=2 dst_pid=52509 dst_tgid=52388 dst_ngid=52501 dst_cpu=49 dst_nid=1 [0:0x378:48]
+ TIME EXTEND: delta:306458165 length:0
+  bash-52501   110dNh. 81779.521670: sched_wakeup:         migration/110:565 [0] success=1 CPU:110 [0:0x3b4:40]
+
+and at the next page, caused the time to go backwards:
+
+  bash-52504   110d... 81779.685411: sched_switch:         bash:52504 [120] S ==> swapper/110:0 [120] [8347057:0xfb4:64]
+CPU:110 [SUBBUFFER START] [81779379165886:0x1320000]
+  <idle>-0     110dN.. 81779.379166: sched_wakeup:         bash:52504 [120] success=1 CPU:110 [0:0x10:40]
+  <idle>-0     110d... 81779.379167: sched_switch:         swapper/110:0 [120] R ==> bash:52504 [120] [1168:0x3c:64]
+
+Link: https://lkml.kernel.org/r/20200622151815.345d1bf5@oasis.local.home
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: dc4e2801d400b ("ring-buffer: Redefine the unimplemented RINGBUF_TYPE_TIME_STAMP")
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/umh.h |  1 -
- kernel/umh.c        | 10 +++-------
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/umh.h b/include/linux/umh.h
-index 73173c4a07e5..244aff638220 100644
---- a/include/linux/umh.h
-+++ b/include/linux/umh.h
-@@ -22,7 +22,6 @@ struct subprocess_info {
- 	const char *path;
- 	char **argv;
- 	char **envp;
--	struct file *file;
- 	int wait;
- 	int retval;
- 	int (*init)(struct subprocess_info *info, struct cred *new);
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 3e4e453d45c8..6ca2096298b9 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -98,13 +98,9 @@ static int call_usermodehelper_exec_async(void *data)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 805aef83b5cf5..564d22691dd73 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2333,7 +2333,7 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (unlikely(info->add_timestamp)) {
+ 		bool abs = ring_buffer_time_stamp_abs(cpu_buffer->buffer);
  
- 	commit_creds(new);
- 
--	if (sub_info->file)
--		retval = do_execve_file(sub_info->file,
--					sub_info->argv, sub_info->envp);
--	else
--		retval = do_execve(getname_kernel(sub_info->path),
--				   (const char __user *const __user *)sub_info->argv,
--				   (const char __user *const __user *)sub_info->envp);
-+	retval = do_execve(getname_kernel(sub_info->path),
-+			   (const char __user *const __user *)sub_info->argv,
-+			   (const char __user *const __user *)sub_info->envp);
- out:
- 	sub_info->retval = retval;
- 	/*
+-		event = rb_add_time_stamp(event, info->delta, abs);
++		event = rb_add_time_stamp(event, abs ? info->delta : delta, abs);
+ 		length -= RB_LEN_TIME_EXTEND;
+ 		delta = 0;
+ 	}
 -- 
-2.25.0
+2.25.1
 
