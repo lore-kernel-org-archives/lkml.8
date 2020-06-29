@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC839C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5034206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C18206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467986;
-	bh=C9k1s+ImQZhFLYcZjvmoOEJvDi0OY8NulpkwBF9MZ3g=;
+	s=default; t=1593467988;
+	bh=HYvfElDfnG+Yf63yRLlSta1TK55cTcemPItTmCoDs6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ODohgtegz1vuFgIY8XmqQPzx5N/Fx2EO6QPNcTtCoFLnrJVI/v4GE4ADls/tD0M1b
-	 M9Fpv0TP9OLBHgs5VcS2GBmpTnI4D9NuE7GO+D0CxzWB4Pfl3dTYLpx+HlqoDaqm3H
-	 Ru98CCaBLYfSzM4Ydu0Z5fl4zcyMF21XmBEbIA+I=
+	b=Uzye/rpRxDcy4+MCnH4+lqawiiWhc+dJ2BqKdLKz7I6YT0YWYi13lk+1ZwLF2P00S
+	 2Zlv3eEdGe1eAmACnXmnEJe7m636VjWN2yYMiFFrpLwaSmVl9aaEqw/6AMFs0NTF0V
+	 NvISUSACMjgz8ByVF6S9hiTC78f7dsJYeZRbbTSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404806AbgF2V7o (ORCPT
+        id S2391618AbgF2V7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgF2Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726413AbgF2Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7850F247BD;
-        Mon, 29 Jun 2020 15:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778F82463F;
+        Mon, 29 Jun 2020 15:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444126;
-        bh=C9k1s+ImQZhFLYcZjvmoOEJvDi0OY8NulpkwBF9MZ3g=;
+        s=default; t=1593443964;
+        bh=HYvfElDfnG+Yf63yRLlSta1TK55cTcemPItTmCoDs6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n85OXHkFnHNgwKuj3y27LPgnlQCFfTGnZVZlY2UpPanDI4MmAsGexEgRpGpPIX2Ji
-         EsXi+V7CTFZ5x7U0Qd1OIVRGKbZaelP/FEp8jQKO1+5hqOdqkePdKvcS2fYg9zF9IM
-         Bj1kicURRI3+2Lu/WFRhkxw5SWciSsd5w0NVAgE8=
+        b=ZOi5BygWQ/lBhMwNC2Rgd/b0ey6hgM1QN1Urn3aZNZ6Ffx4f7/HmpU7aH0SsnOCcT
+         EoLUxwIfGdMUQYBDQdvgnMikg3N9H/ohLBfl4hkc9Ejc3RXxMrNh4FowqYrQw1Wa63
+         oh2BE9xGRNbBTyoFC8nTuMmLrmVYB2SBG78CY+F8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 234/265] ocfs2: fix panic on nfs server over ocfs2
-Date:   Mon, 29 Jun 2020 11:17:47 -0400
-Message-Id: <20200629151818.2493727-235-sashal@kernel.org>
+Subject: [PATCH 5.7 067/265] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
+Date:   Mon, 29 Jun 2020 11:15:00 -0400
+Message-Id: <20200629151818.2493727-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -70,92 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Macpaul Lin <macpaul.lin@mediatek.com>
 
-commit e5a15e17a78d58f933d17cafedfcf7486a29f5b4 upstream.
+commit a24d5072e87457a14023ee1dd3fc8b1e76f899ef upstream.
 
-The following kernel panic was captured when running nfs server over
-ocfs2, at that time ocfs2_test_inode_bit() was checking whether one
-inode locating at "blkno" 5 was valid, that is ocfs2 root inode, its
-"suballoc_slot" was OCFS2_INVALID_SLOT(65535) and it was allocted from
-//global_inode_alloc, but here it wrongly assumed that it was got from per
-slot inode alloctor which would cause array overflow and trigger kernel
-panic.
+When runtime suspend was enabled, runtime suspend might happen
+when xhci is removing hcd. This might cause kernel panic when hcd
+has been freed but runtime pm suspend related handle need to
+reference it.
 
-  BUG: unable to handle kernel paging request at 0000000000001088
-  IP: [<ffffffff816f6898>] _raw_spin_lock+0x18/0xf0
-  PGD 1e06ba067 PUD 1e9e7d067 PMD 0
-  Oops: 0002 [#1] SMP
-  CPU: 6 PID: 24873 Comm: nfsd Not tainted 4.1.12-124.36.1.el6uek.x86_64 #2
-  Hardware name: Huawei CH121 V3/IT11SGCA1, BIOS 3.87 02/02/2018
-  RIP: _raw_spin_lock+0x18/0xf0
-  RSP: e02b:ffff88005ae97908  EFLAGS: 00010206
-  RAX: ffff88005ae98000 RBX: 0000000000001088 RCX: 0000000000000000
-  RDX: 0000000000020000 RSI: 0000000000000009 RDI: 0000000000001088
-  RBP: ffff88005ae97928 R08: 0000000000000000 R09: ffff880212878e00
-  R10: 0000000000007ff0 R11: 0000000000000000 R12: 0000000000001088
-  R13: ffff8800063c0aa8 R14: ffff8800650c27d0 R15: 000000000000ffff
-  FS:  0000000000000000(0000) GS:ffff880218180000(0000) knlGS:ffff880218180000
-  CS:  e033 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000001088 CR3: 00000002033d0000 CR4: 0000000000042660
-  Call Trace:
-    igrab+0x1e/0x60
-    ocfs2_get_system_file_inode+0x63/0x3a0 [ocfs2]
-    ocfs2_test_inode_bit+0x328/0xa00 [ocfs2]
-    ocfs2_get_parent+0xba/0x3e0 [ocfs2]
-    reconnect_path+0xb5/0x300
-    exportfs_decode_fh+0xf6/0x2b0
-    fh_verify+0x350/0x660 [nfsd]
-    nfsd4_putfh+0x4d/0x60 [nfsd]
-    nfsd4_proc_compound+0x3d3/0x6f0 [nfsd]
-    nfsd_dispatch+0xe0/0x290 [nfsd]
-    svc_process_common+0x412/0x6a0 [sunrpc]
-    svc_process+0x123/0x210 [sunrpc]
-    nfsd+0xff/0x170 [nfsd]
-    kthread+0xcb/0xf0
-    ret_from_fork+0x61/0x90
-  Code: 83 c2 02 0f b7 f2 e8 18 dc 91 ff 66 90 eb bf 0f 1f 40 00 55 48 89 e5 41 56 41 55 41 54 53 0f 1f 44 00 00 48 89 fb ba 00 00 02 00 <f0> 0f c1 17 89 d0 45 31 e4 45 31 ed c1 e8 10 66 39 d0 41 89 c6
-  RIP   _raw_spin_lock+0x18/0xf0
-  CR2: 0000000000001088
-  ---[ end trace 7264463cd1aac8f9 ]---
-  Kernel panic - not syncing: Fatal exception
-
-Link: http://lkml.kernel.org/r/20200616183829.87211-4-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-4-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ocfs2/suballoc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-mtk.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-index 4836becb7578a..45745cc3408a5 100644
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -2825,9 +2825,12 @@ int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res)
- 		goto bail;
- 	}
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index bfbdb3ceed291..4311d4c9b68de 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -587,6 +587,9 @@ static int xhci_mtk_remove(struct platform_device *dev)
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+ 	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
  
--	inode_alloc_inode =
--		ocfs2_get_system_file_inode(osb, INODE_ALLOC_SYSTEM_INODE,
--					    suballoc_slot);
-+	if (suballoc_slot == (u16)OCFS2_INVALID_SLOT)
-+		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
-+			GLOBAL_INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
-+	else
-+		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
-+			INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
- 	if (!inode_alloc_inode) {
- 		/* the error code could be inaccurate, but we are not able to
- 		 * get the correct one. */
++	pm_runtime_put_noidle(&dev->dev);
++	pm_runtime_disable(&dev->dev);
++
+ 	usb_remove_hcd(shared_hcd);
+ 	xhci->shared_hcd = NULL;
+ 	device_init_wakeup(&dev->dev, false);
+@@ -597,8 +600,6 @@ static int xhci_mtk_remove(struct platform_device *dev)
+ 	xhci_mtk_sch_exit(mtk);
+ 	xhci_mtk_clks_disable(mtk);
+ 	xhci_mtk_ldos_disable(mtk);
+-	pm_runtime_put_sync(&dev->dev);
+-	pm_runtime_disable(&dev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
