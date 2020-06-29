@@ -2,113 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78562208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465881;
-	bh=VU/RIJXvCYk+2jviH8h2AT1vE98UnjDulLXhUfcDuQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rRb9Drchn9FCw7BlmrlMBZ34jkgEMJtMhwXYQA69pPTrVM/7Sx9yVFcgL8HDUNekf
-	 a6N7Iou5O7ahFKMx/QMyf4WCywC9MBlup96gK2UULbzPcD61Nr6LigXjr+M/PdT1GK
-	 Qx3M2UoLFTEQNCwumVt5L+uvJrLOUuMrd7I7Geco=
+	by mail.kernel.org (Postfix) with ESMTP id 1536E208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="T7f3fBEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391016AbgF2VYj (ORCPT
+        id S2391033AbgF2VYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 17:24:48 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:27801 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390666AbgF2VYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 17:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729487AbgF2SuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:50:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17DCE25374;
-        Mon, 29 Jun 2020 16:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593447622;
-        bh=VU/RIJXvCYk+2jviH8h2AT1vE98UnjDulLXhUfcDuQM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zekE3DSOLBcqpTnJqEY1MWbVu31fmkX0WoQ29NElsbLZeg5a1/ebgLKulJEaGDcAJ
-         Ves1NgwfqAndZuwwUlg6t38RoVYM0obP7iONb6svovbBOH2Kbd4jrJutTSZDHnzYnS
-         Vwek86TKKmK6noATwJONwfVYpkK0BrWm9HoXoR3s=
-Date:   Mon, 29 Jun 2020 18:20:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andra Paraschiv <andraprs@amazon.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-Message-ID: <20200629162013.GA718066@kroah.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-8-andraprs@amazon.com>
-MIME-Version: 1.0
+X-Greylist: delayed 395 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 17:24:38 EDT
+Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id DB96540186E;
+        Mon, 29 Jun 2020 14:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1593465481;
+        bh=6rzpagTEz/0c76jqpV4RCeaagtLY9blrBtt6YCEHTrw=;
+        h=Date:To:Subject:From:From;
+        b=T7f3fBEHpUZytdu2dNWE4IOyY2k7FnzrY+o/OenHEBt9S58mhUR6c/sbUsE90U9um
+         63HFFog4ODYUbrqhwyMkQ343mLRQk+Czh8yoTjh+Pm4O/tpDpKx1PT5w0q3r/QyAGr
+         PRGBqfHrx/7eQB71w/KdbZrJZxIr5UEq0GjbQ3HrBZw1K2F0Y7AaHSuAJ6ig3TLcg8
+         3RNjXFcd9utZlJ6YFi3eUfn/ZX64DNvg+C6tvNfESlrjJjI6SFLQJWFKnw+HEH4hQR
+         r0evEFRhEBprt3Jv6Zxm+wdSvOgEYxn+fHauuuUYP52erWnuWY0rL1ObWwXLXZka/8
+         DrkZaIFaGJmGA==
+Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
+        id C3D7095C0900; Mon, 29 Jun 2020 14:18:01 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:18:01 -0700
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, kuba@kernel.org,
+        davem@davemloft.net, jeffrey.t.kirsher@intel.com,
+        fruggeri@arista.com
+Subject: [PATCH] igb: reinit_locked() should be called with rtnl_lock
+User-Agent: Heirloom mailx 12.5 7/5/10
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622200329.52996-8-andraprs@amazon.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200629211801.C3D7095C0900@us180.sjc.aristanetworks.com>
+From:   fruggeri@arista.com (Francesco Ruggeri)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:03:18PM +0300, Andra Paraschiv wrote:
-> +static int __init ne_init(void)
-> +{
-> +	struct pci_dev *pdev = pci_get_device(PCI_VENDOR_ID_AMAZON,
-> +					      PCI_DEVICE_ID_NE, NULL);
-> +	int rc = -EINVAL;
-> +
-> +	if (!pdev)
-> +		return -ENODEV;
+We observed a panic in igb_reset_task caused by this race condition
+when doing a reboot -f:
 
-Ick, that's a _very_ old-school way of binding to a pci device.  Please
-just be a "real" pci driver and your probe function will be called if
-your hardware is present (or when it shows up.)  To do it this way
-prevents your driver from being auto-loaded for when your hardware is
-seen in the system, as well as lots of other things.
+	kworker			reboot -f
 
-> +
-> +	if (!zalloc_cpumask_var(&ne_cpu_pool.avail, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&ne_cpu_pool.mutex);
-> +
-> +	rc = pci_register_driver(&ne_pci_driver);
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
 
-Nice, you did it right here, but why the above crazy test?
+This commit applies to igb the same changes that were applied to ixgbe
+in commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
 
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev,
-> +			"Error in pci register driver [rc=%d]\n", rc);
-> +
-> +		goto free_cpumask;
-> +	}
-> +
-> +	return 0;
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+---
+ drivers/net/ethernet/intel/igb/igb_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You leaked a reference on that pci device, didn't you?  Not good :(
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 8bb3db2cbd41..b79a78e102f3 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6224,9 +6224,11 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
+ 
++	rtnl_lock();
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
+ }
+ 
+ /**
 
-thanks,
-
-greg k-h
