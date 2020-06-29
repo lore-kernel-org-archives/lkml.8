@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C663C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B610620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEA4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467169;
-	bh=suxS3uWxS2tL0+jBGETGD3bqF3me5u0sGxXU3krztR0=;
+	s=default; t=1593467174;
+	bh=OPjqXLYev10H5olWoqeIxX2UjObS9ZzCJfkGOS9eXLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AM1eypHbMB/GvPfkYOfHrXfRm/Uxa+tt6ipb0d5f8hGb9PVJsLsnRL+l2vnLc+qOB
-	 6FzGEy1bIfzaOXddLd2EvfqXBqRDTpQhcBK13LVqtAST/NHmCHrgXTNU8VLt+3M0db
-	 XAgR0fk4KPxpl49oWPwuj641pXVWPN5haFKbn8BI=
+	b=GfuVy/66x5B0WYPi0Ehbibme71IIcFnpN/h74k4Gwg/MkCbByRwhgbqDiXuveeZtY
+	 TQg1vwgsYOYaeo4Nb6t7EabMEenOKWfL3+aphecLHhbowfQrY9GL3o54f6j/Cls08F
+	 SrZzLp93r2D/C1tKVVb2TsH/HETHSOlGSw2fjnaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404124AbgF2VqI (ORCPT
+        id S1726777AbgF2Sfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726209AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E334124631;
-        Mon, 29 Jun 2020 15:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3C4C2473B;
+        Mon, 29 Jun 2020 15:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443960;
-        bh=suxS3uWxS2tL0+jBGETGD3bqF3me5u0sGxXU3krztR0=;
+        s=default; t=1593444059;
+        bh=OPjqXLYev10H5olWoqeIxX2UjObS9ZzCJfkGOS9eXLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gwhDBbYqRZLBankpXnjMkSpwct+wj0CD+OfSJa9F6WywnjZNO32/vO1BCzJzs5mNE
-         I84Z82YQYGoj+iZZWYFHoiPYGz629v0ePy6Ex+PfsiEOAAoFcP/W6iRkwUZKZ0fWh4
-         H+jdemzfs5+jb82fwouH8kckX5SGE5JQm8jiia78=
+        b=x+8ED3fLmMsJDR50lSZHAyfTNSfhp9HiVFYGP4801NZaxxeYIf8NHtqx4o5qjrxKy
+         llu52JxhUvbdWi/HHTq1Ep3zMorWnV5ap7iiWmmUsPNr3mHnoL/v8htYvE3OfnEs0q
+         ekwjjZf01eQp5zXCnuJF1alTIo7HBfzHFAWRv4Rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 063/265] USB: ohci-sm501: Add missed iounmap() in remove
-Date:   Mon, 29 Jun 2020 11:14:56 -0400
-Message-Id: <20200629151818.2493727-64-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 167/265] netfilter: ipset: fix unaligned atomic access
+Date:   Mon, 29 Jun 2020 11:16:40 -0400
+Message-Id: <20200629151818.2493727-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,36 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 07c112fb09c86c0231f6ff0061a000ffe91c8eb9 upstream.
+[ Upstream commit 715028460082d07a7ec6fcd87b14b46784346a72 ]
 
-This driver misses calling iounmap() in remove to undo the ioremap()
-called in probe.
-Add the missed call to fix it.
+When using ip_set with counters and comment, traffic causes the kernel
+to panic on 32-bit ARM:
 
-Fixes: f54aab6ebcec ("usb: ohci-sm501 driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200610024844.3628408-1-hslester96@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Alignment trap: not handling instruction e1b82f9f at [<bf01b0dc>]
+Unhandled fault: alignment exception (0x221) at 0xea08133c
+PC is at ip_set_match_extensions+0xe0/0x224 [ip_set]
+
+The problem occurs when we try to update the 64-bit counters - the
+faulting address above is not 64-bit aligned.  The problem occurs
+due to the way elements are allocated, for example:
+
+	set->dsize = ip_set_elem_len(set, tb, 0, 0);
+	map = ip_set_alloc(sizeof(*map) + elements * set->dsize);
+
+If the element has a requirement for a member to be 64-bit aligned,
+and set->dsize is not a multiple of 8, but is a multiple of four,
+then every odd numbered elements will be misaligned - and hitting
+an atomic64_add() on that element will cause the kernel to panic.
+
+ip_set_elem_len() must return a size that is rounded to the maximum
+alignment of any extension field stored in the element.  This change
+ensures that is the case.
+
+Fixes: 95ad1f4a9358 ("netfilter: ipset: Fix extension alignment")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-sm501.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/ipset/ip_set_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index cff9652403270..b91d50da6127f 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -191,6 +191,7 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
- 	struct resource	*mem;
- 
- 	usb_remove_hcd(hcd);
-+	iounmap(hcd->regs);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- 	usb_put_hcd(hcd);
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index 340cb955af25c..56621d6bfd297 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -460,6 +460,8 @@ ip_set_elem_len(struct ip_set *set, struct nlattr *tb[], size_t len,
+ 	for (id = 0; id < IPSET_EXT_ID_MAX; id++) {
+ 		if (!add_extension(id, cadt_flags, tb))
+ 			continue;
++		if (align < ip_set_extensions[id].align)
++			align = ip_set_extensions[id].align;
+ 		len = ALIGN(len, ip_set_extensions[id].align);
+ 		set->offset[id] = len;
+ 		set->extensions |= ip_set_extensions[id].type;
 -- 
 2.25.1
 
