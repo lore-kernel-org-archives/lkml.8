@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED58C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C983AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B994F206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8A6206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462685;
-	bh=FLR1irznMZBpSrXbVAb2w1UYt1EZwIZZD5ToCoTJKu0=;
+	s=default; t=1593462692;
+	bh=sMo19pW5gAo4+XW+lfiFBbmbrnZQJHiXItqEAsxw8js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cc+nNlFqYcaZ/2XmIrzmD/ZSwJcuUjb00ZskZgOjQjHqs/v3rOwfVh925FagRK7fV
-	 G4J7TRD7AyZnAKKE8GXmePl9dkDweKVptdZRHrEGJghKWMJJTHVBEmO1XZPsifdJ0Z
-	 dqzA7QG5i4OjEXGbk6i+xYCYHCxrJ6n0tIBn2WR4=
+	b=A7tyzjvK0M849Xrn3ApHyvq6J+yiB7WgPfFYl+Wp70f/BU/6CbFBAz1OBqmaAodDN
+	 da3iMjfEVFs3pIzG8RkEaHeobMgNSdJT+vfWeUW1gF2AivXPUrlIqHCvfI52Idzd5l
+	 JFT3jlM8ugMuXWj6RMWbl8iGMa62ruwUsxX/D9cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbgF2UbA (ORCPT
+        id S2389075AbgF2Ubb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:31:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732480AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:20 -0400
+        id S1732479AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C832125407;
-        Mon, 29 Jun 2020 15:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64ED25465;
+        Mon, 29 Jun 2020 15:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445353;
-        bh=FLR1irznMZBpSrXbVAb2w1UYt1EZwIZZD5ToCoTJKu0=;
+        s=default; t=1593445418;
+        bh=sMo19pW5gAo4+XW+lfiFBbmbrnZQJHiXItqEAsxw8js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znryeguIViFHtsxKiUGIHWP5tfJ6s0JVhn/RTIfPGXLyp4ba5lOerVkPTCt29uyW0
-         SlKdVgk1/25/lxDMoHi2Ro8Be0ATDO5rEQmFWdUMUdRNV8qYNQRKT1joUOHHRfBJ/M
-         T5WYluhPfpfoCFZcWB0pyfis0A3ymJYttv5Uli58=
+        b=qT1gvJBGI9WIyBYUvYeCHBDkKq1pOp7krs9i1oPCkvKIFjWCzL1pmGcJYkw2UAa7I
+         Onp+NsDrEB7gvpwj2v26Smcl683cILMPuZ5unzd8NSo/lYEcG7p+sbvuB4yFjl5tiJ
+         zKADg13XcXCdNahDUmoQUaRMFGsSOc0wykp8gJ5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Shuah Khan <shuahkh@osg.samsung.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 111/191] media: dvb_frontend: fix return values for FE_SET_PROPERTY
-Date:   Mon, 29 Jun 2020 11:38:47 -0400
-Message-Id: <20200629154007.2495120-112-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 167/191] usb: gadget: udc: Potential Oops in error handling code
+Date:   Mon, 29 Jun 2020 11:39:43 -0400
+Message-Id: <20200629154007.2495120-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,96 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 259a41d9ae8f3689742267f340ad2b159d00b302 upstream
+[ Upstream commit e55f3c37cb8d31c7e301f46396b2ac6a19eb3a7c ]
 
-There are several problems with regards to the return of
-FE_SET_PROPERTY. The original idea were to return per-property
-return codes via tvp->result field, and to return an updated
-set of values.
+If this is in "transceiver" mode the the ->qwork isn't required and is
+a NULL pointer.  This can lead to a NULL dereference when we call
+destroy_workqueue(udc->qwork).
 
-However, that never worked. What's actually implemented is:
-
-- the FE_SET_PROPERTY implementation doesn't call .get_frontend
-  callback in order to get the actual parameters after return;
-
-- the tvp->result field is only filled if there's no error.
-  So, it is always filled with zero;
-
-- FE_SET_PROPERTY doesn't call memdup_user() nor any other
-  copy_to_user() function. So, any changes to the properties
-  will be lost;
-
-- FE_SET_PROPERTY is declared as a write-only ioctl (IOW).
-
-While we could fix the above, it could cause regressions.
-
-So, let's just assume what the code really does, updating
-the documentation accordingly and removing the logic that
-would update the discarded tvp->result.
-
-Reviewed-by: Shuah Khan <shuahkh@osg.samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 3517c31a8ece ("usb: gadget: mv_udc: use devm_xxx for probe")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/media/uapi/dvb/fe-get-property.rst | 7 +++++--
- drivers/media/dvb-core/dvb_frontend.c            | 2 --
- include/uapi/linux/dvb/frontend.h                | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/usb/gadget/udc/mv_udc_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/media/uapi/dvb/fe-get-property.rst b/Documentation/media/uapi/dvb/fe-get-property.rst
-index 015d4db597b58..c80c5fc6e9163 100644
---- a/Documentation/media/uapi/dvb/fe-get-property.rst
-+++ b/Documentation/media/uapi/dvb/fe-get-property.rst
-@@ -48,8 +48,11 @@ depends on the delivery system and on the device:
+diff --git a/drivers/usb/gadget/udc/mv_udc_core.c b/drivers/usb/gadget/udc/mv_udc_core.c
+index ce73b3552269f..8700db903382d 100644
+--- a/drivers/usb/gadget/udc/mv_udc_core.c
++++ b/drivers/usb/gadget/udc/mv_udc_core.c
+@@ -2317,7 +2317,8 @@ static int mv_udc_probe(struct platform_device *pdev)
+ 	return 0;
  
-    -  This call requires read/write access to the device.
- 
--   -  At return, the values are updated to reflect the actual parameters
--      used.
-+.. note::
-+
-+   At return, the values aren't updated to reflect the actual
-+   parameters used. If the actual parameters are needed, an explicit
-+   call to ``FE_GET_PROPERTY`` is needed.
- 
- -  ``FE_GET_PROPERTY:``
- 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 673cefb7230cb..ca4959bbb6c2f 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -2127,7 +2127,6 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 				kfree(tvp);
- 				return err;
- 			}
--			(tvp + i)->result = err;
- 		}
- 		kfree(tvp);
- 		break;
-@@ -2172,7 +2171,6 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 				kfree(tvp);
- 				return err;
- 			}
--			(tvp + i)->result = err;
- 		}
- 
- 		if (copy_to_user((void __user *)tvps->props, tvp,
-diff --git a/include/uapi/linux/dvb/frontend.h b/include/uapi/linux/dvb/frontend.h
-index 16a318fc469a8..b653754ee9cfa 100644
---- a/include/uapi/linux/dvb/frontend.h
-+++ b/include/uapi/linux/dvb/frontend.h
-@@ -830,7 +830,7 @@ struct dtv_fe_stats {
-  * @cmd:	Digital TV command.
-  * @reserved:	Not used.
-  * @u:		Union with the values for the command.
-- * @result:	Result of the command set (currently unused).
-+ * @result:	Unused
-  *
-  * The @u union may have either one of the values below:
-  *
+ err_create_workqueue:
+-	destroy_workqueue(udc->qwork);
++	if (udc->qwork)
++		destroy_workqueue(udc->qwork);
+ err_destroy_dma:
+ 	dma_pool_destroy(udc->dtd_pool);
+ err_free_dma:
 -- 
 2.25.1
 
