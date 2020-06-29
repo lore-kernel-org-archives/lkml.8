@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155A8206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FAC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462851;
-	bh=q+7gY2SeD3b7kSkgWYgPz2xXtwzGx94EdwIhMcM5uik=;
+	s=default; t=1593462856;
+	bh=UponP9uN0FZddsIhE5IxvCzsuffNzGdTbdtmDVu3vF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkiBETTkF23hI5O5sf01nNvMOrRT7EOtFtDszKDwvT6UrXQBu4YcQBI/A0XtzdXVE
-	 o6WXUreFvCecPWYrzpEQ6umQ0loJOnkB22IqQt4Af4tHdERCnYuCRcy076Lyysja8b
-	 K/4dFF+MljFp234afWZA9OFZVCU2pv34UviPkLww=
+	b=Qmzcg1OLjb17YKhusmeSVe87R4qDb64J5jiGyJfeLhV54KHTvHO0dUdgFn5HX1/Ed
+	 qXWULjFHz88RY18uGZOwXfPhUU3jH5XFdlugDRXEVqDQBT/2pqg7Nv720RDAo79eyq
+	 2NIIxPUq3kbIZme5NFgRjOAKmy1epJexxyDFsgKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389211AbgF2UeJ (ORCPT
+        id S2389371AbgF2UeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732148AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:16 -0400
+        id S1731826AbgF2TZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0BE2536A;
-        Mon, 29 Jun 2020 15:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A83B253FD;
+        Mon, 29 Jun 2020 15:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445231;
-        bh=q+7gY2SeD3b7kSkgWYgPz2xXtwzGx94EdwIhMcM5uik=;
+        s=default; t=1593445347;
+        bh=UponP9uN0FZddsIhE5IxvCzsuffNzGdTbdtmDVu3vF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nck8cTMSleU48EsHuNK0M1NUUCHZ4FZIh9WhLRZQzbRlN6lS2eoswAtwS3LlFYLGK
-         skLjoYGd6UcnQQLJczQDZq/ZWLWm0bYfbHafWaqtvbVqSSZH6kQcy+dGEE/Kf6KVei
-         Stvr9Thn8g4PdruVDdnysr6GnhuK5LYbOFf3v1/Y=
+        b=SZ6J3+jImw7z/fN9eqUIJFpKwYr7XEDwBE1J36PogTVuyfypIXPY1pwmyPF3XvGet
+         SpAC0KWFTwU/V9ve9UQAlPi/TvuApWrp4+cvHGVAop91QIleqpXren6E3ZnuOoqT+2
+         9q/2pkO8AL2D+VFwsqG/m7aUyllgIYtgy2f36frs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 016/191] mfd: wm8994: Fix driver operation if loaded as modules
-Date:   Mon, 29 Jun 2020 11:37:12 -0400
-Message-Id: <20200629154007.2495120-17-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 105/191] media: friio-fe: get rid of set_property()
+Date:   Mon, 29 Jun 2020 11:38:41 -0400
+Message-Id: <20200629154007.2495120-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,36 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
+commit b2c41ca9632e686e79f6c9db9c5f75666d37926e upstream
 
-WM8994 chip has built-in regulators, which might be used for chip
-operation. They are controlled by a separate wm8994-regulator driver,
-which should be loaded before this driver calls regulator_get(), because
-that driver also provides consumer-supply mapping for the them. If that
-driver is not yet loaded, regulator core substitute them with dummy
-regulator, what breaks chip operation, because the built-in regulators are
-never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
-"pre" dependency to "wm8994_regulator" module.
+This callback is not actually doing anything but making it to
+return an error depending on the DTV frontend command. Well,
+that could break userspace for no good reason, and, if needed,
+should be implemented, instead, at set_frontend() callback.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So, get rid of it.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mfd/wm8994-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/dvb-usb/friio-fe.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index 8588dbad33011..925c1828ec288 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -698,3 +698,4 @@ module_i2c_driver(wm8994_i2c_driver);
- MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
-+MODULE_SOFTDEP("pre: wm8994_regulator");
+diff --git a/drivers/media/usb/dvb-usb/friio-fe.c b/drivers/media/usb/dvb-usb/friio-fe.c
+index 979f05b4b87ca..237f12f9a7f24 100644
+--- a/drivers/media/usb/dvb-usb/friio-fe.c
++++ b/drivers/media/usb/dvb-usb/friio-fe.c
+@@ -261,28 +261,6 @@ static int jdvbt90502_read_signal_strength(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
+-
+-/* filter out un-supported properties to notify users */
+-static int jdvbt90502_set_property(struct dvb_frontend *fe,
+-				   struct dtv_property *tvp)
+-{
+-	int r = 0;
+-
+-	switch (tvp->cmd) {
+-	case DTV_DELIVERY_SYSTEM:
+-		if (tvp->u.data != SYS_ISDBT)
+-			r = -EINVAL;
+-		break;
+-	case DTV_CLEAR:
+-	case DTV_TUNE:
+-	case DTV_FREQUENCY:
+-		break;
+-	default:
+-		r = -EINVAL;
+-	}
+-	return r;
+-}
+-
+ static int jdvbt90502_set_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dtv_frontend_properties *p = &fe->dtv_property_cache;
+@@ -457,8 +435,6 @@ static struct dvb_frontend_ops jdvbt90502_ops = {
+ 	.init = jdvbt90502_init,
+ 	.write = _jdvbt90502_write,
+ 
+-	.set_property = jdvbt90502_set_property,
+-
+ 	.set_frontend = jdvbt90502_set_frontend,
+ 
+ 	.read_status = jdvbt90502_read_status,
 -- 
 2.25.1
 
