@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99F720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DC3206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461583;
-	bh=ggQCab5KnLpw64gdJWdLsmih1qKl8lrZLrqWHjsEGhA=;
+	s=default; t=1593461591;
+	bh=3ZMdc+RGeK23hlZouBqse1iDaDpe7ynZ7ye5vWuCnWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RFSNT1U5+4/34QhSktD9GRKEWab1xvtTlbo+Qq/0+kPCkTeCJJnXq+i0thoSyaQdO
-	 IFiPmocjK8Wkjg6d8HIiGFIqvWbss7aNaqyXv6s5va5qpiUV6ZOzD3yj4AL5Js/v01
-	 Uv2C0DgYsz8NA5bchep/8YHaRxtIft1elBZCmAOs=
+	b=qcHWbEWoUpOIQHbxW1CtjG7ooy27kqdbjJSL73qZdJvHNA0hWoagEadb/tq3t4nhI
+	 Nyj6cWi/NMNtZrqD8uNcS8sSDwst99Z4LqcLujl7gTXEFmr+sLGI5b+RnI9LvN6V5L
+	 LQlFo2adc/YkA+A3bk5fikYj1ngZLIBn0g9ch1Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgF2UNC (ORCPT
+        id S1731000AbgF2UNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732864AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732866AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AFA0252C2;
-        Mon, 29 Jun 2020 15:37:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64DD2252D9;
+        Mon, 29 Jun 2020 15:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445033;
-        bh=ggQCab5KnLpw64gdJWdLsmih1qKl8lrZLrqWHjsEGhA=;
+        s=default; t=1593445101;
+        bh=3ZMdc+RGeK23hlZouBqse1iDaDpe7ynZ7ye5vWuCnWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQLu5WU7uuZUS0JRZpOYLDykua5YJElDatFH3CQHIoPLJO+/+xt65cwJwYvmLHAX2
-         t4W03Ac/WY1Me8PzuUaH8gypEn37Bk+jFMyLa6gCRImqdNspFr2kCU7CgizgyOLxEe
-         5G7528clDttXd75kZVjLKeeL4X2xXKa2BF6BXi3E=
+        b=m44OD4zdwAJWw5lYC4xMgVUEmjV3SU/wEotRd9Nz6KCKAx5hNLNce0Az1w/2/h/2B
+         fZ5mC6z/TX6eVy9IqrU91qc3hfsEOTndrT1vP7MDXTDkcAWZTjRLoPZScejuSNYFtk
+         kQPDTsozY4YcMyGbuAmKo/MZpqH6GyMGg3xd9ikE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>,
-        Ren Xudong <renxudong1@huawei.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/131] xfs: add agf freeblocks verify in xfs_agf_verify
-Date:   Mon, 29 Jun 2020 11:35:01 -0400
-Message-Id: <20200629153502.2494656-131-sashal@kernel.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 10/78] net: fix memleak in register_netdevice()
+Date:   Mon, 29 Jun 2020 11:36:58 -0400
+Message-Id: <20200629153806.2494953-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,110 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
+[ Upstream commit 814152a89ed52c722ab92e9fbabcac3cb8a39245 ]
 
-We recently used fuzz(hydra) to test XFS and automatically generate
-tmp.img(XFS v5 format, but some metadata is wrong)
+I got a memleak report when doing some fuzz test:
 
-xfs_repair information(just one AG):
-agf_freeblks 0, counted 3224 in ag 0
-agf_longest 536874136, counted 3224 in ag 0
-sb_fdblocks 613, counted 3228
+unreferenced object 0xffff888112584000 (size 13599):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    74 61 70 30 00 00 00 00 00 00 00 00 00 00 00 00  tap0............
+    00 ee d9 19 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002f60ba65>] __kmalloc_node+0x309/0x3a0
+    [<0000000075b211ec>] kvmalloc_node+0x7f/0xc0
+    [<00000000d3a97396>] alloc_netdev_mqs+0x76/0xfc0
+    [<00000000609c3655>] __tun_chr_ioctl+0x1456/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff888111845cc0 (size 8):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 8 bytes):
+    74 61 70 30 00 88 ff ff                          tap0....
+  backtrace:
+    [<000000004c159777>] kstrdup+0x35/0x70
+    [<00000000d8b496ad>] kstrdup_const+0x3d/0x50
+    [<00000000494e884a>] kvasprintf_const+0xf1/0x180
+    [<0000000097880a2b>] kobject_set_name_vargs+0x56/0x140
+    [<000000008fbdfc7b>] dev_set_name+0xab/0xe0
+    [<000000005b99e3b4>] netdev_register_kobject+0xc0/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff88811886d800 (size 512):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff c0 66 3d a3 ff ff ff ff  .........f=.....
+  backtrace:
+    [<0000000050315800>] device_add+0x61e/0x1950
+    [<0000000021008dfb>] netdev_register_kobject+0x17e/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Test as follows:
-mount tmp.img tmpdir
-cp file1M tmpdir
-sync
+If call_netdevice_notifiers() failed, then rollback_registered()
+calls netdev_unregister_kobject() which holds the kobject. The
+reference cannot be put because the netdev won't be add to todo
+list, so it will leads a memleak, we need put the reference to
+avoid memleak.
 
-In 4.19-stable, sync will stuck, the reason is:
-xfs_mountfs
-  xfs_check_summary_counts
-    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
-       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
-       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
-	return 0;  -->just return, incore sb_fdblocks still be 613
-    xfs_initialize_perag_data
-
-cp file1M tmpdir -->ok(write file to pagecache)
-sync -->stuck(write pagecache to disk)
-xfs_map_blocks
-  xfs_iomap_write_allocate
-    while (count_fsb != 0) {
-      nimaps = 0;
-      while (nimaps == 0) { --> endless loop
-         nimaps = 1;
-         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
-xfs_bmapi_write
-  xfs_bmap_alloc
-    xfs_bmap_btalloc
-      xfs_alloc_vextent
-        xfs_alloc_fix_freelist
-          xfs_alloc_space_available -->fail(agf_freeblks is 0)
-
-In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
-use the latest extent at writeback delalloc conversion time") remove
-the above while, dmesg is as follows:
-[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
-
-Users do not know why this page is discard, the better soultion is:
-1. Like xfs_repair, make sure sb_fdblocks is equal to counted
-(xfs_initialize_perag_data did this, who is not called at this mount)
-2. Add agf verify, if fail, will tell users to repair
-
-This patch use the second soultion.
-
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Ren Xudong <renxudong1@huawei.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ net/core/dev.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index e1c0c0d2f1b05..1eb7933dac83e 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2596,6 +2596,13 @@ xfs_agf_verify(
- 	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
- 		return __this_address;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 0aaa1426450fa..1ee177485fd0f 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7694,6 +7694,13 @@ int register_netdevice(struct net_device *dev)
+ 		rcu_barrier();
  
-+	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
-+		return __this_address;
-+
-+	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
-+	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
- 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
-@@ -2607,6 +2614,10 @@ xfs_agf_verify(
- 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
- 		return __this_address;
- 
-+	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
+ 		dev->reg_state = NETREG_UNREGISTERED;
++		/* We should put the kobject that hold in
++		 * netdev_unregister_kobject(), otherwise
++		 * the net device cannot be freed when
++		 * driver calls free_netdev(), because the
++		 * kobject is being hold.
++		 */
++		kobject_put(&dev->dev.kobj);
+ 	}
  	/*
- 	 * during growfs operations, the perag is not fully initialised,
- 	 * so we can't use it for any useful checking. growfs ensures we can't
-@@ -2620,6 +2631,11 @@ xfs_agf_verify(
- 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
- 		return __this_address;
- 
-+	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_refcount_blocks) >
-+	    be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
- 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
- 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
- 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
+ 	 *	Prevent userspace races by waiting until the network
 -- 
 2.25.1
 
