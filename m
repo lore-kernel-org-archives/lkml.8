@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D89C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0197D20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FDD2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464949;
-	bh=iyk7aEUo9yTnwoHe5Z2I8aXR1ATCXoZ5X7cVnr/kBVs=;
+	s=default; t=1593464954;
+	bh=w3TFxo/9VyhZfB+HgR6d7F51RKl8eRTq06YPoX5tZuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVwPEvlWHxJaC7UvnCMa2hfOP2bb7FiSBLHe/ULFC6BZZ3SPIoo67PfYFKwp6taHp
-	 hJSMviZOEhywRO70Ly0aa/1/NSNat226X1qxVKantwPlwPQjRlZisD/vrn6C3eVb8d
-	 OvJDeEPj16VXSa6kvQU8TzGK1T/IBMqD73zyFsyA=
+	b=NZEhLtOwf59ea5wxwFV6txW7TvqeDQ5iv7I8Hcg/TCuIIktGxAb3qhbEE6BdLb51X
+	 z2IMMhmmHLMyJLuBwQND+ZzrGAlI6D986jTvUf/frJTQyZ5hd0UdB+ittbd5ZC7FnR
+	 2aLHaLeHd+8Ie/HDZaLjfEYvOeep0DIGQYbTWWOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbgF2VJI (ORCPT
+        id S2390178AbgF2VJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730326AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB7325536;
-        Mon, 29 Jun 2020 15:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F5BE254C6;
+        Mon, 29 Jun 2020 15:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446099;
-        bh=iyk7aEUo9yTnwoHe5Z2I8aXR1ATCXoZ5X7cVnr/kBVs=;
+        s=default; t=1593446020;
+        bh=w3TFxo/9VyhZfB+HgR6d7F51RKl8eRTq06YPoX5tZuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=maHx1XmAYxd7JkbV2UPt0/Ertweku7ZuR1v5hrubwtfAy00Yh44ug2/EIbNP5rQMP
-         +/378IeVrcrURrKuWqkasN682BdtXHa8jr2Ph+F0UikPnv+TYGTolM321Kns/c3JEo
-         ZsFGKKTe57nSwwNGfc79V5k+gAH62LcZJXxcAvz0=
+        b=cRIEdwWpVzo+P+SOwdr/RX0OXF/BZnipd1x46kuY/FIJbO1X8ZfOOJuYt/Ehyqg+k
+         l22sBEruBOJd9fe6XsMyhzj3ZuN7j7fOmXUoXO4gEy0mxu2iJ8CxML8is4IDq8dvdt
+         5wsOEuufg9QTKZwfZN1F2ADuagx66YtWMPoWQ5aU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 092/135] net: core: reduce recursion limit value
-Date:   Mon, 29 Jun 2020 11:52:26 -0400
-Message-Id: <20200629155309.2495516-93-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 027/135] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Mon, 29 Jun 2020 11:51:21 -0400
+Message-Id: <20200629155309.2495516-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,84 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-In the current code, ->ndo_start_xmit() can be executed recursively only
-10 times because of stack memory.
-But, in the case of the vxlan, 10 recursion limit value results in
-a stack overflow.
-In the current code, the nested interface is limited by 8 depth.
-There is no critical reason that the recursion limitation value should
-be 10.
-So, it would be good to be the same value with the limitation value of
-nesting interface depth.
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-Test commands:
-    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
-    ip link set vxlan10 up
-    ip a a 192.168.10.1/24 dev vxlan10
-    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
 
-    for i in {9..0}
-    do
-        let A=$i+1
-	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
-	ip link set vxlan$i up
-	ip a a 192.168.$i.1/24 dev vxlan$i
-	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
-	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
-    done
-    hping3 192.168.10.2 -2 -d 60000
-
-Splat looks like:
-[  103.814237][ T1127] =============================================================================
-[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
-[  103.873187][ T1127] -----------------------------------------------------------------------------
-[  103.873187][ T1127]
-[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
-[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
-[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  103.883006][ T1127] Call Trace:
-[  103.883324][ T1127]  dump_stack+0x96/0xdb
-[  103.883716][ T1127]  slab_err+0xad/0xd0
-[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
-[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
-[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
-[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.886316][ T1127]  check_slab+0x97/0xb0
-[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
-[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
-[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
-[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
-[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
-[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
-[ ... ]
-
-Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/smb347-charger.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 67725818d562d..09115c68f29dc 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3017,7 +3017,7 @@ static void skb_update_prio(struct sk_buff *skb)
- DEFINE_PER_CPU(int, xmit_recursion);
- EXPORT_SYMBOL(xmit_recursion);
- 
--#define RECURSION_LIMIT 10
-+#define RECURSION_LIMIT 8
- 
- /**
-  *	dev_loopback_xmit - loop back @skb
+diff --git a/drivers/power/smb347-charger.c b/drivers/power/smb347-charger.c
+index 072c5189bd6d1..0655dbdc7000d 100644
+--- a/drivers/power/smb347-charger.c
++++ b/drivers/power/smb347-charger.c
+@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
