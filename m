@@ -2,131 +2,193 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5373C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76ACE206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F11E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="BybM+kRz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xj9LflCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbgF2TTD (ORCPT
+        id S1732046AbgF2TS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
+        Mon, 29 Jun 2020 15:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731758AbgF2TOU (ORCPT
+        with ESMTP id S1731766AbgF2TOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:20 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA549C08EA4D;
-        Sun, 28 Jun 2020 22:55:02 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wGsq67rhz9sQt;
-        Mon, 29 Jun 2020 15:54:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1593410101;
-        bh=Jh0SmCOzWGYUXyeIgZMSmN1pyztkyV9tCktpTHdG1i8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=BybM+kRzXXhESpdzgGc8v3JB79Vlzk3vA79SnZQQwaV1CyaostawEhvEsPizyn5ni
-         mjvAYZpXe9D14yRzLQkEWsiwft6LzwUmSLO89yP3t9zLEsD+h7in5CqCItOw3sUnXR
-         XR+PrHFFIh1Ruw6CrJF20kEkaITEUNaIHZC08UfgEZ8Putxpw5kSYKPHNxeYkigt4c
-         wbS4tjp+GQZq9Z2ufwA0RhBt6wAqdoTijQHNpLODJsGwpEFKRWcu7n9lm2IGDlK13B
-         k9wjzdSQGsDp4Wip6l38PVkFqw/f9pFWx+EErzZH+ebnzKJZrzt962Cws7xNX2yiy3
-         NIHL1cwW1rRiA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] kbuild: introduce ccflags-remove-y and asflags-remove-y
-In-Reply-To: <20200628015041.1000002-1-masahiroy@kernel.org>
-References: <20200628015041.1000002-1-masahiroy@kernel.org>
-Date:   Mon, 29 Jun 2020 15:57:11 +1000
-Message-ID: <87imfa8le0.fsf@mpe.ellerman.id.au>
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2BC2C008747;
+        Mon, 29 Jun 2020 01:30:08 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id f9so7607126pfn.0;
+        Mon, 29 Jun 2020 01:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vn4Ze0UHW0gH8hUyyrUyOwtMgWZD0FLbsTJZBjBZlPg=;
+        b=Xj9LflCa6VYlGnt52Oz9oTfxstS0hCfiCJRh3uW2yvWsPSwqKXyPSRW1nuEcpWPyNL
+         FkBk+bHHpd79vy+tX/vJYN00b/jYiKPrFg4Ulvz8BPnrO/iN4beZiXVoUFlQiIl0perU
+         shErqJOLmy42xDUqXxSzXQyvOzQ2Gg9UjT55O8d6E2HzZJs+eSFO3tM6JB5nqxiJEbPD
+         BYcCCAVsV+mJKAzBp+sryiXPHPW26HG1dCtJNWmPUnDgDQKHg6mAggBQGg+vnUjG3XBg
+         bSftecGHNVMKKZPLsh2WV9syRkMiwio0H/IvdOESzEKBaIDd8W4R6DVXxFCCaKRqqc6p
+         QBmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vn4Ze0UHW0gH8hUyyrUyOwtMgWZD0FLbsTJZBjBZlPg=;
+        b=pLxamryimTTeMNhs9ufKNhwTqmzQB7IXdFTyLk3HDYij7S3CG1EHBOEX4oYT/1P9t5
+         4aZlfF0KCvDhK9BxJlOZ0RCZAItxT+wjR6VN9xlkPxiFBJB68l2Out/rlco9UzoYsNaI
+         nHONj7KacoZLipTYXyCvmLgz5g/Kd9CrabMdLKLaVDF7s1/HKQFrchaZitewHaS5Jq8u
+         8HpUgOogKhOYJJ20sNhYXy5+WTp/EQWy1SjLCYdq8wNbj9DKEMKjlFzX9Vb4V4Ncg0/8
+         Wr/kmr945/GYbcjjp93kO+z5pk7JOlN0HLpQuaADdeykgDXtFlu93YXWee6x1HPD1NQ/
+         mkLQ==
+X-Gm-Message-State: AOAM5301Q8Hta2L31Y1Cobyk7HZVK4QYFEZaQGaE66l6+Nhnwp8yBc4c
+        JW6Cr4CLSG6E3T9rY/45uRc=
+X-Google-Smtp-Source: ABdhPJyJRgqqMjOOssnX0R5YVEwJg/CfAQowXuEo7uiGSKuBQsWEr2DXB6YAuuB5IyOGGNgwnqi/8A==
+X-Received: by 2002:a63:6486:: with SMTP id y128mr8964219pgb.82.1593419408269;
+        Mon, 29 Jun 2020 01:30:08 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id 202sm9133790pfw.84.2020.06.29.01.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 01:30:07 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 3/4] rts5208/rtsx.c: use generic power management
+Date:   Mon, 29 Jun 2020 13:58:18 +0530
+Message-Id: <20200629082819.216405-4-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
+References: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <masahiroy@kernel.org> writes:
-> CFLAGS_REMOVE_<file>.o works per object, that is, there is no
-> convenient way to filter out flags for every object in a directory.
->
-> Add ccflags-remove-y and asflags-remove-y to make it easily.
->
-> Use ccflags-remove-y to clean up some Makefiles.
->
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/arm/boot/compressed/Makefile | 6 +-----
->  arch/powerpc/xmon/Makefile        | 3 +--
->  arch/sh/boot/compressed/Makefile  | 5 +----
->  kernel/trace/Makefile             | 4 ++--
->  lib/Makefile                      | 5 +----
->  scripts/Makefile.lib              | 4 ++--
->  6 files changed, 8 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-> index 89c76ca35640..55cbcdd88ac0 100644
-> --- a/arch/powerpc/xmon/Makefile
-> +++ b/arch/powerpc/xmon/Makefile
-> @@ -7,8 +7,7 @@ UBSAN_SANITIZE := n
->  KASAN_SANITIZE := n
->  
->  # Disable ftrace for the entire directory
-> -ORIG_CFLAGS := $(KBUILD_CFLAGS)
-> -KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
-> +ccflags-remove-y += $(CC_FLAGS_FTRACE)
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-This could be:
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
 
-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead.
 
-Similar to kernel/trace/Makefile below.
+Compile-tested only.
 
-I don't mind though.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/staging/rts5208/rtsx.c | 30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+index be0053c795b7..6ca90694db8b 100644
+--- a/drivers/staging/rts5208/rtsx.c
++++ b/drivers/staging/rts5208/rtsx.c
+@@ -258,12 +258,12 @@ static int rtsx_acquire_irq(struct rtsx_dev *dev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+ /*
+  * power management
+  */
+-static int rtsx_suspend(struct pci_dev *pci, pm_message_t state)
++static int __maybe_unused rtsx_suspend(struct device *dev_d)
+ {
++	struct pci_dev *pci = to_pci_dev(dev_d);
+ 	struct rtsx_dev *dev = pci_get_drvdata(pci);
+ 	struct rtsx_chip *chip;
+ 
+@@ -285,10 +285,7 @@ static int rtsx_suspend(struct pci_dev *pci, pm_message_t state)
+ 	if (chip->msi_en)
+ 		pci_disable_msi(pci);
+ 
+-	pci_save_state(pci);
+-	pci_enable_wake(pci, pci_choose_state(pci, state), 1);
+-	pci_disable_device(pci);
+-	pci_set_power_state(pci, pci_choose_state(pci, state));
++	device_wakeup_enable(dev_d);
+ 
+ 	/* unlock the device pointers */
+ 	mutex_unlock(&dev->dev_mutex);
+@@ -296,8 +293,9 @@ static int rtsx_suspend(struct pci_dev *pci, pm_message_t state)
+ 	return 0;
+ }
+ 
+-static int rtsx_resume(struct pci_dev *pci)
++static int __maybe_unused rtsx_resume(struct device *dev_d)
+ {
++	struct pci_dev *pci = to_pci_dev(dev_d);
+ 	struct rtsx_dev *dev = pci_get_drvdata(pci);
+ 	struct rtsx_chip *chip;
+ 
+@@ -309,16 +307,6 @@ static int rtsx_resume(struct pci_dev *pci)
+ 	/* lock the device pointers */
+ 	mutex_lock(&dev->dev_mutex);
+ 
+-	pci_set_power_state(pci, PCI_D0);
+-	pci_restore_state(pci);
+-	if (pci_enable_device(pci) < 0) {
+-		dev_err(&dev->pci->dev,
+-			"%s: pci_enable_device failed, disabling device\n",
+-			CR_DRIVER_NAME);
+-		/* unlock the device pointers */
+-		mutex_unlock(&dev->dev_mutex);
+-		return -EIO;
+-	}
+ 	pci_set_master(pci);
+ 
+ 	if (chip->msi_en) {
+@@ -340,7 +328,6 @@ static int rtsx_resume(struct pci_dev *pci)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static void rtsx_shutdown(struct pci_dev *pci)
+ {
+@@ -999,16 +986,15 @@ static const struct pci_device_id rtsx_ids[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, rtsx_ids);
+ 
++static SIMPLE_DEV_PM_OPS(rtsx_pm_ops, rtsx_suspend, rtsx_resume);
++
+ /* pci_driver definition */
+ static struct pci_driver rtsx_driver = {
+ 	.name = CR_DRIVER_NAME,
+ 	.id_table = rtsx_ids,
+ 	.probe = rtsx_probe,
+ 	.remove = rtsx_remove,
+-#ifdef CONFIG_PM
+-	.suspend = rtsx_suspend,
+-	.resume = rtsx_resume,
+-#endif
++	.driver.pm = &rtsx_pm_ops,
+ 	.shutdown = rtsx_shutdown,
+ };
+ 
+-- 
+2.27.0
 
-cheers
-
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 6575bb0a0434..7492844a8b1b 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -2,9 +2,9 @@
->  
->  # Do not instrument the tracer itself:
->  
-> +ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
-> +
->  ifdef CONFIG_FUNCTION_TRACER
-> -ORIG_CFLAGS := $(KBUILD_CFLAGS)
-> -KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
->  
->  # Avoid recursion due to instrumentation.
->  KCSAN_SANITIZE := n
