@@ -2,174 +2,304 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F883C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00809206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466677;
-	bh=FaYsE7JquzijpgqGxVh4UkKNz52dL+bO6o8rqPYsmqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAwcPkU61TOTQhVbGqPkcWpkc5ivPlbPxtaT3JBl/gCM2TJrE2EUYaGN+CK94pwHy
-	 +7wwz/gZnzFK6AHjXbHxfO0mdnbb9Vlf5osBhVfTC0DdkIs5Upkop3jHQc9pYa4Zpc
-	 IFlzM/w0d7PZQR1Q/V+GL1dzRCsfM6V0eujXjGdU=
+	by mail.kernel.org (Postfix) with ESMTP id 5FDC9206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGsVB1+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391286AbgF2Vhr (ORCPT
+        id S1733001AbgF2ViJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgF2Skd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616A823F57;
-        Mon, 29 Jun 2020 15:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443916;
-        bh=FaYsE7JquzijpgqGxVh4UkKNz52dL+bO6o8rqPYsmqc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2xfQTeFMNGXDJj2+5W1OpqEhyRztM3IjGzNOlSLC6Dzx04Gd+Rc+8OdU3weEDblo
-         Ez54ZFkvKx1lKuHz4gImVqA11PsxS/mXa8H111yRNBbVqGJxiZ+Db4cm44T+5SsmCT
-         kr5KqtJISgLUanLTyUHvDaopcEw3v7TrEQf5+3WI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 016/265] net: increment xmit_recursion level in dev_direct_xmit()
-Date:   Mon, 29 Jun 2020 11:14:09 -0400
-Message-Id: <20200629151818.2493727-17-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388000AbgF2Vhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:37:45 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C66FC03E97E
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:45 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id c16so18803798ioi.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Af+/9CSUqiL8+Q2/NBMEqVxoFlpAKXhf/eB3TWyxOp0=;
+        b=zGsVB1+MMLrSD2Ry7w7m2IEZ22N2/s30BIJKpqZjygc3KdGr8QFP4dNKGUpJ0ICZn/
+         g2a6IMaHNbXSBpTyPGc/RZokJhWkFcmkJ2nDuZ29kxJHOfYE/QNpUyZOSMQ6HZ8dU4JX
+         ZuwFBHpqk8thm4EBpD/QQYXOGonGXYxvUiCNiPphEDBRHChTpHiJAA7Sqigb/MhdFXnj
+         iPvkwv/YlsEnUYfzP+k3kwuHEOdW0z27+Zgm8VIbBEch1xCRcDIpsDDm32pmXk9JbtWL
+         eUWPEZkgIPvR6KV+DEp3jvkYhX1mkRPBLyg7F6XhepV6aerCg1oGlR4FMQyZf1rNppPU
+         VwuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Af+/9CSUqiL8+Q2/NBMEqVxoFlpAKXhf/eB3TWyxOp0=;
+        b=Z/aHfr5fc9q8F53ybk8UfEf1Tir2w5NDuB0TGSsIOaLlMwH1oGSxUM9WJumXPc7EQq
+         nxW6V1CdGHI0m0yz7aD9+INzCnvAsCl5WZDLZM4PLx+dZTjaK2swMvMga+3UDASLnMei
+         rHF43AfZP//u4S6p7eL2WhmiJKhCbZXpWVNsDSKEENiBygg1W8ch4RbX78fyn+eliZyQ
+         kp0Nmo2mBUbMaEfsGcfeOj43AskBYV9nucVNBolefZ9rZUZvscfR45iCjB9bBs56Gqel
+         yNNbJ7UgukcCpR0jHeN9+Qa54vLb7uSk+U9wFD2ZlUv0jI+uCzbUysJQlckH8opXelGE
+         q4kA==
+X-Gm-Message-State: AOAM531s99xxqpPQT/49V1Lhvo3ayFf7KA/gOZabqoh0DLIw3yKT7bkJ
+        NZcSgnn7x8zFX/h2zUsCn9/YOA==
+X-Google-Smtp-Source: ABdhPJweAkCU1I/gVxr3kiGGIzaWQ9PhwzaBoQ5br97ZsRMbjJFhGfIXWg7VOBTeCr3MRLX243ybqw==
+X-Received: by 2002:a05:6602:2d89:: with SMTP id k9mr18775417iow.41.1593466664460;
+        Mon, 29 Jun 2020 14:37:44 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id u6sm571353ilg.32.2020.06.29.14.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:37:44 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 2/3] net: ipa: standarize more GSI error messages
+Date:   Mon, 29 Jun 2020 16:37:37 -0500
+Message-Id: <20200629213738.1180618-3-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+In-Reply-To: <20200629213738.1180618-1-elder@linaro.org>
+References: <20200629213738.1180618-1-elder@linaro.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Make minor updates to error messages reported in "gsi.c":
+  - Use local variables to reduce multi-line function calls
+  - Don't use parentheses in messages
+  - Do some slight rewording in a few cases
 
-[ Upstream commit 0ad6f6e767ec2f613418cbc7ebe5ec4c35af540c ]
-
-Back in commit f60e5990d9c1 ("ipv6: protect skb->sk accesses
-from recursive dereference inside the stack") Hannes added code
-so that IPv6 stack would not trust skb->sk for typical cases
-where packet goes through 'standard' xmit path (__dev_queue_xmit())
-
-Alas af_packet had a dev_direct_xmit() path that was not
-dealing yet with xmit_recursion level.
-
-Also change sk_mc_loop() to dump a stack once only.
-
-Without this patch, syzbot was able to trigger :
-
-[1]
-[  153.567378] WARNING: CPU: 7 PID: 11273 at net/core/sock.c:721 sk_mc_loop+0x51/0x70
-[  153.567378] Modules linked in: nfnetlink ip6table_raw ip6table_filter iptable_raw iptable_nat nf_nat nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 iptable_filter macsec macvtap tap macvlan 8021q hsr wireguard libblake2s blake2s_x86_64 libblake2s_generic udp_tunnel ip6_udp_tunnel libchacha20poly1305 poly1305_x86_64 chacha_x86_64 libchacha curve25519_x86_64 libcurve25519_generic netdevsim batman_adv dummy team bridge stp llc w1_therm wire i2c_mux_pca954x i2c_mux cdc_acm ehci_pci ehci_hcd mlx4_en mlx4_ib ib_uverbs ib_core mlx4_core
-[  153.567386] CPU: 7 PID: 11273 Comm: b159172088 Not tainted 5.8.0-smp-DEV #273
-[  153.567387] RIP: 0010:sk_mc_loop+0x51/0x70
-[  153.567388] Code: 66 83 f8 0a 75 24 0f b6 4f 12 b8 01 00 00 00 31 d2 d3 e0 a9 bf ef ff ff 74 07 48 8b 97 f0 02 00 00 0f b6 42 3a 83 e0 01 5d c3 <0f> 0b b8 01 00 00 00 5d c3 0f b6 87 18 03 00 00 5d c0 e8 04 83 e0
-[  153.567388] RSP: 0018:ffff95c69bb93990 EFLAGS: 00010212
-[  153.567388] RAX: 0000000000000011 RBX: ffff95c6e0ee3e00 RCX: 0000000000000007
-[  153.567389] RDX: ffff95c69ae50000 RSI: ffff95c6c30c3000 RDI: ffff95c6c30c3000
-[  153.567389] RBP: ffff95c69bb93990 R08: ffff95c69a77f000 R09: 0000000000000008
-[  153.567389] R10: 0000000000000040 R11: 00003e0e00026128 R12: ffff95c6c30c3000
-[  153.567390] R13: ffff95c6cc4fd500 R14: ffff95c6f84500c0 R15: ffff95c69aa13c00
-[  153.567390] FS:  00007fdc3a283700(0000) GS:ffff95c6ff9c0000(0000) knlGS:0000000000000000
-[  153.567390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  153.567391] CR2: 00007ffee758e890 CR3: 0000001f9ba20003 CR4: 00000000001606e0
-[  153.567391] Call Trace:
-[  153.567391]  ip6_finish_output2+0x34e/0x550
-[  153.567391]  __ip6_finish_output+0xe7/0x110
-[  153.567391]  ip6_finish_output+0x2d/0xb0
-[  153.567392]  ip6_output+0x77/0x120
-[  153.567392]  ? __ip6_finish_output+0x110/0x110
-[  153.567392]  ip6_local_out+0x3d/0x50
-[  153.567392]  ipvlan_queue_xmit+0x56c/0x5e0
-[  153.567393]  ? ksize+0x19/0x30
-[  153.567393]  ipvlan_start_xmit+0x18/0x50
-[  153.567393]  dev_direct_xmit+0xf3/0x1c0
-[  153.567393]  packet_direct_xmit+0x69/0xa0
-[  153.567394]  packet_sendmsg+0xbf0/0x19b0
-[  153.567394]  ? plist_del+0x62/0xb0
-[  153.567394]  sock_sendmsg+0x65/0x70
-[  153.567394]  sock_write_iter+0x93/0xf0
-[  153.567394]  new_sync_write+0x18e/0x1a0
-[  153.567395]  __vfs_write+0x29/0x40
-[  153.567395]  vfs_write+0xb9/0x1b0
-[  153.567395]  ksys_write+0xb1/0xe0
-[  153.567395]  __x64_sys_write+0x1a/0x20
-[  153.567395]  do_syscall_64+0x43/0x70
-[  153.567396]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  153.567396] RIP: 0033:0x453549
-[  153.567396] Code: Bad RIP value.
-[  153.567396] RSP: 002b:00007fdc3a282cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  153.567397] RAX: ffffffffffffffda RBX: 00000000004d32d0 RCX: 0000000000453549
-[  153.567397] RDX: 0000000000000020 RSI: 0000000020000300 RDI: 0000000000000003
-[  153.567398] RBP: 00000000004d32d8 R08: 0000000000000000 R09: 0000000000000000
-[  153.567398] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004d32dc
-[  153.567398] R13: 00007ffee742260f R14: 00007fdc3a282dc0 R15: 00007fdc3a283700
-[  153.567399] ---[ end trace c1d5ae2b1059ec62 ]---
-
-f60e5990d9c1 ("ipv6: protect skb->sk accesses from recursive dereference inside the stack")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- net/core/dev.c  | 2 ++
- net/core/sock.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ipa/gsi.c | 57 ++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 28 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 096b0dfa95890..c9ee5d80d5ea1 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4109,10 +4109,12 @@ int dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
+diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+index 7e4e54ee09b1..f8d5b8d86335 100644
+--- a/drivers/net/ipa/gsi.c
++++ b/drivers/net/ipa/gsi.c
+@@ -336,6 +336,7 @@ static int evt_ring_command(struct gsi *gsi, u32 evt_ring_id,
+ {
+ 	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
+ 	struct completion *completion = &evt_ring->completion;
++	struct device *dev = gsi->dev;
+ 	u32 val;
  
- 	local_bh_disable();
+ 	val = u32_encode_bits(evt_ring_id, EV_CHID_FMASK);
+@@ -344,8 +345,8 @@ static int evt_ring_command(struct gsi *gsi, u32 evt_ring_id,
+ 	if (gsi_command(gsi, GSI_EV_CH_CMD_OFFSET, val, completion))
+ 		return 0;	/* Success! */
  
-+	dev_xmit_recursion_inc();
- 	HARD_TX_LOCK(dev, txq, smp_processor_id());
- 	if (!netif_xmit_frozen_or_drv_stopped(txq))
- 		ret = netdev_start_xmit(skb, dev, txq, false);
- 	HARD_TX_UNLOCK(dev, txq);
-+	dev_xmit_recursion_dec();
+-	dev_err(gsi->dev, "GSI command %u to event ring %u timed out "
+-		"(state is %u)\n", opcode, evt_ring_id, evt_ring->state);
++	dev_err(dev, "GSI command %u for event ring %u timed out, state %u\n",
++		opcode, evt_ring_id, evt_ring->state);
  
- 	local_bh_enable();
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index da244f4d00363..afe4a62adf8ff 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -707,7 +707,7 @@ bool sk_mc_loop(struct sock *sk)
- 		return inet6_sk(sk)->mc_loop;
- #endif
- 	}
--	WARN_ON(1);
-+	WARN_ON_ONCE(1);
- 	return true;
+ 	return -ETIMEDOUT;
  }
- EXPORT_SYMBOL(sk_mc_loop);
+@@ -431,6 +432,7 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
+ 	struct completion *completion = &channel->completion;
+ 	u32 channel_id = gsi_channel_id(channel);
+ 	struct gsi *gsi = channel->gsi;
++	struct device *dev = gsi->dev;
+ 	u32 val;
+ 
+ 	val = u32_encode_bits(channel_id, CH_CHID_FMASK);
+@@ -439,8 +441,7 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
+ 	if (gsi_command(gsi, GSI_CH_CMD_OFFSET, val, completion))
+ 		return 0;	/* Success! */
+ 
+-	dev_err(gsi->dev,
+-		"GSI command %u to channel %u timed out (state is %u)\n",
++	dev_err(dev, "GSI command %u for channel %u timed out, state %u\n",
+ 		opcode, channel_id, gsi_channel_state(channel));
+ 
+ 	return -ETIMEDOUT;
+@@ -1154,8 +1155,8 @@ static irqreturn_t gsi_isr(int irq, void *dev_id)
+ 				break;
+ 			default:
+ 				dev_err(gsi->dev,
+-					"%s: unrecognized type 0x%08x\n",
+-					__func__, gsi_intr);
++					"unrecognized interrupt type 0x%08x\n",
++					gsi_intr);
+ 				break;
+ 			}
+ 		} while (intr_mask);
+@@ -1259,7 +1260,7 @@ static int gsi_ring_alloc(struct gsi *gsi, struct gsi_ring *ring, u32 count)
+ 	if (ring->virt && addr % size) {
+ 		dma_free_coherent(dev, size, ring->virt, ring->addr);
+ 		dev_err(dev, "unable to alloc 0x%zx-aligned ring buffer\n",
+-				size);
++			size);
+ 		return -EINVAL;	/* Not a good error value, but distinct */
+ 	} else if (!ring->virt) {
+ 		return -ENOMEM;
+@@ -1650,12 +1651,13 @@ static void gsi_channel_teardown(struct gsi *gsi)
+ /* Setup function for GSI.  GSI firmware must be loaded and initialized */
+ int gsi_setup(struct gsi *gsi, bool legacy)
+ {
++	struct device *dev = gsi->dev;
+ 	u32 val;
+ 
+ 	/* Here is where we first touch the GSI hardware */
+ 	val = ioread32(gsi->virt + GSI_GSI_STATUS_OFFSET);
+ 	if (!(val & ENABLED_FMASK)) {
+-		dev_err(gsi->dev, "GSI has not been enabled\n");
++		dev_err(dev, "GSI has not been enabled\n");
+ 		return -EIO;
+ 	}
+ 
+@@ -1663,24 +1665,24 @@ int gsi_setup(struct gsi *gsi, bool legacy)
+ 
+ 	gsi->channel_count = u32_get_bits(val, NUM_CH_PER_EE_FMASK);
+ 	if (!gsi->channel_count) {
+-		dev_err(gsi->dev, "GSI reports zero channels supported\n");
++		dev_err(dev, "GSI reports zero channels supported\n");
+ 		return -EINVAL;
+ 	}
+ 	if (gsi->channel_count > GSI_CHANNEL_COUNT_MAX) {
+-		dev_warn(gsi->dev,
+-			"limiting to %u channels (hardware supports %u)\n",
++		dev_warn(dev,
++			"limiting to %u channels; hardware supports %u\n",
+ 			 GSI_CHANNEL_COUNT_MAX, gsi->channel_count);
+ 		gsi->channel_count = GSI_CHANNEL_COUNT_MAX;
+ 	}
+ 
+ 	gsi->evt_ring_count = u32_get_bits(val, NUM_EV_PER_EE_FMASK);
+ 	if (!gsi->evt_ring_count) {
+-		dev_err(gsi->dev, "GSI reports zero event rings supported\n");
++		dev_err(dev, "GSI reports zero event rings supported\n");
+ 		return -EINVAL;
+ 	}
+ 	if (gsi->evt_ring_count > GSI_EVT_RING_COUNT_MAX) {
+-		dev_warn(gsi->dev,
+-			"limiting to %u event rings (hardware supports %u)\n",
++		dev_warn(dev,
++			"limiting to %u event rings; hardware supports %u\n",
+ 			 GSI_EVT_RING_COUNT_MAX, gsi->evt_ring_count);
+ 		gsi->evt_ring_count = GSI_EVT_RING_COUNT_MAX;
+ 	}
+@@ -1766,19 +1768,19 @@ static bool gsi_channel_data_valid(struct gsi *gsi,
+ 
+ 	/* Make sure channel ids are in the range driver supports */
+ 	if (channel_id >= GSI_CHANNEL_COUNT_MAX) {
+-		dev_err(dev, "bad channel id %u (must be less than %u)\n",
++		dev_err(dev, "bad channel id %u; must be less than %u\n",
+ 			channel_id, GSI_CHANNEL_COUNT_MAX);
+ 		return false;
+ 	}
+ 
+ 	if (data->ee_id != GSI_EE_AP && data->ee_id != GSI_EE_MODEM) {
+-		dev_err(dev, "bad EE id %u (AP or modem)\n", data->ee_id);
++		dev_err(dev, "bad EE id %u; not AP or modem\n", data->ee_id);
+ 		return false;
+ 	}
+ 
+ 	if (!data->channel.tlv_count ||
+ 	    data->channel.tlv_count > GSI_TLV_MAX) {
+-		dev_err(dev, "channel %u bad tlv_count %u (must be 1..%u)\n",
++		dev_err(dev, "channel %u bad tlv_count %u; must be 1..%u\n",
+ 			channel_id, data->channel.tlv_count, GSI_TLV_MAX);
+ 		return false;
+ 	}
+@@ -1796,13 +1798,13 @@ static bool gsi_channel_data_valid(struct gsi *gsi,
+ 	}
+ 
+ 	if (!is_power_of_2(data->channel.tre_count)) {
+-		dev_err(dev, "channel %u bad tre_count %u (not power of 2)\n",
++		dev_err(dev, "channel %u bad tre_count %u; not power of 2\n",
+ 			channel_id, data->channel.tre_count);
+ 		return false;
+ 	}
+ 
+ 	if (!is_power_of_2(data->channel.event_count)) {
+-		dev_err(dev, "channel %u bad event_count %u (not power of 2)\n",
++		dev_err(dev, "channel %u bad event_count %u; not power of 2\n",
+ 			channel_id, data->channel.event_count);
+ 		return false;
+ 	}
+@@ -1956,6 +1958,7 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
+ 	     u32 count, const struct ipa_gsi_endpoint_data *data,
+ 	     bool modem_alloc)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+ 	resource_size_t size;
+ 	unsigned int irq;
+@@ -1963,7 +1966,7 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
+ 
+ 	gsi_validate_build();
+ 
+-	gsi->dev = &pdev->dev;
++	gsi->dev = dev;
+ 
+ 	/* The GSI layer performs NAPI on all endpoints.  NAPI requires a
+ 	 * network device structure, but the GSI layer does not have one,
+@@ -1974,43 +1977,41 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
+ 	/* Get the GSI IRQ and request for it to wake the system */
+ 	ret = platform_get_irq_byname(pdev, "gsi");
+ 	if (ret <= 0) {
+-		dev_err(gsi->dev,
+-			"DT error %d getting \"gsi\" IRQ property\n", ret);
++		dev_err(dev, "DT error %d getting \"gsi\" IRQ property\n", ret);
+ 		return ret ? : -EINVAL;
+ 	}
+ 	irq = ret;
+ 
+ 	ret = request_irq(irq, gsi_isr, 0, "gsi", gsi);
+ 	if (ret) {
+-		dev_err(gsi->dev, "error %d requesting \"gsi\" IRQ\n", ret);
++		dev_err(dev, "error %d requesting \"gsi\" IRQ\n", ret);
+ 		return ret;
+ 	}
+ 	gsi->irq = irq;
+ 
+ 	ret = enable_irq_wake(gsi->irq);
+ 	if (ret)
+-		dev_warn(gsi->dev, "error %d enabling gsi wake irq\n", ret);
++		dev_warn(dev, "error %d enabling gsi wake irq\n", ret);
+ 	gsi->irq_wake_enabled = !ret;
+ 
+ 	/* Get GSI memory range and map it */
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gsi");
+ 	if (!res) {
+-		dev_err(gsi->dev,
+-			"DT error getting \"gsi\" memory property\n");
++		dev_err(dev, "DT error getting \"gsi\" memory property\n");
+ 		ret = -ENODEV;
+ 		goto err_disable_irq_wake;
+ 	}
+ 
+ 	size = resource_size(res);
+ 	if (res->start > U32_MAX || size > U32_MAX - res->start) {
+-		dev_err(gsi->dev, "DT memory resource \"gsi\" out of range\n");
++		dev_err(dev, "DT memory resource \"gsi\" out of range\n");
+ 		ret = -EINVAL;
+ 		goto err_disable_irq_wake;
+ 	}
+ 
+ 	gsi->virt = ioremap(res->start, size);
+ 	if (!gsi->virt) {
+-		dev_err(gsi->dev, "unable to remap \"gsi\" memory\n");
++		dev_err(dev, "unable to remap \"gsi\" memory\n");
+ 		ret = -ENOMEM;
+ 		goto err_disable_irq_wake;
+ 	}
 -- 
 2.25.1
 
