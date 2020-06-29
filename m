@@ -2,126 +2,253 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E37E20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F58020786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQd/jRl4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UIDT07o7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgF2XwW (ORCPT
+        id S1727983AbgF2XwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:52:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32405 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726019AbgF2XwV (ORCPT
+        Mon, 29 Jun 2020 19:52:25 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49166 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgF2XwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593474740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yDZbQbffAZgKbfmHXdWfl91EskJ76dTDejso9RX8q6M=;
-        b=MQd/jRl4aTYMo0k9uuNjQFQtC8TdyMR7Abqx8jFe0NDA76Eky/wPi0wL5f3gS8szGCH2+W
-        hAjtIQFrDGcQfU/AEpqfT8kLI/iR1PD5qBZEAHqlymxbnSk7BZsXaNOxGnIKSW2bbBDY8H
-        TJ+Ug8QBMtCljvl6KLHKm4PQbIyS2jY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-11h7hjn8O3WvpaYjIxuK3A-1; Mon, 29 Jun 2020 19:52:12 -0400
-X-MC-Unique: 11h7hjn8O3WvpaYjIxuK3A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9CD8107ACCA;
-        Mon, 29 Jun 2020 23:52:10 +0000 (UTC)
-Received: from localhost (ovpn-116-13.gru2.redhat.com [10.97.116.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FFE05C1D4;
-        Mon, 29 Jun 2020 23:52:10 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 20:52:09 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erichte@linux.ibm.com, nayna@linux.ibm.com
-Subject: Re: [PATCH v3 1/2] arch/ima: extend secure boot check to include
- trusted boot
-Message-ID: <20200629235209.GB2756@glitch>
-References: <20200623202640.4936-1-bmeneg@redhat.com>
- <20200623202640.4936-2-bmeneg@redhat.com>
- <1593202992.27152.463.camel@linux.ibm.com>
+        Mon, 29 Jun 2020 19:52:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593474740; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=P5Qq095rKF3uyYrOAeCOssNQFzeyNSGNN2mhlGuYWGE=;
+        b=UIDT07o7LqUOtL3gDxuLzAWkaKUkTQrPveZZfJwId6GzoldMh/f6XTvM+P/+1ujwHEbpwy
+        koAK17MI2X92+mkPcLwl+iWo2YBkuwK1llyf10gXnQsMnG+WjbojRFc9tM3tIAW8VConjr
+        JhugrEsLFTEQpoP5qmvNW7+iO/uAZQQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 01/10] dt-bindings: display: Convert ingenic,lcd.txt to YAML
+Date:   Tue, 30 Jun 2020 01:52:01 +0200
+Message-Id: <20200629235210.441709-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <1593202992.27152.463.camel@linux.ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---61jdw2sOBCFtR2d/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Convert the ingenic,lcd.txt to a new ingenic,lcd.yaml file.
 
-On Fri, Jun 26, 2020 at 04:23:12PM -0400, Mimi Zohar wrote:
-> On Tue, 2020-06-23 at 17:26 -0300, Bruno Meneguele wrote:
-> <snip>
->=20
-> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima=
-/ima_main.c
-> > index c1583d98c5e5..a760094e8f8d 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -694,7 +694,7 @@ int ima_load_data(enum kernel_load_data_id id)
-> >  =09switch (id) {
-> >  =09case LOADING_KEXEC_IMAGE:
-> >  =09=09if (IS_ENABLED(CONFIG_KEXEC_SIG)
-> > -=09=09    && arch_ima_get_secureboot()) {
-> > +=09=09    && arch_ima_secure_or_trusted_boot()) {
-> >  =09=09=09pr_err("impossible to appraise a kernel image without a file =
-descriptor; try using kexec_file_load syscall.\n");
-> >  =09=09=09return -EACCES;
-> >  =09=09}
->=20
-> Only IMA-appraisal enforces file integrity based on policy.
->=20
+In the process, the new ingenic,jz4780-lcd compatible string has been
+added.
 
-Right, but I didn't get the relation to the code above: I basically
-renamed the function:=20
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-"arch_ima_get_secureboot" -> "arch_ima_secure_or_trusted_boot". =20
+Notes:
+    v2: Add info about IPU at port@8
 
-Which doesn't change the ima_load_data logic.
+ .../bindings/display/ingenic,lcd.txt          |  45 -------
+ .../bindings/display/ingenic,lcd.yaml         | 126 ++++++++++++++++++
+ 2 files changed, 126 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
 
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---61jdw2sOBCFtR2d/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl76fqkACgkQYdRkFR+R
-okMSCwf6ArclPVwGnMxzR1YUkXqbk98vyQn1q7ARf7mcpdWpVdzicAwiacFuaAMP
-3uHozsXFja1TneJZpKj8ZI+noUFiHxL4G3s560qNfaIyr7eqOUd7ptKfzP1RW/5+
-C049uTjHMTe38EhUtq3sG+YkBSo3NLz1e/O78eBW++44fOAqqrGyKKrJPyrmqMTx
-/ieLpcfGrY9rnNtGm+pvcGWQntT0J2kddg2oxYB1JBRdbPBOXFYzfpTqQZRo1DP6
-AscFZaSpcnlLgAMXr0J0TsLhaZZ4+FINhGYNRUc1R3nN1IwM0UdMWqXHi6qMW0aU
-sB8+pxFQlSYmWeZGwrWZj4AKQeulYA==
-=jCqQ
------END PGP SIGNATURE-----
-
---61jdw2sOBCFtR2d/--
+diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
+deleted file mode 100644
+index 01e3261defb6..000000000000
+--- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Ingenic JZ47xx LCD driver
+-
+-Required properties:
+-- compatible: one of:
+-  * ingenic,jz4740-lcd
+-  * ingenic,jz4725b-lcd
+-  * ingenic,jz4770-lcd
+-- reg: LCD registers location and length
+-- clocks: LCD pixclock and device clock specifiers.
+-	   The device clock is only required on the JZ4740.
+-- clock-names: "lcd_pclk" and "lcd"
+-- interrupts: Specifies the interrupt line the LCD controller is connected to.
+-
+-Example:
+-
+-panel {
+-	compatible = "sharp,ls020b1dd01d";
+-
+-	backlight = <&backlight>;
+-	power-supply = <&vcc>;
+-
+-	port {
+-		panel_input: endpoint {
+-			remote-endpoint = <&panel_output>;
+-		};
+-	};
+-};
+-
+-
+-lcd: lcd-controller@13050000 {
+-	compatible = "ingenic,jz4725b-lcd";
+-	reg = <0x13050000 0x1000>;
+-
+-	interrupt-parent = <&intc>;
+-	interrupts = <31>;
+-
+-	clocks = <&cgu JZ4725B_CLK_LCD>;
+-	clock-names = "lcd";
+-
+-	port {
+-		panel_output: endpoint {
+-			remote-endpoint = <&panel_input>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.yaml b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+new file mode 100644
+index 000000000000..d56db1802fad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/ingenic,lcd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic SoCs LCD controller devicetree bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: "^lcd-controller@[0-9a-f]+$"
++
++  compatible:
++    enum:
++      - ingenic,jz4740-lcd
++      - ingenic,jz4725b-lcd
++      - ingenic,jz4770-lcd
++      - ingenic,jz4780-lcd
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Pixel clock
++      - description: Module clock
++    minItems: 1
++
++  clock-names:
++    items:
++      - const: lcd_pclk
++      - const: lcd
++    minItems: 1
++
++  port:
++    description: OF graph bindings (specified in bindings/graph.txt).
++
++  ports:
++    description: OF graph bindings (specified in bindings/graph.txt).
++    type: object
++    properties:
++      port@0:
++        type: object
++        description: DPI output, to interface with TFT panels.
++
++      port@8:
++        type: object
++        description: Link to the Image Processing Unit (IPU).
++          (See ingenic,ipu.yaml).
++
++    required:
++      - port@0
++
++required:
++    - compatible
++    - reg
++    - interrupts
++    - clocks
++    - clock-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ingenic,jz4740-lcd
++          - ingenic,jz4780-lcd
++then:
++  properties:
++    clocks:
++      minItems: 2
++    clock-names:
++      minItems: 2
++else:
++  properties:
++    clocks:
++      maxItems: 1
++    clock-names:
++      maxItems: 1
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4740-cgu.h>
++    lcd-controller@13050000 {
++      compatible = "ingenic,jz4740-lcd";
++      reg = <0x13050000 0x1000>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <30>;
++
++      clocks = <&cgu JZ4740_CLK_LCD_PCLK>, <&cgu JZ4740_CLK_LCD>;
++      clock-names = "lcd_pclk", "lcd";
++
++      port {
++        endpoint {
++          remote-endpoint = <&panel_input>;
++        };
++      };
++    };
++
++  - |
++    #include <dt-bindings/clock/jz4725b-cgu.h>
++    lcd-controller@13050000 {
++      compatible = "ingenic,jz4725b-lcd";
++      reg = <0x13050000 0x1000>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <31>;
++
++      clocks = <&cgu JZ4725B_CLK_LCD>;
++      clock-names = "lcd_pclk";
++
++      port {
++        endpoint {
++          remote-endpoint = <&panel_input>;
++        };
++      };
++    };
+-- 
+2.27.0
 
