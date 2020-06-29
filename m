@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A61C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7C920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAD2206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461687;
-	bh=5ScMDTKWM/U7yfgxm06jNQ+5F0fwhk/4g0yJEqvOIng=;
+	s=default; t=1593461694;
+	bh=N8Kw4vgdWvrmLWML7P5AQDoKHbBDhEK38kF08BLH4Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNUpl8jlulHFDgXEZCMF/4xpaV3icdpw+qK7zPzpxlQs5z0muGhD0MXMbwFu/RrJs
-	 WlLp6JMNeeggrhoB9z9MM66sCdto+dQ6DHaUxjYrXtOHHcXEL1JHa89RMgN/WcgVYj
-	 SNIt93nMJC88sBUNrfUJQJ1tLrbIz+5aaKftGk0o=
+	b=2qyIr+oydk7pzk/bGs381sSQi3ecoG8ACEMx31+JhgWZRVLMmfbNIw28x/1L4H86C
+	 rJ8AMffnYUnJccl5qaTKJOmwpnKWYpcEQwBZULd49pAm+jnK26uHwmuL2a+oCxyLs3
+	 vEmeYe33m3S5ySaYULQZIwSudL5e9T5DJKYC3nfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbgF2UOp (ORCPT
+        id S1732858AbgF2UOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732846AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732831AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29779252BE;
-        Mon, 29 Jun 2020 15:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C662E251EE;
+        Mon, 29 Jun 2020 15:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445032;
-        bh=5ScMDTKWM/U7yfgxm06jNQ+5F0fwhk/4g0yJEqvOIng=;
+        s=default; t=1593444911;
+        bh=N8Kw4vgdWvrmLWML7P5AQDoKHbBDhEK38kF08BLH4Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQ9F+CKWuyzN3i+kZa4chF2r4ZF7rDGmFSGgyJjo70N0IexlT/UPeXVLsjGhnfCaj
-         E2MumfUlpkAYqAogCuju5Swa2GGS9IeL9t4MVLH2IjhJ8b1mI8fclcHkmig4f7NVlg
-         7XsUBBZ+VuKwFV92PFkmUj8B5qGPaDVZ0vvpy8AM=
+        b=jZLd6sgf7bEItZ76KoZsHn3uLTbfg56m9AbeyzhLvVrpdjqRnwoXb5Fcitz5am01Q
+         pMdOKboKboBX5pYFeqYnohbTibUgmRHZWJXCUVxX6RqDmLo+1SRUXrXft11fQSNh00
+         z/2OW0GhEOXZEzRfMcFu7utJjpMKyFJjfGdQdKrw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 129/131] dm writecache: add cond_resched to loop in persistent_memory_claim()
-Date:   Mon, 29 Jun 2020 11:35:00 -0400
-Message-Id: <20200629153502.2494656-130-sashal@kernel.org>
+Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kim Phillips <kim.phillips@amd.com>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 007/131] EDAC/amd64: Add Family 17h Model 30h PCI IDs
+Date:   Mon, 29 Jun 2020 11:32:58 -0400
+Message-Id: <20200629153502.2494656-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,35 +69,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-commit d35bd764e6899a7bea71958f08d16cea5bfa1919 upstream.
+[ Upstream commit 6e846239e5487cbb89ac8192d5f11437d010130e ]
 
-Add cond_resched() to a loop that fills in the mapper memory area
-because the loop can be executed many times.
+Add the new Family 17h Model 30h PCI IDs to the AMD64 EDAC module.
 
-Fixes: 48debafe4f2fe ("dm: add writecache target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This also fixes a probe failure that appeared when some other PCI IDs
+for Family 17h Model 30h were added to the AMD NB code.
+
+Fixes: be3518a16ef2 (x86/amd_nb: Add PCI device IDs for family 17h, model 30h)
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Kim Phillips <kim.phillips@amd.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190228153558.127292-1-Yazen.Ghannam@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-writecache.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/edac/amd64_edac.c | 13 +++++++++++++
+ drivers/edac/amd64_edac.h |  3 +++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 509552fc55fc7..cc028353f9d55 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -281,6 +281,8 @@ static int persistent_memory_claim(struct dm_writecache *wc)
- 			while (daa-- && i < p) {
- 				pages[i++] = pfn_t_to_page(pfn);
- 				pfn.val++;
-+				if (!(i & 15))
-+					cond_resched();
- 			}
- 		} while (i < p);
- 		wc->memory_map = vmap(pages, p, VM_MAP, PAGE_KERNEL);
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 05d6f9c86ac38..268ada29cd987 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2209,6 +2209,15 @@ static struct amd64_family_type family_types[] = {
+ 			.dbam_to_cs		= f17_base_addr_to_cs_size,
+ 		}
+ 	},
++	[F17_M30H_CPUS] = {
++		.ctl_name = "F17h_M30h",
++		.f0_id = PCI_DEVICE_ID_AMD_17H_M30H_DF_F0,
++		.f6_id = PCI_DEVICE_ID_AMD_17H_M30H_DF_F6,
++		.ops = {
++			.early_channel_count	= f17_early_channel_count,
++			.dbam_to_cs		= f17_base_addr_to_cs_size,
++		}
++	},
+ };
+ 
+ /*
+@@ -3212,6 +3221,10 @@ static struct amd64_family_type *per_family_init(struct amd64_pvt *pvt)
+ 			fam_type = &family_types[F17_M10H_CPUS];
+ 			pvt->ops = &family_types[F17_M10H_CPUS].ops;
+ 			break;
++		} else if (pvt->model >= 0x30 && pvt->model <= 0x3f) {
++			fam_type = &family_types[F17_M30H_CPUS];
++			pvt->ops = &family_types[F17_M30H_CPUS].ops;
++			break;
+ 		}
+ 		fam_type	= &family_types[F17_CPUS];
+ 		pvt->ops	= &family_types[F17_CPUS].ops;
+diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
+index 4242f8e39c18f..de8dbb0b42b55 100644
+--- a/drivers/edac/amd64_edac.h
++++ b/drivers/edac/amd64_edac.h
+@@ -117,6 +117,8 @@
+ #define PCI_DEVICE_ID_AMD_17H_DF_F6	0x1466
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F0 0x15e8
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
++#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
++#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
+ 
+ /*
+  * Function 1 - Address Map
+@@ -284,6 +286,7 @@ enum amd_families {
+ 	F16_M30H_CPUS,
+ 	F17_CPUS,
+ 	F17_M10H_CPUS,
++	F17_M30H_CPUS,
+ 	NUM_FAMILIES,
+ };
+ 
 -- 
 2.25.1
 
