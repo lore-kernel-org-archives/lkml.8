@@ -2,178 +2,192 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F0C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D61520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="yMmYS8Vg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SAidnYTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389538AbgF2Ulv (ORCPT
+        id S2389621AbgF2Ul5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        Mon, 29 Jun 2020 16:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbgF2TOG (ORCPT
+        with ESMTP id S1731666AbgF2TOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:06 -0400
-X-Greylist: delayed 517 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 29 Jun 2020 04:07:43 PDT
-Received: from pmg01-out3.zxcs.nl (pmg01-out3.zxcs.nl [IPv6:2a06:2ec0:1:b::ffeb])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B503C00862C
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:07:43 -0700 (PDT)
-Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
-        by pmg01.zxcs.nl (Zxcs) with ESMTP id BE0761035FD;
-        Mon, 29 Jun 2020 12:59:04 +0200 (CEST)
-Received: from web0081.zxcs.nl (web0081.zxcs.nl [IPv6:2a06:2ec0:1::81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pmg01.zxcs.nl (Zxcs) with ESMTPS;
-        Mon, 29 Jun 2020 12:59:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
-        :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BeEd1bjgVqI+6WM8IxHn3yBv6gBN5vUlSzEvbSv2GPY=; b=yMmYS8VgDQ27kiSVRfsNHb29iE
-        LPmdLaagH+bhjYa54+X3DMcJw/nqLZV5COm0Da2zOkefygoaxdrpUEvEHZmBtFVSzEFG9x1NIuXin
-        I1E5JmsDND6n2nkV9HZuv+1p5MFjUc+FoJDbKytPhTvY0MRa2F7TDed2QfZrlyxmEPFezW39If8ZR
-        llTMADSiNPRmBiZ72ZBx/mxD1WsEvyqYe2WHWTx83dzz1qTw7J73QFk0CDdeDSqELEzDMvAGMy+OK
-        9/A/IOH366nZ3vtIYr10sHMVvuSCsLkY1HJ6TRYo0Gx2ZTuUb633j1zBZovb0Pz192M3r0YlsTIN3
-        zIejNerg==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:48016 helo=mail-slave02.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.93.0.4)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jprV9-004AMs-6x; Mon, 29 Jun 2020 12:59:03 +0200
-MIME-Version: 1.0
-Date:   Mon, 29 Jun 2020 12:59:02 +0200
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     laurent.pinchart@ideasonboard.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5792EC008756
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:41:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so14548643wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:41:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kELMG7Ol5vjIMHU3qC+BQXaaTJ8E8QYQvAWRNYeed9M=;
+        b=SAidnYTvCAvw4nM9pKaVGyUWYh4lBZdMjgSCjmPpa9D3LQBrQUc3RCKehpb6PKqggZ
+         TeaOqMvp6dCVKftm/uw0GaG8yXAySh/iP6DzwlDk2xCIwxhqxWoWKTW+iJ1pcCaOZfbB
+         DpZKB/oMAPAc3h6cmL+d2DN+Xo5dvzwAOBpglwMqaLhgudXwT45k2EN4EBQ3wKzjeCEj
+         q8iYSAM/hObjr4f78K4bmXmnCpKibZwbyiHAfSkWy3P+T72ouT3J3oje0riSVe13LDQX
+         WTI0E2PYLcV57jEmExGhOdtznJuDkUL5Gy6hx/fV9er78GznjRIovETaeom4xFrtDaFP
+         JG+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kELMG7Ol5vjIMHU3qC+BQXaaTJ8E8QYQvAWRNYeed9M=;
+        b=RpZgy5UGKv2mzsKVd/nwsaNhrm0DVKClg2y6XJvulc8zcxHm3u4wIi9maMbP8V1H9u
+         ksnIoo/XetLfuFfYx5yTZxy4Snn4Ppo7KN/3yxFQHRprM8zBQqyhHQOoywp8wHDZjs1A
+         WfgfWOctbT7hLVr4Qj28l9YgwzvmU8GEkk29aWoG+dSbO+R+lXadv+bicLg9rTBv0Cw/
+         +1kT6XKc0moAv0aQZYdSZ/F4DZEBariq/hPc1gTd0hGQSbeJIjpZu2L53TbxHh5bBsdX
+         dH8WFywaCygFS19JEEIpvtYDBJLnGlSdCW3oWTUeLoDYqfNuMvu6WJ+sA1/6G3VcTZX2
+         kjng==
+X-Gm-Message-State: AOAM533FiLCxtTqOWRiZWh5eQDQScvuCAr2ZxSKtedCssevZMv7nTcF+
+        utUstQQRChmgHxpphhU7kU0rsqjRREJeQQ==
+X-Google-Smtp-Source: ABdhPJyIgWKnLVqOjW/TXd55cHSZefw2qzWi6tfdjxbEZPy9CjFBYVBt8aaWScCDu9aOFYS3XT3bmQ==
+X-Received: by 2002:a1c:b6c3:: with SMTP id g186mr16279573wmf.135.1593420109557;
+        Mon, 29 Jun 2020 01:41:49 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
+        by smtp.gmail.com with ESMTPSA id r1sm14414094wrw.24.2020.06.29.01.41.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 01:41:48 -0700 (PDT)
+Subject: Re: [PATCH 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return
+ value when setting a GPIO
+To:     Doug Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sandeep Panda <spanda@codeaurora.org>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] Re: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
-In-Reply-To: <20200628072819.GB8391@pendragon.ideasonboard.com>
-References: <20200320112205.7100-1-dev@pascalroeleven.nl>
- <20200320112205.7100-3-dev@pascalroeleven.nl>
- <20200628072819.GB8391@pendragon.ideasonboard.com>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <d43b324fa26638c179650e3c52adbf32@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
+ <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
+ <159186950406.242598.11120838219466948342@swboyd.mtv.corp.google.com>
+ <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <e454746a-8137-a26f-d6ba-ca30adec036c@baylibre.com>
+Date:   Mon, 29 Jun 2020 10:41:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AuthUser: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On 11/06/2020 16:34, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Jun 11, 2020 at 2:58 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>>
+>> Quoting Douglas Anderson (2020-06-08 10:48:35)
+>>> The ti_sn_bridge_gpio_set() got the return value of
+>>> regmap_update_bits() but didn't check it.  The function can't return
+>>> an error value, but we should at least print a warning if it didn't
+>>> work.
+>>>
+>>> This fixes a compiler warning about setting "ret" but not using it.
+>>>
+>>> Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
+>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>> ---
+>>>
+>>>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+>>> index 1080e4f9df96..526add27dc03 100644
+>>> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+>>> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+>>> @@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>>>         ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
+>>>                                  BIT(SN_GPIO_OUTPUT_SHIFT + offset),
+>>>                                  val << (SN_GPIO_OUTPUT_SHIFT + offset));
+>>> +       if (ret)
+>>> +               dev_warn(pdata->dev,
+>>> +                        "Failed to set bridge GPIO %d: %d\n", offset, ret);
+>>
+>> GPIO %u because it's unsigned?
+> 
+> Sure.  I'll plan to spin tomorrow in case anyone else has any
+> feedback.  If any maintainer would prefer me not to spin and would
+> rather fix this when applying, please shout and I won't send out a v2.
+> 
+> -Doug
+> 
 
-Good catch. It's actually the connector type which is wrong. The 
-connector_type should be DRM_MODE_CONNECTOR_DPI. If you would include 
-this in your patch series, you can have my acked-by.
+Yes please respin, ping me on IRC if I forget to apply..
 
-Regards,
-Pascal
-
-On 2020-06-28 09:28, Laurent Pinchart wrote:
-> Hi Pascal,
-> 
-> On Fri, Mar 20, 2020 at 12:21:33PM +0100, Pascal Roeleven wrote:
->> The KR070PE2T is a 7" panel with a resolution of 800x480.
->> 
->> KR070PE2T is the marking present on the ribbon cable. As this panel is
->> probably available under different brands, this marking will catch
->> most devices.
->> 
->> As I can't find a datasheet for this panel, the bus_flags are instead
->> from trial-and-error. The flags seem to be common for these kind of
->> panels as well.
->> 
->> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
->> ---
->>  drivers/gpu/drm/panel/panel-simple.c | 29 
->> ++++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->> 
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c 
->> b/drivers/gpu/drm/panel/panel-simple.c
->> index e14c14ac6..b3d257257 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -2842,6 +2842,32 @@ static const struct panel_desc 
->> shelly_sca07010_bfn_lnn = {
->>  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
->>  };
->> 
->> +static const struct drm_display_mode starry_kr070pe2t_mode = {
->> +	.clock = 33000,
->> +	.hdisplay = 800,
->> +	.hsync_start = 800 + 209,
->> +	.hsync_end = 800 + 209 + 1,
->> +	.htotal = 800 + 209 + 1 + 45,
->> +	.vdisplay = 480,
->> +	.vsync_start = 480 + 22,
->> +	.vsync_end = 480 + 22 + 1,
->> +	.vtotal = 480 + 22 + 1 + 22,
->> +	.vrefresh = 60,
->> +};
->> +
->> +static const struct panel_desc starry_kr070pe2t = {
->> +	.modes = &starry_kr070pe2t_mode,
->> +	.num_modes = 1,
->> +	.bpc = 8,
->> +	.size = {
->> +		.width = 152,
->> +		.height = 86,
->> +	},
->> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
->> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | 
->> DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
->> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-> 
-> I'm trying to fix inconsistencies in the panel-simple driver, and this
-> caught my eyes. MEDIA_BUS_FMT_RGB888_1X24 isn't a correct format for
-> LVDS panels. MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-> MEDIA_BUS_FMT_RGB888_1X7X4_SPWG or MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
-> should be used instead. As I couldn't find documentation for the panel,
-> I can't tell which format is correct. Could you please help ?
-> 
->> +};
->> +
->>  static const struct drm_display_mode starry_kr122ea0sra_mode = {
->>  	.clock = 147000,
->>  	.hdisplay = 1920,
->> @@ -3474,6 +3500,9 @@ static const struct of_device_id 
->> platform_of_match[] = {
->>  	}, {
->>  		.compatible = "shelly,sca07010-bfn-lnn",
->>  		.data = &shelly_sca07010_bfn_lnn,
->> +	}, {
->> +		.compatible = "starry,kr070pe2t",
->> +		.data = &starry_kr070pe2t,
->>  	}, {
->>  		.compatible = "starry,kr122ea0sra",
->>  		.data = &starry_kr122ea0sra,
-> 
-> --
-> Regards,
-> 
-> Laurent Pinchart
-
+Neil
