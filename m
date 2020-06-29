@@ -4,122 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C90FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D772DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4442073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E18206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466241;
-	bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+	s=default; t=1593466246;
+	bh=xrtSI1ftxfMwU5aR7cVF6dYNr3U91GCqJPVY8cd1ylg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6sSDEMrahmdhnwFwMB6DPvpl4L4HCcRCuePiDVBq0kiQI9sYFsgVTqezNpSg3iet
-	 rWgXL2AE+pxUnYwoz83k7gx0FTYyjoRxPIbfcAVt0PYfsBTIZHJ/BLtZvjaSjKT/b5
-	 ynMi+7sat0wqvd7uBVkz2SuRDThjQtlxggNFg6tc=
+	b=H52IKVfrzUnLKSqIKc8/fRcLjk/2/35ggKeifk8nYCDNR381h7IyYei/usfB6nqZK
+	 m1Ngm2vcdNGMXhVSMJg56eX7sHpSwcDuWZWkdDWNLPcm6AjSNXNUIQ9ExKTcKglcYJ
+	 H4FWbFX6Dmd3dsjXJENoqddNbSzobSU9ZA4HDV2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbgF2Vaj (ORCPT
+        id S1730701AbgF2Vap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728845AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost.localdomain (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD86923EF3;
-        Mon, 29 Jun 2020 15:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA6362336E;
+        Mon, 29 Jun 2020 14:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443907;
-        bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+        s=default; t=1593442253;
+        bh=xrtSI1ftxfMwU5aR7cVF6dYNr3U91GCqJPVY8cd1ylg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j7PoIfcVL4IDNCIiAO0PQxKjYC7iRj6j/jzNBkYc28/cVJ7CaTQvu1eryqkVLPnO7
-         z7HJUh1o8/L6qhSeCWpQ+Bj7Iy7xdK0aIoMBTEcqKDoYn4kctHe+0QhBMhv3VXp5k8
-         VYH4jWS3Eog2hYdIxGdEyMK2kae8SV4bQWcXAuGo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 007/265] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Mon, 29 Jun 2020 11:14:00 -0400
-Message-Id: <20200629151818.2493727-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        b=O4Iw5qdfUvqJE5VPKHUW495X+vQfhfCU6Z1RprpA0rJduvsSv+Y4rAu0Dg0cBkpbR
+         7OYVyt/tG7c8r0kZ/ryyxZztyTT9f7B5q3ID1pRw9SXNkKVAHFikeWztv4nUE7gKIv
+         LUR6Hn5oIYvzycelZW+KNgdlL5fziBEAz5ux3FiI=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 4/4] phy: ti-pipe3: remove set but unused variable
+Date:   Mon, 29 Jun 2020 20:20:10 +0530
+Message-Id: <20200629145010.122675-4-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629145010.122675-1-vkoul@kernel.org>
+References: <20200629145010.122675-1-vkoul@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+ti_pipe3_power_on() sets variable 'ret' but never uses it, so remove it.
 
-[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
+drivers/phy/ti/phy-ti-pipe3.c:340:6: warning: variable ‘ret’ set but not
+used [-Wunused-but-set-variable]
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
-
-Using ip6_mc_clear_src() to take care of the missing free.
-
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- net/ipv6/mcast.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/phy/ti/phy-ti-pipe3.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index eaa4c2cc2fbb2..c875c9b6edbe9 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2618,6 +2618,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
- 
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
+diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
+index a87946589eb7..e9332c90f75f 100644
+--- a/drivers/phy/ti/phy-ti-pipe3.c
++++ b/drivers/phy/ti/phy-ti-pipe3.c
+@@ -337,7 +337,6 @@ static int ti_pipe3_power_on(struct phy *x)
+ {
+ 	u32 val;
+ 	u32 mask;
+-	int ret;
+ 	unsigned long rate;
+ 	struct ti_pipe3 *phy = phy_get_drvdata(x);
+ 	bool rx_pending = false;
+@@ -355,8 +354,8 @@ static int ti_pipe3_power_on(struct phy *x)
+ 	rate = rate / 1000000;
+ 	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
+ 	val = rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
+-	ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
+-				 mask, val);
++	regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
++			   mask, val);
+ 	/*
+ 	 * For PCIe, TX and RX must be powered on simultaneously.
+ 	 * For USB and SATA, TX must be powered on before RX
 -- 
-2.25.1
+2.26.2
 
