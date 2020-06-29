@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C36C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741E620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E72206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467522;
-	bh=VK3L9BGAbCNv1q6ujaJ7mqqUR7iptXCtRvdtc56LAmU=;
+	s=default; t=1593467526;
+	bh=NMTP80wN+ewpTJxV9j+dBrPqhrhKQJgOIdEz6TaTsNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z8rU+th02RWKG8Fyv9zmWpgQlBeFlnvn92nhqPIFATQ38a7/at63YB1sxlOQOwldE
-	 oXbrMGnBEVU+nVroqHG5vdPrTN05lMnvpjXkcZvXuzql5VZWFqXovw3UoLJqHUZ3Pn
-	 9whZ5CMGkx0YcqlLpJIA86EWGviu81zyV75sZMbc=
+	b=zIC01VHXPG27yLRvJYIO37Hx3+4USwN7ZY9ZBaUpH/PLbIVrSMKc/qRFtER4LOAPp
+	 wSQGk9gW6YDjAvi3Wf6HES6VKiSOkgwWW+byAvFfEvOWLeX1vbCU/TlNS0znQG/uA7
+	 RvGfd5NacC1E7+AEyZTj7hOUNkoM0CZD1iahEhFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404586AbgF2VwB (ORCPT
+        id S2404591AbgF2VwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726647AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD2C424795;
-        Mon, 29 Jun 2020 15:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B2324744;
+        Mon, 29 Jun 2020 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444103;
-        bh=VK3L9BGAbCNv1q6ujaJ7mqqUR7iptXCtRvdtc56LAmU=;
+        s=default; t=1593444065;
+        bh=NMTP80wN+ewpTJxV9j+dBrPqhrhKQJgOIdEz6TaTsNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOdaz3jOqaAD9paXt9eHzDw5YMZ0hjvMG6BGQF80eD/zTNI9HTgjFJjArFdbGQKWH
-         r4jtszacwyiA9yhRsM4dKgOpGVnD88q88pxh+BdW6Y3dx+GOpWLdMr3iuhenPQLpye
-         1z8U8QEWvuptV3+8ZmZdj5fpOsnnJbzIyYGlvqQw=
+        b=pMyZSv6iS/bHNTweW6qbWu7Ian979E2Ma3rSxVRadeWnqkhbBwmAUqJxVHuAPizqU
+         fXgD5fOwg0bj/ol+Wm7Rxof6JloeUl9WiTSKsyGRR92Ca+irt5pTHX52l8B15pLan7
+         GIdxDsOg6OUIBitVbhpCmxJ52gugdRgbxKtnk9g0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gao Xiang <hsiangkao@redhat.com>,
-        Hongyu Jin <hongyu.jin@unisoc.com>,
-        Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 214/265] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
-Date:   Mon, 29 Jun 2020 11:17:27 -0400
-Message-Id: <20200629151818.2493727-215-sashal@kernel.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 174/265] socionext: account for napi_gro_receive never returning GRO_DROP
+Date:   Mon, 29 Jun 2020 11:16:47 -0400
+Message-Id: <20200629151818.2493727-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,70 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <hsiangkao@redhat.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
+[ Upstream commit e5e7d8052f6140985c03bd49ebaa0af9c2944bc6 ]
 
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
+The napi_gro_receive function no longer returns GRO_DROP ever, making
+handling GRO_DROP dead code. This commit removes that dead code.
+Further, it's not even clear that device drivers have any business in
+taking action after passing off received packets; that's arguably out of
+their hands.
 
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
-
-Let's fix it now.
-
-Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/erofs/zdata.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 7824f5563a552..9b66c28b3ae9d 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
--repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
-+	int orig, orig_index, val;
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index a5a0fb60193ab..5a70c49bf454f 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -1038,8 +1038,9 @@ static int netsec_process_rx(struct netsec_priv *priv, int budget)
+ 			skb->ip_summed = CHECKSUM_UNNECESSARY;
  
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+repeat:
-+	orig = atomic_read(u.o);
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
- 
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
- 
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
- }
- 
+ next:
+-		if ((skb && napi_gro_receive(&priv->napi, skb) != GRO_DROP) ||
+-		    xdp_result) {
++		if (skb)
++			napi_gro_receive(&priv->napi, skb);
++		if (skb || xdp_result) {
+ 			ndev->stats.rx_packets++;
+ 			ndev->stats.rx_bytes += xdp.data_end - xdp.data;
+ 		}
 -- 
 2.25.1
 
