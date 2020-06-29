@@ -2,51 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852A0206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2446206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460724;
-	bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
+	s=default; t=1593460728;
+	bh=w6apJk8AfKAn6zaaO5RkNTDJ2S+KinzX00mJQQ4CrxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJNovz1E+YjP2JKM/NBJmsrPhudS9tbSlrVyoVxgely79sn8m+W8tMOTCQVf8iJCY
-	 mkMNx5NVxnrHpqSHMhUG4EaFLz4+cDcZfu92r+RK9Wwo5RWfFREcVKF52D/kiUGVd4
-	 YJtlfQzB5MBHkwNs9LIhhcTYlJ4putJf5Eb0f8U0=
+	b=VsgUZnoBA/R29LDO9HUlaPrLPIwx0TWmjeMvPcJ14SNvf7MbEBwwc/UkFTzeTn883
+	 2r5j4/9zsO0c4B6wn+xS3O3sADRLhweDPw455mBKI8oV5RtDIbVK0DyveZ0Gr1zXC0
+	 CHhg7BouW0WuW2wISwf2mMxNKWClwFpoynuzVhkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388482AbgF2T6c (ORCPT
+        id S2387674AbgF2T6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387603AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387598AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134A7248EE;
-        Mon, 29 Jun 2020 15:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 195D22481D;
+        Mon, 29 Jun 2020 15:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444441;
-        bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
+        s=default; t=1593444338;
+        bh=w6apJk8AfKAn6zaaO5RkNTDJ2S+KinzX00mJQQ4CrxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flwTi2LUyWVUFyuPk8sDWSzDjreodRP/1kRi/eaqm0v+DNK9yta4HGZcC3Bo0IcpX
-         NJ7dXYolvAFF2mBEnY93ZLDb77TOaYMDts7oiRIHSCLCHu3uur05h4k3iTtBDM7VVh
-         Q87flB72smfb+cUr1jH4qRW57Gwrbcr/eE3Fp7jw=
+        b=GwBEgawYLlSxIR59SIGFf1XtWY+CRaW3aQUKYVcZnNprG4TK9Ye8aQgsTqOgdNsaG
+         OLMWdsCU+G1KRNLX0SePI2QNIhCVTFvFoMKToquT1HKmHK7zoHFvHUJQAiBX69KYOf
+         s8d5oEvd6p11/nl5L3n0Cwrz5LGrWkMm+OynJ8HY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 120/178] riscv/atomic: Fix sign extension for RV64I
-Date:   Mon, 29 Jun 2020 11:24:25 -0400
-Message-Id: <20200629152523.2494198-121-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 013/178] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Mon, 29 Jun 2020 11:22:38 -0400
+Message-Id: <20200629152523.2494198-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,65 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-The argument passed to cmpxchg is not guaranteed to be sign
-extended, but lr.w sign extends on RV64I. This makes cmpxchg
-fail on clang built kernels when __old is negative.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-To fix this, we just cast __old to long which sign extends on
-RV64I. With this fix, clang built RISC-V kernels now boot.
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/867
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Those last two bytes - 96 1f - aren't part of the original packet.
+
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/riscv/include/asm/cmpxchg.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index d969bab4a26b5..262e5bbb27760 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -179,7 +179,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -224,7 +224,7 @@
- 			RISCV_ACQUIRE_BARRIER				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -270,7 +270,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -316,7 +316,7 @@
- 			"	fence rw, rw\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index daa54486ab094..df2f7cc6dc03a 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1387,10 +1387,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
+ 
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1399,8 +1399,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
