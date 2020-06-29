@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F17C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 395BD21D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3852222281
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455770;
-	bh=oIYrLKBcbE1yGStjETpm0NAs49UI9Y8xkZBOAIb8+T4=;
+	s=default; t=1593455774;
+	bh=7VlxaRnLEAXuzxc1DqjOaN93RU3LWp7PGuQKVENWRGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVQYDqudIYzvaFjNqLQIEKbqkYAsul8M+Bniw7Bcpkw/ulNlL0lBxAgCiofT4TKu/
-	 Q8x3czpNFvWVOEmP87krn0GXOFig6DD07aaWuHQzsmYy3GdVkxjv/jkJ9mE9H+Sj71
-	 1c6y1SMvU9kWOUt93PQ7amLZbEsm9KeL0J2hXw60=
+	b=jrHdnz0g45z3FaEQq/vLmeyBfbNVQmnBudK36exm3qKf5HG4LUj/CdO20PjzEwXOj
+	 cRLUXUHuaaNSNkvafQBhmmkDB+mNL/YFTTaexSSdhPMEeqogmtAz74zKrCygyaNiGP
+	 irdy1FcKnCcGVQK0+SrTIPLgbWpk/cTMJvKHRg9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgF2SgI (ORCPT
+        id S1726082AbgF2SgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726632AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3766D2472E;
-        Mon, 29 Jun 2020 15:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35CA02468A;
+        Mon, 29 Jun 2020 15:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444050;
-        bh=oIYrLKBcbE1yGStjETpm0NAs49UI9Y8xkZBOAIb8+T4=;
+        s=default; t=1593443986;
+        bh=7VlxaRnLEAXuzxc1DqjOaN93RU3LWp7PGuQKVENWRGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WQ9kz0T7yv5z00QXACz86disFifERmadzjt9SvYDwsngKV0hpcJMVr9Xsn/Nqt0cY
-         ICB8LlTjjPCRJd3HiLbN5vnTMceP+emLlLEz+FyVVSgXJ9Be1ZGp88SmVADDUqpgil
-         bounURSy4uLN9DwU3iuN4edcxZvn1K3LQSSGP4dQ=
+        b=Hjb/P3hWbOp5rp0qejC78C+JuRJqvFcJicEYiIh1m073CDzK3quy6GUQ4ZfpD46t5
+         tSQsDqW2CIK2nf7QJ9I0FDWHZ+FxXhXynL7CvgQtO8IZENDuxEzPXzgIE1Z7rMbJBi
+         0IrY9ESK8HCSB5fIHTJN8Gleu46CUggJZoyO3VRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     SeongJae Park <sjpark@amazon.de>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 158/265] scsi: lpfc: Avoid another null dereference in lpfc_sli4_hba_unset()
-Date:   Mon, 29 Jun 2020 11:16:31 -0400
-Message-Id: <20200629151818.2493727-159-sashal@kernel.org>
+Cc:     Zheng Bin <zhengbin13@huawei.com>, Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 090/265] loop: replace kill_bdev with invalidate_bdev
+Date:   Mon, 29 Jun 2020 11:15:23 -0400
+Message-Id: <20200629151818.2493727-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,45 +66,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit 46da547e21d6cefceec3fb3dba5ebbca056627fc ]
+[ Upstream commit f4bd34b139a3fa2808c4205f12714c65e1548c6c ]
 
-Commit cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with
-general hdw_queues per cpu") has introduced static checker warnings for
-potential null dereferences in 'lpfc_sli4_hba_unset()' and commit 1ffdd2c0440d
-("scsi: lpfc: resolve static checker warning in lpfc_sli4_hba_unset") has
-tried to fix it.  However, yet another potential null dereference is
-remaining.  This commit fixes it.
+When a filesystem is mounted on a loop device and on a loop ioctl
+LOOP_SET_STATUS64, because of kill_bdev, buffer_head mappings are getting
+destroyed.
+kill_bdev
+  truncate_inode_pages
+    truncate_inode_pages_range
+      do_invalidatepage
+        block_invalidatepage
+          discard_buffer  -->clear BH_Mapped flag
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
+sb_bread
+  __bread_gfp
+  bh = __getblk_gfp
+  -->discard_buffer clear BH_Mapped flag
+  __bread_slow
+    submit_bh
+      submit_bh_wbc
+        BUG_ON(!buffer_mapped(bh))  --> hit this BUG_ON
 
-Link: https://lore.kernel.org/r/20200623084122.30633-1-sjpark@amazon.com
-Fixes: 1ffdd2c0440d ("scsi: lpfc: resolve static checker warning inlpfc_sli4_hba_unset")
-Fixes: cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with general hdw_queues per cpu")
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/lpfc/lpfc_init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/loop.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 4104bdcdbb6fd..70be1f5de8730 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -11895,7 +11895,8 @@ lpfc_sli4_hba_unset(struct lpfc_hba *phba)
- 	lpfc_sli4_xri_exchange_busy_wait(phba);
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index da693e6a834e5..418bb4621255a 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1289,7 +1289,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	if (lo->lo_offset != info->lo_offset ||
+ 	    lo->lo_sizelimit != info->lo_sizelimit) {
+ 		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
+ 	}
  
- 	/* per-phba callback de-registration for hotplug event */
--	lpfc_cpuhp_remove(phba);
-+	if (phba->pport)
-+		lpfc_cpuhp_remove(phba);
+ 	/* I/O need to be drained during transfer transition */
+@@ -1320,7 +1320,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
  
- 	/* Disable PCI subsystem interrupt */
- 	lpfc_sli4_disable_intr(phba);
+ 	if (lo->lo_offset != info->lo_offset ||
+ 	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		/* kill_bdev should have truncated all the pages */
++		/* invalidate_bdev should have truncated all the pages */
+ 		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+ 			err = -EAGAIN;
+ 			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+@@ -1565,11 +1565,11 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ 		return 0;
+ 
+ 	sync_blockdev(lo->lo_device);
+-	kill_bdev(lo->lo_device);
++	invalidate_bdev(lo->lo_device);
+ 
+ 	blk_mq_freeze_queue(lo->lo_queue);
+ 
+-	/* kill_bdev should have truncated all the pages */
++	/* invalidate_bdev should have truncated all the pages */
+ 	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+ 		err = -EAGAIN;
+ 		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
 -- 
 2.25.1
 
