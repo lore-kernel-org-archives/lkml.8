@@ -2,85 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8D2C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80119C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9308220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A99720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgF2THA (ORCPT
+        id S1730762AbgF2TGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:07:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:59051 "EHLO verein.lst.de"
+        Mon, 29 Jun 2020 15:06:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62621 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgF2TGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:35 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1ED6168C65; Mon, 29 Jun 2020 17:29:13 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 17:29:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
- operations
-Message-ID: <20200629152912.GA26172@lst.de>
-References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com> <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1730523AbgF2TG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:29 -0400
+IronPort-SDR: avHOxCyaMxH47z3257V8Qd/6fZ0BEtvTxD2IlF+DAUb9GSz91fbvjCh33rypwz0YX8MSynMu4q
+ fvWODqqDLAQA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126075721"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="126075721"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:20:35 -0700
+IronPort-SDR: nLpGrcumA+6GC498ABBr/dkx2dEJmkIN/APYDCN5/QDH/Zxi7OURf41G2yPvYoG5OkEQgOrQXE
+ To5dQOC5ULFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="303001166"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Jun 2020 02:20:33 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] perf scripts python: export-to-postgresql.py: Fix struct.pack() int argument
+Date:   Mon, 29 Jun 2020 12:19:50 +0300
+Message-Id: <20200629091955.17090-2-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629091955.17090-1-adrian.hunter@intel.com>
+References: <20200629091955.17090-1-adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:33:03AM -0700, Linus Torvalds wrote:
-> I thought there was just one very specific case of "oh, in certain
-> cases of setsockopt we don't know what size this address is and optlen
-> is ignored", so we have to just pass the pointer down to the protocol,
-> which is the point that knows how much of an address it wants..
+Python 3.8 is requiring that arguments being packed as integers are
+also integers.  Add int() accordingly.
 
-The setsock issue is a little more complicated.  Let me try to summarize
-it:
+ Before:
 
- - setsock takes a (user) pointer and len
- - unfortunately while the designed of the BSD socket API designed the
-   len to be correct some protocol implementations have been sloppy
-   and just use a hardcoded len for the value plus some other funnies
- - unfortunately there is some BPF magic that can attach to a socket
-   and be run, and that (and only that in the latest kernel) can cause
-   a setsockopt to take a kernel buffer.  One that was copied from
-   userspace earlier and had the BPF program run on it.
- - unfortunately we have about 90 ->setsockopt instances, and the BPF
-   hook is not specific to one particular of them.  In fact the
-   BPF program can run for options that don't even exist, and based on
-   my previous dicussion Facebook has setups that rely on that.
+   $ perf record -e intel_pt//u uname
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-postgresql.py perf_data_db branches calls
+   2020-06-25 16:09:10.547256 Creating database...
+   2020-06-25 16:09:10.733185 Writing to intermediate files...
+   Traceback (most recent call last):
+     File "/home/ahunter/libexec/perf-core/scripts/python/export-to-postgresql.py", line 1106, in synth_data
+       cbr(id, raw_buf)
+     File "/home/ahunter/libexec/perf-core/scripts/python/export-to-postgresql.py", line 1058, in cbr
+       value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, MHz, 4, percent)
+   struct.error: required argument is not an integer
+   Fatal Python error: problem in Python trace event handler
+   Python runtime state: initialized
 
-> Was that a misunderstanding on my part?
-> 
-> Because if there are tons and tons of places that want this "either
-> kernel or user" then we could still have a helper function for it, but
-> it means that the whole "limit the cases" advantage to some degree
-> goes away.
+   Current thread 0x00007f35d3695780 (most recent call first):
+   <no Python frame>
+   Aborted (core dumped)
 
-But except for setsockopt we don't really have anything like that left.
-There is some alpha arch code that would need to be duplicated for
-user vs kernel pointers, but I suspect it will get cleaner by that,
-and the messy s390 crypto driver whіch will be a bit of work, but all
-internal to that driver.
+ After:
 
-So based on that I'd rather get away without our flag and tag the
-kernel pointer case in setsockopt explicitly.
+   $ dropdb perf_data_db
+   $ rm -rf perf_data_db-perf-data
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-postgresql.py perf_data_db branches calls
+   2020-06-25 16:09:40.990267 Creating database...
+   2020-06-25 16:09:41.207009 Writing to intermediate files...
+   2020-06-25 16:09:41.270915 Copying to database...
+   2020-06-25 16:09:41.382030 Removing intermediate files...
+   2020-06-25 16:09:41.384630 Adding primary keys
+   2020-06-25 16:09:41.541894 Adding foreign keys
+   2020-06-25 16:09:41.677044 Dropping unused tables
+   2020-06-25 16:09:41.703761 Done
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: aba44287a224 ("perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events")
+Cc: stable@vger.kernel.org
+---
+ tools/perf/scripts/python/export-to-postgresql.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 7bd73a904b4e..d187e46c2683 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -1055,7 +1055,7 @@ def cbr(id, raw_buf):
+ 	cbr = data[0]
+ 	MHz = (data[4] + 500) / 1000
+ 	percent = ((cbr * 1000 / data[2]) + 5) / 10
+-	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, MHz, 4, percent)
++	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, int(MHz), 4, int(percent))
+ 	cbr_file.write(value)
+ 
+ def mwait(id, raw_buf):
+-- 
+2.17.1
+
