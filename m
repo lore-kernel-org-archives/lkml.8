@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E961C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44377C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73561206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21122206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467502;
-	bh=R2j6V0eZaLlrba2WbCE1v/ST4757gs8/EMzZo0IjirQ=;
+	s=default; t=1593467509;
+	bh=aR/n9YmbFGdYRzA85sOOciIhQUIcNMLgmVGFMBCDFl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfF5/bfuEb+YdCUaWTqYxwCuWwyXpkBoWCa1zzxh7vFpNet0iaYrMDQO8u5YYLAl2
-	 UwZIRbCbEs4wEJ1AZDhBdZ7X+1e7PsqQ7U/56z6ri9cG5KNODCkRLDVamHBaN6P9CD
-	 +8o7PI6i1bdVmQqMhlIG4Y0BMfqG2RJXWBXrsNZQ=
+	b=Bj/5qrOJh64G5pa+sYPmqHXVHrLobiaOo4cbwjAGXS704taRDslPwVrbsR1D7X5cI
+	 6CFmh3++0diXRXiZSfd14jiuIb19I14liC9wjWA8a3hNQiYnw0qvxyTJAD32Bgulva
+	 XLs2M6OJ91s3psIecCdjshNZREtvRVb9n5tQxca0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404565AbgF2Vvl (ORCPT
+        id S2404313AbgF2Vvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726658AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4952479A;
-        Mon, 29 Jun 2020 15:21:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D4F2474F;
+        Mon, 29 Jun 2020 15:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444105;
-        bh=R2j6V0eZaLlrba2WbCE1v/ST4757gs8/EMzZo0IjirQ=;
+        s=default; t=1593444069;
+        bh=aR/n9YmbFGdYRzA85sOOciIhQUIcNMLgmVGFMBCDFl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1OviV8XQhH3uAJBDH2eMw9RXdFn+G6UwWSUG3wPMJuhb62mebPXPCgUXkA40SUD3
-         2bJaN6Uhl1hpdCYwIKErV80N1WIJnNUfzcCg33+n+o2yT344dLGtzXhAS1tlTfpiAu
-         OjG5q4TWYr1oWM3+tqYSGp6P9+n254akVMpDEdoU=
+        b=oKBOCN7m4mtRZ7FT7VQdvpo9nche5LLGmLYKQBDbqO2+xYGUrXf3iYQmbqPQ4JBzn
+         qsj7YM2HCkM15ihvnSSA7bVvq0WQpdyNhI2RLAUBXu4Rg1CbvFYuH1tQpKBiRXoW85
+         GzBQLExsYLRa6JKkJl3vjzg6rk2ggJYZJrR+X2rQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Mammedov <imammedo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 216/265] kvm: lapic: fix broken vcpu hotplug
-Date:   Mon, 29 Jun 2020 11:17:29 -0400
-Message-Id: <20200629151818.2493727-217-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 178/265] afs: Fix storage of cell names
+Date:   Mon, 29 Jun 2020 11:16:51 -0400
+Message-Id: <20200629151818.2493727-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,43 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Mammedov <imammedo@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-commit af28dfacbe00d53df5dec2bf50640df33138b1fe upstream.
+[ Upstream commit 719fdd32921fb7e3208db8832d32ae1c2d68900f ]
 
-Guest fails to online hotplugged CPU with error
-  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
+The cell name stored in the afs_cell struct is a 64-char + NUL buffer -
+when it needs to be able to handle up to AFS_MAXCELLNAME (256 chars) + NUL.
 
-It's caused by the fact that kvm_apic_set_state(), which used to call
-recalculate_apic_map() unconditionally and pulled hotplugged CPU into
-apic map, is updating map conditionally on state changes.  In this case
-the APIC map is not considered dirty and the is not updated.
+Fix this by changing the array to a pointer and allocating the string.
 
-Fix the issue by forcing unconditional update from kvm_apic_set_state(),
-like it used to be.
+Found using Coverity.
 
-Fixes: 4abaffce4d25a ("KVM: LAPIC: Recalculate apic map in batch")
-Cc: stable@vger.kernel.org
-Signed-off-by: Igor Mammedov <imammedo@redhat.com>
-Message-Id: <20200622160830.426022-1-imammedo@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 989782dcdc91 ("afs: Overhaul cell database management")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/lapic.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/afs/cell.c     | 9 +++++++++
+ fs/afs/internal.h | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 9af25c97612a7..8967e320a9784 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2512,6 +2512,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 78ba5f9322879..296b489861a9a 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -154,10 +154,17 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
+ 		return ERR_PTR(-ENOMEM);
  	}
- 	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
  
-+	apic->vcpu->kvm->arch.apic_map_dirty = true;
- 	kvm_recalculate_apic_map(vcpu->kvm);
- 	kvm_apic_set_version(vcpu);
++	cell->name = kmalloc(namelen + 1, GFP_KERNEL);
++	if (!cell->name) {
++		kfree(cell);
++		return ERR_PTR(-ENOMEM);
++	}
++
+ 	cell->net = net;
+ 	cell->name_len = namelen;
+ 	for (i = 0; i < namelen; i++)
+ 		cell->name[i] = tolower(name[i]);
++	cell->name[i] = 0;
  
+ 	atomic_set(&cell->usage, 2);
+ 	INIT_WORK(&cell->manager, afs_manage_cell);
+@@ -203,6 +210,7 @@ parse_failed:
+ 	if (ret == -EINVAL)
+ 		printk(KERN_ERR "kAFS: bad VL server IP address\n");
+ error:
++	kfree(cell->name);
+ 	kfree(cell);
+ 	_leave(" = %d", ret);
+ 	return ERR_PTR(ret);
+@@ -483,6 +491,7 @@ static void afs_cell_destroy(struct rcu_head *rcu)
+ 
+ 	afs_put_vlserverlist(cell->net, rcu_access_pointer(cell->vl_servers));
+ 	key_put(cell->anonymous_key);
++	kfree(cell->name);
+ 	kfree(cell);
+ 
+ 	_leave(" [destroyed]");
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 98e0cebd5e5e9..c67a9767397d0 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -397,7 +397,7 @@ struct afs_cell {
+ 	struct afs_vlserver_list __rcu *vl_servers;
+ 
+ 	u8			name_len;	/* Length of name */
+-	char			name[64 + 1];	/* Cell name, case-flattened and NUL-padded */
++	char			*name;		/* Cell name, case-flattened and NUL-padded */
+ };
+ 
+ /*
 -- 
 2.25.1
 
