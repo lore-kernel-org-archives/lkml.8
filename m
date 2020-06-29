@@ -2,86 +2,133 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 622BE20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CB320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUchiO1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbgF2TGF (ORCPT
+        id S1730734AbgF2TGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
+        Mon, 29 Jun 2020 15:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730406AbgF2TCn (ORCPT
+        with ESMTP id S1730529AbgF2TCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:02:43 -0400
-X-Greylist: delayed 1419 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 29 Jun 2020 07:16:46 PDT
-Received: from www62.your-server.de (www62.your-server.de [IPv6:2a01:4f8:d0a:276a::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337D4C02E2E8;
-        Mon, 29 Jun 2020 07:16:46 -0700 (PDT)
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jpuDM-0001DH-6o; Mon, 29 Jun 2020 15:52:52 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jpuDL-0002Xa-QH; Mon, 29 Jun 2020 15:52:51 +0200
-Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        netdev@vger.kernel.org, davem@davemloft.net,
-        konrad.wilk@oracle.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        maximmi@mellanox.com, magnus.karlsson@intel.com,
-        jonathan.lemon@gmail.com
-References: <20200626134358.90122-1-bjorn.topel@gmail.com>
- <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net>
- <20200627070406.GB11854@lst.de>
- <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <e879bcc8-5f7d-b1b3-9b66-1032dec6245d@iogearbox.net>
-Date:   Mon, 29 Jun 2020 15:52:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B5BC031C5E;
+        Mon, 29 Jun 2020 10:44:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 67so4131721pfg.5;
+        Mon, 29 Jun 2020 10:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zajKLFBWYvbR/dn70eWOQZrMNaJGoW21UItsytAj4Pg=;
+        b=tUchiO1ZmHPcMUQ6nb6f+GBa4GwRs+UmAyEev+2pWA7R/2ylJcq4ZTXHOQeyLtbtKC
+         7YJaKxcjh5GVMzls4Q0y2vp3h7D94xr91HPZHTYdn3HRQgzE3dF8791jm9A3v6tBOYqe
+         WN40ApOIzVoFRQK49V44l03voWX+TUL36q1dDsY4yrM2g6KHfASEnDkSdp5miGCDrg3+
+         PqVW30sWMvrXokrQORmke/VQMfqTpNs7Ifvm3EwToEa83E23Sy5TQACWtjB4RMpJgQPl
+         5SmtFPk5qWymIYKBXzKyeUZl7u0NABgETrEC4t95CUwAH4Rcq+4JnrfPp4X4iM/CKla8
+         k0ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zajKLFBWYvbR/dn70eWOQZrMNaJGoW21UItsytAj4Pg=;
+        b=Hiyg0VM7FzFORSv7WbPWk/zWDfzusT9C853x3QcYrGF7uSB/PlrwIkjfMc8BqteZPi
+         D4w1WwunePVvphKkDXbkdZ1KPgSKMM1kC8xRVVGZ88xjj5r20t3RtsBQ/Xm3gn6QXfOw
+         jGOGeI4JmWLhBq5c1tyjr1wrobWBaxWmLOArhMTTo2VUA9xEgUzG1Otot38bWyooYI39
+         vWZN5BX18fE66alc6jSYnRmvQocfSicozZ3by9E6WChqQExTvlI3BWQ94u4m9MzoR25h
+         BvMm6y+GvyfH/JrsDX7w1ALlQtzzD9U8Rwab6YZszybK+6+gWH5PwFIudxWed2P6BB+U
+         h2Cg==
+X-Gm-Message-State: AOAM533Vqzx7Cl9NrhPmxMljb5ImMXuuZ3ljDs6nuyTFrzllL1Cb2aAz
+        hieoQKu/lihXeBu8EtCNIns=
+X-Google-Smtp-Source: ABdhPJzBcLLzwLTBp+SADDEiJRBUHsSxdEdo7/SpaPcZ8T2RJtU5PzmMtmzfSCa+VgpSvypvEpCRVA==
+X-Received: by 2002:a63:d74c:: with SMTP id w12mr11600066pgi.260.1593452642988;
+        Mon, 29 Jun 2020 10:44:02 -0700 (PDT)
+Received: from localhost ([160.16.113.140])
+        by smtp.gmail.com with ESMTPSA id j2sm202778pjf.4.2020.06.29.10.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:44:02 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Tue, 30 Jun 2020 01:43:52 +0800
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     devel@driverdev.osuosl.org, joe@perches.com,
+        dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
+        Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] staging: qlge: replace pr_err with netdev_err
+Message-ID: <20200629174352.euw4lckze2k7xtbm@Rk>
+References: <20200627145857.15926-1-coiby.xu@gmail.com>
+ <20200627145857.15926-5-coiby.xu@gmail.com>
+ <20200629053004.GA6165@f3>
 MIME-Version: 1.0
-In-Reply-To: <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25857/Sun Jun 28 15:28:36 2020)
+In-Reply-To: <20200629053004.GA6165@f3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/20 7:16 PM, Björn Töpel wrote:
-> On 2020-06-27 09:04, Christoph Hellwig wrote:
->> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
->>> Given there is roughly a ~5 weeks window at max where this removal could
->>> still be applied in the worst case, could we come up with a fix / proposal
->>> first that moves this into the DMA mapping core? If there is something that
->>> can be agreed upon by all parties, then we could avoid re-adding the 9%
->>> slowdown. :/
->>
->> I'd rather turn it upside down - this abuse of the internals blocks work
->> that has basically just missed the previous window and I'm not going
->> to wait weeks to sort out the API misuse.  But we can add optimizations
->> back later if we find a sane way.
-> 
-> I'm not super excited about the performance loss, but I do get
-> Christoph's frustration about gutting the DMA API making it harder for
-> DMA people to get work done. Lets try to solve this properly using
-> proper DMA APIs.
+On Mon, Jun 29, 2020 at 02:30:04PM +0900, Benjamin Poirier wrote:
+>On 2020-06-27 22:58 +0800, Coiby Xu wrote:
+>[...]
+>>  void ql_dump_qdev(struct ql_adapter *qdev)
+>>  {
+>> @@ -1611,99 +1618,100 @@ void ql_dump_qdev(struct ql_adapter *qdev)
+>>  #ifdef QL_CB_DUMP
+>>  void ql_dump_wqicb(struct wqicb *wqicb)
+>>  {
+>> -	pr_err("Dumping wqicb stuff...\n");
+>> -	pr_err("wqicb->len = 0x%x\n", le16_to_cpu(wqicb->len));
+>> -	pr_err("wqicb->flags = %x\n", le16_to_cpu(wqicb->flags));
+>> -	pr_err("wqicb->cq_id_rss = %d\n",
+>> -	       le16_to_cpu(wqicb->cq_id_rss));
+>> -	pr_err("wqicb->rid = 0x%x\n", le16_to_cpu(wqicb->rid));
+>> -	pr_err("wqicb->wq_addr = 0x%llx\n",
+>> -	       (unsigned long long)le64_to_cpu(wqicb->addr));
+>> -	pr_err("wqicb->wq_cnsmr_idx_addr = 0x%llx\n",
+>> -	       (unsigned long long)le64_to_cpu(wqicb->cnsmr_idx_addr));
+>> +	netdev_err(qdev->ndev, "Dumping wqicb stuff...\n");
+>
+>drivers/staging/qlge/qlge_dbg.c:1621:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
+> 1621 |  netdev_err(qdev->ndev, "Dumping wqicb stuff...\n");
+>      |             ^~~~
+>      |             cdev
+>
+>[...]
+>and many more like that
+>
+>Anyways, qlge_dbg.h is a dumpster. It has hundreds of lines of code
+>bitrotting away in ifdef land. See this comment from David Miller on the
+>topic of ifdef'ed debugging code:
+>https://lore.kernel.org/netdev/20200303.145916.1506066510928020193.davem@davemloft.net/
 
-Ok, fair enough, please work with DMA folks to get this properly integrated and
-restored then. Applied, thanks!
+Thank you for spotting this problem! This issue could be fixed by
+passing qdev to ql_dump_wqicb. Or are you suggesting we completely
+remove qlge_dbg since it's only for the purpose of debugging the driver
+by the developer?
+
+Btw, I'm curious how you make this compiling error occur. Do you manually trigger
+it via "QL_CB_DUMP=1 make M=drivers/staging/qlge" or use some automate
+tools?
+
+--
+Best regards,
+Coiby
