@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7109C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F14B20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59551206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467816;
-	bh=bLRl2rLPMhp83306SUIditzCcdXltvjcG8ReAqiFQ6g=;
+	s=default; t=1593467819;
+	bh=/VlVN8Y5e/NHbbuobpruoqHxCsCxqbSzEftUaUUQbk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6gdsCf63G9sAhIIxubMn9vArZiHhokHwTKYYUQCIFUwf9nz5XMA1BqeZcleyKxBr
-	 TkdgW117JhHDIQLkEM6VnGXf5YbUrIgx4tyq9xBk+UqAg6wTp6uVbGyMPI1mKz0DNc
-	 rl0sgnltc2OYLQX3I+Z5lyzICRs/sVbgHrFBYs78=
+	b=CPZ5ySWDEYfIBF8vEHLfp1eIsMja4FEJdw3BemtK4LnYbyBvUsmiL4uV1lhQojOT5
+	 4j8QKp8fUimjVlDKBU2XB2vQvGQunHZuiv2LNDgILxOyVH3WlWAClaCs5Htjje+1gY
+	 MUAq3HfLCcH8rkiMEgYs8Vg+EJiXJNgol9l5pLdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391625AbgF2V4z (ORCPT
+        id S2404555AbgF2V45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726505AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC2D246F7;
-        Mon, 29 Jun 2020 15:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 537A9247D0;
+        Mon, 29 Jun 2020 15:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444039;
-        bh=bLRl2rLPMhp83306SUIditzCcdXltvjcG8ReAqiFQ6g=;
+        s=default; t=1593444140;
+        bh=/VlVN8Y5e/NHbbuobpruoqHxCsCxqbSzEftUaUUQbk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+eegtsCompvnv+dB1mCiMa0hUZmeY5IQK8Zs6o65t/Ing6yiWOAi6GoENy7WeX9D
-         LaCifcoDeinUnEDeRAsvuCUqMjzLTl0FN9A1/10o/xy1+vj6J7ebA+2JZ9vxqgIP9S
-         2kGf+gTSBCWxE/fufMlnu61/awYEunkeqI5dH0Do=
+        b=QpzGDrOR9zmGVUsydN45xOS/sztsUBIfVO8+XgV8IW8Sv5yWTGmdEvCKp/i76bK+N
+         uN2bga6EwVhvTxRaU201dg3c2ds/xeuoAxQYcN/pyqNQ2tIhXvL8T4DwNOaUhDpIgc
+         MTyGvd06egS1h6l0JqbsVrQ3koPEDh5NYcHrlCD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 146/265] dma-direct: add missing set_memory_decrypted() for coherent mapping
-Date:   Mon, 29 Jun 2020 11:16:19 -0400
-Message-Id: <20200629151818.2493727-147-sashal@kernel.org>
+Cc:     Daniel Gomez <dagmcr@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 246/265] drm: rcar-du: Fix build error
+Date:   Mon, 29 Jun 2020 11:17:59 -0400
+Message-Id: <20200629151818.2493727-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,38 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Daniel Gomez <dagmcr@gmail.com>
 
-[ Upstream commit 1a2b3357e860d890f8045367b179c7e7e802cd71 ]
+commit 5f9af404eec82981c4345c9943be48422234e7ab upstream.
 
-When a coherent mapping is created in dma_direct_alloc_pages(), it needs
-to be decrypted if the device requires unencrypted DMA before returning.
+Select DRM_KMS_HELPER dependency.
 
-Fixes: 3acac065508f ("dma-mapping: merge the generic remapping helpers into dma-direct")
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Build error when DRM_KMS_HELPER is not selected:
+
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
+
+Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/dma/direct.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/rcar-du/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 98c445dcb308b..2270930f36f83 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -161,6 +161,12 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 				__builtin_return_address(0));
- 		if (!ret)
- 			goto out_free_pages;
-+		if (force_dma_unencrypted(dev)) {
-+			err = set_memory_decrypted((unsigned long)ret,
-+						   1 << get_order(size));
-+			if (err)
-+				goto out_free_pages;
-+		}
- 		memset(ret, 0, size);
- 		goto done;
- 	}
+diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+index 0919f1f159a49..f65d1489dc509 100644
+--- a/drivers/gpu/drm/rcar-du/Kconfig
++++ b/drivers/gpu/drm/rcar-du/Kconfig
+@@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
+ config DRM_RCAR_LVDS
+ 	tristate "R-Car DU LVDS Encoder Support"
+ 	depends on DRM && DRM_BRIDGE && OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL
+ 	select OF_FLATTREE
+ 	select OF_OVERLAY
 -- 
 2.25.1
 
