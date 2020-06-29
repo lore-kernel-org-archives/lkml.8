@@ -2,194 +2,137 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50292C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80AB20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C72020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="SaS/sbLk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/hTM7XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgF2UNR (ORCPT
+        id S1732863AbgF2TaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:13:17 -0400
-Received: from mout.web.de ([212.227.15.14]:58117 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730983AbgF2UNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:13:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593461583;
-        bh=Q3WSo3iqrFbKXC7DLY/3is3L/ZI6GDoUzruhP1cV/to=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=SaS/sbLk0BNHnhgxU7MvVPkBupbfR7gkvP6+7UTp/1mOc7lHZyZLgywkSM4pnWHAC
-         cK2+z/uv9pgso7PYPoA3S/pOLF+2onbEJP5JxYNkQKR42haHi4zN67QjlSorJoz5Df
-         m5H5lFqOOI252929tikgCVKHjZ3q0eJzHjJxtYPU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.123.16]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M3jsn-1iyeT42K25-00rJzV; Mon, 29
- Jun 2020 08:26:51 +0200
-Subject: Re: [PATCH v2] ext4: fix direct I/O read error
-To:     Jiang Ying <jiangying8582@126.com>,
-        Wang Long <wanglong19@meituan.com>, linux-ext4@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>
-References: <1593400165-114818-1-git-send-email-jiangying8582@126.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <22f650fd-6348-30d8-763a-8e03b0772f10@web.de>
-Date:   Mon, 29 Jun 2020 08:26:27 +0200
+        Mon, 29 Jun 2020 15:30:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25701 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732807AbgF2TaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593459007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/rozIRZd2Z+z5ejQC/EdCJboYjDdy+vJEupYT4pSKo0=;
+        b=V/hTM7XB50m9Kuc7AcgnYYNGh4Ng3MgmS/LaBBEh0+2dFG8O4oS1UeRcsITjTRKqc4qeTt
+        eHeB033RqlUURYiw4myCfNGX/VNPBxa5FfRHQOflni2f1hLK+cxi3nvwKTMCR0Q+5sDAO9
+        EMoYa5r0TO1dKQtqMLIvZ9PpozT7iNY=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-msZzHqchMRycRMFTAle1qQ-1; Mon, 29 Jun 2020 09:28:07 -0400
+X-MC-Unique: msZzHqchMRycRMFTAle1qQ-1
+Received: by mail-qv1-f70.google.com with SMTP id a12so6120174qvt.22
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=/rozIRZd2Z+z5ejQC/EdCJboYjDdy+vJEupYT4pSKo0=;
+        b=SI6zwWqwO7Lxip1jAvaO1GlOZNk30zQE1O/mTeED+mvw0TIYUSrewuoxrxQ8xnhToW
+         PR14BLDDa+dDBbl1GUP8s88brzZYV3HdK1WeEyl0ydCspaipn6vM1Gu4Z2UHyvmXRD2F
+         Epust4ksYJ54wWx4NqtsBHCgqbNTbb2DHKRbDsAInlHSA7TDn/JbB3URB0opOFUPH5za
+         BKQtIb6moDjNojLl8rRZRaO2XwthTYJjqLRpLo5SdfPz8CVCeFIR1PV+7EuzG4eysXBr
+         61BtujSuInBMNfXrlvUqed6J/fWJSmfZ/ZNZ04pqRkRgqVEZMVRMRtcUjXSCuEV442pb
+         dOwA==
+X-Gm-Message-State: AOAM531arp6/thp9Wb4saSiVuFXHfEOBwXAjpVE51HLLcl6z+0LpnKAP
+        RbxJ7ktWEjHBUBZp//KFAD8UCLfyS+LqF5jSYEXZjCy0bnotX7sl4LW9HzMwfUHjzHmQ8QlMnwn
+        OC79xKQ0V+h1JK3JdPULlHeeH
+X-Received: by 2002:a0c:b246:: with SMTP id k6mr15065267qve.146.1593437287342;
+        Mon, 29 Jun 2020 06:28:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwms1o8tyqQwrkXCJ8cIREd5x9uNk+bPTzS0ou0s1jv5IQbRinAHtIoLnXqHLMHBn8uHQRMvg==
+X-Received: by 2002:a0c:b246:: with SMTP id k6mr15065252qve.146.1593437287140;
+        Mon, 29 Jun 2020 06:28:07 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x13sm17008095qts.57.2020.06.29.06.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 06:28:06 -0700 (PDT)
+Subject: Re: [PATCH] fpga: dfl: improve configuration of dfl pci devices
+To:     "Wu, Hao" <hao.wu@intel.com>, "Xu, Yilun" <yilun.xu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
+References: <20200628151813.7679-1-trix@redhat.com>
+ <20200629021924.GB2620@yilunxu-OptiPlex-7050>
+ <DM6PR11MB38196ED29A3E0BBAD7B246C1856E0@DM6PR11MB3819.namprd11.prod.outlook.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <26b7c920-7b9f-b753-4a49-258e09b771fa@redhat.com>
+Date:   Mon, 29 Jun 2020 06:28:04 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1593400165-114818-1-git-send-email-jiangying8582@126.com>
+In-Reply-To: <DM6PR11MB38196ED29A3E0BBAD7B246C1856E0@DM6PR11MB3819.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6DkxKtQCaX1WqVxtxjIC4UtI3gb108ulowLy+O6ULPizOMczSQ8
- QIl3o8HtDNZOXTAv33a7BioAOPjwf6CnT/K51Z016trMu2u0X5E5bgQIdM8O6XGEAfIVFDe
- FRXkN6lQ1y3dgUJvS/VOnOce/Y/8Wbmha/09jbPW3KE1gslmkiJL+BKSfiyJqHi7ULObV1k
- AJtZ50k3KIB1bWn5u6Dqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q6hm88/EICM=:+o2JQ5iJKVKQP26hXF8s1p
- LZLXY+aUxMpPQRHSVpJrQszqhO4jw73NajznJpHPzXIhSnHwmkPeZxwVYcenKkPEqNtyKcesq
- dFhw30Lkb6rrRGYJQyVMBOP1D7ej5jKKBedo3ybj5ml8qjuzys8I1zyQ/g5BpF4UR9YywNnjJ
- RTkdErAQUYMZJ0VBxvATHd9HB5mxb6fTUJIO7Q2U2VVFySLMsQzdW5hcWRY5MD2Khucezmiux
- iYTFyaLoanWZ6ywz6+XBy10RsVX38wU6SoPhCUk6nWod6LwvsZh+7fPyzWd8TyR2in+W71vNe
- aP+gafLNF7Rg2DIz6Xz7Ap6F+N3iwadkBQPI2npaX2bk9gmxGJeBfnFwS7dylpGO+0qQadNeT
- NB1I9ETQtfjOQ8qvzXD2VC/onNZ+CnnsHubQ4N3c8rT0BTgZqC3b8JY1uap9JYK9THI7gpxkd
- AcZOsutIqHIBCIEp6TOPBLxLie1zoStEu+OmetYIAx3B+Ba8xHoMmieih+H7v3L0dxMb5dXAG
- uh85/1lLdyiXy1se/6snhoZk/zYDbDKZwWL2hGdWllbusTgoD4eNi0MlJNhHigZmqeGhCGPHB
- xHyu2GcpGnbKGBw0VepN7rpFpMPzWKBhyed+/xFmh9+YSzhqa9u0kl1JeH1GVw5TMx2O7S6tj
- l/xoh7Gx9T/HQryvNuy6CEfhVZW49qJK/EkT666ut/pnQPWZMRbAVsdonrOn+Gswp+3BvB/ll
- 0ObkNmlBIuFHHvgT76IcnMbsic3QwMtknRQYu1cjW39PlOjr35f33EkFLWmZER9zHBMZB4d6F
- nZcp2lhAslH6UX0wK8jgsNf/cwVxx4PleBVVJgn8Rjhxa/zUFDkooj6K0cpWHwdx3UhAHoah8
- fSnlUIIfTBT1bFdA5nyOtJo8eMzh9imNw6f4Domtpcj6ijY/HqqAyFPi60dm4URZBMMbpf829
- 4Cp05bJ6fI0RhYt/w3KRC6LcqIqcia1v/U9MTtgEK12Yypl2fxGqAsIHBcW102eIMJB8EXmC7
- W0RBksweVBpTCqGGtUKKJKlE5UFLlEPypfryL7jQ2VDpeZ1q5bn/jITJT7Nvfn6NRxPFgspsK
- RsYsuLiXmtIfwBDwYDtpfMeuXfhvDKR3JGOyC4BxaunzQBj/siDDHScNx+PvcC/r1BCNlhEeF
- qnYTfEwcPOy8aa9yWmh+cvwKe5AxfCatG8TQJeXAtil4Vxzzua8FA7oWjzc1FB4PoNkZ2x5gt
- shmMrCnkkGDyM5Xv9CHedH1iZDY7ybU9tw2LFkA==
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")=
-.
 
-* I suggest to move this tag to the bottom of the commit message.
+On 6/28/20 8:12 PM, Wu, Hao wrote:
+>> -----Original Message-----
+>> From: linux-fpga-owner@vger.kernel.org <linux-fpga-owner@vger.kernel.org>
+>> On Behalf Of Xu Yilun
+>> Sent: Monday, June 29, 2020 10:19 AM
+>> To: trix@redhat.com
+>> Cc: mdf@kernel.org; linux-fpga@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; Wu, Hao <hao.wu@intel.com>;
+>> matthew.gerlach@linux.intel.com
+>> Subject: Re: [PATCH] fpga: dfl: improve configuration of dfl pci devices
+>>
+>> I think maybe we don't have to select them all. It is now possible for
+>> FPGA DFL boards to work without FME or AFU, providing limited
+>> functionality. It is possible designers trim the bitstream for their
+>> purpose, and also need a smaller driver set.
+>>
+> Yes, we hope that this dfl-pci could be a common module shared by
+> different cards. Some device doesn't have FME, e.g. some VF device
+> with AFU only, some device has FME, but no PR support, and in the
+> future, it's possible to add new modules, or something replacing AFU
+> or FME, so we don't have to select all here.
+>
+>> I think we may add "default FPGA_DFL" for FPGA_DFL_FME,
+>> FPGA_DFL_FME_MGR and others to make life easier.
+> It's hard to say it's easier for everybody, e.g. I am a user of N3000, but
+> I have to unselect the PR modules, as they are default Yes as proposed?
+> Maybe it's better to let user select what they want, unless we find
+> something really common needed under DFL framework.
 
-* This specification is usually preferred without a dot at the line end.
+I get your point about n3000, but that card is not currently supported in the public. Currently there is really only pac10, the 0x9c4 device.  Once n3000 (and d5005) is out, it will have several sub devices that will also so need to be manually configured.  While a developer of the n3000 will know which subdevices are needed, someone just building the kernel will not.  So would expect there to be something like
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D9ebcfadb0610322ac537dd7aa5=
-d9cbc2b2894c68#n183
+CONFIG_FPGA_DFL_N3000
 
+select CONFIG_DFL_PCI
 
-> This commit caused ext4 direct I/O read error when the read size is not
-> alignment with block size.
+select CONFIG_DFL_SUBDEV_1
 
-Wording alternative:
-aligned =E2=80=A6
+..
 
+On PF vs FP, yes only afu parts are needed.  But i doubt anyone builds a VF specific kernel. And if folks wanted to not use the fme parts they would not have to load it's module at run time.
 
-> (1) Make the file that is not alignment with block size:
+I would like a top level config what auto selects all of the submodules needed based on the card. I think maybe that is CONFIG_FPGA_DFL_PAC10. so we will be ready for CONFIG_FPGA_DFL_N3000 and CONFIG_FPGA_DFL_D5005 and what ever comes later.
 
-=E2=80=A6 a file =E2=80=A6 aligned =E2=80=A6
+Tom
 
+> Hao
+>
 
-> (3) Compiling the script:
-
-(3) Compile the source file:
-
-
-> (4) Exec the script:
-
-(4) Run the test program:
-
-
-> =E2=80=A6 Thanks.
-
-I propose to omit this word here.
-
-
-> ---
->  fs/ext4/inode.c | 6 ++++++
-
-Would you like to add patch version descriptions here?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D9ebcfadb0610322ac537dd7aa5=
-d9cbc2b2894c68#n751
-
-
-=E2=80=A6
-> @@ -3821,6 +3821,12 @@ static ssize_t ext4_direct_IO_read(struct kiocb *=
-iocb, struct iov_iter *iter)
->  	struct inode *inode =3D mapping->host;
->  	size_t count =3D iov_iter_count(iter);
->  	ssize_t ret;
-> +	loff_t offset =3D iocb->ki_pos;
-> +	loff_t size;
-> +
-> +	size =3D i_size_read(inode);
-
-How do you think about to use the following source code variant?
-
-+	loff_t size =3D i_size_read(inode);
-
-
-> +	if (offset >=3D size)
-> +		return 0;
-
-Will any further fine-tuning matter for this function implementation?
-
-Regards,
-Markus
