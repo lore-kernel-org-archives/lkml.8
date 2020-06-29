@@ -2,100 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85568C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4646E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB5C2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466367;
-	bh=Uoq248fVFUS7nUmxb0KXFHCYIbklwNYP4+WvgbTtC1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SVc3mGvb1i6KKVYcHk2GPQ4k7f2kvwr/nH/dw5tVsYcH14awf48nRyQ+G9lnox49+
-	 HkCpPVxdfZBjT6iYJisfK3njvtfSJ46745EId5V2eKAkxmHS8kmRmyeeZpb9fHoNk4
-	 F4Oc9sRNUho6aPA5BQwDLIVdMngs1TIGczyFUFGg=
+	s=default; t=1593466373;
+	bh=mJaCYI4btU77BjT4PDJBi8Zu5C6oM/B6lAiEyv9SjQg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q59cpTryal5gUZve2vGcn1p3wGzergQhhxhp0x1/QnyYGpBXoJp9SisNLZSpc8S5q
+	 QlxC+iRgBwN8Cn5Q4barlGqpJP8KQOa6vmFMR/jHQbUVIxd6MuFAzFzogGqzet8MKm
+	 GxmZfdEc/lRQl1po5gAoUJavcbEChAf7g8egcRWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgF2Vco (ORCPT
+        id S2388692AbgF2Vcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgF2SlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728653AbgF2SlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3880C23C92;
-        Mon, 29 Jun 2020 11:43:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3875523F5A;
+        Mon, 29 Jun 2020 15:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593431020;
-        bh=Uoq248fVFUS7nUmxb0KXFHCYIbklwNYP4+WvgbTtC1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XpeHWz9EqU044sGwnG7+DdW/u7FkYkft+eJigTVeZK0S7erx+eQJm3cTif2Jnqubr
-         JZNXSHPfFZsaoN1WacMh0LsuISkXsGW8rvwjy/6rlvPQm2EiSCuT1JbKk1RXhlraRj
-         fSNWAmxvj/yNBQp9VsB8r5nmHK1PVohkw3clDgP4=
-Date:   Mon, 29 Jun 2020 13:43:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        "kurahul@cadene.com" <kurahul@cadene.com>,
-        Sanket Parmar <sparmar@cadence.com>
-Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
-Message-ID: <20200629114315.GA121549@kroah.com>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-3-pawell@cadence.com>
- <20200626134344.GA4030531@kroah.com>
- <DM6PR07MB5529755E72D87EFDD1867A7BDD6E0@DM6PR07MB5529.namprd07.prod.outlook.com>
+        s=default; t=1593443917;
+        bh=mJaCYI4btU77BjT4PDJBi8Zu5C6oM/B6lAiEyv9SjQg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F8YjdP1CsY4J5xIafnF6zQpduO9cRSp2yxgR552MdRL/DfiCduQv6Ba6FEHhTFKul
+         F0Gi93N77BOrjL4QkGftr2AvZRPTGPUC65wNZulz/FpCwoN7rsLRKLyNP33IJ0JwPm
+         AM6i1VgdJkQTPEFbRnB+1knUzLG5GxLg35STrm28=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 018/265] openvswitch: take into account de-fragmentation/gso_size in execute_check_pkt_len
+Date:   Mon, 29 Jun 2020 11:14:11 -0400
+Message-Id: <20200629151818.2493727-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR07MB5529755E72D87EFDD1867A7BDD6E0@DM6PR07MB5529.namprd07.prod.outlook.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:35:32AM +0000, Pawel Laszczak wrote:
-> 
-> >
-> >On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
-> >> Patch adds PCI specific glue driver that creates and registers in-system
-> >> cdns-usbssp platform device.
-> >
-> >Ick, no.
-> >
-> >Platform devices are ONLY to be used for when you have a real platform
-> >device.  If your device is a PCI device, use that.  Don't try to be cute
-> >and make a platform device when you don't have one please.
-> >
-> >> Thanks to that we will be able to use
-> >> the cdns-usbssp platform driver for USBSS-DEV controller
-> >> build on PCI board.
-> >
-> >No, fix up that driver to not care about it being a platform device,
-> >make it just accept any type of 'struct device'.
-> >
-> Ok, I will remove it form this driver but probably in a few months I will have to add 
-> such support.  
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-For a real platform device, that's fine, but that is not what you are
-doing here.
+[ Upstream commit 17843655708e1941c0653af3cd61be6948e36f43 ]
 
-thanks,
+ovs connection tracking module performs de-fragmentation on incoming
+fragmented traffic. Take info account if traffic has been de-fragmented
+in execute_check_pkt_len action otherwise we will perform the wrong
+nested action considering the original packet size. This issue typically
+occurs if ovs-vswitchd adds a rule in the pipeline that requires connection
+tracking (e.g. OVN stateful ACLs) before execute_check_pkt_len action.
+Moreover take into account GSO fragment size for GSO packet in
+execute_check_pkt_len routine
 
-greg k-h
+Fixes: 4d5ec89fc8d14 ("net: openvswitch: Add a new action check_pkt_len")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/openvswitch/actions.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index fc0efd8833c84..2611657f40cac 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -1169,9 +1169,10 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+ 				 struct sw_flow_key *key,
+ 				 const struct nlattr *attr, bool last)
+ {
++	struct ovs_skb_cb *ovs_cb = OVS_CB(skb);
+ 	const struct nlattr *actions, *cpl_arg;
++	int len, max_len, rem = nla_len(attr);
+ 	const struct check_pkt_len_arg *arg;
+-	int rem = nla_len(attr);
+ 	bool clone_flow_key;
+ 
+ 	/* The first netlink attribute in 'attr' is always
+@@ -1180,7 +1181,11 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+ 	cpl_arg = nla_data(attr);
+ 	arg = nla_data(cpl_arg);
+ 
+-	if (skb->len <= arg->pkt_len) {
++	len = ovs_cb->mru ? ovs_cb->mru + skb->mac_len : skb->len;
++	max_len = arg->pkt_len;
++
++	if ((skb_is_gso(skb) && skb_gso_validate_mac_len(skb, max_len)) ||
++	    len <= max_len) {
+ 		/* Second netlink attribute in 'attr' is always
+ 		 * 'OVS_CHECK_PKT_LEN_ATTR_ACTIONS_IF_LESS_EQUAL'.
+ 		 */
+-- 
+2.25.1
+
