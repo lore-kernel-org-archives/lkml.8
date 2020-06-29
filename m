@@ -2,129 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C12B020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F07020786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461606;
+	bh=PP0ajkeGP6eoBJXOFpuMrFRvLXRQW3qx0S6W7XWD21Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zWX6K9Llh6IB1r2IT32FmJ5fRaB0IUXbhxMcsEkOZluaBKDv/yYUJNvcMkJ2xtufg
+	 /wmfm76llAdBsBLZ4AlBZDbadRo2+bM+O8DTwjhL1m/1Xte8W1TYOkKcis/3epNSII
+	 EwWERxWTYA0oJsmtttpb6mTaJKgTAczpL1xs83rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgF2UNX (ORCPT
+        id S1731777AbgF2UNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:13:23 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:41870 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731185AbgF2UNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:13:16 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq09N-0006mI-1L; Mon, 29 Jun 2020 14:13:09 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq09M-0004y7-3b; Mon, 29 Jun 2020 14:13:08 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:08:36 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <87sged3a9n.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732858AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 280D12522C;
+        Mon, 29 Jun 2020 15:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444946;
+        bh=PP0ajkeGP6eoBJXOFpuMrFRvLXRQW3qx0S6W7XWD21Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Gh4D+5HZyQC3magTfqfy/IwIru4fI3CM1x1Q7vyd/MLafcRH4rbIzImsS4nTMtfk8
+         zlPE7Q9sf+F7+yxGHTe2MzccpIuUNpcOEPP0970vr1u5n4MfhQF5lGeIfQKChRg2zg
+         pfJI1y062QNrpJrqUMY0cpFXNu13oOX7/FTKhPGI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Longfang Liu <liulongfang@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 044/131] USB: ehci: reopen solution for Synopsys HC bug
+Date:   Mon, 29 Jun 2020 11:33:35 -0400
+Message-Id: <20200629153502.2494656-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq09M-0004y7-3b;;;mid=<87sged3a9n.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+cqHAFjSvF5nxXSqbZnPcbIo/0ve3+EU8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 15/15] umd: Stop using split_argv
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Longfang Liu <liulongfang@huawei.com>
 
-There is exactly one argument so there is nothing to split.  All
-split_argv does now is cause confusion and avoid the need for a cast
-when passing a "const char *" string to call_usermodehelper_setup.
+commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
 
-So avoid confusion and the possibility of an odd driver name causing
-problems by just using a fixed argv array with a cast in the call to
-call_usermodehelper_setup.
+A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
+might cause the host controller not issuing ping.
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Bug description:
+After indicating an Interrupt on Async Advance, the software uses the
+doorbell mechanism to delete the Next Link queue head of the last
+executed queue head. At this time, the host controller still references
+the removed queue head(the queue head is NULL). NULL reference causes
+the host controller to lose the USB device.
+
+Solution:
+After deleting the Next Link queue head, when has_synopsys_hc_bug set
+to 1，the software can write one of the valid queue head addresses to
+the ASYNCLISTADDR register to allow the host controller to get
+the valid queue head. in order to solve that problem, this patch set
+the flag for Huawei Kunpeng920
+
+There are detailed instructions and solutions in this patch:
+commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
+
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/umd.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/usb/host/ehci-pci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/umd.c b/kernel/umd.c
-index 4188b71de267..ff79fb16d738 100644
---- a/kernel/umd.c
-+++ b/kernel/umd.c
-@@ -160,27 +160,21 @@ static void umd_cleanup(struct subprocess_info *info)
- int fork_usermode_driver(struct umd_info *info)
- {
- 	struct subprocess_info *sub_info;
--	char **argv = NULL;
-+	const char *argv[] = { info->driver_name, NULL };
- 	int err;
+diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+index fe9422d3bcdc4..fcfad5c298a9f 100644
+--- a/drivers/usb/host/ehci-pci.c
++++ b/drivers/usb/host/ehci-pci.c
+@@ -216,6 +216,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
+ 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
+ 		ehci->frame_index_bug = 1;
+ 		break;
++	case PCI_VENDOR_ID_HUAWEI:
++		/* Synopsys HC bug */
++		if (pdev->device == 0xa239) {
++			ehci_info(ehci, "applying Synopsys HC workaround\n");
++			ehci->has_synopsys_hc_bug = 1;
++		}
++		break;
+ 	}
  
- 	if (WARN_ON_ONCE(info->tgid))
- 		return -EBUSY;
- 
- 	err = -ENOMEM;
--	argv = argv_split(GFP_KERNEL, info->driver_name, NULL);
--	if (!argv)
--		goto out;
--
--	sub_info = call_usermodehelper_setup(info->driver_name, argv, NULL,
--					     GFP_KERNEL,
-+	sub_info = call_usermodehelper_setup(info->driver_name,
-+					     (char **)argv, NULL, GFP_KERNEL,
- 					     umd_setup, umd_cleanup, info);
- 	if (!sub_info)
- 		goto out;
- 
- 	err = call_usermodehelper_exec(sub_info, UMH_WAIT_EXEC);
- out:
--	if (argv)
--		argv_free(argv);
- 	return err;
- }
- EXPORT_SYMBOL_GPL(fork_usermode_driver);
+ 	/* optional debug port, normally in the first BAR */
 -- 
-2.25.0
+2.25.1
 
