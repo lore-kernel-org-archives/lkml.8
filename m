@@ -2,147 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA114C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E59206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459315;
-	bh=VS1CPfZGGl3IXFs3WZontZttp1TBg5R/bIFBI+ppRM4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCOdBJVIDhfrJJkdQGb4IzIggft8RbV69HjcU7+eP1733pc2yIvCT/uRd7OUbTttI
-	 tS3y6WRRn8Sk1uSZ3rroYkQGJ07M9DUmHNxig+fE+bv0kr6DTneSPYfj1fxGqDjyoU
-	 odBnRgpaAUnYQTROPFfvEVJGE8pPnBilj2fDhWjQ=
+	by mail.kernel.org (Postfix) with ESMTP id BFC6220672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="b9otqqiV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbgF2TbS (ORCPT
+        id S1733239AbgF2TfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732687AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D13252E6;
-        Mon, 29 Jun 2020 15:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445116;
-        bh=VS1CPfZGGl3IXFs3WZontZttp1TBg5R/bIFBI+ppRM4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rcYFLq2mFBehsid0JInu6MTBf6IJiaRHNOi2XtfS1rdIKBzemdGE3drAdXmRQJ/Sd
-         mIMatbU/65TbiDC4BCneLbiZ1zgjdTVj8lhUnTrzFdskTwlzZnr+ymw9/0ssW1sSBJ
-         Obn7pKr7jVKC344PP1Ms2Z5lOjad1qvWUd4hnljA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 22/78] net: core: reduce recursion limit value
-Date:   Mon, 29 Jun 2020 11:37:10 -0400
-Message-Id: <20200629153806.2494953-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:35:17 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:24916 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732761AbgF2TbR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:31:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593459077; x=1624995077;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=CVcq2zndXVsddYQ8O6xnjIwELA++4s2vt+dBW25RPxw=;
+  b=b9otqqiVz5IzO+TpgIpIl5x1fTTmOSQG3OMqvKf/mqzDz7ttXDj9cy26
+   wjH+Yz5v/7wnS0xjesx81aJ/isv60akcXmXlfsnBUQNTHbwvQbgb2vfQh
+   Jdy7RDAj9Iez+cpJouBD4vlDLPkIyE6m2cb3C98As0xr/wUV4lhcX5wE8
+   g=;
+IronPort-SDR: IqI4/h1k6y6GKcc3DjPyyObPuwfrJpzrWV6Wad85FwQ4Pbpf/ah8+z9QegclRz+AL7FxXn7PPI
+ qJ++tEW4Qo/Q==
+X-IronPort-AV: E=Sophos;i="5.75,295,1589241600"; 
+   d="scan'208";a="54762156"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 29 Jun 2020 17:45:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 586D0A24B4;
+        Mon, 29 Jun 2020 17:45:46 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 17:45:44 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 17:45:36 +0000
+Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-8-andraprs@amazon.com>
+ <20200629162013.GA718066@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <b87e2eeb-39cf-8de5-0f5f-1db04b3e2794@amazon.com>
+Date:   Mon, 29 Jun 2020 20:45:25 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629162013.GA718066@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D39UWB004.ant.amazon.com (10.43.161.148) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
-
-[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
-
-In the current code, ->ndo_start_xmit() can be executed recursively only
-10 times because of stack memory.
-But, in the case of the vxlan, 10 recursion limit value results in
-a stack overflow.
-In the current code, the nested interface is limited by 8 depth.
-There is no critical reason that the recursion limitation value should
-be 10.
-So, it would be good to be the same value with the limitation value of
-nesting interface depth.
-
-Test commands:
-    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
-    ip link set vxlan10 up
-    ip a a 192.168.10.1/24 dev vxlan10
-    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
-
-    for i in {9..0}
-    do
-        let A=$i+1
-	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
-	ip link set vxlan$i up
-	ip a a 192.168.$i.1/24 dev vxlan$i
-	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
-	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
-    done
-    hping3 192.168.10.2 -2 -d 60000
-
-Splat looks like:
-[  103.814237][ T1127] =============================================================================
-[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
-[  103.873187][ T1127] -----------------------------------------------------------------------------
-[  103.873187][ T1127]
-[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
-[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
-[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  103.883006][ T1127] Call Trace:
-[  103.883324][ T1127]  dump_stack+0x96/0xdb
-[  103.883716][ T1127]  slab_err+0xad/0xd0
-[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
-[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
-[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
-[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.886316][ T1127]  check_slab+0x97/0xb0
-[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
-[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
-[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
-[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
-[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
-[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
-[ ... ]
-
-Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 31fc54757bf2e..3512c337a4a6b 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -2449,7 +2449,7 @@ void synchronize_net(void);
- int init_dummy_netdev(struct net_device *dev);
- 
- DECLARE_PER_CPU(int, xmit_recursion);
--#define XMIT_RECURSION_LIMIT	10
-+#define XMIT_RECURSION_LIMIT	8
- 
- static inline int dev_recursion_level(void)
- {
--- 
-2.25.1
+CgpPbiAyOS8wNi8yMDIwIDE5OjIwLCBHcmVnIEtIIHdyb3RlOgo+Cj4gT24gTW9uLCBKdW4gMjIs
+IDIwMjAgYXQgMTE6MDM6MThQTSArMDMwMCwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+PiArc3Rh
+dGljIGludCBfX2luaXQgbmVfaW5pdCh2b2lkKQo+PiArewo+PiArICAgICBzdHJ1Y3QgcGNpX2Rl
+diAqcGRldiA9IHBjaV9nZXRfZGV2aWNlKFBDSV9WRU5ET1JfSURfQU1BWk9OLAo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBDSV9ERVZJQ0VfSURfTkUsIE5V
+TEwpOwo+PiArICAgICBpbnQgcmMgPSAtRUlOVkFMOwo+PiArCj4+ICsgICAgIGlmICghcGRldikK
+Pj4gKyAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsKPiBJY2ssIHRoYXQncyBhIF92ZXJ5XyBv
+bGQtc2Nob29sIHdheSBvZiBiaW5kaW5nIHRvIGEgcGNpIGRldmljZS4gIFBsZWFzZQo+IGp1c3Qg
+YmUgYSAicmVhbCIgcGNpIGRyaXZlciBhbmQgeW91ciBwcm9iZSBmdW5jdGlvbiB3aWxsIGJlIGNh
+bGxlZCBpZgo+IHlvdXIgaGFyZHdhcmUgaXMgcHJlc2VudCAob3Igd2hlbiBpdCBzaG93cyB1cC4p
+ICBUbyBkbyBpdCB0aGlzIHdheQo+IHByZXZlbnRzIHlvdXIgZHJpdmVyIGZyb20gYmVpbmcgYXV0
+by1sb2FkZWQgZm9yIHdoZW4geW91ciBoYXJkd2FyZSBpcwo+IHNlZW4gaW4gdGhlIHN5c3RlbSwg
+YXMgd2VsbCBhcyBsb3RzIG9mIG90aGVyIHRoaW5ncy4KClRoaXMgY2hlY2sgaXMgbWFpbmx5IGhl
+cmUgaW4gdGhlIGNhc2UgYW55IGNvZGViYXNlIGlzIGFkZGVkIGJlZm9yZSB0aGUgCnBjaSBkcml2
+ZXIgcmVnaXN0ZXIgY2FsbCBiZWxvdy4KCkFuZCBpZiB3ZSBsb2cgYW55IGVycm9yIHdpdGggZGV2
+X2VycigpIGluc3RlYWQgb2YgcHJfZXJyKCkgYmVmb3JlIHRoZSAKZHJpdmVyIHJlZ2lzdGVyLgoK
+VGhhdCBjaGVjayB3YXMgb25seSBmb3IgbG9nZ2luZyBwdXJwb3NlcywgaWYgZG9uZSB3aXRoIGRl
+dl9lcnIoKS4gSSAKcmVtb3ZlZCB0aGUgY2hlY2sgaW4gdjUuCgo+PiArCj4+ICsgICAgIGlmICgh
+emFsbG9jX2NwdW1hc2tfdmFyKCZuZV9jcHVfcG9vbC5hdmFpbCwgR0ZQX0tFUk5FTCkpCj4+ICsg
+ICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+ICsKPj4gKyAgICAgbXV0ZXhfaW5pdCgmbmVf
+Y3B1X3Bvb2wubXV0ZXgpOwo+PiArCj4+ICsgICAgIHJjID0gcGNpX3JlZ2lzdGVyX2RyaXZlcigm
+bmVfcGNpX2RyaXZlcik7Cj4gTmljZSwgeW91IGRpZCBpdCByaWdodCBoZXJlLCBidXQgd2h5IHRo
+ZSBhYm92ZSBjcmF6eSB0ZXN0Pwo+Cj4+ICsgICAgIGlmIChyYyA8IDApIHsKPj4gKyAgICAgICAg
+ICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsCj4+ICsgICAgICAgICAgICAgICAgICAgICAiRXJyb3Ig
+aW4gcGNpIHJlZ2lzdGVyIGRyaXZlciBbcmM9JWRdXG4iLCByYyk7Cj4+ICsKPj4gKyAgICAgICAg
+ICAgICBnb3RvIGZyZWVfY3B1bWFzazsKPj4gKyAgICAgfQo+PiArCj4+ICsgICAgIHJldHVybiAw
+Owo+IFlvdSBsZWFrZWQgYSByZWZlcmVuY2Ugb24gdGhhdCBwY2kgZGV2aWNlLCBkaWRuJ3QgeW91
+PyAgTm90IGdvb2QgOigKClllcywgdGhlIHBjaSBnZXQgZGV2aWNlIGNhbGwgbmVlZHMgaXRzIHBh
+aXIgLSBwY2lfZGV2X3B1dCgpLiBJIGFkZGVkIGl0IApoZXJlIGFuZCBmb3IgdGhlIG90aGVyIG9j
+Y3VycmVuY2VzIHdoZXJlIGl0IHdhcyBtaXNzaW5nLgoKVGhhbmtzIGZvciByZXZpZXcuCgpBbmRy
+YQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJl
+ZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNp
+IENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJh
+dGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
 
