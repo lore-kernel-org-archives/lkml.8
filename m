@@ -6,104 +6,89 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD056C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5AA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE85E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466861;
-	bh=FvnI01MrqwrGCSn1pXUy+BedbEZpbcC56ZDWbIF8mFk=;
+	s=default; t=1593466864;
+	bh=F9yc76dllBQnO/0SNt01rAhctcmIbR2BvDh67iPOI7Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nQAWulQLHLKiHDK3TMDxKAZKGtXhYoYzI8tD4dgSR4mp8xL3u5IX+JCO9/XX5te6B
-	 w2+Pv5jHrXyy7ajF7FFka8/v7OqmniOuqlEAzfM9dsi1SsZMxVBZX0XF4YNq+51dWj
-	 kGDF3ypc6x4SF4VSpPnwPPWwpkLufzFKE/Y4vKOM=
+	b=ffMZWn8/b47ZfwgZPgUHmOWaaxFqYfXzFyZ2+zG+1yhlxmIajZd1s+Qi7N2+1W2LH
+	 slBQwxAivCeKYLcLSJlubhpQi3wXTXicucZDzGmEqm7cYpQyAUgheZ5i7xIic5iR9F
+	 8Dwb9QDL4g2uqTabU6YKxmNsIHNUjPKbV9YAphak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391371AbgF2VlA (ORCPT
+        id S2403858AbgF2VlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgF2SkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728213AbgF2SkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:21 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994E1235FF;
-        Mon, 29 Jun 2020 09:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9026E239ED;
+        Mon, 29 Jun 2020 10:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593424331;
-        bh=FvnI01MrqwrGCSn1pXUy+BedbEZpbcC56ZDWbIF8mFk=;
+        s=default; t=1593428384;
+        bh=F9yc76dllBQnO/0SNt01rAhctcmIbR2BvDh67iPOI7Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SBvp+p2JVOK+mbuCO0DyD4m6cTuqvLnfQwf0MoDwwc8qToNCpesGe8dGwvR4NHuwO
-         Um0wpFOI/f3glHy7M5ECcY13Z3m0pS1xZjX2DpfInnFAL2wXMZ7j9bYOC/Yc/h/5lx
-         oe0ArLBMZ0u5XA50l1TuR2YiQ+bH3SrCAP+UPgQ0=
-Date:   Mon, 29 Jun 2020 15:22:07 +0530
+        b=u7i4gLoBFJh8FDswEs4uWCnzV8kp5cBaykYs9RrKg54vCoL3/C0EaOFpjx1DrhjfS
+         4mNJ4glCP/jr3gLNi8kdWFWb1vABqEYXsI71Lc4tw/tmxGVS0uQm2WRHvx/eLCmk1m
+         b/FFCTozE9w12rAUVRu6J6hMGYAE5c8rVRP+XLHc=
+Date:   Mon, 29 Jun 2020 16:29:39 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Amit Tomer <amittomer25@gmail.com>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
- engine
-Message-ID: <20200629095207.GG2599@vkoul-mobl>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
- <20200624061529.GF2324254@vkoul-mobl>
- <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com>
+To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        linux-kernel@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 1/3] ALSA: compress: document the compress audio state
+ machine
+Message-ID: <20200629105939.GK2599@vkoul-mobl>
+References: <20200629075002.11436-1-vkoul@kernel.org>
+ <20200629075002.11436-2-vkoul@kernel.org>
+ <c29b3199-cebd-2153-5530-e75f76aa8b4b@linux.intel.com>
+ <20200629093429.GA2599@vkoul-mobl>
+ <3a43467a-5432-a3ef-2250-2ac1054539d0@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a43467a-5432-a3ef-2250-2ac1054539d0@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-06-20, 13:49, Amit Tomer wrote:
-> Hi Vinod,
-> 
-> Thanks for having a look and providing the comments.
-> 
-> > Is the .compatible documented, Documentation patch should come before
-> > the driver use patch in a series
-> 
-> Yes, this new compatible string is documented in patch (05/10).
-> I would make it as a patch (1/10).
-> 
-> > >  static int owl_dma_probe(struct platform_device *pdev)
-> > >  {
-> > >       struct device_node *np = pdev->dev.of_node;
-> > >       struct owl_dma *od;
-> > >       int ret, i, nr_channels, nr_requests;
-> > > +     const struct of_device_id *of_id =
-> > > +                             of_match_device(owl_dma_match, &pdev->dev);
+On 29-06-20, 12:02, Amadeusz Sławiński wrote:
+> On 6/29/2020 11:34 AM, Vinod Koul wrote:
 > >
-> > You care about driver_data rather than of_id, so using
-> > of_device_get_match_data() would be better..
-> 
-> Okay. would take care of it in next version.
-> 
-> > >       od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
-> > >       if (!od)
-> > > @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
-> > >       dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
-> > >                nr_channels, nr_requests);
-> > >
-> > > +     od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
+> > Not sure, this is not in the version I posted, arrow is from setup ->
+> > prepare. See
+> https://lore.kernel.org/alsa-devel/20200629075002.11436-2-vkoul@kernel.org/
 > >
-> > Funny casts, I dont think you need uintptr_t!
-> 
-> But without this cast, clang compiler emits following warning:
-> 
-> warning: cast to smaller integer type 'enum owl_dma_id' from 'const void *'
->           [-Wvoid-pointer-to-enum-cast]
+> > I don't know how it got reversed in your version, maybe the MUA messed
+> > up??
+> >
+> Ah... I must have edited it myself when preparing edited version, sorry for
+> noise ;)
 
-If you use of_device_get_match_data() you will not fall into this :)
+No worries
+
+> 
+> > a compr_write() moves from SETUP -> PREPARE. Fixing that above looks
+> > better version of mine..
+> Yes, I feel it is easier to understand, A redirect confused me for a short
+> bit when I first looked at graph and it can be easily avoided.
+
+Thanks for the suggestion, it was a good one indeed, I will send the
+update shortly
 
 -- 
 ~Vinod
