@@ -2,160 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1217C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BB620781
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AECA20781
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466463;
+	bh=jARi/R4D3lgWV8NV1MNg8COPXHS+phn3bVWAQun1iT0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X1JD6xhfqTj+cDZRwGDDOachBFCFZeK0A2LdXh1+PaVIpzjSic5hFRZXenZHQ8eTF
+	 3iso0cQxyYH6QWAlGE74RTZaNqFiD416ONtCafvAjLMZ2D+7Yvfaqc9VD35SVGpPrq
+	 rBHr3EbSZhzxO7yKJ/GOGyJhGA5aUT75ZdNU6iZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgF2VeI (ORCPT
+        id S1728792AbgF2VeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:34:08 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:39055 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728611AbgF2Sk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:58 -0400
-Received: (qmail 410173 invoked by uid 1000); 29 Jun 2020 13:40:55 -0400
-Date:   Mon, 29 Jun 2020 13:40:55 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200629174055.GA408860@rowland.harvard.edu>
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
- <20200629161536.GA405175@rowland.harvard.edu>
- <df54c02f-dbe9-08d5-fec8-835788caf164@acm.org>
+        Mon, 29 Jun 2020 17:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728610AbgF2Sk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:57 -0400
+Received: from ziggy.de (unknown [213.195.114.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DD423A03;
+        Mon, 29 Jun 2020 11:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593428511;
+        bh=jARi/R4D3lgWV8NV1MNg8COPXHS+phn3bVWAQun1iT0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gJff2v4TXpfy6hF9V6idvI8o6WC2i340W5y4znsunb9GxFAXu2t/OxlZeOr4CANCE
+         v3g+wgVTjfgtjZKl617qqJw7N+PNK3gGuMBcDHarUaPqWnyMR5N6EyMprUao3IZOp8
+         qsythEBwnsU7SofzrpVhPdVTaGeMNKm0wslVZVMY=
+From:   matthias.bgg@kernel.org
+To:     arend.vanspriel@broadcom.com, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
+        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
+        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        wright.feng@cypress.com, matthias.bgg@kernel.org,
+        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
+Subject: [PATCH v2] brcmfmac: Transform compatible string for FW loading
+Date:   Mon, 29 Jun 2020 13:01:41 +0200
+Message-Id: <20200629110141.22419-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df54c02f-dbe9-08d5-fec8-835788caf164@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:56:49AM -0700, Bart Van Assche wrote:
-> On 2020-06-29 09:15, Alan Stern wrote:
-> > Aha.  Looking at this more closely, it's apparent that the code in 
-> > blk-core.c contains a logic bug: It assumes that if the BLK_MQ_REQ_PREEMPT 
-> > flag is set then the request can be issued regardless of the queue's 
-> > runtime status.  That is not correct when the queue is suspended.
-> 
-> Please clarify why this is not correct.
+From: Matthias Brugger <mbrugger@suse.com>
 
-As I understand it, BLK_MQ_REQ_PREEMPT is supposed to mean (among other 
-things) that this request may be issued as part of the procedure for 
-putting a device into a low-power state or returning it to a high-power 
-state.  Consequently, requests with that flag set must be allowed while 
-the queue is in the RPM_SUSPENDING or RPM_RESUMING runtime states -- as 
-opposed to ordinary requests, which are allowed only in the RPM_ACTIVE 
-state.
+The driver relies on the compatible string from DT to determine which
+FW configuration file it should load. The DTS spec allows for '/' as
+part of the compatible string. We change this to '-' so that we will
+still be able to load the config file, even when the compatible has a
+'/'. This fixes explicitly the firmware loading for
+"solidrun,cubox-i/q".
 
-In the RPM_SUSPENDED state, however, the queue is entirely inactive.  Even 
-if a request were to be issued somehow, it would fail because the system 
-would not be able to transmit it to the device.  In other words, when the 
-queue is in the RPM_SUSPENDED state, a resume must be requested before 
-_any_ request can be issued.
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-> > Index: usb-devel/block/blk-core.c
-> > ===================================================================
-> > --- usb-devel.orig/block/blk-core.c
-> > +++ usb-devel/block/blk-core.c
-> > @@ -423,7 +423,8 @@ int blk_queue_enter(struct request_queue
-> >  			 * responsible for ensuring that that counter is
-> >  			 * globally visible before the queue is unfrozen.
-> >  			 */
-> > -			if (pm || !blk_queue_pm_only(q)) {
-> > +			if ((pm && q->rpm_status != RPM_SUSPENDED) ||
-> > +			    !blk_queue_pm_only(q)) {
-> >  				success = true;
-> >  			} else {
-> >  				percpu_ref_put(&q->q_usage_counter);
-> 
-> Does the above change make it impossible to bring a suspended device
-> back to the RPM_ACTIVE state if the BLK_MQ_REQ_NOWAIT flag is set?
+---
 
-The only case affected by this change is when BLK_MQ_REQ_PREEMPT is set 
-and the queue is in the RPM_SUSPENDED state.  If BLK_MQ_REQ_NOWAIT was 
-also set, the original code would set "success" to true, allowing the 
-request to proceed even though it could not be carried out immediately -- 
-a bug.
+Changes in v2:
+- use strscpy instead of strncpy (Hans de Goede)
+- use strlen(tmp) + 1 for allocation (Hans de Goede, kernel test robot)
 
-With the patch, such a request will fail without resuming the device.  I 
-don't know whether that is the desired behavior or not, but at least it's 
-not obviously a bug.
+ .../wireless/broadcom/brcm80211/brcmfmac/of.c  | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-It does seem odd that blk_queue_enter() tests the queue's pm_only status 
-and the request flag in two different spots (here and below).  Why does it 
-do this?  It seems like an invitation for bugs.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+index b886b56a5e5a..5f0ebaf4d64e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+@@ -17,7 +17,6 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+ {
+ 	struct brcmfmac_sdio_pd *sdio = &settings->bus.sdio;
+ 	struct device_node *root, *np = dev->of_node;
+-	struct property *prop;
+ 	int irq;
+ 	u32 irqf;
+ 	u32 val;
+@@ -25,8 +24,21 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+ 	/* Set board-type to the first string of the machine compatible prop */
+ 	root = of_find_node_by_path("/");
+ 	if (root) {
+-		prop = of_find_property(root, "compatible", NULL);
+-		settings->board_type = of_prop_next_string(prop, NULL);
++		int i;
++		char *board_type;
++		const char *tmp;
++
++		of_property_read_string_index(root, "compatible", 0, &tmp);
++
++		/* get rid of '/' in the compatible string to be able to find the FW */
++		board_type = devm_kzalloc(dev, strlen(tmp) + 1, GFP_KERNEL);
++		strscpy(board_type, tmp, sizeof(board_type));
++		for (i = 0; i < strlen(board_type); i++) {
++			if (board_type[i] == '/')
++				board_type[i] = '-';
++		}
++		settings->board_type = board_type;
++
+ 		of_node_put(root);
+ 	}
+ 
+-- 
+2.27.0
 
-> > @@ -448,8 +449,7 @@ int blk_queue_enter(struct request_queue
-> >  
-> >  		wait_event(q->mq_freeze_wq,
-> >  			   (!q->mq_freeze_depth &&
-> > -			    (pm || (blk_pm_request_resume(q),
-> > -				    !blk_queue_pm_only(q)))) ||
-> > +			    blk_pm_resume_queue(pm, q)) ||
-> >  			   blk_queue_dying(q));
-> >  		if (blk_queue_dying(q))
-> >  			return -ENODEV;
-> > Index: usb-devel/block/blk-pm.h
-> > ===================================================================
-> > --- usb-devel.orig/block/blk-pm.h
-> > +++ usb-devel/block/blk-pm.h
-> > @@ -6,11 +6,14 @@
-> >  #include <linux/pm_runtime.h>
-> >  
-> >  #ifdef CONFIG_PM
-> > -static inline void blk_pm_request_resume(struct request_queue *q)
-> > +static inline int blk_pm_resume_queue(const bool pm, struct request_queue *q)
-> >  {
-> > -	if (q->dev && (q->rpm_status == RPM_SUSPENDED ||
-> > -		       q->rpm_status == RPM_SUSPENDING))
-> > -		pm_request_resume(q->dev);
-> > +	if (!q->dev || !blk_queue_pm_only(q))
-> > +		return 1;	/* Nothing to do */
-> > +	if (pm && q->rpm_status != RPM_SUSPENDED)
-> > +		return 1;	/* Request allowed */
-> > +	pm_request_resume(q->dev);
-> > +	return 0;
-> >  }
-> 
-> Does the above change, especially the " && q->rpm_status !=
-> RPM_SUSPENDED" part, make it impossible to bring a suspended device back
-> to the RPM_ACTIVE state?
-
-Just the opposite -- the change makes it _possible_ for a 
-BLK_MQ_REQ_PREEMPT request to bring a suspended device back to the 
-RPM_ACTIVE state.
-
-Look at the existing code: If pm is true then blk_pm_request_resume() will 
-be skipped, so the device won't be resumed.  With this patch -- in 
-particular with the "&& q->rpm_status != RPM_SUSPENDED" part added -- the 
-call won't be skipped and so the resume will take place.
-
-The rather complicated syntax of the wait_event() call in the existing 
-code contributes to this confusion.  One of the things my patch tries to 
-do is make the code more straightforward and easier to grasp.
-
-I admit that there are parts to this thing I don't understand.  The 
-wait_event() call in blk_queue_enter(), for example: If we are waiting for 
-the device to leave the RPM_SUSPENDED state (or enter the RPM_ACTIVE 
-state), where does q->mq_freeze_wq get woken up?  There's no obvious spot 
-in blk_{pre|post}_runtime_resume().
-
-Alan Stern
