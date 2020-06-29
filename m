@@ -2,99 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22379C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE34CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D14206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="atALUCdR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0UaMBvXK"
+	by mail.kernel.org (Postfix) with ESMTP id AA3A5206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467899;
+	bh=9eTJkBPtQzWZrbi1EuMCFB1y10kAK0/xqrmC+Tcg7u8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2WVAmOEpu1QzRjWXZXhxETpMkWD6tjW3eSWy2ONA21ktJ2NnIvYEYO17IxLBjmuVf
+	 VGaYVCQSo6y01587JZV365MyUp31cJwJaISmh1ogNxhyz2L9+TVsn6EMUUoeh0kE4m
+	 KxTXDZrq1Jjt563FzJpRScToCCVIUZJe6bxRp5Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391512AbgF2V6H (ORCPT
+        id S2391638AbgF2V6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgF2V6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:58:05 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FEDC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:58:05 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593467881;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qCfJAHafYa/AK9R1oGXdsMRC8dDD1+/B6dAzjfz2e8A=;
-        b=atALUCdRSCjttKOnEF7ACaejPFRnLCROGTU2TYcrTGB+x4/vvCK2w3z0nOYKLM29guozda
-        v7GCs60PvZimi55BI+pF9yKr/oUNB2pfhzkq7fNd86NV8iVTuqfRYKSZwZexUdfeagQSsQ
-        r1F6NS0luJXHyEo3nMPC7GqnxrpGXEVvOdhan1/v12ZxlCOJrLWrUEucsY22IFVjXWjuhM
-        YrYO6Zgzj0fEHOiEM+CO2MkJKNZZmCoA+gIHSwB53Ee5SDqiG6MXljMOzzertMSSFJkEGB
-        dyhtUpSOIV8vYMaows5UqYXNooA2Afc7Lu0+X+b8nSliReFAIoK1N09pDp8WnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593467881;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qCfJAHafYa/AK9R1oGXdsMRC8dDD1+/B6dAzjfz2e8A=;
-        b=0UaMBvXKer7+fp5NEnvGteOT9ErcAAfKjSd3iwxofOplHufM1dhe3a4AYC6EWgF6qzN1Oq
-        lry2ysi0HSt+ASBQ==
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless ringbuffer
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
-        <20200618144919.9806-4-john.ogness@linutronix.de>
-        <20200625082838.GF6156@alley> <87sgeh3m5j.fsf@jogness.linutronix.de>
-        <20200629140445.GK6156@alley>
-Date:   Mon, 29 Jun 2020 23:57:59 +0200
-In-Reply-To: <20200629140445.GK6156@alley> (Petr Mladek's message of "Mon, 29
-        Jun 2020 16:04:45 +0200")
-Message-ID: <87ftad8rh4.fsf@jogness.linutronix.de>
+        Mon, 29 Jun 2020 17:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726468AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73DD9247D3;
+        Mon, 29 Jun 2020 15:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444141;
+        bh=9eTJkBPtQzWZrbi1EuMCFB1y10kAK0/xqrmC+Tcg7u8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ucJIYhq9S1FDv/8xh8z19L7xkm9XqRP0rXrUMLFaRciJn+fRp8s7g0Xfprapw+7NW
+         k+KkL35IYhakt/4ipJhT7vXiyfwCc8G4ErpTP111C4YQgHXm4EjLdP5gkB26d9H830
+         1ttooSkLsoH37t9sA+RR7fOHpll7Bokt1bFb6t5A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 247/265] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Mon, 29 Jun 2020 11:18:00 -0400
+Message-Id: <20200629151818.2493727-248-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-29, Petr Mladek <pmladek@suse.com> wrote:
->> @@ @@ void __init setup_log_buf(int early)
->> +	prb_init(&printk_rb_dynamic,
->> +		 new_log_buf, order_base_2(new_log_buf_len),
->> +		 new_dict_buf, order_base_2(new_log_buf_len),
->> +		 new_descs, order_base_2(new_descs_count));
->
-> order_base_2() is safe. But the result might be tat some allocated
-> space is not used.
->
-> I would prefer to make sure that new_log_buf_len is rounded, e.g.
-> by roundup_pow_of_two(), at the beginning of the function. Then we
-> could use ilog2() here.
+From: Denis Efremov <efremov@linux.com>
 
-new_log_buf_len can only be set within log_buf_len_update(), and it
-is already doing exactly what you want:
+commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
 
-        if (size)
-                size = roundup_pow_of_two(size);
-        if (size > log_buf_len)
-                new_log_buf_len = (unsigned long)size;
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-I can switch to ilog2() instead of the more conservative order_base_2().
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-John Ogness
+diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
+index b57c37ddd164c..c7fbb7932f379 100644
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2127,7 +2127,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
+ 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
+ 			ret = -EINVAL;
+ 
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
+ 
+ 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
+-- 
+2.25.1
+
