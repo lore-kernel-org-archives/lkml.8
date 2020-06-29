@@ -2,171 +2,87 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60981C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D14C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E93C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E47B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgF2TFC (ORCPT
+        id S1730666AbgF2TEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:05:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:37928 "EHLO foss.arm.com"
+        Mon, 29 Jun 2020 15:04:52 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41094 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbgF2TEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:04:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7DD1143D;
-        Mon, 29 Jun 2020 04:56:48 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 509373F73C;
-        Mon, 29 Jun 2020 04:56:47 -0700 (PDT)
-Subject: Re: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Kevin Tian <kevin.tian@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <20200627031532.28046-1-baolu.lu@linux.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
-Date:   Mon, 29 Jun 2020 12:56:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200627031532.28046-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1730646AbgF2TEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:04:47 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5790F200FDF;
+        Mon, 29 Jun 2020 08:06:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 53FAC200EFB;
+        Mon, 29 Jun 2020 08:06:07 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BBF2A40323;
+        Mon, 29 Jun 2020 14:05:51 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
+        sboyd@kernel.org, oleksandr.suvorov@toradex.com,
+        stefan.agner@toradex.com, arnd@arndb.de, peng.fan@nxp.com,
+        abel.vesa@nxp.com, aisheng.dong@nxp.com, fugang.duan@nxp.com,
+        daniel.baluta@nxp.com, yuehaibing@huawei.com, sfr@canb.auug.org.au,
+        viro@zeniv.linux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 09/10] clk: imx8mq: Support module build
+Date:   Mon, 29 Jun 2020 13:54:01 +0800
+Message-Id: <1593410042-10598-10-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
+References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-27 04:15, Lu Baolu wrote:
-> The hardware assistant vfio mediated device is a use case of iommu
-> aux-domain. The interactions between vfio/mdev and iommu during mdev
-> creation and passthr are:
-> 
-> - Create a group for mdev with iommu_group_alloc();
-> - Add the device to the group with
->          group = iommu_group_alloc();
->          if (IS_ERR(group))
->                  return PTR_ERR(group);
-> 
->          ret = iommu_group_add_device(group, &mdev->dev);
->          if (!ret)
->                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->                           iommu_group_id(group));
-> - Allocate an aux-domain
-> 	iommu_domain_alloc()
-> - Attach the aux-domain to the physical device from which the mdev is
->    created.
-> 	iommu_aux_attach_device()
-> 
-> In the whole process, an iommu group was allocated for the mdev and an
-> iommu domain was attached to the group, but the group->domain leaves
-> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
-> 
-> This adds iommu_group_get/set_domain() so that group->domain could be
-> managed whenever a domain is attached or detached through the aux-domain
-> api's.
+Support building i.MX8MQ clock driver as module.
 
-Letting external callers poke around directly in the internals of 
-iommu_group doesn't look right to me.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ drivers/clk/imx/Kconfig      | 2 +-
+ drivers/clk/imx/clk-imx8mq.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-If a regular device is attached to one or more aux domains for PASID 
-use, iommu_get_domain_for_dev() is still going to return the primary 
-domain, so why should it be expected to behave differently for mediated 
-devices? AFAICS it's perfectly legitimate to have no primary domain if 
-traffic-without-PASID is invalid.
+diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
+index 0811bed..060f9c3 100644
+--- a/drivers/clk/imx/Kconfig
++++ b/drivers/clk/imx/Kconfig
+@@ -30,7 +30,7 @@ config CLK_IMX8MP
+ 	    Build the driver for i.MX8MP CCM Clock Driver
+ 
+ config CLK_IMX8MQ
+-	bool "IMX8MQ CCM Clock Driver"
++	tristate "IMX8MQ CCM Clock Driver"
+ 	depends on ARCH_MXC
+ 	select MXC_CLK
+ 	help
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index a64aace..2861c31 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -643,3 +643,4 @@ static struct platform_driver imx8mq_clk_driver = {
+ 	},
+ };
+ module_platform_driver(imx8mq_clk_driver);
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
-Robin.
-
-> Fixes: 7bd50f0cd2fd5 ("vfio/type1: Add domain at(de)taching group helpers")
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->   drivers/iommu/iommu.c | 28 ++++++++++++++++++++++++++++
->   include/linux/iommu.h | 14 ++++++++++++++
->   2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index d43120eb1dc5..e2b665303d70 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -715,6 +715,34 @@ int iommu_group_set_name(struct iommu_group *group, const char *name)
->   }
->   EXPORT_SYMBOL_GPL(iommu_group_set_name);
->   
-> +/**
-> + * iommu_group_get_domain - get domain of a group
-> + * @group: the group
-> + *
-> + * This is called to get the domain of a group.
-> + */
-> +struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
-> +{
-> +	return group->domain;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_group_get_domain);
-> +
-> +/**
-> + * iommu_group_set_domain - set domain for a group
-> + * @group: the group
-> + * @domain: iommu domain
-> + *
-> + * This is called to set the domain for a group. In aux-domain case, a domain
-> + * might attach or detach to an iommu group through the aux-domain apis, but
-> + * the group->domain doesn't get a chance to be updated there.
-> + */
-> +void iommu_group_set_domain(struct iommu_group *group,
-> +			    struct iommu_domain *domain)
-> +{
-> +	group->domain = domain;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_group_set_domain);
-> +
->   static int iommu_create_device_direct_mappings(struct iommu_group *group,
->   					       struct device *dev)
->   {
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 5f0b7859d2eb..ff88d548a870 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -496,6 +496,9 @@ extern void iommu_group_set_iommudata(struct iommu_group *group,
->   				      void *iommu_data,
->   				      void (*release)(void *iommu_data));
->   extern int iommu_group_set_name(struct iommu_group *group, const char *name);
-> +extern struct iommu_domain *iommu_group_get_domain(struct iommu_group *group);
-> +extern void iommu_group_set_domain(struct iommu_group *group,
-> +				   struct iommu_domain *domain);
->   extern int iommu_group_add_device(struct iommu_group *group,
->   				  struct device *dev);
->   extern void iommu_group_remove_device(struct device *dev);
-> @@ -840,6 +843,17 @@ static inline int iommu_group_set_name(struct iommu_group *group,
->   	return -ENODEV;
->   }
->   
-> +static inline
-> +struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void iommu_group_set_domain(struct iommu_group *group,
-> +					  struct iommu_domain *domain)
-> +{
-> +}
-> +
->   static inline int iommu_group_add_device(struct iommu_group *group,
->   					 struct device *dev)
->   {
-> 
