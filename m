@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F99DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC9E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE61206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460216;
-	bh=SUPHN01or/VFs4cUd20YAltwSpjTjb7X1I0nXO18N0A=;
+	s=default; t=1593460222;
+	bh=YfelfwEUbcmCm/7aOeEl7t6zt0M79VdUgGvywh71Yzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avwGpsMstG7rzElXzWyl2lI0HSb5uO9Xx4oglkXmWIUdk2wImqbnpSphF+xCwyt9/
-	 jZrVVy33W6Vu9DNeGdy2N98HVk7IuEhbeh6Q0sBST/5xbQ/1asgmkcPUQxWMXmJS7N
-	 ywAWNDa/JKqJ4Vhm0O05vzZvO22l29d55weFxMO4=
+	b=2cXY3PtvVRqIfkdEPd63GVNvR0o+F6zfqKNve5QnVkgphmmI/VfouIZdT0zDStLtV
+	 +TNy4sMDkYmCGGG3x8XzYtubGWxCznt29yDeR+RrNv24D0QByUpm+m/md/E91E2qDM
+	 5QEjNOY6YkEWbtXzMSw7UdJ/u/48cb1FU2rPtMek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgF2TuO (ORCPT
+        id S1730648AbgF2TuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387753AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:37 -0400
+        id S1732703AbgF2Tkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0607B248A7;
-        Mon, 29 Jun 2020 15:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C03E24803;
+        Mon, 29 Jun 2020 15:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444401;
-        bh=SUPHN01or/VFs4cUd20YAltwSpjTjb7X1I0nXO18N0A=;
+        s=default; t=1593444329;
+        bh=YfelfwEUbcmCm/7aOeEl7t6zt0M79VdUgGvywh71Yzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRDGLDHaIU82FxeGWheB9hdMNug7SxWeQYVlVDKKac1BHMP2Yywm06QljF08aSytW
-         tv17N4cPBEF4Q+GAhFc3ELZmcPyJ6fbpBcyj4PHp430VShPkp9yrGgcUvqOJECDWdA
-         W9fl5knhveqQyniZNDr8tgK4QvqUQUsEJYMrQa3Q=
+        b=BJ0v7dXOU2iXSFDa4wmF344S5avXRRwtuNdcdurQG55rYPXq8Hzoh3lozWHBfsr59
+         NoIVJZOljnrQ6OGyNBzrzNbPtbWwV8qYbYq8+hQc8BnFBDli0Dkpp2Q6A+0f7AZCT8
+         7+M7RXtxOEDkorYAEI3zEZ49r9hnMC2BXGzxEZcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Xiumei Mu <xmu@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 079/178] devmap: Use bpf_map_area_alloc() for allocating hash buckets
-Date:   Mon, 29 Jun 2020 11:23:44 -0400
-Message-Id: <20200629152523.2494198-80-sashal@kernel.org>
+Cc:     Sabrina Dubroca <sd@queasysnail.net>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 003/178] geneve: allow changing DF behavior after creation
+Date:   Mon, 29 Jun 2020 11:22:28 -0400
+Message-Id: <20200629152523.2494198-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -68,66 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 99c51064fb06146b3d494b745c947e438a10aaa7 ]
+[ Upstream commit 56c09de347e40804fc8dad155272fb9609e0a97b ]
 
-Syzkaller discovered that creating a hash of type devmap_hash with a large
-number of entries can hit the memory allocator limit for allocating
-contiguous memory regions. There's really no reason to use kmalloc_array()
-directly in the devmap code, so just switch it to the existing
-bpf_map_area_alloc() function that is used elsewhere.
+Currently, trying to change the DF parameter of a geneve device does
+nothing:
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200616142829.114173-1-toke@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    # ip -d link show geneve1
+    14: geneve1: <snip>
+        link/ether <snip>
+        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
+    # ip link set geneve1 type geneve id 1 df unset
+    # ip -d link show geneve1
+    14: geneve1: <snip>
+        link/ether <snip>
+        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
+
+We just need to update the value in geneve_changelink.
+
+Fixes: a025fb5f49ad ("geneve: Allow configuration of DF behaviour")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/devmap.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/geneve.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index b4b6b77f309c6..6684696fa4571 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -88,12 +88,13 @@ struct bpf_dtab {
- static DEFINE_SPINLOCK(dev_map_lock);
- static LIST_HEAD(dev_map_list);
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index cac75c7d1d018..19d9d78a6df2c 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -1649,6 +1649,7 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
+ 	geneve->collect_md = metadata;
+ 	geneve->use_udp6_rx_checksums = use_udp6_rx_checksums;
+ 	geneve->ttl_inherit = ttl_inherit;
++	geneve->df = df;
+ 	geneve_unquiesce(geneve, gs4, gs6);
  
--static struct hlist_head *dev_map_create_hash(unsigned int entries)
-+static struct hlist_head *dev_map_create_hash(unsigned int entries,
-+					      int numa_node)
- {
- 	int i;
- 	struct hlist_head *hash;
- 
--	hash = kmalloc_array(entries, sizeof(*hash), GFP_KERNEL);
-+	hash = bpf_map_area_alloc(entries * sizeof(*hash), numa_node);
- 	if (hash != NULL)
- 		for (i = 0; i < entries; i++)
- 			INIT_HLIST_HEAD(&hash[i]);
-@@ -151,7 +152,8 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 		INIT_LIST_HEAD(per_cpu_ptr(dtab->flush_list, cpu));
- 
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
--		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets);
-+		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
-+							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
- 			goto free_percpu;
- 
-@@ -249,7 +251,7 @@ static void dev_map_free(struct bpf_map *map)
- 			}
- 		}
- 
--		kfree(dtab->dev_index_head);
-+		bpf_map_area_free(dtab->dev_index_head);
- 	} else {
- 		for (i = 0; i < dtab->map.max_entries; i++) {
- 			struct bpf_dtab_netdev *dev;
+ 	return 0;
 -- 
 2.25.1
 
