@@ -4,61 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B81AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36453206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74F9206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462749;
-	bh=sAkVKI621eDeDT4uF2NaiOTlWuImgW05lxPhwdMEAwE=;
+	s=default; t=1593462752;
+	bh=1BjEz1tNYoNIeAeDoXRNi9H/EWV7Ubqa6oY+NfFIwu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KVxVu/JLeOm+ZOvqg5GO8CHfKkOEyt56MQ961V5bBPLX8+wI6pG8HFwrGwCdnnFGm
-	 NLpKDzfvnMIu+oRBzK9MK1LsAfImMBFpa2tkQhSyGMK9+7W0Q+gbZHoXKOSr7TwGsB
-	 4wPf87NSsefnyw87B22bzvz+PlvrhIHv4DDPgrGY=
+	b=BuIdTteVdOvGN7I31bQMH9ETVJD9CDrrq6dTJD20YHw3+s1J0uGbTgU/oPKeO2nbW
+	 vrrfdJLT0PJ9VMUIzChmapNHgSY2miZE2wQLwgL1LFuR1cr3XCQGqh4wc2QfBunQKf
+	 tKM4F5zv8UZf1nRI+NzuoZWztXov3BBVMA622G34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732935AbgF2Uc2 (ORCPT
+        id S2388843AbgF2Uca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:32:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732410AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732445AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD0C2532C;
-        Mon, 29 Jun 2020 15:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D87F25415;
+        Mon, 29 Jun 2020 15:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445160;
-        bh=sAkVKI621eDeDT4uF2NaiOTlWuImgW05lxPhwdMEAwE=;
+        s=default; t=1593445366;
+        bh=1BjEz1tNYoNIeAeDoXRNi9H/EWV7Ubqa6oY+NfFIwu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GuylTHnvrfFWdw16Shuo6aoFt5OMDMg4k0YiZiodZUTNx+Iyl5LKJkY6La3T4U47m
-         M0Qyjqa+VypATgWrZIY9f2nbI74v8E+jVvRD+iooZ4iLbCK7T0oV3+iB6C5O6lo8jn
-         f8RDA8e0LdwYHgEdi84hjkCzNaopFuJVX3bFUY+0=
+        b=CtsNII7/jzuADAaqSnxxtFqwDkbSAIhzVPfK0+QISE91JNAlYFIZ5Vj7tieyqH7OU
+         XuY735oCBS1amdEk16KTzuYPeWNYZ2zyyrTJWlHetjHPZmYare+3kuchFUA+A6XBU1
+         g37Te8eSFkDbjMlixaAzDreNaci1pw9VnhsCL/bM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 61/78] KVM: X86: Fix MSR range of APIC registers in X2APIC mode
-Date:   Mon, 29 Jun 2020 11:37:49 -0400
-Message-Id: <20200629153806.2494953-62-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 121/191] mtd: rawnand: sharpsl: Fix the probe error path
+Date:   Mon, 29 Jun 2020 11:38:57 -0400
+Message-Id: <20200629154007.2495120-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,47 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit bf10bd0be53282183f374af23577b18b5fbf7801 upstream.
+[ Upstream commit 0f44b3275b3798ccb97a2f51ac85871c30d6fbbc ]
 
-Only MSR address range 0x800 through 0x8ff is architecturally reserved
-and dedicated for accessing APIC registers in x2APIC mode.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Message-Id: <20200616073307.16440-1-xiaoyao.li@intel.com>
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense.
+
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-49-miquel.raynal@bootlin.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/sharpsl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3401061a22314..0db7f5cd9c720 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2344,7 +2344,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		return kvm_mtrr_set_msr(vcpu, msr, data);
- 	case MSR_IA32_APICBASE:
- 		return kvm_set_apic_base(vcpu, msr_info);
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_write(vcpu, msr, data);
- 	case MSR_IA32_TSCDEADLINE:
- 		kvm_set_lapic_tscdeadline_msr(vcpu, data);
-@@ -2629,7 +2629,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_APICBASE:
- 		msr_info->data = kvm_get_apic_base(vcpu);
- 		break;
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
- 		break;
- 	case MSR_IA32_TSCDEADLINE:
+diff --git a/drivers/mtd/nand/sharpsl.c b/drivers/mtd/nand/sharpsl.c
+index 70e28bfeb840f..661b4928e0fcf 100644
+--- a/drivers/mtd/nand/sharpsl.c
++++ b/drivers/mtd/nand/sharpsl.c
+@@ -192,7 +192,7 @@ static int sharpsl_nand_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_add:
+-	nand_release(this);
++	nand_cleanup(this);
+ 
+ err_scan:
+ 	iounmap(sharpsl->io);
 -- 
 2.25.1
 
