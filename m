@@ -4,61 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F848C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8241C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED16206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A54E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462408;
-	bh=BQdAqSdPS3iRhcepvseUBv/Xhst8nit7E9e0iguDRwQ=;
+	s=default; t=1593462413;
+	bh=U/vdpUFnbMSHnv19qe02lQ+5fJN4qRutmWTdXVU4Jt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ApE3Q733avUVaeHNA0jNcW0Uap6mV+XrfAEQ1mKuGt0Y0vuOEusBG2y6OAoX8nM8s
-	 fO12ybudYnYZoGevKUu/16kxLpoQtF2UEoPKJ3/W4qwXCa3HA/anvxoHhpV+jBY7FF
-	 OxkVGp135AE6jc4sVW1uMpcHquXah8VDi0Dij8eo=
+	b=g4EsbBgvrpEZQTI3jVzyBMGzMzNQ57Jdc5609v46acuhxFkQJjOLDM6XVyFvtcZIo
+	 SVQdR2aZ/q1B2JL+uGieFEYdSTEQzDz/ZomXZQhF9AyO6Zw91u4EuFlCmFx9P4mpDK
+	 1oAZWVfJbp0c2PMnTqzbTEqWEP/z6qmIpZRTp8Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgF2U03 (ORCPT
+        id S1732632AbgF2U0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732520AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732518AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E8F2548B;
-        Mon, 29 Jun 2020 15:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1A82531D;
+        Mon, 29 Jun 2020 15:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445448;
-        bh=BQdAqSdPS3iRhcepvseUBv/Xhst8nit7E9e0iguDRwQ=;
+        s=default; t=1593445152;
+        bh=U/vdpUFnbMSHnv19qe02lQ+5fJN4qRutmWTdXVU4Jt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ticfH3YdPyauEJBVIMTByXziPLfqjYY/ckUzYsAGNJ+Sz1yDjbLJ7/PwyQKjIOKe5
-         ZA6p0dhqGdS6ICKd+ZKEgnxyWjP68kD2qUTHTMGRGWGqTJn4A9Px7IRKJOhppvEtKO
-         yeC+8MbaGUpLpEVeBqxVPd5xGJH5L6rVO2AEd0tw=
+        b=rdz+rB/0X+Tw+bowE43qr1UotU7FcDAiqfI3QONOz1uT58xr37bOPgf6udzGhoOih
+         vi7c/4xbD32PUmEERn2JCJ9p7EIQ5U3i8JOuhztz5DaOg2ryVKUE+npcuGHL2rK6G2
+         sVSNG4kzsaMgG2XtCW6D1NA08XW5KIlIvJPFVSO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Neil Brown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 188/191] NFSv4 fix CLOSE not waiting for direct IO compeletion
-Date:   Mon, 29 Jun 2020 11:40:04 -0400
-Message-Id: <20200629154007.2495120-189-sashal@kernel.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 53/78] sched/core: Fix PI boosting between RT and DEADLINE tasks
+Date:   Mon, 29 Jun 2020 11:37:41 -0400
+Message-Id: <20200629153806.2494953-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,96 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-commit d03727b248d0dae6199569a8d7b629a681154633 upstream.
+[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
 
-Figuring out the root case for the REMOVE/CLOSE race and
-suggesting the solution was done by Neil Brown.
+syzbot reported the following warning:
 
-Currently what happens is that direct IO calls hold a reference
-on the open context which is decremented as an asynchronous task
-in the nfs_direct_complete(). Before reference is decremented,
-control is returned to the application which is free to close the
-file. When close is being processed, it decrements its reference
-on the open_context but since directIO still holds one, it doesn't
-sent a close on the wire. It returns control to the application
-which is free to do other operations. For instance, it can delete a
-file. Direct IO is finally releasing its reference and triggering
-an asynchronous close. Which races with the REMOVE. On the server,
-REMOVE can be processed before the CLOSE, failing the REMOVE with
-EACCES as the file is still opened.
+ WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
+ enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Suggested-by: Neil Brown <neilb@suse.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+At deadline.c:628 we have:
+
+ 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
+ 624 {
+ 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
+ 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
+ 627
+ 628 	WARN_ON(dl_se->dl_boosted);
+ 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
+        [...]
+     }
+
+Which means that setup_new_dl_entity() has been called on a task
+currently boosted. This shouldn't happen though, as setup_new_dl_entity()
+is only called when the 'dynamic' deadline of the new entity
+is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
+condition.
+
+Digging through the PI code I noticed that what above might in fact happen
+if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
+first branch of boosting conditions we check only if a pi_task 'dynamic'
+deadline is earlier than mutex holder's and in this case we set mutex
+holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
+initialized if such tasks get boosted at some point (or if they become
+DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
+to 0 and this verifies the aforementioned condition.
+
+Fix it by checking that the potential donor task is actually (even if
+temporary because in turn boosted) running at DEADLINE priority before
+using its 'dynamic' deadline value.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 13 +++++++++----
- fs/nfs/file.c   |  1 +
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index de135d2591ffb..1affdec237299 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -379,8 +379,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
- {
- 	struct inode *inode = dreq->inode;
- 
--	inode_dio_end(inode);
--
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -392,7 +390,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
- 
- 	complete(&dreq->completion);
- 
-+	igrab(inode);
- 	nfs_direct_req_release(dreq);
-+	inode_dio_end(inode);
-+	iput(inode);
- }
- 
- static void nfs_direct_readpage_release(struct nfs_page *req)
-@@ -534,8 +535,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 97a27726ea217..c5599174e7450 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3731,7 +3731,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
  	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -953,8 +956,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 1eec947c562d2..a89d2f793c1b8 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -82,6 +82,7 @@ nfs_file_release(struct inode *inode, struct file *filp)
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
-+	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
+ 	if (dl_prio(prio)) {
+ 		if (!dl_prio(p->normal_prio) ||
+-		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
++		    (pi_task && dl_prio(pi_task->prio) &&
++		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
+ 			p->dl.dl_boosted = 1;
+ 			queue_flag |= ENQUEUE_REPLENISH;
+ 		} else
 -- 
 2.25.1
 
