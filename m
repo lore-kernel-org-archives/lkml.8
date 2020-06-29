@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B113206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D4D206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468063;
-	bh=jtQ9krYpw0F1Pk4uWyQOXj1u1Ae2KuvA8Ghy1N/XZJQ=;
+	s=default; t=1593468067;
+	bh=Tp4oBHPGfd8p24YkN3+BS4LvQkkurIqnCJ0Eu188tlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVS1PaXBav9D88QbW0+7njpDCUzhXG268duYv5QT2gXKsoYJt4asXOsxnF7dqeEAU
-	 htr5i8NgKD/0NNX1+yWoOBFCzvVV/G4tzJnG7hxyJe7MVdSmOUIZQh+qr1JC130vQ7
-	 yzvSSi7FY3WgIywvJOx/vpSUrhcjWD+L1Z/3R8sQ=
+	b=dUJNsfPzdbwoJ1p4p0Ag1byUqVfY6blZ/HPvjF586dAWYG4dJNMQ7uK56IXEleVqF
+	 gwEbb96tkv5Lwr4VSFWC8ooTElaa+gX+bC7fYk82qV5PGga5SdhEc3z6YBnGK/0+UO
+	 f6rWh/t7BxN74iN4Dva2pvlg2Q/5hCyHHJKGSKKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404754AbgF2WBA (ORCPT
+        id S2404836AbgF2WBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726276AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8CD247A1;
-        Mon, 29 Jun 2020 15:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279D0246D1;
+        Mon, 29 Jun 2020 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444109;
-        bh=jtQ9krYpw0F1Pk4uWyQOXj1u1Ae2KuvA8Ghy1N/XZJQ=;
+        s=default; t=1593444021;
+        bh=Tp4oBHPGfd8p24YkN3+BS4LvQkkurIqnCJ0Eu188tlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2YMD96Jd6Md7ies4Y/qzqLqjImq0bTdOxBToPh4rPcxRVHbT9v9VLLNQJ0gVB99+
-         TpvevKXhgAxgGlpQOTisMEZuKFd0gPnXGuzJ9rNgRjBgB0YCVDATtBOFWmK5ItRE33
-         O2Qyd6SaI6/gv0bawDh44Z+ue+EQb3kxHF8QqEgA=
+        b=jXQRe/kTT7Z+Kmr2VToBkhvn4oE6oo/cZTuamx2eRQDhlSKalKIr16j/K998Jdobg
+         9f23rfMlaM4QsY7iWwZg0cREK09r0EQqdK+JTdqGbIZvkSiWhmJOqRyB2U2i+xVtrG
+         ZoEDTXiwClXXLfU4HQE9it1LmbjOVxeSG2M/7KRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Liam Merwick <liam.merwick@oracle.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 220/265] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
-Date:   Mon, 29 Jun 2020 11:17:33 -0400
-Message-Id: <20200629151818.2493727-221-sashal@kernel.org>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 128/265] bpf: Don't return EINVAL from {get,set}sockopt when optlen > PAGE_SIZE
+Date:   Mon, 29 Jun 2020 11:16:01 -0400
+Message-Id: <20200629151818.2493727-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -68,116 +66,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Stanislav Fomichev <sdf@google.com>
 
-commit 5d5103595e9e53048bb7e70ee2673c897ab38300 upstream.
+[ Upstream commit d8fe449a9c51a37d844ab607e14e2f5c657d3cf2 ]
 
-Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
-where firmware doesn't initialize or save/restore across S3.  This fixes
-a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
-taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
+Attaching to these hooks can break iptables because its optval is
+usually quite big, or at least bigger than the current PAGE_SIZE limit.
+David also mentioned some SCTP options can be big (around 256k).
 
-Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
-with the case where the MSR is locked, and because APs already redo
-init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
-used to reinitialize APs upon wakeup.  Do the call in the early wakeup
-flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
-a resume hook is not guaranteed to work, as KVM does VMXON in its own
-resume hook, kvm_resume(), when KVM has active guests.
+For such optvals we expose only the first PAGE_SIZE bytes to
+the BPF program. BPF program has two options:
+1. Set ctx->optlen to 0 to indicate that the BPF's optval
+   should be ignored and the kernel should use original userspace
+   value.
+2. Set ctx->optlen to something that's smaller than the PAGE_SIZE.
 
-Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
-Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
-Cc: stable@vger.kernel.org # v5.6
-Link: https://lkml.kernel.org/r/20200608174134.11157-1-sean.j.christopherson@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+v5:
+* use ctx->optlen == 0 with trimmed buffer (Alexei Starovoitov)
+* update the docs accordingly
+
+v4:
+* use temporary buffer to avoid optval == optval_end == NULL;
+  this removes the corner case in the verifier that might assume
+  non-zero PTR_TO_PACKET/PTR_TO_PACKET_END.
+
+v3:
+* don't increase the limit, bypass the argument
+
+v2:
+* proper comments formatting (Jakub Kicinski)
+
+Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Link: https://lore.kernel.org/bpf/20200617010416.93086-1-sdf@google.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/cpu.h    | 5 +++++
- arch/x86/kernel/cpu/centaur.c | 1 +
- arch/x86/kernel/cpu/cpu.h     | 4 ----
- arch/x86/kernel/cpu/zhaoxin.c | 1 +
- arch/x86/power/cpu.c          | 6 ++++++
- 5 files changed, 13 insertions(+), 4 deletions(-)
+ kernel/bpf/cgroup.c | 53 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index dd17c2da1af5f..da78ccbd493b7 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned long ip)
- 	return false;
- }
- #endif
-+#ifdef CONFIG_IA32_FEAT_CTL
-+void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
-+#else
-+static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
-+#endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index 426792565d864..c5cf336e50776 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -3,6 +3,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index cb305e71e7deb..25aebd21c15b1 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -1240,16 +1240,23 @@ static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
  
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
- #include <asm/e820/api.h>
- #include <asm/mtrr.h>
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index fb538fccd24c0..9d033693519aa 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -81,8 +81,4 @@ extern void update_srbds_msr(void);
- 
- extern u64 x86_read_arch_cap_msr(void);
- 
--#ifdef CONFIG_IA32_FEAT_CTL
--void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
--#endif
--
- #endif /* ARCH_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-index df1358ba622bd..05fa4ef634902 100644
---- a/arch/x86/kernel/cpu/zhaoxin.c
-+++ b/arch/x86/kernel/cpu/zhaoxin.c
-@@ -2,6 +2,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- 
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
- 
- #include "cpu.h"
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index aaff9ed7ff45c..b0d3c5ca6d807 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -193,6 +193,8 @@ static void fix_processor_context(void)
-  */
- static void notrace __restore_processor_state(struct saved_context *ctxt)
+ static int sockopt_alloc_buf(struct bpf_sockopt_kern *ctx, int max_optlen)
  {
-+	struct cpuinfo_x86 *c;
+-	if (unlikely(max_optlen > PAGE_SIZE) || max_optlen < 0)
++	if (unlikely(max_optlen < 0))
+ 		return -EINVAL;
+ 
++	if (unlikely(max_optlen > PAGE_SIZE)) {
++		/* We don't expose optvals that are greater than PAGE_SIZE
++		 * to the BPF program.
++		 */
++		max_optlen = PAGE_SIZE;
++	}
 +
- 	if (ctxt->misc_enable_saved)
- 		wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
- 	/*
-@@ -263,6 +265,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
- 	mtrr_bp_restore();
- 	perf_restore_debug_store();
- 	msr_restore_context(ctxt);
-+
-+	c = &cpu_data(smp_processor_id());
-+	if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
-+		init_ia32_feat_ctl(c);
+ 	ctx->optval = kzalloc(max_optlen, GFP_USER);
+ 	if (!ctx->optval)
+ 		return -ENOMEM;
+ 
+ 	ctx->optval_end = ctx->optval + max_optlen;
+ 
+-	return 0;
++	return max_optlen;
  }
  
- /* Needed by apm.c */
+ static void sockopt_free_buf(struct bpf_sockopt_kern *ctx)
+@@ -1283,13 +1290,13 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
+ 	 */
+ 	max_optlen = max_t(int, 16, *optlen);
+ 
+-	ret = sockopt_alloc_buf(&ctx, max_optlen);
+-	if (ret)
+-		return ret;
++	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
++	if (max_optlen < 0)
++		return max_optlen;
+ 
+ 	ctx.optlen = *optlen;
+ 
+-	if (copy_from_user(ctx.optval, optval, *optlen) != 0) {
++	if (copy_from_user(ctx.optval, optval, min(*optlen, max_optlen)) != 0) {
+ 		ret = -EFAULT;
+ 		goto out;
+ 	}
+@@ -1317,8 +1324,14 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
+ 		/* export any potential modifications */
+ 		*level = ctx.level;
+ 		*optname = ctx.optname;
+-		*optlen = ctx.optlen;
+-		*kernel_optval = ctx.optval;
++
++		/* optlen == 0 from BPF indicates that we should
++		 * use original userspace data.
++		 */
++		if (ctx.optlen != 0) {
++			*optlen = ctx.optlen;
++			*kernel_optval = ctx.optval;
++		}
+ 	}
+ 
+ out:
+@@ -1350,12 +1363,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 	    __cgroup_bpf_prog_array_is_empty(cgrp, BPF_CGROUP_GETSOCKOPT))
+ 		return retval;
+ 
+-	ret = sockopt_alloc_buf(&ctx, max_optlen);
+-	if (ret)
+-		return ret;
+-
+ 	ctx.optlen = max_optlen;
+ 
++	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
++	if (max_optlen < 0)
++		return max_optlen;
++
+ 	if (!retval) {
+ 		/* If kernel getsockopt finished successfully,
+ 		 * copy whatever was returned to the user back
+@@ -1369,10 +1382,8 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 			goto out;
+ 		}
+ 
+-		if (ctx.optlen > max_optlen)
+-			ctx.optlen = max_optlen;
+-
+-		if (copy_from_user(ctx.optval, optval, ctx.optlen) != 0) {
++		if (copy_from_user(ctx.optval, optval,
++				   min(ctx.optlen, max_optlen)) != 0) {
+ 			ret = -EFAULT;
+ 			goto out;
+ 		}
+@@ -1401,10 +1412,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 		goto out;
+ 	}
+ 
+-	if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
+-	    put_user(ctx.optlen, optlen)) {
+-		ret = -EFAULT;
+-		goto out;
++	if (ctx.optlen != 0) {
++		if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
++		    put_user(ctx.optlen, optlen)) {
++			ret = -EFAULT;
++			goto out;
++		}
+ 	}
+ 
+ 	ret = ctx.retval;
 -- 
 2.25.1
 
