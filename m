@@ -2,120 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C322C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 195172067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462862;
-	bh=3yDHEoSikSlRvhsLsSDwWUziG1n0W0jEjmeFALMD9Ns=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0a3hlgPCOL0JAc14Fbpna7sFAAZht+q3oeEhHjsPIUv9NB1DYv+7pdyyU3LR5cPC
-	 qT0gGOJCkbDWUgk3m04NmMT6W3+75p8eDIVzZw4Y5XzFAAq5ScZDt49kwyvwu7Q7iB
-	 PxtyKL7YxCzX+GbxBi25ZHp+aogTvI5fIwZCfcks=
+	by mail.kernel.org (Postfix) with ESMTP id 5170F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XfTI9qoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbgF2UeV (ORCPT
+        id S2389386AbgF2UeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731869AbgF2TZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 29 Jun 2020 16:34:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28391 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730093AbgF2TZO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593458713;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lZIwwdY+4quyzpnR8PUmWqC5xEd+/+UfLosIlVye92g=;
+        b=XfTI9qoX+sXb18yxRHATyx9lYlpAmQxaBGhH+Q59uMKyWWHF3IJC3OAk7st/0l13bAUF/H
+        ASig2sVX3qHT0YY+4EvsIwvi/f1nTu7MtvnnBv6BQyBKSfqSCdqiNTi71HuD46AXwFp797
+        zjzvXOB58eyS8FWNTE9M+s3DZnLNFQQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-I02TrkkrNZaFJyo8zF93YA-1; Mon, 29 Jun 2020 08:23:52 -0400
+X-MC-Unique: I02TrkkrNZaFJyo8zF93YA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B0B25320;
-        Mon, 29 Jun 2020 15:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445154;
-        bh=3yDHEoSikSlRvhsLsSDwWUziG1n0W0jEjmeFALMD9Ns=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDNWUkol0FB+rtD14pKrx/+72ZCvN08hSXfEiK6RTbr4Ulen+wGx489dEhvkO5wR9
-         o494JWzc0vqb/LFDpze6N0kkvqiLWSY6lpi2+69Rytawj4rBwSFLffb7Sq0fbtcnv3
-         4d1zyu4hJGF0P666bTDpA4kTTBK40IntLTTeTV8E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 55/78] net: alx: fix race condition in alx_remove
-Date:   Mon, 29 Jun 2020 11:37:43 -0400
-Message-Id: <20200629153806.2494953-56-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D5D2464;
+        Mon, 29 Jun 2020 12:23:51 +0000 (UTC)
+Received: from starship (unknown [10.35.206.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46A7D5D9DA;
+        Mon, 29 Jun 2020 12:23:50 +0000 (UTC)
+Message-ID: <649f4c040c2f6dd2d83e984a88343917d498b4ad.camel@redhat.com>
+Subject: Re: [PATCH v2 0/5] Fix split view search and debug info navigation
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 29 Jun 2020 15:23:49 +0300
+In-Reply-To: <cover.1593423060.git.mchehab+huawei@kernel.org>
+References: <cover.1593423060.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zekun Shen <bruceshenzk@gmail.com>
+On Mon, 2020-06-29 at 11:35 +0200, Mauro Carvalho Chehab wrote:
+> This series fixes some issues with search while on split view and fix the
+> broken hyperlink navigation.
+> 
+> The first patches restore the pre-Qt5 conversion behavior. The last
+> one implements navigation on a different way. I opted to keep this one
+> in separate, as this one is a new feature.
+> 
+> Mauro Carvalho Chehab (5):
+>   kconfig: qconf: cleanup includes
+>   kconfig: qconf: ensure that only one item will be highlighted
+>   kconfig: qconf: make search fully work again on split mode
+>   kconfig: qconf: make debug links work again
+>   kconfig: qconf: navigate menus on hyperlinks
+> 
+>  scripts/kconfig/qconf.cc | 120 +++++++++++++++++++++++++++++----------
+>  scripts/kconfig/qconf.h  |  15 ++---
+>  2 files changed, 98 insertions(+), 37 deletions(-)
+> 
+I tested the series, and it works really well here.
+Thanks a lot for the patch 5, I indeed noted that 
+I am not sure it ever worked like that but it does now, 
+and it is a very good improvement in terms of usability.
 
-[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
+There is still a tiny issue in patch 5 - sometimes already
+selected items remain selected like it was in the search (now fixed).
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+Also I found another bug - clicking on '..' menu doesn't work:
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
+For example select 'input device support', then 'keyboards' on the right,
+then you can't get back. It also might be something that never worked,
+and it doesn't bother me, I just note this for reference.
 
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index 5e5022fa1d047..85029d43da758 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1250,8 +1250,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
- 
- static void __alx_stop(struct alx_priv *alx)
- {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
- }
-@@ -1863,9 +1867,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
- 
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
--
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
- 
--- 
-2.25.1
+Thanks a lot for these fixes!
+Best regards,
+	Maxim Levitsky
 
