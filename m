@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA00CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C301DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5EB206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F01B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457982;
-	bh=V+ahR2kIEDOuEOMyidmVqcY3UmUtoO3I0e5fiMrHOQc=;
+	s=default; t=1593457988;
+	bh=NBYooCxBz9DLx51kVAfojPfrpaJKY1fDyyxiKGfm8rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HDBCc8u74iwT6EsPeSxm1zNz3Pvjw4bfemUww5rCE7n1eIpVneH19A7llqnfyeZf/
-	 0padOMjwr+zINlwC8N/UYfWlj7IEQ0D8xjAsUgXy8EioF+bIdKi+sTD7uQwL4BmHrl
-	 xrI1954oqNMYbspOpyPLcWDaYPCTe100BeImCMgE=
+	b=sRJsrYV2vHnLMAIWqdw3F+bdMDkg3R+Jeg3kMkaLNyAe8+lhSQBgZc9cTzcxz6jQ4
+	 wRV9u7F0dEhklHPZg57sHOS3SpH7YO2p7Ugc4GCU0sppESYBBlz3TO0mFtt07brpUb
+	 2didRozDUlluayjDYx4cmxQXrq422GpSQ9lul/TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgF2TNA (ORCPT
+        id S1731261AbgF2TNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730960AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CBD254B1;
-        Mon, 29 Jun 2020 15:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B19BF2545F;
+        Mon, 29 Jun 2020 15:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446008;
-        bh=V+ahR2kIEDOuEOMyidmVqcY3UmUtoO3I0e5fiMrHOQc=;
+        s=default; t=1593445997;
+        bh=NBYooCxBz9DLx51kVAfojPfrpaJKY1fDyyxiKGfm8rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0gq11+zL0BEd+L0RgvaJ3A2ekRFUg44YpLbv5I7n2lQueRK/BlAuJZIO+IofMgcR
-         xu2MiI1VpoiF8ZRQoJF3HMy9UPTsbVVpLeu/rH6YQpb5V6W5mnphAF5XzrPnFaKTQD
-         xmqKIP990mr3ii8gTjcLfAANFrIm6oXvF7ZQ7jJg=
+        b=YzpYXpxA36uY64e3qR4E4VbNysSBWu2m2fnS1dZrkHOT+xJYkZA4aTrdP+W7AfF1m
+         tN6VoiiPfUko8rCSaAwU8zkua4TWdUO6LO8mh8WEPaXcWbsE7wW9myJVGWYaydYhyK
+         uMevMFPSHyo6eU4+14M9mFG33PVMM9o6EAn4UwFQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 015/135] yam: fix possible memory leak in yam_init_driver
-Date:   Mon, 29 Jun 2020 11:51:09 -0400
-Message-Id: <20200629155309.2495516-16-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 005/135] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Mon, 29 Jun 2020 11:50:59 -0400
+Message-Id: <20200629155309.2495516-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,34 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index 1a4729c36aa49..623e4225e7c84 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1160,6 +1160,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index 718d5e3b7806f..6c06d06457796 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1174,7 +1174,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
++
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1205,6 +1208,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
+ 
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
