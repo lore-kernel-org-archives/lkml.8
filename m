@@ -2,111 +2,91 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED530C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2210C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C6E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A005E2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt/jc4Xm"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="XIaGTyyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403927AbgF2VmL (ORCPT
+        id S2403938AbgF2VmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
+        Mon, 29 Jun 2020 17:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgF2Sh6 (ORCPT
+        with ESMTP id S1727916AbgF2Sh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:58 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55871C031414;
-        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so7703338pgc.8;
-        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
-        b=Nt/jc4Xm3mvn5WqweNAwuOw5XVFPe3sw7g1bxrnFrB14aW4N+u8tzFVgRTc90SHXRB
-         ZiXp58toYoc0ODij/6SbIdGrnrSdEZo7/jEOUGj0GahDzCeX/xMZNKq2+bK/otDzj4cz
-         9NsaMQbXza8P6bwQW3R7MhLu/ahcGjau2xeGrfvMhoIIviu7q/uSvncMPj4rd4I8V58E
-         G2z0UuGPGV55wArpeJlarXOVZfwvYi8EM6ltHIpaAoMlUzAi1xe9MmrQkStUPNzjyJa1
-         DYBGvYHBHW56EC5ACRP0KFpMU3rjMPnfG5B26lphNu2nqAxgbskxmS4SFidlzo5ff7l4
-         QSLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
-        b=k6TEzmiboAZOZ9a+3Viah9V4Lso+MjXejSBIw6/f4GZiZtvr0rDQEaRSosOLEdWNna
-         FIgwAJTPgioti2BrrFZiuEJn+08murrR5shPzZ0/5XNTqGXrJk3xpeskocg0noKQynfh
-         OvM3eVK5+pfB7dwI58B2eD0M/MIlVU+TIik0U5IW2KyQ5oIs8vw+mz5iCnPfsDfIg8ZH
-         4C0RTHcePtAevheHhqB+iIzLokrcUk6XHXhP6uKOxUXp5r+p9stwJGIwiDivO9Z+LEje
-         DAkRUKoFi+TVr2XnX8bDvR/eRyq0Os3Dwyp6OaC4V20PBVyVX5bVGB7i0pUYU9BLz20w
-         0aGA==
-X-Gm-Message-State: AOAM532Agf8e2ktFA87JIkmEeqBT0rbjXiA32Vxtsy4g44xs+28FALJN
-        7IlU4HL+Wc6CKqBqgMVdolU=
-X-Google-Smtp-Source: ABdhPJwBz4zO1nux6YEsGIypPIa2qPGaoUx75nn3Ar1oull1wcbktACCA97kxB2CT7b9kqFFkD3b1w==
-X-Received: by 2002:a63:8c5d:: with SMTP id q29mr10983595pgn.249.1593451177944;
-        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g12sm257852pfb.190.2020.06.29.10.19.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
-Subject: Re: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Mon, 29 Jun 2020 14:37:56 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C56C031C7D;
+        Mon, 29 Jun 2020 11:18:19 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B6A7622FA7;
+        Mon, 29 Jun 2020 20:18:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593454698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eEE2UbGu8BTGtcLgMgns43018yjd14SkF1FC8t9v/x8=;
+        b=XIaGTyyus2oWlG5KxK6sEEDMh31kXJcp+INP/eDG3A6nTLQzla+6o1S0Fdv7D2wX8neEdV
+        WaqZ099GB39Yx2DHEDYBDRxHwccl71glD8/skeZPZU9vUo+ryMfwmJ3N9qU4eBJ5iEpXUN
+        5gaOOw33ERueJDXtn3vm8ZOno0emA+8=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         "David S . Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-6-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a88026d5-8a4e-52be-93fd-e683fb2ff05d@gmail.com>
-Date:   Mon, 29 Jun 2020 10:19:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] can: flexcan: use ctrlmode to enable CAN-FD
+Date:   Mon, 29 Jun 2020 20:18:08 +0200
+Message-Id: <20200629181809.25338-2-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200629181809.25338-1-michael@walle.cc>
+References: <20200629181809.25338-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The driver will enable CAN-FD mode according to the ctrlmode_supported,
+which will always be true, if the controller supports it. This is wrong.
+Use the correct ctrlmode instead.
 
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/can/flexcan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Functions should only be static inline if they're very short. This
-> devres helper is already over 10 lines and it will grow soon as we'll
-> be improving upon its approach. Pull it into mdio_devres.c.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 12043250e398..183e094f8d66 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1345,7 +1345,7 @@ static int flexcan_chip_start(struct net_device *dev)
+ 		reg_mcr |= FLEXCAN_MCR_SRX_DIS;
+ 
+ 	/* MCR - CAN-FD */
+-	if (priv->can.ctrlmode_supported & CAN_CTRLMODE_FD)
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
+ 		reg_mcr |= FLEXCAN_MCR_FDEN;
+ 	else
+ 		reg_mcr &= ~FLEXCAN_MCR_FDEN;
 -- 
-Florian
+2.20.1
+
