@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDAA206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229272067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461989;
-	bh=9mTK1c+NsX/lpeb9u0hRpDUgCNM27kvlzHnsMC7fYK4=;
+	s=default; t=1593461993;
+	bh=WsfovrXhs2VsfMvSkdpy9L8ZGLhkj9qlRne1wbrGhQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X4H0C90OdjRQVSslG+ACjK5z3wPus96xf6LWAc2qLlY8mHQCVjrpLGRtLceQZfBZK
-	 niGYvLOSErWpd7kJ28KJzBYiteKzsTq8EsocGjZfcIDGWpjYftbFLNwOmy+f9h1M7N
-	 07fCGqhlpsTVWkxU49hz/LpBl3jSpVRZC2vsGIao=
+	b=gt1YPrDpRqKg9F2c71AYKMQX/VIIm6FRQpXqBuDd/1B56djj5uzPRmiSkdM/OkpaS
+	 VVsLJJtRcTA+thToP1d2q2A6rfu0i7QeFsGiLL2p9FKWc92/cHDXw6xBSMGK3pWqFo
+	 V8uYd0SKUSKbzZDCOfAsqNioRNhsdoI8PLDwWFSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732909AbgF2UTs (ORCPT
+        id S2387716AbgF2UTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732617AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732625AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B56C9253AA;
-        Mon, 29 Jun 2020 15:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B6A2541E;
+        Mon, 29 Jun 2020 15:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445275;
-        bh=9mTK1c+NsX/lpeb9u0hRpDUgCNM27kvlzHnsMC7fYK4=;
+        s=default; t=1593445371;
+        bh=WsfovrXhs2VsfMvSkdpy9L8ZGLhkj9qlRne1wbrGhQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAElEFSs5uosY6kcXjI+KZpholq8CUBP+TjJGB+6qIhpWGfCDbdnN4eYT65+ThU85
-         A3rnhPVbR1Q6I2+BPItB8s3dSd6VyIxSOAqGRU/X3AVhF/5CJMvX7oMmNkEMne2RzO
-         lRBY7soE8FIq68mNCK6Mygfr9znP9mG9DfL7bGJc=
+        b=E5qvOn+oI75hM0WXVhH5erI+JOjcNorsxN5YK0ig9qIDttekjVbXvorTu1GHsnn7D
+         E+X+FuI1mRea9rWpqLxSuMyOKgjIQLBqzGCMx4Vp0Kyi32Z8HcoKDKaP4/SZpXO+r5
+         FzsSkwTbcUuhq/ND5SR8vTEaUlLe6FBvKAaW3Zbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 054/191] usb: dwc2: gadget: move gadget resume after the core is in L0 state
-Date:   Mon, 29 Jun 2020 11:37:50 -0400
-Message-Id: <20200629154007.2495120-55-sashal@kernel.org>
+Subject: [PATCH 4.9 126/191] mtd: rawnand: mtk: Fix the probe error path
+Date:   Mon, 29 Jun 2020 11:39:02 -0400
+Message-Id: <20200629154007.2495120-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,49 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 8c935deacebb8fac8f41378701eb79d12f3c2e2d ]
+[ Upstream commit 8a82bbcadec877f5f938c54026278dfc1f05a332 ]
 
-When the remote wakeup interrupt is triggered, lx_state is resumed from L2
-to L0 state. But when the gadget resume is called, lx_state is still L2.
-This prevents the resume callback to queue any request. Any attempt
-to queue a request from resume callback will result in:
-- "submit request only in active state" debug message to be issued
-- dwc2_hsotg_ep_queue() returns -EAGAIN
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Call the gadget resume routine after the core is in L0 state.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-Fixes: f81f46e1f530 ("usb: dwc2: implement hibernation during bus suspend/resume")
-
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-28-miquel.raynal@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/core_intr.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/mtk_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-index d85c5c9f96c1d..f046703f63f27 100644
---- a/drivers/usb/dwc2/core_intr.c
-+++ b/drivers/usb/dwc2/core_intr.c
-@@ -365,10 +365,13 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- 			if (ret && (ret != -ENOTSUPP))
- 				dev_err(hsotg->dev, "exit hibernation failed\n");
+diff --git a/drivers/mtd/nand/mtk_nand.c b/drivers/mtd/nand/mtk_nand.c
+index fadc755e55f82..2375dce766eff 100644
+--- a/drivers/mtd/nand/mtk_nand.c
++++ b/drivers/mtd/nand/mtk_nand.c
+@@ -1327,7 +1327,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev, struct mtk_nfc *nfc,
+ 	ret = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
+ 	if (ret) {
+ 		dev_err(dev, "mtd parse partition error\n");
+-		nand_release(nand);
++		nand_cleanup(nand);
+ 		return ret;
+ 	}
  
-+			/* Change to L0 state */
-+			hsotg->lx_state = DWC2_L0;
- 			call_gadget(hsotg, resume);
-+		} else {
-+			/* Change to L0 state */
-+			hsotg->lx_state = DWC2_L0;
- 		}
--		/* Change to L0 state */
--		hsotg->lx_state = DWC2_L0;
- 	} else {
- 		if (hsotg->core_params->hibernation)
- 			return;
 -- 
 2.25.1
 
