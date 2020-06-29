@@ -2,94 +2,105 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37009C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB6620672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LhMrpjSD"
+	by mail.kernel.org (Postfix) with ESMTP id B34E120672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459406;
+	bh=yzF+R1vfR4+sPC1JW0ON7fOehKKTbTlT2m6gPB/YGc0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PF2UEJ5K1VukwLEnisf9SG+uX1mgR1MNpGQnrXKma4psHcVRiNuIlC5VbwHjCe0sy
+	 EUEQp6CV9wmp7Hrg1jZfHh28yH/WUfMJbFU9Q7Me1VOkax3LRVBqq1V3pJqrytanIJ
+	 EGfh+IdrMUFsTLAWzldQA6Vl2hTG7Y67O/secIFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbgF2Tgd (ORCPT
+        id S1733089AbgF2Tgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:33 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:54693 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgF2TgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:36:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593459383; x=1624995383;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=b4/y29sI+1yiTQiF1xYesH4kt0pQMd5eSrVNTpeSPi4=;
-  b=LhMrpjSDf/mnZHYhSrEDPKDmdrPwxiQfr1dbGMLPojkN6ps2Afa7AiEa
-   Vg3gYnKcTSWGjSF2j8DBPkd7PVqE78er3SOTq6THG/PC0pHFD5xhJCVPf
-   c5Zgpk2UuTgvDaEIoxB9kIq7GKpENd0xy7PTHSilfNgCtiOvzgmi4YkwW
-   s=;
-IronPort-SDR: 30ZfxPliLXRENJTl2hI0YJ7tElU9JTYqigHOFsbk/lUG7zcXVx6pI7nW0ogcDx+3yHCtxim+sP
- YCQMGiTTYanQ==
-X-IronPort-AV: E=Sophos;i="5.75,295,1589241600"; 
-   d="scan'208";a="39176521"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 29 Jun 2020 19:36:19 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id B7CFDA1C47;
-        Mon, 29 Jun 2020 19:36:17 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 29 Jun 2020 19:36:17 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.48) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 29 Jun 2020 19:36:12 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
-CC:     <sj38.park@gmail.com>, <stable@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Upstream fixes not merged in 5.4.y
-Date:   Mon, 29 Jun 2020 21:35:37 +0200
-Message-ID: <20200629193537.21738-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Jun 2020 15:36:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733021AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9BB251E7;
+        Mon, 29 Jun 2020 15:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444906;
+        bh=yzF+R1vfR4+sPC1JW0ON7fOehKKTbTlT2m6gPB/YGc0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fO+KDijP+GdZ2zRCdorym8JKgge2OWrA7clnsc1yVQXvcB8vuH/xdj0b9KPVloRfc
+         iIzvHv3SBhZmdHVSUQ0pQFm0A6xrVG9OP/eLeMJLrEQWo1L3QEnH2pAkqcPJ4jNNlO
+         Qyvy6x3g98eCYZ2qQdNsMaCWXCjYGUFMASd3bFks=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 002/131] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
+Date:   Mon, 29 Jun 2020 11:32:53 -0400
+Message-Id: <20200629153502.2494656-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.48]
-X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: yu kuai <yukuai3@huawei.com>
 
+commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
 
-With my little script, I found below commits in the mainline tree are more than
-1 week old and fixing commits that back-ported in v5.4..v5.4.49 but not merged
-in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
-dealyed?
+commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
+a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
+the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+'bio->bi_integrity' were set previousy in bio_integrity_alloc().
 
-9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
-9fecd13202f5 ("btrfs: fix a block group ref counter leak after failure to remove block group")
-9d964e1b82d8 ("fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"")
-8ab3a3812aa9 ("drm/i915/gt: Incrementally check for rewinding")
-6e2f83884c09 ("bnxt_en: Fix AER reset logic on 57500 chips.")
-efb94790852a ("drm/panel-simple: fix connector type for LogicPD Type28 Display")
-ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
-ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
-8dbe4c5d5e40 ("net: dsa: bcm_sf2: Fix node reference count")
-ca8826095e4d ("selftests/net: report etf errors correctly")
-5a8d7f126c97 ("of: of_mdio: Correct loop scanning logic")
-d35d3660e065 ("binder: fix null deref of proc->context")
+Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ block/bio-integrity.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The script found several more commits but I exclude those here, because those
-seems not applicable on 5.4.y or fixing trivial problems only.  If I'm not
-following a proper process for this kind of reports, please let me know.
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 5bd90cd4b51e3..a059fad53f1b0 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -293,7 +293,6 @@ bool bio_integrity_prep(struct bio *bio)
+ 
+ 		if (ret == 0) {
+ 			printk(KERN_ERR "could not attach integrity payload\n");
+-			kfree(buf);
+ 			status = BLK_STS_RESOURCE;
+ 			goto err_end_io;
+ 		}
+-- 
+2.25.1
 
-
-Thanks,
-SeongJae Park
