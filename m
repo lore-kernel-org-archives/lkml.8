@@ -2,152 +2,120 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88859C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D263B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KCQ5YzkO"
+	by mail.kernel.org (Postfix) with ESMTP id 66F0E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593458011;
+	bh=i9ZfBpzxB3oPpousxT2bRt0NotTChvxCXKkleB811bU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KXxj/ioiboaQgbIa7DhCE3iH3OiMV/N4R2tcP9+39Tt7ss98x+8vwMzOsMvJnnMqG
+	 9PZRs4IB+jIIr5eGgc12PwsN9fIx/VIeHdjiXFGtm77IvLyOjx6j0IJiQq2TjRf5ls
+	 8Xd+FWiOnpUzBVldvMkuW7ndQo3Jn7VeygCxMkyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgF2TNU (ORCPT
+        id S1731057AbgF2TN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        Mon, 29 Jun 2020 15:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731271AbgF2TNI (ORCPT
+        with ESMTP id S1731325AbgF2TNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:08 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071FDC08EB22
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:31 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k71so4114248pje.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EO3sRskvzqVrSi/8WlTJ+nKIw1S19eoepjwOuVzqC+k=;
-        b=KCQ5YzkONWOo65CEsckxdgEZDidmsxzkUPEN/UJBCW/qObWNXMfEoB9r0/E7rvaRmO
-         xlnRluaPTdkLMjWOJpH+yUIspSAOF0HgZkzvSgs47FWa+/kG7rzViG86wdee3s9jODiH
-         uu4zTKxTboSZHSRTNaUsgRAj4+LH6Z0yJ6Lok=
+        Mon, 29 Jun 2020 15:13:20 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B91C008751;
+        Mon, 29 Jun 2020 01:35:57 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i14so15694087ejr.9;
+        Mon, 29 Jun 2020 01:35:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EO3sRskvzqVrSi/8WlTJ+nKIw1S19eoepjwOuVzqC+k=;
-        b=th95Gpdxt/6aN9BwilCk8D6wCp3abZOnS68uG0VcKBDTNrX2L2z57b3m9cb1Tc3tfN
-         6K+BRS4hTX/gI96Xq7eCpuiNLYEw4xLcXZfXwUJI4XwTineoMsgRGNbVfXoYIiZ6LjK9
-         zx4aA4+4o2xuWXn3yRZPi4pFTGuNnEa2ryj43dxk8pSPRp1LG7nJ7+5O1OCB7uHclZC7
-         sLmRu0KT/m8C0CTRSYQB4FOFvRSyIPkr8loaCG7H1g2h4KiqvGBGtrmSOu0DTvr3RngV
-         9GZglLAEbkT44/LOux/hc3HSzRr7O1BYrFjqvHknJhBDJwqROj7ttiuH97rQzhPkDRMf
-         4G1A==
-X-Gm-Message-State: AOAM532rAP8jJ7/B35c0b1tmU7x+hpRZCJNl+9JRa0qxRMaO8f5WcM9B
-        6eduIduRiwDJHdZ0cXgWMFGAPw==
-X-Google-Smtp-Source: ABdhPJxsnK2AsNvKawVoNrn3+ksDPrZ4SCYduO82/RDQuADusHJqjvhs/5ikZAbuEc8CjzSaMNuCrA==
-X-Received: by 2002:a17:90b:4d10:: with SMTP id mw16mr15789032pjb.143.1593412050567;
-        Sun, 28 Jun 2020 23:27:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h3sm19838700pje.28.2020.06.28.23.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:27:28 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 17/17] x86/boot: Warn on orphan section placement
-Date:   Sun, 28 Jun 2020 23:18:40 -0700
-Message-Id: <20200629061840.4065483-18-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
-References: <20200629061840.4065483-1-keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P/lWBTxJeT64MmPuE+Y53vSa9wNIb6a3JKrDaGJpzms=;
+        b=tCNf8B6YWMeZ7MhUEoFAMQQAPNwFYbsz8eq/qIeXIgJQ6vdkn0041EqqTNOsLS+Ait
+         7avI8YxjJj1tMA/EiLLMs3kgCxbshsE+tLXz1Zkr/SQZY78jFK2GDRipp7jWGmZScS1m
+         x0YWXskl11/zTACK5IRnOR5tCmC5WpBc1ZRDVWTcj5RK5B2ZK2TB6YSmWsVCouXkc9fH
+         m3LrT8ZGR4If4XF5Ru3zfQMz5xoTV5WWhsbTlYl9M7mxn+MGHY4/MM234iegMFhaWdsp
+         uhOC0QCCdFbme+VmxGNE4aqPWc/SeAOABmuCY5wbNX3szwexaajOfxaWr/jw8Q8AH78H
+         wrqg==
+X-Gm-Message-State: AOAM533VCO9psoKWQ3lh3cxY3vt8aw0C/h3kyeoM21T5JpLGZtQXoefc
+        /JH67q0msfWvT/9U+Fkm30zhyXT3
+X-Google-Smtp-Source: ABdhPJwSpDThVjcEd0PgJHWyDlPf/nuRiq+gnvJcGaWZixD0/guW/6gO2OZBM23kPBf0l0OLqzgoxQ==
+X-Received: by 2002:a17:906:a1cc:: with SMTP id bx12mr12520655ejb.461.1593419756288;
+        Mon, 29 Jun 2020 01:35:56 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id c4sm24101091ejb.17.2020.06.29.01.35.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 01:35:55 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:35:53 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tamseel Shams <m.shams@samsung.com>
+Cc:     kgene@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com
+Subject: Re: [PATCH v2] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Message-ID: <20200629083553.GA14028@kozik-lap>
+References: <CGME20200628071932epcas5p175059c085421a95de76202767bd132cf@epcas5p1.samsung.com>
+ <20200628070007.36222-1-m.shams@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200628070007.36222-1-m.shams@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly named in the linker
-script.
+On Sun, Jun 28, 2020 at 12:30:07PM +0530, Tamseel Shams wrote:
+> In few older Samsung SoCs like s3c2410, s3c2412
+> and s3c2440, UART IP is having 2 interrupt lines.
+> However, in other SoCs like s3c6400, s5pv210,
+> exynos5433, and exynos4210 UART is having only 1
+> interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+> call in the driver gives the following warning:
+> "IRQ index 1 not found" on recent platforms.
+> 
+> This patch re-factors the IRQ resources handling for
+> each platform and hence fixing the above warnings seen
+> on some platforms.
+> 
+> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> ---
+> Removed the RFC tag and using 'platform_get_irq_optional'
+> instead of 'platform_get_irq' as per comment received from
+> Robin Murphy.
+> 
+>  drivers/tty/serial/samsung_tty.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 6ef614d8648c..60554f42e208 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -60,6 +60,7 @@ struct s3c24xx_uart_info {
+>  	char			*name;
+>  	unsigned int		type;
+>  	unsigned int		fifosize;
+> +	unsigned int		irq_cnt;
 
-Add the common debugging sections. Discard the unused note, rel, plt,
-dyn, and hash sections that are not needed in the compressed vmlinux.
-Disable .eh_frame generation in the linker and enable orphan section
-warnings.
+No, it's duplicating the logic.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/boot/compressed/Makefile      |  3 ++-
- arch/x86/boot/compressed/vmlinux.lds.S | 10 ++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+The driver already checks whether SoC has two or one interrupt line with
+s3c24xx_serial_has_interrupt_mask() so there is no point to have two of
+such methods.
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 7619742f91c9..646720a05f89 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -48,6 +48,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE :=n
- 
- KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-+KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
- ifeq ($(CONFIG_X86_32),y)
-@@ -59,7 +60,7 @@ else
- KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
- 	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
- endif
--LDFLAGS_vmlinux := -T
-+LDFLAGS_vmlinux := --orphan-handling=warn -T
- 
- hostprogs	:= mkpiggy
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index d88612e3091f..9afb8737896f 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -75,7 +75,17 @@ SECTIONS
- 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
- 	_end = .;
- 
-+	STABS_DEBUG
-+	DWARF_DEBUG
- 	ELF_DETAILS
- 
- 	DISCARDS
-+	/DISCARD/ : {
-+		*(.note.*)
-+		*(.rela.*) *(.rela_*)
-+		*(.rel.*) *(.rel_*)
-+		*(.plt) *(.plt.*)
-+		*(.dyn*)
-+		*(.hash) *(.gnu.hash)
-+	}
- }
--- 
-2.25.1
+Instead unify it please. Probably entire
+s3c24xx_serial_has_interrupt_mask() and s3c24xx_serial_type() should be
+removed and switched into *serial_drv_data.
 
+Best regards,
+Krzysztof
