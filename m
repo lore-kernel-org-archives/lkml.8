@@ -2,241 +2,159 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB40C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C78821D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455782;
-	bh=593OyubN331LWjjdmxQZ5FO8EQpjPse/1PEqKhxkcfc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dtkUVK6ZDrhLTyYWZHzwAzkjxe1piPHrogQyhq4kvYpQ5UGHVm7QSnsO7tY1hDOyp
-	 DiYSl6CL85jW/FHr6/ZMKdEW9Ut17eSAinyvpPudyUct35XF5WaQAoktWYXAO77hyV
-	 jqnK8ZgeA8+a7bhgl05TmMqxmZKyspvDIuYG96HM=
+	by mail.kernel.org (Postfix) with ESMTP id E678821D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zhx8tlVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgF2SgV (ORCPT
+        id S1726975AbgF2SgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbgF2Sfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E529824754;
-        Mon, 29 Jun 2020 15:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444074;
-        bh=593OyubN331LWjjdmxQZ5FO8EQpjPse/1PEqKhxkcfc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvKjlfi9eZef0NVnrkpJm7TX77WIXMfJ9veV32w03fOzaH6E8/ZHI8GkB3WqnABRJ
-         plnv/lfV2RdH2ySUY8cASw6NdQ+bwPc9ff5fsY/9k1Ci/ALwwQ+FbFnrL9fqnsVI2B
-         MkI0lHP9M3pK56xEV8QkYocgjBH1uzfJxsNVNAkE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ye Bin <yebin10@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 183/265] ata/libata: Fix usage of page address by page_address in ata_scsi_mode_select_xlat function
-Date:   Mon, 29 Jun 2020 11:16:56 -0400
-Message-Id: <20200629151818.2493727-184-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 14:36:24 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:52790 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgF2SgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:36:14 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200629065003epoutp02adbf693a5ec4b49a1d64d7b1598035d5~c8QxV3K6H1107911079epoutp02X
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:50:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200629065003epoutp02adbf693a5ec4b49a1d64d7b1598035d5~c8QxV3K6H1107911079epoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593413403;
+        bh=Gf3pprKXKrcSeP86aKBRO6sfzz3FSEUrZ6VtYq5iOiA=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=Zhx8tlVZf4alD7CbADu6icHoUN1LkMfPcJ/k7csz25kpWYHTC53GSK8j4r7fqe4y2
+         ttngKi65L1+89iFYQCWV2SsDSj0db5QndEFWr98RbsUZrNLL0KzHv73+2/DQJcoyld
+         RHamEz2khA2tzNeDOrNbRveowQlkInwiR3lqXL4g=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200629065002epcas1p27b22a8678c41d2bcdde721adb43f5085~c8Qw6GAND1512515125epcas1p2d;
+        Mon, 29 Jun 2020 06:50:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v4 1/5] scsi: ufs: Add UFS feature related parameter
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+Date:   Mon, 29 Jun 2020 15:48:57 +0900
+X-CMS-MailID: 20200629064857epcms2p4e4bc13826bb0079440fe011c4c105070
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200629064323epcms2p787baba58a416fef7fdd3927f8da701da
+References: <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+This is a patch for parameters to be used for UFS features layer and HPB
+module.
 
-[ Upstream commit f650ef61e040bcb175dd8762164b00a5d627f20e ]
-
-BUG: KASAN: use-after-free in ata_scsi_mode_select_xlat+0x10bd/0x10f0
-drivers/ata/libata-scsi.c:4045
-Read of size 1 at addr ffff88803b8cd003 by task syz-executor.6/12621
-
-CPU: 1 PID: 12621 Comm: syz-executor.6 Not tainted 4.19.95 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xac/0xee lib/dump_stack.c:118
-print_address_description+0x60/0x223 mm/kasan/report.c:253
-kasan_report_error mm/kasan/report.c:351 [inline]
-kasan_report mm/kasan/report.c:409 [inline]
-kasan_report.cold+0xae/0x2d8 mm/kasan/report.c:393
-ata_scsi_mode_select_xlat+0x10bd/0x10f0 drivers/ata/libata-scsi.c:4045
-ata_scsi_translate+0x2da/0x680 drivers/ata/libata-scsi.c:2035
-__ata_scsi_queuecmd drivers/ata/libata-scsi.c:4360 [inline]
-ata_scsi_queuecmd+0x2e4/0x790 drivers/ata/libata-scsi.c:4409
-scsi_dispatch_cmd+0x2ee/0x6c0 drivers/scsi/scsi_lib.c:1867
-scsi_queue_rq+0xfd7/0x1990 drivers/scsi/scsi_lib.c:2170
-blk_mq_dispatch_rq_list+0x1e1/0x19a0 block/blk-mq.c:1186
-blk_mq_do_dispatch_sched+0x147/0x3d0 block/blk-mq-sched.c:108
-blk_mq_sched_dispatch_requests+0x427/0x680 block/blk-mq-sched.c:204
-__blk_mq_run_hw_queue+0xbc/0x200 block/blk-mq.c:1308
-__blk_mq_delay_run_hw_queue+0x3c0/0x460 block/blk-mq.c:1376
-blk_mq_run_hw_queue+0x152/0x310 block/blk-mq.c:1413
-blk_mq_sched_insert_request+0x337/0x6c0 block/blk-mq-sched.c:397
-blk_execute_rq_nowait+0x124/0x320 block/blk-exec.c:64
-blk_execute_rq+0xc5/0x112 block/blk-exec.c:101
-sg_scsi_ioctl+0x3b0/0x6a0 block/scsi_ioctl.c:507
-sg_ioctl+0xd37/0x23f0 drivers/scsi/sg.c:1106
-vfs_ioctl fs/ioctl.c:46 [inline]
-file_ioctl fs/ioctl.c:501 [inline]
-do_vfs_ioctl+0xae6/0x1030 fs/ioctl.c:688
-ksys_ioctl+0x76/0xa0 fs/ioctl.c:705
-__do_sys_ioctl fs/ioctl.c:712 [inline]
-__se_sys_ioctl fs/ioctl.c:710 [inline]
-__x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:710
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
-f7 48
-89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-ff 0f
-83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb0e9602c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fb0e96036d4 RCX: 000000000045c479
-RDX: 0000000020000040 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000046d R14: 00000000004c6e1a R15: 000000000076bfcc
-
-Allocated by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-kasan_kmalloc mm/kasan/kasan.c:553 [inline]
-kasan_kmalloc+0xbf/0xe0 mm/kasan/kasan.c:531
-__kmalloc+0xf3/0x1e0 mm/slub.c:3749
-kmalloc include/linux/slab.h:520 [inline]
-load_elf_phdrs+0x118/0x1b0 fs/binfmt_elf.c:441
-load_elf_binary+0x2de/0x4610 fs/binfmt_elf.c:737
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-__kasan_slab_free+0x129/0x170 mm/kasan/kasan.c:521
-slab_free_hook mm/slub.c:1370 [inline]
-slab_free_freelist_hook mm/slub.c:1397 [inline]
-slab_free mm/slub.c:2952 [inline]
-kfree+0x8b/0x1a0 mm/slub.c:3904
-load_elf_binary+0x1be7/0x4610 fs/binfmt_elf.c:1118
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88803b8ccf00
-which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 259 bytes inside of
-512-byte region [ffff88803b8ccf00, ffff88803b8cd100)
-The buggy address belongs to the page:
-page:ffffea0000ee3300 count:1 mapcount:0 mapping:ffff88806cc03080
-index:0xffff88803b8cc780 compound_mapcount: 0
-flags: 0x100000000008100(slab|head)
-raw: 0100000000008100 ffffea0001104080 0000000200000002 ffff88806cc03080
-raw: ffff88803b8cc780 00000000800c000b 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-ffff88803b8ccf00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8ccf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88803b8cd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-^
-ffff88803b8cd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8cd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-
-You can refer to "https://www.lkml.org/lkml/2019/1/17/474" reproduce
-this error.
-
-The exception code is "bd_len = p[3];", "p" value is ffff88803b8cd000
-which belongs to the cache kmalloc-512 of size 512. The "page_address(sg_page(scsi_sglist(scmd)))"
-maybe from sg_scsi_ioctl function "buffer" which allocated by kzalloc, so "buffer"
-may not page aligned.
-This also looks completely buggy on highmem systems and really needs to use a
-kmap_atomic.      --Christoph Hellwig
-To address above bugs, Paolo Bonzini advise to simpler to just make a char array
-of size CACHE_MPAGE_LEN+8+8+4-2(or just 64 to make it easy), use sg_copy_to_buffer
-to copy from the sglist into the buffer, and workthere.
-
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 ---
- drivers/ata/libata-scsi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufs.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 36e588d88b956..c10deb87015ba 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -3692,12 +3692,13 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
- {
- 	struct scsi_cmnd *scmd = qc->scsicmd;
- 	const u8 *cdb = scmd->cmnd;
--	const u8 *p;
- 	u8 pg, spg;
- 	unsigned six_byte, pg_len, hdr_len, bd_len;
- 	int len;
- 	u16 fp = (u16)-1;
- 	u8 bp = 0xff;
-+	u8 buffer[64];
-+	const u8 *p = buffer;
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index f8ab16f30fdc..ae557b8d3eba 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -122,6 +122,7 @@ enum flag_idn {
+ 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
++	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
+ };
  
- 	VPRINTK("ENTER\n");
+ /* Attribute idn for Query requests */
+@@ -195,6 +196,9 @@ enum unit_desc_param {
+ 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
+ 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
+ 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
++	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
++	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
++	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
+ 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
+ };
  
-@@ -3731,12 +3732,14 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
- 	if (!scsi_sg_count(scmd) || scsi_sglist(scmd)->length < len)
- 		goto invalid_param_len;
+@@ -235,6 +239,8 @@ enum device_desc_param {
+ 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
+ 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
+ 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
++	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
++	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
+ 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
+ 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
+ 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
+@@ -283,6 +289,10 @@ enum geometry_desc_param {
+ 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
+ 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
+ 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
++	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
++	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
++	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
++	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
+ 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
+@@ -327,6 +337,7 @@ enum {
  
--	p = page_address(sg_page(scsi_sglist(scmd)));
--
- 	/* Move past header and block descriptors.  */
- 	if (len < hdr_len)
- 		goto invalid_param_len;
+ /* Possible values for dExtendedUFSFeaturesSupport */
+ enum {
++	UFS_DEV_HPB_SUPPORT		= BIT(7),
+ 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+ };
  
-+	if (!sg_copy_to_buffer(scsi_sglist(scmd), scsi_sg_count(scmd),
-+			       buffer, sizeof(buffer)))
-+		goto invalid_param_len;
-+
- 	if (six_byte)
- 		bd_len = p[3];
- 	else
+@@ -537,6 +548,7 @@ struct ufs_dev_info {
+ 	u8 *model;
+ 	u16 wspecversion;
+ 	u32 clk_gating_wait_us;
++	u8 b_ufs_feature_sup;
+ 	u32 d_ext_ufs_feature_sup;
+ 	u8 b_wb_buffer_type;
+ 	u32 d_wb_alloc_units;
+
+base-commit: fbca7a04dbd8271752a58594727b61307bcc85b6
 -- 
-2.25.1
+2.17.1
+
 
