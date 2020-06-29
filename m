@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96049C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73459206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F76206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467809;
-	bh=s1z9igBSV3lztCsHw33mR1pCTyJJtjXbdRW56g7ZAdU=;
+	s=default; t=1593467814;
+	bh=C7vN3ZMmLv4OKeTt0VDBRY3+6jrh8L5yizzK4p3NFxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7EgEUb1i+kiJ6ZSL7zub9q3tKcghTN2OBerfBgtlmofb5DoBzoaPrhJYwxBxllPb
-	 1SnprAbb1ltfWr0dz/5Zj3RCI1cx1mlhy23ZbxTQpcnp5PoFXAFysHfMn4HkRmiy6O
-	 sCpfaglk591Sjd3e2FVSQh5wFLruR7ih0O8zQG3c=
+	b=zcHW+h+b9aJvjC1mplpbP35rNXNPkBmgWZ2hRXHPdSVGyK1xaQL+CbvpBrGT1H2by
+	 7TK/OS3o3ZltuJ62Zv4CZf7S5ymgkCoUvfLYGPAbuF/5JXw/bZyxkuP+k7uUfexqwD
+	 +k0e7jmCeB2oNQHU0afUrXP4c/S+iT9eChJppZko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391614AbgF2V4r (ORCPT
+        id S2389588AbgF2V4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726520AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F4B1247CD;
-        Mon, 29 Jun 2020 15:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5804624692;
+        Mon, 29 Jun 2020 15:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444139;
-        bh=s1z9igBSV3lztCsHw33mR1pCTyJJtjXbdRW56g7ZAdU=;
+        s=default; t=1593443987;
+        bh=C7vN3ZMmLv4OKeTt0VDBRY3+6jrh8L5yizzK4p3NFxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVAycklmSqym+6N5TGsaURCbKgfRlnI5acljxK64b08/XpEkKWAUEf5uBJ7Odx8YN
-         f7KibMiCS/O+i87sB5bhEI39IZnQM+RDs6Dp6HDtZRsXjvwOfR54/BNd/NL+XiE0P7
-         a2A7lIUzrmnSPkzamh8A16g6nuMbNAPzMOjrE24A=
+        b=B14r1JVg6iVJardyj+AmxyVwh9+7Q+ytQVgR3jrcxdPoamDMrdQ/R3Kp5cse0hhGN
+         3GKf24PM3aHBKSxR5xUHnyXtK1GMLO/Cc1QI1CWCiNFXxNm9x0zdNHKCoG74+yAx5I
+         Z2W/oxPmkjK4MwhkQ+DaFNvq7zEj3xaFlUmuO2bk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bernard Zhao <bernard@vivo.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Shay Drory <shayd@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 245/265] drm/amd: fix potential memleak in err branch
-Date:   Mon, 29 Jun 2020 11:17:58 -0400
-Message-Id: <20200629151818.2493727-246-sashal@kernel.org>
+Subject: [PATCH 5.7 091/265] IB/mad: Fix use after free when destroying MAD agent
+Date:   Mon, 29 Jun 2020 11:15:24 -0400
+Message-Id: <20200629151818.2493727-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,39 +68,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Zhao <bernard@vivo.com>
+From: Shay Drory <shayd@mellanox.com>
 
-commit b5b78a6c8d8cb9c307bc6b16a754603424459d6e upstream.
+commit 116a1b9f1cb769b83e5adff323f977a62b1dcb2e upstream.
 
-The function kobject_init_and_add alloc memory like:
-kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
-->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
-->kmalloc_slab, in err branch this memory not free. If use
-kmemleak, this path maybe catched.
-These changes are to add kobject_put in kobject_init_and_add
-failed branch, fix potential memleak.
+Currently, when RMPP MADs are processed while the MAD agent is destroyed,
+it could result in use after free of rmpp_recv, as decribed below:
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+	cpu-0						cpu-1
+	-----						-----
+ib_mad_recv_done()
+ ib_mad_complete_recv()
+  ib_process_rmpp_recv_wc()
+						unregister_mad_agent()
+						 ib_cancel_rmpp_recvs()
+						  cancel_delayed_work()
+   process_rmpp_data()
+    start_rmpp()
+     queue_delayed_work(rmpp_recv->cleanup_work)
+						  destroy_rmpp_recv()
+						   free_rmpp_recv()
+     cleanup_work()[1]
+      spin_lock_irqsave(&rmpp_recv->agent->lock) <-- use after free
+
+[1] cleanup_work() == recv_cleanup_handler
+
+Fix it by waiting for the MAD agent reference count becoming zero before
+calling to ib_cancel_rmpp_recvs().
+
+Fixes: 9a41e38a467c ("IB/mad: Use IDR for agent IDs")
+Link: https://lore.kernel.org/r/20200621104738.54850-2-leon@kernel.org
+Signed-off-by: Shay Drory <shayd@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/core/mad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index fe0cd49d4ea7c..d8c74aa4e5650 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -396,6 +396,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
- 					   (int)process->lead_thread->pid);
- 		if (ret) {
- 			pr_warn("Creating procfs pid directory failed");
-+			kobject_put(process->kobj);
- 			goto out;
- 		}
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index c54db13fa9b0a..f7626ebcf31cf 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -639,10 +639,10 @@ static void unregister_mad_agent(struct ib_mad_agent_private *mad_agent_priv)
+ 	xa_erase(&ib_mad_clients, mad_agent_priv->agent.hi_tid);
+ 
+ 	flush_workqueue(port_priv->wq);
+-	ib_cancel_rmpp_recvs(mad_agent_priv);
+ 
+ 	deref_mad_agent(mad_agent_priv);
+ 	wait_for_completion(&mad_agent_priv->comp);
++	ib_cancel_rmpp_recvs(mad_agent_priv);
+ 
+ 	ib_mad_agent_security_cleanup(&mad_agent_priv->agent);
  
 -- 
 2.25.1
