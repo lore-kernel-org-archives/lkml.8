@@ -2,183 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30296C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF8A720702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460434;
-	bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IslOtLGRtuoKkpHfzrPcQlG3/vYrFMUt12qvGgona07PNqoM0FBv1/jKQnNzUR2a3
-	 vtaY2Pm53JI/tPK2CaYBThPbLXOoOnXGMlvF90ZMuEoZpe1BSP0IypYbM9gpCV+lVO
-	 BZ6+6321ZS6rwEz4+2NcoGwTYsdMEwwnE6JBve0g=
+	by mail.kernel.org (Postfix) with ESMTP id 12D3720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bRgfBWJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgF2Txw (ORCPT
+        id S1729615AbgF2TyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE402489B;
-        Mon, 29 Jun 2020 15:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444393;
-        bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j29ob9AdVSJ82cr9u5sJ4g+fz+uoZ3Nr5RBFl8rH3NVcSsgp6VPR2mXiEvaiQQnpO
-         PmCkokPGK4vkXfTOy5um0JciPaMiaBpDu7Bdd5VFbjkBCmrioHhKH/THgqgQ6reczd
-         5mLPRdsKrRsZT+gL3kKBi6vGrtk2pggVcrTw3J2o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Christophe Meynard <Christophe.Meynard@ign.fr>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/178] regualtor: pfuze100: correct sw1a/sw2 on pfuze3000
-Date:   Mon, 29 Jun 2020 11:23:35 -0400
-Message-Id: <20200629152523.2494198-71-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730991AbgF2Tx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:53:59 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B994C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:59 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b184so1935255pfa.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zKRhn9sIaFaGEW3xbHkfNQIj02f8YddLObFXUqnNhu8=;
+        b=bRgfBWJhw3k6vEkg+gGrA7QdNS4rt+ffVIqjxb8+xRH5Hf8e5n3ITha/4r/HQQjG1F
+         Mnp916bSSyiyNJ3mB4Pp24pG+NomV7NtlGrDIbs1/VO6qz2zh+2u4MyKygTW4DWOdEAW
+         h0hJeQ7dnSzCQo+TA8azgjmFV+w1Q1r8AkAQ6kyp/vQDX2e8LTYa1tMbaefxqY2R+gNz
+         opFp+Zy1OQeuKe8JMokYShmECU6iURq7DyQW5616Pz5i3j+aOZhMSWUTT6+QxBbnEYnE
+         2WnYAveyeIeVpJcFa2nui3COjVCHDpZHxL9us5S2uMZdxLknVjYHLMAByD7JWc3QqKQU
+         /rhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zKRhn9sIaFaGEW3xbHkfNQIj02f8YddLObFXUqnNhu8=;
+        b=WGnSzMAIjeIb2EkkmEEY3D/xE7OAE4t2yhqOglzZLpSe3M1hLJVxOfLe+cRGs6DseI
+         tF/iEy5eXNMulIyeFpzloXQc4AeG82YejvWzsjS1SWaZUI4ldxcFlnO/twDWF60uSNHy
+         dsZIV/PGQGacQ7lNvWqvPFFRheJF4UQ6rHcMCrgTMzYpRgMlqaTVbcOnO9INEh4b6+77
+         8xq17gb2IeVqOKdsxVfaHLJmeRd8kR0OKaxikCeT3xdqYkeYGoi8BRcpi9qTZ39VQwCg
+         xoIcWMcttcYyURn67WRHd6zi0i7409PnMiCnp97zmj9l+guo/x0aN4ClA2pBRtNNqkp0
+         oKAw==
+X-Gm-Message-State: AOAM533b3/ZwuqXWFHX6lAdYDVngm0CAz8EQl4TZKpxPZfbMPZOMXghG
+        iohMpmJKY0If4gh+eVph0kGSVO/37yfr8sNr4tgBAA==
+X-Google-Smtp-Source: ABdhPJx1ZltZC8TxdLF0qs/W70OrjV+LgOyxShhZsT9U/M+Islb1fHf4YkGIw2+d4lhznk2dOuqEiVum9V3YVQvnVAQ=
+X-Received: by 2002:a63:7e55:: with SMTP id o21mr11995677pgn.263.1593460438609;
+ Mon, 29 Jun 2020 12:53:58 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200629061840.4065483-1-keescook@chromium.org> <20200629061840.4065483-9-keescook@chromium.org>
+In-Reply-To: <20200629061840.4065483-9-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Jun 2020 12:53:47 -0700
+Message-ID: <CAKwvOd=r6bsBfSZxVYrnbm1Utq==ApWBDjx+0Fxsm90Aq3Jghw@mail.gmail.com>
+Subject: Re: [PATCH v4 08/17] arm64/mm: Remove needless section quotes
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+On Sun, Jun 28, 2020 at 11:18 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Fix a case of needless quotes in __section(), which Clang doesn't like.
+>
+> Acked-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 6f1cf5257acc6e6242ddf2f52bc7912aed77b79f ]
+Yep, I remember bugs from this.  Probably should scan the kernel for
+other instances of this.  +Joe for checkpatch.pl validation.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-PFUZE100_SWB_REG is not proper for sw1a/sw2, because enable_mask/enable_reg
-is not correct. On PFUZE3000, sw1a/sw2 should be the same as sw1a/sw2 on
-pfuze100 except that voltages are not linear, so add new PFUZE3000_SW_REG
-and pfuze3000_sw_regulator_ops which like the non-linear PFUZE100_SW_REG
-and pfuze100_sw_regulator_ops.
+> ---
+>  arch/arm64/mm/mmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 1df25f26571d..dce024ea6084 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -42,7 +42,7 @@
+>  u64 idmap_t0sz = TCR_T0SZ(VA_BITS);
+>  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
+>
+> -u64 __section(".mmuoff.data.write") vabits_actual;
+> +u64 __section(.mmuoff.data.write) vabits_actual;
+>  EXPORT_SYMBOL(vabits_actual);
+>
+>  u64 kimage_voffset __ro_after_init;
+> --
+> 2.25.1
+>
 
-Fixes: 1dced996ee70 ("regulator: pfuze100: update voltage setting for pfuze3000 sw1a")
-Reported-by: Christophe Meynard <Christophe.Meynard@ign.fr>
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Link: https://lore.kernel.org/r/1592171648-8752-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/regulator/pfuze100-regulator.c | 60 +++++++++++++++++---------
- 1 file changed, 39 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 689537927f6f7..4c8e8b4722872 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -209,6 +209,19 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 
- };
- 
-+static const struct regulator_ops pfuze3000_sw_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_ascend,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.set_ramp_delay = pfuze100_set_ramp_delay,
-+
-+};
-+
- #define PFUZE100_FIXED_REG(_chip, _name, base, voltage)	\
- 	[_chip ## _ ## _name] = {	\
- 		.desc = {	\
-@@ -318,23 +331,28 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 	.stby_mask = 0x20,	\
- }
- 
--
--#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
--	.desc = {	\
--		.name = #_name,\
--		.n_voltages = ((max) - (min)) / (step) + 1,	\
--		.ops = &pfuze100_sw_regulator_ops,	\
--		.type = REGULATOR_VOLTAGE,	\
--		.id = _chip ## _ ## _name,	\
--		.owner = THIS_MODULE,	\
--		.min_uV = (min),	\
--		.uV_step = (step),	\
--		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
--		.vsel_mask = 0x7,	\
--	},	\
--	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
--	.stby_mask = 0x7,	\
--}
-+/* No linar case for the some switches of PFUZE3000 */
-+#define PFUZE3000_SW_REG(_chip, _name, base, mask, voltages)	\
-+	[_chip ## _ ##  _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ARRAY_SIZE(voltages),	\
-+			.ops = &pfuze3000_sw_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = _chip ## _ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.volt_table = voltages,	\
-+			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+			.vsel_mask = (mask),	\
-+			.enable_reg = (base) + PFUZE100_MODE_OFFSET,	\
-+			.enable_mask = 0xf,	\
-+			.enable_val = 0x8,	\
-+			.enable_time = 500,	\
-+		},	\
-+		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+		.stby_mask = (mask),	\
-+		.sw_reg = true,		\
-+	}
- 
- #define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
- 	.desc = {	\
-@@ -391,9 +409,9 @@ static struct pfuze_regulator pfuze200_regulators[] = {
- };
- 
- static struct pfuze_regulator pfuze3000_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
- 	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
--	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
- 	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-@@ -407,8 +425,8 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
- };
- 
- static struct pfuze_regulator pfuze3001_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
--	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
- 	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
 -- 
-2.25.1
-
+Thanks,
+~Nick Desaulniers
