@@ -2,114 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6369C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77C5206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8x6aysV"
+	by mail.kernel.org (Postfix) with ESMTP id 0779F206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593456953;
+	bh=8Nt0QTjmU/HPfCrCbQoidM1/zHTp3ETdg+Q0aNDBh58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HXv/QCIyvzcF1ec+nGCJnMJl5g6u2rOKuf0nVM9A0ByIYDWGm0WoOmCM0JYwtqmXH
+	 skt7A7P1IRQDAg+UmsDXRVnQ8c4nHN6vpH985klQp5uDxA91u1ijLxJ3uI/4QCj/xC
+	 asChzpHD2sx60o5nIcedb80+dKfIeKXsWEIMZNAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgF2Szp (ORCPT
+        id S1729671AbgF2Szu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56524 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729913AbgF2SzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593456919;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IRNIV4x43P6HErryarebd5FQz8VopUKzf076Ub4cEhw=;
-        b=X8x6aysVFVe8YFVhCEmUfJRQ0p8IteM8r0KfEtdIzRJXebemoPOpgVk9PmFw5+q1RAqeiE
-        dlMu7KrzsZ4zc4fdXbNYAnrQuME4wPHLgFAbnxqe/rXB7sTU6CZKGfqYUivNX0byQ3+V6a
-        vntnh5Ohk0wTgsLP66a1K4lHuNxKu08=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-um4uu1F4PoCkq658zZ3pxg-1; Mon, 29 Jun 2020 08:54:00 -0400
-X-MC-Unique: um4uu1F4PoCkq658zZ3pxg-1
-Received: by mail-wm1-f69.google.com with SMTP id v6so16151905wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:54:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IRNIV4x43P6HErryarebd5FQz8VopUKzf076Ub4cEhw=;
-        b=P9u/mZg4grv2BZpGy6gmnrIurUD2sBX+C3GJ02eyjG4cgVO4qGPAnY/jbN2yHtTG7g
-         rxNO+Q0aHlet4vo8UUn/qlFDowC94sUCuBrYkwzSzetKzI6Qhp0aGYAq8CjFUH/CCFzW
-         0k36sVr8/8PH1CFj1aC/5PcqklFZ/GbnfUNYIwNPIm6z5XtUb4WIQ6JFJQOLDo/wTERX
-         6Kclqz6okEl8/dc1AX5ZApGAZnZADKB57Mqgv+3GQSPlhh0eeKMdzsdT+rnnZshTXWML
-         XpZ/Qjb9kXuUVLpPcn6kNloxe3kTwcdBGBX8DoHXd8isc3gdrhXszP71POr2aeJXkrA5
-         tmEQ==
-X-Gm-Message-State: AOAM531o4yRACR0YCgkRR0hmnQ7v+E2Oh3NfqHGKTsVYXUTAuoXEa9dR
-        9DMFt+51vBP+lncE2mlP7bOONMPjMlUk3Hvo/vrhU0Faes89C9Cd8UhwPKxepNNxWQPHP3qQf/P
-        Yj9zcm4IU8PO8mW1vRNc6HjUA
-X-Received: by 2002:a1c:5418:: with SMTP id i24mr16011211wmb.47.1593435239275;
-        Mon, 29 Jun 2020 05:53:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyCGDvr+eGI0QiQBdG3VZDI0bqn2iCa/GHXZRlpJW0cXI/cAOmdxZFkRYH9FPz3OcQeGVb3lA==
-X-Received: by 2002:a1c:5418:: with SMTP id i24mr16011199wmb.47.1593435239033;
-        Mon, 29 Jun 2020 05:53:59 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.8.241])
-        by smtp.gmail.com with ESMTPSA id x13sm50975152wre.83.2020.06.29.05.53.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:53:58 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 14:53:56 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
- is cleared
-Message-ID: <20200629125356.GB9670@localhost.localdomain>
-References: <20200520164925.GM10078@localhost.localdomain>
- <20200520170215.GB8800@lenoir>
- <20200520184710.GO10078@localhost.localdomain>
- <20200521004443.GB15455@lenoir>
- <20200521170020.GQ10078@localhost.localdomain>
- <20200615210743.GA21371@lenoir>
- <20200616065757.GA446382@localhost.localdomain>
- <20200616204649.GA4914@lenoir>
- <20200629123651.GA9670@localhost.localdomain>
- <20200629124207.GA6088@lenoir>
+        Mon, 29 Jun 2020 14:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729983AbgF2SzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:55:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAEBE25578;
+        Mon, 29 Jun 2020 15:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446140;
+        bh=8Nt0QTjmU/HPfCrCbQoidM1/zHTp3ETdg+Q0aNDBh58=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H/IXSN/SGfq3/LOZI8NMyVD5oyCmk9NqOsvYZrQQKG1rVEHNzUU7ixPpteglTn0qx
+         gn9uFIUgSg8AIZQiDE8PM7qmWj8BjQOcEXzhQTHsPGA9cRu4WLRSRiX8DxxRNkA1nk
+         r3zdpodM+cVnCm11CNcZptqgfmn0J5fekgk6r6sY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 128/135] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Mon, 29 Jun 2020 11:53:02 -0400
+Message-Id: <20200629155309.2495516-129-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629124207.GA6088@lenoir>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/06/20 14:42, Frederic Weisbecker wrote:
-> On Mon, Jun 29, 2020 at 02:36:51PM +0200, Juri Lelli wrote:
-> > Hi,
-> > 
-> > On 16/06/20 22:46, Frederic Weisbecker wrote:
-> > > On Tue, Jun 16, 2020 at 08:57:57AM +0200, Juri Lelli wrote:
-> > > > Sure. Let me know if you find anything.
-> > > 
-> > > I managed to reproduce. With "threadirqs" and without
-> > > "tsc=reliable". I see tons of spurious TIMER softirqs.
-> > > Investigation begins! I'll let you know.
-> > 
-> > Gentle ping. Any new findings about this issue?
-> 
-> Yep, I'm working on a series to reduce timer softirqs. I'm almost
-> done, should post it soon.
+From: Denis Efremov <efremov@linux.com>
 
-Great!
+commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
 
-Looking forward to it.
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-Best,
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Juri
+diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
+index c3d531a1114b6..14ee1d9a56a76 100644
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2128,7 +2128,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
+ 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
+ 			ret = -EINVAL;
+ 
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
+ 
+ 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
+-- 
+2.25.1
 
