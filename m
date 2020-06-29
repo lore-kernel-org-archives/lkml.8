@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2B2206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F716206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457834;
-	bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
+	s=default; t=1593457840;
+	bh=3Ob8pXuAG12RcidzX5/UkCv6xb4eoYNzwyVZ7XKkcCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzT1x2+EDhJcmtfiuQF8Ii9/VZef00tAIE5+4uvP2Arz1VN1fYW4KyeIi/Leq+2MW
-	 /cVocIIYqfcpmvPqKdBcY5Jj6NDiA8ACBwsdMfZp4VpZnZw8zr6oZBP+xHpnGibUka
-	 Qoxc8b13LrFyVdXE9sObFJZHNke+IZVaWR5raGlc=
+	b=U9fI7ckVl5dWtQtPBJZFNzMzlCJgdapjAWZBE1/f9KtWYLAAXo+et9wVXPAjHhVZ6
+	 fL2UARTIpDGfAWXI4plTYcvF+y0lxpPSuArBB6uHJe45HabaLmROu6gpYTNwvtsg7t
+	 eeo2mQrUGphOBIRwW4ptG6xRuR8vtkLYQgT3XGV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgF2TKd (ORCPT
+        id S1730989AbgF2TKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:10:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53732 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:18 -0400
+        id S1730406AbgF2TKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:10:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A3C254B3;
-        Mon, 29 Jun 2020 15:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D54254D1;
+        Mon, 29 Jun 2020 15:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446009;
-        bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
+        s=default; t=1593446028;
+        bh=3Ob8pXuAG12RcidzX5/UkCv6xb4eoYNzwyVZ7XKkcCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0jalzkpvp/PBxP+DmNNWXszeUb+jLcC26qzoOMKBRpwEDFoheucI8SRvIfWBCq6t
-         G8/qoYhbO86ReDeqSrRDPsYJpOQRLLBuy0d730PVTC9vnktNBfq//ivEKDSvUr+gWh
-         q6sHvC/A9Dl4JmYR+sWEdfOGH8JYl5PGKoqN8D+A=
+        b=ttiXW4FFOdSW+1kouNdyYm+Ay3CIeMmS7dBbFotKhmHWIq8kdG2YZSU8NxOcGqCpz
+         WMZoybw+UwyKz9D8zrNHgMK9PY2zAze0iKPCTKmd509NXHVblqj0vYQO9dM3/hgher
+         Q0rqRH6yNwoxLPiH6wYJ47YnR1Fh0yAtLXou4/r4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ashimida <ashimida@linux.alibaba.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+Cc:     Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 016/135] mksysmap: Fix the mismatch of '.L' symbols in System.map
-Date:   Mon, 29 Jun 2020 11:51:10 -0400
-Message-Id: <20200629155309.2495516-17-sashal@kernel.org>
+Subject: [PATCH 4.4 034/135] powerpc/ps3: Fix kexec shutdown hang
+Date:   Mon, 29 Jun 2020 11:51:28 -0400
+Message-Id: <20200629155309.2495516-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,44 +65,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ashimida <ashimida@linux.alibaba.com>
+From: Geoff Levand <geoff@infradead.org>
 
-[ Upstream commit 72d24accf02add25e08733f0ecc93cf10fcbd88c ]
+[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
 
-When System.map was generated, the kernel used mksysmap to
-filter the kernel symbols, but all the symbols with the
-second letter 'L' in the kernel were filtered out, not just
-the symbols starting with 'dot + L'.
+The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
+are called very late in the shutdown via kexec's mmu_cleanup_all
+routine.  By the time mmu_cleanup_all runs it is too late to use
+udbg_printf, and calling it will cause PS3 systems to hang.
 
-For example:
-ashimida@ubuntu:~/linux$ cat System.map |grep ' .L'
-ashimida@ubuntu:~/linux$ nm -n vmlinux |grep ' .L'
-ffff0000088028e0 t bLength_show
-......
-ffff0000092e0408 b PLLP_OUTC_lock
-ffff0000092e0410 b PLLP_OUTA_lock
+Remove all debugging statements from ps3_mm_region_destroy() and
+ps3_mm_vas_destroy() and replace any error reporting with calls
+to lv1_panic.
 
-The original intent should be to filter out all local symbols
-starting with '.L', so the dot should be escaped.
+With this change builds with 'DEBUG' defined will not cause kexec
+reboots to hang, and builds with 'DEBUG' defined or not will end
+in lv1_panic if an error is encountered.
 
-Fixes: 00902e984732 ("mksysmap: Add h8300 local symbol pattern")
-Signed-off-by: ashimida <ashimida@linux.alibaba.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/mksysmap | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index a35acc0d0b827..9aa23d15862a0 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -41,4 +41,4 @@
- # so we just ignore them to let readprofile continue to work.
- # (At least sparc64 has __crc_ in the middle).
+diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
+index b0f34663b1aec..19bae78b1f25b 100644
+--- a/arch/powerpc/platforms/ps3/mm.c
++++ b/arch/powerpc/platforms/ps3/mm.c
+@@ -212,13 +212,14 @@ void ps3_mm_vas_destroy(void)
+ {
+ 	int result;
  
--$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
-+$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
+-	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
+-
+ 	if (map.vas_id) {
+ 		result = lv1_select_virtual_address_space(0);
+-		BUG_ON(result);
+-		result = lv1_destruct_virtual_address_space(map.vas_id);
+-		BUG_ON(result);
++		result += lv1_destruct_virtual_address_space(map.vas_id);
++
++		if (result) {
++			lv1_panic(0);
++		}
++
+ 		map.vas_id = 0;
+ 	}
+ }
+@@ -316,19 +317,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
+ 	int result;
+ 
+ 	if (!r->destroy) {
+-		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
+-			__func__, __LINE__, r->base, r->size);
+ 		return;
+ 	}
+ 
+-	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
+-
+ 	if (r->base) {
+ 		result = lv1_release_memory(r->base);
+-		BUG_ON(result);
++
++		if (result) {
++			lv1_panic(0);
++		}
++
+ 		r->size = r->base = r->offset = 0;
+ 		map.total = map.rm.size;
+ 	}
++
+ 	ps3_mm_set_repository_highmem(NULL);
+ }
+ 
 -- 
 2.25.1
 
