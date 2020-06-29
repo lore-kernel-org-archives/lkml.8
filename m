@@ -2,95 +2,89 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11512C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8B820720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A337206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgF2COH convert rfc822-to-8bit (ORCPT
+        id S1726392AbgF2CQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:14:07 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:50419 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgF2COH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:14:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U0xryp7_1593396842;
-Received: from 30.27.116.9(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U0xryp7_1593396842)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Jun 2020 10:14:03 +0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3 0/3] Build ORC fast lookup table in scripts/sorttable
- tool
-From:   changhuaixin <changhuaixin@linux.alibaba.com>
-In-Reply-To: <20200603143945.64248-1-changhuaixin@linux.alibaba.com>
-Date:   Mon, 29 Jun 2020 10:14:01 +0800
-Cc:     changhuaixin <changhuaixin@linux.alibaba.com>, bp@alien8.de,
-        hpa@zytor.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        x86@kernel.org, yamada.masahiro@socionext.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <217C22B3-D08F-4CB9-BC8D-3645C8389F5D@linux.alibaba.com>
-References: <20200601173840.3f36m6l4fsu5bill@treble>
- <20200603143945.64248-1-changhuaixin@linux.alibaba.com>
-To:     jpoimboe@redhat.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sun, 28 Jun 2020 22:16:42 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58328 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726204AbgF2CQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:16:42 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jpjLP-0001Kz-SD; Mon, 29 Jun 2020 12:16:28 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 29 Jun 2020 12:16:27 +1000
+Date:   Mon, 29 Jun 2020 12:16:27 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.8
+Message-ID: <20200629021627.GA13792@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200408061513.GA23636@gondor.apana.org.au>
+ <20200611040544.GA27603@gondor.apana.org.au>
+ <20200621082303.GA30729@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200621082303.GA30729@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josh, will you please have a look at this patchset?
+Hi Linus:
 
-There might be another way to set SHT_PROGBITS of section .orc_lookup by writing section headers when orc_unwind and orc_unwind_ip tables are writen. It might be as follows:
+This push fixes two race conditions, one in padata and one in
+af_alg.
 
-diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
-index 3f98dcfbc177..860d4dcec8e6 100644
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -183,6 +183,10 @@ int create_orc_sections(struct objtool_file *file)
-        u_sec = elf_create_section(file->elf, ".orc_unwind",
-                                   sizeof(struct orc_entry), idx);
+The following changes since commit 819966c06b759022e9932f328284314d9272b9f3:
 
-+       /* make flags of section orc_lookup right */
-+       if (!elf_create_section(file->elf, ".orc_lookup", sizeof(int), 0))
-+               return -1;
-+
+  crypto: drbg - always try to free Jitter RNG instance (2020-06-15 17:38:54 +1000)
 
-What do you think about this way of setting SHT_PROGBITS?
+are available in the Git repository at:
 
-> On Jun 3, 2020, at 10:39 PM, Huaixin Chang <changhuaixin@linux.alibaba.com> wrote:
-> 
-> Move building of fast lookup table from boot to sorttable tool. This saves us
-> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores. It
-> adds a little more than 7ms to boot time when testing on the same CPU.
-> 
-> Changelog v3:
-> 1. Modify annotation of unwind_init().
-> 
-> Changelog v2:
-> 1. Type of section orc_lookup needs to be SHT_PROGBITS.
-> 2. unwind_init() cannot be removed totally as setting lookup_num_blocks is needed.
-> 
-> Huaixin Chang (3):
->  scripts/sorttable: Change section type of orc_lookup to SHT_PROGBITS
->  scripts/sorttable: Build orc fast lookup table via sorttable tool
->  x86/unwind/orc: Simplify unwind_init() for x86 boot
-> 
-> arch/x86/kernel/unwind_orc.c      | 41 +---------------
-> include/asm-generic/vmlinux.lds.h |  2 +
-> scripts/sorttable.h               | 99 ++++++++++++++++++++++++++++++++++++---
-> 3 files changed, 96 insertions(+), 46 deletions(-)
-> 
-> -- 
-> 2.14.4.44.g2045bb6
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
 
+for you to fetch changes up to e04ec0de61c1eb9693179093e83ab8ca68a30d08:
+
+  padata: upgrade smp_mb__after_atomic to smp_mb in padata_do_serial (2020-06-18 17:09:54 +1000)
+
+----------------------------------------------------------------
+Daniel Jordan (1):
+      padata: upgrade smp_mb__after_atomic to smp_mb in padata_do_serial
+
+Herbert Xu (1):
+      crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+
+ crypto/af_alg.c         | 26 +++++++++++---------------
+ crypto/algif_aead.c     |  9 +++------
+ crypto/algif_hash.c     |  9 +++------
+ crypto/algif_skcipher.c |  9 +++------
+ include/crypto/if_alg.h |  4 ++--
+ kernel/padata.c         |  4 ++--
+ 6 files changed, 24 insertions(+), 37 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
