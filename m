@@ -4,218 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6121FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3501120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED6C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kMCZrtAC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZN+AKNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389468AbgF2UkA (ORCPT
+        id S1731972AbgF2UkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
+        Mon, 29 Jun 2020 16:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731714AbgF2TOM (ORCPT
+        with ESMTP id S1731708AbgF2TOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:12 -0400
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on20618.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e1a::618])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149AEC0A8883;
-        Mon, 29 Jun 2020 00:26:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mcPIIM0J49awy5mMi1lCWfQzPIyIZRC84rprM/zKJ2Bev73l9Pq6hK02VNXsMUz/HsNjOg9BDjW4vbB6epLtoCnrQaLvggq7E9ivOnqLncred8GXpzBSp9fq41m3krpuhVY8zNCb0DCX1u4cc0pBl6iIWfI78b5ECc0JYAx8K6QWyHY4TGB2wyi1xfj29YlPZC5n1IxhXf1BJLdEokhCcesb5CVMTQKTpPGo+rQYftEZsBuCJrcCY2Hm6WnkqUcGnFSmIPFrZYQ03zPpfqSq2qgKG73OsknQC0tTweWViU/Gay8iDvyKfZ0GgNKgxZMA8OLOojDAxXsLUGhIvx1c/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZDsw9jv65xNcBYVWYB2Md7url5wOA/++AE8vL2DTvE=;
- b=fmOkoJfelc5kmOxOBjt5N/hdess9x9lgleez2qCCm1R1FM6kkmvGKABnETAyBgB16DS3IvTbcEQYDN7H5PxIte2EqpSrgElvyh03p5919QcXMqzNfr8PtP5BGfPHl0kcj5gddiqCfN316NVMMV7AUwJQaHPNvnbrom7nOa/Fd6f5WoZ8oPYfkj3mgzw2ZCQn1Fr1mX81g/aWZSL/L1CxtsMa4f5lz3IpnlIEmI5K2u7n8VP318xM1OHQyHY0Ro8hawXlWZle8OBUcqDphwzt75DVqp3p9ncw1LY/DWlWuBe2d7KrUgjER83204KeLzERzpbyXFplNjWcsa+IyUaT+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZDsw9jv65xNcBYVWYB2Md7url5wOA/++AE8vL2DTvE=;
- b=kMCZrtACK+hqAKC1EAwyFArBlbtMC1zGdAMq5iXQVm8nUsKoa/Kw4e0aDAq4/db1FgtSJES9esF/cZoVHI7gzdu+1qGuO7Guew03pkafPSijVyoY3yjG8BpVkeq2YPBtrIWtx5sPaBdzEbCU2q410IDHKWcdUpg+K7wV6w2wpLE=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM5PR04MB3026.eurprd04.prod.outlook.com (2603:10a6:206:11::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Mon, 29 Jun
- 2020 07:26:41 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 07:26:41 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
-Thread-Topic: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
-Thread-Index: AQHWS6lrNGtWbd2boEmTo3bADIlBSqjvNguA
-Date:   Mon, 29 Jun 2020 07:26:41 +0000
-Message-ID: <20200629072703.GC30684@b29397-desktop>
-References: <20200626110311.221596-1-philippe.schenker@toradex.com>
-In-Reply-To: <20200626110311.221596-1-philippe.schenker@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: toradex.com; dkim=none (message not signed)
- header.d=none;toradex.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fb58a959-e0ba-418a-be7d-08d81bfdc4a5
-x-ms-traffictypediagnostic: AM5PR04MB3026:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM5PR04MB302618210141B1FE9C9AF3818B6E0@AM5PR04MB3026.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TX7OxMzli9EDZGdG2/ioiyDWUnuyT6L8t+9F1rf3DvZVe9aPVWe/aFNhmxb8NRKiaPL43RtSouJPICvsTN8fkbd5gJnlUMgP7nGYiPuSwdZybq2ty/oGi5Gc9lSsvHEe0hnq7rke3JyojZKlOW/hFsgYMeaUXvqio+sHh9T2yrHtFg47ULWZIekLZuPoIH3JpUl4JbG3ZeVT+EzKTZ8QUbwEnAzLuZvDHM9evkyyDIvHXJHzAvfPMgG0HbrqNTpHtP1bq3kTftdz2w3C4Ay531epE0pOVkKspdmdugCCLLvHZBYKXPh/zmUXC7Dpu/JlnvoifxfQH6xMy/T+C6qHQA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(1076003)(26005)(2906002)(71200400001)(66946007)(8676002)(5660300002)(76116006)(91956017)(186003)(53546011)(33716001)(6506007)(33656002)(66476007)(66556008)(64756008)(6916009)(66446008)(44832011)(83380400001)(6486002)(8936002)(54906003)(316002)(478600001)(86362001)(4326008)(9686003)(6512007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: dnQiICs8RVMBeA2LtvvOEHyUnonGDpnuIF4FuW2vRaPl/MLjvLMdranttqxdLzP2u21V6bRMBzHDrf4uIzBgU5cF1z+7rt7l1SMlqKxEosHt6yqFOklLSCCgaVnocZaf6y0ZiwRQCcHzOOzObTGlZ+7eJ+PHrATLzKWq6CZebt5fOvdJujZL50awnqCp2V5stBbd3FDlxh6dSwfd9P0xMHYXpTVvfcQunCl83d+Yc0rGspOQe8QDix35ZMuiM6JcXD08L+o8udYhg55pJFQemLuovN7XKQJMgoVisOD4aHWfS8Ku635ODrg5IQki9T2/O3pUPnl+0ss3pmGUmZIbj1ZoFitOmeyEcYoiWxk3DugzI/KmdbFP2HtBZ5u/YKJtkyxEyqlEFYVbWNfUfG5rE8ItKu7E4oqgwbbYkK42pMGmXOiDtalSyuXZWhgI2VfBc4AeXTTyEQg9TJx3VNVcV4yLeCkis3/fml9qdgNLFPM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3F9A289E77C7A64AA875B803FD787BD5@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D239C08EC0C
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:48:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so16704182ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TMiOaRXPbBCmvsQhZQZwPQhO0CEmmeEuzVBe8QB9/bw=;
+        b=eZN+AKNqDPqkzjHlgJVXVozWvev4EslhTtOwR9F7cRMyVurHeID6ZtGHxLXI6DwfO4
+         7ZepBNV+kKuvghwEAJLJYqR2JJe+nZLD+XcBOA/kFM30hKbyI2tNhPJBgcQhCM7GckoA
+         6u9oZfZq3Eshn5GTmWpaFRpOKGYX1NjO9lxfthdgptQctcBQoUChdMjiOTV4/kekfBMi
+         b/fzY/qxRfFyBeuMo25vEm+OckxCoSE16THKHctHFWQ+0jCFSVdWqbMBJsMEWjQcECYa
+         wfb+dQ/FNlF+ZSWwP3R2CB4SST9aMucAY+EyH8zmPEQPe2DG5hShPKC5a8pNF8tOdcKy
+         z8wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TMiOaRXPbBCmvsQhZQZwPQhO0CEmmeEuzVBe8QB9/bw=;
+        b=Swt8lmzDbYa/4DBqVD4N2VzsYsBtgUDSdVjg00wrhwuf2aKHhrmaPYXTkOP36EwSwr
+         pgedO7CQsXhYbMNeASri9WuRcGwHYW8DEZVl8dhPDFkT7XInwtGrQZdfhXK51NMPJsDI
+         lw3VtptmDUpWWfz2Sp+2ogxRSjHY2YVs3VC9UdarVl3/MGMqFWqC5D0+qXk/OJkjJY2O
+         3Vq7UMYK6TE6YS6ordlWtcGsyxXHqcbhYnGbsOGqE0LEREG2088GZ+hn/0yFPtGq+LmL
+         Wy9fluM+IPj3K5buluMqGHwIiGGOVs+QY2zFLB+xP92x29jmODmI9NKeXQj7A9QOsA/N
+         zFdA==
+X-Gm-Message-State: AOAM530dRsZXRmQjfmTaJcIRa2qBNRiV17E2LCD7TLtq1f/Hi5H+GITt
+        flA8jVaRbiPFxbqADxCtXsN2nLZ+VU23SaJpAgU54g==
+X-Google-Smtp-Source: ABdhPJz8Xi/8RhtlNzOxfZcCcsQ6wXqbmRLtT2FZvNHfcrfRdS7lFVKrxm6GjHGDNhqpKJg6rwrDW4am/48Bpmy6opo=
+X-Received: by 2002:a2e:9d10:: with SMTP id t16mr7294802lji.46.1593413306316;
+ Sun, 28 Jun 2020 23:48:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb58a959-e0ba-418a-be7d-08d81bfdc4a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 07:26:41.1378
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n9/2cf24CGbg9Pe4wDw9pVkBDoBIY1FGpM1+TwHB7hrlj8F+wuQjzg6NiX0xVwWyQ72J8N6gh5GQYa+51m1VYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3026
+References: <202006281417.GPpEXCGD%lkp@intel.com> <20200628060359.GA29916@8567a11ddfea>
+In-Reply-To: <20200628060359.GA29916@8567a11ddfea>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 29 Jun 2020 12:18:15 +0530
+Message-ID: <CAP245DVK6+if=73AtveXJO=y-J75cWZkCRzFy1G+RJ0QXokCzg@mail.gmail.com>
+Subject: Re: [RFC PATCH linus] drivers: thermal: tsens: tsens_critical_irq_thread()
+ can be static
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-06-26 13:03:11, Philippe Schenker wrote:
-> If the hardware is in low-power-mode and one plugs in device or host
-> it did not switch the mode due to the early exit out of the interrupt.
+Hi,
 
-Do you mean there is no coming call for role-switch? Could you please share
-your dts changes? Try below patch:
+A patch to fix this was already submitted on 27th May.
 
+I believe Daniel plans to send it as fixes for -rc4.
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index e8ce300ad490..9e10dcfeb98f 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -1313,6 +1313,29 @@ static void ci_controller_suspend(struct ci_hdrc *ci=
-)
- 	enable_irq(ci->irq);
- }
-=20
-+/*
-+ * Handle the wakeup interrupt triggered by extcon connector
-+ * We need to call ci_irq again for extcon since the first
-+ * interrupt (wakeup int) only let the controller be out of
-+ * low power mode, but not handle any interrupts.
-+ */
-+static void ci_extcon_wakeup_int(struct ci_hdrc *ci)
-+{
-+	struct ci_hdrc_cable *cable_id, *cable_vbus;
-+	u32 otgsc =3D hw_read_otgsc(ci, ~0);
-+
-+	cable_id =3D &ci->platdata->id_extcon;
-+	cable_vbus =3D &ci->platdata->vbus_extcon;
-+
-+	if (!IS_ERR(cable_id->edev) && ci->is_otg &&
-+		(otgsc & OTGSC_IDIE) && (otgsc & OTGSC_IDIS))
-+		ci_irq(ci->irq, ci);
-+
-+	if (!IS_ERR(cable_vbus->edev) && ci->is_otg &&
-+		(otgsc & OTGSC_BSVIE) && (otgsc & OTGSC_BSVIS))
-+		ci_irq(ci->irq, ci);
-+}
-+
- static int ci_controller_resume(struct device *dev)
- {
- 	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
-@@ -1343,6 +1366,7 @@ static int ci_controller_resume(struct device *dev)
- 		enable_irq(ci->irq);
- 		if (ci_otg_is_fsm_mode(ci))
- 			ci_otg_fsm_wakeup_by_srp(ci);
-+		ci_extcon_wakeup_int(ci);
- 	}
-=20
- 	return 0;
+Regards,
+Amit
 
->=20
-> This patch fixes that behaviour and lets the rest of the code check if
-> something has to be done. If nothing has to be done the same return
-> value gets returned as before.
-
-Before the controller leaving low power mode, otgsc value may not
-correct since the controller/PHY is still in low power mode.
-
->=20
-> Fixes: 1f874edcb731 ("usb: chipidea: add runtime power management support=
-")
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->=20
+On Sun, Jun 28, 2020 at 11:34 AM kernel test robot <lkp@intel.com> wrote:
+>
+>
+> Fixes: a7ff82976122 ("drivers: thermal: tsens: Merge tsens-common.c into tsens.c")
+> Signed-off-by: kernel test robot <lkp@intel.com>
 > ---
->=20
-> Hi Peter
->=20
-> During my investigation I found a bug in ci_irq. I would appreciate
-> if you could review this. From what I see this patch should be save to ap=
-ply.
->=20
-> This patch does not solve all of our issues. When I have RUNTIME_PM
-> enabled on imx6ull or imx7. RNDIS still does not come up. So there
-> has to be another bug hiding somewhere in the Runtime PM code to prevent
-> RNDIS from working properly. I quickly looked through your patches
-> that added this stuff back in 2015 but couldn't spot anything related to
-> usb gadget-mode.
->=20
-> If you right away know where the problem could be hiding itself,
-> I would appreciate a hint.
->=20
-
-I need information for call trace for further suggestion.
-
-Peter
-
->=20
-> ---
->=20
->  drivers/usb/chipidea/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 9a7c53d09ab4..5159420a23a4 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -518,7 +518,7 @@ static irqreturn_t ci_irq(int irq, void *data)
->  		disable_irq_nosync(irq);
->  		ci->wakeup_int =3D true;
->  		pm_runtime_get(ci->dev);
-> -		return IRQ_HANDLED;
-> +		ret =3D IRQ_HANDLED;
->  	}
-> =20
->  	if (ci->is_otg) {
-> --=20
-> 2.27.0
->=20
-
---=20
-
-Thanks,
-Peter Chen=
+>  tsens.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 8d3e94d2a9ed4..39c4462e38f62 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -382,7 +382,7 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+>   *
+>   * Return: IRQ_HANDLED
+>   */
+> -irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+> +static irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+>  {
+>         struct tsens_priv *priv = data;
+>         struct tsens_irq_data d;
+> @@ -452,7 +452,7 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+>   *
+>   * Return: IRQ_HANDLED
+>   */
+> -irqreturn_t tsens_irq_thread(int irq, void *data)
+> +static irqreturn_t tsens_irq_thread(int irq, void *data)
+>  {
+>         struct tsens_priv *priv = data;
+>         struct tsens_irq_data d;
+> @@ -520,7 +520,7 @@ irqreturn_t tsens_irq_thread(int irq, void *data)
+>         return IRQ_HANDLED;
+>  }
+>
+> -int tsens_set_trips(void *_sensor, int low, int high)
+> +static int tsens_set_trips(void *_sensor, int low, int high)
+>  {
+>         struct tsens_sensor *s = _sensor;
+>         struct tsens_priv *priv = s->priv;
+> @@ -557,7 +557,7 @@ int tsens_set_trips(void *_sensor, int low, int high)
+>         return 0;
+>  }
+>
+> -int tsens_enable_irq(struct tsens_priv *priv)
+> +static int tsens_enable_irq(struct tsens_priv *priv)
+>  {
+>         int ret;
+>         int val = tsens_version(priv) > VER_1_X ? 7 : 1;
+> @@ -570,7 +570,7 @@ int tsens_enable_irq(struct tsens_priv *priv)
+>         return ret;
+>  }
+>
+> -void tsens_disable_irq(struct tsens_priv *priv)
+> +static void tsens_disable_irq(struct tsens_priv *priv)
+>  {
+>         regmap_field_write(priv->rf[INT_EN], 0);
+>  }
