@@ -2,91 +2,140 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE21206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466579;
-	bh=PB+3AQAalgU2HfA/Ow/B31cXbQPKTJ+EqjMYiPpBE6M=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=iwCVONWSZNYosgWZlOYLAAIZybaU6D2xyKpDzrLU77OfzhEQUxIU/PNgEWHaCYb3P
-	 bSWZFLtxd98UR3gu4VgWqDyfmveLRTLlKgXcFyxLgz21c7M2QSeNzXIy9DMPWTFL2l
-	 AvqJ/YGY+W/qbDW2L5lZaTjEV+va+Fdli/oAqayA=
+	by mail.kernel.org (Postfix) with ESMTP id 35216206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VCAl77z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403809AbgF2VgS (ORCPT
+        id S2403799AbgF2VgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:36:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33481 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728459AbgF2Skn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726869AbgF2Skn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:43 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456043; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=MMgpD5DCLQ6JjRpMGo318xv/+oipR7QB8aPXFQoSC2I=; b=VCAl77z4c2Yw0uwrj5anPBR+fJRd3a3E+5q6FwIM5E2fWRS1Gy9hiN/hxk6B25cr2+JwZCAt
+ yiWl6XGml7FpdjxrV/VhdqZLPO1qvnyRqc92RPVMJkO7QJmPTPqFwOxort9kxJzTNVgv8MT0
+ u0ax27SW84XAkU3yNN2hEljfVlM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5efa0e694c9690533a5f0fc1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8BDA9C433B1; Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AB1233F6;
-        Mon, 29 Jun 2020 09:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423343;
-        bh=PB+3AQAalgU2HfA/Ow/B31cXbQPKTJ+EqjMYiPpBE6M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+fzcmZIz1xFsARlxvRksUz/DLcAnRUzzDClqT4BG/Zw2/3YuVGAjbfe3BQTORL4I
-         T4fxISy+GjbYMETFO3K7KsnVqumbJK8spCNQntGO/57KUG5bCKu8b7kr2ScVo16vj3
-         wjA8BVPoiz6Bw3SDQT2fUqB61cbLCrQRlKj0KmWQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jpqCS-006cAJ-Fg; Mon, 29 Jun 2020 11:35:40 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] kconfig: qconf: ensure that only one item will be highlighted
-Date:   Mon, 29 Jun 2020 11:35:36 +0200
-Message-Id: <9cc77cb28cf641d537b3dd08892f3d655f26ffb2.1593423060.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593423060.git.mchehab+huawei@kernel.org>
-References: <cover.1593423060.git.mchehab+huawei@kernel.org>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 467E3C433CA;
+        Mon, 29 Jun 2020 15:53:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 467E3C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/7] System Cache support for GPU and required SMMU support
+Date:   Mon, 29 Jun 2020 21:22:43 +0530
+Message-Id: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The logic which is used by search to show a new link lacks
-support for un-selecting a previously-selected item.
+Some hardware variants contain a system cache or the last level
+cache(llc). This cache is typically a large block which is shared
+by multiple clients on the SOC. GPU uses the system cache to cache
+both the GPU data buffers(like textures) as well the SMMU pagetables.
+This helps with improved render performance as well as lower power
+consumption by reducing the bus traffic to the system memory.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- scripts/kconfig/qconf.cc | 7 +++++++
- 1 file changed, 7 insertions(+)
+The system cache architecture allows the cache to be split into slices
+which then be used by multiple SOC clients. This patch series is an
+effort to enable and use two of those slices perallocated for the GPU,
+one for the GPU data buffers and another for the GPU SMMU hardware
+pagetables.
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 0e06afa08908..67dac2406a98 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -1662,6 +1662,13 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 	}
- 
- 	if (list) {
-+		/* Clear an already-selected item */
-+		if (!list->selectedItems().isEmpty()) {
-+			item = (ConfigItem*)list->selectedItems().first();
-+			if (item)
-+				item->setSelected(false);
-+		}
-+
- 		item = list->findConfigItem(menu);
- 		if (item) {
- 			item->setSelected(true);
+Patch 1 adds a init_context_bank implementation hook to set SCTLR.HUPCF.
+Patch 2,3,6,7 adds system cache support in SMMU and GPU driver.
+Patch 4 and 5 are minor cleanups for arm-smmu impl.
+
+Changes in v3:
+ * Fix domain attribute setting to before iommu_attach_device()
+ * Fix few code style and checkpatch warnings
+ * Rebase on top of Jordan's latest split pagetables and per-instance
+   pagetables support [1][2]
+
+Changes in v2:
+ * Addressed review comments and rebased on top of Jordan's split
+   pagetables series
+
+[1] https://lore.kernel.org/patchwork/cover/1264446/
+[2] https://lore.kernel.org/patchwork/cover/1264460/
+
+Jordan Crouse (1):
+  iommu/arm-smmu: Add a init_context_bank implementation hook
+
+Sai Prakash Ranjan (4):
+  iommu/io-pgtable-arm: Add support to use system cache
+  iommu/arm-smmu: Add domain attribute for system cache
+  iommu: arm-smmu-impl: Remove unwanted extra blank lines
+  iommu: arm-smmu-impl: Convert to use of_match_node() for qcom impl
+
+Sharat Masetty (2):
+  drm/msm: rearrange the gpu_rmw() function
+  drm/msm/a6xx: Add support for using system cache(LLC)
+
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 82 +++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h   |  3 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 23 ++++++-
+ drivers/gpu/drm/msm/msm_drv.c           |  8 +++
+ drivers/gpu/drm/msm/msm_drv.h           |  1 +
+ drivers/gpu/drm/msm/msm_gpu.h           |  5 +-
+ drivers/gpu/drm/msm/msm_iommu.c         |  3 +
+ drivers/gpu/drm/msm/msm_mmu.h           |  4 ++
+ drivers/iommu/arm-smmu-impl.c           | 13 ++--
+ drivers/iommu/arm-smmu-qcom.c           | 13 ++++
+ drivers/iommu/arm-smmu.c                | 46 +++++++++-----
+ drivers/iommu/arm-smmu.h                | 13 ++++
+ drivers/iommu/io-pgtable-arm.c          |  7 ++-
+ include/linux/io-pgtable.h              |  4 ++
+ include/linux/iommu.h                   |  1 +
+ 15 files changed, 198 insertions(+), 28 deletions(-)
+
 -- 
-2.26.2
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
