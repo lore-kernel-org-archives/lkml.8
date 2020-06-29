@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C700C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4742C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B657206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79BC206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460851;
-	bh=Wey9NWm6SEoUMi8gGkWxezjIJSpDGHLnsTrE9L0Do0s=;
+	s=default; t=1593460854;
+	bh=agRQypckGCYSkFlC3kExSSvrt4mjZ/93NTQyMsU16ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3tbiWToxAVQVlgTyw5VV2jAsF3hK24M3QrMS0IDRERAEyDj8YyjvaEpqaauOLoRP
-	 t0rEZTvNHUbjS1N5QB3yLDGiV1ABUKFa9mqN9cnCsJmeZL0UmjGgMYau06vtJ0mqyo
-	 XpLjTk5XsYa/h4cUrrYbWaILX7RG0stGKngYw1yc=
+	b=mqqiahg1LwNSbfR0x74s2E3AaTjR0wSBNCpaQ4kEjLeoRaPiUpI6hRg6QMCje726n
+	 S59bpBnKZhtozZUKeMKtIiAmUDn+fs8mTXiROacblYrA8RcqfKi5a2YNZe4nU80Vht
+	 YMeEVlDo0N6m6PHigUQLl0lbKXKBhWOfPKRp01m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbgF2UAt (ORCPT
+        id S2388617AbgF2UAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387563AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387564AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961C5251BF;
-        Mon, 29 Jun 2020 15:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6682485D;
+        Mon, 29 Jun 2020 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444493;
-        bh=Wey9NWm6SEoUMi8gGkWxezjIJSpDGHLnsTrE9L0Do0s=;
+        s=default; t=1593444360;
+        bh=agRQypckGCYSkFlC3kExSSvrt4mjZ/93NTQyMsU16ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3FhNENfVyGIk2Op5pvNMa/INtb0Y91TGxpXQJFYbx1dMxSZTqKKgRCPrY3okxZzA
-         z3E1MbspWMIATaTlDlRWiWufAhbQ71Yb5fD3tRpe7yylN+CA9/VoLEO3dY0aZhibSg
-         5BvWpRU2li3hLnjiytI7xcGmXF4bt+7Bg0m7xOIs=
+        b=rZmxCEekEQnn5YvAKJP7oclfx/A6RrB4wFUeLiWaDGRNujuGEyASJXAdK35BqQgu4
+         fluy6mYAagk0Nx39tfS7i2dWKxxDme+jSWZnY2GssZik5f9C0Pezq/wYdvzffGBUSs
+         eCj3V79TOZ1/Kzth/07FNrn7uaqZ7+Qpy6ISPtJk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 170/178] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
-Date:   Mon, 29 Jun 2020 11:25:15 -0400
-Message-Id: <20200629152523.2494198-171-sashal@kernel.org>
+Subject: [PATCH 5.4 036/178] usb: add USB_QUIRK_DELAY_INIT for Logitech C922
+Date:   Mon, 29 Jun 2020 11:23:01 -0400
+Message-Id: <20200629152523.2494198-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -66,34 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Tomasz Meresiński <tomasz@meresinski.eu>
 
-commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
+commit 5d8021923e8a8cc37a421a64e27c7221f0fee33c upstream.
 
-__rpc_depopulate(gssd_dentry) was lost on error path
+The Logitech C922, just like other Logitech webcams,
+needs the USB_QUIRK_DELAY_INIT or it will randomly
+not respond after device connection
 
-cc: stable@vger.kernel.org
-Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Tomasz Meresiński <tomasz@meresinski.eu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603203347.7792-1-tomasz@meresinski.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/rpc_pipe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/quirks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index b71a39ded930a..37792675ed571 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -1317,6 +1317,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
- 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
- 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
- 	if (!clnt_dentry) {
-+		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
- 		pipe_dentry = ERR_PTR(-ENOENT);
- 		goto out;
- 	}
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 3e8efe759c3e6..e0b77674869ce 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -218,11 +218,12 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	/* Logitech HD Webcam C270 */
+ 	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
+ 
+-	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
++	/* Logitech HD Pro Webcams C920, C920-C, C922, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0843), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x085b), .driver_info = USB_QUIRK_DELAY_INIT },
++	{ USB_DEVICE(0x046d, 0x085c), .driver_info = USB_QUIRK_DELAY_INIT },
+ 
+ 	/* Logitech ConferenceCam CC3000e */
+ 	{ USB_DEVICE(0x046d, 0x0847), .driver_info = USB_QUIRK_DELAY_INIT },
 -- 
 2.25.1
 
