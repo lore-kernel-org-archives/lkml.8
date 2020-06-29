@@ -4,52 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF18C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE389206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB0320720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465043;
-	bh=LDXT9UF8X44Hnv40HO63lWGGsL9RnJsPrsTfMFszSLI=;
+	s=default; t=1593465047;
+	bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2J//09m0G11j4cmfk+TW16Nf6/pca0A/LXFosgZlaKfcAFiL/YKdyDQ7nwhaphCs9
-	 Vd9EztW8nNfCnXVWYc/wGkPwCdggmUgMi/FHESMJR2+bmhS3bBsE+bUVLDz8p85BCE
-	 mQQ5MEhDdpWpZ7WrJjtnFhSFRe9ckyjF2bbIQdSY=
+	b=NVoufLhpLG/GLwsKQNRIWW2Ie1Q5aeNAK/6ZMyeseamNY3ZPgr8RlVatV/9g45es1
+	 SQixTqPFxMxNiMOgBJptYOMdG8A0Gda59bBYiOv8fgIzAROXYGHnZG3xPSVI4YO/Ew
+	 hQMOVjq590PGXB7hjjIVCGzQDYud07wZO6L8qAcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732378AbgF2VKm (ORCPT
+        id S2390562AbgF2VKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbgF2TAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730031AbgF2TAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D5BC2551F;
-        Mon, 29 Jun 2020 15:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9225524;
+        Mon, 29 Jun 2020 15:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446078;
-        bh=LDXT9UF8X44Hnv40HO63lWGGsL9RnJsPrsTfMFszSLI=;
+        s=default; t=1593446086;
+        bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BiqyLIKclejyen5yWlsUkaIncwZxCt3XWQHtb7Io/t3B1zbUs8ctb8wNl8GWv7VQy
-         9sBaD4PbS88CxI1UqvZpyTB1t3AvGkPTHQ7i2lsN+VvLjLomyiRwWuC8bnJW29kR+K
-         Rmwgpi0Vc7SBzXEICUuRCXnpgmkNORdkehQPPIIA=
+        b=kSs3/Q3F7JxGz3sZv+YGnODOvdwYv0BoiOkmdWyKUyUIFc5F5r9+IWf1xq3qLqY1n
+         nUGNrTKCYFvMMGENudiInp2uJTTpBGrjXYoDP9HwILDUKpx8pyFIUeWw5ZXOxInRZX
+         Qke+WzEMdsOBpPzWbCUTe6VrTNlFkKlxv6A+SGRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stable@vger.kernel.org, Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 074/135] e1000e: Do not wake up the system via WOL if device wakeup is disabled
-Date:   Mon, 29 Jun 2020 11:52:08 -0400
-Message-Id: <20200629155309.2495516-75-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 081/135] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
+Date:   Mon, 29 Jun 2020 11:52:15 -0400
+Message-Id: <20200629155309.2495516-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -68,67 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 6bf6be1127f7e6d4bf39f84d56854e944d045d74 ]
+[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
 
-Currently the system will be woken up via WOL(Wake On LAN) even if the
-device wakeup ability has been disabled via sysfs:
- cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
- disabled
+lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
 
-The system should not be woken up if the user has explicitly
-disabled the wake up ability for this device.
-
-This patch clears the WOL ability of this network device if the
-user has disabled the wake up ability in sysfs.
-
-Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
-Reported-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/sparc/kernel/ptrace_32.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 203f96faf6fbe..3bd0bdbdfa0e1 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -6270,11 +6270,17 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 	struct e1000_hw *hw = &adapter->hw;
--	u32 ctrl, ctrl_ext, rctl, status;
--	/* Runtime suspend should only enable wakeup for link changes */
--	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
-+	u32 ctrl, ctrl_ext, rctl, status, wufc;
- 	int retval = 0;
+diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
+index 396dbdea0cfa0..2f4316c142664 100644
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -167,12 +167,17 @@ static int genregs32_set(struct task_struct *target,
+ 	if (ret || !count)
+ 		return ret;
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-				 &regs->y,
++				 &regs->npc,
+ 				 34 * sizeof(u32), 35 * sizeof(u32));
+ 	if (ret || !count)
+ 		return ret;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->y,
++				 35 * sizeof(u32), 36 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+-					 35 * sizeof(u32), 38 * sizeof(u32));
++					 36 * sizeof(u32), 38 * sizeof(u32));
+ }
  
-+	/* Runtime suspend should only enable wakeup for link changes */
-+	if (runtime)
-+		wufc = E1000_WUFC_LNKC;
-+	else if (device_may_wakeup(&pdev->dev))
-+		wufc = adapter->wol;
-+	else
-+		wufc = 0;
-+
- 	status = er32(STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -6332,7 +6338,7 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
- 	} else if ((hw->mac.type == e1000_pch_lpt) ||
- 		   (hw->mac.type == e1000_pch_spt)) {
--		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
-+		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
- 			/* ULP does not support wake from unicast, multicast
- 			 * or broadcast.
- 			 */
+ static int fpregs32_get(struct task_struct *target,
 -- 
 2.25.1
 
