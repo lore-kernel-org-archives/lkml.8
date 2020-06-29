@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCFFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5977EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610C1206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DFD206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457755;
-	bh=fMO4jSJVSkgKvxcbkd3PUtLTMUfTWuiDNyJ6o5bgtAc=;
+	s=default; t=1593457768;
+	bh=KdJ/ah3nXbr2EVG/1M2SKqJ5uUF0nci/3d/WZ35yXto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lUZapIoHVCPEZ61TcS4IvKBU+ln44o1DffqindB+xGaIoUCIxCiTX5IdHXng4gRe
-	 2eqQufWV9SgktE0YsCP8asYEeWQ3H12hRct8lrrzRNgS1beVXk4EZDHx30TER1yK81
-	 N90qnulLidNXPRDRDPzlH5dX2YOm5t6qJ1iouZZg=
+	b=DYrI0VCerNJ81yx29lEYRI1coLgDP/ShtKJxJubW7L3gNkzIzSi+BI4E5lblJuplC
+	 HsnRhY3U5EvSZfAEX0swEdBPP3de65H3UNmFb316hoi6mH8d2IE/9BAmeLHqre39I0
+	 MhmieTtDBgVycPtlhK2NlZkhsYTuKJfO5i95BfvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbgF2TCm (ORCPT
+        id S1730677AbgF2TJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730348AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C0425528;
-        Mon, 29 Jun 2020 15:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8412E254D2;
+        Mon, 29 Jun 2020 15:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446088;
-        bh=fMO4jSJVSkgKvxcbkd3PUtLTMUfTWuiDNyJ6o5bgtAc=;
+        s=default; t=1593446029;
+        bh=KdJ/ah3nXbr2EVG/1M2SKqJ5uUF0nci/3d/WZ35yXto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTKZvCLjP2Mi2nBgKydv3jEyr5pae/jJ4W1VaJiulC0qXzH9Ipf71U97RTJfSEGg+
-         umDgS1ZbGUZLeR6Mo0F+JbXf+hPt2B8+DaKFUEHoxsLvCV5dPRRuI//iTwSAJ38uaN
-         gYkfVDbbSX5WOS9diZ1GGm6gViA9bREkTLYA8gRM=
+        b=sSQqFSwHEgYcmfzHN7Y1XISns1O4CoJ7DqRxsFhx9deJVro2uV1LjAapVFQZZOlHx
+         1376UNJARnf9P/P9cEW2E/eSe/MGuQPvP9sigNW2+8mNPfeBujuXmcKiTERnbDcuM+
+         OBy24UDIkFCXXnAOzl7ub3nWJ+P8i5ZvCkGARCx8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 083/135] net: usb: ax88179_178a: fix packet alignment padding
-Date:   Mon, 29 Jun 2020 11:52:17 -0400
-Message-Id: <20200629155309.2495516-84-sashal@kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 035/135] vfio-pci: Mask cap zero
+Date:   Mon, 29 Jun 2020 11:51:29 -0400
+Message-Id: <20200629155309.2495516-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,72 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
+[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
 
-Using a AX88179 device (0b95:1790), I see two bytes of appended data on
-every RX packet. For example, this 48-byte ping, using 0xff as a
-payload byte:
+The PCI Code and ID Assignment Specification changed capability ID 0
+from reserved to a NULL capability in the v1.1 revision.  The NULL
+capability is defined to include only the 16-bit capability header,
+ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
+map of config space, where ID 0 is used to reserve the standard type
+0 header.  Finding an actual capability with this ID therefore results
+in a bogus range marked in that map and conflicts with subsequent
+capabilities.  As this seems to be a dummy capability anyway and we
+already support dropping capabilities, let's hide this one rather than
+delving into the potentially subtle dependencies within our map.
 
-  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
-	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
-	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
-	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
-	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
-	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0060:  ffff 961f
+Seen on an NVIDIA Tesla T4.
 
-Those last two bytes - 96 1f - aren't part of the original packet.
-
-In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
-'alignment pseudo header' from the start of the packet, and sets the
-length from a per-packet field populated by hardware. It looks like that
-length field *includes* the 2-byte header; the current driver assumes
-that it's excluded.
-
-This change trims the 2-byte alignment header after we've set the packet
-length, so the resulting packet length is correct. While we're moving
-the comment around, this also fixes the spelling of 'pseudo'.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/ax88179_178a.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index e3f2e6098db40..2dcc8a039d42e 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1396,10 +1396,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		}
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index bf65572f47a8f..666b234acca0a 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1405,7 +1405,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+ 		if (ret)
+ 			return ret;
  
- 		if (pkt_cnt == 0) {
--			/* Skip IP alignment psudo header */
--			skb_pull(skb, 2);
- 			skb->len = pkt_len;
--			skb_set_tail_pointer(skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(skb, 2);
-+			skb_set_tail_pointer(skb, skb->len);
- 			skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(skb, pkt_hdr);
- 			return 1;
-@@ -1408,8 +1408,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		ax_skb = skb_clone(skb, GFP_ATOMIC);
- 		if (ax_skb) {
- 			ax_skb->len = pkt_len;
--			ax_skb->data = skb->data + 2;
--			skb_set_tail_pointer(ax_skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(ax_skb, 2);
-+			skb_set_tail_pointer(ax_skb, ax_skb->len);
- 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(ax_skb, pkt_hdr);
- 			usbnet_skb_return(dev, ax_skb);
+-		if (cap <= PCI_CAP_ID_MAX) {
++		/*
++		 * ID 0 is a NULL capability, conflicting with our fake
++		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
++		 * hidden for now.
++		 */
++		if (cap && cap <= PCI_CAP_ID_MAX) {
+ 			len = pci_cap_length[cap];
+ 			if (len == 0xFF) { /* Variable length */
+ 				len = vfio_cap_len(vdev, cap, pos);
 -- 
 2.25.1
 
