@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB088C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03823C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9E020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D197220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460404;
-	bh=nQvcCjAJLkom8VDNWDceaM3WxBPNPWb9LqbVpaaSGg4=;
+	s=default; t=1593460405;
+	bh=7rccOV63Vtj0065zeobOG3izF1tba9oFIHbjELXfIYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UgZWh0HMSwYl/TRAI+pPq80rGOPQqTAjxI4Qw2KXEIzQQOYmZTxkQ1dwyNKVXT1BT
-	 2AfGJFu6K9QFNjCYAUgtVZSUM04Gop/LOqvRc07IGtPkVmeHpInCwRZuxpkvWu9Xb5
-	 rjBLIPTXbZPQZQIzU+M4ddW6z7H1xCf6lm6ho+r4=
+	b=LwZ7OUIkvWnCFlJMqUfi00tfKR5I5LRhJVYUNJOHwXhbkA7xuBcNPYZbA9F80fspN
+	 l/iARs/xisVXbLrQOiqlM52gwLoXzE/1zRKsBXEO7IBs5CcXwsnCoHwJWcvYaX3+fZ
+	 iAEVdw4E1AnuJCA0jvzmv9iYg4Dt5eBeNVterqHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgF2TxR (ORCPT
+        id S2387723AbgF2TxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:53:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387695AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387697AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD1824869;
-        Mon, 29 Jun 2020 15:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD80924829;
+        Mon, 29 Jun 2020 15:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444366;
-        bh=nQvcCjAJLkom8VDNWDceaM3WxBPNPWb9LqbVpaaSGg4=;
+        s=default; t=1593444345;
+        bh=7rccOV63Vtj0065zeobOG3izF1tba9oFIHbjELXfIYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2nIy2iCi8xuKZv9yYupE8aAWfc27KVP3MzY0xLjT4yqIQGdJzJ84UrDhj4QAm6iB
-         A8dmhXvWXivY8rqnbt2+4RMHT2PZTLAbYND2lzjjDMyGGejDL1pJdluljwRaG2Vdcn
-         /fAXuff2XVf1G79ysVc/T+EcAVhJr3Mc3L4tF/cU=
+        b=yI88cJM2+1UtdtUviz8U7oXKTbLM7LyWWxuualu0H6l2K7u6VKtYtuKQWb84ZPCVR
+         DZQ2AEhVwqowpXAK6f5p26tV0+SvD+loZ4caxKx9i+5lLHSxUjRz3KrLbBTsjwRfZK
+         skTq4nJKkQROYbcFZjB66SnVgK7CBryYnvagC2NU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
+Cc:     David Christensen <drc@linux.vnet.ibm.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 043/178] ALSA: usb-audio: add quirk for Denon DCD-1500RE
-Date:   Mon, 29 Jun 2020 11:23:08 -0400
-Message-Id: <20200629152523.2494198-44-sashal@kernel.org>
+Subject: [PATCH 5.4 020/178] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
+Date:   Mon, 29 Jun 2020 11:22:45 -0400
+Message-Id: <20200629152523.2494198-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -64,41 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
+From: David Christensen <drc@linux.vnet.ibm.com>
 
-commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
+[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
 
-fix error "clock source 41 is not valid, cannot use"
+The driver function tg3_io_error_detected() calls napi_disable twice,
+without an intervening napi_enable, when the number of EEH errors exceeds
+eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
 
-[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
-[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[] Product: DCD-1500RE
-[] Manufacturer: D & M Holdings Inc.
-[]
-[] clock source 41 is not valid, cannot use
-[] usbcore: registered new interface driver snd-usb-audio
+Add check for pcierr_recovery which skips code already executed for the
+"Frozen" state.
 
-Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/tg3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 092720ce2c559..eb3da0b71269c 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1461,6 +1461,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
- static bool is_itf_usb_dsd_dac(unsigned int id)
- {
- 	switch (id) {
-+	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
- 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
- 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
- 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index ca3aa1250dd13..e12ba81288e64 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -18176,8 +18176,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+ 
+ 	rtnl_lock();
+ 
+-	/* We probably don't have netdev yet */
+-	if (!netdev || !netif_running(netdev))
++	/* Could be second call or maybe we don't have netdev yet */
++	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
+ 		goto done;
+ 
+ 	/* We needn't recover from permanent error */
 -- 
 2.25.1
 
