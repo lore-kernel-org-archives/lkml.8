@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE364C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE45C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BA620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10752082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460128;
-	bh=eCoiJnE2UqZNsG6gJYFlYftVhCvaxXONnjxO3zvrJx4=;
+	s=default; t=1593460136;
+	bh=oCoaaWGr5MOoT2sXVLSno5YS0mBX7CG2YT0Ne6tRkVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gI7N0ugSXRpZCoNjHqTbN+snWovkmLyufnguQagvzqa9qKZTX0gcXf2SkHZy6PxYr
-	 OO3WXLeyG97sess+5CVA+KjAptYhy9TuzJ4aeerMRfDNNouviKFxfOfzNf5yLFG75i
-	 xjHzixTbPY21G8U06TIfKTGJcoJmJDAClwsrtV44=
+	b=Nzw4/8upaOyYdHXqx4/PeMIdCMHJ/OjquRx3GSe9eP07AJ8QLES9h8rcDUfDpz1f3
+	 Bh0C/Py8JGIduW+BBFJUMe+4PqmHYpGF50eaPn46cbC2ezOdzpYxXL29hZ7I9TSHrT
+	 DM8UglalqHq/MqseydBAQMNLjeQwxWLVLkmSo8wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388182AbgF2Tsj (ORCPT
+        id S1731595AbgF2Tsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387772AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387769AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B822424946;
-        Mon, 29 Jun 2020 15:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA95F248B9;
+        Mon, 29 Jun 2020 15:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444486;
-        bh=eCoiJnE2UqZNsG6gJYFlYftVhCvaxXONnjxO3zvrJx4=;
+        s=default; t=1593444408;
+        bh=oCoaaWGr5MOoT2sXVLSno5YS0mBX7CG2YT0Ne6tRkVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vo9AuC8u7RHkW2jlfg4R02180kcxYBNDDPINReyHz/UEj8EBKiyY26cBavPn4rVza
-         TYimY/11hq+83UOzsD4qWM9y/3UzHl0KNAYPvziiK4UUJFfnAaXi08XkH6x2uvY0ii
-         tQ5NcR14ZeVSeD8qoICic9r41h1rp4jTR9ExtzYY=
+        b=fKs90qGUph2zbxXTg/jSXA/J3LbdjKvINSvxNlZ3vPZN+9VAJ0Exxw/Z663vChwEW
+         W8BjVO+6enTXVb3Tm025EeM4STbBoBr4ZqsbDxcJovy69vr+2DXWHfIrRnWDwod2lq
+         Y4Qfv5c5/K2nMfoz2SWOtzNKsk3MOvWIld/PZytI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 163/178] tracing: Fix event trigger to accept redundant spaces
-Date:   Mon, 29 Jun 2020 11:25:08 -0400
-Message-Id: <20200629152523.2494198-164-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Heiko Stuebner <heiko@sntech.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 086/178] ASoC: rockchip: Fix a reference count leak.
+Date:   Mon, 29 Jun 2020 11:23:51 -0400
+Message-Id: <20200629152523.2494198-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,89 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+[ Upstream commit f141a422159a199f4c8dedb7e0df55b3b2cf16cd ]
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-For example, these return -EINVAL
-
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
-
-But these are hard to find what is wrong.
-
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: fc05a5b22253 ("ASoC: rockchip: add support for pdm controller")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200613205158.27296-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ sound/soc/rockchip/rockchip_pdm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index de840de87a18c..e913d41a41949 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -216,11 +216,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- static int trigger_process_regex(struct trace_event_file *file, char *buff)
- {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
- 
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
- 
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
+diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+index 7cd42fcfcf38a..1707414cfa921 100644
+--- a/sound/soc/rockchip/rockchip_pdm.c
++++ b/sound/soc/rockchip/rockchip_pdm.c
+@@ -590,8 +590,10 @@ static int rockchip_pdm_resume(struct device *dev)
  	int ret;
  
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
 +	}
  
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
+ 	ret = regcache_sync(pdm->regmap);
  
-@@ -1368,6 +1380,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
 -- 
 2.25.1
 
