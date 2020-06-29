@@ -2,102 +2,96 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E143DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F74C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC70206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07D9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457793;
-	bh=ws8BzZB8g1upQCbMjiyvcwajLytfvmMGBkpxrNv9/60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFh/Cidbo7okxsWgVHxur7SENl2ZCI4oq6gG5waDI+30FE9hQo0DQ4/cIHz+yL1tv
-	 4MMqF+dcPZ1bOn4sWddhfuXr6l4Tqz5hb0sbLSW/JScdRzYrOCG3vwLF7XBi6QeXO/
-	 09iVrAHw4IyaHP5SpFl6V+Jvq1bcpwN31RHu7ktU=
+	s=default; t=1593457795;
+	bh=4iXE6X6BH7Sxje+iISVf8jR0Is6iv3UfKTVAnMUZGaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LNKSBXN6fedasCJoB6xj0f6NAxHR7r8k4EbwQ+pwC7An+z1lZbDfxO0y5ngpCN0Qk
+	 3gvNsYyKt+bstqsZPW7xwpReKgHyY42Z4glyJW2EmdvJJqPl2D6hHN1zx26jqKtfZF
+	 NdgZmOGHOIrC1UEGOclmVJOw1CdZ68H9LBbPYcfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgF2TJw (ORCPT
+        id S1730262AbgF2TJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730338AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730335AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3473B254D5;
-        Mon, 29 Jun 2020 15:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB7F2554B;
+        Mon, 29 Jun 2020 15:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446032;
-        bh=ws8BzZB8g1upQCbMjiyvcwajLytfvmMGBkpxrNv9/60=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7+QitxAJWFx5Ih/R8liF5gFcn1uv+Z80ptVe5w5OVVW3frFheuQZAI7/gi5MT4Fm
-         oQOWN/5MotvZDFCn8RGYb5mjQAZhrJGkIvIJ7sFslpWmewst8n3heri8R9IlLLyYDe
-         Ak46Fbzh6ToZn7oxqX1u6SZicYVKCTS+MiBomEqU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 037/135] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
-Date:   Mon, 29 Jun 2020 11:51:31 -0400
-Message-Id: <20200629155309.2495516-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        s=default; t=1593446112;
+        bh=4iXE6X6BH7Sxje+iISVf8jR0Is6iv3UfKTVAnMUZGaY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h2U+MILBVT23YaZGdGpLO6laSjCwUsbg1urnAwBg/mN+0QstKMt2rgVhJrjbvq5RT
+         s6etxdPdTY1Mv4RLGYevq3RavmmS//9KWuBexp7reG+SFRlF4vhtx+Z2GYBUqhoUnK
+         bgcM4W2IY97lLpe70xK5huDwRLE4lOXseGWjvwcM=
+Date:   Mon, 29 Jun 2020 17:55:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     B K Karthik <bkkarthik@pesu.pes.edu>
+Cc:     B K Karthik <karthik.bk2000@live.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: media: atomisp: i2c: atomisp-ov2680.c: fixed a
+ brace coding style issue.
+Message-ID: <20200629155503.GB512815@kroah.com>
+References: <20200628043833.3dodctrmkec6aoe5@pesu-pes-edu>
+ <20200629144336.fhykjoqrhfhifmes@pesu-pes-edu>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629144336.fhykjoqrhfhifmes@pesu-pes-edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-[ Upstream commit d49292025f79693d3348f8e2029a8b4703be0f0a ]
+A: No.
+Q: Should I include quotations after my reply?
 
-The function ehci_mxc_drv_probe() does not perform sufficient error
-checking after executing platform_get_irq(), thus fix it.
+http://daringfireball.net/2007/07/on_top
 
-Fixes: 7e8d5cd93fac ("USB: Add EHCI support for MX27 and MX31 based boards")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200513132647.5456-1-tangbin@cmss.chinamobile.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/ehci-mxc.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, Jun 29, 2020 at 10:43:36AM -0400, B K Karthik wrote:
+> Did this get burried in along with a bunch of other patches? I am sending this email only because I did not recieve a negetive acknowledgement on the patch.
+> 
+> I apologize if this message was hurtful / disrespectfull in any manner,
+> thank you for reading this message.
+> 
+> karthik
+> 
+> On 20/06/28 12:38AM, B K Karthik wrote:
 
-diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-index c7a9b31eeaeff..637079a350032 100644
---- a/drivers/usb/host/ehci-mxc.c
-+++ b/drivers/usb/host/ehci-mxc.c
-@@ -63,6 +63,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
- 
- 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
- 	if (!hcd)
--- 
-2.25.1
+You sent this one day ago.
 
+Please be patient, some maintainers only get to patches every few weeks.
+If, after 2 weeks, there has not been a response, then resend it.
+
+Remember, maintainers have other work to do as well, and staging patches
+are usually down the list of things they work on.
+
+(hint, I'm not the maintainer of this part of the staging tree...)
+
+thanks,
+
+greg k-h
