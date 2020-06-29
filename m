@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E158206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B26206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467945;
-	bh=/J4Vj/koB1Dk0LlbraN2Hi5ejMzp3jhOESc6V5O3qiY=;
+	s=default; t=1593467953;
+	bh=0yx4bJ3B+m+aCTmdxosbdG7iughP3yPsSPVXS6vM4vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QfD66WzOgPynmGhapRyu8eNlvnPjhX3/IQpxKSaw7Iw8B6TlGSb6FdGs5z/6ePmkU
-	 /x6KwatT1+i3U/FnPlU41cPWk8y37iju+s1OKT/5fgv2s7a4SFKMZxwNtR8gqAqmb6
-	 VojM3PBCEmuBWQP6t9h6AqOfjzEJV2+9ulA6hpEY=
+	b=LF9wKBJWNCxVvNoqrd+9XXnjplqiCDw43BJp9K1zn12k+bAOH8Ui3EvYb6uxrM18D
+	 phCJStEQVn2Cns9IhGDZgmL74sYDDqVYACZHMvFd524hT8zvI6ID2FmOvtsrC/GyTX
+	 UIK7uboGth3I57mRFZ8bz6KhvxCS0/4YNANTj9KQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404787AbgF2V7E (ORCPT
+        id S2391676AbgF2V7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726432AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7608024686;
-        Mon, 29 Jun 2020 15:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78D402478F;
+        Mon, 29 Jun 2020 15:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443984;
-        bh=/J4Vj/koB1Dk0LlbraN2Hi5ejMzp3jhOESc6V5O3qiY=;
+        s=default; t=1593444098;
+        bh=0yx4bJ3B+m+aCTmdxosbdG7iughP3yPsSPVXS6vM4vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFXRmRV7GIieRLGDIi/9nHyXKZB0sZ8Dt4gxkT0X2cA89rxC0To79nRUeyU0SikLu
-         HN9IBcEyRLMQSU6RTw5WUbStoBKQmgY3zD0fx3njpGH130tpe8ceDsnC2ytRBdIREE
-         NgwnHk3zm+2N8yv6nXyT/xlVfoQBU6WXPayYpg3c=
+        b=iOfMOM/wPTMIXXwz7q5FBZr+xa/nzrTtnNVmcHvEs/cQPjU/rLGdbofd6y9pxtnoA
+         s1rxBfQaZeqygxc4MBu8HIQTKO6uEbsStnYFp0XM1uz2/UBfAj3DpCynUdYlByHprp
+         kjrtmOO8nEdlNQinBR/s8QJvS3rDygzR745zilp4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc:     Jiri Slaby <jslaby@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
+        Brian Gerst <brgerst@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 088/265] xhci: Return if xHCI doesn't support LPM
-Date:   Mon, 29 Jun 2020 11:15:21 -0400
-Message-Id: <20200629151818.2493727-89-sashal@kernel.org>
+Subject: [PATCH 5.7 208/265] syscalls: Fix offset type of ksys_ftruncate()
+Date:   Mon, 29 Jun 2020 11:17:21 -0400
+Message-Id: <20200629151818.2493727-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,50 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit f0c472a6da51f9fac15e80fe2fd9c83b68754cff upstream.
+commit 8e742aa79780b13cd300a42198c1a4cea9c89905 upstream.
 
-Just return if xHCI is quirked to disable LPM. We can save some time
-from reading registers and doing spinlocks.
+After the commit below, truncate() on x86 32bit uses ksys_ftruncate(). But
+ksys_ftruncate() truncates the offset to unsigned long.
 
-Add stable tag as we want this patch together with the next one,
-"Poll for U0 after disabling USB2 LPM" which fixes a suspend issue
-for some USB2 LPM devices
+Switch the type of offset to loff_t which is what do_sys_ftruncate()
+expects.
 
+Fixes: 121b32a58a3a (x86/entry/32: Use IA32-specific wrappers for syscalls taking 64-bit arguments)
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Brian Gerst <brgerst@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-5-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200610114851.28549-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/host/xhci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/syscalls.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index dcc987e1d57b0..ed468eed299c5 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4391,6 +4391,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 	int		hird, exit_latency;
- 	int		ret;
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 1815065d52f37..1b0c7813197b0 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1358,7 +1358,7 @@ static inline long ksys_lchown(const char __user *filename, uid_t user,
  
-+	if (xhci->quirks & XHCI_HW_LPM_DISABLE)
-+		return -EPERM;
-+
- 	if (hcd->speed >= HCD_USB3 || !xhci->hw_lpm_support ||
- 			!udev->lpm_capable)
- 		return -EPERM;
-@@ -4413,7 +4416,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
- 			enable ? "enable" : "disable", port_num + 1);
+ extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
  
--	if (enable && !(xhci->quirks & XHCI_HW_LPM_DISABLE)) {
-+	if (enable) {
- 		/* Host supports BESL timeout instead of HIRD */
- 		if (udev->usb2_hw_lpm_besl_capable) {
- 			/* if device doesn't have a preferred BESL value use a
+-static inline long ksys_ftruncate(unsigned int fd, unsigned long length)
++static inline long ksys_ftruncate(unsigned int fd, loff_t length)
+ {
+ 	return do_sys_ftruncate(fd, length, 1);
+ }
 -- 
 2.25.1
 
