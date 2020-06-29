@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D88C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE76207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BCF2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461112;
-	bh=IPcRzfGVEeCIakQ1km6wz6nbtv/q2XHmTaiepMphpRg=;
+	s=default; t=1593461116;
+	bh=wQq2d3fy/7yNpl+BXWHi56yLi/aUisRKVh+58QC2WqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Irao9oeoMSEeIs+bAm1b4rAa7yPoGG+oTFR+HX9b3KhMPiaioAb1BkiexHXXO9Y2Q
-	 gJ6aGekWuuUNeoURsd8F3tUQeIyorx9nLkBVJ5KWsXtK/KUcXW/E7sDRM2pyEpEHy3
-	 yWv7QO3y8iusS9zMRwSHSa1YYw20FOqwAcWX51W4=
+	b=GSVmNomTt9BYelIT/swyymn8zq8Db7GdkDLt0So1u9Jed/f1MNKQzOgYBMqQnWiti
+	 IV9Kr8rWjtGfFSHF8BJ34ia8u9f0VWDOXSkOC7wZvDLrL6Io4pSxXEa5ivXcXP1T7x
+	 6KrzpX9qS608I0LHw70NjbZ5A4DiG5E0cbsZ31nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgF2Ta3 (ORCPT
+        id S1731768AbgF2UFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732811AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:16 -0400
+        id S1732978AbgF2Ta3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 195BD248E9;
-        Mon, 29 Jun 2020 15:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30B5252E2;
+        Mon, 29 Jun 2020 15:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444919;
-        bh=IPcRzfGVEeCIakQ1km6wz6nbtv/q2XHmTaiepMphpRg=;
+        s=default; t=1593445113;
+        bh=wQq2d3fy/7yNpl+BXWHi56yLi/aUisRKVh+58QC2WqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V8GHMxJCqjnayygVMOI/r9178K2ZmFoTiHBEfZoApBkmBr1sIKfLTKvJtPGj1FZ6R
-         z6Tc2m4u9nPBrf6z9oq72FfyDKvwtXkv09kL2sYYQN1PLQG/EPvWRk0eCtJe014tH1
-         LigYOIA+LRjPur10KHR+HK4iVJ27hQV/8ayqvvuw=
+        b=zbKwso5xK9uVW0ln8Qc5qlsJw5qUj7QSNJggh4B5GdRxt+SslMUvas6OtX+IdN6Jx
+         k5q6YpsARNcZx8s8sNu0/HQry97r580W3zECOztJnAzkttgsCSNAhP/YesxoPDFbv6
+         ckz9jMltGuEtwNqIw5+dE18Prj+ZPmm8OV7/A7ig=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>, Cyrill Gorcunov <gorcunov@gmail.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/131] apparmor: don't try to replace stale label in ptraceme check
-Date:   Mon, 29 Jun 2020 11:33:07 -0400
-Message-Id: <20200629153502.2494656-17-sashal@kernel.org>
+Cc:     guodeqing <geffrey.guo@huawei.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 20/78] net: Fix the arp error in some cases
+Date:   Mon, 29 Jun 2020 11:37:08 -0400
+Message-Id: <20200629153806.2494953-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,45 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: guodeqing <geffrey.guo@huawei.com>
 
-[ Upstream commit ca3fde5214e1d24f78269b337d3f22afd6bf445e ]
+[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
 
-begin_current_label_crit_section() must run in sleepable context because
-when label_is_stale() is true, aa_replace_current_label() runs, which uses
-prepare_creds(), which can sleep.
+ie.,
+$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
 
-Until now, the ptraceme access check (which runs with tasklist_lock held)
-violated this rule.
+$ ip rule add from 6.6.6.6 table 6666
 
-Fixes: b2d09ae449ced ("apparmor: move ptrace checks to using labels")
-Reported-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+$ ip route add 9.9.9.9 via 6.6.6.6
+
+$ ping -I 6.6.6.6 9.9.9.9
+PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
+
+3 packets transmitted, 0 received, 100% packet loss, time 2079ms
+
+$ arp
+Address     HWtype  HWaddress           Flags Mask            Iface
+6.6.6.6             (incomplete)                              eth0
+
+The arp request address is error, this is because fib_table_lookup in
+fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
+the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
+Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
+
+Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
+Signed-off-by: guodeqing <geffrey.guo@huawei.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- security/apparmor/lsm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/fib_semantics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index 5e32fe434140e..898752b818dc5 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -130,11 +130,11 @@ static int apparmor_ptrace_traceme(struct task_struct *parent)
- 	struct aa_label *tracer, *tracee;
- 	int error;
+diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+index eff703cb13b6f..bc233fdfae0fe 100644
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -839,7 +839,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_info *fi,
+ 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
+ 				fl4.flowi4_scope = RT_SCOPE_LINK;
  
--	tracee = begin_current_label_crit_section();
-+	tracee = __begin_current_label_crit_section();
- 	tracer = aa_get_task_label(parent);
- 	error = aa_may_ptrace(tracer, tracee, AA_PTRACE_TRACE);
- 	aa_put_label(tracer);
--	end_current_label_crit_section(tracee);
-+	__end_current_label_crit_section(tracee);
+-			if (cfg->fc_table)
++			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
+ 				tbl = fib_get_table(net, cfg->fc_table);
  
- 	return error;
- }
+ 			if (tbl)
 -- 
 2.25.1
 
