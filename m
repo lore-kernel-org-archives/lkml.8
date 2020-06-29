@@ -2,161 +2,165 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B87C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64FD2206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE5820775
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOLEqH8u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QmjgHMCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388705AbgF2VSA (ORCPT
+        id S2390766AbgF2VSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
+        Mon, 29 Jun 2020 17:18:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgF2Swu (ORCPT
+        with ESMTP id S1729796AbgF2VSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:50 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F52FC02E2D5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:03 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so5407910wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:03 -0700 (PDT)
+        Mon, 29 Jun 2020 17:18:05 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE572C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:18:04 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n26so4347710ejx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Mu+wXsRAPVJI2BbUnA6whI4V192flwFfYNz4LkoWH3w=;
-        b=jOLEqH8u8fh6v6UYWj7y6Sg98lssQOe4aTyeSL0IikxGXCqZutLG6GKlQ9BXJNekwO
-         pA0FLrP45RJazv/O776JiqFwBiM9SSicqTdF0HmAHU3jsaAj1VlHgzlj9wY/GzgB17pM
-         ubWy6qfRPbBvZ8J3w1kxyXFv/IeI5waIMPcfmr2zcYZvZlRxT2dwWNaRuE4Puv/HfYYT
-         nIkmrT8A+p9sCGg0k4ohno1ddfnIdqPqRPEFbj0iJclDIK6PzXYisbdjyd+W2gD3vfvk
-         Zsevyfjt6lHQNZDymm97hSlwNKvxpXflu4E4I+3qDDPb+o+TP01B05fqRjFg7PI25dmS
-         Rl1A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k3u8HXAMPWhEhabpqjdYJ146WuNuaOg2EhIYFRuXqpM=;
+        b=QmjgHMCPFtCfnd59WVkDYYDiCvQJ9TLMoKuXhlgAiNXcDkkFsNyOXAh0kOxXWFEiDT
+         81VLh016Tri13UHQ7NSxRn8xP5ymt1ZMTpuNM8uz/KZ6WQCLFkfurQOO0rly/X+Jucs/
+         A1qCYgMyWxe7vr921ErrncDcDEzz5AkoHqEtC/blRCUiNzOtz17KT7vgZsm33z4WgzN3
+         MHKvpcINhb5Iznv0VUNmFulPauzyQf/+ojmfY0KPNuzUC5ck0A2iBFLMxrH1Kfu+zQmX
+         wzwgFkdU4USwX2P7373AMUo7uLfXYWPKvfF/g5OM5KMN315qZdMTsRszkPTyeK3DnJZl
+         TBKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Mu+wXsRAPVJI2BbUnA6whI4V192flwFfYNz4LkoWH3w=;
-        b=M1F2eHRpOPY56+Ka/3WO5iuq9VSCsYZqR5t4chatvmvvI4DnC+MBOmTwR55STlR3JN
-         8YYPL8VtnvUoJ+ZwbXt6L5MC+94YFsXOKQyS92ZvppxE90a+v7fVRGkLgmOAVft+wz35
-         FlsglnIqYilVwHEgWpJJXG7j+WagZXnH4hdE5tZYxlLcqGnYt8Goe8bmRSrdDIjwWNLP
-         VAwXGku/KfGGDc1dlzk7ieRKHOk4nrxLtAQsfclfOtYWEN/PeptI++1mROf2lobKd5xS
-         0UuincSCqgWJ4xDV2Pj0FKKgg8jugfqHRGxZPcm0sh5CVxwJgPpPwEmLoAvEe12AFEom
-         rMog==
-X-Gm-Message-State: AOAM531fa1YjB0z+zSnBGEzP2cDB9zveA5KkUj0KPsKn33ItPrkKj4Cu
-        i4Rb+pPl4Md2tNHQQCdHW7ienQ==
-X-Google-Smtp-Source: ABdhPJznnVAOrd15Z7Gc4f8Mk9Y3wkQjwCks7QOJqn2xOTJTvoqY/62dUv1+U/NtBEe3EVYh+Ui3rw==
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr17241252wrs.228.1593439501944;
-        Mon, 29 Jun 2020 07:05:01 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:05:00 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Masayuki Ohtak <masa-korg@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>
-Subject: [PATCH 13/20] misc: pch_phub: Provide descriptions for 'chip' argument
-Date:   Mon, 29 Jun 2020 15:04:35 +0100
-Message-Id: <20200629140442.1043957-14-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k3u8HXAMPWhEhabpqjdYJ146WuNuaOg2EhIYFRuXqpM=;
+        b=B+pE0eq69x517LwhcTQqv910rwCOK0Rs0GGOf0MifnpH8IyCX9pnfcpD+KU8XYPBhS
+         ZzYj8P5YP4cjfPySw9TILcUUL9iXYARbzvANBALyc4lPEBnaolIvxNoibEu5cp1rMoqp
+         cjOy8W0mauBtKORSxeHSUQAX8yBa1T9bAS2FMy2Wlz6d2SgDI5joapVfkAhp0Xbgw5Kg
+         9fq4JuLtXHQLJZVvO27A1Y8Sc8Rtow35yjEq00jm6K3weXQPPLEFDCjL0EkbGsDrbgsh
+         3guxmB4zlolsu3g67WfOgYr5ebIMeHFeXMrjPNgKO8nI4B37DiugDO0Kd6uYzHUpq7ea
+         c9/w==
+X-Gm-Message-State: AOAM532OOfwymQJs89P2WpA/K6AXQLNalUvlIGXeDBlBfrVhmfXjSd/4
+        I1IqPPOjbYftC1l/yoTrIQs1nisOpgV1evDbX8ZWpbQWyK1YVg==
+X-Google-Smtp-Source: ABdhPJwM0wqdpMYgzcsUtDEa7EOy9g/cN2Z7gW1lSQFWRn7v+meb/CMrSR5490ZvdAkIzHdlncJj9DBeAMUV/VcNmZM=
+X-Received: by 2002:a17:906:899:: with SMTP id n25mr14799477eje.298.1593465483433;
+ Mon, 29 Jun 2020 14:18:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629211329.2185342-1-pmalani@chromium.org>
+In-Reply-To: <20200629211329.2185342-1-pmalani@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 29 Jun 2020 14:17:52 -0700
+Message-ID: <CABXOdTfoks7+hmQA8rj98TsSGF6oabkrOOJzrd0NTKrzHNqjPg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] platform/chrome: cros_ec_typec: Use workqueue for
+ port update
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reason (probably copy 'n' paste) kerneldoc descriptions
-were missing for all instances of 'chip'.  Providing them squashes
-the following W=1 kernel build warnings:
+On Mon, Jun 29, 2020 at 2:13 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Use a work queue to call the port update routines, instead of doing it
+> directly in the PD notifier callback. This will prevent other drivers
+> with PD notifier callbacks from being blocked on the port update routine
+> completing.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
- drivers/misc/pch_phub.c:145: warning: Function parameter or member 'chip' not described in 'pch_phub_read_modify_write_reg'
- drivers/misc/pch_phub.c:282: warning: Function parameter or member 'chip' not described in 'pch_phub_read_serial_rom'
- drivers/misc/pch_phub.c:296: warning: Function parameter or member 'chip' not described in 'pch_phub_write_serial_rom'
- drivers/misc/pch_phub.c:334: warning: Function parameter or member 'chip' not described in 'pch_phub_read_serial_rom_val'
- drivers/misc/pch_phub.c:350: warning: Function parameter or member 'chip' not described in 'pch_phub_write_serial_rom_val'
- drivers/misc/pch_phub.c:450: warning: Function parameter or member 'chip' not described in 'pch_phub_read_gbe_mac_addr'
- drivers/misc/pch_phub.c:462: warning: Function parameter or member 'chip' not described in 'pch_phub_write_gbe_mac_addr'
+I can see you are having fun with me :-)
 
-Cc: Masayuki Ohtak <masa-korg@dsn.okisemi.com>
-Cc: Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/pch_phub.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> -       int ret, i;
+> +       int i, ret;
 
-diff --git a/drivers/misc/pch_phub.c b/drivers/misc/pch_phub.c
-index 60828af7506a3..95ba82a8625b0 100644
---- a/drivers/misc/pch_phub.c
-+++ b/drivers/misc/pch_phub.c
-@@ -135,6 +135,7 @@ static DEFINE_MUTEX(pch_phub_mutex);
- 
- /**
-  * pch_phub_read_modify_write_reg() - Reading modifying and writing register
-+ * @chip:		Pointer to the PHUB register structure
-  * @reg_addr_offset:	Register offset address value.
-  * @data:		Writing value.
-  * @mask:		Mask value.
-@@ -274,6 +275,7 @@ static void pch_phub_restore_reg_conf(struct pci_dev *pdev)
- 
- /**
-  * pch_phub_read_serial_rom() - Reading Serial ROM
-+ * @chip:		Pointer to the PHUB register structure
-  * @offset_address:	Serial ROM offset address to read.
-  * @data:		Read buffer for specified Serial ROM value.
-  */
-@@ -288,6 +290,7 @@ static void pch_phub_read_serial_rom(struct pch_phub_reg *chip,
- 
- /**
-  * pch_phub_write_serial_rom() - Writing Serial ROM
-+ * @chip:		Pointer to the PHUB register structure
-  * @offset_address:	Serial ROM offset address.
-  * @data:		Serial ROM value to write.
-  */
-@@ -326,6 +329,7 @@ static int pch_phub_write_serial_rom(struct pch_phub_reg *chip,
- 
- /**
-  * pch_phub_read_serial_rom_val() - Read Serial ROM value
-+ * @chip:		Pointer to the PHUB register structure
-  * @offset_address:	Serial ROM address offset value.
-  * @data:		Serial ROM value to read.
-  */
-@@ -342,6 +346,7 @@ static void pch_phub_read_serial_rom_val(struct pch_phub_reg *chip,
- 
- /**
-  * pch_phub_write_serial_rom_val() - writing Serial ROM value
-+ * @chip:		Pointer to the PHUB register structure
-  * @offset_address:	Serial ROM address offset value.
-  * @data:		Serial ROM value.
-  */
-@@ -444,6 +449,7 @@ static int pch_phub_gbe_serial_rom_conf_mp(struct pch_phub_reg *chip)
- /**
-  * pch_phub_read_gbe_mac_addr() - Read Gigabit Ethernet MAC address
-  * @offset_address:	Gigabit Ethernet MAC address offset value.
-+ * @chip:		Pointer to the PHUB register structure
-  * @data:		Buffer of the Gigabit Ethernet MAC address value.
-  */
- static void pch_phub_read_gbe_mac_addr(struct pch_phub_reg *chip, u8 *data)
-@@ -456,6 +462,7 @@ static void pch_phub_read_gbe_mac_addr(struct pch_phub_reg *chip, u8 *data)
- /**
-  * pch_phub_write_gbe_mac_addr() - Write MAC address
-  * @offset_address:	Gigabit Ethernet MAC address offset value.
-+ * @chip:		Pointer to the PHUB register structure
-  * @data:		Gigabit Ethernet MAC address value.
-  */
- static int pch_phub_write_gbe_mac_addr(struct pch_phub_reg *chip, u8 *data)
--- 
-2.25.1
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
+> ---
+>
+> Changes in v4:
+> - Removed extra newline.
+> - Moved both variable declarations into one line.
+>
+> Changes in v3:
+> - Use new 100 character line length limit.
+>
+> Changes in v2:
+> - No changes.
+>
+>  drivers/platform/chrome/cros_ec_typec.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 0c041b79cbba..69c4118e280c 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -58,6 +58,7 @@ struct cros_typec_data {
+>         /* Array of ports, indexed by port number. */
+>         struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+>         struct notifier_block nb;
+> +       struct work_struct port_work;
+>  };
+>
+>  static int cros_typec_parse_port_props(struct typec_capability *cap,
+> @@ -619,18 +620,24 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+>         return 0;
+>  }
+>
+> -static int cros_ec_typec_event(struct notifier_block *nb,
+> -                              unsigned long host_event, void *_notify)
+> +static void cros_typec_port_work(struct work_struct *work)
+>  {
+> -       struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+> -                                                    nb);
+> -       int ret, i;
+> +       struct cros_typec_data *typec = container_of(work, struct cros_typec_data, port_work);
+> +       int i, ret;
+>
+>         for (i = 0; i < typec->num_ports; i++) {
+>                 ret = cros_typec_port_update(typec, i);
+>                 if (ret < 0)
+>                         dev_warn(typec->dev, "Update failed for port: %d\n", i);
+>         }
+> +}
+> +
+> +static int cros_ec_typec_event(struct notifier_block *nb,
+> +                              unsigned long host_event, void *_notify)
+> +{
+> +       struct cros_typec_data *typec = container_of(nb, struct cros_typec_data, nb);
+> +
+> +       schedule_work(&typec->port_work);
+>
+>         return NOTIFY_OK;
+>  }
+> @@ -689,6 +696,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+>         if (ret < 0)
+>                 return ret;
+>
+> +       INIT_WORK(&typec->port_work, cros_typec_port_work);
+> +
+> +       /*
+> +        * Safe to call port update here, since we haven't registered the
+> +        * PD notifier yet.
+> +        */
+>         for (i = 0; i < typec->num_ports; i++) {
+>                 ret = cros_typec_port_update(typec, i);
+>                 if (ret < 0)
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
