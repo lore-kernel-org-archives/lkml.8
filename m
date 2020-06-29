@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0919C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C792CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC032065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA2E20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468174;
-	bh=6LsGxbjBijB3n3BH6v7BJ+ueot9xAGvIAWaP9F5Uejg=;
+	s=default; t=1593468185;
+	bh=j2PgZ/whi0LQa51s89tNZ3et6wNy7JuSHDp1a9QO73A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOQie9Rlz9cyBVIWbc7daLaLopjNz5HtX5GtRvHeD44Zqsnb7fiTqoM/hGX4xm9g9
-	 nwThCHsiil1rwzY82cdOKRQVlkVweS4/Wwf6aLOuzZEfuBTf2FgOHs4wbpjhkx41RX
-	 SuScZdzGd8MKMXHww7dQPPJPFzXNw+oKmojca+KY=
+	b=zGOXjubVIyBSws4jrSAbx3MLvvilKaO1k+xCz8OHvAFTiu1QIAjVeG87dxDHT2uw7
+	 D4PJ8IWAxoHuIGkmX+GXjY3DJtOZxQ/wHVJKV6Wh/CMhIOW1EK2HKx58Kx/9WAHN6p
+	 AK4p8W4faJVH27L+5k97YTYvrTa/qO1NDda57BIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390104AbgF2WCx (ORCPT
+        id S2390469AbgF2WDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:02:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726226AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6551B247FC;
-        Mon, 29 Jun 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6FCC246AE;
+        Mon, 29 Jun 2020 15:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444158;
-        bh=6LsGxbjBijB3n3BH6v7BJ+ueot9xAGvIAWaP9F5Uejg=;
+        s=default; t=1593444011;
+        bh=j2PgZ/whi0LQa51s89tNZ3et6wNy7JuSHDp1a9QO73A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L9wr6KV+lPmJiuwwUFvvS2VF33j8aR3V7ExpMPEzv/BLOdGD1JAcdIdjhQqkvgOWj
-         KC3CbpdBJethLn6FVpw4l9A95XMzTjCnmE3uSSJj/xhIfKG5+nTjgrKOhTTOCL/Ntm
-         0a2mkAdjspSSZHn/1CLqqss0C0KXF6h9m2dvW1oA=
+        b=V7SGgFssjOgpxsr375i0F/0Me5PwsAYUE6AO+NszV2MNtNa7aaG/X4B4bW58uDa0G
+         WPA9045TDOmYTSRe0ihmmq89oqzJJcXsJAIvxKzbX0QZq6NrWM3ZdLmwbOT3XGfmgC
+         MPna5n6BxNHIcDTpZH/gipwj4zBBd7Tec86iasmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 264/265] dm writecache: add cond_resched to loop in persistent_memory_claim()
-Date:   Mon, 29 Jun 2020 11:18:17 -0400
-Message-Id: <20200629151818.2493727-265-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 117/265] ASoC: fsl_ssi: Fix bclk calculation for mono channel
+Date:   Mon, 29 Jun 2020 11:15:50 -0400
+Message-Id: <20200629151818.2493727-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,35 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit d35bd764e6899a7bea71958f08d16cea5bfa1919 upstream.
+[ Upstream commit ed1220df6e666500ebf58c4f2fccc681941646fb ]
 
-Add cond_resched() to a loop that fills in the mapper memory area
-because the loop can be executed many times.
+For mono channel, SSI will switch to Normal mode.
 
-Fixes: 48debafe4f2fe ("dm: add writecache target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In Normal mode and Network mode, the Word Length Control bits
+control the word length divider in clock generator, which is
+different with I2S Master mode (the word length is fixed to
+32bit), it should be the value of params_width(hw_params).
+
+The condition "slots == 2" is not good for I2S Master mode,
+because for Network mode and Normal mode, the slots can also
+be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
+to check if it is I2S Master mode.
+
+So we refine the formula for mono channel, otherwise there
+will be sound issue for S24_LE.
+
+Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-writecache.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/fsl/fsl_ssi.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 856b3515654ff..5cc94f57421ca 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -286,6 +286,8 @@ static int persistent_memory_claim(struct dm_writecache *wc)
- 			while (daa-- && i < p) {
- 				pages[i++] = pfn_t_to_page(pfn);
- 				pfn.val++;
-+				if (!(i & 15))
-+					cond_resched();
- 			}
- 		} while (i < p);
- 		wc->memory_map = vmap(pages, p, VM_MAP, PAGE_KERNEL);
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index bad89b0d129e7..1a2fa7f181423 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	struct regmap *regs = ssi->regs;
+ 	u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
+ 	unsigned long clkrate, baudrate, tmprate;
+-	unsigned int slots = params_channels(hw_params);
+-	unsigned int slot_width = 32;
++	unsigned int channels = params_channels(hw_params);
++	unsigned int slot_width = params_width(hw_params);
++	unsigned int slots = 2;
+ 	u64 sub, savesub = 100000;
+ 	unsigned int freq;
+ 	bool baudclk_is_used;
+@@ -688,10 +689,14 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	/* Override slots and slot_width if being specifically set... */
+ 	if (ssi->slots)
+ 		slots = ssi->slots;
+-	/* ...but keep 32 bits if slots is 2 -- I2S Master mode */
+-	if (ssi->slot_width && slots != 2)
++	if (ssi->slot_width)
+ 		slot_width = ssi->slot_width;
+ 
++	/* ...but force 32 bits for stereo audio using I2S Master Mode */
++	if (channels == 2 &&
++	    (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) == SSI_SCR_I2S_MODE_MASTER)
++		slot_width = 32;
++
+ 	/* Generate bit clock based on the slot number and slot width */
+ 	freq = slots * slot_width * params_rate(hw_params);
+ 
 -- 
 2.25.1
 
