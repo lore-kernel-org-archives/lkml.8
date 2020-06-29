@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3A3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220332053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3ECA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457277;
-	bh=CLuD78hSDZry6q0IZ5+0dE6txkqVSlnjENSPHZm+94w=;
+	s=default; t=1593457280;
+	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZh0PSAQVnAJUN+VodcVf/pkg7yVHAC9GEvfSMek4P19doTJYoSWULRQJgjgaIq0X
-	 Z6tdR1AGvnkwqy6IDP7csJEu3YD+g4+7uncMoeHvnxcX+VGa6XQtA7b+SFcfH5VvZM
-	 MYJSV9Zrq4B4p2GOka0C/mprRX7euAuxIJTwdsiA=
+	b=YZQgEX0DIifX9oRxB2b1h6EC3/ifWn4eJHZWFivv2s85vg2ptx5P5aDSGefXxek3y
+	 4GYuwV3zDZ4l+NFlALV9iimvCxb/e0Z7HK5pJr3PzJNsQwAE8xxXxqK2PR/iXVXptx
+	 swNimc7zoxWD+zcNzPzEJ5P+rWdTpQ1MJG0XqSHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgF2TBO (ORCPT
+        id S1729882AbgF2TBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730364AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 442C925549;
-        Mon, 29 Jun 2020 15:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D7A254F2;
+        Mon, 29 Jun 2020 15:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446109;
-        bh=CLuD78hSDZry6q0IZ5+0dE6txkqVSlnjENSPHZm+94w=;
+        s=default; t=1593446050;
+        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s10LyWPLQJIoXcOHJ8Lr2i17ROBbmanOmn+u+BhUm6zrcK3AOjRN9g2gqencLDInI
-         Zllln5EVqwnGmApC5NLHj89IeFHR1x/Wn8jzmCV4NsCBquG7JVOF/uJDiEpNGJHc/x
-         IuVQlpcbK18nQ7fIaEwOSDOegroKDm89Ssu6Ey0o=
+        b=Zuy4gx/Gx1fV9tsSoUzbnZw9At47H2+/K9zjy3x4AklnrvonWpR8ACJdLeadx/fSw
+         4xZXZthd218rpfCuN+PlOZdBpjlddBDesNXdjQ+HyHKyLrwj1nzpaVbq4kmJuQep2t
+         gjDgZwYTKbHMelE2UdphoPcwU/oKWye/HIuYHOQc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 101/135] xhci: Fix incorrect EP_STATE_MASK
-Date:   Mon, 29 Jun 2020 11:52:35 -0400
-Message-Id: <20200629155309.2495516-102-sashal@kernel.org>
+Cc:     tannerlove <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 053/135] selftests/net: in timestamping, strncpy needs to preserve null byte
+Date:   Mon, 29 Jun 2020 11:51:47 -0400
+Message-Id: <20200629155309.2495516-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -64,39 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: tannerlove <tannerlove@google.com>
 
-commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
+[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
 
-EP_STATE_MASK should be 0x7 instead of 0xf
+If user passed an interface option longer than 15 characters, then
+device.ifr_name and hwtstamp.ifr_name became non-null-terminated
+strings. The compiler warned about this:
 
-xhci spec 6.2.3 shows that the EP state field in the endpoint context data
-structure consist of bits [2:0].
-The old value included a bit from the next field which fortunately is a
- RsvdZ region. So hopefully this hasn't caused too much harm
+timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
+destination size [-Wstringop-truncation]
+  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 0a3aa38b3c96e..a7f346529f913 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -706,7 +706,7 @@ struct xhci_ep_ctx {
-  * 4 - TRB error
-  * 5-7 - reserved
-  */
--#define EP_STATE_MASK		(0xf)
-+#define EP_STATE_MASK		(0x7)
- #define EP_STATE_DISABLED	0
- #define EP_STATE_RUNNING	1
- #define EP_STATE_HALTED		2
+diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
+index 5cdfd743447b7..900ed4b478996 100644
+--- a/tools/testing/selftests/networking/timestamping/timestamping.c
++++ b/tools/testing/selftests/networking/timestamping/timestamping.c
+@@ -332,10 +332,16 @@ int main(int argc, char **argv)
+ 	int val;
+ 	socklen_t len;
+ 	struct timeval next;
++	size_t if_len;
+ 
+ 	if (argc < 2)
+ 		usage(0);
+ 	interface = argv[1];
++	if_len = strlen(interface);
++	if (if_len >= IFNAMSIZ) {
++		printf("interface name exceeds IFNAMSIZ\n");
++		exit(1);
++	}
+ 
+ 	for (i = 2; i < argc; i++) {
+ 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
+@@ -369,12 +375,12 @@ int main(int argc, char **argv)
+ 		bail("socket");
+ 
+ 	memset(&device, 0, sizeof(device));
+-	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
++	memcpy(device.ifr_name, interface, if_len + 1);
+ 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
+ 		bail("getting interface IP address");
+ 
+ 	memset(&hwtstamp, 0, sizeof(hwtstamp));
+-	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
++	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
+ 	hwtstamp.ifr_data = (void *)&hwconfig;
+ 	memset(&hwconfig, 0, sizeof(hwconfig));
+ 	hwconfig.tx_type =
 -- 
 2.25.1
 
