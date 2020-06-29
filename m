@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909AD2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986192065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468200;
-	bh=1/ZFzVVzjPohzbHNwJsyjOAmCkS4AaSN6cYqJq14jks=;
+	s=default; t=1593468204;
+	bh=SGnq0RrVsgwdJiovhIBuLGHgftO74XJW57gEQCjVjL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NaXkA+C75pDcofT53qv10iELu7tTR/Jm/SLpvMZydWE288/63RcZMrB3+hDDuuzsw
-	 HABamiBjL5iGhx+OWX2Jho+ZkS9xMyQ1SwKqcwH07n9BFvoS93NwX5gczyhsR5sYrR
-	 CM/TK+bV1eq3DoMgNZhp2IbqGXrL4GCEVN13lROk=
+	b=NbfCdUf6lyJB83KYOAroxCpcHaJy2NaNGvzjw+avCBc1/4d1KjXYYRHz6+iAijPdT
+	 ePk57kf2Cq43Fo3K/NIhSj90o+ajraYUYwloRS3w8qKkf003b5F/sFnUUTjIogo8hz
+	 zsmKAm602oBimkHXU7gpF5LeHqX7DEXLpIfR4Tp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390640AbgF2WDS (ORCPT
+        id S2390990AbgF2WDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726225AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264BC246AF;
-        Mon, 29 Jun 2020 15:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C438624759;
+        Mon, 29 Jun 2020 15:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444003;
-        bh=1/ZFzVVzjPohzbHNwJsyjOAmCkS4AaSN6cYqJq14jks=;
+        s=default; t=1593444075;
+        bh=SGnq0RrVsgwdJiovhIBuLGHgftO74XJW57gEQCjVjL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/UW0Hjq9YwGYZXHM1qfD1uqAgmzlsizggZKX9K9KRKWnnWwc8+54nuVB8mRaZGHI
-         7xskypGSMDDHuHNqwbmsfzk0mx1OAippSgEl7EJuR7CD60OBftZGtEyFFPxMQ5DD3b
-         9z6mlSFPkg/zzTh4Y5TGeM1gk541djtQIofkvCxg=
+        b=kJlFtfgGeiyZccxwvUGtxj77EszAxhaEbIcy6wBX+w3g7ZkjG9dRz4gdoFaeFU049
+         Ash5UthyKsDpGXVwGQnps2HsNMI2dO9cS/gLNiyvEcAZRJ4DpQ/92OKYfBeVO0F7/S
+         4EQtYo9YS6RavNXP1tPNDi+S0QH5eT2VGG2nXJG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Ard Biesheuvel <ardb@kernel.org>,
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 109/265] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
-Date:   Mon, 29 Jun 2020 11:15:42 -0400
-Message-Id: <20200629151818.2493727-110-sashal@kernel.org>
+Subject: [PATCH 5.7 184/265] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
+Date:   Mon, 29 Jun 2020 11:16:57 -0400
+Message-Id: <20200629151818.2493727-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,37 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit 4ddf4739be6e375116c375f0a68bf3893ffcee21 ]
+[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Use kfree() instead of kvfree() to free rgb_user in
+calculate_user_regamma_ramp() because the memory is allocated with
+kcalloc().
 
-Fixes: 0bb549052d33 ("efi: Add esrt support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200528183804.4497-1-wu000273@umn.edu
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/esrt.c | 2 +-
+ drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-index e3d6926965834..d5915272141fd 100644
---- a/drivers/firmware/efi/esrt.c
-+++ b/drivers/firmware/efi/esrt.c
-@@ -181,7 +181,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
- 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
- 					  "entry%d", entry_num);
- 		if (rc) {
--			kfree(entry);
-+			kobject_put(&entry->kobj);
- 			return rc;
- 		}
- 	}
+diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+index e89694eb90b4c..700f0039df7bd 100644
+--- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
++++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+@@ -1777,7 +1777,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
+ 
+ 	kfree(rgb_regamma);
+ rgb_regamma_alloc_fail:
+-	kvfree(rgb_user);
++	kfree(rgb_user);
+ rgb_user_alloc_fail:
+ 	return ret;
+ }
 -- 
 2.25.1
 
