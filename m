@@ -2,194 +2,137 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D561FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37EA2204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE46620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="crlH/71/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgF2SwG (ORCPT
+        id S1727091AbgF2SwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:52:06 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:55815 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729716AbgF2Sv7 (ORCPT
+        Mon, 29 Jun 2020 14:52:04 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18047 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbgF2Svx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:59 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EFC963C0588;
-        Mon, 29 Jun 2020 11:24:22 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3LZ3PyHkiLPo; Mon, 29 Jun 2020 11:24:18 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 274483C0585;
-        Mon, 29 Jun 2020 11:24:18 +0200 (CEST)
-Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 29 Jun
- 2020 11:24:17 +0200
-Date:   Mon, 29 Jun 2020 11:24:13 +0200
-From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200629092413.GA84958@vmlxhi-110.adit-jv.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
- <20200626011251.GP5865@pendragon.ideasonboard.com>
+        Mon, 29 Jun 2020 14:51:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efa0cd20000>; Mon, 29 Jun 2020 08:46:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 29 Jun 2020 08:46:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 29 Jun 2020 08:46:39 -0700
+Received: from [10.25.103.164] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jun
+ 2020 15:46:32 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 08/23] ASoC: soc-core: Fix component name_prefix
+ parsing
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+ <1593233625-14961-9-git-send-email-spujar@nvidia.com>
+ <878sg61zcf.wl-kuninori.morimoto.gx@renesas.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <5ad958bb-a736-2391-31fa-c32e13750322@nvidia.com>
+Date:   Mon, 29 Jun 2020 21:16:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200626011251.GP5865@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.196]
+In-Reply-To: <878sg61zcf.wl-kuninori.morimoto.gx@renesas.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593445587; bh=AivjTXZmlEwPaPeki/OKMhcWRIlg67pix78mVS/IG5g=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=crlH/71/oPsaD1V4+PwTZqGicdSi20WdXty8nf7RLaTpAyp6gkuO+Pa0+2UZAzrST
+         M03XnZnhMY/EQUOIJHuUx8axa7TTlwsq/wr0I0DwlvAxPbiomyLkD3Lt+Q3ZTf+MED
+         saUFpl/tGXzBT8KgWaQZ2pnsYOa/pcy1uyyeJ7/GQZ3xrQbbyHLxOBcG01AiG2hJEg
+         ifZvRP/d7uwMOwPZ2Ny1d/IWZHl8S1ZeUiIoFqjdL2rR+bZE8v6V56Ksh4iKbn9Uu3
+         4If5OLDYVnz90Z0NXsA1/ib6mXGckJEpW3czH6pOHE1LRbvTTQpOv1JZ7Ain2t82Pd
+         6OoO+gowAKlnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
 
-On Fri, Jun 26, 2020 at 04:12:51AM +0300, Laurent Pinchart wrote:
-> Hi Steve,
-> 
-> On Thu, Jun 25, 2020 at 10:41:09AM -0700, Steve Longerbeam wrote:
-> > On 6/24/20 7:01 PM, Laurent Pinchart wrote:
-> > > On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> > >> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> > >>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > >>   +Niklas, +Laurent
-> > >>
-> > >> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> > > I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> > > idea either :-) Routing doesn't go through the subdev [gs]_input
-> > > operations in MC-based drivers. It should be configured through link
-> > > setup instead. This patch goes in the wrong direction, sorry Steve.
-> > 
-> > That's OK! :) I didn't submit this patch, and as stated in the commit 
-> > header, I never recommended this patch be submitted to upstream in the 
-> > first place.
-> > 
-> > Selecting inputs at a subdev should normally make use of media link 
-> > setup. But for selecting analog signal inputs, such as the ADV748x AFE 
-> > standard definition inputs, that would  mean there would need to exist 
-> > source "analog" subdevs that connect to the AFE inputs, if only for the 
-> > purpose of selecting those inputs, which seems silly IMHO. The ADV748x 
-> > AFE subdev defines these inputs as media pads, but have no connections, 
-> > so link setup API can't be used to select those inputs.
-> > 
-> > So a new subdev pad API is clearly needed, not just to get input status 
-> > at a subdev pad, but to select/make active such analog inputs without 
-> > requiring link setup API.
-> 
-> There was an attempt to create a subdev ioctl to configure internal
-> routing. See "[PATCH v4 19/31] media: Documentation: Add GS_ROUTING
-> documentation" ([1]) and the related patches in the series.
-> 
-> [1] https://lore.kernel.org/linux-media/20190328200608.9463-20-jacopo+renesas@jmondi.org/
-> 
 
-I was thinking why not just allowing linking pads of the same media entity.
-This will avoid adding a new control, and will do the same as S_INPUT ioctl.
+On 6/29/2020 6:08 AM, Kuninori Morimoto wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sameer
+>
+> Thank you for your patch
+>
+> # I guess there was ML registering magic until v3 ?
+> # This is 1st time for me to get this patch series...
 
-> > >>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> > >>> ioctls for use via v4l2 subdevice node.
-> > >>>
-> > >>> This commit should probably not be pushed upstream, because the (old)
-> > >>> idea of video inputs conflicts with the newer concept of establishing
-> > >>> media links between src->sink pads.
-> > >>>
-> > >>> However it might make sense for some subdevices to support enum/get/set
-> > >>> inputs. One example would be the analog front end subdevice for the
-> > >>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> > >>> can be done without requiring the implementation of media entities that
-> > >>> would define the analog source for which to establish a media link.
-> > >>>
-> > >>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > >>> ---
-> > >>>   drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> > >>>   include/media/v4l2-subdev.h           | 11 +++++++++++
-> > >>>   2 files changed, 20 insertions(+)
-> > >>>
-> > >>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> index 6b989fe..73fbfe9 100644
-> > >>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> > >>>   			return -ENOTTY;
-> > >>>   		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> > >>>
-> > >>> +	case VIDIOC_ENUMINPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> > >>> +
-> > >>> +	case VIDIOC_G_INPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> > >>> +
-> > >>> +	case VIDIOC_S_INPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> > >>> +
-> > >>>   	case VIDIOC_G_CTRL:
-> > >>>   		if (!vfh->ctrl_handler)
-> > >>>   			return -ENOTTY;
-> > >>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> > >>> index f7fe78a..6e1a9cd 100644
-> > >>> --- a/include/media/v4l2-subdev.h
-> > >>> +++ b/include/media/v4l2-subdev.h
-> > >>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> > >>>    * @g_input_status: get input status. Same as the status field in the
-> > >>>    *	&struct &v4l2_input
-> > >>>    *
-> > >>> + * @enuminput: enumerate inputs. Should return the same input status as
-> > >>> + *      @g_input_status if the passed input index is the currently active
-> > >>> + *      input.
-> > >>> + *
-> > >>> + * @g_input: returns the currently active input index.
-> > >>> + *
-> > >>> + * @s_input: set the active input.
-> > >>> + *
-> > >>>    * @s_stream: used to notify the driver that a video stream will start or has
-> > >>>    *	stopped.
-> > >>>    *
-> > >>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> > >>>   	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> > >>>   	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> > >>>   	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> > >>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> > >>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> > >>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> > >>>   	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> > >>>   	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> > >>>   	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> > 
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+Until v3 the series was mostly about registering ASoC components. Based 
+on the discussions in the previous series and threads, I have updated 
+drivers to work with DPCM and added patches for simple-card driver to 
+test complete audio path. Yes, simple-card driver patches are new and 
+were not part of earlier series. Sorry if I was not clear in the cover 
+letter.
 
--- 
-Best Regards,
-Ramzi Ben Meftah.
+Thank you for the review.
+>
+>> The "prefix" can be defined in DAI link node or it can be specified as
+>> part of the component node itself. Currently "sound-name-prefix" defined
+>> in a component is not taking effect. Actually the property is not getting
+>> parsed. It can be fixed by parsing "sound-name-prefix" property whenever
+>> "prefix" is missing in DAI link Codec node.
+>>
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> (snip)
+>> @@ -1111,8 +1111,10 @@ static void soc_set_name_prefix(struct snd_soc_card *card,
+>>                struct snd_soc_codec_conf *map = &card->codec_conf[i];
+>>
+>>                if (snd_soc_is_matching_component(&map->dlc, component)) {
+>> -                     component->name_prefix = map->name_prefix;
+>> -                     return;
+>> +                     if (map->name_prefix) {
+>> +                             component->name_prefix = map->name_prefix;
+>> +                             return;
+>> +                     }
+>>                }
+>>        }
+> This is nit-pick but it can be like this ?
+>
+>                  if (snd_soc_is_matching_component(&map->dlc, component) &&
+>                      map->name_prefix) {
+>                          ...
+>                  }
+
+Sounds fine. Will update.
+>
+> Thank you for your help !!
+>
+> Best regards
+> ---
+> Kuninori Morimoto
+
