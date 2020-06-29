@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0779F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EBC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456953;
-	bh=8Nt0QTjmU/HPfCrCbQoidM1/zHTp3ETdg+Q0aNDBh58=;
+	s=default; t=1593456955;
+	bh=M1QucpjvT5eQKOYWZVjXYjHcyud6sajkmXPvml24HBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HXv/QCIyvzcF1ec+nGCJnMJl5g6u2rOKuf0nVM9A0ByIYDWGm0WoOmCM0JYwtqmXH
-	 skt7A7P1IRQDAg+UmsDXRVnQ8c4nHN6vpH985klQp5uDxA91u1ijLxJ3uI/4QCj/xC
-	 asChzpHD2sx60o5nIcedb80+dKfIeKXsWEIMZNAw=
+	b=UI0ckZIQo4ybEIkmfI/9VGUvf1ewiDx9l/WTuhDPLDAqfXLvKPbAH3H9abxhHod2j
+	 LIuJYjt+dTZZO9Vcm81vNKG70w2Jv28ds54nthX+7bvXoMBOo+X15vkZ03Y2gSJc38
+	 cezs358OKTPg9LwnY9/DZIOWuuRWVE33s27AKRoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgF2Szu (ORCPT
+        id S1729144AbgF2Szx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729983AbgF2SzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:18 -0400
+        id S1729974AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEBE25578;
-        Mon, 29 Jun 2020 15:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85DD823F28;
+        Mon, 29 Jun 2020 15:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446140;
-        bh=8Nt0QTjmU/HPfCrCbQoidM1/zHTp3ETdg+Q0aNDBh58=;
+        s=default; t=1593446117;
+        bh=M1QucpjvT5eQKOYWZVjXYjHcyud6sajkmXPvml24HBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/IXSN/SGfq3/LOZI8NMyVD5oyCmk9NqOsvYZrQQKG1rVEHNzUU7ixPpteglTn0qx
-         gn9uFIUgSg8AIZQiDE8PM7qmWj8BjQOcEXzhQTHsPGA9cRu4WLRSRiX8DxxRNkA1nk
-         r3zdpodM+cVnCm11CNcZptqgfmn0J5fekgk6r6sY=
+        b=qmOs17oacklVED4lxuYBoRdHaKPIWTVI1240q9dbQLdrRLyLEaegavEWpqqW1gGe0
+         ZoaHn5bEjA8W0i24fidb2TM7Osgew5ps034y9cG+JwcJ1zesw4yranjBwzXi9xpIiz
+         Mi70/CVNDGXRvkXh8i6Pdk7itULlfnTU8NvJjgTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 128/135] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
-Date:   Mon, 29 Jun 2020 11:53:02 -0400
-Message-Id: <20200629155309.2495516-129-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 108/135] xhci: Poll for U0 after disabling USB2 LPM
+Date:   Mon, 29 Jun 2020 11:52:42 -0400
+Message-Id: <20200629155309.2495516-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,35 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
+[ Upstream commit b3d71abd135e6919ca0b6cab463738472653ddfb ]
 
-clk_s is checked twice in a row in ni_init_smc_spll_table().
-fb_div should be checked instead.
+USB2 devices with LPM enabled may interrupt the system suspend:
+[  932.510475] usb 1-7: usb suspend, wakeup 0
+[  932.510549] hub 1-0:1.0: hub_suspend
+[  932.510581] usb usb1: bus suspend, wakeup 0
+[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
+[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
+..
+[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
+..
+[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
+[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
+[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
 
-Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+During system suspend, USB core will let HC suspends the device if it
+doesn't have remote wakeup enabled and doesn't have any children.
+However, from the log above we can see that the usb 1-7 doesn't get bus
+suspended due to not in U0. After a while the port finished U2 -> U0
+transition, interrupts the suspend process.
+
+The observation is that after disabling LPM, port doesn't transit to U0
+immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
+maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
+the affected device is advertised as 400us, which is still not enough
+based on my testing result.
+
+So let's use the maximum permitted latency, 10000, to poll for U0
+status to solve the issue.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
-index c3d531a1114b6..14ee1d9a56a76 100644
---- a/drivers/gpu/drm/radeon/ni_dpm.c
-+++ b/drivers/gpu/drm/radeon/ni_dpm.c
-@@ -2128,7 +2128,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
- 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
- 			ret = -EINVAL;
- 
--		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
-+		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
- 			ret = -EINVAL;
- 
- 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 7272c98becb8b..51d84332eb786 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4264,6 +4264,9 @@ int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 			mutex_lock(hcd->bandwidth_mutex);
+ 			xhci_change_max_exit_latency(xhci, udev, 0);
+ 			mutex_unlock(hcd->bandwidth_mutex);
++			readl_poll_timeout(port_array[port_num], pm_val,
++					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
++					   100, 10000);
+ 			return 0;
+ 		}
+ 	}
 -- 
 2.25.1
 
