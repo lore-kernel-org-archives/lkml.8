@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D28C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB67C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE122067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BEF2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462665;
-	bh=sFN3jMxTCuTSoLS0viYpH/B0gqv0IL0UISqEiczNlm0=;
+	s=default; t=1593462674;
+	bh=+RTLm4nwuLUV6n4xQyBpCOQVWTHC9HipVho00fhacZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxFlkYrTL9FgdkjGFJR5Xvdz97Y7u4/dNTAj8Ksqriu0PszbbCIJs200VNBLEiLsq
-	 zWaRG8kpw1F2paFW62FH/kYXqQzRDxyvAnau4scmbwGhKKpdEyZqPHbQ8xuust69OS
-	 7i0axfbETd8zRC83fjlaHlgUvNAxsf0vHoRKRUwA=
+	b=2rpreZCUXoP4JYfpNXG/askOnMD4qsZojqUZmiEqYTIuLZTwB/NskhP2WjkRN9gh/
+	 TUkFF1RcDO7slxOaa809mWiM7BOwhOj6q7nycxkWbPzLo4OVgpjp2eWFkINhDss5qo
+	 hl/RhzPyAcYkPkG/Hb9SS73KCiMHqj4dQm0PLg5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387646AbgF2UbC (ORCPT
+        id S1730239AbgF2UbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732486AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:20 -0400
+        id S1732444AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C49532536D;
-        Mon, 29 Jun 2020 15:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C721A253DD;
+        Mon, 29 Jun 2020 15:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445233;
-        bh=sFN3jMxTCuTSoLS0viYpH/B0gqv0IL0UISqEiczNlm0=;
+        s=default; t=1593445315;
+        bh=+RTLm4nwuLUV6n4xQyBpCOQVWTHC9HipVho00fhacZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bIhr0WGbQfNfBL5ymE+ClgmZZYfaj7FlvQjAhHBJmW/OflBR53jg7EruSnWjdM56T
-         hnz1pLZSkYZ5zCJjCiCmz/SwkE1ZEbdiiC41Al2E5rKS0EoDXZDuB7f69A3uWiIaFT
-         4Wdopd2OUVcU3rmFEHaQjEetyJKQg7p1Xn5gcYJs=
+        b=0x6ISDVMOQx6EzHHCGLTS7xx9HIMfMnf16veMVKTJjldIyKgaDxArgTGHk5psNbd6
+         MZGroJuz5VIUJZWUdTPIbmekKVOCGbnQ+dehxZnW8h4z9a8jL3xpI4GjCq/LZ0ar48
+         rDq+19xkY1ifZxWrb9wGDHhZp18xsrX7YBxeQwwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Volmat <avolmat@me.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 018/191] clk: clk-flexgen: fix clock-critical handling
-Date:   Mon, 29 Jun 2020 11:37:14 -0400
-Message-Id: <20200629154007.2495120-19-sashal@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>, Gerd Hoffmann <kraxel@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 083/191] drm/qxl: Use correct notify port address when creating cursor ring
+Date:   Mon, 29 Jun 2020 11:38:19 -0400
+Message-Id: <20200629154007.2495120-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,35 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <avolmat@me.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
+commit 80e5f89da3ab949fbbf1cae01dfaea29f5483a75 upstream.
 
-Fixes an issue leading to having all clocks following a critical
-clocks marked as well as criticals.
+The command ring and cursor ring use different notify port addresses
+definition: QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR. However, in
+qxl_device_init() we use QXL_IO_NOTIFY_CMD to create both command ring
+and cursor ring. This doesn't cause any problems now, because QEMU's
+behaviors on QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR are the same.
+However, QEMU's behavior may be change in future, so let's fix it.
 
-Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
-Signed-off-by: Alain Volmat <avolmat@me.com>
-Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+P.S.: In the X.org QXL driver, the notify port address of cursor ring
+      is correct.
+
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Cc: <stable@vger.kernel.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/1585635488-17507-1-git-send-email-chenhc@lemote.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/st/clk-flexgen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/qxl/qxl_kms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
-index a485f3b284b9f..033e6062599d6 100644
---- a/drivers/clk/st/clk-flexgen.c
-+++ b/drivers/clk/st/clk-flexgen.c
-@@ -371,6 +371,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 			break;
- 		}
+diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
+index e642242728c0b..a886652ed895b 100644
+--- a/drivers/gpu/drm/qxl/qxl_kms.c
++++ b/drivers/gpu/drm/qxl/qxl_kms.c
+@@ -199,7 +199,7 @@ static int qxl_device_init(struct qxl_device *qdev,
+ 				&(qdev->ram_header->cursor_ring_hdr),
+ 				sizeof(struct qxl_command),
+ 				QXL_CURSOR_RING_SIZE,
+-				qdev->io_base + QXL_IO_NOTIFY_CMD,
++				qdev->io_base + QXL_IO_NOTIFY_CURSOR,
+ 				false,
+ 				&qdev->cursor_event);
  
-+		flex_flags &= ~CLK_IS_CRITICAL;
- 		of_clk_detect_critical(np, i, &flex_flags);
- 
- 		/*
 -- 
 2.25.1
 
