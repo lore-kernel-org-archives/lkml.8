@@ -4,48 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09435C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7253620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D891D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462198;
-	bh=NINkKK4I3VffHpoat9TDm1EvXMkhuApXJRXDL/obqqw=;
+	s=default; t=1593462200;
+	bh=n/fVQGQa3Rcy64B1mVJf9Ntx2j9lrA37EDwref+eJ20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWmuN9/9N/xXh/aI5YQmD5efucyMP4/bGhxcp92YExFSb5C91efV2KsXwMgBzW78x
-	 fX406P3RTa+H5kI1YPLKyl9qo8cgeaO6OTrk4oQT18xZZeyjQTAnnlgotN8K2vduTq
-	 3u00hsjdaRu9EkvR8psRIzf3jlrEvZNESzsca2Aw=
+	b=YaPf+fWtl/BdloYygPcDZ7bSAYBEVBH+tDpOWJOH3Bw9RnfFsvs5qrF7SMXMblaYI
+	 VB4+FO8ovOoUBdwzL3aIg1kBva76xrs4ErMOfs1jzL2lKPESXjyasuML9oebSAj/OQ
+	 FOabwUatpcBQcGCzeN+N4rzAiFyikTLakt8jZ2MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbgF2UXQ (ORCPT
+        id S2388631AbgF2UXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732575AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732570AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F15125448;
-        Mon, 29 Jun 2020 15:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE62253C7;
+        Mon, 29 Jun 2020 15:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445399;
-        bh=NINkKK4I3VffHpoat9TDm1EvXMkhuApXJRXDL/obqqw=;
+        s=default; t=1593445300;
+        bh=n/fVQGQa3Rcy64B1mVJf9Ntx2j9lrA37EDwref+eJ20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLD7spZU8KxAyfRcDA2K5E5EmTYKGyIshzyqjsud0ZqR/45ELVipvoBAKMa6yZZRw
-         fYfTyy+O07XNL+4fcLiNbk2LIN4i+w8KgiEJrF/hBJV0YsEf7vZvx8aDPenfH5yk4n
-         ++UGDcAHlaccbBDcJ7j20350WKIloK/pTk9yKdpw=
+        b=EuZTanAgmtPXeaHjnkfnbjuPZRXXLAD/VC+Q2qx2kw3DQgw45gR+i/82CSa+1orkN
+         IvCLot3h/zsh7DnWcHd4hFtIu4CC9TzAy65hXP+ajweqRewLNDY2h5WDG+TTh0mP2t
+         CMTaY+UcbQ9Bkuac1vOO2De6NTFYkRxsC1REdsZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 151/191] ALSA: usb-audio: add quirk for Denon DCD-1500RE
-Date:   Mon, 29 Jun 2020 11:39:27 -0400
-Message-Id: <20200629154007.2495120-152-sashal@kernel.org>
+Cc:     Ram Pai <linuxram@us.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 072/191] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
+Date:   Mon, 29 Jun 2020 11:38:08 -0400
+Message-Id: <20200629154007.2495120-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,41 +77,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
+From: Ram Pai <linuxram@us.ibm.com>
 
-commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
+[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
 
-fix error "clock source 41 is not valid, cannot use"
+alloc_random_pkey() was allocating the same pkey every time.  Not all
+pkeys were geting tested.  This fixes it.
 
-[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
-[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[] Product: DCD-1500RE
-[] Manufacturer: D & M Holdings Inc.
-[]
-[] clock source 41 is not valid, cannot use
-[] usbcore: registered new interface driver snd-usb-audio
-
-Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Michal Suchanek <msuchanek@suse.de>
+Cc: Shuah Khan <shuah@kernel.org>
+Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/x86/protection_keys.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 0484a8d8a5bbe..486d27129ac39 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1162,6 +1162,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
- static bool is_itf_usb_dsd_2alts_dac(unsigned int id)
- {
- 	switch (id) {
-+	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
- 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
- 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
- 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
+diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
+index 874972ccfc95b..5338e668b5e65 100644
+--- a/tools/testing/selftests/x86/protection_keys.c
++++ b/tools/testing/selftests/x86/protection_keys.c
+@@ -23,6 +23,7 @@
+ #define _GNU_SOURCE
+ #include <errno.h>
+ #include <linux/futex.h>
++#include <time.h>
+ #include <sys/time.h>
+ #include <sys/syscall.h>
+ #include <string.h>
+@@ -608,10 +609,10 @@ int alloc_random_pkey(void)
+ 	int nr_alloced = 0;
+ 	int random_index;
+ 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
++	srand((unsigned int)time(NULL));
+ 
+ 	/* allocate every possible key and make a note of which ones we got */
+ 	max_nr_pkey_allocs = NR_PKEYS;
+-	max_nr_pkey_allocs = 1;
+ 	for (i = 0; i < max_nr_pkey_allocs; i++) {
+ 		int new_pkey = alloc_pkey();
+ 		if (new_pkey < 0)
 -- 
 2.25.1
 
