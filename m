@@ -2,157 +2,170 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA259C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9908220780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CED20781
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wE7nxuQQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cIXvVaSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgF2XVI (ORCPT
+        id S1728556AbgF2XWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:21:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+        Mon, 29 Jun 2020 19:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgF2XVG (ORCPT
+        with ESMTP id S1726746AbgF2XWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:21:06 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFDEC03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:21:06 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so9001255pge.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:21:06 -0700 (PDT)
+        Mon, 29 Jun 2020 19:22:51 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDB7C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:22:51 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b16so8535746pfi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:22:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y3eOZWqjsfvFABJlAWadxHNb9WOoW2QZW11FNR7qgIM=;
-        b=wE7nxuQQ8Ee1SyIlOGu96foC1kguVLhQnWfsM449qkfn/VoKBCtsVMOqOmKx7IZI4C
-         RVaEjdafrzkZKrdHnHpUfIuUaR+nDUOQdXro+nnJx5XibnwFB04m0UpfLU8lcAfNzunK
-         FH4vq/4AmRKx0OXYjTpIwOSmyWjemlGQQrsAim9D+osZfnHYYrMcyKBMOA6AcmZTCt7D
-         SC8HEZlX2KwR8OsKRbEGGGO82nQHiO6QrFnPdGaYVsrLOIGowYuaQm3rOF21PeyeGPnP
-         uhJe537nfOotmxkifcJzP2KlYRs06hCp+YYdixCMO/J34Bhc2jSz49ZJoQbscAlwSyYN
-         PnZQ==
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vosq3jM/Z3IP3Dh+gOgBhDGbMDQnYun30kIMF/La9o4=;
+        b=cIXvVaSaQc5ILuJaRDR/wexJyYUN6n9xmX1Wz1HZxX80qts79UYOAhmSOBvWwYqI7g
+         K9PB0H/wRCjKRAO+cLvtThHz32uLW5TIi6DgUzJTqZ9fuQUJDhotTkH9WXj6wAdvFPZE
+         mwnev4Gi9EJBfAoFdE9KkeinMzAXYcwYebrUgBNbU/saUchbLqgoZ1oKO4V680pigEzj
+         xrpYdpei+CQX0Rc5BW6sXS7yeV+GyYg2idYnOO9vrB8+HscqnaiJT0cJiUo6bv11ew4J
+         MnJ68nn/9iGBayeJds85Ayzcn8jWktIo61przQX4SFL9ddvG6d9vRq01144dk5rq0wXq
+         gwwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y3eOZWqjsfvFABJlAWadxHNb9WOoW2QZW11FNR7qgIM=;
-        b=uGZvWq3NCJeK8nzruyfsKDyamO8A2vkpYfbJUqD23yOsVKIAy88WqYIT6uWrY4GsO3
-         nbBfp9BBSAB2ZWS5LOn3hKAokCOzarqcvf73i/YodsxiqrX9tJ4zHMaaC1tTYXUiiWJq
-         PDY5M3RN/T5PEyUl5um2Ud/IyaW3CjeeapKiCahy/ZLPJqe2a+f5QCbpFSpyUk6IlAjD
-         Z5vArZYHeF+8xEn77H4kMj2keE2Sz33Jse1jsXa/1pCIkjuBCk47EVdLeYSvEf/vGtn5
-         NY+rR0znijZPVZ6cBMQp/Y/TcV8lO17H1Sjx9K1gJM//7tn9Cn3HH/Oh649SpY2aD0Z1
-         w8Kg==
-X-Gm-Message-State: AOAM530N6aMSyfmhH8+pioGbHHod6+fMCTwy2/J+4rIkXamzHJLRcnJH
-        rT0oYaSWYeBqsIwf4xMcv+khIA==
-X-Google-Smtp-Source: ABdhPJyWjBAVW07I/bBTVGZOBkIjcBIoUitijR4kfg05/memnxRwz5hP6QJZ8z5KUGyU1tHG6QOWdA==
-X-Received: by 2002:a62:ce48:: with SMTP id y69mr15584876pfg.208.1593472865320;
-        Mon, 29 Jun 2020 16:21:05 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id d9sm722596pgg.74.2020.06.29.16.21.04
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=vosq3jM/Z3IP3Dh+gOgBhDGbMDQnYun30kIMF/La9o4=;
+        b=tFRkbe89FECMIR+QBHcqC4Ave2Vl9BwvLX/fyBgLEdlP12Z4hPCLmTgd6R7ajY52zM
+         gN/FzNJ4NLjCoypbImT/RGFeghStxl0a4KKuyncEMlQkpmSYv8jtJT87a/SLGdIDctYK
+         m/3tUL6SUSZxOdBjvcBoPUPjgj+5a6nLsM9UDZ3wovgOU8C/PqElVSsXTIocaV3AVWLM
+         06cyeUvk7jbYl0/WtFwW0HtgtFNwNyWdsNdZFkte8diItqqIGUyoUeBoaARl/h4pGzUv
+         iJsVanNZ+Ao+FE5/pK9FHyxng9bKpi2sq717dNRv7cZcu1ibGC7EV74HNBQe5NsJ+s96
+         Qm8A==
+X-Gm-Message-State: AOAM533S9Vb2lk+aS718GvlUjxebbEzA69WwZXDPFBWzrYbzVDkSEGoG
+        0pt99aLtFx0V1OuDH4AURmW1dQ==
+X-Google-Smtp-Source: ABdhPJx3JO3u4fG6Fd9hfA+ttXXsBjo2Fr8PGnVv+moeh/cJBgY7JGWNYXy+Pe70NRofreAkTSmyaQ==
+X-Received: by 2002:a65:6883:: with SMTP id e3mr12506452pgt.5.1593472971349;
+        Mon, 29 Jun 2020 16:22:51 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id n137sm638694pfd.194.2020.06.29.16.22.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 16:21:04 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 16:20:59 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200629232059.GA3787278@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
+        Mon, 29 Jun 2020 16:22:50 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 16:22:50 -0700 (PDT)
+X-Google-Original-Date: Mon, 29 Jun 2020 16:22:41 PDT (-0700)
+Subject:     Re: [PATCH V2] riscv: Fixup compile error BUILD_BUG_ON failed
+In-Reply-To: <20200629012524.c941a5f18aa7f312d325f714@kernel.org>
+CC:     guoren@kernel.org, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+        linux-csky@vger.kernel.org, zong.li@sifive.com,
+        guoren@linux.alibaba.com
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     mhiramat@kernel.org
+Message-ID: <mhng-37e70bbc-2616-41e6-bc8a-f144ca647c97@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+On Sun, 28 Jun 2020 09:25:24 PDT (-0700), mhiramat@kernel.org wrote:
+> On Sun, 28 Jun 2020 16:07:37 +0000
+> guoren@kernel.org wrote:
+>
+>> From: Guo Ren <guoren@linux.alibaba.com>
+>>
+>> Unfortunately, the current code couldn't be compiled:
+>>
+>>   CC      arch/riscv/kernel/patch.o
+>> In file included from ./include/linux/kernel.h:11,
+>>                  from ./include/linux/list.h:9,
+>>                  from ./include/linux/preempt.h:11,
+>>                  from ./include/linux/spinlock.h:51,
+>>                  from arch/riscv/kernel/patch.c:6:
+>> In function ‘fix_to_virt’,
+>>     inlined from ‘patch_map’ at arch/riscv/kernel/patch.c:37:17:
+>> ./include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_205’ declared with attribute error: BUILD_BUG_ON failed: idx >= __end_of_fixed_addresses
+>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>                                       ^
+>> ./include/linux/compiler.h:373:4: note: in definition of macro ‘__compiletime_assert’
+>>     prefix ## suffix();    \
+>>     ^~~~~~
+>> ./include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
+>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>   ^~~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>                                      ^~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>>   ^~~~~~~~~~~~~~~~
+>> ./include/asm-generic/fixmap.h:32:2: note: in expansion of macro ‘BUILD_BUG_ON’
+>>   BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
+>>   ^~~~~~~~~~~~
+>>
+>> Because fix_to_virt(, idx) needs a const value, not a dynamic variable of
+>> reg-a0 or BUILD_BUG_ON failed with "idx >= __end_of_fixed_addresses".
+>
+> Looks good to me :)
+>
+> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-On Mon, Jun 29, 2020 at 01:56:19AM +0900, Masahiro Yamada wrote:
-> On Thu, Jun 25, 2020 at 5:32 AM 'Sami Tolvanen' via Clang Built Linux
-> <clang-built-linux@googlegroups.com> wrote:
-> >
-> > This patch series adds support for building x86_64 and arm64 kernels
-> > with Clang's Link Time Optimization (LTO).
-> >
-> > In addition to performance, the primary motivation for LTO is to allow
-> > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
-> > Pixel devices have shipped with LTO+CFI kernels since 2018.
-> >
-> > Most of the patches are build system changes for handling LLVM bitcode,
-> > which Clang produces with LTO instead of ELF object files, postponing
-> > ELF processing until a later stage, and ensuring initcall ordering.
-> >
-> > Note that first objtool patch in the series is already in linux-next,
-> > but as it's needed with LTO, I'm including it also here to make testing
-> > easier.
-> 
-> 
-> I put this series on a testing branch,
-> and 0-day bot started reporting some issues.
+Is there a configuration that runs into this bug?  It's not showing up for me,
+and I generally try to add regressions to my test suite.
 
-Yes, I'll fix those issues in v2.
-
-> (but 0-day bot is quieter than I expected.
-> Perhaps, 0-day bot does not turn on LLVM=1 ?)
-
-In order for it to test an LTO build, it would need to enable LTO_CLANG
-explicitly though, in addition to LLVM=1.
-
-> I also got an error for
-> ARCH=arm64 allyesconfig + CONFIG_LTO_CLANG=y
-> 
-> 
-> 
-> $ make ARCH=arm64 LLVM=1 LLVM_IAS=1
-> CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
-> -j24
-> 
->   ...
-> 
->   GEN     .version
->   CHK     include/generated/compile.h
->   UPD     include/generated/compile.h
->   CC      init/version.o
->   AR      init/built-in.a
->   GEN     .tmp_initcalls.lds
->   GEN     .tmp_symversions.lds
->   LTO     vmlinux.o
->   MODPOST vmlinux.symvers
->   MODINFO modules.builtin.modinfo
->   GEN     modules.builtin
->   LD      .tmp_vmlinux.kallsyms1
-> ld.lld: error: undefined symbol: __compiletime_assert_905
-> >>> referenced by irqbypass.c
-> >>>               vmlinux.o:(jeq_imm)
-> make: *** [Makefile:1161: vmlinux] Error 1
-
-I can reproduce this with ToT LLVM and it's BUILD_BUG_ON_MSG(..., "value
-too large for the field") in drivers/net/ethernet/netronome/nfp/bpf/jit.c.
-Specifically, the FIELD_FIT / __BF_FIELD_CHECK macro in ur_load_imm_any.
-
-This compiles just fine with an earlier LLVM revision, so it could be a
-relatively recent regression. I'll take a look. Thanks for catching this!
-
-Sami
+> Thanks!
+>
+>>
+>> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+>> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+>> Cc: Zong Li <zong.li@sifive.com>
+>> ---
+>> Changelog V2:
+>>  - Use __always_inline as same as fix_to_virt
+>>  - Use const "const unsigned int" for 2th param
+>>
+>> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+>> ---
+>>  arch/riscv/kernel/patch.c | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+>> index d4a64df..3179a4e 100644
+>> --- a/arch/riscv/kernel/patch.c
+>> +++ b/arch/riscv/kernel/patch.c
+>> @@ -20,7 +20,12 @@ struct patch_insn {
+>>  };
+>>
+>>  #ifdef CONFIG_MMU
+>> -static void *patch_map(void *addr, int fixmap)
+>> +/*
+>> + * The fix_to_virt(, idx) needs a const value (not a dynamic variable of
+>> + * reg-a0) or BUILD_BUG_ON failed with "idx >= __end_of_fixed_addresses".
+>> + * So use '__always_inline' and 'const unsigned int fixmap' here.
+>> + */
+>> +static __always_inline void *patch_map(void *addr, const unsigned int fixmap)
+>>  {
+>>  	uintptr_t uintaddr = (uintptr_t) addr;
+>>  	struct page *page;
+>> @@ -37,7 +42,6 @@ static void *patch_map(void *addr, int fixmap)
+>>  	return (void *)set_fixmap_offset(fixmap, page_to_phys(page) +
+>>  					 (uintaddr & ~PAGE_MASK));
+>>  }
+>> -NOKPROBE_SYMBOL(patch_map);
+>>
+>>  static void patch_unmap(int fixmap)
+>>  {
+>> --
+>> 2.7.4
+>>
