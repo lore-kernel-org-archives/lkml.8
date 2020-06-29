@@ -2,164 +2,207 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DEE20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461197;
-	bh=4JS9mGeU2OHBwi42V6yiTDZFBXzJ+sFeEZSphCVFZPM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4Xb9ylJB9hYi1x4NYAF4rwijNpzY7bxEWOMQgu7hvgYRPYzOyg5yhk+wQov/vUW3
-	 pRz6yh9dqL6q/xK8fyi6jIEVVtToxN77BGP4mt9j7btEhzZYpBa+T0T201P/PUv9Ze
-	 ATYE8ZfLDN+ZFncT4J2bycCkfPhjqXh3+Xt2HkOY=
+	by mail.kernel.org (Postfix) with ESMTP id 40D7420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbgF2UGg (ORCPT
+        id S2388872AbgF2UGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732665AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE5BC2521D;
-        Mon, 29 Jun 2020 15:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444937;
-        bh=4JS9mGeU2OHBwi42V6yiTDZFBXzJ+sFeEZSphCVFZPM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buliLr0eMFOvvm+YyuG9q5ZIaHFMNGr9Sfs7nMaG66gMKHaES7MU+SypIGL7H9S1h
-         +DyuUY6qrNSg2zSBObS7OcXppm5NjYG0tS0sFMYnmd9mjrIqtn20ixWzQthdCoW0tV
-         X4EpRYo7Z0SMV889z7y1uMZh9JkJyfsqWbvPNh6I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Ponetayev <i.ponetaev@ndmsystems.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 034/131] sch_cake: don't try to reallocate or unshare skb unconditionally
-Date:   Mon, 29 Jun 2020 11:33:25 -0400
-Message-Id: <20200629153502.2494656-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:06:41 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:35920 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388859AbgF2UGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:06:32 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq02t-0003N6-VO; Mon, 29 Jun 2020 14:06:28 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq02s-0000GO-Gg; Mon, 29 Jun 2020 14:06:27 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 15:01:55 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <878sg563po.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jq02s-0000GO-Gg;;;mid=<878sg563po.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/xzYzSGIoZRKG59bBBeB+kZ2XZYfxfOB4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 06/15] umd: For clarity rename umh_info umd_info
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
 
-[ Upstream commit 9208d2863ac689a563b92f2161d8d1e7127d0add ]
+This structure is only used for user mode drivers so change
+the prefix from umh to umd to make that clear.
 
-cake_handle_diffserv() tries to linearize mac and network header parts of
-skb and to make it writable unconditionally. In some cases it leads to full
-skb reallocation, which reduces throughput and increases CPU load. Some
-measurements of IPv4 forward + NAPT on MIPS router with 580 MHz single-core
-CPU was conducted. It appears that on kernel 4.9 skb_try_make_writable()
-reallocates skb, if skb was allocated in ethernet driver via so-called
-'build skb' method from page cache (it was discovered by strange increase
-of kmalloc-2048 slab at first).
-
-Obtain DSCP value via read-only skb_header_pointer() call, and leave
-linearization only for DSCP bleaching or ECN CE setting. And, as an
-additional optimisation, skip diffserv parsing entirely if it is not needed
-by the current configuration.
-
-Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
-Signed-off-by: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
-[ fix a few style issues, reflow commit message ]
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/87o8p6f0kw.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- net/sched/sch_cake.c | 41 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ include/linux/bpfilter.h    |  2 +-
+ include/linux/umd.h         |  6 +++---
+ kernel/umd.c                | 20 ++++++++++----------
+ net/ipv4/bpfilter/sockopt.c |  2 +-
+ 4 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index 824e3c37e5dd6..c0d92a251bcb6 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1510,30 +1510,49 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
+diff --git a/include/linux/bpfilter.h b/include/linux/bpfilter.h
+index b42e44e29033..4b43d2240172 100644
+--- a/include/linux/bpfilter.h
++++ b/include/linux/bpfilter.h
+@@ -11,7 +11,7 @@ int bpfilter_ip_set_sockopt(struct sock *sk, int optname, char __user *optval,
+ int bpfilter_ip_get_sockopt(struct sock *sk, int optname, char __user *optval,
+ 			    int __user *optlen);
+ struct bpfilter_umh_ops {
+-	struct umh_info info;
++	struct umd_info info;
+ 	/* since ip_getsockopt() can run in parallel, serialize access to umh */
+ 	struct mutex lock;
+ 	int (*sockopt)(struct sock *sk, int optname,
+diff --git a/include/linux/umd.h b/include/linux/umd.h
+index ef40bee590c1..58a9c603c78d 100644
+--- a/include/linux/umd.h
++++ b/include/linux/umd.h
+@@ -17,14 +17,14 @@ static inline void exit_umh(struct task_struct *tsk)
+ }
+ #endif
  
- static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
+-struct umh_info {
++struct umd_info {
+ 	const char *cmdline;
+ 	struct file *pipe_to_umh;
+ 	struct file *pipe_from_umh;
+ 	struct list_head list;
+-	void (*cleanup)(struct umh_info *info);
++	void (*cleanup)(struct umd_info *info);
+ 	pid_t pid;
+ };
+-int fork_usermode_blob(void *data, size_t len, struct umh_info *info);
++int fork_usermode_blob(void *data, size_t len, struct umd_info *info);
+ 
+ #endif /* __LINUX_UMD_H__ */
+diff --git a/kernel/umd.c b/kernel/umd.c
+index 99af9d594eca..f7dacb19c705 100644
+--- a/kernel/umd.c
++++ b/kernel/umd.c
+@@ -11,7 +11,7 @@ static DEFINE_MUTEX(umh_list_lock);
+ 
+ static int umd_setup(struct subprocess_info *info, struct cred *new)
  {
--	int wlen = skb_network_offset(skb);
-+	const int offset = skb_network_offset(skb);
-+	u16 *buf, buf_;
- 	u8 dscp;
+-	struct umh_info *umh_info = info->data;
++	struct umd_info *umd_info = info->data;
+ 	struct file *from_umh[2];
+ 	struct file *to_umh[2];
+ 	int err;
+@@ -43,21 +43,21 @@ static int umd_setup(struct subprocess_info *info, struct cred *new)
+ 		return err;
+ 	}
  
- 	switch (tc_skb_protocol(skb)) {
- 	case htons(ETH_P_IP):
--		wlen += sizeof(struct iphdr);
--		if (!pskb_may_pull(skb, wlen) ||
--		    skb_try_make_writable(skb, wlen))
-+		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
-+		if (unlikely(!buf))
- 			return 0;
+-	umh_info->pipe_to_umh = to_umh[1];
+-	umh_info->pipe_from_umh = from_umh[0];
+-	umh_info->pid = task_pid_nr(current);
++	umd_info->pipe_to_umh = to_umh[1];
++	umd_info->pipe_from_umh = from_umh[0];
++	umd_info->pid = task_pid_nr(current);
+ 	current->flags |= PF_UMH;
+ 	return 0;
+ }
  
--		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
--		if (wash && dscp)
-+		/* ToS is in the second byte of iphdr */
-+		dscp = ipv4_get_dsfield((struct iphdr *)buf) >> 2;
-+
-+		if (wash && dscp) {
-+			const int wlen = offset + sizeof(struct iphdr);
-+
-+			if (!pskb_may_pull(skb, wlen) ||
-+			    skb_try_make_writable(skb, wlen))
-+				return 0;
-+
- 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
-+		}
-+
- 		return dscp;
+ static void umd_cleanup(struct subprocess_info *info)
+ {
+-	struct umh_info *umh_info = info->data;
++	struct umd_info *umd_info = info->data;
  
- 	case htons(ETH_P_IPV6):
--		wlen += sizeof(struct ipv6hdr);
--		if (!pskb_may_pull(skb, wlen) ||
--		    skb_try_make_writable(skb, wlen))
-+		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
-+		if (unlikely(!buf))
- 			return 0;
+ 	/* cleanup if umh_setup() was successful but exec failed */
+ 	if (info->retval) {
+-		fput(umh_info->pipe_to_umh);
+-		fput(umh_info->pipe_from_umh);
++		fput(umd_info->pipe_to_umh);
++		fput(umd_info->pipe_from_umh);
+ 	}
+ }
  
--		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
--		if (wash && dscp)
-+		/* Traffic class is in the first and second bytes of ipv6hdr */
-+		dscp = ipv6_get_dsfield((struct ipv6hdr *)buf) >> 2;
-+
-+		if (wash && dscp) {
-+			const int wlen = offset + sizeof(struct ipv6hdr);
-+
-+			if (!pskb_may_pull(skb, wlen) ||
-+			    skb_try_make_writable(skb, wlen))
-+				return 0;
-+
- 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
-+		}
-+
- 		return dscp;
+@@ -72,12 +72,12 @@ static void umd_cleanup(struct subprocess_info *info)
+  *
+  * Returns either negative error or zero which indicates success
+  * in executing a blob of bytes as a usermode process. In such
+- * case 'struct umh_info *info' is populated with two pipes
++ * case 'struct umd_info *info' is populated with two pipes
+  * and a pid of the process. The caller is responsible for health
+  * check of the user process, killing it via pid, and closing the
+  * pipes when user process is no longer needed.
+  */
+-int fork_usermode_blob(void *data, size_t len, struct umh_info *info)
++int fork_usermode_blob(void *data, size_t len, struct umd_info *info)
+ {
+ 	const char *cmdline = (info->cmdline) ? info->cmdline : "usermodehelper";
+ 	struct subprocess_info *sub_info;
+@@ -126,7 +126,7 @@ EXPORT_SYMBOL_GPL(fork_usermode_blob);
  
- 	case htons(ETH_P_ARP):
+ void __exit_umh(struct task_struct *tsk)
+ {
+-	struct umh_info *info;
++	struct umd_info *info;
+ 	pid_t pid = tsk->pid;
+ 
+ 	mutex_lock(&umh_list_lock);
+diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
+index 0480918bfc7c..c0dbcc86fcdb 100644
+--- a/net/ipv4/bpfilter/sockopt.c
++++ b/net/ipv4/bpfilter/sockopt.c
+@@ -12,7 +12,7 @@
+ struct bpfilter_umh_ops bpfilter_ops;
+ EXPORT_SYMBOL_GPL(bpfilter_ops);
+ 
+-static void bpfilter_umh_cleanup(struct umh_info *info)
++static void bpfilter_umh_cleanup(struct umd_info *info)
+ {
+ 	mutex_lock(&bpfilter_ops.lock);
+ 	bpfilter_ops.stop = true;
 -- 
-2.25.1
+2.25.0
 
