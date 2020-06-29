@@ -2,97 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E142C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2508C206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA6E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iQSpfw6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390715AbgF2VQw (ORCPT
+        id S2390733AbgF2VQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44154 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729803AbgF2Sy7 (ORCPT
+        Mon, 29 Jun 2020 17:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729803AbgF2VQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:54:59 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TFZrHR187886;
-        Mon, 29 Jun 2020 11:50:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa36-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:16 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TFa3N5188917;
-        Mon, 29 Jun 2020 11:50:16 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:16 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFkmOF016516;
-        Mon, 29 Jun 2020 15:50:14 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 31wwch2ck4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 15:50:14 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFoCO559965532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 15:50:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 627CBAE051;
-        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11CA9AE045;
-        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.156.24])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 15:50:11 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 0/3] perf bench numa: fix few minor issues
-Date:   Mon, 29 Jun 2020 17:50:06 +0200
-Message-Id: <cover.1593445668.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0 spamscore=0
- clxscore=1011 malwarescore=0 mlxlogscore=999 suspectscore=1
- cotscore=-2147483648 lowpriorityscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290103
+        Mon, 29 Jun 2020 17:16:54 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F42C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:53 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id e3so5806466uan.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Glv9KPcU1i2kTi/iXapQFW9l12MhBnrThVYjifxz8EM=;
+        b=iQSpfw6Tm/KPuTk+bUTfK5sUy4UnMTGDe2HrdR0LJ5iy/NBxQZbLKaAMr5P8IsFaKS
+         jlx65KlHQsr6onY+QHMDKYDN0o/+INkFidVgT0E/5uY2DgBuPiWIVZPfHlo/wnPJUZ6E
+         9jTXUZ6lxK0iNtd4wO6o08CCwbn+1DdmLYhvg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Glv9KPcU1i2kTi/iXapQFW9l12MhBnrThVYjifxz8EM=;
+        b=eZSOLjfLCLNTPgakZUZGP6Gs13hcaSC7hRC3n8cQPip+HqeoKu+MfJqT7/0kv0dj0C
+         jI1nbb8zwJw7PH57wIEFGz+1UFcnyJq1s9yLP4i4l/djl4ymVVnlECQB2tE/NTEQb8cH
+         S9LBOv7ZWT0AkXKqrIpuxwuH59eAkmnAybY3ou1ynUZ2B1dSap8Khd4widhw6K7ABF30
+         D0DMuxbS3NsHTQJRZMU6GBmm3avhix7nzou2K1HSrqEj7lLSlg+C1LVNdNmSwkeCi5xs
+         A2G+WNwz3HwYwXbWJoeRX6bI4QbLmjFw6Z0Ca3qQGkdIAMpGKfZAolYxnPUOvUba93+u
+         Si2w==
+X-Gm-Message-State: AOAM533X/WRAfqBH15rnEms2H6CVkMt6dwc6uknh8w+a+8rjOZOccmCD
+        1nHBHEjiHqIb4JfAQYV69qTxd/0o3UE=
+X-Google-Smtp-Source: ABdhPJzVSmtEtrcVFXXzdPcfzeT/wrFBA5UMHTzNqDsKEMzgXcV2FzMH9sJyDDmHCjq/qZWxY+0FMQ==
+X-Received: by 2002:ab0:3055:: with SMTP id x21mr12245784ual.106.1593465412330;
+        Mon, 29 Jun 2020 14:16:52 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id b9sm89814vsp.24.2020.06.29.14.16.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id q15so5595845uap.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
+X-Received: by 2002:ab0:29c1:: with SMTP id i1mr12275723uaq.120.1593465411383;
+ Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200629153756.cxg74nec3repa4lu@holly.lan> <20200629205012.3263-1-cengiz@kernel.wtf>
+In-Reply-To: <20200629205012.3263-1-cengiz@kernel.wtf>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 29 Jun 2020 14:16:39 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
+Message-ID: <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
+Subject: Re: [PATCH v2] kdb: remove unnecessary null check of dbg_io_ops
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi,
 
-Please, find couple of fixes to the tool. Note, I did not bother
-fixing leaked memory allocated with numa_allocate_cpumask().
+On Mon, Jun 29, 2020 at 1:50 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+>
+> `kdb_msg_write` operates on a global `struct kgdb_io *` called
+> `dbg_io_ops`.
+>
+> It's initialized in `debug_core.c` and checked throughout the debug
+> flow.
+>
+> There's a null check in `kdb_msg_write` which triggers static analyzers
+> and gives the (almost entirely wrong) impression that it can be null.
+>
+> Coverity scanner caught this as CID 1465042.
+>
+> I have removed the unnecessary null check and eliminated false-positive
+> forward null dereference warning.
+>
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 683a799618ad..4ac59a4fbeec 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -549,14 +549,12 @@ static void kdb_msg_write(const char *msg, int msg_len)
+>         if (msg_len == 0)
+>                 return;
+>
+> -       if (dbg_io_ops) {
+> -               const char *cp = msg;
+> -               int len = msg_len;
+> +       const char *cp = msg;
+> +       int len = msg_len;
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
+kernel/debug/kdb/kdb_io.c:552:14:
+warning: ISO C90 forbids mixing declarations and code
+[-Wdeclaration-after-statement]
 
-Alexander Gordeev (3):
-  perf bench numa: fix incorrect NUMA toplogy assumption
-  perf bench numa: fix benchmark names
-  perf bench numa: fix wrong benchmark configuration
-
- tools/perf/bench/numa.c | 72 ++++++++++++++++++++++++-------------------------
- 1 file changed, 35 insertions(+), 37 deletions(-)
-
--- 
-1.8.3.1
-
+-Doug
