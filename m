@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2841BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C63206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBDC206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459411;
-	bh=Dz13eb/rJGgeoaRVyWqs3XRGPmYfk43xXMq8OI26fbA=;
+	s=default; t=1593459414;
+	bh=wnWbHIeC0vNL682tRqjN0VBlCI1lxlSjMrK/S1A0UNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2qYmMTM/VHBlD2s55JyRwD1QcQwHaTPsBeiIntQtaMfdBac582M1NPyZ4DfWEy/J
-	 /rquS6ynnbw7cmIo16cDNdC4n1KrwQdI6kS8V8R038EOrFSef+8YEDlgmYw5ufOHNK
-	 hhcAHqiIgiuV4ECWATI5ebEYaMAjMBd7P4Bnzae0=
+	b=dGeiwff+f27S2S3lpvQJ041q2qWpZ3CweH/6HJf7bCobLpWDQpb8d177SibDWtxbj
+	 2E+dmN88sqFPwQNA8+KejcpZhunHG8OPlS4+qmy+NMepG9Y3EEOROEmatCph1MNi/K
+	 SaXvoiNHjkmD4jthrMDZ/pFlJd4rSaifYyxI49+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733179AbgF2Tgs (ORCPT
+        id S1733221AbgF2Tgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733017AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732976AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE162529F;
-        Mon, 29 Jun 2020 15:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2904251ED;
+        Mon, 29 Jun 2020 15:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445009;
-        bh=Dz13eb/rJGgeoaRVyWqs3XRGPmYfk43xXMq8OI26fbA=;
+        s=default; t=1593444910;
+        bh=wnWbHIeC0vNL682tRqjN0VBlCI1lxlSjMrK/S1A0UNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8Mb36iTsHoqwIPO6Hv8NMp1GKDM2pzAA/CjKmHhMwAkE2x7pXeYMdOPWIllSpPn1
-         JlVFrzZjMwLNPeUafmPXlbgfgFL5/sfsOlks3VVTofNY3M5mozMRb9BB9zOy7zQjZq
-         pPfMykz+tjKZjEYF978TkqdL6lpwMT+H3wPlN/wU=
+        b=fPXAEd2LZFvjElUNoHEZ7s9ry/wVQu6uoRbIWowMWrJ3feIcwrr1eeuMCqXMQCey5
+         bKuc/62lY1uOq1inomrxMoFvWoyWegOSnCCpbGkZ2GmchkB69vfuV9YmteANolQsTl
+         67eNEMYbUwV/swPE40BV/oYcPSSkrJMI3U2ibZY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 110/131] x86/asm/64: Align start of __clear_user() loop to 16-bytes
-Date:   Mon, 29 Jun 2020 11:34:41 -0400
-Message-Id: <20200629153502.2494656-111-sashal@kernel.org>
+Cc:     Valentin Longchamp <valentin@longchamp.me>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 006/131] net: sched: export __netdev_watchdog_up()
+Date:   Mon, 29 Jun 2020 11:32:57 -0400
+Message-Id: <20200629153502.2494656-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,66 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Valentin Longchamp <valentin@longchamp.me>
 
-commit bb5570ad3b54e7930997aec76ab68256d5236d94 upstream.
+[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
 
-x86 CPUs can suffer severe performance drops if a tight loop, such as
-the ones in __clear_user(), straddles a 16-byte instruction fetch
-window, or worse, a 64-byte cacheline. This issues was discovered in the
-SUSE kernel with the following commit,
+Since the quiesce/activate rework, __netdev_watchdog_up() is directly
+called in the ucc_geth driver.
 
-  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+Unfortunately, this function is not available for modules and thus
+ucc_geth cannot be built as a module anymore. Fix it by exporting
+__netdev_watchdog_up().
 
-which increased the code object size from 10 bytes to 15 bytes and
-caused the 8-byte copy loop in __clear_user() to be split across a
-64-byte cacheline.
+Since the commit introducing the regression was backported to stable
+branches, this one should ideally be as well.
 
-Aligning the start of the loop to 16-bytes makes this fit neatly inside
-a single instruction fetch window again and restores the performance of
-__clear_user() which is used heavily when reading from /dev/zero.
-
-Here are some numbers from running libmicro's read_z* and pread_z*
-microbenchmarks which read from /dev/zero:
-
-  Zen 1 (Naples)
-
-  libmicro-file
-                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
-                                                    revert-1153933703d9+               align16+
-  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
-  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
-  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
-  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
-  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
-  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
-
-Note that this doesn't affect Haswell or Broadwell microarchitectures
-which seem to avoid the alignment issue by executing the loop straight
-out of the Loop Stream Detector (verified using perf events).
-
-Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> # v4.19+
-Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/usercopy_64.c | 1 +
+ net/sched/sch_generic.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index 9c5606d88f618..7077b3e282414 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -23,6 +23,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
- 	asm volatile(
- 		"	testq  %[size8],%[size8]\n"
- 		"	jz     4f\n"
-+		"	.align 16\n"
- 		"0:	movq $0,(%[dst])\n"
- 		"	addq   $8,%[dst]\n"
- 		"	decl %%ecx ; jnz   0b\n"
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 8a4d01e427a22..119e20cad662b 100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -487,6 +487,7 @@ void __netdev_watchdog_up(struct net_device *dev)
+ 			dev_hold(dev);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
+ 
+ static void dev_watchdog_up(struct net_device *dev)
+ {
 -- 
 2.25.1
 
