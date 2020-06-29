@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA74C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0162C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03302082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4392082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460146;
-	bh=Ko1ZhXCx4mPUi3PFsF4m7owQC8fH7OXNJhwIkoqVYA0=;
+	s=default; t=1593460150;
+	bh=KEbRq+rTPTpNKQEudz8+xyiJH24D2HCcrAN6RI92WyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1bH3G7RqesPDsbtflb0chM+IS3F64S37wXxT27BkxGN5nrUkUC18oc6lmjQvfb9+
-	 cjCmdAyswORNfuYzI2drCJK5eqBocJN14ddA+s4yh8oUHQQpteqV/02duB55tYTPtn
-	 5hiWLnb1B98xxeI5Fxxo5hAEtW+UzMKlVYeRN1pw=
+	b=xYWG+gMlngkulmc4Sw4Rc0kvgnGQ9ASn37+E7m5yo3AxDBoiTV1A0aHBZOobx2MID
+	 YH4XAs+ITbfVF/e06aja5eKEUoMpOF0IvG27M8IJBJSl11vBq/HKGrarVNTXxPctQa
+	 EBiEhvVWHFld7QUawmoj0AhB/0MbpSMIYuuIJe6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbgF2Ts6 (ORCPT
+        id S2388030AbgF2TtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387767AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:39 -0400
+        id S2387763AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9B6248F1;
-        Mon, 29 Jun 2020 15:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 343AC24873;
+        Mon, 29 Jun 2020 15:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444444;
-        bh=Ko1ZhXCx4mPUi3PFsF4m7owQC8fH7OXNJhwIkoqVYA0=;
+        s=default; t=1593444373;
+        bh=KEbRq+rTPTpNKQEudz8+xyiJH24D2HCcrAN6RI92WyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyVXANs6yDNJEHOXXfwfe7ptAQmU82yO+tKpxRBKqtTQEzHaSWbmamnd60Cfzm3Iw
-         LjiWNK+t6Vrb5xXjAN4BDYKgqWnAjtpBkIFNFdpMAq3/hXPny8Mh64mL2zhSDY9yVp
-         aRl6UeIOA9Q0aEzeNBcuX6tx0/uJ2VWDjeGYZnts=
+        b=pcBJsqEkDfXmFrHJyWjsbGc0m38Yb54+w3S9dQ2ScQVB2EmsI8KHTlOoWa8y7kReo
+         6GxN0X90I/zL33l4lDbVhMt0v64SKkkjVdtBggoKUd6oZloYVx6G/tZXNCepqvu4Ff
+         nJHdQQBYHF/O5NbKv+vaMGzXDDWmbdtF2gwXNx58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 123/178] ibmvnic: Harden device login requests
-Date:   Mon, 29 Jun 2020 11:24:28 -0400
-Message-Id: <20200629152523.2494198-124-sashal@kernel.org>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 050/178] scsi: zfcp: Fix panic on ERP timeout for previously dismissed ERP action
+Date:   Mon, 29 Jun 2020 11:23:15 -0400
+Message-Id: <20200629152523.2494198-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,71 +66,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
+commit 936e6b85da0476dd2edac7c51c68072da9fb4ba2 upstream.
 
-The VNIC driver's "login" command sequence is the final step
-in the driver's initialization process with device firmware,
-confirming the available device queue resources to be utilized
-by the driver. Under high system load, firmware may not respond
-to the request in a timely manner or may abort the request. In
-such cases, the driver should reattempt the login command
-sequence. In case of a device error, the number of retries
-is bounded.
+Suppose that, for unrelated reasons, FSF requests on behalf of recovery are
+very slow and can run into the ERP timeout.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In the case at hand, we did adapter recovery to a large degree.  However
+due to the slowness a LUN open is pending so the corresponding fc_rport
+remains blocked.  After fast_io_fail_tmo we trigger close physical port
+recovery for the port under which the LUN should have been opened.  The new
+higher order port recovery dismisses the pending LUN open ERP action and
+dismisses the pending LUN open FSF request.  Such dismissal decouples the
+ERP action from the pending corresponding FSF request by setting
+zfcp_fsf_req->erp_action to NULL (among other things)
+[zfcp_erp_strategy_check_fsfreq()].
+
+If now the ERP timeout for the pending open LUN request runs out, we must
+not use zfcp_fsf_req->erp_action in the ERP timeout handler.  This is a
+problem since v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
+timer_setup()"). Before that we intentionally only passed zfcp_erp_action
+as context argument to zfcp_erp_timeout_handler().
+
+Note: The lifetime of the corresponding zfcp_fsf_req object continues until
+a (late) response or an (unrelated) adapter recovery.
+
+Just like the regular response path ignores dismissed requests
+[zfcp_fsf_req_complete() => zfcp_fsf_protstatus_eval() => return early] the
+ERP timeout handler now needs to ignore dismissed requests.  So simply
+return early in the ERP timeout handler if the FSF request is marked as
+dismissed in its status flags.  To protect against the race where
+zfcp_erp_strategy_check_fsfreq() dismisses and sets
+zfcp_fsf_req->erp_action to NULL after our previous status flag check,
+return early if zfcp_fsf_req->erp_action is NULL.  After all, the former
+ERP action does not need to be woken up as that was already done as part of
+the dismissal above [zfcp_erp_action_dismiss()].
+
+This fixes the following panic due to kernel page fault in IRQ context:
+
+Unable to handle kernel pointer dereference in virtual kernel address space
+Failing address: 0000000000000000 TEID: 0000000000000483
+Fault in home space mode while using kernel ASCE.
+AS:000009859238c00b R2:00000e3e7ffd000b R3:00000e3e7ffcc007 S:00000e3e7ffd7000 P:000000000000013d
+Oops: 0004 ilc:2 [#1] SMP
+Modules linked in: ...
+CPU: 82 PID: 311273 Comm: stress Kdump: loaded Tainted: G            E  X   ...
+Hardware name: IBM 8561 T01 701 (LPAR)
+Krnl PSW : 0404c00180000000 001fffff80549be0 (zfcp_erp_notify+0x40/0xc0 [zfcp])
+           R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+Krnl GPRS: 0000000000000080 00000e3d00000000 00000000000000f0 0000000000030000
+           000000010028e700 000000000400a39c 000000010028e700 00000e3e7cf87e02
+           0000000010000000 0700098591cb67f0 0000000000000000 0000000000000000
+           0000033840e9a000 0000000000000000 001fffe008d6bc18 001fffe008d6bbc8
+Krnl Code: 001fffff80549bd4: a7180000            lhi     %r1,0
+           001fffff80549bd8: 4120a0f0            la      %r2,240(%r10)
+          #001fffff80549bdc: a53e0003            llilh   %r3,3
+          >001fffff80549be0: ba132000            cs      %r1,%r3,0(%r2)
+           001fffff80549be4: a7740037            brc     7,1fffff80549c52
+           001fffff80549be8: e320b0180004        lg      %r2,24(%r11)
+           001fffff80549bee: e31020e00004        lg      %r1,224(%r2)
+           001fffff80549bf4: 412020e0            la      %r2,224(%r2)
+Call Trace:
+ [<001fffff80549be0>] zfcp_erp_notify+0x40/0xc0 [zfcp]
+ [<00000985915e26f0>] call_timer_fn+0x38/0x190
+ [<00000985915e2944>] expire_timers+0xfc/0x190
+ [<00000985915e2ac4>] run_timer_softirq+0xec/0x218
+ [<0000098591ca7c4c>] __do_softirq+0x144/0x398
+ [<00000985915110aa>] do_softirq_own_stack+0x72/0x88
+ [<0000098591551b58>] irq_exit+0xb0/0xb8
+ [<0000098591510c6a>] do_IRQ+0x82/0xb0
+ [<0000098591ca7140>] ext_int_handler+0x128/0x12c
+ [<0000098591722d98>] clear_subpage.constprop.13+0x38/0x60
+([<000009859172ae4c>] clear_huge_page+0xec/0x250)
+ [<000009859177e7a2>] do_huge_pmd_anonymous_page+0x32a/0x768
+ [<000009859172a712>] __handle_mm_fault+0x88a/0x900
+ [<000009859172a860>] handle_mm_fault+0xd8/0x1b0
+ [<0000098591529ef6>] do_dat_exception+0x136/0x3e8
+ [<0000098591ca6d34>] pgm_check_handler+0x1c8/0x220
+Last Breaking-Event-Address:
+ [<001fffff80549c88>] zfcp_erp_timeout_handler+0x10/0x18 [zfcp]
+Kernel panic - not syncing: Fatal exception in interrupt
+
+Link: https://lore.kernel.org/r/20200623140242.98864-1-maier@linux.ibm.com
+Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
+Cc: <stable@vger.kernel.org> #4.15+
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 5a42ddeecfe50..4f503b9a674c4 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -779,12 +779,13 @@ static int ibmvnic_login(struct net_device *netdev)
- 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
- 	unsigned long timeout = msecs_to_jiffies(30000);
- 	int retry_count = 0;
-+	int retries = 10;
- 	bool retry;
- 	int rc;
- 
- 	do {
- 		retry = false;
--		if (retry_count > IBMVNIC_MAX_QUEUES) {
-+		if (retry_count > retries) {
- 			netdev_warn(netdev, "Login attempts exceeded\n");
- 			return -1;
- 		}
-@@ -799,11 +800,23 @@ static int ibmvnic_login(struct net_device *netdev)
- 
- 		if (!wait_for_completion_timeout(&adapter->init_done,
- 						 timeout)) {
--			netdev_warn(netdev, "Login timed out\n");
--			return -1;
-+			netdev_warn(netdev, "Login timed out, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			continue;
- 		}
- 
--		if (adapter->init_done_rc == PARTIALSUCCESS) {
-+		if (adapter->init_done_rc == ABORTED) {
-+			netdev_warn(netdev, "Login aborted, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			/* FW or device may be busy, so
-+			 * wait a bit before retrying login
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index cb84125ab80d4..08dc2efb7d8a5 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -576,7 +576,10 @@ static void zfcp_erp_strategy_check_fsfreq(struct zfcp_erp_action *act)
+ 				   ZFCP_STATUS_ERP_TIMEDOUT)) {
+ 			req->status |= ZFCP_STATUS_FSFREQ_DISMISSED;
+ 			zfcp_dbf_rec_run("erscf_1", act);
+-			req->erp_action = NULL;
++			/* lock-free concurrent access with
++			 * zfcp_erp_timeout_handler()
 +			 */
-+			msleep(500);
-+		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
- 			retry_count++;
- 			release_sub_crqs(adapter, 1);
++			WRITE_ONCE(req->erp_action, NULL);
+ 		}
+ 		if (act->status & ZFCP_STATUS_ERP_TIMEDOUT)
+ 			zfcp_dbf_rec_run("erscf_2", act);
+@@ -612,8 +615,14 @@ void zfcp_erp_notify(struct zfcp_erp_action *erp_action, unsigned long set_mask)
+ void zfcp_erp_timeout_handler(struct timer_list *t)
+ {
+ 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
+-	struct zfcp_erp_action *act = fsf_req->erp_action;
++	struct zfcp_erp_action *act;
+ 
++	if (fsf_req->status & ZFCP_STATUS_FSFREQ_DISMISSED)
++		return;
++	/* lock-free concurrent access with zfcp_erp_strategy_check_fsfreq() */
++	act = READ_ONCE(fsf_req->erp_action);
++	if (!act)
++		return;
+ 	zfcp_erp_notify(act, ZFCP_STATUS_ERP_TIMEDOUT);
+ }
  
 -- 
 2.25.1
