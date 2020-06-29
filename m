@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A40CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E514C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F268720760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7179D20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460162;
-	bh=TJrWSuxOiDvcM9/5Ii7LFvS+uNhA52liC/S6Nrw3aG0=;
+	s=default; t=1593460173;
+	bh=X1QTeQGIFT0Nw/MaYnvhSE9VoOJzhh9LxSJcWWTKULY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4vaBpdPQSXDMWZ9Cv0WBhnR1VpX6PNz2YdX9+WwyFB0NFUOWN5/yZv3Uzq2V4esM
-	 PXR+QyrfZiaVshTHI3fwQN+x2j0VK4Vwej8SkraFgL/Bbl3TndAFDfC5cJRoc7iZAl
-	 l/Ldz6e+LGQIhV3GCIIKGAHsBWFNS7glM7BohIMs=
+	b=v+5VoiRFPmdn2Nkdh+3WgUp+sG7rO2+IX6NmQCk1W2DZgqmzTTM64TlZmKghvggnd
+	 Am074071IKOnn+RsvL7KudcARisMMm2WLzZfaM6EgRhAAJW4Ihwio/nST5IiN42enC
+	 ftsKU37iRzUt1swZ/LXitrMqacl+ZtSci3VdXiwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbgF2TtU (ORCPT
+        id S2388221AbgF2Ttb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387756AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:38 -0400
+        id S2387758AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D248E4;
-        Mon, 29 Jun 2020 15:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02F4E24865;
+        Mon, 29 Jun 2020 15:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444438;
-        bh=TJrWSuxOiDvcM9/5Ii7LFvS+uNhA52liC/S6Nrw3aG0=;
+        s=default; t=1593444364;
+        bh=X1QTeQGIFT0Nw/MaYnvhSE9VoOJzhh9LxSJcWWTKULY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TfZ5DBBm+qM+o8oGXIXVbespzRtmUQ5LDSZY45ATc8WuEwId3QOroK6KdrpYLnqQ0
-         P6N20SfVDuWf8slLfu2ryqBZn2gDTJkwmdyxoo61IxfD1s1zMuChZDMTuT8v+MFbew
-         DfAufzvPdqzkQzmPfN4FVDSpLL1zF1PyfV7seneA=
+        b=xRjy5KZE0YNpgEWilweDSoNcaHbIS5DYcZwST6kYe5JG0dakdDDaGIPwYw+aeAn2O
+         GJcn7Pv/p/L95Ahr9UIx/J37oQqgXNIlB+R4w4ZA29dJKTBrMmbxXIxllUc8qA1alz
+         dfKZ/QiyX7NDgkNpj0z8q01FAOAnULXPHiESpZLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 116/178] sched/core: Fix PI boosting between RT and DEADLINE tasks
-Date:   Mon, 29 Jun 2020 11:24:21 -0400
-Message-Id: <20200629152523.2494198-117-sashal@kernel.org>
+Cc:     Li Jun <jun.li@nxp.com>, John Stultz <john.stultz@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 041/178] usb: typec: tcpci_rt1711h: avoid screaming irq causing boot hangs
+Date:   Mon, 29 Jun 2020 11:23:06 -0400
+Message-Id: <20200629152523.2494198-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -69,73 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Li Jun <jun.li@nxp.com>
 
-[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
+commit 302c570bf36e997d55ad0d60628a2feec76954a4 upstream.
 
-syzbot reported the following warning:
+John reported screaming irq caused by rt1711h when system boot[1],
+this is because irq request is done before tcpci_register_port(),
+so the chip->tcpci has not been setup, irq handler is entered but
+can't do anything, this patch is to address this by moving the irq
+request after tcpci_register_port().
 
- WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
- enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
+[1] https://lore.kernel.org/linux-usb/20200530040157.31038-1-john.stultz@linaro.org
 
-At deadline.c:628 we have:
-
- 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
- 624 {
- 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
- 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
- 627
- 628 	WARN_ON(dl_se->dl_boosted);
- 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
-        [...]
-     }
-
-Which means that setup_new_dl_entity() has been called on a task
-currently boosted. This shouldn't happen though, as setup_new_dl_entity()
-is only called when the 'dynamic' deadline of the new entity
-is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
-condition.
-
-Digging through the PI code I noticed that what above might in fact happen
-if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
-first branch of boosting conditions we check only if a pi_task 'dynamic'
-deadline is earlier than mutex holder's and in this case we set mutex
-holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
-initialized if such tasks get boosted at some point (or if they become
-DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
-to 0 and this verifies the aforementioned condition.
-
-Fix it by checking that the potential donor task is actually (even if
-temporary because in turn boosted) running at DEADLINE priority before
-using its 'dynamic' deadline value.
-
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ce08eaeb6388 ("staging: typec: rt1711h typec chip driver")
+Cc: stable <stable@vger.kernel.org> # v4.18+
+Cc: John Stultz <john.stultz@linaro.org>
+Reported-and-tested-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Link: https://lore.kernel.org/r/20200604112118.38062-1-jun.li@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/typec/tcpm/tcpci_rt1711h.c | 31 +++++++++-----------------
+ 1 file changed, 10 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 361cbc2dc9667..7238ef445dafb 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4447,7 +4447,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 	 */
- 	if (dl_prio(prio)) {
- 		if (!dl_prio(p->normal_prio) ||
--		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
-+		    (pi_task && dl_prio(pi_task->prio) &&
-+		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
- 			p->dl.dl_boosted = 1;
- 			queue_flag |= ENQUEUE_REPLENISH;
- 		} else
+diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+index 017389021b96a..b56a0880a0441 100644
+--- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
++++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+@@ -179,26 +179,6 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
+ 	return tcpci_irq(chip->tcpci);
+ }
+ 
+-static int rt1711h_init_alert(struct rt1711h_chip *chip,
+-			      struct i2c_client *client)
+-{
+-	int ret;
+-
+-	/* Disable chip interrupts before requesting irq */
+-	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
+-					rt1711h_irq,
+-					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+-					dev_name(chip->dev), chip);
+-	if (ret < 0)
+-		return ret;
+-	enable_irq_wake(client->irq);
+-	return 0;
+-}
+-
+ static int rt1711h_sw_reset(struct rt1711h_chip *chip)
+ {
+ 	int ret;
+@@ -260,7 +240,8 @@ static int rt1711h_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = rt1711h_init_alert(chip, client);
++	/* Disable chip interrupts before requesting irq */
++	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -271,6 +252,14 @@ static int rt1711h_probe(struct i2c_client *client,
+ 	if (IS_ERR_OR_NULL(chip->tcpci))
+ 		return PTR_ERR(chip->tcpci);
+ 
++	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
++					rt1711h_irq,
++					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
++					dev_name(chip->dev), chip);
++	if (ret < 0)
++		return ret;
++	enable_irq_wake(client->irq);
++
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
