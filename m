@@ -2,101 +2,96 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5AA20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462457;
-	bh=Dl2x24xWRa9PwaVDTYqu2K2O92LxLS+U/wHV9v4pCoY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkIsmUIOiOd/lWsiAi4Qv5a+ruPl2J79ncIJjSFeYvGewyufZa0UAwNxY7uMqux9X
-	 kfs5ygrwFbTTqM9EQs16eapdoQjk86c4Ncad5aMETj0lEF8cwsVB2Ko0tsr1mb6Uot
-	 Y2L5pHpBLrqQ/xPcvQgzvIDaxM9w8DoD39y7MYIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 86AC820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389129AbgF2U1g (ORCPT
+        id S1729875AbgF2U1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:27:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36333 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732516AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732517AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A3325329;
-        Mon, 29 Jun 2020 15:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445158;
-        bh=Dl2x24xWRa9PwaVDTYqu2K2O92LxLS+U/wHV9v4pCoY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHBOsc8FOvUBVJwXeAOhal9c29r3UdRoVHZ/yWGohcfozJXywU1UycTBGdUBVJGyA
-         2K8Szs0SuDbB6cuKck20wBNb1ntB4QW1jhSW3pUG9vIhBu/HOfOwd/nqLA4DUfhbDl
-         s4UhItUYkbt+IHoPRA2tnKUq3Epki+S+yq4nbY28=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Plattner <aplattner@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 59/78] ALSA: hda: Add NVIDIA codec IDs 9a & 9d through a0 to patch table
-Date:   Mon, 29 Jun 2020 11:37:47 -0400
-Message-Id: <20200629153806.2494953-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+IronPort-SDR: GVMgacdmGUkbW+ffhO2gdvKlvkWPQ2O3fzLe5ZUGIVWDmmTXdMANqnNA13P2RYS23XFd8aCO4Z
+ 4GzpZCMrxMmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143475983"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="143475983"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 09:24:53 -0700
+IronPort-SDR: 62afR1hi7+NIlYXmM50Jcl16b+Vm/woAty1FR5P9n+HqfEBNErhKyZ64sGMTbgA/bZkvchdUeW
+ WVP1tG8ShNyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="264877717"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2020 09:24:51 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jprOg-00Gdw6-TX; Mon, 29 Jun 2020 13:52:22 +0300
+Date:   Mon, 29 Jun 2020 13:52:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/7] Some atomisp fixes and improvements
+Message-ID: <20200629105222.GF3703480@smile.fi.intel.com>
+References: <cover.1593180146.git.mchehab+huawei@kernel.org>
+ <20200626150021.GY3703480@smile.fi.intel.com>
+ <20200626175216.7955c374@coco.lan>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626175216.7955c374@coco.lan>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Plattner <aplattner@nvidia.com>
+On Fri, Jun 26, 2020 at 05:52:16PM +0200, Mauro Carvalho Chehab wrote:
+> Em Fri, 26 Jun 2020 18:00:21 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> escreveu:
+> 
+> > On Fri, Jun 26, 2020 at 04:04:52PM +0200, Mauro Carvalho Chehab wrote:
+> > > Those patches are meant to improve device detection by the atomisp driver,
+> > > relying on ACPI bios when possible.
+> > > 
+> > > It also adds a basis for using ACPI PM, but only if the DSDT tables have
+> > > a description about how to turn on the resources needed by the cameras.
+> > > 
+> > > At least on the device I'm using for tests, this is not the case.  
+> > 
+> > Is this in your experimental tree? 
+> 
+> Yes. 
+> 
+> > I'll rebase mine on top and test.
+> > After I will send the rest from my series and give a tag to this.
+> 
+> It would be helpful if you could test removing the DMI match table from
+> your board. If your device has a DSDT table close to the one I have, the
+> new code may be able to get everything from DSDT.
 
-commit adb36a8203831e40494a92095dacd566b2ad4a69 upstream.
+I have checked the atomisp_v5 branch and it doesn't bring any regression to my
+case. So, feel free to add
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-These IDs are for upcoming NVIDIA chips with audio functions that are largely
-similar to the existing ones.
+I'll send rebased patches soon.
 
-Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200611180845.39942-1-aplattner@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 6b4ebaefd8f85..9e8cfc409b4b3 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -3861,6 +3861,11 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
