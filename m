@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BE52063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517C22064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgF2Smv (ORCPT
+        id S1729160AbgF2Smz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
+        Mon, 29 Jun 2020 14:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729011AbgF2Smm (ORCPT
+        with ESMTP id S1728961AbgF2Smm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:42 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808C9C033C09;
-        Mon, 29 Jun 2020 11:26:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DCB9C033C2E;
+        Mon, 29 Jun 2020 11:26:35 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyU9-002DtD-0S; Mon, 29 Jun 2020 18:26:29 +0000
+        id 1jpyUE-002DyH-9j; Mon, 29 Jun 2020 18:26:34 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
         David Miller <davem@davemloft.net>,
         Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 04/41] [ia64] sanitize elf_access_gpreg()
-Date:   Mon, 29 Jun 2020 19:25:51 +0100
-Message-Id: <20200629182628.529995-4-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 40/41] regset(): kill ->get_size()
+Date:   Mon, 29 Jun 2020 19:26:27 +0100
+Message-Id: <20200629182628.529995-40-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
@@ -47,112 +47,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-The function takes the register number, finds the corresponding field
-of pt_regs for registers that are saved there or does the unwind for the
-registers that end up spilled on the kernel stack.  Then it reads from
-or writes to the resulting location.
-
-Unfortunately, finding the required pt_regs field is done by rather
-horrible switch.  It's microoptimized in all the wrong places - it
-even uses the knowledge that fields for r8..r11 follow each other
-in pt_regs layout, while r12..r13 are not adjacent to those, etc.
-
-All of that is to encode the mapping from register numbers to offsets +
-the information that r4..r7 are not to be found in pt_regs.
-
-It's deeply in nasal demon territory, at that - the games it plays
-with pointer arithmetics on addresses of structure members are
-undefined behaviour.
-
-Valid C ends up with better code in this case: just initialize a constant
-array with offsets of relevant pt_regs fields and we don't need that
-switch anymore.
+not used anymore
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/ia64/kernel/ptrace.c | 57 +++++++++++++++++++----------------------------
- 1 file changed, 23 insertions(+), 34 deletions(-)
+ arch/arm64/kernel/ptrace.c | 13 -------------
+ include/linux/regset.h     | 48 +---------------------------------------------
+ 2 files changed, 1 insertion(+), 60 deletions(-)
 
-diff --git a/arch/ia64/kernel/ptrace.c b/arch/ia64/kernel/ptrace.c
-index 82aaacf64583..b9d068903b98 100644
---- a/arch/ia64/kernel/ptrace.c
-+++ b/arch/ia64/kernel/ptrace.c
-@@ -1273,52 +1273,41 @@ struct regset_getset {
- 	int ret;
- };
- 
-+static const ptrdiff_t pt_offsets[16] =
-+{
-+#define R(n) offsetof(struct pt_regs, r##n)
-+	[0] = -1, R(1), R(2), R(3),
-+	[4] = -1, [5] = -1, [6] = -1, [7] = -1,
-+	R(8), R(9), R(10), R(11), R(12), R(13), R(14), R(15),
-+#undef R
-+};
-+
- static int
- access_elf_gpreg(struct task_struct *target, struct unw_frame_info *info,
- 		unsigned long addr, unsigned long *data, int write_access)
- {
--	struct pt_regs *pt;
--	unsigned long *ptr = NULL;
--	int ret;
--	char nat = 0;
-+	struct pt_regs *pt = task_pt_regs(target);
-+	unsigned reg = addr / sizeof(unsigned long);
-+	ptrdiff_t d = pt_offsets[reg];
- 
--	pt = task_pt_regs(target);
--	switch (addr) {
--	case ELF_GR_OFFSET(1):
--		ptr = &pt->r1;
--		break;
--	case ELF_GR_OFFSET(2):
--	case ELF_GR_OFFSET(3):
--		ptr = (void *)&pt->r2 + (addr - ELF_GR_OFFSET(2));
--		break;
--	case ELF_GR_OFFSET(4) ... ELF_GR_OFFSET(7):
-+	if (d >= 0) {
-+		unsigned long *ptr = (void *)pt + d;
-+		if (write_access)
-+			*ptr = *data;
-+		else
-+			*data = *ptr;
-+		return 0;
-+	} else {
-+		char nat = 0;
- 		if (write_access) {
- 			/* read NaT bit first: */
- 			unsigned long dummy;
--
--			ret = unw_get_gr(info, addr/8, &dummy, &nat);
-+			int ret = unw_get_gr(info, reg, &dummy, &nat);
- 			if (ret < 0)
- 				return ret;
- 		}
--		return unw_access_gr(info, addr/8, data, &nat, write_access);
--	case ELF_GR_OFFSET(8) ... ELF_GR_OFFSET(11):
--		ptr = (void *)&pt->r8 + addr - ELF_GR_OFFSET(8);
--		break;
--	case ELF_GR_OFFSET(12):
--	case ELF_GR_OFFSET(13):
--		ptr = (void *)&pt->r12 + addr - ELF_GR_OFFSET(12);
--		break;
--	case ELF_GR_OFFSET(14):
--		ptr = &pt->r14;
--		break;
--	case ELF_GR_OFFSET(15):
--		ptr = &pt->r15;
-+		return unw_access_gr(info, reg, data, &nat, write_access);
- 	}
--	if (write_access)
--		*ptr = *data;
--	else
--		*data = *ptr;
--	return 0;
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 8745aecffcae..5fb2623b7f13 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -740,18 +740,6 @@ static unsigned int sve_size_from_header(struct user_sve_header const *header)
+ 	return ALIGN(header->size, SVE_VQ_BYTES);
  }
  
- static int
+-static unsigned int sve_get_size(struct task_struct *target,
+-				 const struct user_regset *regset)
+-{
+-	struct user_sve_header header;
+-
+-	if (!system_supports_sve())
+-		return 0;
+-
+-	sve_init_header_from_task(&header, target);
+-	return sve_size_from_header(&header);
+-}
+-
+ static int sve_get(struct task_struct *target,
+ 		   const struct user_regset *regset,
+ 		   struct membuf to)
+@@ -1130,7 +1118,6 @@ static const struct user_regset aarch64_regsets[] = {
+ 		.align = SVE_VQ_BYTES,
+ 		.get2 = sve_get,
+ 		.set = sve_set,
+-		.get_size = sve_get_size,
+ 	},
+ #endif
+ #ifdef CONFIG_ARM64_PTR_AUTH
+diff --git a/include/linux/regset.h b/include/linux/regset.h
+index eeabf5cbbbd7..d82bb32e434c 100644
+--- a/include/linux/regset.h
++++ b/include/linux/regset.h
+@@ -133,28 +133,6 @@ typedef int user_regset_writeback_fn(struct task_struct *target,
+ 				     int immediate);
+ 
+ /**
+- * user_regset_get_size_fn - type of @get_size function in &struct user_regset
+- * @target:	thread being examined
+- * @regset:	regset being examined
+- *
+- * This call is optional; usually the pointer is %NULL.
+- *
+- * When provided, this function must return the current size of regset
+- * data, as observed by the @get function in &struct user_regset.  The
+- * value returned must be a multiple of @size.  The returned size is
+- * required to be valid only until the next time (if any) @regset is
+- * modified for @target.
+- *
+- * This function is intended for dynamically sized regsets.  A regset
+- * that is statically sized does not need to implement it.
+- *
+- * This function should not be called directly: instead, callers should
+- * call regset_size() to determine the current size of a regset.
+- */
+-typedef unsigned int user_regset_get_size_fn(struct task_struct *target,
+-					     const struct user_regset *regset);
+-
+-/**
+  * struct user_regset - accessible thread CPU state
+  * @n:			Number of slots (registers).
+  * @size:		Size in bytes of a slot (register).
+@@ -165,7 +143,6 @@ typedef unsigned int user_regset_get_size_fn(struct task_struct *target,
+  * @set:		Function to store values.
+  * @active:		Function to report if regset is active, or %NULL.
+  * @writeback:		Function to write data back to user memory, or %NULL.
+- * @get_size:		Function to return the regset's size, or %NULL.
+  *
+  * This data structure describes a machine resource we call a register set.
+  * This is part of the state of an individual thread, not necessarily
+@@ -173,12 +150,7 @@ typedef unsigned int user_regset_get_size_fn(struct task_struct *target,
+  * similar slots, given by @n.  Each slot is @size bytes, and aligned to
+  * @align bytes (which is at least @size).  For dynamically-sized
+  * regsets, @n must contain the maximum possible number of slots for the
+- * regset, and @get_size must point to a function that returns the
+- * current regset size.
+- *
+- * Callers that need to know only the current size of the regset and do
+- * not care about its internal structure should call regset_size()
+- * instead of inspecting @n or calling @get_size.
++ * regset.
+  *
+  * For backward compatibility, the @get and @set methods must pad to, or
+  * accept, @n * @size bytes, even if the current regset size is smaller.
+@@ -218,7 +190,6 @@ struct user_regset {
+ 	user_regset_set_fn		*set;
+ 	user_regset_active_fn		*active;
+ 	user_regset_writeback_fn	*writeback;
+-	user_regset_get_size_fn		*get_size;
+ 	unsigned int			n;
+ 	unsigned int 			size;
+ 	unsigned int 			align;
+@@ -422,21 +393,4 @@ static inline int copy_regset_from_user(struct task_struct *target,
+ 	return regset->set(target, regset, offset, size, NULL, data);
+ }
+ 
+-/**
+- * regset_size - determine the current size of a regset
+- * @target:	thread to be examined
+- * @regset:	regset to be examined
+- *
+- * Note that the returned size is valid only until the next time
+- * (if any) @regset is modified for @target.
+- */
+-static inline unsigned int regset_size(struct task_struct *target,
+-				       const struct user_regset *regset)
+-{
+-	if (!regset->get_size)
+-		return regset->n * regset->size;
+-	else
+-		return regset->get_size(target, regset);
+-}
+-
+ #endif	/* <linux/regset.h> */
 -- 
 2.11.0
 
