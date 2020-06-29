@@ -2,223 +2,173 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1DC20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D1E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rS5h5EDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="soWLyATD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389875AbgF2UwJ (ORCPT
+        id S2389867AbgF2UwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        Mon, 29 Jun 2020 16:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731375AbgF2TN1 (ORCPT
+        with ESMTP id S1731372AbgF2TN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:27 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D435CC0068FB
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:45:04 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so16191824wrs.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:45:04 -0700 (PDT)
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE899C0A8939;
+        Mon, 29 Jun 2020 00:37:48 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o1so195020plk.1;
+        Mon, 29 Jun 2020 00:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XGw/iLKNRAiVkZjoBpYpVGlTMGowb6J/RzcIqE9oUnc=;
-        b=rS5h5EDVXcM6nddGacPz/Nj3KgrOPH0q0nYOztg+J1s+b0tDo9soLUxF+5ac5OLI08
-         4pj4d8PGVhb2QpuWHGjPLdHrKX0AJKO5kd4h+mlDscVYvZ+wmgjgPcaGK+I6f94mzM4l
-         fb7mw0e8YVatfs/UV5KEfnEtOEVMtAaikz8UK4gdg/86d82CkVVrazsC2z8uZG7CUXUZ
-         niM55Y4S1aOeUjTWaFRV7epBvRNNInwxRoJNp/+oJDa1DqvxWLK+V7ia1o54br2dUWjk
-         r2bBnqELUcWJVWzHCzsw9/yfgbDJJaiY6No8zpA3wSx7ZRHXQyrZbqiOr9LQIvxuxb/V
-         Q9Pw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DRaWMxjlA+y9G9x8PTReSZmOggDcJdYbq3Dmt0Z1Wlg=;
+        b=soWLyATDxsP3lSKBdnbKGoDIiCBQaXGh9rWTzN54ndzKrsUNd0G0F2H/4XSCMotvjR
+         YSPGri8ucPhLiObQp+xsTU6lkzmVJymhJF9wc0Ue711DLzMZWvpfsVh7IQOz85b936Qn
+         Mdnl7wrMDLGJFMOOmIoqg0TXIGB74cL/i6YwdqkKPbiKx2++8a9enxWsKUq7Pxt5/yup
+         udl+xB/D51qwssbd3BQlZqN82j0YURu669zYz2nNRCWYDpEA0NbfiwL13/FaR8pL1SUv
+         Udijy41l1GPzKMzS8sM4HfGclXHANrqlirJxzN+N+piO83H3P9+vKgOLNipO85hXgl0H
+         EPgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XGw/iLKNRAiVkZjoBpYpVGlTMGowb6J/RzcIqE9oUnc=;
-        b=sLpBb/NcFJyu4MVOEuDEQuGyCVFEVFJ0+6cz/c/QH7QU+jO1TiZgZzDita3lmPMoF4
-         jV+uUt+yP3ed/8PtN/tBkZ6IfJUvytNmhHZ6bOrm3G50v+lKgA8aEWbAKRZq95qoLmmE
-         MGL/oe7asTiH9zC3VUrJbGwzQBAtzH1HL8RJPOsxsK53f2BBiNUjeat2cgXZXlL969m4
-         j1goZkGTxP3uxhYqxZqhfKssUWqHfig7iuxVJKN87EfGDPfqD2NpjDU4qfvzd5wdrE6l
-         fR0dxSYLbh+R/R/dqpfHY2GNJ2VCMAsg9f8HoPUWuSiQDRjC08qOXCkPxie/zYGsJ2N7
-         Uqwg==
-X-Gm-Message-State: AOAM531i5EOShdklP+JnzxbJf19cSChu3XAmTvgqPVsDfe41rHJPdlJP
-        UBcLoNYg5ZizR39UFj/7Jeb/1Q==
-X-Google-Smtp-Source: ABdhPJxOJjSafM1OFUfqJURXwD3lrGdaznzf+9LM4EAUq/q+VGG6z+FfLqPpw2iGsX1ac9JHkVsJXw==
-X-Received: by 2002:adf:c142:: with SMTP id w2mr15839442wre.337.1593431103458;
-        Mon, 29 Jun 2020 04:45:03 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s10sm17859915wme.31.2020.06.29.04.45.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DRaWMxjlA+y9G9x8PTReSZmOggDcJdYbq3Dmt0Z1Wlg=;
+        b=cgs0pkVkOZZkrVjG8ywlr+IwyFb5zrha10gwz8h3Dg43SOxkoy32CpJkQ1EUXWZrFD
+         SCWeQtP32dNRAwgV68AiOSyX2H5CvgzmFM6DItqXq/rYLZla0CctQKIyPqp6Wi6hAEFI
+         2J0XO7z/D19CJ52DI1cbkCY/5DpycIIfN6gkz14EjsW0OT2/9/0xLtJXXnn0g6W48fIZ
+         PqY4m8LQOaHEWAsDEoMPqKv5iad9NNC5QSGgyZuzYoLstdVayQBU6vxNq7XwYF0JInlV
+         Mcjqil2zxKL7NqAm53QpZSgvO+vnswz+6sP5JEPXgFofErdVx2G4e1/eJola0PX3Bt4P
+         0/+g==
+X-Gm-Message-State: AOAM530lN1x4xD/kypI53Ca/scRYVqNMBlBE5Nyr1AF7XuTzadWKCdfn
+        1BKU/g9rIXRrLkZXjtlFOSQ=
+X-Google-Smtp-Source: ABdhPJz3FvoamkU1GXqNQu9Zc7XjkNo/hUIxVOEgR9mxBWcqDHqy9UnEwm4JEcoy46VmRIDPIGi8vw==
+X-Received: by 2002:a17:90a:df11:: with SMTP id gp17mr15071981pjb.188.1593416268444;
+        Mon, 29 Jun 2020 00:37:48 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id q10sm34673004pfk.86.2020.06.29.00.37.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 04:45:02 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 12:45:01 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/7] kgdb: Add request_nmi() to the io ops table for
- kgdboc
-Message-ID: <20200629114501.7aq547dzo6o2abrt@holly.lan>
-References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
- <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
- <20200622160300.avgfhnfkpqzqqtsr@holly.lan>
- <CAFA6WYOmQT-OQvjpy1pVPq2mx5S264bJPd-XfwnDY2BjeoWekg@mail.gmail.com>
- <20200623105934.wvyidi3xgqgd35af@holly.lan>
- <CAD=FV=XHZT9ud0Ze1pDvz-kQy7FMFzd9T6+jM5URt1k5BwQ15g@mail.gmail.com>
+        Mon, 29 Jun 2020 00:37:48 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 6/6] [media] tw68: use generic power management
+Date:   Mon, 29 Jun 2020 13:06:04 +0530
+Message-Id: <20200629073604.205478-7-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
+References: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XHZT9ud0Ze1pDvz-kQy7FMFzd9T6+jM5URt1k5BwQ15g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:44:15PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Jun 23, 2020 at 3:59 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Tue, Jun 23, 2020 at 02:07:47PM +0530, Sumit Garg wrote:
-> > > On Mon, 22 Jun 2020 at 21:33, Daniel Thompson
-> > > <daniel.thompson@linaro.org> wrote:
-> > > > > +     irq_set_status_flags(irq, IRQ_NOAUTOEN);
-> > > > > +     res = request_nmi(irq, fn, IRQF_PERCPU, "kgdboc", dev_id);
-> > > >
-> > > > Why do we need IRQF_PERCPU here. A UART interrupt is not normally
-> > > > per-cpu?
-> > > >
-> > >
-> > > Have a look at this comment [1] and corresponding check in
-> > > request_nmi(). So essentially yes UART interrupt is not normally
-> > > per-cpu but in order to make it an NMI, we need to request it in
-> > > per-cpu mode.
-> > >
-> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/irq/manage.c#n2112
-> >
-> > Thanks! This is clear.
-> >
-> > > > > +     if (res) {
-> > > > > +             res = request_irq(irq, fn, IRQF_SHARED, "kgdboc", dev_id);
-> > > >
-> > > > IRQF_SHARED?
-> > > >
-> > > > Currrently there is nothing that prevents concurrent activation of
-> > > > ttyNMI0 and the underlying serial driver. Using IRQF_SHARED means it
-> > > > becomes possible for both drivers to try to service the same interrupt.
-> > > > That risks some rather "interesting" problems.
-> > > >
-> > >
-> > > Could you elaborate more on "interesting" problems?
-> >
-> > Er... one of the serial drivers we have allowed the userspace to open
-> > will, at best, be stone dead and not passing any characters.
-> >
-> >
-> > > BTW, I noticed one more problem with this patch that is IRQF_SHARED
-> > > doesn't go well with IRQ_NOAUTOEN status flag. Earlier I tested it
-> > > with auto enable set.
-> > >
-> > > But if we agree that both shouldn't be active at the same time due to
-> > > some real problems(?) then I can rid of IRQF_SHARED as well. Also, I
-> > > think we should unregister underlying tty driver (eg. /dev/ttyAMA0) as
-> > > well as otherwise it would provide a broken interface to user-space.
-> >
-> > I don't have a particular strong opinion on whether IRQF_SHARED is
-> > correct or not correct since I think that misses the point.
-> >
-> > Firstly, using IRQF_SHARED shows us that there is no interlocking
-> > between kgdb_nmi and the underlying serial driver. That probably tells
-> > us about the importance of the interlock than about IRQF_SHARED.
-> >
-> > To some extent I'm also unsure that kgdb_nmi could ever actually know
-> > the correct flags to use in all cases (that was another reason for the
-> > TODO comment about poll_get_irq() being a bogus API).
-> 
-> I do wonder a little bit if the architecture of the "kgdb_nmi_console"
-> should change.  I remember looking at it in the past and thinking it a
-> little weird that if I wanted to get it to work I'd need to change my
-> "console=" command line to go through this new driver and (I guess)
-> change the agetty I have running on my serial port to point to
-> ttyNMI0.  Is that how it's supposed to work?  Then if I want to do a
-> build without kgdb then I need to go in and change my agetty to point
-> back at my normal serial port?
-> 
-> It kinda feels like a better way to much of what the driver does would be to:
-> 
-> 1. Allow kgdb to sniff incoming serial bytes on a port and look for
-> its characters.  We already have this feature in the kernel to a small
-> extent for sniffing a break / sysrq character.
-> 
-> 2. If userspace doesn't happen to have the serial port open then
-> ideally we could open the port (using all the standard APIs that
-> already exist) from in the kernel and just throw away all the bytes
-> (since we already sniffed them).  As soon as userspace tried to open
-> the port when it would get ownership and if userspace ever closed the
-> port then we'd start reading / throwing away bytes again.
-> 
-> If we had a solution like that:
-> 
-> a) No serial drivers would need to change.
-> 
-> b) No kernel command line parameters would need to change.
-> 
-> Obviously that solution wouldn't magically get you an NMI, though.
-> For that I'd presume the right answer would be to add a parameter for
-> each serial driver that can support it to run its rx interrupt in NMI
-> mode.
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-... or allow modal changes to the uart driver when kgdboc comes up?
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
 
-We already allow UART drivers to de-optimize themselves and use
-different code paths when polling is enabled so its not totally crazy
-;-).
+The driver was invoking PCI helper functions like pci_save/restore_state()
+which is not recommended.
 
+Compile-Tested only.
 
-> Of course, perhaps I'm just confused and crazy and the above is a
-> really bad idea.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/media/pci/tw68/tw68-core.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-Thanks for bringing this up.
+diff --git a/drivers/media/pci/tw68/tw68-core.c b/drivers/media/pci/tw68/tw68-core.c
+index b45f3ffa3de5..065420b09250 100644
+--- a/drivers/media/pci/tw68/tw68-core.c
++++ b/drivers/media/pci/tw68/tw68-core.c
+@@ -359,10 +359,9 @@ static void tw68_finidev(struct pci_dev *pci_dev)
+ 	v4l2_device_unregister(&dev->v4l2_dev);
+ }
+ 
+-#ifdef CONFIG_PM
+-
+-static int tw68_suspend(struct pci_dev *pci_dev , pm_message_t state)
++static int __maybe_unused tw68_suspend(struct device *dev_d)
+ {
++	struct pci_dev *pci_dev = to_pci_dev(dev_d);
+ 	struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
+ 	struct tw68_dev *dev = container_of(v4l2_dev,
+ 				struct tw68_dev, v4l2_dev);
+@@ -373,24 +372,19 @@ static int tw68_suspend(struct pci_dev *pci_dev , pm_message_t state)
+ 
+ 	synchronize_irq(pci_dev->irq);
+ 
+-	pci_save_state(pci_dev);
+-	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
+ 	vb2_discard_done(&dev->vidq);
+ 
+ 	return 0;
+ }
+ 
+-static int tw68_resume(struct pci_dev *pci_dev)
++static int __maybe_unused tw68_resume(struct device *dev_d)
+ {
+-	struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
++	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev_d);
+ 	struct tw68_dev *dev = container_of(v4l2_dev,
+ 					    struct tw68_dev, v4l2_dev);
+ 	struct tw68_buf *buf;
+ 	unsigned long flags;
+ 
+-	pci_set_power_state(pci_dev, PCI_D0);
+-	pci_restore_state(pci_dev);
+-
+ 	/* Do things that are done in tw68_initdev ,
+ 		except of initializing memory structures.*/
+ 
+@@ -408,19 +402,17 @@ static int tw68_resume(struct pci_dev *pci_dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ /* ----------------------------------------------------------- */
+ 
++static SIMPLE_DEV_PM_OPS(tw68_pm_ops, tw68_suspend, tw68_resume);
++
+ static struct pci_driver tw68_pci_driver = {
+-	.name	  = "tw68",
+-	.id_table = tw68_pci_tbl,
+-	.probe	  = tw68_initdev,
+-	.remove	  = tw68_finidev,
+-#ifdef CONFIG_PM
+-	.suspend  = tw68_suspend,
+-	.resume   = tw68_resume
+-#endif
++	.name	   = "tw68",
++	.id_table  = tw68_pci_tbl,
++	.probe	   = tw68_initdev,
++	.remove	   = tw68_finidev,
++	.driver.pm = &tw68_pm_ops,
+ };
+ 
+ module_pci_driver(tw68_pci_driver);
+-- 
+2.27.0
 
-Sumit and I were chatting last week and our discussion went in a similar
-direction (I think not exactly the same which is why it is good to
-see your thoughts too).
-
-Personally I think it comes down to how intrusive adding NMI support is
-to serial drivers. kgdb_nmi is rather hacky and feels a bit odd to
-enable. It is clearly intended to avoid almost all changes to the UART
-driver. On our side we have been wondering whether the serial core can
-add helpers to make it easy for a serial driver to implement an simple,
-safe but not optimal NMI implementation. Making it easy to have
-safety-first might make NMI more palatable.
-
-
-> Speaking of confused: is there actually any way to use the existing
-> kgdb NMI driver (CONFIG_SERIAL_KGDB_NMI) in mainline without out of
-> tree patches?  When I looked before I assumed it was just me that was
-> outta luck because I didn't have NMI at the time, but I just did some
-> grepping and I can't find anyplace in mainline where
-> "arch_kgdb_ops.enable_nmi" would not be NULL.  Did I miss it, or do we
-> need out-of-tree patches to enable this?
-
-Out-of-tree...
-
-If, after looking at other approaches, we do all agree to nuke kgdb_nmi
-then there shouldn't be much impediment (nor that many tears).
-
-
-Daniel.
