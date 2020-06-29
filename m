@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0427C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7562920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBD320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462221;
-	bh=22GcyC7muiffFtETFdjF2sD42yntUmJ9O0GxjhYMGP4=;
+	s=default; t=1593462224;
+	bh=YQvt4AgL3IdwEuFjsf6V9cIKCbQ8atShrwEL2kGC0R0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2VwK30a6dr+o0YasJ6yluX+CmClOKNuV5e7RLMHy1i6l6btRf45IyICu8wtfguhg
-	 gWEA3dyuPAuc6MS6/WHd3oejJU8JFvzLKFd8LY+J1GG7NWiqO+hlCvBBl7fTjRwgTX
-	 vZCkRgzwXX9L1u9Osrv03k2NZ8x/P0/ov+8ipd9s=
+	b=ssqWPQriKcbwxlDKlXH21dD5mEeS+Mh4bHfbIa/84U2bTYwrZixv7e9WKUxEgIh/a
+	 C7B+Bl3c9rssqjN0nj3qqSiVplPcWD8YAolMI/ccHGA9ICKwbYjfnA671GDoqlGhGy
+	 l9tx0Ky1zkvTXm+5Ih0nBgzJgtcxb4jtMcqFMC2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgF2UXk (ORCPT
+        id S2388860AbgF2UXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732567AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732565AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C42537B;
-        Mon, 29 Jun 2020 15:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C3225349;
+        Mon, 29 Jun 2020 15:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445243;
-        bh=22GcyC7muiffFtETFdjF2sD42yntUmJ9O0GxjhYMGP4=;
+        s=default; t=1593445187;
+        bh=YQvt4AgL3IdwEuFjsf6V9cIKCbQ8atShrwEL2kGC0R0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcgbvXfJ4LR4MmOPZCA7+Isk4n+v5XwVnF8xQ1ZeI+iUT9LxPVR9LN4ouLmbEnulk
-         cjmfGFO/7alLUNpXwJlDz12qa4sDYYeDkJ/ruXeZfBu7saUhdsZBTGP4q36S79KkjF
-         N6d6evjfEPQZJwfjSAZJaSc+eMuitMwPvOmtY+rs=
+        b=zJRgmqObLbPpwstik7N+UuNz8p4VtpMz8igWBKOTViALlerLYteJFxnfLy1aB+qvR
+         yaXO6iqSwmX+Lf0oOIV415T+F99E22A/xdITmUzapP1xjvsqpR3WZ2054oiW8Hw9Mt
+         Mpt9NeGvtegSrybJ8h0UvA0RpTdYwe3qh4lQC3Yw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Zheng Bin <zhengbin13@huawei.com>,
+        Ren Xudong <renxudong1@huawei.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/191] s390/qdio: put thinint indicator after early error
-Date:   Mon, 29 Jun 2020 11:37:23 -0400
-Message-Id: <20200629154007.2495120-28-sashal@kernel.org>
+Subject: [PATCH 4.14 77/78] xfs: add agf freeblocks verify in xfs_agf_verify
+Date:   Mon, 29 Jun 2020 11:38:05 -0400
+Message-Id: <20200629153806.2494953-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,83 +66,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
+[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
 
-qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
-If the subsequent qdio_establish_thinint() fails, we miss to put the
-DSCI again. Thus the DSCI isn't available for re-use. Given enough of
-such errors, we could end up with having only the shared DSCI available.
+We recently used fuzz(hydra) to test XFS and automatically generate
+tmp.img(XFS v5 format, but some metadata is wrong)
 
-Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
-such an error internally.
+xfs_repair information(just one AG):
+agf_freeblks 0, counted 3224 in ag 0
+agf_longest 536874136, counted 3224 in ag 0
+sb_fdblocks 613, counted 3228
 
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Test as follows:
+mount tmp.img tmpdir
+cp file1M tmpdir
+sync
+
+In 4.19-stable, sync will stuck, the reason is:
+xfs_mountfs
+  xfs_check_summary_counts
+    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
+       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
+       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
+	return 0;  -->just return, incore sb_fdblocks still be 613
+    xfs_initialize_perag_data
+
+cp file1M tmpdir -->ok(write file to pagecache)
+sync -->stuck(write pagecache to disk)
+xfs_map_blocks
+  xfs_iomap_write_allocate
+    while (count_fsb != 0) {
+      nimaps = 0;
+      while (nimaps == 0) { --> endless loop
+         nimaps = 1;
+         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
+xfs_bmapi_write
+  xfs_bmap_alloc
+    xfs_bmap_btalloc
+      xfs_alloc_vextent
+        xfs_alloc_fix_freelist
+          xfs_alloc_space_available -->fail(agf_freeblks is 0)
+
+In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
+use the latest extent at writeback delalloc conversion time") remove
+the above while, dmesg is as follows:
+[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
+
+Users do not know why this page is discard, the better soultion is:
+1. Like xfs_repair, make sure sb_fdblocks is equal to counted
+(xfs_initialize_perag_data did this, who is not called at this mount)
+2. Add agf verify, if fail, will tell users to repair
+
+This patch use the second soultion.
+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Ren Xudong <renxudong1@huawei.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio.h         |  1 -
- drivers/s390/cio/qdio_setup.c   |  1 -
- drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
-index 7e70f9298cc13..11f6ebd045456 100644
---- a/drivers/s390/cio/qdio.h
-+++ b/drivers/s390/cio/qdio.h
-@@ -376,7 +376,6 @@ static inline int multicast_outbound(struct qdio_q *q)
- extern u64 last_ai_time;
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 516e0c57cf9c4..a10d9a3c181e4 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2529,6 +2529,13 @@ xfs_agf_verify(
+ 	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
+ 		return false;
  
- /* prototypes for thin interrupt */
--void qdio_setup_thinint(struct qdio_irq *irq_ptr);
- int qdio_establish_thinint(struct qdio_irq *irq_ptr);
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
- void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index d0090c5c88e74..a64615a10352b 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -479,7 +479,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
- 	setup_queues(irq_ptr, init_data);
- 
- 	setup_qib(irq_ptr, init_data);
--	qdio_setup_thinint(irq_ptr);
- 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
- 			init_data->qib_param_field,
- 			init_data->input_slib_elements,
-diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index debe69adfc705..aecb6445a5671 100644
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -268,17 +268,19 @@ int __init tiqdio_register_thinints(void)
- 
- int qdio_establish_thinint(struct qdio_irq *irq_ptr)
- {
-+	int rc;
++	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
++		return false;
 +
- 	if (!is_thinint_irq(irq_ptr))
- 		return 0;
--	return set_subchannel_ind(irq_ptr, 0);
--}
- 
--void qdio_setup_thinint(struct qdio_irq *irq_ptr)
--{
--	if (!is_thinint_irq(irq_ptr))
--		return;
- 	irq_ptr->dsci = get_indicator();
- 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
++	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
++	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
++		return false;
 +
-+	rc = set_subchannel_ind(irq_ptr, 0);
-+	if (rc)
-+		put_indicator(irq_ptr->dsci);
-+
-+	return rc;
- }
+ 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
+@@ -2540,6 +2547,10 @@ xfs_agf_verify(
+ 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
+ 		return false;
  
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
++	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
++		return false;
++
+ 	/*
+ 	 * during growfs operations, the perag is not fully initialised,
+ 	 * so we can't use it for any useful checking. growfs ensures we can't
+@@ -2553,6 +2564,11 @@ xfs_agf_verify(
+ 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
+ 		return false;
+ 
++	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_refcount_blocks) >
++	    be32_to_cpu(agf->agf_length))
++		return false;
++
+ 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
+ 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
+ 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
 -- 
 2.25.1
 
