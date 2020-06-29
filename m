@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C663C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEA4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A95206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467174;
-	bh=OPjqXLYev10H5olWoqeIxX2UjObS9ZzCJfkGOS9eXLo=;
+	s=default; t=1593467177;
+	bh=bsVnmFnwHQX1Iq9XkTHGGqBJy3pS/LOLzkSfDILiQOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfuVy/66x5B0WYPi0Ehbibme71IIcFnpN/h74k4Gwg/MkCbByRwhgbqDiXuveeZtY
-	 TQg1vwgsYOYaeo4Nb6t7EabMEenOKWfL3+aphecLHhbowfQrY9GL3o54f6j/Cls08F
-	 SrZzLp93r2D/C1tKVVb2TsH/HETHSOlGSw2fjnaU=
+	b=oLfjskLccht/xcOF2fPiorWNsIKnRpmMR05xRUnuzwXPptu4ut+EuoRiYoRCIYwTS
+	 piuXNhnqb3LHepZgRipLHnLcnAhmsGVc64Zhmp9zsO6H0P0uAOTJiHY/aqmd5Uxsvw
+	 1XS08kaz0ysMhIsZbYM/5JqbRjQJEa8To3i/UKIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgF2Sfu (ORCPT
+        id S1727944AbgF2VqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:23 -0400
+        id S1726782AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3C4C2473B;
-        Mon, 29 Jun 2020 15:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB9E246A0;
+        Mon, 29 Jun 2020 15:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444059;
-        bh=OPjqXLYev10H5olWoqeIxX2UjObS9ZzCJfkGOS9eXLo=;
+        s=default; t=1593443997;
+        bh=bsVnmFnwHQX1Iq9XkTHGGqBJy3pS/LOLzkSfDILiQOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+8ED3fLmMsJDR50lSZHAyfTNSfhp9HiVFYGP4801NZaxxeYIf8NHtqx4o5qjrxKy
-         llu52JxhUvbdWi/HHTq1Ep3zMorWnV5ap7iiWmmUsPNr3mHnoL/v8htYvE3OfnEs0q
-         ekwjjZf01eQp5zXCnuJF1alTIo7HBfzHFAWRv4Rk=
+        b=QUNBc7/gXtY5vLNKN9uaDm0ZamYFoLENq+MOhkv426Yd2fdjCt8TPnBd7vrGdfrAM
+         GAcpIDf4BSoXQl2DdR5uI7Q0df55XZGCF0dntPn+wn4/K1CsoMziImr/4jOq6tOM6k
+         ruQ7M9oSM9+SO1HeCxP4Wf0E6fwPoEZXgtNbQfi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        kernel test robot <lkp@intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 167/265] netfilter: ipset: fix unaligned atomic access
-Date:   Mon, 29 Jun 2020 11:16:40 -0400
-Message-Id: <20200629151818.2493727-168-sashal@kernel.org>
+Subject: [PATCH 5.7 102/265] regulator: da9063: fix LDO9 suspend and warning.
+Date:   Mon, 29 Jun 2020 11:15:35 -0400
+Message-Id: <20200629151818.2493727-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,55 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Martin Fuzzey <martin.fuzzey@flowbird.group>
 
-[ Upstream commit 715028460082d07a7ec6fcd87b14b46784346a72 ]
+[ Upstream commit d7442ba13d62de9afc4e57344a676f9f4623dcaa ]
 
-When using ip_set with counters and comment, traffic causes the kernel
-to panic on 32-bit ARM:
+Commit 99f75ce66619 ("regulator: da9063: fix suspend") converted
+the regulators to use a common (corrected) suspend bit setting but
+one of regulators (LDO9) slipped through the crack.
 
-Alignment trap: not handling instruction e1b82f9f at [<bf01b0dc>]
-Unhandled fault: alignment exception (0x221) at 0xea08133c
-PC is at ip_set_match_extensions+0xe0/0x224 [ip_set]
+This means that the original problem was not fixed for LDO9 and
+also leads to a warning found by the test robot.
+	da9063-regulator.c:515:3: warning: initialized field overwritten
 
-The problem occurs when we try to update the 64-bit counters - the
-faulting address above is not 64-bit aligned.  The problem occurs
-due to the way elements are allocated, for example:
+Fix this by converting that regulator too like the others.
 
-	set->dsize = ip_set_elem_len(set, tb, 0, 0);
-	map = ip_set_alloc(sizeof(*map) + elements * set->dsize);
+Fixes: 99f75ce66619 ("regulator: da9063: fix suspend")
+Reported-by: kernel test robot <lkp@intel.com>
 
-If the element has a requirement for a member to be 64-bit aligned,
-and set->dsize is not a multiple of 8, but is a multiple of four,
-then every odd numbered elements will be misaligned - and hitting
-an atomic64_add() on that element will cause the kernel to panic.
-
-ip_set_elem_len() must return a size that is rounded to the maximum
-alignment of any extension field stored in the element.  This change
-ensures that is the case.
-
-Fixes: 95ad1f4a9358 ("netfilter: ipset: Fix extension alignment")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+Link: https://lore.kernel.org/r/1591959073-16792-1-git-send-email-martin.fuzzey@flowbird.group
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/da9063-regulator.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-index 340cb955af25c..56621d6bfd297 100644
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -460,6 +460,8 @@ ip_set_elem_len(struct ip_set *set, struct nlattr *tb[], size_t len,
- 	for (id = 0; id < IPSET_EXT_ID_MAX; id++) {
- 		if (!add_extension(id, cadt_flags, tb))
- 			continue;
-+		if (align < ip_set_extensions[id].align)
-+			align = ip_set_extensions[id].align;
- 		len = ALIGN(len, ip_set_extensions[id].align);
- 		set->offset[id] = len;
- 		set->extensions |= ip_set_extensions[id].type;
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index e1d6c8f6d40bb..fe65b5acaf280 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -512,7 +512,6 @@ static const struct da9063_regulator_info da9063_regulator_info[] = {
+ 	},
+ 	{
+ 		DA9063_LDO(DA9063, LDO9, 950, 50, 3600),
+-		.suspend = BFIELD(DA9063_REG_LDO9_CONT, DA9063_VLDO9_SEL),
+ 	},
+ 	{
+ 		DA9063_LDO(DA9063, LDO11, 900, 50, 3600),
 -- 
 2.25.1
 
