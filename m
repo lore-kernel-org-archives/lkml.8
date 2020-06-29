@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0429C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE278C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEEDC20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B6320780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461652;
-	bh=xJLQ0boay0Bf+EKvPVKaRb97JxMWn1YRifhIR045NQk=;
+	s=default; t=1593461656;
+	bh=QGu1ul3MHIdZdof5n8qolPY0g5YIYXbad143qfGhvsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2oFS+MF2a8vhZyA5nSl4JmcMym4TbQwUHCnKdhYAny42MJAq2cSNQJdVDlcu2JO1E
-	 Qtq4TGBV1hGooKOXnv9L5kGySwNRh5xyxJkfw8nEqp2mITUxyXqqRRQYCb2RutNHt/
-	 kg1Yjz9wL1trhNa+sqK8RkPLQ0GJz5OdzxGXfLjU=
+	b=FlU7a/NYSLMgG3TWsYl4HWFttysSXz5VsHEhoTZBOuYwuFDWuy4QBYd9F6spgJNgz
+	 G4XRJopfoHM3ZG8rEk5x+tgfpBF6efO4/xNxlMDb4Tc/Yt/CCsGDFqXBOCu4HCgjN5
+	 vwJoBggBJj7K+G64XdcRa0LbR49dzKkEcWtg919o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732428AbgF2UOL (ORCPT
+        id S1732467AbgF2UOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732849AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732851AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 204D9252BD;
-        Mon, 29 Jun 2020 15:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5DE252BA;
+        Mon, 29 Jun 2020 15:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445030;
-        bh=xJLQ0boay0Bf+EKvPVKaRb97JxMWn1YRifhIR045NQk=;
+        s=default; t=1593445027;
+        bh=QGu1ul3MHIdZdof5n8qolPY0g5YIYXbad143qfGhvsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nA6foVKI2Q4Ub97PC3+qsReOgBe/XQ9cRNgzSQFBT0oHMYWnh8Co0MKcod3qXTJCt
-         Pd/NRXHf0UYCrYGJDK6GCvt9ManbgvfxhL6ooAhJZGXTK51cxXTabAhHFow7NcRdab
-         9pfbATfaSLcmKH31IioFcu1Wcq1MHv4n3Zh5P8cQ=
+        b=BaojjbEtnRbEe1U12iPK9But0bZXmAw83OxG8irnU4YTMHhv3emXJvoC1UFuROy4G
+         URz2+Mv+VyExbrpmR0bhdmH6fGM4L6LLhGztLphf5npm3M6mQzRzWXIom9saCZyp3y
+         56cDMzPpIqN3klO5RoJarahrnQBgvgrevHsoLOBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huaisheng Ye <yehs1@lenovo.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 128/131] dm writecache: correct uncommitted_block when discarding uncommitted entry
-Date:   Mon, 29 Jun 2020 11:34:59 -0400
-Message-Id: <20200629153502.2494656-129-sashal@kernel.org>
+Subject: [PATCH 4.19 125/131] SUNRPC: Properly set the @subbuf parameter of xdr_buf_subsegment()
+Date:   Mon, 29 Jun 2020 11:34:56 -0400
+Message-Id: <20200629153502.2494656-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,35 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaisheng Ye <yehs1@lenovo.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit 39495b12ef1cf602e6abd350dce2ef4199906531 upstream.
+commit 89a3c9f5b9f0bcaa9aea3e8b2a616fcaea9aad78 upstream.
 
-When uncommitted entry has been discarded, correct wc->uncommitted_block
-for getting the exact number.
+@subbuf is an output parameter of xdr_buf_subsegment(). A survey of
+call sites shows that @subbuf is always uninitialized before
+xdr_buf_segment() is invoked by callers.
 
-Fixes: 48debafe4f2fe ("dm: add writecache target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+There are some execution paths through xdr_buf_subsegment() that do
+not set all of the fields in @subbuf, leaving some pointer fields
+containing garbage addresses. Subsequent processing of that buffer
+then results in a page fault.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/dm-writecache.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/sunrpc/xdr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 4321c48eba6b9..509552fc55fc7 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -811,6 +811,8 @@ static void writecache_discard(struct dm_writecache *wc, sector_t start, sector_
- 				writecache_wait_for_ios(wc, WRITE);
- 				discarded_something = true;
- 			}
-+			if (!writecache_entry_is_committed(wc, e))
-+				wc->uncommitted_blocks--;
- 			writecache_free_entry(wc, e);
- 		}
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index ac16f509c95cb..540e340e2565c 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1036,6 +1036,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->head[0].iov_len;
++		subbuf->head[0].iov_base = buf->head[0].iov_base;
+ 		subbuf->head[0].iov_len = 0;
+ 	}
+ 
+@@ -1048,6 +1049,8 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->page_len;
++		subbuf->pages = buf->pages;
++		subbuf->page_base = 0;
+ 		subbuf->page_len = 0;
+ 	}
+ 
+@@ -1059,6 +1062,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->tail[0].iov_len;
++		subbuf->tail[0].iov_base = buf->tail[0].iov_base;
+ 		subbuf->tail[0].iov_len = 0;
+ 	}
  
 -- 
 2.25.1
