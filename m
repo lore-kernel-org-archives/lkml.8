@@ -2,91 +2,96 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B66C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7450DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF44E2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WA9KGeZ3"
+	by mail.kernel.org (Postfix) with ESMTP id 51855204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgF2StA (ORCPT
+        id S1729310AbgF2StQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgF2Srn (ORCPT
+        Mon, 29 Jun 2020 14:49:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30544 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728062AbgF2StO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:47:43 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D56AC02E2C3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:59:03 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id q7so4901581ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:59:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UGyosXZCWooG7Tjszoes4KB/+HgMWni06A9jFLNYaYU=;
-        b=WA9KGeZ39tTZkIoY+OkHArQq53QMP7s+PxXqfVe+Z02/159KgvovFmugdz0BtXEsoY
-         82Vlha+qNKVvrsAntFgaRckJhmTXyMZjDXOHxKE2VBXSDVKmlDjco2/BGh0ysDoTn+Eo
-         wLSrOWswk9puj6tmKzCzXWo2d3xWeNzLHj5hyxq7tsY7Fys9DT/qYcVsv04RSW7AF/CB
-         bEKl1Ggly2JGo4pznh9aP9C4OZ3W/P0d9N818RfeazX2GtuY6RrGT/xrafqsR5bdWJuR
-         fKXOziDURBjNuEGK5OisDp5eiJff6sCDKSdjG+vHc9K/SnK6pTIIKb9zuxoU9eE5BgcY
-         tfXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UGyosXZCWooG7Tjszoes4KB/+HgMWni06A9jFLNYaYU=;
-        b=pXaPi/ocBMJ7yvOmN2qJguwvJi1JnKS1sEVteNM12C5JkbZxMW6/57DJzzPsRyUVDs
-         X5baBAVy4kEkfD2h6HAdgQL7wNueRKUiLdy/NJcWEeUIBfBpRoPcCjNCERyKFL6pzxuj
-         hrkk4hp19Ecs5c5QQis5leGJaLdZZG9g+Cg5TcfRBOttSYx0Y+TTK//s0uBHab6SQi11
-         c2YkfMh9I7pOl5FXwvn5nZJJwrCD+tr4ZwArcBea3yt3LicHgBPQRxYH6iVG5IQqdQmX
-         s2/KVdUJIzAPvPjs+OfmCa2HF6HyhYBWN6JnSGoBL1+WJlKsNbWsVpAfmrN09RKdxzcz
-         dgtA==
-X-Gm-Message-State: AOAM5333uQzj0bxFYXh/5Fvz/7D1iG5Tl6/9ebv0IjkrlD+ieRxe6QmJ
-        t6TE8E4rnuxCmHsSqDg+XCMWb4lJFGVMBOAMxQ==
-X-Google-Smtp-Source: ABdhPJzpRYEViQEdoErIqx6gGvcPHrozg6UgphmrJ6HsxKyWoLC9iPa1OMa8YDPoc1Rf83BpJd5GVIsFkw/aguaGYJs=
-X-Received: by 2002:a2e:b4a3:: with SMTP id q3mr7870793ljm.65.1593439141472;
- Mon, 29 Jun 2020 06:59:01 -0700 (PDT)
+        Mon, 29 Jun 2020 14:49:14 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TBVFhI148910;
+        Mon, 29 Jun 2020 07:54:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcq51d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 07:54:42 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TBVJQu149286;
+        Mon, 29 Jun 2020 07:54:42 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcq50r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 07:54:42 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TBoKxn007004;
+        Mon, 29 Jun 2020 11:54:40 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma05fra.de.ibm.com with ESMTP id 31wwr892ye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 11:54:40 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TBsbpd49021128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 11:54:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B92E2A4054;
+        Mon, 29 Jun 2020 11:54:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 621DCA4060;
+        Mon, 29 Jun 2020 11:54:37 +0000 (GMT)
+Received: from osiris (unknown [9.171.82.53])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Jun 2020 11:54:37 +0000 (GMT)
+Date:   Mon, 29 Jun 2020 13:54:35 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        kernel-hardening@lists.openwall.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/s390/char/tty3270: Remove function callback casts
+Message-ID: <20200629115435.GB4468@osiris>
+References: <20200627125417.18887-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
-From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-Date:   Mon, 29 Jun 2020 15:58:50 +0200
-Message-ID: <CADDKRnAwnLKn5phH_Zxnje_rg10a-uro=H_sNq697G78BTQrkQ@mail.gmail.com>
-Subject: segmentation faults with kernels >v5.8-rc2
-To:     Mel Gorman <mgorman@techsingularity.net>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627125417.18887-1-oscar.carter@gmx.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_08:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=1 cotscore=-2147483648 mlxscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006290079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I frequently get segmentation faults in newer kernel >v5.8-rc2 e.g.
-Chrome_ChildIOT[1298]: segfault at 40d048 ip 000056111a41970d sp
-00007fdced6931b0 error 6 in chrome[561115f64000+785b000]
+On Sat, Jun 27, 2020 at 02:54:17PM +0200, Oscar Carter wrote:
+> In an effort to enable -Wcast-function-type in the top-level Makefile to
+> support Control Flow Integrity builds, remove all the function callback
+> casts.
+> 
+> To do this modify the function prototypes accordingly.
+> 
+> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> ---
+>  drivers/s390/char/tty3270.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-Bisection gave me the following
-first bad commit:
-
-e9c15badbb7b20ccdbadf5da14e0a68fbad51015 is the first bad commit
-commit e9c15badbb7b20ccdbadf5da14e0a68fbad51015
-Author: Mel Gorman <mgorman@techsingularity.net>
-Date:   Mon Jun 15 13:13:58 2020 +0100
-
-    fs: Do not check if there is a fsnotify watcher on pseudo inodes
-...
-
-I double checked by reverting this commit on top of v5.8-rc3 and the
-segmentation faults are gone.
-
-
-J=C3=B6rg
+Applied, thanks!
