@@ -2,115 +2,83 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED32C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F28F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467270;
-	bh=o/TYTOT46rvqTePLmOZ9wOwdpWqkKPYJbiOXuA4zRLQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9kXQR96REJLXbv6UmlEbo2gpxsRmZEdjC8vZxole4exoSCi2Uh3lB0G0tWZY2fsO
-	 yK7+wh7b0MemOuVlCRATnRsd7KWUuSx6GxyNnseoEcEu83UwhN2J/AYy5BH8Yovhvy
-	 rMaSA5PN1NIB86YNl2o4x57cc0T1hPUR8qIvDqL0=
+	by mail.kernel.org (Postfix) with ESMTP id 5CE7C20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391476AbgF2Vrt (ORCPT
+        id S1726723AbgF2Vry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9FC24199;
-        Mon, 29 Jun 2020 15:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443955;
-        bh=o/TYTOT46rvqTePLmOZ9wOwdpWqkKPYJbiOXuA4zRLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QE1fMEf19wZKWZ4k9XdIKKVc6+Ur60u4I2T2iE9hOwFQVvoyWT5clwx4x/vnP9aT2
-         tVW9nOSSyYz8UQB7b1H/0PR1fC01AbTyJQADZW1unE0cuAoe9tjU7FF/ryYkX7vc20
-         SZrq18p1FAtVv68jUngL78POMq+hmjH4OTz/bwY8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 057/265] Revert "i2c: tegra: Fix suspending in active runtime PM state"
-Date:   Mon, 29 Jun 2020 11:14:50 -0400
-Message-Id: <20200629151818.2493727-58-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:47:54 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46365 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391466AbgF2Vrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:47:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n24so14590650otr.13;
+        Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bg/8+MNYJDDCvPfevV5MmVW6eomjiYjuKJdPS9BuKRc=;
+        b=KrtLIKkstEXzLph+hH/92CRzqSHeAWo3KOzjjTkWcrVtsSr2KKh0OzcDqgOcxe8+Qp
+         b7NFKuu1zn/ZMMrPwkNhH1EkonUY88m3Bgy0luv4wlSSDt0luFg1XBcl5Ny2QHr/jFHI
+         lN25QpT2n9O4tkMAVDRIXDKcT0J9wikh9hfdxRy7euptOkW+8yJSS7TxlcfdcUpyb3oP
+         D8sdZa59FDQWJmhr3b702CrXoGaAO45EXdvR4Qa2UgBeDAmt/EKbhubG8XG0gVF33K4T
+         0Qapyhd9knt8a7LX37eArLbgVFfSJVK3nVD9mONOy09RxERJt4EAN0eL4za2Q+Won56r
+         whPg==
+X-Gm-Message-State: AOAM5335T8ZfZvTnFiUis89joIQO6t/GWXerNU4YC2r7DRXcnCkctsEl
+        wlRaSM29d/kdq6uE1xrxf62PHRBncRWszVucSjW9XjSBAFI=
+X-Google-Smtp-Source: ABdhPJyLaroA0htJgp6XAeP34onG9mo2tlAy+lOvoV/8lvJ36fwjwGDczPcQeW26SHMu76Ngn9P5yzkiLg9cpAETRvQ=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr14223999otb.107.1593467266175;
+ Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-2-hch@lst.de>
+In-Reply-To: <20200629193947.2705954-2-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jun 2020 23:47:35 +0200
+Message-ID: <CAMuHMdXXORM_yD4bqk+MQ1yEA1jmOjO9eyfnsjxY1a5E5isEcg@mail.gmail.com>
+Subject: Re: [PATCH 01/20] nfblock: stop using ->queuedata
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        Lars Ellenberg <drbd-dev@lists.linbit.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        linux-nvme@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Mon, Jun 29, 2020 at 9:40 PM Christoph Hellwig <hch@lst.de> wrote:
+> Instead of setting up the queuedata as well just use one private data
+> field.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 78ad73421831247e46c31899a7bead02740e4bef ]
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-This reverts commit 9f42de8d4ec2304f10bbc51dc0484f3503d61196.
+Gr{oetje,eeting}s,
 
-It's not safe to use pm_runtime_force_{suspend,resume}(), especially
-during the noirq phase of suspend. See also the guidance provided in
-commit 1e2ef05bb8cf ("PM: Limit race conditions between runtime PM
-and system sleep (v2)").
+                        Geert
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-tegra.c | 9 ---------
- 1 file changed, 9 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4c4d17ddc96b9..7c88611c732c4 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1769,14 +1769,9 @@ static int tegra_i2c_remove(struct platform_device *pdev)
- static int __maybe_unused tegra_i2c_suspend(struct device *dev)
- {
- 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
--	int err;
- 
- 	i2c_mark_adapter_suspended(&i2c_dev->adapter);
- 
--	err = pm_runtime_force_suspend(dev);
--	if (err < 0)
--		return err;
--
- 	return 0;
- }
- 
-@@ -1797,10 +1792,6 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
- 	if (err)
- 		return err;
- 
--	err = pm_runtime_force_resume(dev);
--	if (err < 0)
--		return err;
--
- 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
- 
- 	return 0;
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
