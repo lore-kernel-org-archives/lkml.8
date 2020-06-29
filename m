@@ -7,70 +7,69 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301752063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59FD2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jlf/+bu6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ml6IcAS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404084AbgF2Vpe (ORCPT
+        id S2404092AbgF2Vpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
+        Mon, 29 Jun 2020 17:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgF2Shn (ORCPT
+        with ESMTP id S1727124AbgF2Shm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86812C00F830
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 22so15255638wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E089CC00F836
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:48:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a6so16424980wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MXWPj65SsgiOS9zBWng/y3B2dHdHCzzNx8KN4IFF3T0=;
-        b=Jlf/+bu6MQO1H2Y1nOpHwS2pO3hXcUe/HKZCIAl8BbtiP7Kf0yEVgv1uZN932HwADc
-         133TMwpc3TtvSaPRg1M+WFSrLYTatgIZv2mcd/+YFO4O6JtO2y//GGZpwk8nnUrhGdYQ
-         hMsTYPm9uxGpufCX1GKnRNjRNFLSlDT5dQXKo2WuBUcsIN677aUB958DsS2Ufpw3Ef1L
-         nFdL6uQVDk5/7DG88H8PBdiJnSa0JYbh6CpzKvzVtC54HCTmX3MW25q6eJUouLqxLHNI
-         k0W+rWsYph1/w8326KtVbvoRim9UDd1hixtZ35evPkPMsFz+gjbP/UFmtrYOWW786+7s
-         t8lg==
+        bh=FwP8JJPtcWzsdQkUuHadbU0oZNWmZu/tGYbst3cTQzw=;
+        b=ml6IcAS0tlGAbS5Yi35OokE45RxF0PlZ3JGt98gnPLKHcCqHbUXqmS9PdkMcW8MEeD
+         nAdpEJRjuEjU33LDGSs8mOeNqej9cQUUwV1oCjYWIHXAYFjc4hoa+NFfqLh2BrXsxGwU
+         Aey8Ph72mumwG5PBRJkqa4N/anKJnrLqbygS9IIuId3q0EAMBtuaQiQXgQyF6j0tM5NJ
+         JtVTP07i2EIYkDv2ZhkHbxs0BLIMjYw+V1AyJY+Fvv4337ZFXkSSEqBTG0yBYsjHR1+N
+         KQfzuVk2r5gIZPDsYhj0V7yJQ2QsN/K2PUwgfx987ITORglch9ODjqGaZTYGtKkfKysx
+         VoOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MXWPj65SsgiOS9zBWng/y3B2dHdHCzzNx8KN4IFF3T0=;
-        b=anJ4TIRiOQvh0KHBMznK85FSvTtL+kAdBMBy+PPz8S64Gp1BDL6n6b92IiroS8LFPf
-         SlYPxRCxUyEh2jTxKwePUaNNIVIZklGkm6HCMO/sqhVTNa+xM8HQbT1Zyx6cYhRDYLas
-         +bxlQbn9isYwMNuZj7Yx+CMPLPLmltTXNyHk33idf0y0DwENo1NOkhsBJ0MMNrEyDL/L
-         9gzJR/T3eQz+0XMIZSmY6oWodQKf00kkQ0aQQh9gbbhkDLFTWTPSVH92KVJqj3SzXmWl
-         8+3Jh6J1mXCLgS1hSWUZIIcnmA8zpOu83UpEneQ9T/97CUnq9+3syosTuLiOwptcwZc5
-         rAEw==
-X-Gm-Message-State: AOAM530OKCywGj5dmzGR3p/WlA49tLNMLlx7I8g6y9S2nf+RkVdIb/9z
-        4SBePSlc/aY/oqdyjNsh1P/Z/g==
-X-Google-Smtp-Source: ABdhPJwFsoOz7r0nFMjUVsQWVlIpJeZRYkCocmfI+AhlI+deNKBfMmUDPAunud4nny3pLzOyhu25ug==
-X-Received: by 2002:a7b:cbc5:: with SMTP id n5mr16593514wmi.95.1593434876317;
-        Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
+        bh=FwP8JJPtcWzsdQkUuHadbU0oZNWmZu/tGYbst3cTQzw=;
+        b=a38cbfIyYWigE6geVJfMELlCIcyK/2cv+DDwUk4BRoaXpgSAzr0HGFsmBi/zItnnzd
+         XF0TfvH2VCE/YD8lyNpNQ90bqU1/Z4JN6l1vn3BRmm3v3ZX3b6voE12a7HZ8ZmvNxVyX
+         2ExFaIBihrr90f8GLU1khRDubUVXZJCsxiy9qWRGkJeqhfUWNMow5a9SW8hxiw1RB6Nm
+         wMo9JddRx16h5ABekhMTu8UYFhKJ8PKgp8CBl0m/AbIe0+X6Mi/GlaG82eUiS/gxV5cG
+         deHdXAMYFq+X4ol+f8sXX+kMkzocrivz/5BwvQLmzVGUFdbBpkoamlSUkLukoOU+AD18
+         CuMw==
+X-Gm-Message-State: AOAM533vnGArLsP9fsnfMjpx3QAi1LCh64nMt3I2IUqIf7/W7fej/0+v
+        qoEoCHXrnAHOoeMm6gzP3JXBRg==
+X-Google-Smtp-Source: ABdhPJyQbkunaPWZht+ebwYU90pHFsz7tFovsxHwg6ZqsdgLm+mjM/1dJO07LLGXW+vHYNN8S/XRew==
+X-Received: by 2002:adf:f350:: with SMTP id e16mr16440164wrp.43.1593434879632;
+        Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.55
+        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:47:55 -0700 (PDT)
+        Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         linux-pwm@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when validating duty cycle
-Date:   Mon, 29 Jun 2020 13:47:49 +0100
-Message-Id: <20200629124752.1018358-2-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Joachim Eastwood <manabian@gmail.com>,
+        NeilBrown <neilb@suse.de>, Grant Erickson <marathon96@gmail.com>
+Subject: [PATCH 4/4] pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc header
+Date:   Mon, 29 Jun 2020 13:47:52 +0100
+Message-Id: <20200629124752.1018358-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
 References: <20200629124752.1018358-1-lee.jones@linaro.org>
@@ -81,37 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'duty' here is an unsigned int, thus checking for <0 will always
-evaluate to false.
+Argument descriptions must be prepended with a '@' to be understood
+by the kerneldoc tooling/parsers/validators.
 
 Fixes the following W=1 warning:
 
- drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+  drivers/pwm/pwm-omap-dmtimer.c:70: warning: Function parameter or member 'dm_timer_pdev' not described in 'pwm_omap_dmtimer_chip'
 
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-pwm@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Joachim Eastwood <manabian@gmail.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: Grant Erickson <marathon96@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee70..46f0a45e9049c 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -143,8 +143,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		value = rate * state->duty_cycle;
- 		duty = div64_u64(value, div);
- 
--		if (period < IPROC_PWM_PERIOD_MIN ||
--		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
-+		if (period < IPROC_PWM_PERIOD_MIN)
- 			return -EINVAL;
- 
- 		if (period <= IPROC_PWM_PERIOD_MAX &&
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 0d31833db2e2c..75cea7f2aff5e 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -58,7 +58,7 @@
+  * @mutex:		Mutex to protect pwm apply state
+  * @dm_timer:		Pointer to omap dm timer.
+  * @pdata:		Pointer to omap dm timer ops.
+- * dm_timer_pdev:	Pointer to omap dm timer platform device
++ * @dm_timer_pdev:	Pointer to omap dm timer platform device
+  */
+ struct pwm_omap_dmtimer_chip {
+ 	struct pwm_chip chip;
 -- 
 2.25.1
 
