@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1975C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 364C020809
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C1C20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459711;
-	bh=MCYkuFW+5XeYXr71zGuhSH25Gd1iQl/aqkrPgJdzNhw=;
+	s=default; t=1593459715;
+	bh=7GUbe3H6bGsgLR7A+WgWytyJG14XwkQ1TsxdR+n07kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2UQF9bz4Ffs1E4rmbd2x5I/ndIuvhjpuv0YULNb7e1vI57M4yPQCgEiz1SVNLqCAd
-	 9g+0dR7b53SPW+3n971m5xMukyV8P2K4anAQZITuhPiP7AsNjnkYg+J5DxwCgS5fKG
-	 H/8sqNDATW3yQqtZTxQWqnNaJcBEWYaybINZZDjk=
+	b=P+etOimjDhsWnUUt0BaiRkbwoRvFMYlzCGF3lGXbK30OasZY9P/YScc7Wa9eoniVU
+	 4JzXjNxFdS+gFi3IPnXFacUQIUepq9hxFN8ShRNYEN0QEZPP99LFl4vq9NicmH9SCV
+	 Cgk8aNfA2lu+FkvqrnEbDTj+uiut9e3VrzNGvSIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbgF2Tlt (ORCPT
+        id S2387513AbgF2Tly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387828AbgF2Tkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387841AbgF2Tkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED0512481F;
-        Mon, 29 Jun 2020 15:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9EC6248A9;
+        Mon, 29 Jun 2020 15:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444339;
-        bh=MCYkuFW+5XeYXr71zGuhSH25Gd1iQl/aqkrPgJdzNhw=;
+        s=default; t=1593444404;
+        bh=7GUbe3H6bGsgLR7A+WgWytyJG14XwkQ1TsxdR+n07kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7VthXyju+5Thp9Rb+2p2l9eQJYZmFghR284PvvQ2ftO6tVn3OC8DnSAn+wnCkNvW
-         jcK9mbyoKm1c98MtwjDgbZ/6UqM96ZbnEq1hlDxFcwFq4rTPSrGCXzB1rFwHHUDDfV
-         UZL57C9Qkg8B6F0p15c+WJ/BmVaCRmAlB5CJH5CY=
+        b=v9HPiALfdad6U4NhgxUR0vIHA+N9YcRxHHcm8cDn/KOME4QLevpJ2EAyDP4+xSbVi
+         78SzfHozyBir4T7xQSlQx7NbxzVRSm/0vL+suWmU2BBP17mhEuIFJ1nfOA2kw8Gs7y
+         wvzSmlDYybDSRunD8BPmMjRdzlxaH6kJFtoVlOpo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 014/178] openvswitch: take into account de-fragmentation/gso_size in execute_check_pkt_len
-Date:   Mon, 29 Jun 2020 11:22:39 -0400
-Message-Id: <20200629152523.2494198-15-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 082/178] rxrpc: Fix handling of rwind from an ACK packet
+Date:   Mon, 29 Jun 2020 11:23:47 -0400
+Message-Id: <20200629152523.2494198-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,56 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 17843655708e1941c0653af3cd61be6948e36f43 ]
+[ Upstream commit a2ad7c21ad8cf1ce4ad65e13df1c2a1c29b38ac5 ]
 
-ovs connection tracking module performs de-fragmentation on incoming
-fragmented traffic. Take info account if traffic has been de-fragmented
-in execute_check_pkt_len action otherwise we will perform the wrong
-nested action considering the original packet size. This issue typically
-occurs if ovs-vswitchd adds a rule in the pipeline that requires connection
-tracking (e.g. OVN stateful ACLs) before execute_check_pkt_len action.
-Moreover take into account GSO fragment size for GSO packet in
-execute_check_pkt_len routine
+The handling of the receive window size (rwind) from a received ACK packet
+is not correct.  The rxrpc_input_ackinfo() function currently checks the
+current Tx window size against the rwind from the ACK to see if it has
+changed, but then limits the rwind size before storing it in the tx_winsize
+member and, if it increased, wake up the transmitting process.  This means
+that if rwind > RXRPC_RXTX_BUFF_SIZE - 1, this path will always be
+followed.
 
-Fixes: 4d5ec89fc8d14 ("net: openvswitch: Add a new action check_pkt_len")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by limiting rwind before we compare it to tx_winsize.
+
+The effect of this can be seen by enabling the rxrpc_rx_rwind_change
+tracepoint.
+
+Fixes: 702f2ac87a9a ("rxrpc: Wake up the transmitter if Rx window size increases on the peer")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/actions.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/rxrpc/input.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 99352f09deaac..3d96dab104490 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -1146,9 +1146,10 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
- 				 struct sw_flow_key *key,
- 				 const struct nlattr *attr, bool last)
- {
-+	struct ovs_skb_cb *ovs_cb = OVS_CB(skb);
- 	const struct nlattr *actions, *cpl_arg;
-+	int len, max_len, rem = nla_len(attr);
- 	const struct check_pkt_len_arg *arg;
--	int rem = nla_len(attr);
- 	bool clone_flow_key;
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 3be4177baf707..22dec6049e1bb 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -723,13 +723,12 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
+ 	       ntohl(ackinfo->rxMTU), ntohl(ackinfo->maxMTU),
+ 	       rwind, ntohl(ackinfo->jumbo_max));
  
- 	/* The first netlink attribute in 'attr' is always
-@@ -1157,7 +1158,11 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
- 	cpl_arg = nla_data(attr);
- 	arg = nla_data(cpl_arg);
++	if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
++		rwind = RXRPC_RXTX_BUFF_SIZE - 1;
+ 	if (call->tx_winsize != rwind) {
+-		if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
+-			rwind = RXRPC_RXTX_BUFF_SIZE - 1;
+ 		if (rwind > call->tx_winsize)
+ 			wake = true;
+-		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial,
+-					    ntohl(ackinfo->rwind), wake);
++		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial, rwind, wake);
+ 		call->tx_winsize = rwind;
+ 	}
  
--	if (skb->len <= arg->pkt_len) {
-+	len = ovs_cb->mru ? ovs_cb->mru + skb->mac_len : skb->len;
-+	max_len = arg->pkt_len;
-+
-+	if ((skb_is_gso(skb) && skb_gso_validate_mac_len(skb, max_len)) ||
-+	    len <= max_len) {
- 		/* Second netlink attribute in 'attr' is always
- 		 * 'OVS_CHECK_PKT_LEN_ATTR_ACTIONS_IF_LESS_EQUAL'.
- 		 */
 -- 
 2.25.1
 
