@@ -2,142 +2,106 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F02C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3FD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459185;
-	bh=K/E+tH6zEvXjyQ1suexQYQF8pVMxBHhkigunJTOHRoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fI7B11BfPjVU1LmKUyNoRKp0VBIdLkJQYO9TpWTbuU6wuNY9KExfEPJAWYHE0epx1
-	 d71YeOWGXlQvGvmG8uVUTRJrpD1q2TH3J6c3dsnu16U69HYRei5VNBHhAVoTgSqJwT
-	 zoMSDmI61zeOD5wskOStlm9bP7kPgaRNRZkVOUJY=
+	by mail.kernel.org (Postfix) with ESMTP id 9376B2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LWJedSK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbgF2TdD (ORCPT
+        id S1732811AbgF2TdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
+        Mon, 29 Jun 2020 15:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733235AbgF2Tcp (ORCPT
+        with ESMTP id S1733234AbgF2Tcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:32:45 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE1DC02F002
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:27 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c11so9213409lfh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:27 -0700 (PDT)
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDE0C0307AF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:55:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so17044284wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZLYf85kR83hcUBrWvAXG8Wj7+vy80vScSZPRychjVjA=;
+        b=LWJedSK7vsBqcOAmUtGOZfumg1m6WZSEpuhdmRAZmilonlGtrZ+oyu4Xmq4qljvXoz
+         fxFmvJ8dcvonuqckrIidX/9KdbFm4+bh3/izrA9XHkRvWc3/iDt9uwaOcc1ykoLVTyNf
+         l82zMGLrTJ25BETRb/Efx3mAGjQSdoQkMl9OzYSpqqNKEeLC2Fc5LKTv4uKVg6ckhMj/
+         lskq7ye7Eyddf5MSKTzh1a9kEbgaioraiu4/pmNoC5NeU5xoEnujNhFEB8NU+VKbszRl
+         x3j3zt80UZa2rD5u4GNWyG146Vr1EuG/uhncqg/fHQyFVr8Flr8TpyI59Z7krJmMqBmk
+         zTNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YSrvY7ndQQ0VwYyPuUYQZgjUMOLCrC7/BsK3Jg70uiA=;
-        b=EpQ/dIMdwCYLaRtO5Nv/wtgebffrzaIRTec6A8uPQLjJiTw/a0L6udd4vIUrBW/z2H
-         PKCbFthfmiv7Xjf6wHm9W0BRiKErd/U9vpsYfZ67IDu3GUd40sBdcFjxzKsivxfBxVKU
-         WB1qHSJxp7J+10CQOjX9GZu/5VL3waWRuX1AIDwExBLoLpiVMBp2GL5nRpHUcKFAhkyk
-         tdzJO2JOH+JYflIsWbFApZv+CzvsLEhffvN/Gp1DQFiIitTPIfn0m+mew6jcbk9ot3AU
-         zhQuNLaLtFGF7c5VWjYKEV3mhKLmtdJTdjcz9rsF8wf15Wp1rEg9R8w1FqAU3xPrfUks
-         mvbw==
-X-Gm-Message-State: AOAM5328u0KiphH9u5eeKetW+I2wb03wZYoKwZ+BkhL4+2FIyTnVak+C
-        HvlZJkJT40PWNpb7tUYU4Ok=
-X-Google-Smtp-Source: ABdhPJxlXL/WPQmHiWHBUnNiCTuuoYT2K4kdoHBsIw1V5XczaXf3Hns3BgilQStZ/HVmyNueCKOooQ==
-X-Received: by 2002:ac2:518c:: with SMTP id u12mr9295373lfi.91.1593441806019;
-        Mon, 29 Jun 2020 07:43:26 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id v19sm2858051lfi.65.2020.06.29.07.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:43:25 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jpv0H-0005HB-DZ; Mon, 29 Jun 2020 16:43:25 +0200
-Date:   Mon, 29 Jun 2020 16:43:25 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Johan Hovold <johan@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH 4/5] mfd: sprd-sc27xx-spi: Fix divide by zero when
- allocating register offset/mask
-Message-ID: <20200629144325.GV3334@localhost>
-References: <20200629123215.1014747-1-lee.jones@linaro.org>
- <20200629123215.1014747-5-lee.jones@linaro.org>
- <20200629130644.GU3334@localhost>
- <20200629140137.GK177734@dell>
- <CADBw62r_tkGEr9kHpojAi+fJ+qUqbsc-DQgG1TUAwOdbDXTgNQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZLYf85kR83hcUBrWvAXG8Wj7+vy80vScSZPRychjVjA=;
+        b=Ivklo+SHhXxzSQzRlGwK46KmwlfuND7RpvDyVC26eU8gHQaAMFQHmJhHGT+tolEAX2
+         7vNLVP00XlV+rXK3dbAddO7nmY6HxCJ4bhps3gLJk6BroB/R4jCUJ0C0034putHe9YD4
+         hI/U7IAUgXgOBDDgMTaPk04QguN0AvlO70GdJBZBtj602K1UaTmc0ppVkgaZHwWm6hPq
+         JOx/btoKk9aYWokZRbUVbJsflvbR1vz/fh8cZOydT2okHQ1Q+7BJkLiPKOdA1J0RBRn3
+         cEgXthSJ9Bj84dCjgsXvOVQMxgt/h/r+DeqEhxmcfZ4bwABHtnEHwnazhzicWHxHfwG8
+         xCOg==
+X-Gm-Message-State: AOAM531ZcGobE8OfGoBodzqTQs6AgaPx5e12gUmxHX6zMGq+V3E+d2NN
+        18dKntmI6PQUs3xHjQbYxLY6t2ElqK4/nU7UxjnXpg==
+X-Google-Smtp-Source: ABdhPJz9h6Cq1FWLxlQEINaOnw/gdytwi8Ik6QwjWFXm6YyNY7WE8CKP9YxrAml4Sjw812CKlTvMnxmA4R2YZ4kzcbg=
+X-Received: by 2002:adf:df03:: with SMTP id y3mr16828999wrl.376.1593446149156;
+ Mon, 29 Jun 2020 08:55:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADBw62r_tkGEr9kHpojAi+fJ+qUqbsc-DQgG1TUAwOdbDXTgNQ@mail.gmail.com>
+References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-8-jolsa@kernel.org>
+ <CAP-5=fUB3cs7Px6NkpBtWaWdR5-qQGAd2hAGjQjyMJt=bDKXOA@mail.gmail.com> <20200628215507.GM2988321@krava>
+In-Reply-To: <20200628215507.GM2988321@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 29 Jun 2020 08:55:37 -0700
+Message-ID: <CAP-5=fWLYkxYbc8Qtk331X4_HudO=NukEzSDiJXF=rf2Tghovg@mail.gmail.com>
+Subject: Re: [PATCH 07/10] perf tools: Collect other metrics in struct metric_expr
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:35:06PM +0800, Baolin Wang wrote:
-> On Mon, Jun 29, 2020 at 10:01 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Mon, 29 Jun 2020, Johan Hovold wrote:
-> >
-> > > On Mon, Jun 29, 2020 at 01:32:14PM +0100, Lee Jones wrote:
-> > > > Since ddata->irqs[] is already zeroed when allocated by devm_kcalloc() and
-> > > > dividing 0 by anything is still 0, there is no need to re-assign
-> > > > ddata->irqs[i].* values.  Instead, it should be safe to begin at 1.
-> > > >
-> > > > This fixes the following W=1 warning:
-> > > >
-> > > >  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
-> > > >
-> > > > Cc: Orson Zhai <orsonzhai@gmail.com>
-> > > > Cc: Baolin Wang <baolin.wang7@gmail.com>
-> > > > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > ---
-> > > >  drivers/mfd/sprd-sc27xx-spi.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> > > > index c305e941e435c..694a7d429ccff 100644
-> > > > --- a/drivers/mfd/sprd-sc27xx-spi.c
-> > > > +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> > > > @@ -251,7 +251,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
-> > > >             return -ENOMEM;
-> > > >
-> > > >     ddata->irq_chip.irqs = ddata->irqs;
-> > > > -   for (i = 0; i < pdata->num_irqs; i++) {
-> > > > +   for (i = 1; i < pdata->num_irqs; i++) {
-> > > >             ddata->irqs[i].reg_offset = i / pdata->num_irqs;
-> > > >             ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
-> > > >     }
+On Sun, Jun 28, 2020 at 2:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Fri, Jun 26, 2020 at 02:10:57PM -0700, Ian Rogers wrote:
+> > On Fri, Jun 26, 2020 at 12:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
 > > >
-> > > This doesn't look right either.
+> > > Add 'other' metrics into struct metric_expr object,
+> > > so they are accessible when computing the metric.
 > > >
-> > > First, the loop is never executed if num_irqs is zero.
+> > > Storing just name and expression itself, so the metric
+> > > can be resolved and computed.
 > >
-> > The point of the patch is that 0 entries are never processed.
+> > Nit, other vs something like referenced_metric but otherwise lgtm.
+>
+> I'd like to keep metric prefix
+>
+>   struct metric_ref ?
 
-So what's the problem? There's no division by zero here.
+Sounds good to me. Thanks,
+Ian
 
-And what compiler are you using, Lee? Seems broken.
-
-> > > Second, the current code looks bogus too as reg_offset is always set to
-> > > zero and mask to BIT(i)...
-> 
-> Now the result is correct, since all PMIC irq mask bits are in one
-> register now, which means the reg_offset is always 0 can work well.
-> But I think the logics still can be improved if our PMIC irq numbers
-> are larger than 32 in future.
-
-The code is still bogus as pointed out above. Why do you bother to
-divide by num_irqs at all?
-
-And what have you guys been smoking? ;)
-
-Johan
+> jirka
+>
