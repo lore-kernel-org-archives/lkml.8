@@ -2,101 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D17C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1536E208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="T7f3fBEH"
+	by mail.kernel.org (Postfix) with ESMTP id 1C41421707
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593465891;
+	bh=bvGdXmQvh4zxOJQHNFgDjI538+UWRkKL751z6SCJqxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yzTEcG1DyV91pTtquSSpLEdqiT3yqKTqcuUYUO8cip3UfGn1bI1h8RsMBLy/W6YtC
+	 Q4ihydFDfcJyv4mB/5d2p8kBgpD/SqhDhQPX7/xVSL4MNyZyHqpL5aPiddDZ2B+orv
+	 bvoOe0+H13PLbyUrp84GGOT/nITteaUPJFHBYs8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391033AbgF2VYs (ORCPT
+        id S2391025AbgF2VYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:24:48 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:27801 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390666AbgF2VYj (ORCPT
+        Mon, 29 Jun 2020 17:24:45 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46325 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391015AbgF2VYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:24:39 -0400
-X-Greylist: delayed 395 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 17:24:38 EDT
-Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id DB96540186E;
-        Mon, 29 Jun 2020 14:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1593465481;
-        bh=6rzpagTEz/0c76jqpV4RCeaagtLY9blrBtt6YCEHTrw=;
-        h=Date:To:Subject:From:From;
-        b=T7f3fBEHpUZytdu2dNWE4IOyY2k7FnzrY+o/OenHEBt9S58mhUR6c/sbUsE90U9um
-         63HFFog4ODYUbrqhwyMkQ343mLRQk+Czh8yoTjh+Pm4O/tpDpKx1PT5w0q3r/QyAGr
-         PRGBqfHrx/7eQB71w/KdbZrJZxIr5UEq0GjbQ3HrBZw1K2F0Y7AaHSuAJ6ig3TLcg8
-         3RNjXFcd9utZlJ6YFi3eUfn/ZX64DNvg+C6tvNfESlrjJjI6SFLQJWFKnw+HEH4hQR
-         r0evEFRhEBprt3Jv6Zxm+wdSvOgEYxn+fHauuuUYP52erWnuWY0rL1ObWwXLXZka/8
-         DrkZaIFaGJmGA==
-Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
-        id C3D7095C0900; Mon, 29 Jun 2020 14:18:01 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 14:18:01 -0700
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, kuba@kernel.org,
-        davem@davemloft.net, jeffrey.t.kirsher@intel.com,
-        fruggeri@arista.com
-Subject: [PATCH] igb: reinit_locked() should be called with rtnl_lock
-User-Agent: Heirloom mailx 12.5 7/5/10
+        Mon, 29 Jun 2020 17:24:40 -0400
+Received: by mail-il1-f196.google.com with SMTP id w9so15791277ilk.13;
+        Mon, 29 Jun 2020 14:24:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=70WJ+qIYv3twQa9oIbP0W90ImfwlEJn6IZKm97PIadY=;
+        b=ol/1LFhs1z7BNaP/K6lQ8O0LLi06XiiPB9a95vlfGkuTjpWzptzhVHUUYewi9wq/aV
+         nNWC1GVSw9/vmVm3kNMf9hZJqmjW/ElRPvSajxM4cCqThIbqht8kpBZ1CqFXPk3h3xH4
+         Gsqjm60V1laAKX8c2mDyjvHxgZZyibA+AV9LS0bGJEBv0CmJfIWOd0t8UhzH7OVZzDwD
+         qJPPzLuA/t/0Zc+Os0TZCPA/cBAHpLS5AdSkwb7Hq8kNkeT4gV8WZJSB8J48c9rAq246
+         1zn7Y1E0SFHYYwX/4yOnnEhc1/4Lq/WgV0dwSDX7G1uoWmoUvbIZxNhm9rkeBL/AUpDw
+         5PLg==
+X-Gm-Message-State: AOAM5303Zxmeo5vv7DzzMF4Zlv8d2vOtBRZiD3p/CUVGFeF90Isa2o1f
+        j/PuPwTm0N8DcswPZIhWIoyLP+A7yA==
+X-Google-Smtp-Source: ABdhPJx7N1hclSAGU5RD7z6LsZcvE2bJ0953gV2C1HnxvIs1jAiI/HWiPN7Jy8gBh7z92FSSfsW0iQ==
+X-Received: by 2002:a92:d6d2:: with SMTP id z18mr6547533ilp.272.1593465878953;
+        Mon, 29 Jun 2020 14:24:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id o66sm621346ilb.26.2020.06.29.14.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:24:38 -0700 (PDT)
+Received: (nullmailer pid 2934095 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:24:36 -0000
+Date:   Mon, 29 Jun 2020 15:24:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: fix error in 'make clean' after 'make
+ dt_binding_check'
+Message-ID: <20200629212436.GA2933965@bogus>
+References: <20200625170434.635114-1-masahiroy@kernel.org>
+ <20200625170434.635114-2-masahiroy@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200629211801.C3D7095C0900@us180.sjc.aristanetworks.com>
-From:   fruggeri@arista.com (Francesco Ruggeri)
+Content-Disposition: inline
+In-Reply-To: <20200625170434.635114-2-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We observed a panic in igb_reset_task caused by this race condition
-when doing a reboot -f:
+On Fri, 26 Jun 2020 02:04:31 +0900, Masahiro Yamada wrote:
+> We are having more and more schema files.
+> 
+> Commit 8b6b80218b01 ("dt-bindings: Fix command line length limit
+> calling dt-mk-schema") fixed the 'Argument list too long' error of
+> the schema checks, but the same error happens while cleaning too.
+> 
+> 'make clean' after 'make dt_binding_check' fails as follows:
+> 
+>   $ make dt_binding_check
+>     [ snip ]
+>   $ make clean
+>   make[2]: execvp: /bin/sh: Argument list too long
+>   make[2]: *** [scripts/Makefile.clean:52: __clean] Error 127
+>   make[1]: *** [scripts/Makefile.clean:66: Documentation/devicetree/bindings] Error 2
+>   make: *** [Makefile:1763: _clean_Documentation] Error 2
+> 
+> 'make dt_binding_check' generates so many .example.dts, .dt.yaml files,
+> which are passed to the 'rm' command when you run 'make clean'.
+> 
+> I added a small hack to use the 'find' command to clean up most of the
+> build artifacts before they are processed by scripts/Makefile.clean
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/Makefile | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-	kworker			reboot -f
-
-	igb_reset_task
-	igb_reinit_locked
-	igb_down
-	napi_synchronize
-				__igb_shutdown
-				igb_clear_interrupt_scheme
-				igb_free_q_vectors
-				igb_free_q_vector
-				adapter->q_vector[v_idx] = NULL;
-	napi_disable
-	Panics trying to access
-	adapter->q_vector[v_idx].napi_state
-
-This commit applies to igb the same changes that were applied to ixgbe
-in commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
-rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
-reset subtask").
-
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
----
- drivers/net/ethernet/intel/igb/igb_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 8bb3db2cbd41..b79a78e102f3 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -6224,9 +6224,11 @@ static void igb_reset_task(struct work_struct *work)
- 	struct igb_adapter *adapter;
- 	adapter = container_of(work, struct igb_adapter, reset_task);
- 
-+	rtnl_lock();
- 	igb_dump(adapter);
- 	netdev_err(adapter->netdev, "Reset adapter\n");
- 	igb_reinit_locked(adapter);
-+	rtnl_unlock();
- }
- 
- /**
-
+Applied, thanks!
