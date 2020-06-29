@@ -2,102 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63572C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1D120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8B920768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEytamTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbgF2VFL (ORCPT
+        id S2390280AbgF2VFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:05:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:34209 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731103AbgF2VFC (ORCPT
+        Mon, 29 Jun 2020 17:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731102AbgF2TMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:05:02 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mofst-1j0tDQ1GIb-00p4cK; Mon, 29 Jun 2020 13:37:25 +0200
-Received: by mail-qk1-f176.google.com with SMTP id l6so14871500qkc.6;
-        Mon, 29 Jun 2020 04:37:25 -0700 (PDT)
-X-Gm-Message-State: AOAM5316NKX+qTNj84k+pnnAbrw+5/y3z0doj76V5dvfxnvpdvWBZZxA
-        oPBAKeZOuefuW87vz3MvtjheK4d4eFGXVOZNWe4=
-X-Google-Smtp-Source: ABdhPJwGCaTaF/6lDsrwnIDXUL4eFvWm6Sxzf0vyht5U7St+DoN5wF2vfKmThITTZuTVI5ngfEi0EaDM8L8TwiPm6us=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr14536437qke.286.1593430644096;
- Mon, 29 Jun 2020 04:37:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com> <1593410042-10598-5-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593410042-10598-5-git-send-email-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 13:37:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2yXFbGxuSRoC5_dYBujnAtVoEMXe50V7QYjPYhqra7nA@mail.gmail.com>
-Message-ID: <CAK8P3a2yXFbGxuSRoC5_dYBujnAtVoEMXe50V7QYjPYhqra7nA@mail.gmail.com>
-Subject: Re: [PATCH V3 04/10] clk: imx: Support building SCU clock driver as module
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, oleksandr.suvorov@toradex.com,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:fFz7B6CKzVGMcNOoqhEQ+Q6zaYdSbNLhT5RYA3WT73gjqRLfv3G
- x7gM7jqWl0DIDuUE2yeUfaY4Q6j4CH/U5slfRIMwAtxUWXQG9znYWhecwuWQAAt3obh02PH
- nAVFs/46bBHnM6Wnkra55WG0vQlGd5xeRMOOtcD4b57A6Q0f2WZfsewPe2YNGRXOYbeUMbq
- 4+1nzXnBh9Mn//puJkazg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/dLsAqa9/LA=:J29ItYNPuOs7yVt7PmEaOm
- 2v2y8akWwVq7bOTB2Vcf4yZ/oIoVEuk8+LJ8hrU0GB7yWvrX98hlqxZgHgLk6vc0FGYY6Qtqd
- DvvNXvEVI4dFqtgax2DQ4HfCGWxl7/BIzD6ZNHXCL+iwMV4w46fGzneUKB+kG6vKVtrx3BDcY
- s7hWyqTQIOEt9xiZKl7wT98Kw+LymsQwC8bhhy0nHMeou0VSjC/1LxzmyGDXp8khga3gSZDAd
- 8xsbNvJDtvTy66DvQuNQjqt4FFchgUe3LqPGtPGW4ijDh9DR/WqN95ArmdQV7p1ngJ/tEeRPT
- 0kGF5oevsi1jlBHmhfqaXtkCx33l6xYDfFLnUSGroQ6f+V1pthqD28lEwYdV7IxEtgpcCRATU
- 9maTfhYMr0hf/mxSpXXjT9IZ3vGZlDEa5x8tRwoFh74SQxETdd+1OGUNC1O9sHSbG9N0uJYhE
- hTz+DPwTWMNDA58pVwlGeyrhT1NVMSHf/o81B1u+iJIAwE22C6bNsHZy5JzaIpipkTd4MTyJM
- 0UFmaTl0Vhie6wRyYgSkPlpFt1feGcyUkcK0viTTGG4AbxglJd4p3vhKI43BCcsH+0DE03k8s
- EYvt5+aCpabCeS5Mjec+CxzFGsP9LT9P35VHD4aghfdY451Ua2rhA5djiNgLZFDZjj1LiLus2
- ECJ1H0qq51Uq1qZ0AqO1yHUnU5UnmVKLuvJhZ1T9U4yRLydFpTZpibPcIXqeWRAf4MDaXwwYJ
- J0Jv/l/XojF1cCaIo4YezUaifpf49tasTY9UapyhoddqJ3MMt6RYQuNbE8kLXRLmjVPJMo9NR
- k6sKxMiz66ma7v98h2709HyGWpfxuA+9aQ7Bhw4KzQajkV45lg=
+        Mon, 29 Jun 2020 15:12:44 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02BEC008611;
+        Mon, 29 Jun 2020 03:26:41 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b16so7696154pfi.13;
+        Mon, 29 Jun 2020 03:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZaXV5svWea/pmwM7hzMGgBPV83SPmfUEW0Ej1s60jmc=;
+        b=iEytamTkwbkYbE5TzWpiBqob8St2uHARoRQkWmGEvGjGM/sM00TS1/InbzaCXu8Mb9
+         40VNJ3jWWKf9OKd7Jxu+jPDaf0I+bUWkWe+NFnofOk6kt7cs7eYv0LuY6ddVGj1Lgs8X
+         JG2Ts5p49DPgfZwCIS7Z6q877zeCpSInQkgsN7iBxHuxeqwkMmALV6JMnoJ7313+g6j1
+         EEsZMBPM9CMTZ4ZnBeJMMIB1sojjIOsh3jHBRsHGRZH6Jlc3lhSnQtyrY8mYqQT8Vw/i
+         pS8oP1mH7MtGwk+lm5R63oIERNZoYwRalDxKTq4VRYXpzkVpTsJl23SWnh+qA6gvORk6
+         DmvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZaXV5svWea/pmwM7hzMGgBPV83SPmfUEW0Ej1s60jmc=;
+        b=YOD2s1tDZd1e8se2Em8K28Wv3CeHAufN5LvTDWprQqKEpM6oko5Fvx4fqnM8CwsxSK
+         ZGCgvDZxdIj65vF7inTib1OY4jYKlDUbOzWUsIx6VA0DM9G34sEcBU8Tnh81kWPrB19Y
+         vzg9S+cp0+6zlV8uq8FUQnHEvZ3aBM1tEfjVQ5DKPNKtx66xkicrdNjboGM8aIYESnQ7
+         ZeeMggq5ewf2QlqelWxaPNldSlUDe3Ueq5jjius1A5gOmT+ywL7W8F71CVn/L0oUnoUL
+         wXWiubmQUyZyyuEC+VpomtSS62jayZX1FH8MD/chopQEX2pc5+2bBneoEAR019IIYg3Q
+         gXkQ==
+X-Gm-Message-State: AOAM532bpN27d3+joLNHUJikUMdpqWQnjoklrHn6KyLRUGtiSBzsQsGB
+        YxrZg3Z+oXR1hC1hHrR/jrsyDDkg
+X-Google-Smtp-Source: ABdhPJzcRu4J4/PMWF7WlwCJADHEUVQICiGl6R7X5TQXcMQk5fnwdXbNxuHGqxuZ6mGYS4Vh/B1oHg==
+X-Received: by 2002:a63:5863:: with SMTP id i35mr7436682pgm.390.1593426401185;
+        Mon, 29 Jun 2020 03:26:41 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id 22sm15400181pfx.94.2020.06.29.03.26.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 03:26:40 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] KVM: X86: Fix async pf caused null-ptr-deref
+Date:   Mon, 29 Jun 2020 18:26:31 +0800
+Message-Id: <1593426391-8231-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 8:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+From: Wanpeng Li <wanpengli@tencent.com>
 
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -21,9 +21,9 @@ obj-$(CONFIG_MXC_CLK) += \
->         clk-sscg-pll.o \
->         clk-pll14xx.o
->
-> -obj-$(CONFIG_MXC_CLK_SCU) += \
-> -       clk-scu.o \
-> -       clk-lpcg-scu.o
-> +mxc-clk-scu-objs += clk-lpcg-scu.o
-> +mxc-clk-scu-objs += clk-scu.o
-> +obj-$(CONFIG_MXC_CLK_SCU) += mxc-clk-scu.o
+Syzbot reported that:
 
-It looks like the two modules are tightly connected, one is useless without the
-other. How about linking them into a combined module and dropping the
-export statement?
+  CPU: 1 PID: 6780 Comm: syz-executor153 Not tainted 5.7.0-syzkaller #0
+  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+  RIP: 0010:__apic_accept_irq+0x46/0xb80
+  Call Trace:
+   kvm_arch_async_page_present+0x7de/0x9e0
+   kvm_check_async_pf_completion+0x18d/0x400
+   kvm_arch_vcpu_ioctl_run+0x18bf/0x69f0
+   kvm_vcpu_ioctl+0x46a/0xe20
+   ksys_ioctl+0x11a/0x180
+   __x64_sys_ioctl+0x6f/0xb0
+   do_syscall_64+0xf6/0x7d0
+   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ 
+The testcase enables APF mechanism in MSR_KVM_ASYNC_PF_EN with ASYNC_PF_INT 
+enabled w/o setting MSR_KVM_ASYNC_PF_INT before, what's worse, interrupt 
+based APF 'page ready' event delivery depends on in kernel lapic, however, 
+we didn't bail out when lapic is not in kernel during guest setting 
+MSR_KVM_ASYNC_PF_EN which causes the null-ptr-deref in host later. 
+This patch fixes it.
 
-      Arnd
+Reported-by: syzbot+1bf777dfdde86d64b89b@syzkaller.appspotmail.com
+Fixes: 2635b5c4a0 (KVM: x86: interrupt based APF 'page ready' event delivery)
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/x86.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 00c88c2..1c0b4f5 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2693,6 +2693,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+ 	if (data & 0x30)
+ 		return 1;
+ 
++	if (!lapic_in_kernel(vcpu))
++		return 1;
++
+ 	vcpu->arch.apf.msr_en_val = data;
+ 
+ 	if (!kvm_pv_async_pf_enabled(vcpu)) {
+-- 
+2.7.4
+
