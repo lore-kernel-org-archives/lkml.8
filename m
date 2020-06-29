@@ -2,204 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E430DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E29520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3592065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YiHYnDoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbgF2Utf (ORCPT
+        id S2387672AbgF2Uti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        Mon, 29 Jun 2020 16:49:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731487AbgF2TNk (ORCPT
+        with ESMTP id S1731358AbgF2TNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:40 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA57C0076FC;
-        Mon, 29 Jun 2020 04:26:43 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 6C20C2A2236
-Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when
- rockchip,pmu is absent
-To:     Chanwoo Choi <cw00.choi@samsung.com>, Marc Zyngier <maz@kernel.org>
-Cc:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
- <20200622152824.1054946-1-maz@kernel.org>
- <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
- <87tuyue142.wl-maz@kernel.org>
- <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
- <3de68490-d788-e416-dd5f-d4d6e7eca61a@collabora.com>
- <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <267623b3-9fc5-886e-3554-b86fa1e57ccb@collabora.com>
-Date:   Mon, 29 Jun 2020 13:26:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C68C00862A;
+        Mon, 29 Jun 2020 03:55:11 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wPX01jWzz9s6w;
+        Mon, 29 Jun 2020 20:54:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1593428108;
+        bh=Ikj+QFFobl8b3GOszRTI8T5Tvh6wpN/NDrkClHklAgw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=YiHYnDocf/5avJ1oQV/ZaHBo/5KnMj7//ysZQFYyI4CFWIs0UV549pLr1FezSCW5R
+         7XD/bwKDSUl4GAlnxg7+l0dw4qYA4xFJR/p0JjqRrWAn2c6piTAq/Kf99cWgxRb+Vr
+         ch+9DPfW5GFlugwK8NDTwdtqvhOtAXApFXREB/EMHOgHMLm6ivU0YJfIMjJPJ40xpN
+         kv2gGSe40lRU0VLBuIWAsbpJHfD2vQ8cVfDbiLUGCL8LADDRAfzAvbVmxjxe8KYph/
+         C0DoRs93QcEpGuelY5DIvGvYXit7Ov60w25mPElZgJuSxb+KyRGJmW1byOAeC/UHQf
+         AIm77bM9c7www==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 13/13] powerpc/dma: Remove dev->archdata.iommu_domain
+In-Reply-To: <20200625130836.1916-14-joro@8bytes.org>
+References: <20200625130836.1916-1-joro@8bytes.org> <20200625130836.1916-14-joro@8bytes.org>
+Date:   Mon, 29 Jun 2020 20:57:07 +1000
+Message-ID: <87bll287i4.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+Joerg Roedel <joro@8bytes.org> writes:
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> There are no users left, so remove the pointer and save some memory.
+>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/powerpc/include/asm/device.h | 3 ---
+>  1 file changed, 3 deletions(-)
 
-On 29/6/20 13:29, Chanwoo Choi wrote:
-> Hi Enric and Mark,
-> 
-> On 6/29/20 8:05 PM, Enric Balletbo i Serra wrote:
->> Hi Chanwoo and Marc,
->>
->> On 29/6/20 13:09, Chanwoo Choi wrote:
->>> Hi Enric,
->>>
->>> Could you check this issue? Your patch[1] causes this issue.
->>> As Marc mentioned, although rk3399-dmc.c handled 'rockchip,pmu'
->>> as the mandatory property, your patch[1] didn't add the 'rockchip,pmu'
->>> property to the documentation. 
->>>
->>
->> I think the problem is that the DT binding patch, for some reason, was missed
->> and didn't land. The patch seems to have all the required reviews and acks.
->>
->>   https://patchwork.kernel.org/patch/10901593/
->>
->> Sorry because I didn't notice this issue when 9173c5ceb035 landed. And thanks
->> for fixing the issue.
-> 
-> If the 'rockchip,pmu' propery is mandatory, instead of Mark's patch,
-> we better to require the merge of patch[1] to DT maintainer.
-> 
-> [1] https://patchwork.kernel.org/patch/10901593/
-> 
+It's a little hard to confirm there are no users left just with grep,
+but I think you've got them all, and the compiler should tell us if
+you've missed any.
 
-Give me some time to double check, because I think that at this point, is needed
-on some devices with old firmware but not now. It's been a while since I worked
-on this, but I suspect that being optional is the right way.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Maybe Heiko, who IIRC worked on TF-A has a more clear thought on this?
+cheers
 
-Thanks,
- Enric
-
->>
->> Best regards,
->>  Enric
->>
->>> [1] 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT
->>> and auto power down parameters to TF-A.")
->>>
->>>
->>> On 6/29/20 5:18 PM, Marc Zyngier wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On Mon, 29 Jun 2020 03:43:37 +0100,
->>>> Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>>>>
->>>>> Hi Marc,
->>>>>
->>>>> On 6/23/20 12:28 AM, Marc Zyngier wrote:
->>>>
->>>> [...]
->>>>
->>>>> It looks good to me. But, I think that it is not necessary
->>>>> fully kernel panic log about NULL pointer. It is enoughspsp
->>>>> just mentioning the NULL pointer issue without full kernel panic log.
->>>>
->>>> I personally find the backtrace useful as it allows people with the
->>>> same issue to trawl the kernel log and find whether it has already be
->>>> fixed upstream. But it's only me, and I'm not attached to it.
->>>>
->>>>> So, how about editing the patch description as following or others simply?
->>>>> and we need to add 'stable@vger.kernel.org' to Cc list for applying it
->>>>> to stable branch.
->>>>
->>>> Looks good to me.
->>>>
->>>>>
->>>>>
->>>>>   PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
->>>>>
->>>>>     Booting a recent kernel on a rk3399-based system (nanopc-t4),
->>>>>     equipped with a recent u-boot and ATF results in the kernel panic
->>>>>     about NULL pointer issue.
->>>>
->>>> nit: "results in a kernel panic on dereferencing a NULL pointer".
->>>>
->>>>>
->>>>>     This turns out to be due to the rk3399-dmc driver looking for
->>>>>     an *undocumented* property (rockchip,pmu), and happily using
->>>>>     a NULL pointer when the property isn't there.
->>>>>
->>>>>     Instead, make most of what was brought in with 9173c5ceb035
->>>>>     ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
->>>>>     to TF-A.") conditioned on finding this property in the device-tree,
->>>>>     preventing the driver from exploding.
->>>>>
->>>>>     Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
->>>>>     Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>>>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>
->>>>
->>>> Note that the biggest issue is still there: the driver is using an
->>>> undocumented property, and this patch is just papering over it.
->>>> Since I expect this property to be useful for something, it would be
->>>> good for whoever knows what it does to document it.
->>>
->>> Hi Marc,
->>>
->>> You are right. We have to do two step:
->>> 1. Add missing explanation of 'rockchip,pmu' property to dt-binding document
->>> 2. If possible, add 'rockchip,pmu' property node to rk3399_dmc dt node.
->>>
->>> When I tried to find usage example of 'rockchip,pmu' property,
->>> I found them as following: The 'rockchip,pmu' property[2] indicates
->>> 'PMU (Power Management Unit)'. 
->>>
->>> $ grep -rn "rockchip,pmu" arch/arm64/boot/dts/
->>> arch/arm64/boot/dts/rockchip/px30.dtsi:1211:		rockchip,pmu = <&pmugrf>;
->>> arch/arm64/boot/dts/rockchip/rk3399.dtsi:1909:		rockchip,pmu = <&pmugrf>;
->>> arch/arm64/boot/dts/rockchip/rk3368.dtsi:807:		rockchip,pmu = <&pmugrf>;
->>>
->>> [2] the description of 'rockchip,pmu' property
->>> - https://protect2.fireeye.com/url?k=e55f0ba3-b8384f85-e55e80ec-0cc47a31384a-d9c5f6b28aba9be6&q=1&u=https%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv5.7.2%2Fsource%2FDocumentation%2Fdevicetree%2Fbindings%2Fpinctrl%2Frockchip%2Cpinctrl.txt%23L40
->>>
->>>
->>> If don't receive the any reply, I'll add as following:
->>>
->>> cwchoi00@chan-linux-pc:~/kernel/git.kernel/linux.chanwoo$ d
->>> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->>> index 0ec68141f85a..161e60ea874b 100644
->>> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->>> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->>> @@ -18,6 +18,8 @@ Optional properties:
->>>                          format depends on the interrupt controller.
->>>                          It should be a DCF interrupt. When DDR DVFS finishes
->>>                          a DCF interrupt is triggered.
->>> +- rockchip,pmu:                 Phandle to the syscon managing the "pmu general
->>> +                        register files".
->>>  
->>>  Following properties relate to DDR timing:
->>>  
->>>
->>>
->>
->>
-> 
-> 
+> diff --git a/arch/powerpc/include/asm/device.h b/arch/powerpc/include/asm/device.h
+> index 266542769e4b..1bc595213338 100644
+> --- a/arch/powerpc/include/asm/device.h
+> +++ b/arch/powerpc/include/asm/device.h
+> @@ -34,9 +34,6 @@ struct dev_archdata {
+>  	struct iommu_table	*iommu_table_base;
+>  #endif
+>  
+> -#ifdef CONFIG_IOMMU_API
+> -	void			*iommu_domain;
+> -#endif
+>  #ifdef CONFIG_PPC64
+>  	struct pci_dn		*pci_data;
+>  #endif
+> -- 
+> 2.27.0
