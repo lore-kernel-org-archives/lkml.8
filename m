@@ -2,322 +2,586 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57B7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83F92225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64A322269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="olL1npxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgF2SjM (ORCPT
+        id S1728098AbgF2SjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:39:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726317AbgF2SjI (ORCPT
+        Mon, 29 Jun 2020 14:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbgF2Sh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:39:08 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TF4GkT152437;
-        Mon, 29 Jun 2020 11:11:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31y3xchch9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:11:48 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TF4F1K152427;
-        Mon, 29 Jun 2020 11:11:48 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31y3xchcgh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:11:47 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFAQeO029112;
-        Mon, 29 Jun 2020 15:11:46 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03wdc.us.ibm.com with ESMTP id 31wwr8887p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 15:11:46 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFBiQT33882436
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 15:11:44 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D637F124053;
-        Mon, 29 Jun 2020 15:11:44 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B3A0124052;
-        Mon, 29 Jun 2020 15:11:44 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.160.4])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 15:11:44 +0000 (GMT)
-Subject: Re: [PATCH v8 00/16] s390/vfio-ap: dynamic configuration support
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com
-References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <b6c60eff-3f8f-3e35-df52-11f6fb95cc4a@linux.ibm.com>
-Date:   Mon, 29 Jun 2020 11:11:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 29 Jun 2020 14:37:59 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E30C03143A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:17 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c139so15929588qkg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OWiN/4ZqjgVR5T2MzWEvyn/NsT3BQD5Cd00xaBvjl4w=;
+        b=olL1npxBUwYQB82q2Bd8SSey+zVV7ujSa9Wk2zXzWojgf7/BsfLkPvH+ZsFSmOhYqT
+         GD9xqNuC+ePDF8OccVC5aIOwi7o4GPs/DzidWao9Hmb5kDpTDBzbCUeA9uyqYNLrOk7Y
+         lSYCw9ocaUpbq0spxFdagYGZo/n7t5WyT1NrMFjeB9Yjje8u9zxDJ6kjhT+NVTJ/02/R
+         vjUSbNbbDVhJMqiN0qjxfwr0GlAhq3Hz29qJRUDRuh9lMCwSx2phDBhnIO+jfjk5sLep
+         mPqBdjxTqegGmxTy589fbLX1PWf1AKB1gRMj1vdE5yHoyZZTqoy9RMVfRoCpczmRyohB
+         Ew+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OWiN/4ZqjgVR5T2MzWEvyn/NsT3BQD5Cd00xaBvjl4w=;
+        b=kS9eyzzzSXYMTE3zqhibIEJRktzrMBso3FH+uTmg1dax/7/kdnGJT0zZVBhNcBXewz
+         W0WdkB8P7QHHbjorNOUo8/pixppUEO2oKAA4/ebLm8umbza7IXhJEbWqdJ/kNc86PMCs
+         Cz89JPI2M088UR7xEx2Q9lXEjc4bdcpGq1ogcPbVYlGkNQR8PxkUYxICcWyt1dMrl+Il
+         /Y/iQ5Nwc7P29njae2tf2bCnzBMXlV/0GOvOwsflWVdJezzAL0ITrSlLqjdDFNjJUmbV
+         1Oq65yCCOzmdJJK1z8WF+TLj7ZeRq3x/xBsWfB6QdPzyZGcxcwmm6dF41a6gG0+G7fPQ
+         N1Jg==
+X-Gm-Message-State: AOAM532MZcJq0oNj9G/F+e3VjGJuy6IdyRugiz/5/2tT6dB8kUr2jKI0
+        PBmTCp4pJeDjmkscjvM4B5t4Uw==
+X-Google-Smtp-Source: ABdhPJw1TO/dov+YhalLno+Va0RZNZj1PWmlC1DHlNYvKXpypHw7iEIdYGNd0Ksco3/2RFYl95O+qA==
+X-Received: by 2002:a05:620a:a56:: with SMTP id j22mr15666547qka.193.1593451276208;
+        Mon, 29 Jun 2020 10:21:16 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:21:15 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK)
+Subject: [PATCH v2 10/13] clk: qcom: Add graphics clock controller driver for SM8250
+Date:   Mon, 29 Jun 2020 13:20:40 -0400
+Message-Id: <20200629172049.30452-11-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
+References: <20200629172049.30452-1-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200605214004.14270-1-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=3
- cotscore=-2147483648 clxscore=1011 impostorscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006290103
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series has been on the mailing list since June 5th. It would be GREATLY
-appreciated if these patches can get some attention so we can move
-forward with providing dynamic Adjunct Processor configuration support for
-our customers. Thanks in advance for your time.
+Add support for the graphics clock controller found on SM8250
+based devices. This would allow graphics drivers to probe and
+control their clocks.
 
-On 6/5/20 5:39 PM, Tony Krowiak wrote:
-> Note: Patch 1 - s390/ap: introduce new ap function ap_get_qdev() - is not
->        a part of this series. It is a forthcoming patch that is a
->        prerequisite to this series and is being provided so this series
->        will compile.
->
-> The current design for AP pass-through does not support making dynamic
-> changes to the AP matrix of a running guest resulting in a few
-> deficiencies this patch series is intended to mitigate:
->
-> 1. Adapters, domains and control domains can not be added to or removed
->     from a running guest. In order to modify a guest's AP configuration,
->     the guest must be terminated; only then can AP resources be assigned
->     to or unassigned from the guest's matrix mdev. The new AP
->     configuration becomes available to the guest when it is subsequently
->     restarted.
->
-> 2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
->     be modified by a root user without any restrictions. A change to
->     either mask can result in AP queue devices being unbound from the
->     vfio_ap device driver and bound to a zcrypt device driver even if a
->     guest is using the queues, thus giving the host access to the guest's
->     private crypto data and vice versa.
->
-> 3. The APQNs derived from the Cartesian product of the APIDs of the
->     adapters and APQIs of the domains assigned to a matrix mdev must
->     reference an AP queue device bound to the vfio_ap device driver. The
->     AP architecture allows assignment of AP resources that are not
->     available to the system, so this artificial restriction is not
->     compliant with the architecture.
->
-> 4. The AP configuration profile can be dynamically changed for the linux
->     host after a KVM guest is started. For example, a new domain can be
->     dynamically added to the configuration profile via the SE or an HMC
->     connected to a DPM enabled lpar. Likewise, AP adapters can be
->     dynamically configured (online state) and deconfigured (standby state)
->     using the SE, an SCLP command or an HMC connected to a DPM enabled
->     lpar. This can result in inadvertent sharing of AP queues between the
->     guest and host.
->
-> 5. A root user can manually unbind an AP queue device representing a
->     queue in use by a KVM guest via the vfio_ap device driver's sysfs
->     unbind attribute. In this case, the guest will be using a queue that
->     is not bound to the driver which violates the device model.
->
-> This patch series introduces the following changes to the current design
-> to alleviate the shortcomings described above as well as to implement
-> more of the AP architecture:
->
-> 1. A root user will be prevented from making changes to the AP bus's
->     /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
->     changes from the vfio_ap device driver to a zcrypt driver when the
->     APQN is assigned to a matrix mdev.
->
-> 2. Allow a root user to hot plug/unplug AP adapters, domains and control
->     domains using the matrix mdev's assign/unassign attributes.
->
-> 4. Allow assignment of an AP adapter or domain to a matrix mdev even if
->     it results in assignment of an APQN that does not reference an AP
->     queue device bound to the vfio_ap device driver, as long as the APQN
->     is not reserved for use by the default zcrypt drivers (also known as
->     over-provisioning of AP resources). Allowing over-provisioning of AP
->     resources better models the architecture which does not preclude
->     assigning AP resources that are not yet available in the system. Such
->     APQNs, however, will not be assigned to the guest using the matrix
->     mdev; only APQNs referencing AP queue devices bound to the vfio_ap
->     device driver will actually get assigned to the guest.
->
-> 5. Handle dynamic changes to the AP device model.
->
-> 1. Rationale for changes to AP bus's apmask/aqmask interfaces:
-> ----------------------------------------------------------
-> Due to the extremely sensitive nature of cryptographic data, it is
-> imperative that great care be taken to ensure that such data is secured.
-> Allowing a root user, either inadvertently or maliciously, to configure
-> these masks such that a queue is shared between the host and a guest is
-> not only avoidable, it is advisable. It was suggested that this scenario
-> is better handled in user space with management software, but that does
-> not preclude a malicious administrator from using the sysfs interfaces
-> to gain access to a guest's crypto data. It was also suggested that this
-> scenario could be avoided by taking access to the adapter away from the
-> guest and zeroing out the queues prior to the vfio_ap driver releasing the
-> device; however, stealing an adapter in use from a guest as a by-product
-> of an operation is bad and will likely cause problems for the guest
-> unnecessarily. It was decided that the most effective solution with the
-> least number of negative side effects is to prevent the situation at the
-> source.
->
-> 2. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
-> ----------------------------------------------------------------
-> Allowing a user to hot plug/unplug AP resources using the matrix mdev
-> sysfs interfaces circumvents the need to terminate the guest in order to
-> modify its AP configuration. Allowing dynamic configuration makes
-> reconfiguring a guest's AP matrix much less disruptive.
->
-> 3. Rationale for allowing over-provisioning of AP resources:
-> -----------------------------------------------------------
-> Allowing assignment of AP resources to a matrix mdev and ultimately to a
-> guest better models the AP architecture. The architecture does not
-> preclude assignment of unavailable AP resources. If a queue subsequently
-> becomes available while a guest using the matrix mdev to which its APQN
-> is assigned, the guest will be given access to it. If an APQN
-> is dynamically unassigned from the underlying host system, it will
-> automatically become unavailable to the guest.
->
-> Change log v6-v7:
-> ----------------
-> * Added callbacks to AP bus:
->    - on_config_changed: Notifies implementing drivers that
->      the AP configuration has changed since last AP device scan.
->    - on_scan_complete: Notifies implementing drivers that the device scan
->      has completed.
->    - implemented on_config_changed and on_scan_complete callbacks for
->      vfio_ap device driver.
->    - updated vfio_ap device driver's probe and remove callbacks to handle
->      dynamic changes to the AP device model.
-> * Added code to filter APQNs when assigning AP resources to a KVM guest's
->    CRYCB
->
-> Change log v7-v8:
-> ----------------
-> * Now logging a message when an attempt to reserve APQNs for the zcrypt
->    drivers will result in taking a queue away from a KVM guest to provide
->    the sysadmin a way to ascertain why the sysfs operation failed.
->
-> * Created locked and unlocked versions of the ap_parse_mask_str() function.
->
-> * Now using new interface provided by an AP bus patch -
->    s390/ap: introduce new ap function ap_get_qdev() - to retrieve
->    struct ap_queue representing an AP queue device. This patch is not a
->    part of this series but is a prerequisite for this series.
->
-> Change log v6-v7:
-> ----------------
->
-> Change log v5-v6:
-> ----------------
-> * Fixed a bug in ap_bus.c introduced with patch 2/7 of the v5
->    series. Harald Freudenberer pointed out that the mutex lock
->    for ap_perms_mutex in the apmask_store and aqmask_store functions
->    was not being freed.
->
-> * Removed patch 6/7 which added logging to the vfio_ap driver
->    to expedite acceptance of this series. The logging will be introduced
->    with a separate patch series to allow more time to explore options
->    such as DBF logging vs. tracepoints.
->
-> * Added 3 patches related to ensuring that APQNs that do not reference
->    AP queue devices bound to the vfio_ap device driver are not assigned
->    to the guest CRYCB:
->
->    Patch 4: Filter CRYCB bits for unavailable queue devices
->    Patch 5: sysfs attribute to display the guest CRYCB
->    Patch 6: update guest CRYCB in vfio_ap probe and remove callbacks
->
-> * Added a patch (Patch 9) to version the vfio_ap module.
->
-> * Reshuffled patches to allow the in_use callback implementation to
->    invoke the vfio_ap_mdev_verify_no_sharing() function introduced in
->    patch 2.
->
-> Change log v4-v5:
-> ----------------
-> * Added a patch to provide kernel s390dbf debug logs for VFIO AP
->
-> Change log v3->v4:
-> -----------------
-> * Restored patches preventing root user from changing ownership of
->    APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
->    assigned to an mdev.
->
-> * No longer enforcing requirement restricting guest access to
->    queues represented by a queue device bound to the vfio_ap
->    device driver.
->
-> * Removed shadow CRYCB and now directly updating the guest CRYCB
->    from the matrix mdev's matrix.
->
-> * Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
->    Control' patches.
->
-> * Disabled bind/unbind sysfs interfaces for vfio_ap driver
->
-> Change log v2->v3:
-> -----------------
-> * Allow guest access to an AP queue only if the queue is bound to
->    the vfio_ap device driver.
->
-> * Removed the patch to test CRYCB masks before taking the vCPUs
->    out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
->
-> Change log v1->v2:
-> -----------------
-> * Removed patches preventing root user from unbinding AP queues from
->    the vfio_ap device driver
-> * Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic
->    changes to the AP guest configuration due to root user interventions
->    or hardware anomalies.
->
-> Harald Freudenberger (2):
->    s390/ap: introduce new ap function ap_get_qdev()
->    s390/zcrypt: Notify driver on config changed and scan complete
->      callbacks
->
-> Tony Krowiak (14):
->    s390/vfio-ap: use new AP bus interface to search for queue devices
->    s390/vfio-ap: manage link between queue struct and matrix mdev
->    s390/zcrypt: driver callback to indicate resource in use
->    s390/vfio-ap: implement in-use callback for vfio_ap driver
->    s390/vfio-ap: introduce shadow APCB
->    s390/vfio-ap: sysfs attribute to display the guest's matrix
->    s390/vfio-ap: filter matrix for unavailable queue devices
->    s390/vfio_ap: add qlink from ap_matrix_mdev struct to vfio_ap_queue
->      struct
->    s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
->    s390/vfio-ap: allow configuration of matrix mdev in use by a KVM guest
->    s390/vfio-ap: allow hot plug/unplug of AP resources using mdev device
->    s390/vfio-ap: handle host AP config change notification
->    s390/vfio-ap: handle AP bus scan completed notification
->    s390/vfio-ap: handle probe/remove not due to host AP config changes
->
->   drivers/s390/crypto/ap_bus.c          |  417 +++++++--
->   drivers/s390/crypto/ap_bus.h          |   41 +-
->   drivers/s390/crypto/ap_card.c         |   47 +-
->   drivers/s390/crypto/ap_queue.c        |   10 +-
->   drivers/s390/crypto/vfio_ap_drv.c     |   34 +-
->   drivers/s390/crypto/vfio_ap_ops.c     | 1165 ++++++++++++++++++++-----
->   drivers/s390/crypto/vfio_ap_private.h |   23 +-
->   7 files changed, 1339 insertions(+), 398 deletions(-)
->
+This is copied from the downstream kernel, adapted for upstream.
+For example, GDSCs have been added.
+
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/clk/qcom/Kconfig        |   8 +
+ drivers/clk/qcom/Makefile       |   1 +
+ drivers/clk/qcom/gpucc-sm8250.c | 450 ++++++++++++++++++++++++++++++++
+ 3 files changed, 459 insertions(+)
+ create mode 100644 drivers/clk/qcom/gpucc-sm8250.c
+
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 1bf5e927ee0d..125215e71ec7 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -399,6 +399,14 @@ config SM_GPUCC_8150
+ 	  Say Y if you want to support graphics controller devices and
+ 	  functionality such as 3D graphics.
+ 
++config SM_GPUCC_8250
++	tristate "SM8250 Graphics Clock Controller"
++	select SM_GCC_8250
++	help
++	  Support for the graphics clock controller on SM8250 devices.
++	  Say Y if you want to support graphics controller devices and
++	  functionality such as 3D graphics.
++
+ config SPMI_PMIC_CLKDIV
+ 	tristate "SPMI PMIC clkdiv Support"
+ 	depends on SPMI || COMPILE_TEST
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index f819663c53a6..b5dcb61af7f2 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
+ obj-$(CONFIG_SM_GCC_8150) += gcc-sm8150.o
+ obj-$(CONFIG_SM_GCC_8250) += gcc-sm8250.o
+ obj-$(CONFIG_SM_GPUCC_8150) += gpucc-sm8150.o
++obj-$(CONFIG_SM_GPUCC_8250) += gpucc-sm8250.o
+ obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
+ obj-$(CONFIG_KPSS_XCC) += kpss-xcc.o
+ obj-$(CONFIG_QCOM_HFPLL) += hfpll.o
+diff --git a/drivers/clk/qcom/gpucc-sm8250.c b/drivers/clk/qcom/gpucc-sm8250.c
+new file mode 100644
+index 000000000000..42570fbcdbec
+--- /dev/null
++++ b/drivers/clk/qcom/gpucc-sm8250.c
+@@ -0,0 +1,450 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
++
++#include "common.h"
++#include "clk-alpha-pll.h"
++#include "clk-branch.h"
++#include "clk-pll.h"
++#include "clk-rcg.h"
++#include "clk-regmap.h"
++#include "reset.h"
++#include "gdsc.h"
++
++#define CX_GMU_CBCR_SLEEP_MASK		0xf
++#define CX_GMU_CBCR_SLEEP_SHIFT		4
++#define CX_GMU_CBCR_WAKE_MASK		0xf
++#define CX_GMU_CBCR_WAKE_SHIFT		8
++
++enum {
++	P_BI_TCXO,
++	P_CORE_BI_PLL_TEST_SE,
++	P_GPLL0_OUT_MAIN,
++	P_GPLL0_OUT_MAIN_DIV,
++	P_GPU_CC_PLL0_OUT_MAIN,
++	P_GPU_CC_PLL1_OUT_MAIN,
++};
++
++static const struct parent_map gpu_cc_parent_map_0[] = {
++	{ P_BI_TCXO, 0 },
++	{ P_GPU_CC_PLL0_OUT_MAIN, 1 },
++	{ P_GPU_CC_PLL1_OUT_MAIN, 3 },
++	{ P_GPLL0_OUT_MAIN, 5 },
++	{ P_GPLL0_OUT_MAIN_DIV, 6 },
++	{ P_CORE_BI_PLL_TEST_SE, 7 },
++};
++
++static const char * const gpu_cc_parent_names_0[] = {
++	"bi_tcxo",
++	"gpu_cc_pll0",
++	"gpu_cc_pll1",
++	"gcc_gpu_gpll0_clk_src",
++	"gcc_gpu_gpll0_div_clk_src",
++	"core_bi_pll_test_se",
++};
++
++static struct pll_vco lucid_vco[] = {
++	{ 249600000, 2000000000, 0 },
++};
++
++static const struct alpha_pll_config gpu_cc_pll1_config = {
++	.l = 0x1a,
++	.alpha = 0xaaa,
++	.config_ctl_val = 0x20485699,
++	.config_ctl_hi_val = 0x00002261,
++	.config_ctl_hi1_val = 0x029a699c,
++	.user_ctl_val = 0x00000000,
++	.user_ctl_hi_val = 0x00000805,
++	.user_ctl_hi1_val = 0x00000000,
++};
++
++static struct clk_alpha_pll gpu_cc_pll1 = {
++	.offset = 0x100,
++	.vco_table = lucid_vco,
++	.num_vco = ARRAY_SIZE(lucid_vco),
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID],
++	.clkr = {
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_pll1",
++			.parent_names = (const char *[]){ "bi_tcxo" },
++			.num_parents = 1,
++			.ops = &clk_alpha_pll_lucid_ops,
++		},
++	},
++};
++
++static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] = {
++	F(19200000, P_BI_TCXO, 1, 0, 0),
++	F(200000000, P_GPLL0_OUT_MAIN_DIV, 1.5, 0, 0),
++	F(500000000, P_GPU_CC_PLL1_OUT_MAIN, 1, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 gpu_cc_gmu_clk_src = {
++	.cmd_rcgr = 0x1120,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = gpu_cc_parent_map_0,
++	.freq_tbl = ftbl_gpu_cc_gmu_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "gpu_cc_gmu_clk_src",
++		.parent_names = gpu_cc_parent_names_0,
++		.num_parents = 6,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static struct clk_branch gpu_cc_ahb_clk = {
++	.halt_reg = 0x1078,
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x1078,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_crc_ahb_clk = {
++	.halt_reg = 0x107c,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x107c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_crc_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_apb_clk = {
++	.halt_reg = 0x1088,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1088,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_apb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_gmu_clk = {
++	.halt_reg = 0x1098,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x1098,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_gmu_clk",
++			.parent_names = (const char *[]){
++				"gpu_cc_gmu_clk_src",
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_qdss_at_clk = {
++	.halt_reg = 0x1080,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1080,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_qdss_at_clk",
++			.parent_names = (const char *[]){
++				"qdss_qmp_clk",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_qdss_trig_clk = {
++	.halt_reg = 0x1094,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1094,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_qdss_trig_clk",
++			.parent_names = (const char *[]){
++				"qdss_qmp_clk",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_qdss_tsctr_clk = {
++	.halt_reg = 0x1084,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1084,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_qdss_tsctr_clk",
++			.parent_names = (const char *[]){
++				"qdss_qmp_clk",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cx_snoc_dvm_clk = {
++	.halt_reg = 0x108c,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x108c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cx_snoc_dvm_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cxo_aon_clk = {
++	.halt_reg = 0x1004,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cxo_aon_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cxo_clk = {
++	.halt_reg = 0x109c,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x109c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_cxo_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_gmu_clk = {
++	.halt_reg = 0x1064,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x1064,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_gx_gmu_clk",
++			.parent_names = (const char *[]){
++				"gpu_cc_gmu_clk_src",
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_qdss_tsctr_clk = {
++	.halt_reg = 0x105c,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x105c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_gx_qdss_tsctr_clk",
++			.parent_names = (const char *[]){
++				"qdss_qmp_clk",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_vsense_clk = {
++	.halt_reg = 0x1058,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_gx_vsense_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_sleep_clk = {
++	.halt_reg = 0x1090,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x1090,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gpu_cc_sleep_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_hlos1_vote_gpu_smmu_clk = {
++	.halt_reg = 0x5000,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x5000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			 .name = "gpu_cc_hlos1_vote_gpu_smmu_clk",
++			 .ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct gdsc gpu_cx_gdsc = {
++	.gdscr = 0x106c,
++	.gds_hw_ctrl = 0x1540,
++	.pd = {
++		.name = "gpu_cx_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
++};
++
++static struct gdsc gpu_gx_gdsc = {
++	.gdscr = 0x100c,
++	.clamp_io_ctrl = 0x1508,
++	.pd = {
++		.name = "gpu_gx_gdsc",
++		.power_on = gdsc_gx_do_nothing_enable,
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
++};
++
++static struct clk_regmap *gpu_cc_sm8250_clocks[] = {
++	[GPU_CC_AHB_CLK] = &gpu_cc_ahb_clk.clkr,
++	[GPU_CC_CRC_AHB_CLK] = &gpu_cc_crc_ahb_clk.clkr,
++	[GPU_CC_CX_APB_CLK] = &gpu_cc_cx_apb_clk.clkr,
++	[GPU_CC_CX_GMU_CLK] = &gpu_cc_cx_gmu_clk.clkr,
++	[GPU_CC_CX_QDSS_AT_CLK] = &gpu_cc_cx_qdss_at_clk.clkr,
++	[GPU_CC_CX_QDSS_TRIG_CLK] = &gpu_cc_cx_qdss_trig_clk.clkr,
++	[GPU_CC_CX_QDSS_TSCTR_CLK] = &gpu_cc_cx_qdss_tsctr_clk.clkr,
++	[GPU_CC_CX_SNOC_DVM_CLK] = &gpu_cc_cx_snoc_dvm_clk.clkr,
++	[GPU_CC_CXO_AON_CLK] = &gpu_cc_cxo_aon_clk.clkr,
++	[GPU_CC_CXO_CLK] = &gpu_cc_cxo_clk.clkr,
++	[GPU_CC_GMU_CLK_SRC] = &gpu_cc_gmu_clk_src.clkr,
++	[GPU_CC_GX_GMU_CLK] = &gpu_cc_gx_gmu_clk.clkr,
++	[GPU_CC_GX_QDSS_TSCTR_CLK] = &gpu_cc_gx_qdss_tsctr_clk.clkr,
++	[GPU_CC_GX_VSENSE_CLK] = &gpu_cc_gx_vsense_clk.clkr,
++	[GPU_CC_PLL1] = &gpu_cc_pll1.clkr,
++	[GPU_CC_SLEEP_CLK] = &gpu_cc_sleep_clk.clkr,
++	[GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK] = &gpu_cc_hlos1_vote_gpu_smmu_clk.clkr,
++};
++
++static const struct qcom_reset_map gpu_cc_sm8250_resets[] = {
++	[GPUCC_GPU_CC_ACD_BCR] = { 0x1160 },
++	[GPUCC_GPU_CC_CX_BCR] = { 0x1068 },
++	[GPUCC_GPU_CC_GFX3D_AON_BCR] = { 0x10a0 },
++	[GPUCC_GPU_CC_GMU_BCR] = { 0x111c },
++	[GPUCC_GPU_CC_GX_BCR] = { 0x1008 },
++	[GPUCC_GPU_CC_XO_BCR] = { 0x1000 },
++};
++
++static struct gdsc *gpu_cc_sm8250_gdscs[] = {
++	[GPU_CX_GDSC] = &gpu_cx_gdsc,
++	[GPU_GX_GDSC] = &gpu_gx_gdsc,
++};
++
++static const struct regmap_config gpu_cc_sm8250_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = 0x8008,
++	.fast_io = true,
++};
++
++static const struct qcom_cc_desc gpu_cc_sm8250_desc = {
++	.config = &gpu_cc_sm8250_regmap_config,
++	.clks = gpu_cc_sm8250_clocks,
++	.num_clks = ARRAY_SIZE(gpu_cc_sm8250_clocks),
++	.resets = gpu_cc_sm8250_resets,
++	.num_resets = ARRAY_SIZE(gpu_cc_sm8250_resets),
++	.gdscs = gpu_cc_sm8250_gdscs,
++	.num_gdscs = ARRAY_SIZE(gpu_cc_sm8250_gdscs),
++};
++
++static const struct of_device_id gpu_cc_sm8250_match_table[] = {
++	{ .compatible = "qcom,sm8250-gpucc" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gpu_cc_sm8250_match_table);
++
++static int gpu_cc_sm8250_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
++	unsigned int value, mask;
++
++	regmap = qcom_cc_map(pdev, &gpu_cc_sm8250_desc);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	clk_lucid_pll_configure(&gpu_cc_pll1, regmap, &gpu_cc_pll1_config);
++
++	/*
++	 * Configure gpu_cc_cx_gmu_clk with recommended
++	 * wakeup/sleep settings
++	 */
++	mask = CX_GMU_CBCR_WAKE_MASK << CX_GMU_CBCR_WAKE_SHIFT;
++	mask |= CX_GMU_CBCR_SLEEP_MASK << CX_GMU_CBCR_SLEEP_SHIFT;
++	value = 0xf << CX_GMU_CBCR_WAKE_SHIFT | 0xf << CX_GMU_CBCR_SLEEP_SHIFT;
++	regmap_update_bits(regmap, 0x1098, mask, value);
++
++	return qcom_cc_really_probe(pdev, &gpu_cc_sm8250_desc, regmap);;
++}
++
++static struct platform_driver gpu_cc_sm8250_driver = {
++	.probe = gpu_cc_sm8250_probe,
++	.driver = {
++		.name = "sm8250-gpucc",
++		.of_match_table = gpu_cc_sm8250_match_table,
++	},
++};
++
++static int __init gpu_cc_sm8250_init(void)
++{
++	return platform_driver_register(&gpu_cc_sm8250_driver);
++}
++subsys_initcall(gpu_cc_sm8250_init);
++
++static void __exit gpu_cc_sm8250_exit(void)
++{
++	platform_driver_unregister(&gpu_cc_sm8250_driver);
++}
++module_exit(gpu_cc_sm8250_exit);
++
++MODULE_DESCRIPTION("QTI GPU_CC SM8250 Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.26.1
 
