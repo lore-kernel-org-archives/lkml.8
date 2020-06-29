@@ -2,84 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D421C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E710C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B20F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5AB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AVLg3ibs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="T1IpLJ34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbgF2UoC (ORCPT
+        id S2389713AbgF2UoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+        Mon, 29 Jun 2020 16:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731618AbgF2TOB (ORCPT
+        with ESMTP id S1731547AbgF2TOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:01 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01E7C08EA4E
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:04:07 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wH4P2XnSz9sQt;
-        Mon, 29 Jun 2020 16:04:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1593410645;
-        bh=rCQ9UWEaL81XNzFf+M1vO61UGj8xcpAMew6CAkzUbAk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=AVLg3ibs8WXrZB52xgAmxhuUhTrrl91U87AEtJTXKj6vaOb8oXaq4spqIRIDf2J7H
-         SljLkVTjrk/Du/nMPasTChhWfwrJCg0TPVJNlKe6H0b4Z6c5SAdnk1Cxf61RLO55CH
-         b0omNwc8V1f5uZ5q9vawgcdtCcyWuO//8naB3E4/+UBcFrc/j988kDH3GZ2nxI8ZVs
-         XP1bPqb1q84mE2omSa2SYatDH868N1hjI0VBKBJkyG4ntlLezVSB67jYpzxgH+ruYd
-         reeEN21hJFfhjxwjqZXeaNqEPdhw23fqHesy+RG1WJqXBp8L0ixbjtKx2SK9eS1S5t
-         jY1oOW42I/0Sw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Bin Meng <bmeng.cn@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Bin Meng <bin.meng@windriver.com>
-Subject: Re: [PATCH v2] powerpc: Drop CONFIG_MTD_M25P80 in 85xx-hw.config
-In-Reply-To: <CAEUhbmUj4iC1+4Y=93zpj+aCBqU1ySOHXvQgJHmxNx__UWduCQ@mail.gmail.com>
-References: <1588394694-517-1-git-send-email-bmeng.cn@gmail.com> <CAEUhbmUj4iC1+4Y=93zpj+aCBqU1ySOHXvQgJHmxNx__UWduCQ@mail.gmail.com>
-Date:   Mon, 29 Jun 2020 16:06:20 +1000
-Message-ID: <87ftae8kyr.fsf@mpe.ellerman.id.au>
+        Mon, 29 Jun 2020 15:14:00 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD76AC02E2F1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:26:55 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id z63so15350626qkb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h9h6iUTLSlaM8ZKedUbrDjAeuBkCXn2xjNjPFH6ekn4=;
+        b=T1IpLJ344rgGaAa+SleIJFka/PpqQpfHOmwwxhlqA4Suwr5L752jeOu5N30x6rcKz8
+         KF20wG2FJZQGA4AztiZaX4TzOwDhVPTEKfW0sOaPHxxZXhHWKs5AlLiSCTAg8sFusRgp
+         PeZguF1j71pS4edUg3CM/8vlS2RLY3+JL23breZejkSX4dCEFuIuecM+9Zp34UrFAdZY
+         GWzcWmJsDujFB78JLRZS4i3yxZ8gc8y9UibuKmXikPPbfHYvTNqIpHPz2Vvto1L1wdFI
+         4Ri5cK36BuL8D113uj2oCGfqYuOBE5J0COAuRf5g6TIXA+LImkTnIQvPIvdfMRToNHqS
+         ivpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h9h6iUTLSlaM8ZKedUbrDjAeuBkCXn2xjNjPFH6ekn4=;
+        b=Zm6cBiMtLukqlfBz+W4ASGk/HwQhei84uJ3Ekrcg+sNXcvekwftMcHXAN8vAsLmH4N
+         qAKvIWd9kuigXIhG+JWCZJFttOJUXgR4aqIH5M+GeTie4VqvTPNiZMwv4TaCqytR5baz
+         PswOPAPMCKMXImBFxX2fFJhUMhR2NZfRJw+3ommyiC8f6CtoM4RvpB8ruFMvWhgAi7Ip
+         /G/sf7YIG4FGkXJwsmkVaX82f3WhWy95AuVM4gtapyAHC3ylRMRW2VoY/nXePLKM/9Fr
+         XH5kiKHQkPHBJhMjS6DsGVwV2R+SzB6fJH4MztGKQx6UzZXy0XGnLWAwnJc4uuTnOXFy
+         A/Gg==
+X-Gm-Message-State: AOAM5309Nbexwm5FIOjD0VqOYcVaOal8Px3f5aqQT+fENL9IpDyHpLfR
+        kNLx3YCXTiQIF751oPHiFFkqEBTLIHwdDCsjZTtxewavkB8=
+X-Google-Smtp-Source: ABdhPJzADHgjRYun7EFvcNevrS1w88lT8h+z8+W9iN0INfkGcrVrm59SoEI2bpu5gUwfXvpzn98HJaI1jOgo7YMD9Lc=
+X-Received: by 2002:a37:9c81:: with SMTP id f123mr14194552qke.21.1593440814965;
+ Mon, 29 Jun 2020 07:26:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-16-warthog618@gmail.com>
+In-Reply-To: <20200623040107.22270-16-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 29 Jun 2020 16:26:44 +0200
+Message-ID: <CAMpxmJWoXWk4t08gM8ieMrMSgYPNODjt6Jx3k_L+a9X00891sQ@mail.gmail.com>
+Subject: Re: [PATCH 15/22] gpiolib: add build option for CDEV V1 ABI
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bin Meng <bmeng.cn@gmail.com> writes:
-> On Sat, May 2, 2020 at 12:45 PM Bin Meng <bmeng.cn@gmail.com> wrote:
->>
->> From: Bin Meng <bin.meng@windriver.com>
->>
->> Drop CONFIG_MTD_M25P80 that was removed in
->> commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
->>
->> Signed-off-by: Bin Meng <bin.meng@windriver.com>
->>
->> ---
->>
->> Changes in v2:
->> - correct the typo (5xx => 85xx) in the commit title
->>
->>  arch/powerpc/configs/85xx-hw.config | 1 -
->>  1 file changed, 1 deletion(-)
->>
+On Tue, Jun 23, 2020 at 6:03 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> It seems this patch isn't applied anywhere. Ping?
+> Add a build option to allow the removal of the CDEV v1 ABI.
+>
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
+> ---
+>
+> This patch is before the V2 implementation, and is non-functional until
+> that patch, as some parts of that patch would be written slightly
+> differently if removing V1 was not considered.
+> Adding this patch after that would necessitate revisiting the V2 changes,
+> so this ordering results in two simpler patches.
+>
+>  drivers/gpio/Kconfig | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index affc1524bc2c..b966a7dc1c9a 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -81,6 +81,18 @@ config GPIO_CDEV
+>
+>           If unsure, say Y.
+>
+> +config GPIO_CDEV_V1
+> +       bool "Support GPIO ABI Version 1"
+> +       default y
+> +       depends on GPIO_CDEV
+> +       help
+> +         Say Y here to support version 1 of the GPIO CDEV ABI.
+> +
+> +         This ABI version is deprecated and will be removed in the future.
+> +         Please use the latest ABI for new developments.
+> +
+> +         If unsure, say Y.
+> +
+>  config GPIO_GENERIC
+>         depends on HAS_IOMEM # Only for IOMEM drivers
+>         tristate
+> --
+> 2.27.0
+>
 
-I'll grab it.
+As long as the series remains bisectable:
 
-cheers
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
