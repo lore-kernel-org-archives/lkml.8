@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B671C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB9EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8D5222C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D6E22269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455741;
-	bh=YcBvkHLseg2B1KadSr98e/e+pOnVHrMnbfzANZoWk7E=;
+	s=default; t=1593455745;
+	bh=Lh/wP2IgRNVU0BEv+HYmvbnZxJKAdQ3IZPOli5tfthM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=quse4LGdXbkRnoUuWKOFVZgxEb3t8ZQm28CdtcwG2fD3JZIzFvO+oYf/G0tDUFZiN
-	 5NsaEErtvo7ll7puoWjrK/UR6Oc5XFClhIrzddhD1AAjha40jJBN/0sADbysPlFhPu
-	 eMT4H/Tl6DPVi/IpYnpMqQrjPjyviyhE1v03WjLQ=
+	b=E7hXu9uZhkZgUQL4f1txZU7NKPwcfnrd51gpx9fpK/6WnM4DfDz8xMc77eciladeK
+	 xeSXQjv/xtjD9lxQLNDp9RmPpglj58zsfiZmEUObNRhL/IgSCfiULy3JNwpQs3MVCo
+	 aWv8O2qHi2avpSiRsPdrxLKOif7sHupDt8ti84hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgF2Sfk (ORCPT
+        id S1726736AbgF2Sfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:22 -0400
+        id S1726228AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB00124749;
-        Mon, 29 Jun 2020 15:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8F124683;
+        Mon, 29 Jun 2020 15:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444068;
-        bh=YcBvkHLseg2B1KadSr98e/e+pOnVHrMnbfzANZoWk7E=;
+        s=default; t=1593443982;
+        bh=Lh/wP2IgRNVU0BEv+HYmvbnZxJKAdQ3IZPOli5tfthM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOP7MwMqWc1zEQUxwvWPEHvhPxK7pCjIv0iBN2dD7GdwQu5YkB5tV1pR1crzsP8Gh
-         P6SAGwQaJAue3ZGiOAav3o1164LJJN7qwYsT2vxE9Cq2yYD6EddzyjsWQB+uikLwft
-         PsnAu0YqQbKeajNpefEyozJYn/4ZsFh1Jhm7/01U=
+        b=tcDuA73RwbUDk2Q9lWydpnD52xOIs05glgLoHDWu56sZJV9fDAt6rSe1glrKc5fRJ
+         xQi0s54kKBuyxH6m0ddwUZ590gtnQ1KBstpuFifnevT9Qu9w1U9lvcjE0Tsm+GSFDt
+         DK4M531XXdRkNvsQOdziCFiKjJ0/SL2PVZVNMyLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mans Rullgard <mans@mansr.com>, Wolfram Sang <wsa@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 177/265] i2c: core: check returned size of emulated smbus block read
-Date:   Mon, 29 Jun 2020 11:16:50 -0400
-Message-Id: <20200629151818.2493727-178-sashal@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 086/265] xhci: Fix incorrect EP_STATE_MASK
+Date:   Mon, 29 Jun 2020 11:15:19 -0400
+Message-Id: <20200629151818.2493727-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,45 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mans Rullgard <mans@mansr.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-[ Upstream commit 40e05200593af06633f64ab0effff052eee6f076 ]
+commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
 
-If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
-them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
-on some random device to return an arbitrary value in the first
-byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
-will happily write past the end of the supplied data buffer, thus
-causing Bad Things to happen.  To prevent this, check the size
-before copying the data block and return an error if it is too large.
+EP_STATE_MASK should be 0x7 instead of 0xf
 
-Fixes: 209d27c3b167 ("i2c: Emulate SMBus block read over I2C")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-[wsa: use better errno]
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+xhci spec 6.2.3 shows that the EP state field in the endpoint context data
+structure consist of bits [2:0].
+The old value included a bit from the next field which fortunately is a
+ RsvdZ region. So hopefully this hasn't caused too much harm
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/i2c-core-smbus.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/host/xhci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index b34d2ff069318..bbb70a8a411e3 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -495,6 +495,13 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
- 			break;
- 		case I2C_SMBUS_BLOCK_DATA:
- 		case I2C_SMBUS_BLOCK_PROC_CALL:
-+			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
-+				dev_err(&adapter->dev,
-+					"Invalid block size returned: %d\n",
-+					msg[1].buf[0]);
-+				status = -EPROTO;
-+				goto cleanup;
-+			}
- 			for (i = 0; i < msg[1].buf[0] + 1; i++)
- 				data->block[i] = msg[1].buf[i];
- 			break;
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 86cfefdd6632b..c80710e474769 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -716,7 +716,7 @@ struct xhci_ep_ctx {
+  * 4 - TRB error
+  * 5-7 - reserved
+  */
+-#define EP_STATE_MASK		(0xf)
++#define EP_STATE_MASK		(0x7)
+ #define EP_STATE_DISABLED	0
+ #define EP_STATE_RUNNING	1
+ #define EP_STATE_HALTED		2
 -- 
 2.25.1
 
