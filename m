@@ -2,191 +2,147 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18212063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37F020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1qss+KEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403974AbgF2VnW (ORCPT
+        id S2403980AbgF2Vn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        Mon, 29 Jun 2020 17:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgF2Shv (ORCPT
+        with ESMTP id S1727864AbgF2Shu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:51 -0400
-Received: from mail-il1-x148.google.com (mail-il1-x148.google.com [IPv6:2607:f8b0:4864:20::148])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DB5C030F02
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
-Received: by mail-il1-x148.google.com with SMTP id o4so12652716ilc.15
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:50 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409F5C03141A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:00 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g13so13425586qtv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQkFfkkA31JOV3zD6GN1+JAepXXLzSYJr6ThdL4AJWw=;
+        b=1qss+KElvuSqL3gw9wSWrIE2RxXQTdaCj6wtfO5R3w05GuNfhHAAqh4+TY9xhDRq9O
+         twKwYUUUP51niOGdmvCuQY10Eb42ItPAD1+TGameGSSBimHXfnO6kEvAs+7lLDzzzboB
+         EtRriuEpuISkCQtf21uvTRmYchwXEJxr5b8V70pxuoJiiOWWAywzr3DVFy1IN7fGLALU
+         p0idi94Oa8qjSK1au/LoU1T26oTyr2ct0BVFMljI61OyfInXd7QSeqVDNKGkAQ+5c7MK
+         cABjEGohSuBB4+dGn3luMqds4a/8C+Hs8Ljj9MoYzdY6U+GHsCr6/7fzDm8xM6wGGq91
+         ORhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=GaRDhX7cOPGC7KOMXOAFCs/7Rjn+jmhfg9ZC0k5r71U=;
-        b=dOthf3zS9Iyl0OdnGv77ASXPBEmDoupfR6ltRXLd93ddhTitgrTJiGsFvdfxy8hXLG
-         Yw7TzFD9cMlgCakmEwAjAMts8xSCNyRPHGSvFMpE1oMtfoo0O1nWsADqwQAJ9dtvjKDW
-         WM0iQxbZcSfsptMlnd2vrpsmWYlngQHG5qweF4YzAINrb/3Oh/kd+PA/xjT0kLntYWaC
-         XznFwOCmTombilM3ae0KrnqzXMzQK69Sh1s/I0IlnB1PGg0Qoa7DFnSsusHgN6LuTjtc
-         3eLwH8LT2gkVj4wqUvKf70sXu1wmiCqHxFbk/WSrcvQxtFQKVBuesvbzC3w+wvfjmqry
-         AKkg==
-X-Gm-Message-State: AOAM532DWk+aiHDtRTiznvi8lfYTCtchi/8XnZ00VROFrWwS73zsDzVi
-        TNYXKB6xPvIA5phJjyBkyPsjNZJgUrm39743/XtlzCceUh10
-X-Google-Smtp-Source: ABdhPJw3z2t1uM0GJaA/Osa2SsZoIxIS7OgCF3fDdFOVi6vY4GhZg/Hf0xiq2OUimUiGtPWglLDG9mSqk6Zl/leZAjbX/wyNWmbr
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQkFfkkA31JOV3zD6GN1+JAepXXLzSYJr6ThdL4AJWw=;
+        b=uKcn+zhoXGpE3BkqAkDrm7QTrFfrkMGwvpUEsZ2E/iP+5abx4kVfBYp5iN4mPuYDgN
+         +FFF5IFKN5qDdRH+4+3vRy4wBILLEpNqKPwVr7/10fjwKww1zE+tCGOoQlixsHcijRTd
+         4o67GRM8plHpSZqPk2tJf7Q4gB6GdBG4Wrb71h5ri18bOe95KgfzvqWMccAKiGTcoVib
+         EEF8sN0ars9K9z+9tWxYMilnbjM6AkBM+tZxs16dItQ2keGXte/IXa6KBb20WTaq9BlV
+         ZPFhzGKLx3RnrPXWCjC8BMMzKtM/gsb9aEkBgbD1ou8yQpEoKya0LVGN2LXVE/GE02Sd
+         GqJA==
+X-Gm-Message-State: AOAM5325E2+Re6WRGlAZQb0fUIOZVVgMXPml0GmwLVPxYmJAW4ihlNqW
+        qkFwV0fM8ZfPq3PVEd3xkE8LoA==
+X-Google-Smtp-Source: ABdhPJy/zjExbd8/8qm1ppduBJEP6XTzek9kUYH3mOQnwBfSZPNQI+cXqU/uZhV3BQPKx6T4xnnSMA==
+X-Received: by 2002:ac8:4055:: with SMTP id j21mr16933381qtl.76.1593451259343;
+        Mon, 29 Jun 2020 10:20:59 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:20:58 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list),
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 00/13] Enable GPU for SM8150 and SM8250
+Date:   Mon, 29 Jun 2020 13:20:30 -0400
+Message-Id: <20200629172049.30452-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:5d49:: with SMTP id w70mr18854000jaa.16.1593447076495;
- Mon, 29 Jun 2020 09:11:16 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:11:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f6883a05a93b4e6d@google.com>
-Subject: KASAN: use-after-free Read in tipc_nl_publ_dump (2)
-From:   syzbot <syzbot+6db30c775c0fb130e335@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This series adds the missing clock drivers and dts nodes to enable
+the GPU on both SM8150 and SM8250.
 
-syzbot found the following crash on:
+Note an extra patch [1] is still required for GPU to work on SM8250.
 
-HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122afae3100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=6db30c775c0fb130e335
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158718cd100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131b33c5100000
+Changes in V2:
+* Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the newly added
+  SM8150 GPU gcc clocks
+* Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL"
+* Added yaml schemas to gpucc dt-bindings patches
+* Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers" and changed
+  gpucc patches to use it.
+* Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
+* Added missing rpmh regulator level for sm8250 GPU clock levels
+* Use sm8150/sm8250 iommu compatibles in dts
+* Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks in dts
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6db30c775c0fb130e335@syzkaller.appspotmail.com
+[1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
 
-netlink: 8 bytes leftover after parsing attributes in process `syz-executor007'.
-==================================================================
-BUG: KASAN: use-after-free in nla_len include/net/netlink.h:1135 [inline]
-BUG: KASAN: use-after-free in nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
-BUG: KASAN: use-after-free in tipc_nl_publ_dump+0xae0/0xce0 net/tipc/socket.c:3766
-Read of size 2 at addr ffff8880a7ee0284 by task syz-executor007/6830
+Jonathan Marek (13):
+  clk: qcom: gcc: fix sm8150 GPU and NPU clocks
+  clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL
+  clk: qcom: clk-alpha-pll: same regs and ops for trion and lucid
+  clk: qcom: clk-alpha-pll: use the right PCAL_DONE value for lucid pll
+  clk: qcom: gcc: remove unnecessary vco_table from SM8150
+  dt-bindings: clock: Introduce SM8150 QCOM Graphics clock bindings
+  dt-bindings: clock: Introduce SM8250 QCOM Graphics clock bindings
+  clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers
+  clk: qcom: Add graphics clock controller driver for SM8150
+  clk: qcom: Add graphics clock controller driver for SM8250
+  dt-bindings: power: Add missing rpmpd rpmh regulator level
+  arm64: dts: qcom: add sm8150 GPU nodes
+  arm64: dts: qcom: add sm8250 GPU nodes
 
-CPU: 0 PID: 6830 Comm: syz-executor007 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- nla_len include/net/netlink.h:1135 [inline]
- nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
- tipc_nl_publ_dump+0xae0/0xce0 net/tipc/socket.c:3766
- genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
- netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x445f09
-Code: Bad RIP value.
-RSP: 002b:00007fffb147d488 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445f09
-RDX: 0000000000000000 RSI: 0000000020000500 RDI: 0000000000000004
-RBP: 00000000006d0018 R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004030a0
-R13: 0000000000403130 R14: 0000000000000000 R15: 0000000000000000
+ .../bindings/clock/qcom,sm8150-gpucc.yaml     |  74 +++
+ .../bindings/clock/qcom,sm8250-gpucc.yaml     |  74 +++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 136 ++++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          | 143 ++++++
+ drivers/clk/qcom/Kconfig                      |  16 +
+ drivers/clk/qcom/Makefile                     |   2 +
+ drivers/clk/qcom/clk-alpha-pll.c              |  70 ++-
+ drivers/clk/qcom/clk-alpha-pll.h              |  15 +-
+ drivers/clk/qcom/gcc-sm8150.c                 |  26 +-
+ drivers/clk/qcom/gdsc.c                       |  25 +
+ drivers/clk/qcom/gdsc.h                       |   1 +
+ drivers/clk/qcom/gpucc-sc7180.c               |  27 +-
+ drivers/clk/qcom/gpucc-sdm845.c               |  27 +-
+ drivers/clk/qcom/gpucc-sm8150.c               | 421 ++++++++++++++++
+ drivers/clk/qcom/gpucc-sm8250.c               | 450 ++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sm8150.h |  40 ++
+ include/dt-bindings/clock/qcom,gpucc-sm8250.h |  40 ++
+ include/dt-bindings/power/qcom-rpmpd.h        |   1 +
+ 18 files changed, 1479 insertions(+), 109 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+ create mode 100644 drivers/clk/qcom/gpucc-sm8150.c
+ create mode 100644 drivers/clk/qcom/gpucc-sm8250.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
 
-Allocated by task 6828:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xae/0x550 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+-- 
+2.26.1
 
-Freed by task 6828:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- skb_free_head net/core/skbuff.c:590 [inline]
- skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb net/core/skbuff.c:678 [inline]
- consume_skb net/core/skbuff.c:837 [inline]
- consume_skb+0xc2/0x160 net/core/skbuff.c:831
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880a7ee0000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 644 bytes inside of
- 1024-byte region [ffff8880a7ee0000, ffff8880a7ee0400)
-The buggy address belongs to the page:
-page:ffffea00029fb800 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000278a308 ffffea00025273c8 ffff8880aa000c40
-raw: 0000000000000000 ffff8880a7ee0000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a7ee0180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a7ee0200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880a7ee0280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8880a7ee0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a7ee0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
