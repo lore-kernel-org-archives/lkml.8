@@ -2,52 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A90C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF65DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E0B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D58B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468393;
-	bh=hQa3K2fX97TtAmIp0j4NXa+jVUa5WyPoYFp55trsTWg=;
+	s=default; t=1593468398;
+	bh=RYfkEx+K0eqsbULCE1FHocr7/0rtrtEm/3kjazqQxlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2K6FanKrKP9hueE1rxevD4CUyA8QMsUl70TUsZBmirONQDM38XYGMOeIT+Ggh1kJi
-	 fOQa4gK6BpmPkxDiiIAk6c5rffYVkfxQhBMue2xYzJAvI0Cw2e9znTFwEbHDRKFcrF
-	 pqgam0VXbFYNuPIqK9iFF1LD51nr2YGsqUwSrWUs=
+	b=uLys1Y01PmYXJW5QWF4ObhfU6AwX8iGioi6+b1qJbDMon6dAllubGA7JZJ/WqnAKK
+	 WOKkaojOdpnHFhUUlcYfU96bKXLA/S6VJM6E2bllfvkctvVC6WmMPeti2VqpiA4gpM
+	 tIkVGHcCDJGmW8LXRensNYorwDOX2wqNed87OX2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404784AbgF2WG0 (ORCPT
+        id S2404846AbgF2WGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgF2SfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:18 -0400
+        id S1726121AbgF2SfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930C524789;
-        Mon, 29 Jun 2020 15:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B6E24685;
+        Mon, 29 Jun 2020 15:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444094;
-        bh=hQa3K2fX97TtAmIp0j4NXa+jVUa5WyPoYFp55trsTWg=;
+        s=default; t=1593443983;
+        bh=RYfkEx+K0eqsbULCE1FHocr7/0rtrtEm/3kjazqQxlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LtK9hBB9QRv+KV5IV7DVIKPm45Mw57nhFO+L4MjZs4GqI3VHayGmZ5bxbA37NI/gD
-         wy99kGrewlmFJ74CoU0b/hKp7OPIjO8S93pXjWokkQSx1GCpWkE7+/sDlDkLCiHbzM
-         v7TZC1GSE1Dlt6miup9YRxqHhY+VZlceYNyjZeFk=
+        b=Ig1KAs8m84ZWVWEw2fwDLT6PsWXXRW8Jqh6IyA4Ld7+8peKFiMYXbAhNU8iU0oryZ
+         5Z1JgcCcQFhzJafQfNb3z+vHn1R6ubOs8iRbCcNynNRRByxVDLacK3XSZrHs9Bfh7m
+         RPdv4kyJrAJQLZnDfoXyI1uShUav7h+53/YvmqNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 204/265] blktrace: break out of blktrace setup on concurrent calls
-Date:   Mon, 29 Jun 2020 11:17:17 -0400
-Message-Id: <20200629151818.2493727-205-sashal@kernel.org>
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 087/265] xhci: Fix enumeration issue when setting max packet size for FS devices.
+Date:   Mon, 29 Jun 2020 11:15:20 -0400
+Message-Id: <20200629151818.2493727-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,91 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Al Cooper <alcooperx@gmail.com>
 
-[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
+commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
 
-We use one blktrace per request_queue, that means one per the entire
-disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
-or just two calls on /dev/vda.
+Unable to complete the enumeration of a USB TV Tuner device.
 
-We check for concurrent setup only at the very end of the blktrace setup though.
+Per XHCI spec (4.6.5), the EP state field of the input context shall
+be cleared for a set address command. In the special case of an FS
+device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
+not do this before evaluating the context. With an XHCI controller
+that checks the EP state field for parameter context error this
+causes a problem in cases such as the device getting reset again
+after enumeration.
 
-If we try to run two concurrent blktraces on the same block device the
-second one will fail, and the first one seems to go on. However when
-one tries to kill the first one one will see things like this:
+When that field is cleared, the problem does not occur.
 
-The kernel will show these:
+This was found and fixed by Sasi Kumar.
 
-```
-debugfs: File 'dropped' in directory 'nvme1n1' already present!
-debugfs: File 'msg' in directory 'nvme1n1' already present!
-debugfs: File 'trace0' in directory 'nvme1n1' already present!
-``
-
-And userspace just sees this error message for the second call:
-
-```
-blktrace /dev/nvme1n1
-BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
-```
-
-The first userspace process #1 will also claim that the files
-were taken underneath their nose as well. The files are taken
-away form the first process given that when the second blktrace
-fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
-This means that even if go-happy process #1 is waiting for blktrace
-data, we *have* been asked to take teardown the blktrace.
-
-This can easily be reproduced with break-blktrace [0] run_0005.sh test.
-
-Just break out early if we know we're already going to fail, this will
-prevent trying to create the files all over again, which we know still
-exist.
-
-[0] https://github.com/mcgrof/break-blktrace
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/trace/blktrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/usb/host/xhci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 35610a4be4a9e..085fceca33774 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -3,6 +3,9 @@
-  * Copyright (C) 2006 Jens Axboe <axboe@kernel.dk>
-  *
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/blktrace_api.h>
-@@ -494,6 +497,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	strreplace(buts->name, '/', '_');
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 10d76205a79ca..dcc987e1d57b0 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1430,6 +1430,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
+ 				xhci->devs[slot_id]->out_ctx, ep_index);
  
-+	/*
-+	 * bdev can be NULL, as with scsi-generic, this is a helpful as
-+	 * we can be.
-+	 */
-+	if (q->blk_trace) {
-+		pr_warn("Concurrent blktraces are not allowed on %s\n",
-+			buts->name);
-+		return -EBUSY;
-+	}
-+
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
- 	if (!bt)
- 		return -ENOMEM;
+ 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
++		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
+ 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
+ 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+ 
 -- 
 2.25.1
 
