@@ -2,125 +2,184 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC847C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAE162065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KMAALDJG"
+	by mail.kernel.org (Postfix) with ESMTP id BE3F220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbgF2T2I (ORCPT
+        id S1728684AbgF2T2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732771AbgF2T15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:27:57 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AECC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:27:57 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f6so4396870pjq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gjtO3+vpKn1A68ulTNV3+i1kW5W8NfqinqR35PqtzaI=;
-        b=KMAALDJGoGqtO4OG1RHmMXxEqwnS9LcbGgumEAe0ue9WMeuKbWgzvqK6u9RHeNs3PO
-         hJVPWrtmgZ3DV9y8pQjNFfIrujZfg/OeJOB+5YH9B647Krz5oAq9Q6OefmoCPUHRnpO8
-         gO0OUkpAmKqS+MtNG7QBmUCW0a6wVU+vzFpVo6mK6BVJlBuoF/r3WOwqtnF72kf34a5K
-         bT8WsbVXiGXMsekX+lWRdz9N2oyaWBp+EjqpPPlH07TbHmzlYsdPRA2dze8JFXDONFuc
-         VG3tMGgUk55U3op7075lFmFL+v6gF9r2IhQ7YZ8eVy8KV7Zk/UlXsWEE/ZT+RaRbrCwt
-         GNRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gjtO3+vpKn1A68ulTNV3+i1kW5W8NfqinqR35PqtzaI=;
-        b=ZiDbt9fwTacYU0a8oZN3FjF9jCHxXXHEF5XaTRMoUAHBwqZmfocuTYhPdYbypDtQRz
-         2Q15+KmQDh9YV16JHOCwm/XJJposMXagQGb0GAn7MTvxa2IlU0SCBdgPH8rHY54xA0Em
-         ZKIwYGymhDLXWRsi8RODsr/zZS+Gm49bTuCEc8Q4kXMVNgjHtNAAw5nNcxuyeUUG+SYp
-         QA+C6XGekt5fqwNTgikgI06SSXce06Ypowiadg1wVRO20iI6aLt1ELOdQzLm3J1yEGM2
-         XFez/T/vavudB+Df/H+h/dMycX6PuRl9IoEFrQCpX+Li2w3ySxHFtWZQF1B01u2oaUUO
-         6FmA==
-X-Gm-Message-State: AOAM532Coz9GSegPNV/krerSveL6GiI4v3FKXaEuuKd2PVKgDoXNy8Tp
-        0LiKDu/8ZuIZqHORxR5Feefkmg==
-X-Google-Smtp-Source: ABdhPJy0SChbO2shXRc4vp0bmFhI2gH9IjNGdF2dYdDp0EX9wxfgtO8MwNTFrtY2y9b7qitmPqOirw==
-X-Received: by 2002:a17:90b:4c8b:: with SMTP id my11mr18897947pjb.153.1593458876736;
-        Mon, 29 Jun 2020 12:27:56 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 22sm428848pfx.94.2020.06.29.12.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:27:56 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 12:25:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
- fix qcom build error
-Message-ID: <20200629192524.GK388985@builder.lan>
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+        Mon, 29 Jun 2020 15:28:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:4711 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732389AbgF2T2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:28:00 -0400
+IronPort-SDR: axONr3dzOZxBB0FcL2BR7NmIdsILfZE04A+GUKmzHhzldvE/d5s2GLDgQi1Qo6M8v5YqjpIAks
+ AayGYxLav09w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144994055"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="144994055"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:05:54 -0700
+IronPort-SDR: IHiZZ/2uBuE5q2uzoxtbPOUbIzaP7Wo9/jcAKm7ZJOpzRcmOePKvJX5Ce58yg769rkZSCPsxuC
+ /y1DUk+xeuiQ==
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="424751636"
+Received: from aslawinx-mobl1.ger.corp.intel.com (HELO [10.249.138.39]) ([10.249.138.39])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:05:52 -0700
+Subject: Re: [PATCH v4 1/3] ALSA: compress: document the compress audio state
+ machine
+To:     Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>
+Cc:     alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+References: <20200629075002.11436-1-vkoul@kernel.org>
+ <20200629075002.11436-2-vkoul@kernel.org>
+From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Message-ID: <c29b3199-cebd-2153-5530-e75f76aa8b4b@linux.intel.com>
+Date:   Mon, 29 Jun 2020 11:05:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+In-Reply-To: <20200629075002.11436-2-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29 Jun 09:43 PDT 2020, Randy Dunlap wrote:
 
-> From: Randy Dunlap <rdunlap@infradead.org>
+
+On 6/29/2020 9:50 AM, Vinod Koul wrote:
+> So we had some discussions of the stream states, so I thought it is a
+> good idea to document the state transitions, so add it documentation
 > 
-> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
-> by adding a stub for of_get_next_parent().
-> 
-> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
-> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  include/linux/of.h |    5 +++++
->  1 file changed, 5 insertions(+)
+>   .../sound/designs/compress-offload.rst        | 51 +++++++++++++++++++
+>   1 file changed, 51 insertions(+)
 > 
-> --- linux-next-20200629.orig/include/linux/of.h
-> +++ linux-next-20200629/include/linux/of.h
-> @@ -630,6 +630,11 @@ static inline struct device_node *of_get
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_get_next_parent(struct device_node *node)
-> +{
-> +	return NULL;
-> +}
+> diff --git a/Documentation/sound/designs/compress-offload.rst b/Documentation/sound/designs/compress-offload.rst
+> index ad4bfbdacc83..b6e9025ae105 100644
+> --- a/Documentation/sound/designs/compress-offload.rst
+> +++ b/Documentation/sound/designs/compress-offload.rst
+> @@ -151,6 +151,57 @@ Modifications include:
+>   - Addition of encoding options when required (derived from OpenMAX IL)
+>   - Addition of rateControlSupported (missing in OpenMAX AL)
+>   
+> +State Machine
+> +=============
 > +
->  static inline struct device_node *of_get_next_child(
->  	const struct device_node *node, struct device_node *prev)
->  {
+> +The compressed audio stream state machine is described below ::
+> +
+> +                                        +----------+
+> +                                        |          |
+> +                                        |   OPEN   |
+> +                                        |          |
+> +                                        +----------+
+> +                                             |
+> +                                             |
+> +                                             | compr_set_params()
+> +                                             |
+> +                                             v
+> +         compr_free()                   +----------+
+> +  +------------------------------------|          |
+> +  |                                    |   SETUP  |
+> +  |          +------------------------>|          |<-------------------------+
+> +  |          | compr_drain_notify()    +----------+                          |
+> +  |          |         or                   ^                                |
+> +  |          |      compr_stop()            |                                |
+> +  |          |                              | compr_write()                  |
+> +  |          |                              |                                |
+> +  |          |                              |                                |
+> +  |          |                         +----------+                          |
+> +  |          |                         |          |   compr_free()           |
+> +  |          |                         |  PREPARE |---------------> A        |
+> +  |          |                         |          |                          |
+> +  |          |                         +----------+                          |
+> +  |          |                              |                                |
+> +  |          |                              |                                |
+> +  |          |                              | compr_start()                  |
+> +  |          |                              |                                |
+> +  |          |                              v                                |
+> +  |    +----------+                    +----------+                          |
+> +  |    |          |    compr_drain()   |          |        compr_stop()      |
+> +  |    |  DRAIN   |<-------------------|  RUNNING |--------------------------+
+> +  |    |          |                    |          |                          |
+> +  |    +----------+                    +----------+                          |
+> +  |                                       |    ^                             |
+> +  |          A                            |    |                             |
+> +  |          |              compr_pause() |    | compr_resume()              |
+> +  |          |                            |    |                             |
+> +  |          v                            v    |                             |
+> +  |    +----------+                   +----------+                           |
+> +  |    |          |                   |          |         compr_stop()      |
+> +  +--->|   FREE   |                   |  PAUSE   |---------------------------+
+> +       |          |                   |          |
+> +       +----------+                   +----------+
+> +
+>   
+>   Gapless Playback
+>   ================
 > 
-> 
+
+Line containing compr_free (between SETUP and FREE) seems to be misaligned?
+
+If you move prepare to the left and drain in place of drain, it feels 
+like you won't need this weird indirection with A
+Something like:
+
+ >> +                                             v
+>> +         compr_free()                   +----------+
+>> +  +------------------------------------|          |
+>> +  |                                    |   SETUP  |
+>> +  |          +------------------------>|          |<-------------------------+
+>> +  |          | compr_write()           +----------+                          |
+>> +  |          |                              ^                                |
+>> +  |          |                              | compr_drain_notify() or        |
+>> +  |          |                              | compr_stop()                   |
+>> +  |          |                              |                                |
+>> +  |          |                              |                                |
+>> +  |          |                         +----------+                          |
+>> +  |          |                         |          |                          |
+>> +  |          |                         |  DRAIN   |                          |
+>> +  |          |                         |          |                          |
+>> +  |          |                         +----------+                          |
+>> +  |          |                              ^                                |
+>> +  |          |                              |                                |
+>> +  |          |                              | compr_drain()                  |
+>> +  |          |                              |                                |
+>> +  |          |                              |                                |
+>> +  |    +----------+                    +----------+                          |
+>> +  |    |          |    compr_start()   |          |        compr_stop()      |
+>> +  |    |  PREPARE |------------------->|  RUNNING |--------------------------+
+>> +  |    |          |                    |          |                          |
+>> +  |    +----------+                    +----------+                          |
+>> +  |          |                            |    ^                             |
+>> +  |          | compr_free()               |    |                             |
+>> +  |          |              compr_pause() |    | compr_resume()              |
+>> +  |          |                            |    |                             |
+>> +  |          v                            v    |                             |
+>> +  |    +----------+                   +----------+                           |
+>> +  |    |          |                   |          |         compr_stop()      |
+>> +  +--->|   FREE   |                   |  PAUSE   |---------------------------+
+>> +       |          |                   |          |
+>> +       +----------+                   +----------+
+>> +
+
+but this makes me question PREPARE state, how do you enter it?
