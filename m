@@ -2,51 +2,50 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB840C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8714EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0AEB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB1C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460323;
-	bh=jj3Ljte/sgoT3oHrDvoMUysMOGVCiWeb/5cZvyxK/jM=;
+	s=default; t=1593460326;
+	bh=PTXgBodTo5cXRnYlvSzqSd9BTMIrdK30OzvUyOONAiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J88MUfyXho7AUQSyQqF4uruSPiIkWWcmNnoeocIABaL3kga27OUkRFIGNbOPDv7MK
-	 lWXRuzJC5s+r+w8eEyIHJrt9H+2PmKuDe4NiSLopRTE/txV/wD4ZOCyZd2Uv/oa6Wi
-	 Omy8Iqc3Cw7Dal3aCGkrSJBnPN19uXpcJ76MFfIM=
+	b=qeWCOsMlq5YLz9PbBEd3t4/y8pPBAq+AkzbM1ukqplZA92BedxTBCzY0jmp55/q+6
+	 b6AMjBFaLPYBw/mn68jHyEm2TjZ0hAkaFcmjzEnT99J4YooD4VekxVRssWF/kncdeV
+	 Czp87t9y41Ab5r9FiBokuTQKJXtJ8mUiZGS7W7ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388281AbgF2TwB (ORCPT
+        id S2388286AbgF2TwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387716AbgF2Tkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387715AbgF2Tkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2FA7251BA;
-        Mon, 29 Jun 2020 15:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0FBF24908;
+        Mon, 29 Jun 2020 15:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444490;
-        bh=jj3Ljte/sgoT3oHrDvoMUysMOGVCiWeb/5cZvyxK/jM=;
+        s=default; t=1593444460;
+        bh=PTXgBodTo5cXRnYlvSzqSd9BTMIrdK30OzvUyOONAiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWhuJ3m2qVXRRwVDkcuM26gPis+So7L4ZLEqR7a1iXc3mxTeu6zbuqzSlqURFbRAm
-         wO4iVjyEcAVFd1ToEqpOOOpwWb8AJnMvhJRjzh0b+FqAZ5fuhUQhdg2nneE5E8Tvd8
-         MHM760fuhyQvVFAZh5ItBuzFPPET/LHd1PjZJTgk=
+        b=EAuteJD3+cSUQwPBwpP1afnq07N9AhF3wwG71KV7QEcnxSR/bqnqfUNUBD9C7rzfg
+         yNhHoM4xzIAckMKuXM85kiGKUOaJ3qtmCWZVPwEbn9zP7MP1QhVDMay/ACEgfSye9u
+         HY9hlcZIUlxDCoCS0NiigsT0k0LHVoFJFbtXNE5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 167/178] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
-Date:   Mon, 29 Jun 2020 11:25:12 -0400
-Message-Id: <20200629152523.2494198-168-sashal@kernel.org>
+Subject: [PATCH 5.4 140/178] ALSA: hda/realtek - Add quirk for MSI GE63 laptop
+Date:   Mon, 29 Jun 2020 11:24:45 -0400
+Message-Id: <20200629152523.2494198-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,35 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
+commit a0b03952a797591d4b6d6fa7b9b7872e27783729 upstream.
 
-clk_s is checked twice in a row in ni_init_smc_spll_table().
-fb_div should be checked instead.
+MSI GE63 laptop with ALC1220 codec requires the very same quirk
+(ALC1220_FIXUP_CLEVO_P950) as other MSI devices for the proper sound
+output.
 
-Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208057
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200616132150.8778-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
-index d9e62ca65ab8d..bd2e577c701f2 100644
---- a/drivers/gpu/drm/radeon/ni_dpm.c
-+++ b/drivers/gpu/drm/radeon/ni_dpm.c
-@@ -2128,7 +2128,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
- 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
- 			ret = -EINVAL;
- 
--		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
-+		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
- 			ret = -EINVAL;
- 
- 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 459a7d61326ec..45315b14abe63 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2460,6 +2460,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x11f7, "MSI-GE63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
 -- 
 2.25.1
 
