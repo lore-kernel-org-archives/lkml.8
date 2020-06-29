@@ -2,78 +2,183 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D35AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C154206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F040B20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459332;
-	bh=nq/3u9dL+NpcA+VdPdDb5yrAY3dUfopzZqsU7+8108A=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=INtgSxiMVcJVbhRnv/55bEfqTK4H8uOFDcSGlwSemMpf2lyj+VeT684IdC+bx6G6C
-	 +myIV/GzgS233K8xOMOIeSB/EzpoA4Z1BB7nO18XuceCDj1clC4Qd537LTiyBHFelm
-	 NJrouHKbGAxb5XoTo6T9e4S96tVM3FXXVkBObOFo=
+	s=default; t=1593459334;
+	bh=1ZLzgnbH5oG3t2J2EPld7yYSK9qqa5DjjcAWfwKmD14=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=qzeyrOkkcya7jKFhzkqcKmpSg4610NLC87lTlw+5m28yWCh4PWL3Y40ARuWBOkh8n
+	 Oms0NqLbL1yhzL6ODXhifu56qKvbgoXtT7rcp4JFH62AvJLiVkgBvNEdSK0yllk0XD
+	 iCn9NW9q5DLtLNbYF644ilCQTigUCZFAQFZ7ERG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733255AbgF2Tfa (ORCPT
+        id S1733303AbgF2Tf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbgF2TfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732040AbgF2TfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:35:15 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB8520672;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD9520780;
         Mon, 29 Jun 2020 15:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1593444620;
-        bh=nq/3u9dL+NpcA+VdPdDb5yrAY3dUfopzZqsU7+8108A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UiTkgXKue1u1YVBAqngVCkhOgulfHMdfnLZEEWDCY/co470a08KLv9aANHwZaG3WU
-         T5marLFtwl+o09Ed/sBO34ps6Kf7YVMwjtHrATod/LAJL/wDxcv0kiA8mWmfqhAVz2
-         v741836WMzRBZvnM5+TNZnqd4+6L1mgWwLAk3vCM=
+        bh=1ZLzgnbH5oG3t2J2EPld7yYSK9qqa5DjjcAWfwKmD14=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y1TaVhVpofsGm60DaqyMDNNgAbmjRY6RobR5GqpK1Gk13EiDcO2jzmPWW5pMTHYly
+         No1B8pTaRt8bON2TvoZ71TTnhWOuwKUCh5Q5QX4WlPmAFJ3l/3Ebe53G6Xs0oNfgE0
+         5kk3MnDdK6j/+ejv8P+735DPWIbQEZ9JnVASviXQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jpvje-007CSt-3M; Mon, 29 Jun 2020 17:30:18 +0200
+        id 1jpvje-007CSw-4Y; Mon, 29 Jun 2020 17:30:18 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: [PATCH 0/2] Clean up goback logic
-Date:   Mon, 29 Jun 2020 17:30:15 +0200
-Message-Id: <cover.1593444492.git.mchehab+huawei@kernel.org>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kconfig: qconf: simplify the goBack() logic
+Date:   Mon, 29 Jun 2020 17:30:16 +0200
+Message-Id: <ce51102d23921ca54beef15fcf2453b29c328b72.1593444492.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1593444492.git.mchehab+huawei@kernel.org>
+References: <cover.1593444492.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those patches cleanup the goBack logic.
+The goBack() logic is used only for the configList, as
+it only makes sense on singleMode. So, let's simplify the
+code.
 
-The first patch removes some unused stuff and makes the goBack
-to work only on singleMode.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ scripts/kconfig/qconf.cc | 50 +++++++++++++++-------------------------
+ 1 file changed, 18 insertions(+), 32 deletions(-)
 
-The second patch ensures that the goback button won't be shown
-on split mode. While not clear at the logic, it won't show either on
-full mode. So, the button will only show on single mode, with is
-compatible with the current goBack() implementation.
-
-Mauro Carvalho Chehab (2):
-  kconfig: qconf: simplify the goBack() logic
-  kconfig: qconf: don't show goback button on splitMode
-
- scripts/kconfig/qconf.cc | 55 +++++++++++++++-------------------------
- 1 file changed, 21 insertions(+), 34 deletions(-)
-
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 0ba373a3cdd4..d0bcc0b717f0 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -1440,18 +1440,22 @@ ConfigMainWindow::ConfigMainWindow(void)
+ 	addToolBar(toolBar);
+ 
+ 	backAction = new QAction(QPixmap(xpm_back), "Back", this);
+-	  connect(backAction, SIGNAL(triggered(bool)), SLOT(goBack()));
+-	  backAction->setEnabled(false);
++	connect(backAction, SIGNAL(triggered(bool)), SLOT(goBack()));
++
+ 	QAction *quitAction = new QAction("&Quit", this);
+ 	quitAction->setShortcut(Qt::CTRL + Qt::Key_Q);
+-	  connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
++	connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
++
+ 	QAction *loadAction = new QAction(QPixmap(xpm_load), "&Load", this);
+ 	loadAction->setShortcut(Qt::CTRL + Qt::Key_L);
+-	  connect(loadAction, SIGNAL(triggered(bool)), SLOT(loadConfig()));
++	connect(loadAction, SIGNAL(triggered(bool)), SLOT(loadConfig()));
++
+ 	saveAction = new QAction(QPixmap(xpm_save), "&Save", this);
+ 	saveAction->setShortcut(Qt::CTRL + Qt::Key_S);
+-	  connect(saveAction, SIGNAL(triggered(bool)), SLOT(saveConfig()));
++	connect(saveAction, SIGNAL(triggered(bool)), SLOT(saveConfig()));
++
+ 	conf_set_changed_callback(conf_changed);
++
+ 	// Set saveAction's initial state
+ 	conf_changed();
+ 	configname = xstrdup(conf_get_configname());
+@@ -1652,21 +1656,11 @@ void ConfigMainWindow::searchConfig(void)
+ void ConfigMainWindow::changeItens(struct menu *menu)
+ {
+ 	configList->setRootMenu(menu);
+-
+-	if (configList->rootEntry->parent == &rootmenu)
+-		backAction->setEnabled(false);
+-	else
+-		backAction->setEnabled(true);
+ }
+ 
+ void ConfigMainWindow::changeMenu(struct menu *menu)
+ {
+ 	menuList->setRootMenu(menu);
+-
+-	if (menuList->rootEntry->parent == &rootmenu)
+-		backAction->setEnabled(false);
+-	else
+-		backAction->setEnabled(true);
+ }
+ 
+ void ConfigMainWindow::setMenuLink(struct menu *menu)
+@@ -1734,25 +1728,11 @@ void ConfigMainWindow::listFocusChanged(void)
+ 
+ void ConfigMainWindow::goBack(void)
+ {
+-	ConfigItem* item, *oldSelection;
++qInfo() << __FUNCTION__;
++	if (configList->rootEntry == &rootmenu)
++		return;
+ 
+ 	configList->setParentMenu();
+-	if (configList->rootEntry == &rootmenu)
+-		backAction->setEnabled(false);
+-
+-	if (menuList->selectedItems().count() == 0)
+-		return;
+-
+-	item = (ConfigItem*)menuList->selectedItems().first();
+-	oldSelection = item;
+-	while (item) {
+-		if (item->menu == configList->rootEntry) {
+-			oldSelection->setSelected(false);
+-			item->setSelected(true);
+-			break;
+-		}
+-		item = (ConfigItem*)item->parent();
+-	}
+ }
+ 
+ void ConfigMainWindow::showSingleView(void)
+@@ -1764,6 +1744,8 @@ void ConfigMainWindow::showSingleView(void)
+ 	fullViewAction->setEnabled(true);
+ 	fullViewAction->setChecked(false);
+ 
++	backAction->setEnabled(true);
++
+ 	menuView->hide();
+ 	menuList->setRootMenu(0);
+ 	configList->mode = singleMode;
+@@ -1783,6 +1765,8 @@ void ConfigMainWindow::showSplitView(void)
+ 	fullViewAction->setEnabled(true);
+ 	fullViewAction->setChecked(false);
+ 
++	backAction->setEnabled(false);
++
+ 	configList->mode = menuMode;
+ 	if (configList->rootEntry == &rootmenu)
+ 		configList->updateListAll();
+@@ -1806,6 +1790,8 @@ void ConfigMainWindow::showFullView(void)
+ 	fullViewAction->setEnabled(false);
+ 	fullViewAction->setChecked(true);
+ 
++	backAction->setEnabled(false);
++
+ 	menuView->hide();
+ 	menuList->setRootMenu(0);
+ 	configList->mode = fullMode;
 -- 
 2.26.2
-
 
