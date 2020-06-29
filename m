@@ -2,99 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D813C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3FC206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466561;
-	bh=69KAXq7nSrNne8dVE7YVsV2/lDTgQzzsUVum5KwNVZc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=E4ZQGA+1Z2rQm6ZZ+ucXByrzr99k+HgvHuxIxgvAh6rw8ir6PbhXfuCRuNEtejqSk
-	 HerxEWcyOthaNRmOpdFbsexLXMg8Iv2Yiw9ZQ5717ZDeOZgrUvCA5jX2BNX5uTbOnQ
-	 EDN+uciDDH1V+dsXTx3B5Lmt6KnpHxrYVsb1NYto=
+	s=default; t=1593466564;
+	bh=LXvcRe88NweP1KRH4lrxCsBpxttGet8FB2YNmIkHxnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M6uOVzMZ4mjilQPxYPQYRpYcb3u4GS/tp0PDVDEQ0Ilgemj+5u5aHtYsJMVkaRiO1
+	 K30iWpOVZ6T+cYS5V7LEnTlhtRMUZr0rw0N2G+PbGqcaryVF4r14B257qDdXM1ZKD1
+	 X/W5CU5RhUM1P0UNJ30iaRUBZAEsFYJrqjVAj9Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbgF2VgA (ORCPT
+        id S2391334AbgF2VgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbgF2Skq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:46 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
+        id S1728486AbgF2Skp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:45 -0400
+Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720452312E;
-        Mon, 29 Jun 2020 06:00:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D02523D50;
+        Mon, 29 Jun 2020 13:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593410447;
-        bh=69KAXq7nSrNne8dVE7YVsV2/lDTgQzzsUVum5KwNVZc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GRSZFxsRZTWvOaiuzo8KJuHhWg6fv0kcWT84LyI53REIlQNAFJBgWtSDfy0UeBZrb
-         zDuzXx4213NUAaSuiH3mKzaSCcQNusd1UXAOiWVQZ6qcnUZF9DMNA9p/WftCz9AdGk
-         0cjZOAuZXSdbSxPfzzuRm+wEa09MV4SsfP8A07Dk=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 13E895FCA9; Mon, 29 Jun 2020 14:00:45 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: sun4i: hdmi: Remove extra HPD polling
-Date:   Mon, 29 Jun 2020 14:00:32 +0800
-Message-Id: <20200629060032.24134-1-wens@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        s=default; t=1593436905;
+        bh=LXvcRe88NweP1KRH4lrxCsBpxttGet8FB2YNmIkHxnc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lk8z7Qeu0qofDn4k3ukyl8Sgf9/l0vRWVNNaxxiLCWKdrrkSPK6sw9oFTo8sGJd1R
+         8PFulkOmFfu4BtOELvFb+dYXpcL58MVebjO7CQKYydYCX0IlDe0Gf+7yT9rjRPWn6R
+         CZCP4xfFBBzpmAeGfiSw66I6ySQrWvLzT2eJBH/s=
+Date:   Mon, 29 Jun 2020 18:51:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
+Cc:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, dan.j.williams@intel.com,
+        cristian.ciocaltea@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
+Message-ID: <20200629132141.GM2599@vkoul-mobl>
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+ <20200624061529.GF2324254@vkoul-mobl>
+ <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+ <20200629095446.GH2599@vkoul-mobl>
+ <36274785-f400-4d69-deed-b7d545718d40@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <36274785-f400-4d69-deed-b7d545718d40@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On 29-06-20, 12:19, André Przywara wrote:
+> On 29/06/2020 10:54, Vinod Koul wrote:
 
-The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
-or less an input-only GPIO. Other GPIO-based HPD implementations
-directly return the current state, instead of polling for a specific
-state and returning the other if that times out.
+> >> What newer SoCs? I don't think we should try to guess the future here.
+> > 
+> > In a patch for adding new SoC, quite ironical I would say!
+> 
+> S700 is not a new SoC, it's just this driver didn't support it yet. What
+> I meant is that I don't even know about the existence of upcoming SoCs
+> (Google seems clueless), not to speak of documentation to assess which
+> DMA controller they use.
+> 
+> >> We can always introduce further abstractions later, once we actually
+> >> *know* what we are looking at.
+> > 
+> > Rather if we know we are adding abstractions, why not add in a way that
+> > makes it scale better rather than rework again
+> 
+> I appreciate the effort, but this really tapping around in the dark,
+> since we don't know which direction any new DMA controller is taking. I
+> might not even be similar.
+> 
+> >> Besides, I don't understand what you are after. The max frame length is
+> >> 1MB in both cases, it's just a matter of where to put FCNT_VAL, either
+> >> in FLEN or in CTRLB. And having an extra flag for that in driver data
+> >> sounds a bit over the top at the moment.
+> > 
+> > Maybe, maybe not. I would rather make it support N SoC when adding
+> > support for second one rather than keep adding everytime a new SoC is
+> > added...
+> 
+> Well, what do you suggest, specifically? At the moment we have two
+> *slightly* different DMA controllers, so we differentiate between the
+> two based on the model. Do you want to introduce an extra flag like
+> FRAME_CNT_IN_CTRLB? That seems to be a bit over the top here, since we
+> don't know if a future DMA controller is still compatible, or introduces
+> completely new differences.
 
-Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
-return a known state based on the current reading. This also gets rid
-of excessive CPU usage by kworker as reported on Stack Exchange [1] and
-Armbian forums [2].
+Fair enough, okay let us go with compatible for now
 
- [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietruck-with-bug-in-sun4i-drm-hdmi
- [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm_hdmi-a10a20/
-
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index ce07ddc3e058..557cbe5ab35f 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -259,9 +259,8 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
- 	unsigned long reg;
- 
--	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
--			       reg & SUN4I_HDMI_HPD_HIGH,
--			       0, 500000)) {
-+	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
-+	if (reg & SUN4I_HDMI_HPD_HIGH) {
- 		cec_phys_addr_invalidate(hdmi->cec_adap);
- 		return connector_status_disconnected;
- 	}
 -- 
-2.27.0
-
+~Vinod
