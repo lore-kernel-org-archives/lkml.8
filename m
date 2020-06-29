@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02533C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EAC206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD88D206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467621;
-	bh=drp2f25DFRE4eBQDoA2zeF7D935lnFyMT9HwmaicU8I=;
+	s=default; t=1593467626;
+	bh=sO2xBJT9t+KEVHko+8omTjreYu5x0FMEHORvarc5ou0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18pjRJXoiwuDy51BOtEuPRBC7FnIyCKaCzzadYDjZvR6kQkKbJ5+LP3H9MoSrrAOB
-	 P/1ArWdQVV/5FwuRypSggWmZaRJOIapRV+v6u8db8Kd8ubXBGXq+SVz0tuWJ73jLDP
-	 qCk/3sKebSFUa3qaFIs+gKLXWuCymLvu6+CbykV4=
+	b=vu7L8vqCj7KtJ1QGC9zw2yivzYVaVKsRJMbc4Ok2CT2Nio0XdDoQ2DqgaKpCAm+4P
+	 enKxZVxxkR+45I49IgrIFDKyXTfb2hxynmIOjXBgj4zLqR5Td7/Psy2NicSOSDHliX
+	 ACw1+ipgq4jtAYBOrPfUGKIsM/kX/hVBqhbicbA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404650AbgF2Vxj (ORCPT
+        id S2404389AbgF2Vxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726570AbgF2Sfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726107AbgF2Sfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0443924734;
-        Mon, 29 Jun 2020 15:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FF92417E;
+        Mon, 29 Jun 2020 15:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444053;
-        bh=drp2f25DFRE4eBQDoA2zeF7D935lnFyMT9HwmaicU8I=;
+        s=default; t=1593443949;
+        bh=sO2xBJT9t+KEVHko+8omTjreYu5x0FMEHORvarc5ou0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jiy0FHUHUyXtluBMtv8WCX8Q7HdIyxcPcNmpt6sazksGU67nbyRuzxaB3HqvuCorp
-         iKBm9yOkz7+UEEyIvUy3LeafGSd58KCzsv2uG1hLNsmM0kmR2TbrxVWPSJx83l4i29
-         RIc/LDSYRwXPG57c05yl26YqlcgkadxLh0cX00to=
+        b=Yz63zDOCutQh4/WGEzsPmK8qNDvLW9u8DZRifDflkHDD/bUMA/cmocsgdTalXfk5q
+         QjkbGsPXZkHuDyg2exaCvHVIop2NbwGA+FU7rUNJTLUffzlGVu8RE1a2TEzfAa/ODl
+         8ACfG+8RMPdis6dzUfesaqsxCWpBL/2wowTC2lFQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 161/265] nvme-multipath: set bdi capabilities once
-Date:   Mon, 29 Jun 2020 11:16:34 -0400
-Message-Id: <20200629151818.2493727-162-sashal@kernel.org>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Kevin Groeneveld <kgroeneveld@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 051/265] net: phy: smsc: fix printing too many logs
+Date:   Mon, 29 Jun 2020 11:14:44 -0400
+Message-Id: <20200629151818.2493727-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,68 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit b2ce4d90690bd29ce5b554e203cd03682dd59697 ]
+[ Upstream commit 6d61f483f148b856d47a6c96d5d84054d5a9f849 ]
 
-The queues' backing device info capabilities don't change with each
-namespace revalidation. Set it only when each path's request_queue
-is initially added to a multipath queue.
+Commit 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout()
+to simplify the code") will print a lot of logs as follows when Ethernet
+cable is not connected:
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[    4.473105] SMSC LAN8710/LAN8720 2188000.ethernet-1:00: lan87xx_read_status failed: -110
+
+When wait 640 ms for check ENERGYON bit, the timeout should not be
+regarded as an actual error and an error message also should not be
+printed. due to a hardware bug in LAN87XX device, it leads to unstable
+detection of plugging in Ethernet cable when LAN87xx is in Energy Detect
+Power-Down mode. the workaround for it involves, when the link is down,
+and at each read_status() call:
+
+- disable EDPD mode, forcing the PHY out of low-power mode
+- waiting 640ms to see if we have any energy detected from the media
+- re-enable entry to EDPD mode
+
+This is presumably enough to allow the PHY to notice that a cable is
+connected, and resume normal operations to negotiate with the partner.
+The problem is that when no media is detected, the 640ms wait times
+out and this commit was modified to prints an error message. it is an
+inappropriate conversion by used phy_read_poll_timeout() to introduce
+this bug. so fix this issue by use read_poll_timeout() to replace
+phy_read_poll_timeout().
+
+Fixes: 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout() to simplify the code")
+Reported-by: Kevin Groeneveld <kgroeneveld@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvme/host/core.c      | 7 -------
- drivers/nvme/host/multipath.c | 8 ++++++++
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/net/phy/smsc.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 7b4cbe2c69541..887139f8fa53b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1910,13 +1910,6 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
--		if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--			struct backing_dev_info *info =
--				ns->head->disk->queue->backing_dev_info;
--
--                        info->capabilities |= BDI_CAP_STABLE_WRITES;
--		}
--
- 		revalidate_disk(ns->head->disk);
- 	}
- #endif
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 54603bd3e02de..9f2844935fdfa 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2017-2018 Christoph Hellwig.
-  */
+diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
+index 93da7d3d0954c..74568ae161253 100644
+--- a/drivers/net/phy/smsc.c
++++ b/drivers/net/phy/smsc.c
+@@ -122,10 +122,13 @@ static int lan87xx_read_status(struct phy_device *phydev)
+ 		if (rc < 0)
+ 			return rc;
  
-+#include <linux/backing-dev.h>
- #include <linux/moduleparam.h>
- #include <trace/events/block.h>
- #include "nvme.h"
-@@ -666,6 +667,13 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 		nvme_mpath_set_live(ns);
- 		mutex_unlock(&ns->head->lock);
- 	}
-+
-+	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
-+		struct backing_dev_info *info =
-+					ns->head->disk->queue->backing_dev_info;
-+
-+		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+	}
- }
+-		/* Wait max 640 ms to detect energy */
+-		phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS, rc,
+-				      rc & MII_LAN83C185_ENERGYON, 10000,
+-				      640000, true);
++		/* Wait max 640 ms to detect energy and the timeout is not
++		 * an actual error.
++		 */
++		read_poll_timeout(phy_read, rc,
++				  rc & MII_LAN83C185_ENERGYON || rc < 0,
++				  10000, 640000, true, phydev,
++				  MII_LAN83C185_CTRL_STATUS);
+ 		if (rc < 0)
+ 			return rc;
  
- void nvme_mpath_remove_disk(struct nvme_ns_head *head)
 -- 
 2.25.1
 
