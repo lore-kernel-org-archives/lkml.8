@@ -2,145 +2,166 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05316C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89710204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D4E20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PDfV+Se+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0fJ45Lc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390910AbgF2VUk (ORCPT
+        id S1726975AbgF2VUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
+        Mon, 29 Jun 2020 17:20:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390903AbgF2VU0 (ORCPT
+        with ESMTP id S1729781AbgF2Sws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:20:26 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768ACC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:26 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id f24so10057538vsg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:26 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6FC031C57;
+        Mon, 29 Jun 2020 10:36:37 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t6so8635774pgq.1;
+        Mon, 29 Jun 2020 10:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PvQsP2K1IWOWSErQkN4kOg/ZkRvv96UfS68Sc9P6pYw=;
-        b=PDfV+Se+yMQ06TSOXI9VBLeM9L1MJl1ZGEEhtbRJvxiOKVAraxRnu6LXXdEaMEruK8
-         Le6n8m2csF3UzAPIVfVkNJv8gcn4XGM/iQKosYIESa/2V7rRG+0PyMov4gYgKuzQE2DT
-         kIPVCkP74x/rEcwqpqhX3pupL8W4PJNNkdMWk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
+        b=R0fJ45LcAzqMEfB6noKVYodLWFah632V2+qcF0G9d0sHUN7n7MwsjReJlbHyOxFAgQ
+         Pyqf1TrIb5+jNNbE7Gu2zh7Pev/OIpQYVhr0G06pAc4EvZ3QZti8JaDPPh9JprJ6lqM7
+         tqLA5emrcXMH/+DvgiCyb8A/ClsuRUzKMnIbaTWBxp5GGslGGiGr9HKCHUy1PbvqS24j
+         60bvSOJ0Nj3W6JRhbdP6caRjgWiAIuXtyAUuqOPa4jCa9O05I1sFDK5lLIaDCRcZodQs
+         B0eEZH4anwaspISF1wAL0KJ23fKcs6Ri+fuakGDCBPHZtFTJikMOeCKnC+N8ARzFsldc
+         kSNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PvQsP2K1IWOWSErQkN4kOg/ZkRvv96UfS68Sc9P6pYw=;
-        b=V10ZZr9eqQfxKpA8H4lVERhwBSHMUw5OnXA3B6zWCFNXVRlbsyiOrmuGDDAS8QM1VS
-         7FR9qikmb5pL0wtXZ5CAP1Ko+cHp4bnQxbzCyR2XFo3Xm+wHYn9a/rPnxFvMCGWqq1Ca
-         kPF/TF4qLn6Tx16q9LW0SmbUnUFe9baeuX395qtJ9x9k3l96Y3Be9RyeY2geb6sn5UrA
-         lAxRbbnRBgIEL54WVeVqlXXARlcrx+x0vHpL9l+d2kZcKkTwCeKVmzFuHLiLXLAG6ENG
-         XLGrn1To42eaEpmRkDQfAHIf1MPc7LKYc9ZL5cJAek4LSetoGbhE5nLb+o1G/FXyDTw8
-         CLBg==
-X-Gm-Message-State: AOAM530xJQ24vRPYRAA+kjdK0q7bvhDZnU4NL5BHCJCDt+fOPpM30A5b
-        4nozfMPfziem+A+PeBNcseib6zHwmAs=
-X-Google-Smtp-Source: ABdhPJxxfEhkXHrP7morNwB983hPYKxBv/f5pH+TlQOh199w1sqQl+aqXSZLmIuuL4SEhXV23R0yWA==
-X-Received: by 2002:a67:7743:: with SMTP id s64mr13228041vsc.131.1593465625305;
-        Mon, 29 Jun 2020 14:20:25 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id f133sm146713vke.23.2020.06.29.14.20.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 14:20:24 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id s192so4067647vkh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:23 -0700 (PDT)
-X-Received: by 2002:a1f:974d:: with SMTP id z74mr11382079vkd.40.1593465623410;
- Mon, 29 Jun 2020 14:20:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
+        b=smNUO9Kknl4aB+epcEO3OvhfpqOYEzSnukU5Y8FOsTbHqEuOK4HUSAH0sOaZMol3pa
+         ZbysRAum9pevIeu/RoBsdy6BbPHkZyR42OHuxaP9QUwNOD25FvWkDCwkc5RlK1eFLw4z
+         Kor1VVJ4XEYoAiVX6paPq1xzU23BI3mcXrSuyd4ffz+QSct3XvpRExS9wCZ23vcv54/R
+         nfZRdR3zISxQcG86iCF/2rTUykT54JoOGM83r+vhE0TQ8yW3hH0al4uoY2AryDCGvna/
+         XTmadXJEMgbqbqq1uda6WxGElKIWiFAn5dcHKBJHgoxxqT99SwaC0i/fxrYTzNdaLsWj
+         7u3g==
+X-Gm-Message-State: AOAM530e5uElo1NSZYLHCxCvqMzR4Z8WAMgh1xVR78o8N1WD73djtKQ9
+        fZ16qRwMH0Dv8mblDvltrI0=
+X-Google-Smtp-Source: ABdhPJzX3W9pUE3rQzyWQqNZmLpVSpw6IGMNuc9exvw210citymSwYDDB32iKOYKjCaB5XfOf1cKHw==
+X-Received: by 2002:a63:4915:: with SMTP id w21mr5651899pga.134.1593452196587;
+        Mon, 29 Jun 2020 10:36:36 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id k23sm331461pgb.92.2020.06.29.10.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:36:36 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 4/4] vt6655/device_main.c: use generic power management
+Date:   Mon, 29 Jun 2020 23:04:59 +0530
+Message-Id: <20200629173459.262075-5-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
+References: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <20200509214159.19680-1-liwei391@huawei.com> <CAD=FV=Xv6xgj_M9tYjHzmW4UZD2RdH2c5=dagNybSkdfBabYZw@mail.gmail.com>
- <a20ee677-495b-9336-a329-eabd50dd1cad@huawei.com>
-In-Reply-To: <a20ee677-495b-9336-a329-eabd50dd1cad@huawei.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 29 Jun 2020 14:20:11 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
-Message-ID: <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] arm64: kgdb/kdb: Fix single-step debugging issues
-To:     "liwei (GF)" <liwei391@huawei.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, liwei1412@163.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei,
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-On Sat, May 16, 2020 at 1:20 AM liwei (GF) <liwei391@huawei.com> wrote:
->
-> Hi Douglas,
->
-> On 2020/5/14 8:34, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Sat, May 9, 2020 at 6:49 AM Wei Li <liwei391@huawei.com> wrote:
-> >>
-> >> This patch set is to fix several issues of single-step debugging
-> >> in kgdb/kdb on arm64.
-> >>
-> >> It seems that these issues have been shelved a very long time,
-> >> but i still hope to solve them, as the single-step debugging
-> >> is an useful feature.
-> >>
-> >> Note:
-> >> Based on patch "arm64: cacheflush: Fix KGDB trap detection",
-> >> https://www.spinics.net/lists/arm-kernel/msg803741.html
-> >>
-> >> Wei Li (4):
-> >>   arm64: kgdb: Fix single-step exception handling oops
-> >>   arm64: Extract kprobes_save_local_irqflag() and
-> >>     kprobes_restore_local_irqflag()
-> >>   arm64: kgdb: Fix single-stepping into the irq handler wrongly
-> >>   arm64: kgdb: Set PSTATE.SS to 1 to reenable single-step
-> >>
-> >>  arch/arm64/include/asm/debug-monitors.h |  6 ++++++
-> >>  arch/arm64/kernel/debug-monitors.c      | 28 ++++++++++++++++++++++++-
-> >>  arch/arm64/kernel/kgdb.c                | 16 +++++++++++---
-> >>  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
-> >>  4 files changed, 48 insertions(+), 30 deletions(-)
-> >
-> > Just an overall note that I'm very happy that you posted this patch
-> > series!  It's always been a thorn in my side that stepping and
-> > breakpoints were so broken on arm64 and I'm really excited that you're
-> > fixing them.  Now I'll have to get in the habit of using kgdb for more
-> > than just debugging crashes and maybe I can use it more for exploring
-> > how functions work more.  :-)
-> > > I'll also note that with your patch series I'm even seeing the "call"
-> > feature of gdb working now.  That has always been terribly broken for
-> > me.
-> >
-> Thanks for reviewing and testing this series.
-> Enjoy exploring the kernel with kgdb/kdb! :-)
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
 
-I'm curious to know if you plan another spin.  The feedback you
-received was fairly minor so it hopefully shouldn't be too hard.  I'd
-very much like to get your patches landed and I'd be happy to try to
-address the feedback and spin them myself if you're no longer
-available for it.
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead.
 
-Thanks!
+Compile-tested only.
 
--Doug
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/staging/vt6655/device_main.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
+index 41cbec4134b0..76de1fd568eb 100644
+--- a/drivers/staging/vt6655/device_main.c
++++ b/drivers/staging/vt6655/device_main.c
+@@ -1766,48 +1766,37 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
+ 
+ /*------------------------------------------------------------------*/
+ 
+-#ifdef CONFIG_PM
+-static int vt6655_suspend(struct pci_dev *pcid, pm_message_t state)
++static int __maybe_unused vt6655_suspend(struct device *dev_d)
+ {
+-	struct vnt_private *priv = pci_get_drvdata(pcid);
++	struct vnt_private *priv = dev_get_drvdata(dev_d);
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 
+-	pci_save_state(pcid);
+-
+ 	MACbShutdown(priv);
+ 
+-	pci_disable_device(pcid);
+-
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+-	pci_set_power_state(pcid, pci_choose_state(pcid, state));
+-
+ 	return 0;
+ }
+ 
+-static int vt6655_resume(struct pci_dev *pcid)
++static int __maybe_unused vt6655_resume(struct device *dev_d)
+ {
+-	pci_set_power_state(pcid, PCI_D0);
+-	pci_enable_wake(pcid, PCI_D0, 0);
+-	pci_restore_state(pcid);
++	device_wakeup_disable(dev_d);
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ MODULE_DEVICE_TABLE(pci, vt6655_pci_id_table);
+ 
++static SIMPLE_DEV_PM_OPS(vt6655_pm_ops, vt6655_suspend, vt6655_resume);
++
+ static struct pci_driver device_driver = {
+ 	.name = DEVICE_NAME,
+ 	.id_table = vt6655_pci_id_table,
+ 	.probe = vt6655_probe,
+ 	.remove = vt6655_remove,
+-#ifdef CONFIG_PM
+-	.suspend = vt6655_suspend,
+-	.resume = vt6655_resume,
+-#endif
++	.driver.pm = &vt6655_pm_ops,
+ };
+ 
+ module_pci_driver(device_driver);
+-- 
+2.27.0
+
