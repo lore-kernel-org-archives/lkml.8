@@ -2,147 +2,171 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B37F020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178E520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1qss+KEl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kkVk4vA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403980AbgF2Vn3 (ORCPT
+        id S1731841AbgF2Vnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
+        Mon, 29 Jun 2020 17:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgF2Shu (ORCPT
+        with ESMTP id S1727860AbgF2Sht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:50 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409F5C03141A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:00 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g13so13425586qtv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:00 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:49 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451F2C0307BC
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:08:45 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id t7so7866819qvl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VQkFfkkA31JOV3zD6GN1+JAepXXLzSYJr6ThdL4AJWw=;
-        b=1qss+KElvuSqL3gw9wSWrIE2RxXQTdaCj6wtfO5R3w05GuNfhHAAqh4+TY9xhDRq9O
-         twKwYUUUP51niOGdmvCuQY10Eb42ItPAD1+TGameGSSBimHXfnO6kEvAs+7lLDzzzboB
-         EtRriuEpuISkCQtf21uvTRmYchwXEJxr5b8V70pxuoJiiOWWAywzr3DVFy1IN7fGLALU
-         p0idi94Oa8qjSK1au/LoU1T26oTyr2ct0BVFMljI61OyfInXd7QSeqVDNKGkAQ+5c7MK
-         cABjEGohSuBB4+dGn3luMqds4a/8C+Hs8Ljj9MoYzdY6U+GHsCr6/7fzDm8xM6wGGq91
-         ORhA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQexXlGBKJdk3D0CRqMaYBwtQzQ2Na2WWKz2a9JUMcM=;
+        b=kkVk4vA2nur6Ml4FZZwrw8YeLgGwNqqa4dh75/DY22m+lPTOkfIr04r4MUkXHwMw52
+         3Qq2S9tSvfvY9hy7OsJ9keWL3GBzxD+aI3k/i5794r+rdHuOsfJVfQCDmjV6CUwU37UB
+         OmrGrKuM/J5SyX78ZJShUM8IYT62sSLpP3PIA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VQkFfkkA31JOV3zD6GN1+JAepXXLzSYJr6ThdL4AJWw=;
-        b=uKcn+zhoXGpE3BkqAkDrm7QTrFfrkMGwvpUEsZ2E/iP+5abx4kVfBYp5iN4mPuYDgN
-         +FFF5IFKN5qDdRH+4+3vRy4wBILLEpNqKPwVr7/10fjwKww1zE+tCGOoQlixsHcijRTd
-         4o67GRM8plHpSZqPk2tJf7Q4gB6GdBG4Wrb71h5ri18bOe95KgfzvqWMccAKiGTcoVib
-         EEF8sN0ars9K9z+9tWxYMilnbjM6AkBM+tZxs16dItQ2keGXte/IXa6KBb20WTaq9BlV
-         ZPFhzGKLx3RnrPXWCjC8BMMzKtM/gsb9aEkBgbD1ou8yQpEoKya0LVGN2LXVE/GE02Sd
-         GqJA==
-X-Gm-Message-State: AOAM5325E2+Re6WRGlAZQb0fUIOZVVgMXPml0GmwLVPxYmJAW4ihlNqW
-        qkFwV0fM8ZfPq3PVEd3xkE8LoA==
-X-Google-Smtp-Source: ABdhPJy/zjExbd8/8qm1ppduBJEP6XTzek9kUYH3mOQnwBfSZPNQI+cXqU/uZhV3BQPKx6T4xnnSMA==
-X-Received: by 2002:ac8:4055:: with SMTP id j21mr16933381qtl.76.1593451259343;
-        Mon, 29 Jun 2020 10:20:59 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.20.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:20:58 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Deepak Katragadda <dkatraga@codeaurora.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list),
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 00/13] Enable GPU for SM8150 and SM8250
-Date:   Mon, 29 Jun 2020 13:20:30 -0400
-Message-Id: <20200629172049.30452-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQexXlGBKJdk3D0CRqMaYBwtQzQ2Na2WWKz2a9JUMcM=;
+        b=FW8saY8EUPT5dOrn8/H4LvDW4OF9wPN3DqQvZ0nKNHftWaiJb31RdPO4M3i0RUue37
+         qHqHGtZNg/m+QVivz69nJ2CyN33EnOT4JyhON5/0A1kYTyUh0LTc8WHVJhyBa48gDO5e
+         9hrmASn10lDdhvrfJbninN1rofv7gSM+X1Kevh/TV5xOR/FrqZUrwoRBdgl3dTK6u8Ct
+         AlJ+HUnynMCpGjhm4CaAYvxxNik/lKjt3bw++hJXkxtvsTzJXULqC6AccfyDdOa318is
+         /gK/+KoC5oUigNxMwcZ88lRt97cFq8YhSyF5feiHYR2t0UUIFOWhc3ucoV6amji5v46o
+         CD0g==
+X-Gm-Message-State: AOAM533eegjcoslzz0hNgurq774nbPq6zurm//Ck2OWaVO7a7E0Z7UIm
+        71W1NzdiOnzFfz54tP4QbFchrbG/8eGr9LeRm+tB/A==
+X-Google-Smtp-Source: ABdhPJw7oYxe86+vPz7ga8OTzT65uq/FKjKsrrMcs9OJqqprO2kMPcZz7RR93Rcxm6Eq7BLnP6mTa1hgWoaD/Unue64=
+X-Received: by 2002:a0c:b507:: with SMTP id d7mr15066362qve.133.1593446924258;
+ Mon, 29 Jun 2020 09:08:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200627045840.1314019-1-pmalani@chromium.org>
+ <20200627045840.1314019-2-pmalani@chromium.org> <cf26168d-bc97-7e35-6f86-a769a36fcc4a@collabora.com>
+In-Reply-To: <cf26168d-bc97-7e35-6f86-a769a36fcc4a@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 29 Jun 2020 09:08:32 -0700
+Message-ID: <CACeCKacaGvAshk0DgMfem23YRppdnSHU=Ewj5qAjUv2x-bqyCA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_typec: Add PM support
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds the missing clock drivers and dts nodes to enable
-the GPU on both SM8150 and SM8250.
+Hi Enric,
 
-Note an extra patch [1] is still required for GPU to work on SM8250.
+Thanks for reviewing the patch.
 
-Changes in V2:
-* Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the newly added
-  SM8150 GPU gcc clocks
-* Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL"
-* Added yaml schemas to gpucc dt-bindings patches
-* Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers" and changed
-  gpucc patches to use it.
-* Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
-* Added missing rpmh regulator level for sm8250 GPU clock levels
-* Use sm8150/sm8250 iommu compatibles in dts
-* Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks in dts
+On Mon, Jun 29, 2020 at 3:51 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Prashant,
+>
+> Thank you for the patch.
+>
+> On 27/6/20 6:58, Prashant Malani wrote:
+> > Define basic suspend resume functions for cros-ec-typec. On suspend, we
+> > simply ensure that any pending port update work is completed, and on
+> > resume, we re-poll the port state to account for any
+> > changes/disconnections that might have occurred during suspend.
+> >
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > ---
+> >  drivers/platform/chrome/cros_ec_typec.c | 34 +++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> > index 630170fb2cbe..68f15a47450c 100644
+> > --- a/drivers/platform/chrome/cros_ec_typec.c
+> > +++ b/drivers/platform/chrome/cros_ec_typec.c
+> > @@ -725,11 +725,45 @@ static int cros_typec_probe(struct platform_device *pdev)
+> >       return ret;
+> >  }
+> >
+> > +#ifdef CONFIG_PM_SLEEP
+> > +
+> > +static int cros_typec_suspend(struct device *dev)
+>
+> I'd prefer if you can mark these function as __maybe_unused (to avoid the
+> compiler warning) rather than wrapping it in a preprocessor conditional, it
+> makes the code a bit more simple.
 
-[1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
+Done.
 
-Jonathan Marek (13):
-  clk: qcom: gcc: fix sm8150 GPU and NPU clocks
-  clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL
-  clk: qcom: clk-alpha-pll: same regs and ops for trion and lucid
-  clk: qcom: clk-alpha-pll: use the right PCAL_DONE value for lucid pll
-  clk: qcom: gcc: remove unnecessary vco_table from SM8150
-  dt-bindings: clock: Introduce SM8150 QCOM Graphics clock bindings
-  dt-bindings: clock: Introduce SM8250 QCOM Graphics clock bindings
-  clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers
-  clk: qcom: Add graphics clock controller driver for SM8150
-  clk: qcom: Add graphics clock controller driver for SM8250
-  dt-bindings: power: Add missing rpmpd rpmh regulator level
-  arm64: dts: qcom: add sm8150 GPU nodes
-  arm64: dts: qcom: add sm8250 GPU nodes
+>
+> > +{
+> > +     struct cros_typec_data *typec = dev_get_drvdata(dev);
+> > +
+> > +     cancel_work_sync(&typec->port_work);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int cros_typec_resume(struct device *dev)
+>
+> __maybe_unused ?
 
- .../bindings/clock/qcom,sm8150-gpucc.yaml     |  74 +++
- .../bindings/clock/qcom,sm8250-gpucc.yaml     |  74 +++
- arch/arm64/boot/dts/qcom/sm8150.dtsi          | 136 ++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi          | 143 ++++++
- drivers/clk/qcom/Kconfig                      |  16 +
- drivers/clk/qcom/Makefile                     |   2 +
- drivers/clk/qcom/clk-alpha-pll.c              |  70 ++-
- drivers/clk/qcom/clk-alpha-pll.h              |  15 +-
- drivers/clk/qcom/gcc-sm8150.c                 |  26 +-
- drivers/clk/qcom/gdsc.c                       |  25 +
- drivers/clk/qcom/gdsc.h                       |   1 +
- drivers/clk/qcom/gpucc-sc7180.c               |  27 +-
- drivers/clk/qcom/gpucc-sdm845.c               |  27 +-
- drivers/clk/qcom/gpucc-sm8150.c               | 421 ++++++++++++++++
- drivers/clk/qcom/gpucc-sm8250.c               | 450 ++++++++++++++++++
- include/dt-bindings/clock/qcom,gpucc-sm8150.h |  40 ++
- include/dt-bindings/clock/qcom,gpucc-sm8250.h |  40 ++
- include/dt-bindings/power/qcom-rpmpd.h        |   1 +
- 18 files changed, 1479 insertions(+), 109 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
- create mode 100644 drivers/clk/qcom/gpucc-sm8150.c
- create mode 100644 drivers/clk/qcom/gpucc-sm8250.c
- create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
- create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
+Done.
 
--- 
-2.26.1
+>
+> > +{
+> > +     struct cros_typec_data *typec = dev_get_drvdata(dev);
+> > +
+> > +     /* Refresh port state. */
+> > +     schedule_work(&typec->port_work);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops cros_typec_pm_ops = {
+> > +     SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
+> > +};
+> > +
+> > +#define DEV_PM_OPS   (&cros_typec_pm_ops)
+> > +
+> > +#else
+> > +
+> > +#define DEV_PM_OPS   NULL
+> > +
+> > +#endif /* CONFIG_PM_SLEEP */
+>
+> and remove the ifdefy
+>
 
+Done.
+
+> > +
+> >  static struct platform_driver cros_typec_driver = {
+> >       .driver = {
+> >               .name = DRV_NAME,
+> >               .acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+> >               .of_match_table = of_match_ptr(cros_typec_of_match),
+> > +             .pm = DEV_PM_OPS,
+>
+>                 .pm = &cros_typec_pm_ops,
+>
+> >       },
+> >       .probe = cros_typec_probe,
+> >  };
+> >
+>
+> Thanks,
+>  Enric
