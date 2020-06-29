@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813D72082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40AB20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459996;
-	bh=hSAK8Mcvp45jbcUJDk/GAFg+Sn0L3Ei1iFMlI2KVjU4=;
+	s=default; t=1593459998;
+	bh=edJlsyWOuqfkRWtm1v3QUxPgbMSHNEg8qqqpDklJnFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9oafQcPKjklthnZInU5/e/tJBSPPigRInJd4Gu9wIbGilkq0nOL9El1vaTRchrLj
-	 7NkIYxTWdUzz3hb/mcrCqe/u72qdXpWxjfA1xGKdxlMIT0Td0ppA3tB9wtp12x8ByB
-	 /I7eLcGCWvavOC0hD81FFsVkvLKFcHPRrVV5Jdew=
+	b=FB5olyOBCUNreRN9czGUkAwDTmyschmhdw12LbZNYycwdbXNVogghFwg2ugJ6s/+i
+	 f4YGbbTqwIMOAVVy6BYmKJvQDb49bMIB4Mj+ca+JHe+WGKnd7wKeHTr10cFf/X2isp
+	 tDygpz5HhMjwsP9bCdTTjYXSQT/N8GenPRS2GdeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgF2Tqf (ORCPT
+        id S2387844AbgF2Tqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387792AbgF2Tkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387798AbgF2Tkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBBC24890;
-        Mon, 29 Jun 2020 15:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3DC5248C7;
+        Mon, 29 Jun 2020 15:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444389;
-        bh=hSAK8Mcvp45jbcUJDk/GAFg+Sn0L3Ei1iFMlI2KVjU4=;
+        s=default; t=1593444425;
+        bh=edJlsyWOuqfkRWtm1v3QUxPgbMSHNEg8qqqpDklJnFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZuOu0XFgRd6i5d7EFGCVlCu+cO/VO2z0fnrXdrTAFZ/t5DlqVhj7zJMTpOvQf7xOr
-         4ZeOOTYP06AWVYugI0T9cHEm3wQpGk0R5H6xpCJt1E3UTl0vRIVT6bx7RF9QMgzw8l
-         L11f6fYXVqk5DTMtOv1D3xesqKbxbkUSME4wMlvU=
+        b=mvrWYVYnzs9Dbs7SEYxnJW0k0crMVs5e+gRaXY1SNSZs9gHufnkpcQ7r4gUXLGD7R
+         tJJVRK/9v5MFge3F6z02Cc0ypmYnDU6vNlnT4zQshqxW5XYOsK/EN3/B8fvJBNnIGN
+         UFPci65fK8WI86r18iBBg9V8zDdgtXKweq4/Q5w8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabian Vogt <fvogt@suse.de>, Ard Biesheuvel <ardb@kernel.org>,
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Hien Dang <hien.dang.eb@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/178] efi/tpm: Verify event log header before parsing
-Date:   Mon, 29 Jun 2020 11:23:31 -0400
-Message-Id: <20200629152523.2494198-67-sashal@kernel.org>
+Subject: [PATCH 5.4 103/178] usb: renesas_usbhs: getting residue from callback_result
+Date:   Mon, 29 Jun 2020 11:24:08 -0400
+Message-Id: <20200629152523.2494198-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -64,81 +66,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabian Vogt <fvogt@suse.de>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 7dfc06a0f25b593a9f51992f540c0f80a57f3629 ]
+[ Upstream commit ea0efd687b01355cd799c8643d0c636ba4859ffc ]
 
-It is possible that the first event in the event log is not actually a
-log header at all, but rather a normal event. This leads to the cast in
-__calc_tpm2_event_size being an invalid conversion, which means that
-the values read are effectively garbage. Depending on the first event's
-contents, this leads either to apparently normal behaviour, a crash or
-a freeze.
+This driver assumed that dmaengine_tx_status() could return
+the residue even if the transfer was completed. However,
+this was not correct usage [1] and this caused to break getting
+the residue after the commit 24461d9792c2 ("dmaengine:
+virt-dma: Fix access after free in vchan_complete()") actually.
+So, this is possible to get wrong received size if the usb
+controller gets a short packet. For example, g_zero driver
+causes "bad OUT byte" errors.
 
-While this behaviour of the firmware is not in accordance with the
-TCG Client EFI Specification, this happens on a Dell Precision 5510
-with the TPM enabled but hidden from the OS ("TPM On" disabled, state
-otherwise untouched). The EFI firmware claims that the TPM is present
-and active and that it supports the TCG 2.0 event log format.
+The usb-dmac driver will support the callback_result, so this
+driver can use it to get residue correctly. Note that even if
+the usb-dmac driver has not supported the callback_result yet,
+this patch doesn't cause any side-effects.
 
-Fortunately, this can be worked around by simply checking the header
-of the first event and the event log header signature itself.
+[1]
+https://lore.kernel.org/dmaengine/20200616165550.GP2324254@vkoul-mobl/
 
-Commit b4f1874c6216 ("tpm: check event log version before reading final
-events") addressed a similar issue also found on Dell models.
-
-Fixes: 6b0326190205 ("efi: Attempt to get the TCG2 event log in the boot stub")
-Signed-off-by: Fabian Vogt <fvogt@suse.de>
-Link: https://lore.kernel.org/r/1927248.evlx2EsYKh@linux-e202.suse.de
-Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1165773
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Reported-by: Hien Dang <hien.dang.eb@renesas.com>
+Fixes: 24461d9792c2 ("dmaengine: virt-dma: Fix access after free in vchan_complete()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1592482277-19563-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/tpm_eventlog.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/usb/renesas_usbhs/fifo.c | 23 +++++++++++++----------
+ drivers/usb/renesas_usbhs/fifo.h |  2 +-
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 131ea1bad458b..eccfd3a4e4c85 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -81,6 +81,8 @@ struct tcg_efi_specid_event_algs {
- 	u16 digest_size;
- } __packed;
+diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
+index 86637cd066cfb..05cdad13933b1 100644
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -803,7 +803,8 @@ static int __usbhsf_dma_map_ctrl(struct usbhs_pkt *pkt, int map)
+ 	return info->dma_map_ctrl(chan->device->dev, pkt, map);
+ }
  
-+#define TCG_SPECID_SIG "Spec ID Event03"
-+
- struct tcg_efi_specid_event_head {
- 	u8 signature[16];
- 	u32 platform_class;
-@@ -171,6 +173,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	int i;
- 	int j;
- 	u32 count, event_type;
-+	const u8 zero_digest[sizeof(event_header->digest)] = {0};
+-static void usbhsf_dma_complete(void *arg);
++static void usbhsf_dma_complete(void *arg,
++				const struct dmaengine_result *result);
+ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ {
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+@@ -813,6 +814,7 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
++	dma_cookie_t cookie;
  
- 	marker = event;
- 	marker_start = marker;
-@@ -198,10 +201,19 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	count = READ_ONCE(event->count);
- 	event_type = READ_ONCE(event->event_type);
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+@@ -827,11 +829,11 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ 	if (!desc)
+ 		return;
  
-+	/* Verify that it's the log header */
-+	if (event_header->pcr_idx != 0 ||
-+	    event_header->event_type != NO_ACTION ||
-+	    memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
-+		size = 0;
-+		goto out;
-+	}
-+
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+-	desc->callback		= usbhsf_dma_complete;
+-	desc->callback_param	= pipe;
++	desc->callback_result	= usbhsf_dma_complete;
++	desc->callback_param	= pkt;
  
- 	/* Check if event is malformed. */
--	if (count > efispecid->num_algs) {
-+	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
-+		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
- 		size = 0;
- 		goto out;
+-	pkt->cookie = dmaengine_submit(desc);
+-	if (pkt->cookie < 0) {
++	cookie = dmaengine_submit(desc);
++	if (cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+ 		return;
  	}
+@@ -1152,12 +1154,10 @@ static size_t usbhs_dma_calc_received_size(struct usbhs_pkt *pkt,
+ 					   struct dma_chan *chan, int dtln)
+ {
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+-	struct dma_tx_state state;
+ 	size_t received_size;
+ 	int maxp = usbhs_pipe_get_maxpacket(pipe);
+ 
+-	dmaengine_tx_status(chan, pkt->cookie, &state);
+-	received_size = pkt->length - state.residue;
++	received_size = pkt->length - pkt->dma_result->residue;
+ 
+ 	if (dtln) {
+ 		received_size -= USBHS_USB_DMAC_XFER_SIZE;
+@@ -1363,13 +1363,16 @@ static int usbhsf_irq_ready(struct usbhs_priv *priv,
+ 	return 0;
+ }
+ 
+-static void usbhsf_dma_complete(void *arg)
++static void usbhsf_dma_complete(void *arg,
++				const struct dmaengine_result *result)
+ {
+-	struct usbhs_pipe *pipe = arg;
++	struct usbhs_pkt *pkt = arg;
++	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	int ret;
+ 
++	pkt->dma_result = result;
+ 	ret = usbhsf_pkt_handler(pipe, USBHSF_PKT_DMA_DONE);
+ 	if (ret < 0)
+ 		dev_err(dev, "dma_complete run_error %d : %d\n",
+diff --git a/drivers/usb/renesas_usbhs/fifo.h b/drivers/usb/renesas_usbhs/fifo.h
+index c3d3cc35cee0f..4a7dc23ce3d35 100644
+--- a/drivers/usb/renesas_usbhs/fifo.h
++++ b/drivers/usb/renesas_usbhs/fifo.h
+@@ -50,7 +50,7 @@ struct usbhs_pkt {
+ 		     struct usbhs_pkt *pkt);
+ 	struct work_struct work;
+ 	dma_addr_t dma;
+-	dma_cookie_t cookie;
++	const struct dmaengine_result *dma_result;
+ 	void *buf;
+ 	int length;
+ 	int trans;
 -- 
 2.25.1
 
