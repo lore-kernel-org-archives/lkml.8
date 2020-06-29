@@ -2,160 +2,232 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D769C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F618C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 411EA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463648;
-	bh=uVrYPpEk0IjrH6XuehrsQ7j1MoJZIOKEVBYQ0CHtPn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sNl93oWwf2AZr+/NP5g824/pIsX3J+62qYB7gkZ1Y4DaefTwYoSbwvSPFfyRPM2BE
-	 1SmKy9NCkYYR6hPGsl9d7GTVIoO8ATm+FDFnfq3QQWj7jNeRE07kwN/uMlSGOKagEd
-	 ok4i1c/ZXLSw1DL4RfGlGluBK37D+CnqxUyxXSj4=
+	by mail.kernel.org (Postfix) with ESMTP id 804F820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sj3Z3WaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389793AbgF2Ur0 (ORCPT
+        id S2389805AbgF2Urd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
+        Mon, 29 Jun 2020 16:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731532AbgF2TNw (ORCPT
+        with ESMTP id S2389787AbgF2UrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:52 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E292C014AFD
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:03:53 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id by13so2153500edb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:03:53 -0700 (PDT)
+        Mon, 29 Jun 2020 16:47:24 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF3AC03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:47:24 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id j19so5999850ybj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UYdsVW3BBX8OC9WrPhf4Ap0SclutgAMBOwsFuhmAiUc=;
+        b=sj3Z3WaQ1XCj7qzBWUHl68lvUTLwnu6zeQufplCvQ7tx0Qlt+QJveoGV1nfGTLWyLv
+         M9vMyUf7RdkMji4al4luUrBJcN0XeDmkmrOP/FKVt6KzO3zJABVlVDOmki4v00ZinZsG
+         W3QatwpjQU/iv2XPFNkb3pk0fgKTqufJuLYy7G9ouIXrZNHI0mXMv8bpiQaKt1wr0Hey
+         zXQiFGGxuXjY2dwQ4qTyezFna1+McjHL8mJYxtwlnFmhj8/4Na+fIdw6DCLrOsEZz6vp
+         nrfN7LVua3jDjmxgQfa07/uAThOHhECLgI6qrP4c4P5428H7aUw8G6BVfA7qjCy+fXsF
+         LhdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tU/p6/XQD1UtMhsPATQwXv6wMmo7z9qcgbgQtemfgDk=;
-        b=PgAlD3Agd6yrN87LXFvAIhwHZzgLemW5Lyos8HKYyo3w6lbPwBXp+ZxstLHbk7e8Ou
-         7Lqy5I7/Z7uJnnkB78xqVCWzbycH0Hn03Gio9iETOiWIbJ/EWfJtqVNVgrx9muvH6TKU
-         cCw9lP1xx+5orVSuCvLonCKJGfhRQKiiQ5LpRX+IN4icw2cwhtnP7+iQO2rvXlwMGYWN
-         h8O73y2dMPoLCa28rrkiCw+RhJv8JANP/nXr6YYeR4npeEabJd5/MyX0fqhQtC0vmxz+
-         gNw7CV8HvMtlrmG7MeUiykiZqLrRwszoQesV6fi3Qaw4yjT2EZH4CMjGvkVk924zTe43
-         uuwA==
-X-Gm-Message-State: AOAM531c9QD+dHhR5H5nQtti9RSO8iS2+H414zIlxOFHujPld1UpFH5X
-        zt+kqG3hUpVGfEiDNOWKazM=
-X-Google-Smtp-Source: ABdhPJz4TRSsBtthWM7Gwrj+nINEZzKzoZdqTqYqd/hjV00j8U3cZeGjwf0qOk5kiSsg/aHoLbtMCQ==
-X-Received: by 2002:aa7:c98d:: with SMTP id c13mr8016803edt.188.1593417831943;
-        Mon, 29 Jun 2020 01:03:51 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id y21sm23452236ejp.32.2020.06.29.01.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:03:51 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:03:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v3 5/8] mm/migrate: make a standard migration target
- allocation function
-Message-ID: <20200629080350.GB32461@dhcp22.suse.cz>
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com>
- <20200625120550.GF1320@dhcp22.suse.cz>
- <CAAmzW4ObN=GAzCLw8betLftTeCEsLs4OihfNXvtg4CaWyWiBCw@mail.gmail.com>
- <20200626073342.GU1320@dhcp22.suse.cz>
- <CAAmzW4PT+M8mUwXMPhQSKLhz9nkPATivL5D-yLyyfC9SOwPnYQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UYdsVW3BBX8OC9WrPhf4Ap0SclutgAMBOwsFuhmAiUc=;
+        b=DszULbdszLBJsLGMGbEZueKHbI6Jb3mMqKFjmsAJ5qP/nfrRmMum9Zo893jz7wdwJy
+         Z9OZY5W/XGUIByKbpCx7zBc2k5CTBgrHyFM13DxKFmKWPgdnG7hrV3j37OKzitwwBeuj
+         lH5Rmb1HIA/P2kE5QK7X8eeIYcnoPpn662JEju3pG6MLoXbv1TgsMsMdY+HZUnaxkski
+         3mYe4T2CSxeutiaYgtVep2dN/sKVJt7zHMJ3mWoIAuSU7zSvTZKXK+B8U++nWylGAncC
+         m2LbS/FpYl3r3nan6UVfL0rDWALPmYSIbwfSnxXwgHzYO7TUa/m8s/wM/luNOyo+d2o7
+         FesA==
+X-Gm-Message-State: AOAM533VFIdD9Cswk2HhgufPfEtTTtIROW5R/Xm6bHCjM8nRaUmf8xkX
+        6alBQZ9AEKQ4arUJ6JhX0DMecqLpmiXUnHkZW7XIkw==
+X-Google-Smtp-Source: ABdhPJxtcxHf4vay9U02xLtRTxdahfswH8fg2jT+pmXLYU6yoQ0LrxrKPuLTeJOmlFoMAdLKDEoo0vUghrQVCwVvJug=
+X-Received: by 2002:a25:cd87:: with SMTP id d129mr27206628ybf.395.1593463642859;
+ Mon, 29 Jun 2020 13:47:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAmzW4PT+M8mUwXMPhQSKLhz9nkPATivL5D-yLyyfC9SOwPnYQ@mail.gmail.com>
+References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com>
+ <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com>
+ <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com> <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Mon, 29 Jun 2020 13:47:11 -0700
+Message-ID: <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-06-20 15:41:37, Joonsoo Kim wrote:
-> 2020년 6월 26일 (금) 오후 4:33, Michal Hocko <mhocko@kernel.org>님이 작성:
+On Mon, Jun 29, 2020 at 12:43 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> ----- On May 13, 2020, at 3:56 PM, Eric Dumazet edumazet@google.com wrote:
+>
+> > On Wed, May 13, 2020 at 12:49 PM Eric Dumazet <edumazet@google.com> wrote:
+> >>
+> >>
+> >> On Wed, May 13, 2020 at 12:38 PM Mathieu Desnoyers
+> >> <mathieu.desnoyers@efficios.com> wrote:
+> >> >
+> >> > Hi,
+> >> >
+> >> > I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
+> >> > on established sockets. It is observed by a customer.
+> >> >
+> >> > This issue is introduced by this commit:
+> >> >
+> >> > commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on
+> >> > established sockets"
+> >> >
+> >> > The intent of this commit appears to be to fix a use of uninitialized value in
+> >> > tcp_parse_options(). The change introduced by this commit is to disallow setting
+> >> > the TCP_MD5SIG{,_EXT} socket options on an established socket.
+> >> >
+> >> > The justification for this change appears in the commit message:
+> >> >
+> >> >    "I believe this was caused by a TCP_MD5SIG being set on live
+> >> >     flow.
+> >> >
+> >> >     This is highly unexpected, since TCP option space is limited.
+> >> >
+> >> >     For instance, presence of TCP MD5 option automatically disables
+> >> >     TCP TimeStamp option at SYN/SYNACK time, which we can not do
+> >> >     once flow has been established.
+> >> >
+> >> >     Really, adding/deleting an MD5 key only makes sense on sockets
+> >> >     in CLOSE or LISTEN state."
+> >> >
+> >> > However, reading through RFC2385 [1], this justification does not appear
+> >> > correct. Quoting to the RFC:
+> >> >
+> >> >    "This password never appears in the connection stream, and the actual
+> >> >     form of the password is up to the application. It could even change
+> >> >     during the lifetime of a particular connection so long as this change
+> >> >     was synchronized on both ends"
+> >> >
+> >> > The paragraph above clearly underlines that changing the MD5 signature of
+> >> > a live TCP socket is allowed.
+> >> >
+> >> > I also do not understand why it would be invalid to transition an established
+> >> > TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
+> >> > RFC:
+> >> >
+> >> >   "The total header size is also an issue.  The TCP header specifies
+> >> >    where segment data starts with a 4-bit field which gives the total
+> >> >    size of the header (including options) in 32-byte words.  This means
+> >> >    that the total size of the header plus option must be less than or
+> >> >    equal to 60 bytes -- this leaves 40 bytes for options."
+> >> >
+> >> > The paragraph above seems to be the only indication that some TCP options
+> >> > cannot be combined on a given TCP socket: if the resulting header size does
+> >> > not fit. However, I do not see anything in the specification preventing any
+> >> > of the following use-cases on an established TCP socket:
+> >> >
+> >> > - Transition from no-MD5 to MD5,
+> >> > - Transition from MD5 to no-MD5,
+> >> > - Changing the MD5 key associated with a socket.
+> >> >
+> >> > As long as the resulting combination of options does not exceed the available
+> >> > header space.
+> >> >
+> >> > Can we please fix this KASAN report in a way that does not break user-space
+> >> > applications expectations about Linux' implementation of RFC2385 ?
+> [...]
+> >> > [1] RFC2385: https://tools.ietf.org/html/rfc2385
+> >>
+> >>
+> >> I do not think we want to transition sockets in the middle. since
+> >> packets can be re-ordered in the network.
+> >>
+> >> MD5 is about security (and a loose form of it), so better make sure
+> >> all packets have it from the beginning of the flow.
+> >>
+> >> A flow with TCP TS on can not suddenly be sending packets without TCP TS.
+> >>
+> >> Clearly, trying to support this operation is a can of worms, I do not
+> >> want to maintain such atrocity.
+> >>
+> >> RFC can state whatever it wants, sometimes reality forces us to have
+> >> sane operations.
+> >>
+> >> Thanks.
+> >>
+> > Also the RFC states :
 > >
-> > On Fri 26-06-20 14:02:49, Joonsoo Kim wrote:
-> > > 2020년 6월 25일 (목) 오후 9:05, Michal Hocko <mhocko@kernel.org>님이 작성:
-> > > >
-> > > > On Tue 23-06-20 15:13:45, Joonsoo Kim wrote:
-> > [...]
-> > > > > -struct page *new_page_nodemask(struct page *page,
-> > > > > -                             int preferred_nid, nodemask_t *nodemask)
-> > > > > +struct page *alloc_migration_target(struct page *page, unsigned long private)
-> > > > >  {
-> > > > > -     gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
-> > > > > +     struct migration_target_control *mtc;
-> > > > > +     gfp_t gfp_mask;
-> > > > >       unsigned int order = 0;
-> > > > >       struct page *new_page = NULL;
-> > > > > +     int zidx;
-> > > > > +
-> > > > > +     mtc = (struct migration_target_control *)private;
-> > > > > +     gfp_mask = mtc->gfp_mask;
-> > > > >
-> > > > >       if (PageHuge(page)) {
-> > > > >               return alloc_huge_page_nodemask(
-> > > > > -                             page_hstate(compound_head(page)),
-> > > > > -                             preferred_nid, nodemask, 0, false);
-> > > > > +                             page_hstate(compound_head(page)), mtc->nid,
-> > > > > +                             mtc->nmask, gfp_mask, false);
-> > > > >       }
-> > > > >
-> > > > >       if (PageTransHuge(page)) {
-> > > > > +             gfp_mask &= ~__GFP_RECLAIM;
-> > > >
-> > > > What's up with this gfp_mask modification?
-> > >
-> > > THP page allocation uses a standard gfp masks, GFP_TRANSHUGE_LIGHT and
-> > > GFP_TRANHUGE. __GFP_RECLAIM flags is a big part of this standard mask design.
-> > > So, I clear it here so as not to disrupt the THP gfp mask.
+> > "This password never appears in the connection stream, and the actual
+> >    form of the password is up to the application. It could even change
+> >    during the lifetime of a particular connection so long as this change
+> >    was synchronized on both ends"
 > >
-> > Why this wasn't really needed before? I guess I must be missing
-> > something here. This patch should be mostly mechanical convergence of
-> > existing migration callbacks but this change adds a new behavior AFAICS.
-> 
-> Before this patch, a user cannot specify a gfp_mask and THP allocation
-> uses GFP_TRANSHUGE
-> statically.
+> > It means the key can be changed, but this does not imply the option
+> > can be turned on/off dynamically.
+> >
+>
+> The change discussed previously (introduced by commit 721230326891 "tcp:
+> md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets") breaks
+> user-space ABI. As an example, the following BGP application uses
+> setsockopt TCP_MD5SIG on a live TCP socket:
+>
+> https://github.com/IPInfusion/SDN-IP
+>
+> In addition to break user-space, it also breaks network protocol
+> expectations for network equipment vendors implementing RFC2385.
+> Considering that the goal of these protocols is interaction between
+> different network equipment, breaking compatibility on that side
+> is unexpected as well. Requiring to bring down/up the connection
+> just to change the TCP MD5 password is a no-go in networks with
+> high availability requirements. Changing the BGP authentication
+> password must be allowed without tearing down and re-establishing
+> the TCP sockets. Otherwise it doesn't scale for large network
+> operators to have to individually manage each individual TCP socket
+> in their network. However, based on the feedback I received, it
+> would be acceptable to tear-down the TCP connections and re-establish
+> them when enabling or disabling the MD5 option.
+>
+> Here is a list of a few network vendors along with their behavior
+> with respect to TCP MD5:
+>
+> - Cisco: Allows for password to be changed, but within the hold-down
+> timer (~180 seconds).
+> - Juniper: When password is initially set on active connection it will
+> reset, but after that any subsequent password changes no network
+> resets.
+> - Nokia: No notes on if they flap the tcp connection or not.
+> - Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
+> both sides are ok with new passwords.
+> - Meta-Switch: Expects the password to be set before a connection is
+> attempted, but no further info on whether they reset the TCP
+> connection on a change.
+> - Avaya: Disable the neighbor, then set password, then re-enable.
+> - Zebos: Would normally allow the change when socket connected.
+>
+>
 
-Unless I am misreading there are code paths (e.g.new_page_nodemask) which simply use
-add GFP_TRANSHUGE to GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL. And
-this goes all the way to thp migration introduction.
+If you want to be able to _change_ md5 key, this is fine by me, please
+send a patch.
 
-> After this patch, a user can specify a gfp_mask and it
-> could conflict with GFP_TRANSHUGE.
-> This code tries to avoid this conflict.
-> 
-> > It would effectively drop __GFP_RETRY_MAYFAIL and __GFP_KSWAPD_RECLAIM
-> 
-> __GFP_RETRY_MAYFAIL isn't dropped. __GFP_RECLAIM is
-> "___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM".
-> So, __GFP_KSWAPD_RECLAIM would be dropped for THP allocation.
-> IIUC, THP allocation doesn't use __GFP_KSWAPD_RECLAIM since it's
-> overhead is too large and this overhead should be given to the caller
-> rather than system thread (kswapd) and so on.
+We can not dynamically turn on MD5, this is mentioned briefly in
+tcp_synack_options().
 
-Yes, there is a reason why KSWAPD is excluded from THP allocations in
-the page fault path. Maybe we want to extend that behavior to the
-migration as well. I do not have a strong opinion on that because I
-haven't seen excessive kswapd reclaim due to THP migrations. They are
-likely too rare.
-
-But as I've said in my previous email. Make this a separate patch with
-an explanation why we want this.
--- 
-Michal Hocko
-SUSE Labs
+If you want to turn on MD5 on an established flow, then you must
+ensure that both SACK and TS were not enabled in the 3WHS,
+and then make sure nothing blows up in the stack.
