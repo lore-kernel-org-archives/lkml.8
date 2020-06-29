@@ -2,115 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE15C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAED3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21AC20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460894;
-	bh=HRSgkNNcN9hXr8UE2smMGJ57xFPxY2jHvMplTRcgQkE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3Zbm0Ezj290sUp/IBfDSSa8P3nrlmP5Cw6+mjaNm5Slk7jcGvq/M+zeR8fmaOBbD
-	 q5rHDaX9kKFdOc+0PM5QHw/Ix4d077Fpw2rOimkg1LSFDqXoce/tGzUvKPnKoM7WMX
-	 SGMZLzcCIi83xx+4lH2RxG3naPmLhYxW4BpChKDo=
+	by mail.kernel.org (Postfix) with ESMTP id B2E0520672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388649AbgF2UBd (ORCPT
+        id S2388380AbgF2UBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387547AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9325024840;
-        Mon, 29 Jun 2020 15:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444353;
-        bh=HRSgkNNcN9hXr8UE2smMGJ57xFPxY2jHvMplTRcgQkE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZPRF0vasjVlx7JUx2yay+l8bL1PPjMbwB60hh0o12hLrnSYGUtkz/evYT8h5GpiC
-         dd2A/IbEp6wa3M+AvnnGTYkD6BNmcGqMqafV60efBLTVWxIqUn562tpK0tRZZfPdK4
-         bf5d8ZX9iIU++v684lib2lesHChmjHkkk2rZhjxo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/178] Revert "i2c: tegra: Fix suspending in active runtime PM state"
-Date:   Mon, 29 Jun 2020 11:22:53 -0400
-Message-Id: <20200629152523.2494198-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:01:40 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:37270 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388122AbgF2UBg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:01:36 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jpzyB-0005Vb-G4; Mon, 29 Jun 2020 14:01:35 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jpzyA-0007zH-8m; Mon, 29 Jun 2020 14:01:35 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 14:57:03 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <87zh8l63xs.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jpzyA-0007zH-8m;;;mid=<87zh8l63xs.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18tkilkwueNF9nWNOIZyHygLGlNpkZV+hs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 02/15] umh: Move setting PF_UMH into umh_pipe_setup
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 78ad73421831247e46c31899a7bead02740e4bef ]
+I am separating the code specific to user mode drivers from the code
+for ordinary user space helpers.  Move setting of PF_UMH from
+call_usermodehelper_exec_async which is core user mode helper code
+into umh_pipe_setup which is user mode driver code.
 
-This reverts commit 9f42de8d4ec2304f10bbc51dc0484f3503d61196.
+The code is equally as easy to write in one location as the other and
+the movement minimizes the impact of the user mode driver code on the
+core of the user mode helper code.
 
-It's not safe to use pm_runtime_force_{suspend,resume}(), especially
-during the noirq phase of suspend. See also the guidance provided in
-commit 1e2ef05bb8cf ("PM: Limit race conditions between runtime PM
-and system sleep (v2)").
+Setting PF_UMH unconditionally is harmless as an action will only
+happen if it is paired with an entry on umh_list.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lkml.kernel.org/r/87bll6gf8t.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ kernel/umh.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index dbc43cfec19d4..331f7cca9babe 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1719,14 +1719,9 @@ static int tegra_i2c_remove(struct platform_device *pdev)
- static int __maybe_unused tegra_i2c_suspend(struct device *dev)
- {
- 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
--	int err;
+diff --git a/kernel/umh.c b/kernel/umh.c
+index c2a582b3a2bf..e6b9d6636850 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -102,12 +102,10 @@ static int call_usermodehelper_exec_async(void *data)
  
- 	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+ 	commit_creds(new);
  
--	err = pm_runtime_force_suspend(dev);
--	if (err < 0)
--		return err;
--
+-	if (sub_info->file) {
++	if (sub_info->file)
+ 		retval = do_execve_file(sub_info->file,
+ 					sub_info->argv, sub_info->envp);
+-		if (!retval)
+-			current->flags |= PF_UMH;
+-	} else
++	else
+ 		retval = do_execve(getname_kernel(sub_info->path),
+ 				   (const char __user *const __user *)sub_info->argv,
+ 				   (const char __user *const __user *)sub_info->envp);
+@@ -468,6 +466,7 @@ static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
+ 	umh_info->pipe_to_umh = to_umh[1];
+ 	umh_info->pipe_from_umh = from_umh[0];
+ 	umh_info->pid = task_pid_nr(current);
++	current->flags |= PF_UMH;
  	return 0;
  }
  
-@@ -1747,10 +1742,6 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
- 	if (err)
- 		return err;
- 
--	err = pm_runtime_force_resume(dev);
--	if (err < 0)
--		return err;
--
- 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
- 
- 	return 0;
 -- 
-2.25.1
+2.25.0
 
