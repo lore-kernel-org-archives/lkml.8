@@ -2,103 +2,149 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C772225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9C021D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455873;
-	bh=eY0QGIFZIS7WdQIamcQCrBKEmMR1zTMwcRLCHTgVfd8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U5vSWYUJIkT7GneBB40wzaTipZ/fty3Jl9RSMohn3hoCfTk1s6LoAWjsqWUbYi59A
-	 PripnOO0pc+l8eJtfGNCj39taTGL2hiZb5AS+fexvR2CPaKfo+x8IYm2wqukIsUYAd
-	 YD3ZY+2eP8//wpNy66vQQxApqpLu3ed4nW1Ohx5w=
+	s=default; t=1593455878;
+	bh=3PQUGe+qdshaYBJMmSVFbzuZ4v1BnhHxU6b93Wzgcuo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=itgQukkykliNouDRh2zT/M5XvQW89fqenfal0hRxll3g6HIvEeOAfwFkBpAymIklN
+	 DU2xJsCD6bUId3WcOTQEHlyhaJi0MLaxzlwolNATBq+NYxYXXLKrLWkG1hWySEjMJb
+	 f2JrMTmMxKmNViWr7j0SFWXxt4ekEtqZZKOj8dUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgF2Shu (ORCPT
+        id S1727904AbgF2Shz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:50 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95EE24656;
-        Mon, 29 Jun 2020 15:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443969;
-        bh=eY0QGIFZIS7WdQIamcQCrBKEmMR1zTMwcRLCHTgVfd8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QvM59Q1AeNB6S1jCCFuUPBc2leuDZsW3zefX0rN7xEq4uPaDX3TWQkDcVn3Be656m
-         jCskXfOco26RvTZRs6JwMvqYp7+PnxPGiJIisjDjN0dQQeaZVZORSJwuUwTQQopagZ
-         pkWJC+5ruAz78SZ+jskQ1DhjgMESbWU/TWgLDM8U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 073/265] ALSA: usb-audio: add quirk for Denon DCD-1500RE
-Date:   Mon, 29 Jun 2020 11:15:06 -0400
-Message-Id: <20200629151818.2493727-74-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 14:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727086AbgF2Shm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:37:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BB0C033C35
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t25so14715822lji.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/dhvDgleJHHO6BJC9vWh9omDNPlG72DDBtGZ6h3AXGQ=;
+        b=QG5+6qRC7nsdPcUZTLfS+NEfHK62YgjdIwfMGtYPHzfLaI4jEbzvOeQZzTdHo9hNak
+         LckQojrFpUDhJ5X7+nsWLEKLjTAbP7X0XvFHCHDH8Rgwq9O5cIeAFY+lp4mLYcKtWp2g
+         Yx3pvKuQpLIVMdrWZr5Woiwbrm+vUS5+GpPNQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/dhvDgleJHHO6BJC9vWh9omDNPlG72DDBtGZ6h3AXGQ=;
+        b=Kkwe/Utu6obX+qg/guMutQt9fjCdgybZZgIYqALRyeFps1skvJPw43Ag4CNBxKsjp+
+         1O3HeKKAwpu9BgBXb3up+PHbB957YJ7fALdYjVZXQB1KIqmVzekBl2E2uyDkVYmbE6w6
+         dBUUn76zzQkDgEajfBEEWNZfDuSYX8ZMgtwxqs9TTcdc60dVFmJJnxPu2iW6ey7MsrH3
+         iPz0hPUXGeJt8xOqRpWWLGv4UJZ5CX7E/IidUhJNN/q9oV/ZJngcD0V2jMZ2WXA6AjV/
+         6gIbGDlalFU6ya6CBGiFwxZde8CNV95MrzF5mVEuy+svE97P3eQj9k1NaapNjSPwEt1Y
+         CWKA==
+X-Gm-Message-State: AOAM533Ioa5S2QMxKSSK0Ps8QD3WxtvKQfPHltBEeRA+6j1dNiY8k3MW
+        Uw55Sc+9rZ/H5PW5sJhwlhMHRu508Hs=
+X-Google-Smtp-Source: ABdhPJwWSQBajlOsqqavx18sUBM68rhIDBbUnSNFN4nSGgLWhOgy8K4EyFqOFyXV5XzJ9SSgc8+HTg==
+X-Received: by 2002:a2e:b04c:: with SMTP id d12mr7965925ljl.256.1593455379834;
+        Mon, 29 Jun 2020 11:29:39 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id x10sm125481ljx.67.2020.06.29.11.29.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 11:29:39 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id f8so7019223ljc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:38 -0700 (PDT)
+X-Received: by 2002:a2e:9c92:: with SMTP id x18mr3886392lji.70.1593455378379;
+ Mon, 29 Jun 2020 11:29:38 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
+ <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+ <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
+ <20200629152912.GA26172@lst.de> <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com>
+ <20200629180730.GA4600@lst.de>
+In-Reply-To: <20200629180730.GA4600@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Jun 2020 11:29:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
+Message-ID: <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
+On Mon, Jun 29, 2020 at 11:07 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> One issue is that a lot setsockopt calls are in the fast path, and
+> even have micro-optimizations like putting an int on stack for the
+> fast path to avoid the memory allocation.
 
-commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
+Yeah., An the RFC patch I posted could easily be updated to do exactly
+that for small optlen values (say, avoid the kmalloc and use a stack
+buffer for oplen smaller than 16 bytes or whatever).
 
-fix error "clock source 41 is not valid, cannot use"
+Most of the setsockopt's I'm aware of are just a single integer, so if
+that's the bulk of them, then we'd never actually need to do the
+kmalloc() in those cases, and only fall back to the kmalloc for the
+(hopefully quite unusual) bigger options..
 
-[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
-[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[] Product: DCD-1500RE
-[] Manufacturer: D & M Holdings Inc.
-[]
-[] clock source 41 is not valid, cannot use
-[] usbcore: registered new interface driver snd-usb-audio
+> I'd love to be able to do that.  And now that we want through this
+> whole mess than Nth time I have another idea:
+>
+>  - we assume optlen is correct, which should cover about 90% of
+>    the protocols
+>  - but to override that a new setsockopt_len method is added that
+>    returns the correct length for all the messy ones.
+>
+> Let me try if that works out.
 
-Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+Doing a quick grep, there's about 100 different ".setsockopt" function
+initializers, but a quarter of them are just setting it to
+'sock_no_setsockopt'.
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index d8a765be5dfe8..aa964847b39b2 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1505,6 +1505,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
- static bool is_itf_usb_dsd_dac(unsigned int id)
- {
- 	switch (id) {
-+	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
- 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
- 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
- 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
--- 
-2.25.1
+A number of others are using 'sock_common_setsockopt'.
 
+Which leaves something like 50 different implementations of the
+.setsockopt functions.  But I didn't go any deeper than that - maybe
+they then have hundreds of different option cases each and this is all
+a nightmare.
+
+Looking at a couple of them, the "int val" situation does seem to be
+the most common one by _far_, and is often handled by a common
+"get_user()" thing, so converting them to just getting the thing as a
+kernel pointer doesn't look _too_ nasty, because even when they have a
+lot of subcases, the actual optval accesses are much fewer.
+
+Which is not to say that it looks all that much fun, but it doesn't
+look entirely undoable either.
+
+The good news (I guess) is that any missed transformation will be
+fairly obvious (ie somebody uses a "get_user()" on what is now a
+kernel pointer, and returns -EFAULT. So it shouldn't cause any subtle
+failures, and it shouldn't cause any security issues.
+
+I didn't look at the compat cases, but if anything I'd expect those to
+become simpler by having kernel pointers. And there doesn't actually
+seem to be that many of them (possibly because the "int" case si so
+common that it all ends up being the same?)
+
+              Linus
