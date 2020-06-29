@@ -2,51 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73136C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7535520786
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D5020786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458760;
-	bh=keHXIWG4WmeoqHIOPMk3MCnR5w3BYmgRSNYF33aViCI=;
+	s=default; t=1593458765;
+	bh=GE0G3P08GA599AmVntNBGr/PEBtJYVNAt/jofKJFvzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNwceS1Fs7iVY8Z4u4ucbdGYmNhzxKgjC8AI05rScDeMmNcBIUtlWn2mL1k4NbfR6
-	 qdsevSNF0n9//w85C7S2/HuXO/f1uhTz5aVx6qtH67hHhFAIMnthNwNIYu9scqNYxv
-	 hqS9ZhxKmjp8HrgupA6JPlIy7U9M1PpciO5YAVgk=
+	b=ciP+AWawhtbIv0wB8+/9QX73LkaXFQPmSIoKacNo34X4v15a8SR2AwIykWRozrmEL
+	 SoCwO0vK6swEkV/Teqo2Dr9QzawqlNnnmzuEYLvUi3Ps7YPHZMnMeq8EimaBtfkyce
+	 lU9EZkEDql5Mp65/n19vRnOIa6n0XDPW3HYPFBjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbgF2TZ7 (ORCPT
+        id S1730465AbgF2T0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732613AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732616AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FAF925392;
-        Mon, 29 Jun 2020 15:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8421253AD;
+        Mon, 29 Jun 2020 15:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445260;
-        bh=keHXIWG4WmeoqHIOPMk3MCnR5w3BYmgRSNYF33aViCI=;
+        s=default; t=1593445276;
+        bh=GE0G3P08GA599AmVntNBGr/PEBtJYVNAt/jofKJFvzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otacwNlmDV22nCPR9NA8HirD4jRyfkdCAyCz5G9M1OT9KEpEFYi0F605D1+hetDnr
-         CTqWMRTUBefgJRZImCy+kINkBHykKoZRFcEz2c35pcgrHU+KrW0HStHHm2xJJbDyE2
-         hZn5lY1jcF0/mAVqJQfExEfLIS39PXSCJoRgV7cM=
+        b=gjyUR2IoohNyicvagQEa8npVwcGGgylHhwP2n/PgQe877z/lTZbotNeD0CXOrHvOx
+         N/cVWpduQOzmCSXMjGLpSteB5/Z04W0oslizX3Jxab5JlYHl/ZRWNNVoIRtAoAu/LG
+         853CuQQ0H6pMSxAo/RcHsCWQNpvGLdu65FqUAYjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 041/191] tty: n_gsm: Fix waking up upper tty layer when room available
-Date:   Mon, 29 Jun 2020 11:37:37 -0400
-Message-Id: <20200629154007.2495120-42-sashal@kernel.org>
+Subject: [PATCH 4.9 055/191] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
+Date:   Mon, 29 Jun 2020 11:37:51 -0400
+Message-Id: <20200629154007.2495120-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,88 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 01dbb362f0a114fbce19c8abe4cd6f4710e934d5 ]
+[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
 
-Warn the upper layer when n_gms is ready to receive data
-again. Without this the associated virtual tty remains blocked
-indefinitely.
+Clang warns:
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200512115323.1447922-4-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
+address of 'ep->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (&ep->queue == NULL)
+             ~~~~^~~~~    ~~~~
+1 warning generated.
+
+It is not wrong, queue is not a pointer so if ep is not NULL, the
+address of queue cannot be NULL. No other driver does a check like this
+and this check has been around since the driver was first introduced,
+presumably with no issues so it does not seem like this check should be
+something else. Just remove it.
+
+Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
+this but it is not the root cause of the warning.
+
+Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1004
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index d5efacd27b15c..56716f5250303 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -681,7 +681,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
-  *	FIXME: lock against link layer control transmissions
-  */
- 
--static void gsm_data_kick(struct gsm_mux *gsm)
-+static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index eb3571ee59e3c..08153a48704bb 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -269,10 +269,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
+ static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
+ 		struct s3c2410_ep *ep, int status)
  {
- 	struct gsm_msg *msg, *nmsg;
- 	int len;
-@@ -713,6 +713,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- 
- 		list_del(&msg->list);
- 		kfree(msg);
-+
-+		if (dlci) {
-+			tty_port_tty_wakeup(&dlci->port);
-+		} else {
-+			int i = 0;
-+
-+			for (i = 0; i < NUM_DLCI; i++) {
-+				struct gsm_dlci *dlci;
-+
-+				dlci = gsm->dlci[i];
-+				if (dlci == NULL) {
-+					i++;
-+					continue;
-+				}
-+
-+				tty_port_tty_wakeup(&dlci->port);
-+			}
-+		}
- 	}
- }
- 
-@@ -764,7 +782,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
- 	/* Add to the actual output queue */
- 	list_add_tail(&msg->list, &gsm->tx_list);
- 	gsm->tx_bytes += msg->len;
--	gsm_data_kick(gsm);
-+	gsm_data_kick(gsm, dlci);
- }
- 
- /**
-@@ -1225,7 +1243,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
- 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
- 		/* Kick the link in case it is idling */
- 		spin_lock_irqsave(&gsm->tx_lock, flags);
--		gsm_data_kick(gsm);
-+		gsm_data_kick(gsm, NULL);
- 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
- 		break;
- 	case CMD_FCOFF:
-@@ -2408,7 +2426,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
- 	/* Queue poll */
- 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
- 	spin_lock_irqsave(&gsm->tx_lock, flags);
--	gsm_data_kick(gsm);
-+	gsm_data_kick(gsm, NULL);
- 	if (gsm->tx_bytes < TX_THRESH_LO) {
- 		gsm_dlci_data_sweep(gsm);
- 	}
+-	/* Sanity check */
+-	if (&ep->queue == NULL)
+-		return;
+-
+ 	while (!list_empty(&ep->queue)) {
+ 		struct s3c2410_request *req;
+ 		req = list_entry(ep->queue.next, struct s3c2410_request,
 -- 
 2.25.1
 
