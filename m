@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C38AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5581AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E70206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31593206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467436;
-	bh=A3K3ErW6wak4Wb7RQTGMwgbd+KYm4MBulm8X6qBHnzY=;
+	s=default; t=1593467440;
+	bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttPRXbuZ1kyGlomw9oNR8YYglBgyhp3B5mlPUpeDxUO+VSLV0eW4vljAI3NTc5fl2
-	 6GEHaTmWHsxIbLyH7UiRS+i2Fz7lzWA2xuvOjgo7NA4nkkMEzh7FIJ3S6FGALCiO/r
-	 A6x+cLn9eg4qfa2cKHrLKg0clsPdx1Pe4wBn5HGE=
+	b=jxw/GhK9b+2O5hhsz5qglPF8cRK5dChGerepvyE3hIwD/GITAb7HZF2hdLqQuVQsg
+	 2rgVOXnpxkQwQbmKP39ITEzULyAXPFqkfV3oX+f+b4ZvTcQDYrZvupPSJkwg1tXF99
+	 OB0Z+pzVFo0yyWq2Yba2HYRTW6x3sh/wVxz08qOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404468AbgF2Vuf (ORCPT
+        id S2404234AbgF2Vui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726677AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8047C247F8;
-        Mon, 29 Jun 2020 15:22:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89D74247A2;
+        Mon, 29 Jun 2020 15:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444156;
-        bh=A3K3ErW6wak4Wb7RQTGMwgbd+KYm4MBulm8X6qBHnzY=;
+        s=default; t=1593444110;
+        bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRaQdkM1Ba25bC0blWAslH5+TZlXXVC2XUFMFnsBZ2PgE1ulesxpLgS0QxqATFDyX
-         8HhJlcnXUDOAg+g8RIx0A3PB0HXTrHg2Xx5JXpMR/2FQeT2QqRKWleoKHJDiJ4K6dz
-         sgf0lxIURUSwn3HCKdYvG41oclE9MoFsOipC3UXI=
+        b=k3aaZsZjgXDm/yvBmsAcF1glFZMbCd6ljZNYespqvZ3jnL6dqN2Fb2c5jbqLHwzDV
+         +vTWl0KvakiaYK6MHc2fgg0DjS+9XjX6bU9gCXV1Coz9l3jLuFaqEbj+zKAE0grK/H
+         lkI7/NjnVIAe1CP4HNIF/ihzNd9NTckEkSThXM2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, stable@kernel.vger.org,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 262/265] xprtrdma: Fix handling of RDMA_ERROR replies
-Date:   Mon, 29 Jun 2020 11:18:15 -0400
-Message-Id: <20200629151818.2493727-263-sashal@kernel.org>
+Subject: [PATCH 5.7 221/265] x86/asm/64: Align start of __clear_user() loop to 16-bytes
+Date:   Mon, 29 Jun 2020 11:17:34 -0400
+Message-Id: <20200629151818.2493727-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,60 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Matt Fleming <matt@codeblueprint.co.uk>
 
-commit 7b2182ec381f8ea15c7eb1266d6b5d7da620ad93 upstream.
+commit bb5570ad3b54e7930997aec76ab68256d5236d94 upstream.
 
-The RPC client currently doesn't handle ERR_CHUNK replies correctly.
-rpcrdma_complete_rqst() incorrectly passes a negative number to
-xprt_complete_rqst() as the number of bytes copied. Instead, set
-task->tk_status to the error value, and return zero bytes copied.
+x86 CPUs can suffer severe performance drops if a tight loop, such as
+the ones in __clear_user(), straddles a 16-byte instruction fetch
+window, or worse, a 64-byte cacheline. This issues was discovered in the
+SUSE kernel with the following commit,
 
-In these cases, return -EIO rather than -EREMOTEIO. The RPC client's
-finite state machine doesn't know what to do with -EREMOTEIO.
+  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
 
-Additional clean ups:
-- Don't double-count RDMA_ERROR replies
-- Remove a stale comment
+which increased the code object size from 10 bytes to 15 bytes and
+caused the 8-byte copy loop in __clear_user() to be split across a
+64-byte cacheline.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@kernel.vger.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Aligning the start of the loop to 16-bytes makes this fit neatly inside
+a single instruction fetch window again and restores the performance of
+__clear_user() which is used heavily when reading from /dev/zero.
+
+Here are some numbers from running libmicro's read_z* and pread_z*
+microbenchmarks which read from /dev/zero:
+
+  Zen 1 (Naples)
+
+  libmicro-file
+                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
+                                                    revert-1153933703d9+               align16+
+  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
+  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
+  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
+  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
+  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
+  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
+
+Note that this doesn't affect Haswell or Broadwell microarchitectures
+which seem to avoid the alignment issue by executing the loop straight
+out of the Loop Stream Detector (verified using perf events).
+
+Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org> # v4.19+
+Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/lib/usercopy_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 3c627dc685cc8..57118e342c8eb 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1349,8 +1349,7 @@ rpcrdma_decode_error(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
- 			be32_to_cpup(p), be32_to_cpu(rep->rr_xid));
- 	}
- 
--	r_xprt->rx_stats.bad_reply_count++;
--	return -EREMOTEIO;
-+	return -EIO;
- }
- 
- /* Perform XID lookup, reconstruction of the RPC reply, and
-@@ -1387,13 +1386,11 @@ out:
- 	spin_unlock(&xprt->queue_lock);
- 	return;
- 
--/* If the incoming reply terminated a pending RPC, the next
-- * RPC call will post a replacement receive buffer as it is
-- * being marshaled.
-- */
- out_badheader:
- 	trace_xprtrdma_reply_hdr(rep);
- 	r_xprt->rx_stats.bad_reply_count++;
-+	rqst->rq_task->tk_status = status;
-+	status = 0;
- 	goto out;
- }
- 
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index fff28c6f73a21..b0dfac3d3df71 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
+ 	asm volatile(
+ 		"	testq  %[size8],%[size8]\n"
+ 		"	jz     4f\n"
++		"	.align 16\n"
+ 		"0:	movq $0,(%[dst])\n"
+ 		"	addq   $8,%[dst]\n"
+ 		"	decl %%ecx ; jnz   0b\n"
 -- 
 2.25.1
 
