@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6132C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B463EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84DF12082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1B92082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460060;
-	bh=HBXY920oo0pacrv3V9t54CQyy7bpNG+4WV0uWzGTL84=;
+	s=default; t=1593460064;
+	bh=XZcpOh3AQvmUqyI5y4yxQ4ilPh6mZE/CsCqnpTt/IBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkbpQ72r44c50/gLxvZiBkadeqgpiD9IhjdVqOwTHAG6b77MvfRVSvo7EsTylITxD
-	 E6ffHC2EsWNckFL73178bSY7wMPNCiFS28cqAnZBtQiQJyvxUGrtk9fVg81/FskRJ4
-	 WsYe86gah1ZOOS/z3axPTwhm38uHG/fTsAs1RN9I=
+	b=ZihTgANuBLooseauc9uluSQ05klU1WN7O6zgCLh0oxc4sOFiCZWOSsBpYOUSP2rNA
+	 M0rdLLbuaJLdTeBu8wQYLAmrVUE5TTLLi9nsaw6TMk1CWPbVjhEIq1OFZ6HqGD6s6o
+	 /AVe/TZ8qSBEqE6/xq0OpsUCCTgaRHlEy7Ypoz6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388155AbgF2Tri (ORCPT
+        id S2387430AbgF2Trn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387786AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387778AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81A07248BA;
-        Mon, 29 Jun 2020 15:26:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BD42486D;
+        Mon, 29 Jun 2020 15:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444413;
-        bh=HBXY920oo0pacrv3V9t54CQyy7bpNG+4WV0uWzGTL84=;
+        s=default; t=1593444368;
+        bh=XZcpOh3AQvmUqyI5y4yxQ4ilPh6mZE/CsCqnpTt/IBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIOsk5RPNmZH++/GnW9j9Ma9aEXOarIGPsuSV7Pihhtl+/7dH5yXIl4atkcArqfjO
-         L8Ys0rq6YWH/3u5iFSiFlW31ZeoQi4uVecylkQ3HR4lQzWUihSQlsY3Sip1jCQTGg2
-         RGB98aCPJ6ScuQ3ybJcwmtg1Oo58Un1l6xgROe50=
+        b=qdfUg8bhMOxVuB2KgR8ZhzC0R7FqDIwYZAr5EcUQr1n0f7V0udeHI0xcb4sf6Z9Gj
+         n2TPPuKVugxGdsN6vT74PlVpoqgMeu5lvYkLnRVMw7bBBpQRZNmQ52cDM+fyW961Zu
+         0SACxIwkATkHSrl7Q5QPT/hW/b4WSSL991ljhI+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 091/178] iommu/vt-d: Update scalable mode paging structure coherency
-Date:   Mon, 29 Jun 2020 11:23:56 -0400
-Message-Id: <20200629152523.2494198-92-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+fb14314433463ad51625@syzkaller.appspotmail.com,
+        syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 045/178] ALSA: usb-audio: Fix OOB access of mixer element list
+Date:   Mon, 29 Jun 2020 11:23:10 -0400
+Message-Id: <20200629152523.2494198-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,74 +66,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 04c00956ee3cd138fd38560a91452a804a8c5550 ]
+commit 220345e98f1cdc768eeb6e3364a0fa7ab9647fe7 upstream.
 
-The Scalable-mode Page-walk Coherency (SMPWC) field in the VT-d extended
-capability register indicates the hardware coherency behavior on paging
-structures accessed through the pasid table entry. This is ignored in
-current code and using ECAP.C instead which is only valid in legacy mode.
-Fix this so that paging structure updates could be manually flushed from
-the cache line if hardware page walking is not snooped.
+The USB-audio mixer code holds a linked list of usb_mixer_elem_list,
+and several operations are performed for each mixer element.  A few of
+them (snd_usb_mixer_notify_id() and snd_usb_mixer_interrupt_v2())
+assume each mixer element being a usb_mixer_elem_info object that is a
+subclass of usb_mixer_elem_list, cast via container_of() and access it
+members.  This may result in an out-of-bound access when a
+non-standard list element has been added, as spotted by syzkaller
+recently.
 
-Fixes: 765b6a98c1de3 ("iommu/vt-d: Enumerate the scalable mode capability")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Link: https://lore.kernel.org/r/20200622231345.29722-6-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch adds a new field, is_std_info, in usb_mixer_elem_list to
+indicate that the element is the usb_mixer_elem_info type or not, and
+skip the access to such an element if needed.
+
+Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
+Reported-by: syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200624122340.9615-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iommu/intel-iommu.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ sound/usb/mixer.c        | 15 +++++++++++----
+ sound/usb/mixer.h        |  9 +++++++--
+ sound/usb/mixer_quirks.c |  3 ++-
+ 3 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 773ac2b0d6068..6366b5fbb3a46 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -611,6 +611,12 @@ struct intel_iommu *domain_get_iommu(struct dmar_domain *domain)
- 	return g_iommus[iommu_id];
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index f55afe3a98e3a..9079c380228fc 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -576,8 +576,9 @@ static int check_matrix_bitmap(unsigned char *bmap,
+  * if failed, give up and free the control instance.
+  */
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl)
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info)
+ {
+ 	struct usb_mixer_interface *mixer = list->mixer;
+ 	int err;
+@@ -591,6 +592,7 @@ int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+ 		return err;
+ 	}
+ 	list->kctl = kctl;
++	list->is_std_info = is_std_info;
+ 	list->next_id_elem = mixer->id_elems[list->id];
+ 	mixer->id_elems[list->id] = list;
+ 	return 0;
+@@ -3213,8 +3215,11 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ 	unitid = delegate_notify(mixer, unitid, NULL, NULL);
+ 
+ 	for_each_mixer_elem(list, mixer, unitid) {
+-		struct usb_mixer_elem_info *info =
+-			mixer_elem_list_to_info(list);
++		struct usb_mixer_elem_info *info;
++
++		if (!list->is_std_info)
++			continue;
++		info = mixer_elem_list_to_info(list);
+ 		/* invalidate cache, so the value is read from the device */
+ 		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+@@ -3294,6 +3299,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 
+ 		if (!list->kctl)
+ 			continue;
++		if (!list->is_std_info)
++			continue;
+ 
+ 		info = mixer_elem_list_to_info(list);
+ 		if (count > 1 && info->control != control)
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index 8e0fb7fdf1a00..01b5e5cc22210 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -66,6 +66,7 @@ struct usb_mixer_elem_list {
+ 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
+ 	struct snd_kcontrol *kctl;
+ 	unsigned int id;
++	bool is_std_info;
+ 	usb_mixer_elem_dump_func_t dump;
+ 	usb_mixer_elem_resume_func_t resume;
+ };
+@@ -103,8 +104,12 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
+ int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
+ 				int request, int validx, int value_set);
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl);
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info);
++
++#define snd_usb_mixer_add_control(list, kctl) \
++	snd_usb_mixer_add_list(list, kctl, true)
+ 
+ void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
+ 				 struct usb_mixer_interface *mixer,
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index dc181066c799e..d39bf5b648d1f 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -157,7 +157,8 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
+ 		return -ENOMEM;
+ 	}
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+-	return snd_usb_mixer_add_control(list, kctl);
++	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
++	return snd_usb_mixer_add_list(list, kctl, false);
  }
  
-+static inline bool iommu_paging_structure_coherency(struct intel_iommu *iommu)
-+{
-+	return sm_supported(iommu) ?
-+			ecap_smpwc(iommu->ecap) : ecap_coherent(iommu->ecap);
-+}
-+
- static void domain_update_iommu_coherency(struct dmar_domain *domain)
- {
- 	struct dmar_drhd_unit *drhd;
-@@ -622,7 +628,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
- 
- 	for_each_domain_iommu(i, domain) {
- 		found = true;
--		if (!ecap_coherent(g_iommus[i]->ecap)) {
-+		if (!iommu_paging_structure_coherency(g_iommus[i])) {
- 			domain->iommu_coherency = 0;
- 			break;
- 		}
-@@ -633,7 +639,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
- 	/* No hardware attached; use lowest common denominator */
- 	rcu_read_lock();
- 	for_each_active_iommu(iommu, drhd) {
--		if (!ecap_coherent(iommu->ecap)) {
-+		if (!iommu_paging_structure_coherency(iommu)) {
- 			domain->iommu_coherency = 0;
- 			break;
- 		}
-@@ -2090,7 +2096,8 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
- 
- 	context_set_fault_enable(context);
- 	context_set_present(context);
--	domain_flush_cache(domain, context, sizeof(*context));
-+	if (!ecap_coherent(iommu->ecap))
-+		clflush_cache_range(context, sizeof(*context));
- 
- 	/*
- 	 * It's a non-present to present mapping. If hardware doesn't cache
+ /*
 -- 
 2.25.1
 
