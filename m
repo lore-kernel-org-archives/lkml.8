@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B45BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF4A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4809720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461808;
-	bh=LJCuUSZBQy9uGSZuNnnL9kR2KmZ+rfiBdMZ024+64qI=;
+	s=default; t=1593461811;
+	bh=kdZXgki5KkRNROtby/YxBQc4vUme9Ez8Gc8tgsTrpeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBpGXTn94fowcbjhEMpZDGgcqdmcihwDXT/auvaLCxdpVzp9ckJcFcM9UTnky34NH
-	 8o7WdiPhk92RfeviPOZMTJZszNJXvpjo3QIPy9fJQU83tahHKG4yJfCVUk3ZzqAR72
-	 iiBuUgo7WBjKYeJdoEqGy8aG47ytp8G834bnvogY=
+	b=utcBtdXf+WMCMMB/X6M8VV2WgeZg4/rvbR5Jl3E5qem75xJMK77890ONNRzN1YZi2
+	 dMS4yIDrgBO8ySi5hCzW+UGlZs+K0n2vyjxld9rHouMFQNQzzDAvXQmEEXbh99W0Gm
+	 3Ts1bNb6lfledZxXDR890k/kScVgJ/49xQkVueBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732924AbgF2UQq (ORCPT
+        id S1732958AbgF2UQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40562 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732773AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732739AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9693525289;
-        Mon, 29 Jun 2020 15:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A7425226;
+        Mon, 29 Jun 2020 15:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444997;
-        bh=LJCuUSZBQy9uGSZuNnnL9kR2KmZ+rfiBdMZ024+64qI=;
+        s=default; t=1593444941;
+        bh=kdZXgki5KkRNROtby/YxBQc4vUme9Ez8Gc8tgsTrpeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=arOQUulaDNvnoxbCk+q7TuHo1o65m2wJJbocbWhEUnEShcX20kvhHrTAPRwLk3P0p
-         scsSnZAHnkawz376uEmZXiaMwzndQQ8Vn+KbsQMOSlhZTNh4mn91nZ8QBC3Oh7wmQZ
-         v650bWtwtk4gWWrB41Wk/A6rm4xOgA3Us005tIEI=
+        b=Gt5pis5QKDwPLnJI5/w/zCG0B59u5tiO7/gb+zbnXaj7wnvJCqH5yiymeYqwqpqyz
+         WxIusSgGTLXx0whiWqDQsv9APmxTkYOVogWDjHIydK/jlFdFqb0nyReuYise8j3DDC
+         M2IJoER43dXrWhgzdsTqDlIO6usfxxB+JrPDMlKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+Cc:     guodeqing <geffrey.guo@huawei.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/131] net: alx: fix race condition in alx_remove
-Date:   Mon, 29 Jun 2020 11:34:28 -0400
-Message-Id: <20200629153502.2494656-98-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 038/131] net: Fix the arp error in some cases
+Date:   Mon, 29 Jun 2020 11:33:29 -0400
+Message-Id: <20200629153502.2494656-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,57 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zekun Shen <bruceshenzk@gmail.com>
+From: guodeqing <geffrey.guo@huawei.com>
 
-[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
+[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+ie.,
+$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
+$ ip rule add from 6.6.6.6 table 6666
 
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+$ ip route add 9.9.9.9 via 6.6.6.6
+
+$ ping -I 6.6.6.6 9.9.9.9
+PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
+
+3 packets transmitted, 0 received, 100% packet loss, time 2079ms
+
+$ arp
+Address     HWtype  HWaddress           Flags Mask            Iface
+6.6.6.6             (incomplete)                              eth0
+
+The arp request address is error, this is because fib_table_lookup in
+fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
+the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
+Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
+
+Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
+Signed-off-by: guodeqing <geffrey.guo@huawei.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/ipv4/fib_semantics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index 6d32211349275..dd63b993ce7b3 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1250,8 +1250,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
+diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+index a8fc4e83cd954..9573cd242b908 100644
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -831,7 +831,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_nh *nh,
+ 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
+ 				fl4.flowi4_scope = RT_SCOPE_LINK;
  
- static void __alx_stop(struct alx_priv *alx)
- {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
- }
-@@ -1861,9 +1865,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
+-			if (cfg->fc_table)
++			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
+ 				tbl = fib_get_table(net, cfg->fc_table);
  
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
--
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
- 
+ 			if (tbl)
 -- 
 2.25.1
 
