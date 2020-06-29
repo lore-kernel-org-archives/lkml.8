@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B97C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4C820675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC2020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461471;
-	bh=b0j2mIs3XUjOXxVpOjvPT/hMw0I3XoANlSSZiHVK85k=;
+	s=default; t=1593461473;
+	bh=jI2fGmYPwaAl3xVuOHptjhQ0C2N8hoO2htzF4IITZMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JyCpgEz1mquOBIgjZl1mAWpgpgD276pQTMaLcJQFp/eurhM1MsLmNitMr8dJ9cMwr
-	 hrT+UVyB44f80hwJn5CYcQXxHdwou7RLNgb5QX+wIsSMCTKhK2Fk2BWP9RRI6BWo3G
-	 HCEA+z704zrj/SXegicNuFIIdrrPStjfndIY1c+k=
+	b=cCKvVIfLVU/EQg4233iXdL32vSA74YN8l4LD5PoTSFtoIGZK8+ZC/EH6f6t0OLOHt
+	 Coo3mqbpiBiLzXtr/W+5AS3+cWX7Uz5R//NPnQZujUcQ6sbsVlM9ej6c/67Mq1Z+V7
+	 kaldHu7nK0yeu01dWtpp5AelpnuW9UtbgbX1t8Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgF2ULF (ORCPT
+        id S1729580AbgF2ULE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732892AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732899AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C172528A;
-        Mon, 29 Jun 2020 15:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C44B252D6;
+        Mon, 29 Jun 2020 15:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444998;
-        bh=b0j2mIs3XUjOXxVpOjvPT/hMw0I3XoANlSSZiHVK85k=;
+        s=default; t=1593445102;
+        bh=jI2fGmYPwaAl3xVuOHptjhQ0C2N8hoO2htzF4IITZMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gc5piatigOs3Pdcb/s35N9WmNkOHR/SFHjVPTmtqC3AseCgyhrC81BeFMv3cOEGnl
-         o8BEqATZoFiasa2GxIOXqJnJ478ZiUfp1n1PtevOzWH0xc1fvNY25oo3zwkfaQ9iGV
-         t1ad63yoClnIjdOH3sArmqmXtfhpj9kJ959REav0=
+        b=r6u2jp3eae5pQz3++iggxRDLDEPXh8NhBNZwozwBr1beG1MPPSLiNSMEm6JrD9eUY
+         BgPV5rUCWj6UgXgi2rieurAez1+5Ts4UEa8vNYeeR7mtzIOgHXRNA+d1futYDDRhW5
+         etGAX+fRDWDo4tG02CwLb1kRJP49e+r0YLm4/h1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/131] s390/ptrace: fix setting syscall number
-Date:   Mon, 29 Jun 2020 11:34:29 -0400
-Message-Id: <20200629153502.2494656-99-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 11/78] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Mon, 29 Jun 2020 11:36:59 -0400
+Message-Id: <20200629153806.2494953-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,90 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-When strace wants to update the syscall number, it sets GPR2
-to the desired number and updates the GPR via PTRACE_SETREGSET.
-It doesn't update regs->int_code which would cause the old syscall
-executed on syscall restart. As we cannot change the ptrace ABI and
-don't have a field for the interruption code, check whether the tracee
-is in a syscall and the last instruction was svc. In that case assume
-that the tracer wants to update the syscall number and copy the GPR2
-value to regs->int_code.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
+
+Those last two bytes - 96 1f - aren't part of the original packet.
+
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index cd3df5514552c..65fefbf61e1ca 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -325,6 +325,25 @@ static inline void __poke_user_per(struct task_struct *child,
- 		child->thread.per_user.end = data;
- }
- 
-+static void fixup_int_code(struct task_struct *child, addr_t data)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	int ilc = regs->int_code >> 16;
-+	u16 insn;
-+
-+	if (ilc > 6)
-+		return;
-+
-+	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
-+			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
-+		return;
-+
-+	/* double check that tracee stopped on svc instruction */
-+	if ((insn >> 8) != 0xa)
-+		return;
-+
-+	regs->int_code = 0x20000 | (data & 0xffff);
-+}
- /*
-  * Write a word to the user area of a process at location addr. This
-  * operation does have an additional problem compared to peek_user.
-@@ -336,7 +355,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 	struct user *dummy = NULL;
- 	addr_t offset;
- 
-+
- 	if (addr < (addr_t) &dummy->regs.acrs) {
-+		struct pt_regs *regs = task_pt_regs(child);
- 		/*
- 		 * psw and gprs are stored on the stack
- 		 */
-@@ -354,7 +375,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 				/* Invalid addressing mode bits */
- 				return -EINVAL;
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 0f69b77e8502b..875639b0e9d56 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1400,10 +1400,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
  		}
--		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
-+
-+		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+			addr == offsetof(struct user, regs.gprs[2]))
-+			fixup_int_code(child, data);
-+		*(addr_t *)((addr_t) &regs->psw + addr) = data;
  
- 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
- 		/*
-@@ -720,6 +745,10 @@ static int __poke_user_compat(struct task_struct *child,
- 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
- 				(__u64)(tmp & PSW32_ADDR_AMODE);
- 		} else {
-+
-+			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+				addr == offsetof(struct compat_user, regs.gprs[2]))
-+				fixup_int_code(child, data);
- 			/* gpr 0-15 */
- 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
- 		}
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1412,8 +1412,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
