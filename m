@@ -2,181 +2,156 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B48C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A147C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 650AB20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jqXAyz0N"
+	by mail.kernel.org (Postfix) with ESMTP id 68C7A2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457387;
+	bh=lxxQnrSMlr+97kH0qKxyqvhMkplbf2d/pEWokw3G1Go=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xNNdpgkWn1nT1aib6cfyu3qKsHnZu38jMOh+gft+t7bKLVuCQgy9PdpmY+pQf5Xda
+	 ae1rnULCUhtc/Vf0XSAUsYleTPTlj5EAdKOcQ+HfiC9c6DxOL9blb24TwT4AT/TLod
+	 +LoubKfevOzHCztnT3eDc2pVVPh9iUzz5uPGjZBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgF2TCx (ORCPT
+        id S1730549AbgF2TCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:53 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:52563 "EHLO m43-7.mailgun.net"
+        Mon, 29 Jun 2020 15:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbgF2TCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593457365; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=7RTKsK1vkgMcrQEAHJsfsvSNG30HIOc0GMqPzPCA89A=;
- b=jqXAyz0NQ0OH5YAaJmZhUgdjw5hEbwLF98+VJcK/1EV901O3f/1cwdNgPYQsr2kDVDBFYUKk
- FeoxDOQt//2YldW3yt1DZUju5y7CZSdl9GMmBxzvwOpwN21lCJtYQZwWn/um4Gl0qi+UTbXA
- hm3pR6FfRQsZbXP60izqXEMAtxs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ef9f192c4bb4f886d603937 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 13:50:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A36BDC43395; Mon, 29 Jun 2020 13:50:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1730344AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: harigovi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1502AC433C8;
-        Mon, 29 Jun 2020 13:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DD7254FE;
+        Mon, 29 Jun 2020 15:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446058;
+        bh=lxxQnrSMlr+97kH0qKxyqvhMkplbf2d/pEWokw3G1Go=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kw+a2qTqpdNQe+5kwqc63kVw9Fa8K5O2dlzMHlMEiQZQ2UlZTg/zVKQ3sZrnnI6hi
+         i29vc0wer8zfW1LTDuJgjl+z2vIlvlnq5W6GZ16A9RDYpY9l56bZ4f4warR5WCpip3
+         s3DZ6Qeidh4fwUxPaL15hQakH3INa67zMXIme2lE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 058/135] bcache: fix potential deadlock problem in btree_gc_coalesce
+Date:   Mon, 29 Jun 2020 11:51:52 -0400
+Message-Id: <20200629155309.2495516-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 29 Jun 2020 19:20:09 +0530
-From:   harigovi@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v3] arm64: dts: sc7180: add nodes for idp display
-In-Reply-To: <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
-References: <20200217085842.28333-1-harigovi@codeaurora.org>
- <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
-Message-ID: <5c2265e82af8f755d649c0c36a462f19@codeaurora.org>
-X-Sender: harigovi@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25 06:37, Stephen Boyd wrote:
-> Quoting Harigovindan P (2020-02-17 00:58:42)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
->> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> index 388f50ad4fde..349db8fe78a5 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -232,6 +233,57 @@ vreg_bob: bob {
->>         };
->>  };
->> 
->> +&dsi0 {
->> +       status = "okay";
->> +
->> +       vdda-supply = <&vreg_l3c_1p2>;
->> +
->> +       panel@0 {
->> +               compatible = "visionox,rm69299-1080p-display";
->> +               reg = <0>;
->> +
->> +               vdda-supply = <&vreg_l8c_1p8>;
->> +               vdd3p3-supply = <&vreg_l18a_2p8>;
->> +
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&disp_pins>;
->> +
->> +               reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
->> +
->> +               ports {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +                       port@0 {
->> +                               reg = <0>;
->> +                               panel0_in: endpoint {
->> +                                       remote-endpoint = <&dsi0_out>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->> +       ports {
->> +               port@1 {
->> +                       endpoint {
->> +                               remote-endpoint = <&panel0_in>;
->> +                               data-lanes = <0 1 2 3>;
-> 
-> Is this property needed? If it's the default assumption it would be 
-> nice
-> to omit it so that we don't have to think about it.
-> This property is needed during panel probe. If this is not mentioned 
-> here,
-mipi_dsi_attach() will fail during panel probe. In dsi_host.c, 
-dsi_host_attach()
-fails since dsi lanes are greater than msm_host lanes. msm_host lanes 
-are updated
-as part of dsi_host_parse_dt. If we dont provide data-lanes in dt, it'll 
-have default
-value and fail in dsi_host_attach().
->> +                       };
->> +               };
->> +       };
->> +};
->> +
->> +&dsi_phy {
->> +       status = "okay";
->> +};
->> +
->> +&mdp {
->> +       status = "okay";
->> +};
->> +
->> +&mdss {
->> +       status = "okay";
->> +};
->> +
->>  &qspi {
->>         status = "okay";
->>         pinctrl-names = "default";
->> @@ -289,6 +341,17 @@ &usb_1_qmpphy {
->> 
->>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->> 
->> +&pm6150l_gpio {
->> +       disp_pins: disp-pins {
-> 
-> Curious how this works. It looks like PMIC GPIOS are expecting the node
-> to look like:
-> 
-> 	disp_pins: disp-pins {
-> 		pinconf {
-> 			pins = "gpio3";
-> 			function = PMIC_GPIO_FUNC_FUNC1;
-> 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_MED>;
-> 			power-source = <PM6150_GPIO_VPH>;
-> 			bias-disable;
-> 			output-low;
-> 		};
-> 
-> but this doesn't use the macros or the subnode for pinconf. Why? Also,
-> the PM6150_GPIO_VPH macro doesn't exist.
-We are discussing with PMIC team to have that macro in the header file.
-Will add other macros as part of next version.
-> 
->> +               pins = "gpio3";
->> +               function = "func1";
->> +               qcom,drive-strength = <2>;
->> +               power-source = <0>;
->> +               bias-disable;
->> +               output-low;
->> +       };
->> +};
->> +
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+
+[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
+
+coccicheck reports:
+  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+
+In btree_gc_coalesce func, if the coalescing process fails, we will goto
+to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
+Then, it will cause a deadlock when trying to acquire new_nodes[i]->
+write_lock for freeing new_nodes[i] before return.
+
+btree_gc_coalesce func details as follows:
+	if alloc new_nodes[i] fails:
+		goto out_nocoalesce;
+	// obtain new_nodes[i]->write_lock
+	mutex_lock(&new_nodes[i]->write_lock)
+	// main coalescing process
+	for (i = nodes - 1; i > 0; --i)
+		[snipped]
+		if coalescing process fails:
+			// Here, directly goto out_nocoalesce
+			 // tag will cause a deadlock
+			goto out_nocoalesce;
+		[snipped]
+	// release new_nodes[i]->write_lock
+	mutex_unlock(&new_nodes[i]->write_lock)
+	// coalesing succ, return
+	return;
+out_nocoalesce:
+	btree_node_free(new_nodes[i])	// free new_nodes[i]
+	// obtain new_nodes[i]->write_lock
+	mutex_lock(&new_nodes[i]->write_lock);
+	// set flag for reuse
+	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
+	// release new_nodes[i]->write_lock
+	mutex_unlock(&new_nodes[i]->write_lock);
+
+To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
+releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
+coalescing process fails, we will go to out_unlock_nocoalesce tag
+for releasing new_nodes[i]->write_lock before free new_nodes[i] in
+out_nocoalesce tag.
+
+(Coly Li helps to clean up commit log format.)
+
+Fixes: 2a285686c109816 ("bcache: btree locking rework")
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/bcache/btree.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 5c93582c71cc6..634e9284b7bee 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -1375,7 +1375,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 			if (__set_blocks(n1, n1->keys + n2->keys,
+ 					 block_bytes(b->c)) >
+ 			    btree_blocks(new_nodes[i]))
+-				goto out_nocoalesce;
++				goto out_unlock_nocoalesce;
+ 
+ 			keys = n2->keys;
+ 			/* Take the key of the node we're getting rid of */
+@@ -1404,7 +1404,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 
+ 		if (__bch_keylist_realloc(&keylist,
+ 					  bkey_u64s(&new_nodes[i]->key)))
+-			goto out_nocoalesce;
++			goto out_unlock_nocoalesce;
+ 
+ 		bch_btree_node_write(new_nodes[i], &cl);
+ 		bch_keylist_add(&keylist, &new_nodes[i]->key);
+@@ -1450,6 +1450,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 	/* Invalidated our iterator */
+ 	return -EINTR;
+ 
++out_unlock_nocoalesce:
++	for (i = 0; i < nodes; i++)
++		mutex_unlock(&new_nodes[i]->write_lock);
++
+ out_nocoalesce:
+ 	closure_sync(&cl);
+ 	bch_keylist_free(&keylist);
+-- 
+2.25.1
+
