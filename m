@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6403BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C033DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A6D206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3A0206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467660;
-	bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
+	s=default; t=1593467674;
+	bh=sTZhejpHNdPTk4/qHgVwZSgCKGun0MCFQds5tLxB0K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEqfaXudVAdGqzbtGiNQCBe2MJTk4qDTqzhVyZmCf+MrgAUT2X0u4RMNZfL4VgAxY
-	 opyAZ1/vhrs0BVREOvix9u85ljxShRmJhYO0GN0GJJFyIcA/R6UTGpZodQTg30CbGj
-	 YJx2dcGFblfJyahANm1X6n/gGhfBpAeeOtr/KP+M=
+	b=z0i0j0LotNVbG3a24rWab2zB3JISK6hVHIEODAZND9TBFyNrWggvZIAv6/w20eSNT
+	 TQL2+S6lhLwVEySnEtUgwfmlMaHdbEEc+03Umyz5BfZiQpQSGGV2u/RZuzIXNULYNy
+	 Osr08PQy2mlSZfkx4S/3NwagaH8Eov70mds5cmkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404514AbgF2VyO (ORCPT
+        id S2389289AbgF2Vy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726586AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B51247C3;
-        Mon, 29 Jun 2020 15:22:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AEB324732;
+        Mon, 29 Jun 2020 15:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444131;
-        bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
+        s=default; t=1593444052;
+        bh=sTZhejpHNdPTk4/qHgVwZSgCKGun0MCFQds5tLxB0K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yUJilzUb4s7sioCaJcwmre67x/13LQvdsl3Ek0RG9Nd2e9lFJUJYAF8usf8bnZYTH
-         G0pxarCUuBM7adDtKEgfdfnI8L9i+rnlTz7Hl/y1Etu1E/Z/qKiaaz7YNzJFVc5JBv
-         /yCGGtVssoreIwLcQmzajcI6y3z4JyaAbzXdW9lo=
+        b=Ubc8ycbNfVqA4+LQMTlAvJF7GFl7QZSTX5xx3Ln/F28G8QAl2ZEws7P0UxxDCw39v
+         s4sKSAJkrsxSTssd9M5oqBCMF4kwcKuigKK2W8V4ep8HJ2A4PcK+VlhhKi9hCh88OJ
+         qD9eMt/a7QrrzPcTTfuvwx1qpqatOZ5jZ9TOyh3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiping Ma <jiping.ma2@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 238/265] arm64: perf: Report the PC value in REGS_ABI_32 mode
-Date:   Mon, 29 Jun 2020 11:17:51 -0400
-Message-Id: <20200629151818.2493727-239-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Hien Dang <hien.dang.eb@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 160/265] usb: renesas_usbhs: getting residue from callback_result
+Date:   Mon, 29 Jun 2020 11:16:33 -0400
+Message-Id: <20200629151818.2493727-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,69 +66,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
+[ Upstream commit ea0efd687b01355cd799c8643d0c636ba4859ffc ]
 
-A 32-bit perf querying the registers of a compat task using REGS_ABI_32
-will receive zeroes from w15, when it expects to find the PC.
+This driver assumed that dmaengine_tx_status() could return
+the residue even if the transfer was completed. However,
+this was not correct usage [1] and this caused to break getting
+the residue after the commit 24461d9792c2 ("dmaengine:
+virt-dma: Fix access after free in vchan_complete()") actually.
+So, this is possible to get wrong received size if the usb
+controller gets a short packet. For example, g_zero driver
+causes "bad OUT byte" errors.
 
-Return the PC value for register dwarf register 15 when returning register
-values for a compat task to perf.
+The usb-dmac driver will support the callback_result, so this
+driver can use it to get residue correctly. Note that even if
+the usb-dmac driver has not supported the callback_result yet,
+this patch doesn't cause any side-effects.
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
-[will: Shuffled code and added a comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+[1]
+https://lore.kernel.org/dmaengine/20200616165550.GP2324254@vkoul-mobl/
+
+Reported-by: Hien Dang <hien.dang.eb@renesas.com>
+Fixes: 24461d9792c2 ("dmaengine: virt-dma: Fix access after free in vchan_complete()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1592482277-19563-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/usb/renesas_usbhs/fifo.c | 23 +++++++++++++----------
+ drivers/usb/renesas_usbhs/fifo.h |  2 +-
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 0bbac612146ea..666b225aeb3ad 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -15,15 +15,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 		return 0;
+diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
+index 01c6a48c41bc9..ac9a81ae82164 100644
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -803,7 +803,8 @@ static int __usbhsf_dma_map_ctrl(struct usbhs_pkt *pkt, int map)
+ 	return info->dma_map_ctrl(chan->device->dev, pkt, map);
+ }
  
- 	/*
--	 * Compat (i.e. 32 bit) mode:
--	 * - PC has been set in the pt_regs struct in kernel_entry,
--	 * - Handle SP and LR here.
-+	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
-+	 * we're stuck with it for ABI compatability reasons.
-+	 *
-+	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
-+	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
-+	 * These correspond directly to a prefix of the registers saved in our
-+	 * 'struct pt_regs', with the exception of the PC, so we copy that down
-+	 * (x15 corresponds to SP_hyp in the architecture).
-+	 *
-+	 * So far, so good.
-+	 *
-+	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
-+	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
-+	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
-+	 * PC registers would normally live. The initial idea was to allow a
-+	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
-+	 * how well that works in practice, somebody might be relying on it.
-+	 *
-+	 * At the time we make a sample, we don't know whether the consumer is
-+	 * 32-bit or 64-bit, so we have to cater for both possibilities.
- 	 */
- 	if (compat_user_mode(regs)) {
- 		if ((u32)idx == PERF_REG_ARM64_SP)
- 			return regs->compat_sp;
- 		if ((u32)idx == PERF_REG_ARM64_LR)
- 			return regs->compat_lr;
-+		if (idx == 15)
-+			return regs->pc;
+-static void usbhsf_dma_complete(void *arg);
++static void usbhsf_dma_complete(void *arg,
++				const struct dmaengine_result *result);
+ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ {
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+@@ -813,6 +814,7 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
++	dma_cookie_t cookie;
+ 
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+@@ -827,11 +829,11 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ 	if (!desc)
+ 		return;
+ 
+-	desc->callback		= usbhsf_dma_complete;
+-	desc->callback_param	= pipe;
++	desc->callback_result	= usbhsf_dma_complete;
++	desc->callback_param	= pkt;
+ 
+-	pkt->cookie = dmaengine_submit(desc);
+-	if (pkt->cookie < 0) {
++	cookie = dmaengine_submit(desc);
++	if (cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+ 		return;
  	}
+@@ -1152,12 +1154,10 @@ static size_t usbhs_dma_calc_received_size(struct usbhs_pkt *pkt,
+ 					   struct dma_chan *chan, int dtln)
+ {
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+-	struct dma_tx_state state;
+ 	size_t received_size;
+ 	int maxp = usbhs_pipe_get_maxpacket(pipe);
  
- 	if ((u32)idx == PERF_REG_ARM64_SP)
+-	dmaengine_tx_status(chan, pkt->cookie, &state);
+-	received_size = pkt->length - state.residue;
++	received_size = pkt->length - pkt->dma_result->residue;
+ 
+ 	if (dtln) {
+ 		received_size -= USBHS_USB_DMAC_XFER_SIZE;
+@@ -1363,13 +1363,16 @@ static int usbhsf_irq_ready(struct usbhs_priv *priv,
+ 	return 0;
+ }
+ 
+-static void usbhsf_dma_complete(void *arg)
++static void usbhsf_dma_complete(void *arg,
++				const struct dmaengine_result *result)
+ {
+-	struct usbhs_pipe *pipe = arg;
++	struct usbhs_pkt *pkt = arg;
++	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	int ret;
+ 
++	pkt->dma_result = result;
+ 	ret = usbhsf_pkt_handler(pipe, USBHSF_PKT_DMA_DONE);
+ 	if (ret < 0)
+ 		dev_err(dev, "dma_complete run_error %d : %d\n",
+diff --git a/drivers/usb/renesas_usbhs/fifo.h b/drivers/usb/renesas_usbhs/fifo.h
+index c3d3cc35cee0f..4a7dc23ce3d35 100644
+--- a/drivers/usb/renesas_usbhs/fifo.h
++++ b/drivers/usb/renesas_usbhs/fifo.h
+@@ -50,7 +50,7 @@ struct usbhs_pkt {
+ 		     struct usbhs_pkt *pkt);
+ 	struct work_struct work;
+ 	dma_addr_t dma;
+-	dma_cookie_t cookie;
++	const struct dmaengine_result *dma_result;
+ 	void *buf;
+ 	int length;
+ 	int trans;
 -- 
 2.25.1
 
