@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C700C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490B4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B657206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460848;
-	bh=e1aEkFgeabM9gKsDhPNpArYKPyKjbdBH/0iXvt6caJY=;
+	s=default; t=1593460851;
+	bh=Wey9NWm6SEoUMi8gGkWxezjIJSpDGHLnsTrE9L0Do0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngay3xx5/qvGmjyn87Uyko2qqjAuYtaxCZx/EYkjtZ+Eb02gJQmBKtP74TJDTtLuR
-	 W8ezAaRyuMcZBxC+hJhXjLUudOO4jg5aTnJh7/ygzmZ2e2ja0DzsMGCL0nAxiISamN
-	 hewBASOJ6HkoMYPIfOFbBy72NI9f/CShbaNY9jf0=
+	b=q3tbiWToxAVQVlgTyw5VV2jAsF3hK24M3QrMS0IDRERAEyDj8YyjvaEpqaauOLoRP
+	 t0rEZTvNHUbjS1N5QB3yLDGiV1ABUKFa9mqN9cnCsJmeZL0UmjGgMYau06vtJ0mqyo
+	 XpLjTk5XsYa/h4cUrrYbWaILX7RG0stGKngYw1yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbgF2UAq (ORCPT
+        id S2387598AbgF2UAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387562AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387563AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C43A24881;
-        Mon, 29 Jun 2020 15:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 961C5251BF;
+        Mon, 29 Jun 2020 15:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444382;
-        bh=e1aEkFgeabM9gKsDhPNpArYKPyKjbdBH/0iXvt6caJY=;
+        s=default; t=1593444493;
+        bh=Wey9NWm6SEoUMi8gGkWxezjIJSpDGHLnsTrE9L0Do0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPZ51QQpR69NGE07chbUVFjb9EMUKcwYXocPCPVdC0sVwAyq7GVREK1LSjBfsqRwY
-         mnQvWDjRHDbVPSizK17b6uYWA+nU23e58BziqZIatVpykcuR0iJRmeUt+rkakYanIU
-         xFDunZ407tILPdDi9g0h03n7P6rXy39fNwer64wY=
+        b=l3FhNENfVyGIk2Op5pvNMa/INtb0Y91TGxpXQJFYbx1dMxSZTqKKgRCPrY3okxZzA
+         z3E1MbspWMIATaTlDlRWiWufAhbQ71Yb5fD3tRpe7yylN+CA9/VoLEO3dY0aZhibSg
+         5BvWpRU2li3hLnjiytI7xcGmXF4bt+7Bg0m7xOIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shay Drory <shayd@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 059/178] IB/mad: Fix use after free when destroying MAD agent
-Date:   Mon, 29 Jun 2020 11:23:24 -0400
-Message-Id: <20200629152523.2494198-60-sashal@kernel.org>
+Subject: [PATCH 5.4 170/178] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
+Date:   Mon, 29 Jun 2020 11:25:15 -0400
+Message-Id: <20200629152523.2494198-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -68,62 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Drory <shayd@mellanox.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 116a1b9f1cb769b83e5adff323f977a62b1dcb2e upstream.
+commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
 
-Currently, when RMPP MADs are processed while the MAD agent is destroyed,
-it could result in use after free of rmpp_recv, as decribed below:
+__rpc_depopulate(gssd_dentry) was lost on error path
 
-	cpu-0						cpu-1
-	-----						-----
-ib_mad_recv_done()
- ib_mad_complete_recv()
-  ib_process_rmpp_recv_wc()
-						unregister_mad_agent()
-						 ib_cancel_rmpp_recvs()
-						  cancel_delayed_work()
-   process_rmpp_data()
-    start_rmpp()
-     queue_delayed_work(rmpp_recv->cleanup_work)
-						  destroy_rmpp_recv()
-						   free_rmpp_recv()
-     cleanup_work()[1]
-      spin_lock_irqsave(&rmpp_recv->agent->lock) <-- use after free
-
-[1] cleanup_work() == recv_cleanup_handler
-
-Fix it by waiting for the MAD agent reference count becoming zero before
-calling to ib_cancel_rmpp_recvs().
-
-Fixes: 9a41e38a467c ("IB/mad: Use IDR for agent IDs")
-Link: https://lore.kernel.org/r/20200621104738.54850-2-leon@kernel.org
-Signed-off-by: Shay Drory <shayd@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+cc: stable@vger.kernel.org
+Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/mad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/rpc_pipe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index 9947d16edef21..a9e00cdf717b8 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -639,10 +639,10 @@ static void unregister_mad_agent(struct ib_mad_agent_private *mad_agent_priv)
- 	xa_erase(&ib_mad_clients, mad_agent_priv->agent.hi_tid);
- 
- 	flush_workqueue(port_priv->wq);
--	ib_cancel_rmpp_recvs(mad_agent_priv);
- 
- 	deref_mad_agent(mad_agent_priv);
- 	wait_for_completion(&mad_agent_priv->comp);
-+	ib_cancel_rmpp_recvs(mad_agent_priv);
- 
- 	ib_mad_agent_security_cleanup(&mad_agent_priv->agent);
- 
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index b71a39ded930a..37792675ed571 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1317,6 +1317,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+ 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
+ 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
+ 	if (!clnt_dentry) {
++		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+ 		pipe_dentry = ERR_PTR(-ENOENT);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
