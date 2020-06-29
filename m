@@ -2,99 +2,129 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C520675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B56B206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sk970az7"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WO+QZ4pc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgF2Cna (ORCPT
+        id S1726047AbgF2Cte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgF2Cna (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:43:30 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B661DC03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yQyPEA4fwxkaL2Sv58MpobbVI0aOCnfA9ig8/eIofc4=; b=Sk970az7hnYAcjWTyGRiUoVN9O
-        tQtxlUTlo/8U5dc3sGFbFmflvvI2Wex6C9zPV7+J2Gkcc9UulOy4vL3t1O6rLgHOcSR2L5HYVFVoC
-        jnupRvZRp8u78yS0A7oalZT7fRBlft4E4VVtN/Qrs24w4g81UUSDz0R1U0VvglyW2J7vymqsPbY1D
-        b1Of+pOkbouxk4ZUag321o8xceZTyxKucZR2yDMXwKc++LHrTHech+P/vm4ItfZPw6IsjIHzECCj9
-        yEx94aoZHo11vausSXGtPLPwK7cMB4ZMgmGPHL2Jsj2BnQmODaHiq76yV1gSM8JW1LmXwUDeAz7Bq
-        Ef4rDsWw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpjl0-0002B1-0p; Mon, 29 Jun 2020 02:42:54 +0000
-Date:   Mon, 29 Jun 2020 03:42:53 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Long Li <lonuxli.64@gmail.com>
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mm:free unused pages in kmalloc_order
-Message-ID: <20200629024253.GB25523@casper.infradead.org>
-References: <20200627045507.GA57675@lilong>
+        Sun, 28 Jun 2020 22:49:34 -0400
+Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:34748
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbgF2Cte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:49:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YC+wdMeL6KxPxwW7anJIJ2NFmH6ai1Iqu32imfqnLoBmCt1/74cH8HwhmIKdOnrOBqB6svJ1kU0zamxVL9giIuDiNHtv7kB/w/AykK6kb8tiAt4u4ZdA+uHj16E5qBWgNpkiSM1Av1t6Z9Bg6rxwA/NME7qr2Rjc4a66IVLsWnXRWb3O1JJr2XcvPPXzYUTMtD9wtGSuY4xb5zNCPxjunyOu3rxgAnGE3KU+N2+uza8DKK/ZNFhyozbke2YT7iJMhgVfi3V38J/CSzHOF9ROxsok0nbtsM17noigtR/HFiOBqBor5AOXd0D5QQyw5Hl6V3hRHnYW0U46PFU2J/88CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FE1V1JHUxciUnSqOxiMQ0Ld99J67xsUFcnbEWx7VBXk=;
+ b=X/Q73dzTvTE/RWHmqhcdssOWny/MFL5MikPW1yQLpsDsF/biuRrU21cu3d6iFDBrRD3B9dlCpCWfq2cqFCb8lded63UiVhHHc8DKAXCxndLLjaIf8ucm6r1gFw6SmCbMYGs4YCkZlZqExkTWH0lI8TuXAtkJc7niL8XPreOPDwm9Bksz+6HQV8cJEtNQ0ipeCMYFtFXGlTGKQKSNdktPzhdwWSO76eEREi2ldl//ZdWaLYVgrJaDh1rA/O36QiJtbc5DZIee4sfjeh0U7wrvNc/GPq70IwnSRxJEcx0MvLTSJrfQuLrY328I4aRbfPCwrLYr4+OD3P6VQauGQEoXDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FE1V1JHUxciUnSqOxiMQ0Ld99J67xsUFcnbEWx7VBXk=;
+ b=WO+QZ4pcq7m8obCi5qa+KebnKVygDAoQNspHmYMBe0crIwPcy19X+6/wY0dzZgISn6ajigKKY7qm+mLSLjGgfiHJEIxKJO9gdl0zzOLvKScu99cmhHK+gkOMlE49zM+7tVgwY/UCliQTZUtnq8TxOAtlr5hu+4hI0qL50EN7nLM=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TYAPR01MB4221.jpnprd01.prod.outlook.com (2603:1096:404:cc::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 02:49:30 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 02:49:30 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH/RFC v4 3/4] mmc: core: Call mmc_poweroff_nofity() if
+ regulators are disabled
+Thread-Topic: [PATCH/RFC v4 3/4] mmc: core: Call mmc_poweroff_nofity() if
+ regulators are disabled
+Thread-Index: AQHWS5y2P9SOm+4ShEmD+FQrAiQE9qjrAYcAgAPlY2A=
+Date:   Mon, 29 Jun 2020 02:49:30 +0000
+Message-ID: <TY2PR01MB36925C9FF9C023C9FAD63D13D86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200626151342.GF5289@sirena.org.uk>
+In-Reply-To: <20200626151342.GF5289@sirena.org.uk>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: efb09d15-6652-4777-ccd3-08d81bd70c37
+x-ms-traffictypediagnostic: TYAPR01MB4221:
+x-microsoft-antispam-prvs: <TYAPR01MB42212410969BC37D32DE6777D86E0@TYAPR01MB4221.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZDeskdBBfwKoWd/C2XIKqM5vbne8B4vRs4lL1AeaifgdC3V8/H/oZF5o8f05YRqscz+s+3/bie1XTkPkxAGfTge4p7ZuQvzYTYZuiHd9RWmFyS/hB0MI+kjQKeExWodb20OTsBKqaZ+RulQtyZ3dty26iZ4ll/nqcDpubVWX09b2jWyDkNXc7tILXYo0+07fbApmHqs9U97sdvCyo9vGNNlvR6nZjNgDGC2r+Oai2woBkjv5ZmHJfggz1kCGd9OLTgcQrZ+NeZ6w5bK2vGdpAucNbcBZq84p2Y5eR89wq3CI+2VaZ2L3xfZcYCXVN3Yv
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(26005)(6506007)(55236004)(8936002)(54906003)(8676002)(186003)(2906002)(33656002)(52536014)(66476007)(66446008)(66556008)(66946007)(64756008)(86362001)(5660300002)(4744005)(316002)(76116006)(9686003)(83380400001)(7696005)(55016002)(6916009)(478600001)(71200400001)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: g++oz9OeQigpgZxDerU33vauhqfaLEgHn6AEEOcY2GWTHw00327o678zOBl/9u9vy1qoFWAtIIUAqW4+p0zrRGljAAydJNwpv77VuFo+2n0WmgFvrho7SKh2w8er85HWGDPu/PeMnVj+M5i15p38TrbG+5kpCcuaU77j0M/Lp2Wy25a5jDQ7tJeuDZWgZIYe+3sb+ffL1+okuDubGC96ahJNUyW7b68WVSlruI392+oJr2sriTxCUFajHW+hC968txi6nYIc2CaRH2uRxvbYNY2EPfhrCkxk3YTb/RCKpHXeLOpuJNcw7CpYkbEdF624PWwVIxl9GXJam5adSxyW9zxgGSauTZdvcBXGoX2z45Q4QpS+OBFLzYRKUAWSIKkWwNuhOvelQkw7ZMOBgRYvvl0ryA3sfEgs9HuKI5nvzPtM2YP83hz7sg/XXJjG3hw5a67Frs3ead6zB9/FIQm8MurISB1xv724y/toJIzsmPd2HabO621aPxsKYpHfaQnX
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627045507.GA57675@lilong>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efb09d15-6652-4777-ccd3-08d81bd70c37
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 02:49:30.8348
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BDw5C5sN6f6uGPgKvIlqQhJhFBaQkY4NJWKtjlzwb5//jjBJ68fwFxFtOfUzAOZJGR0vW/dbGqNMBoOUQaW2jzSPhHN8feUXgtjFQC7ZYEjIJZQ/W2hSa3IOGBYmJGz9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 04:55:07AM +0000, Long Li wrote:
-> Environment using the slub allocator, 1G memory in my ARM32.
-> kmalloc(1024, GFP_HIGHUSER) can allocate memory normally,
-> kmalloc(64*1024, GFP_HIGHUSER) will cause a memory leak, because
-> alloc_pages returns highmem physical pages, but it cannot be directly
-> converted into a virtual address and return NULL, the pages has not
-> been released. Usually driver developers will not use the
-> GFP_HIGHUSER flag to allocate memory in kmalloc, but I think this
-> memory leak is not perfect, it is best to be fixed. This is the
-> first time I have posted a patch, there may be something wrong.
+Hi Mark,
 
-Slab used to disallow GFP_HIGHMEM allocations earlier than this,
-so you'd never get here.  See one moron's patch here, 20 years ago ...
-https://lore.kernel.org/lkml/20001228145801.C19693@parcelfarce.linux.theplanet.co.uk/
+> From: Mark Brown, Sent: Saturday, June 27, 2020 12:14 AM
+>=20
+> On Fri, Jun 26, 2020 at 06:32:21PM +0900, Yoshihiro Shimoda wrote:
+> > Note that this is possible to happen when the regulator-fixed driver
+> > turns the vmmc and vqmmc off by firmware like PSCI while the system
+> > is suspended.
+>=20
+> This is not a good interface, if there's a need to query the state over
+> suspend then we should query the state over suspend rather than trying
+> to somehow shoehorn it via the runtime enable state which is going to
+> break any other users and relies on the regulator driver doing dodgy
+> stuff representing the enable state.
 
-Things changed a bit since then.  SLAB_LEVEL_MASK became GFP_SLAB_BUG_MASK,
-then GFP_SLAB_BUG_MASK moved to mm/internal.h.  Nowadays, GFP_SLAB_BUG_MASK
-is checked only in new_slab(), and it is definitely skipped when we go through
-the kmalloc_large() patch.
+I understood it.
+So, as I mentioned other email thread, I'm thinking adding a new property
+into MMC is better.
 
-Could you send a replacement patch which checks GFP_SLAB_BUG_MASK before
-calling alloc_pages()?
+Best regards,
+Yoshihiro Shimoda
 
-> +++ b/mm/slab_common.c
-> @@ -819,8 +819,12 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
->  	page = alloc_pages(flags, order);
->  	if (likely(page)) {
->  		ret = page_address(page);
-> -		mod_node_page_state(page_pgdat(page), NR_SLAB_UNRECLAIMABLE_B,
-> -				    PAGE_SIZE << order);
-> +		if (ret)
-> +			mod_node_page_state(page_pgdat(page),
-> +					NR_SLAB_UNRECLAIMABLE_B,
-> +					PAGE_SIZE << order);
-> +		else
-> +			__free_pages(page, order);
->  	}
->  	ret = kasan_kmalloc_large(ret, size, flags);
->  	/* As ret might get tagged, call kmemleak hook after KASAN. */
-> -- 
-> 2.17.1
-> 
-> 
