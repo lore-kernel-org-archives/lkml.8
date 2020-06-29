@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02544C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF67B2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753262065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461950;
-	bh=9o5x72zZZnWSCJ6J+SEm8U/hiA+ojDbeHCsxOYiiEwM=;
+	s=default; t=1593461954;
+	bh=hutlfR1xaBFjPKdvQ57mSBsj0oG+6c8GbbJqFgwq59k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBPoL0pTwOAvLfEyr3DiuwVAGp9sMFr9CFODmqFMYHdn4PpX+mY35GN7KBrsIf7hg
-	 N9iGXZT8nCKGk/Tqjd0gon0j1xtEfYPwjpZ9jz/hp9OSbA3guNKkmxgMwfSpz+nNjv
-	 TyJHzcCbmOXWnYnzqfqLRXi3vWRmsf3xAIUNGcOk=
+	b=k148L0ZpaZxKmChAkX1l07orSOurenfKzGSA/DmiZkEIQRBfO0BHknoaC0x62jFdY
+	 vRB69bePRxLTMWMdqWEWulNM/rIKopS2WswZCqOQp4tQRoYsRMZNspTVFE6ViuLPtt
+	 chrXGTVtXgKFMvZFBgJQRfn4QR9oT93TH36Wa+XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgF2UTJ (ORCPT
+        id S1732031AbgF2UTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:19:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732631AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732624AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEF1E25381;
-        Mon, 29 Jun 2020 15:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ACF32541C;
+        Mon, 29 Jun 2020 15:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445246;
-        bh=9o5x72zZZnWSCJ6J+SEm8U/hiA+ojDbeHCsxOYiiEwM=;
+        s=default; t=1593445369;
+        bh=hutlfR1xaBFjPKdvQ57mSBsj0oG+6c8GbbJqFgwq59k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erWO35jjJYLPPwes7c2a8yPgO+MeuxHg88BJ9u9CZHQaX+tJ/wOecN4ueXSqbG1Gs
-         Gu3wlfh18yTIKF8WrMdYmnwonAwJ4GMID9yT6hqwdrIHXopmAqkt/VQQP1rZtHkKVR
-         2oio3N19iHNgJlHXIU9s4EhWpWkl53EAMJBMp6Hc=
+        b=NDXhQjS9NDIc5JhzOjsy++nmd65L6jNtayTEIc5mYNvZUQYxMrPmoDm42U2SYb5ic
+         OtgXkfpqu27t3cOEU8DsLxT2Yg/4s1ctUxETyFxx0yC3sHApL4DpElLYqmR0FHc6dD
+         njhm2S7IDIYkBPtBrMaTCJCs2TJk9yd95PBanK/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/191] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Mon, 29 Jun 2020 11:37:26 -0400
-Message-Id: <20200629154007.2495120-31-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 124/191] mtd: rawnand: socrates: Fix the probe error path
+Date:   Mon, 29 Jun 2020 11:39:00 -0400
+Message-Id: <20200629154007.2495120-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,52 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit 9c6c2e5cc77119ce0dacb4f9feedb73ce0354421 ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
-
-Reduce the number of always zero prefix digits to save screen real-
-estate.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-51-miquel.raynal@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/socrates_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index e49af19852098..fb191ad8fc3aa 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -297,11 +297,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
- }
+diff --git a/drivers/mtd/nand/socrates_nand.c b/drivers/mtd/nand/socrates_nand.c
+index f633ff1ebc0ab..957d9597c4847 100644
+--- a/drivers/mtd/nand/socrates_nand.c
++++ b/drivers/mtd/nand/socrates_nand.c
+@@ -203,7 +203,7 @@ static int socrates_nand_probe(struct platform_device *ofdev)
+ 	if (!res)
+ 		return res;
  
- #else /* ifdef DEBUG */
+-	nand_release(nand_chip);
++	nand_cleanup(nand_chip);
+ 
+ out:
+ 	iounmap(host->io_base);
 -- 
 2.25.1
 
