@@ -2,568 +2,117 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E014C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29403C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFAF7206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EC6206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbgF2TVg (ORCPT
+        id S1731782AbgF2TW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:22:26 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45968 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732226AbgF2TVg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:21:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59258 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732158AbgF2TV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:21:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 889A1AFCB;
-        Mon, 29 Jun 2020 15:10:04 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 28/47] staging: vchi: Get rid of vchiq_shim's message callback
-Date:   Mon, 29 Jun 2020 17:09:26 +0200
-Message-Id: <20200629150945.10720-29-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629150945.10720-1-nsaenzjulienne@suse.de>
-References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
+Received: from 89-64-84-69.dynamic.chello.pl (89.64.84.69) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 200f7df7d1df78b0; Mon, 29 Jun 2020 18:34:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Subject: [PATCH v4 0/2] ACPI: ACPICA / OSL: Avoid unmapping ACPI memory inside of the AML interpreter
+Date:   Mon, 29 Jun 2020 18:31:02 +0200
+Message-ID: <1666722.UopIai5n7p@kreacher>
+In-Reply-To: <2788992.3K7huLjdjL@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As vchiq_shim's callback does nothing aside from pushing messages into
-the service's queue, let's bypass it and jump directly to the service's
-callbacks, letting them choose whether to use the message queue.
+Hi All,
 
-It turns out most services don't need to use the message queue, which
-makes for simpler code in the end.
+On Friday, June 26, 2020 7:28:27 PM CEST Rafael J. Wysocki wrote:
+> Hi All,
+> 
+> On Monday, June 22, 2020 3:50:42 PM CEST Rafael J. Wysocki wrote:
+> > Hi All,
+> > 
+> > This series is to address the problem with RCU synchronization occurring,
+> > possibly relatively often, inside of acpi_ex_system_memory_space_handler(),
+> > when the namespace and interpreter mutexes are held.
+> > 
+> > Like I said before, I had decided to change the approach used in the previous
+> > iteration of this series and to allow the unmap operations carried out by 
+> > acpi_ex_system_memory_space_handler() to be deferred in the first place,
+> > which is done in patches [1-2/4].
+> 
+> In the meantime I realized that calling syncrhonize_rcu_expedited() under the
+> "tables" mutex within ACPICA is not quite a good idea too and that there is no
+> reason for any users of acpi_os_unmap_memory() in the tree to use the "sync"
+> variant of unmapping.
+> 
+> So, unless I'm missing something, acpi_os_unmap_memory() can be changed to
+> always defer the final unmapping and the only ACPICA change needed to support
+> that is the addition of the acpi_os_release_unused_mappings() call to get rid
+> of the unused mappings when leaving the interpreter (module the extra call in
+> the debug code for consistency).
+> 
+> So patches [1-2/4] have been changed accordingly.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../bcm2835-audio/bcm2835-vchiq.c             | 20 ++---
- .../vc04_services/interface/vchi/vchi.h       |  9 +-
- .../interface/vchi/vchi_common.h              | 12 ---
- .../interface/vchiq_arm/vchiq_shim.c          | 42 ++--------
- .../vc04_services/vchiq-mmal/mmal-vchiq.c     | 83 +++++++++----------
- 5 files changed, 59 insertions(+), 107 deletions(-)
- delete mode 100644 drivers/staging/vc04_services/interface/vchi/vchi_common.h
+And this still can be improved by using queue_rcu_work() to queue up the unused
+mappings for removal in which case ACPICA need not be modified at all for the
+deferred unmapping to work.
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-index 0f97eda4ec90..71750ef891dd 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-@@ -89,22 +89,17 @@ static int bcm2835_audio_send_simple(struct bcm2835_audio_instance *instance,
- 	return bcm2835_audio_send_msg(instance, &m, wait);
- }
- 
--static void audio_vchi_callback(void *param, const enum vchiq_reason reason,
--				void *msg_handle)
-+static enum vchiq_status audio_vchi_callback(enum vchiq_reason reason,
-+					     struct vchiq_header *header,
-+					     unsigned handle, void *userdata)
- {
--	struct bcm2835_audio_instance *instance = param;
--	struct vchi_held_msg handle;
-+	struct bcm2835_audio_instance *instance = vchiq_get_service_userdata(handle);
- 	struct vc_audio_msg *m;
--	unsigned size;
--	int status;
- 
- 	if (reason != VCHIQ_MESSAGE_AVAILABLE)
--		return;
--
--	status = vchi_msg_hold(instance->service, (void **)&m, &size, &handle);
--	if (status)
--		return;
-+		return VCHIQ_SUCCESS;
- 
-+	m = (void *)header->data;
- 	if (m->type == VC_AUDIO_MSG_TYPE_RESULT) {
- 		instance->result = m->result.success;
- 		complete(&instance->msg_avail_comp);
-@@ -119,7 +114,8 @@ static void audio_vchi_callback(void *param, const enum vchiq_reason reason,
- 		dev_err(instance->dev, "unexpected callback type=%d\n", m->type);
- 	}
- 
--	vchi_held_msg_release(&handle);
-+	vchiq_release_message(handle, header);
-+	return VCHIQ_SUCCESS;
- }
- 
- static int
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
-index 789acb7999d1..fdc243f3f60a 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
-@@ -4,8 +4,6 @@
- #ifndef VCHI_H_
- #define VCHI_H_
- 
--#include "vchi_common.h"
--
- /******************************************************************************
-  * Global defs
-  *****************************************************************************/
-@@ -31,16 +29,13 @@ struct vchi_held_msg {
- 
- struct vchi_service {
- 	unsigned int handle;
--
--	vchi_callback callback;
--	void *callback_param;
- };
- 
- // structure used to provide the information needed to open a server or a client
- struct service_creation {
- 	struct vchi_version version;
- 	int32_t service_id;
--	vchi_callback callback;
-+	vchiq_callback callback;
- 	void *callback_param;
- };
- 
-@@ -88,7 +83,7 @@ extern int vchi_queue_kernel_message(struct vchi_service *service, void *data,
- // Routine to look at a message in place.
- // The message is dequeued, so the caller is left holding it; the descriptor is
- // filled in and must be released when the user has finished with the message.
--extern int32_t vchi_msg_hold(struct vchi_service *service,
-+extern int32_t vchi_msg_hold(unsigned handle,
- 			     void **data,        // } may be NULL, as info can be
- 			     uint32_t *msg_size, // } obtained from HELD_MSG_T
- 			     struct vchi_held_msg *message_descriptor);
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_common.h b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-deleted file mode 100644
-index 24e8665e214a..000000000000
---- a/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
--
--#ifndef VCHI_COMMON_H_
--#define VCHI_COMMON_H_
--
--//Callback used by all services / bulk transfers
--typedef void (*vchi_callback)(void *callback_param, //my service local param
--			      enum vchiq_reason reason,
--			      void *handle); //for transmitting msg's only
--
--#endif // VCHI_COMMON_H_
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index bec78f0ff44b..fb9fd5fec42c 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -158,12 +158,12 @@ EXPORT_SYMBOL(vchi_held_msg_release);
-  * Returns: int32_t - success == 0
-  *
-  ***********************************************************/
--int32_t vchi_msg_hold(struct vchi_service *service, void **data,
--		      uint32_t *msg_size, struct vchi_held_msg *message_handle)
-+int32_t vchi_msg_hold(unsigned handle, void **data, uint32_t *msg_size,
-+		      struct vchi_held_msg *message_handle)
- {
- 	struct vchiq_header *header;
- 
--	header = vchiq_msg_hold(service->handle);
-+	header = vchiq_msg_hold(handle);
- 	if (!header)
- 		return -ENOENT;
- 
-@@ -179,7 +179,7 @@ int32_t vchi_msg_hold(struct vchi_service *service, void **data,
- 	 */
- 
- 	message_handle->service =
--		(struct opaque_vchi_service_t *)(long)service->handle;
-+		(struct opaque_vchi_service_t *)(long)handle;
- 	message_handle->message = header;
- 
- 	return 0;
-@@ -253,33 +253,9 @@ EXPORT_SYMBOL(vchi_disconnect);
-  *
-  ***********************************************************/
- 
--static enum vchiq_status shim_callback(enum vchiq_reason reason,
--				    struct vchiq_header *header,
--				    unsigned int handle,
--				    void *bulk_user)
-+static struct vchi_service *service_alloc(void)
- {
--	struct vchi_service *service =
--		(struct vchi_service *)VCHIQ_GET_SERVICE_USERDATA(handle);
--
--	if (reason == VCHIQ_MESSAGE_AVAILABLE)
--		vchiq_msg_queue_push(service->handle, header);
--
--	service->callback(service->callback_param, reason, bulk_user);
--
--	return VCHIQ_SUCCESS;
--}
--
--static struct vchi_service *service_alloc(struct vchiq_instance *instance,
--	struct service_creation *setup)
--{
--	struct vchi_service *service = kzalloc(sizeof(struct vchi_service), GFP_KERNEL);
--
--	if (service) {
--		service->callback = setup->callback;
--		service->callback_param = setup->callback_param;
--	}
--
--	return service;
-+	return kzalloc(sizeof(struct vchi_service), GFP_KERNEL);
- }
- 
- static void service_free(struct vchi_service *service)
-@@ -293,15 +269,15 @@ int32_t vchi_service_open(struct vchiq_instance *instance,
- 	struct vchi_service **service)
- {
- 
--	*service = service_alloc(instance, setup);
-+	*service = service_alloc();
- 	if (*service) {
- 		struct vchiq_service_params params;
- 		enum vchiq_status status;
- 
- 		memset(&params, 0, sizeof(params));
- 		params.fourcc = setup->service_id;
--		params.callback = shim_callback;
--		params.userdata = *service;
-+		params.callback = setup->callback;
-+		params.userdata = setup->callback_param;
- 		params.version = setup->version.version;
- 		params.version_min = setup->version.version_min;
- 
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index f710ccccb14c..2abf0f6664f9 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -152,7 +152,7 @@ struct mmal_msg_context {
- 
- 		struct {
- 			/* message handle to release */
--			struct vchi_held_msg msg_handle;
-+			struct vchiq_header *msg_handle;
- 			/* pointer to received message */
- 			struct mmal_msg *msg;
- 			/* received message length */
-@@ -549,54 +549,49 @@ static void bulk_abort_cb(struct vchiq_mmal_instance *instance,
- }
- 
- /* incoming event service callback */
--static void service_callback(void *param, const enum vchiq_reason reason,
--			     void *bulk_ctx)
-+static enum vchiq_status service_callback(enum vchiq_reason reason,
-+					  struct vchiq_header *header,
-+					  unsigned handle, void *bulk_ctx)
- {
--	struct vchiq_mmal_instance *instance = param;
--	int status;
-+	struct vchiq_mmal_instance *instance = vchiq_get_service_userdata(handle);
- 	u32 msg_len;
- 	struct mmal_msg *msg;
--	struct vchi_held_msg msg_handle;
- 	struct mmal_msg_context *msg_context;
- 
- 	if (!instance) {
- 		pr_err("Message callback passed NULL instance\n");
--		return;
-+		return VCHIQ_SUCCESS;
- 	}
- 
- 	switch (reason) {
- 	case VCHIQ_MESSAGE_AVAILABLE:
--		status = vchi_msg_hold(instance->service, (void **)&msg,
--				       &msg_len, &msg_handle);
--		if (status) {
--			pr_err("Unable to dequeue a message (%d)\n", status);
--			break;
--		}
-+		msg = (void *)header->data;
-+		msg_len = header->size;
- 
- 		DBG_DUMP_MSG(msg, msg_len, "<<< reply message");
- 
- 		/* handling is different for buffer messages */
- 		switch (msg->h.type) {
- 		case MMAL_MSG_TYPE_BUFFER_FROM_HOST:
--			vchi_held_msg_release(&msg_handle);
-+			vchiq_release_message(handle, header);
- 			break;
- 
- 		case MMAL_MSG_TYPE_EVENT_TO_HOST:
- 			event_to_host_cb(instance, msg, msg_len);
--			vchi_held_msg_release(&msg_handle);
-+			vchiq_release_message(handle, header);
- 
- 			break;
- 
- 		case MMAL_MSG_TYPE_BUFFER_TO_HOST:
- 			buffer_to_host_cb(instance, msg, msg_len);
--			vchi_held_msg_release(&msg_handle);
-+			vchiq_release_message(handle, header);
- 			break;
- 
- 		default:
- 			/* messages dependent on header context to complete */
- 			if (!msg->h.context) {
- 				pr_err("received message context was null!\n");
--				vchi_held_msg_release(&msg_handle);
-+				vchiq_release_message(handle, header);
- 				break;
- 			}
- 
-@@ -605,12 +600,12 @@ static void service_callback(void *param, const enum vchiq_reason reason,
- 			if (!msg_context) {
- 				pr_err("received invalid message context %u!\n",
- 				       msg->h.context);
--				vchi_held_msg_release(&msg_handle);
-+				vchiq_release_message(handle, header);
- 				break;
- 			}
- 
- 			/* fill in context values */
--			msg_context->u.sync.msg_handle = msg_handle;
-+			msg_context->u.sync.msg_handle = header;
- 			msg_context->u.sync.msg = msg;
- 			msg_context->u.sync.msg_len = msg_len;
- 
-@@ -648,13 +643,15 @@ static void service_callback(void *param, const enum vchiq_reason reason,
- 		pr_err("Received unhandled message reason %d\n", reason);
- 		break;
- 	}
-+
-+	return VCHIQ_SUCCESS;
- }
- 
- static int send_synchronous_mmal_msg(struct vchiq_mmal_instance *instance,
- 				     struct mmal_msg *msg,
- 				     unsigned int payload_len,
- 				     struct mmal_msg **msg_out,
--				     struct vchi_held_msg *msg_handle_out)
-+				     struct vchiq_header **msg_handle)
- {
- 	struct mmal_msg_context *msg_context;
- 	int ret;
-@@ -708,7 +705,7 @@ static int send_synchronous_mmal_msg(struct vchiq_mmal_instance *instance,
- 	}
- 
- 	*msg_out = msg_context->u.sync.msg;
--	*msg_handle_out = msg_context->u.sync.msg_handle;
-+	*msg_handle = msg_context->u.sync.msg_handle;
- 	release_msg_context(msg_context);
- 
- 	return 0;
-@@ -780,7 +777,7 @@ static int port_info_set(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	pr_debug("setting port info port %p\n", port);
- 	if (!port)
-@@ -829,7 +826,7 @@ static int port_info_set(struct vchiq_mmal_instance *instance,
- 		 port->component->handle, port->handle);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -841,7 +838,7 @@ static int port_info_get(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	/* port info time */
- 	m.h.type = MMAL_MSG_TYPE_PORT_INFO_GET;
-@@ -924,7 +921,7 @@ static int port_info_get(struct vchiq_mmal_instance *instance,
- 	pr_debug("%s:result:%d component:0x%x port:%d\n",
- 		 __func__, ret, port->component->handle, port->handle);
- 
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -937,7 +934,7 @@ static int create_component(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	/* build component create message */
- 	m.h.type = MMAL_MSG_TYPE_COMPONENT_CREATE;
-@@ -972,7 +969,7 @@ static int create_component(struct vchiq_mmal_instance *instance,
- 		 component->inputs, component->outputs, component->clocks);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -984,7 +981,7 @@ static int destroy_component(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_COMPONENT_DESTROY;
- 	m.u.component_destroy.component_handle = component->handle;
-@@ -1005,7 +1002,7 @@ static int destroy_component(struct vchiq_mmal_instance *instance,
- 
- release_msg:
- 
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1017,7 +1014,7 @@ static int enable_component(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_COMPONENT_ENABLE;
- 	m.u.component_enable.component_handle = component->handle;
-@@ -1037,7 +1034,7 @@ static int enable_component(struct vchiq_mmal_instance *instance,
- 	ret = -rmsg->u.component_enable_reply.status;
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1049,7 +1046,7 @@ static int disable_component(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_COMPONENT_DISABLE;
- 	m.u.component_disable.component_handle = component->handle;
-@@ -1070,7 +1067,7 @@ static int disable_component(struct vchiq_mmal_instance *instance,
- 
- release_msg:
- 
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1082,7 +1079,7 @@ static int get_version(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_GET_VERSION;
- 
-@@ -1102,7 +1099,7 @@ static int get_version(struct vchiq_mmal_instance *instance,
- 	*minor_out = rmsg->u.version.minor;
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1115,7 +1112,7 @@ static int port_action_port(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_PORT_ACTION;
- 	m.u.port_action_port.component_handle = port->component->handle;
-@@ -1144,7 +1141,7 @@ static int port_action_port(struct vchiq_mmal_instance *instance,
- 		 port_action_type_names[action_type], action_type);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1159,7 +1156,7 @@ static int port_action_handle(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_PORT_ACTION;
- 
-@@ -1192,7 +1189,7 @@ static int port_action_handle(struct vchiq_mmal_instance *instance,
- 		 action_type, connect_component_handle, connect_port_handle);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1204,7 +1201,7 @@ static int port_parameter_set(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_PORT_PARAMETER_SET;
- 
-@@ -1233,7 +1230,7 @@ static int port_parameter_set(struct vchiq_mmal_instance *instance,
- 		 ret, port->component->handle, port->handle, parameter_id);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
-@@ -1245,7 +1242,7 @@ static int port_parameter_get(struct vchiq_mmal_instance *instance,
- 	int ret;
- 	struct mmal_msg m;
- 	struct mmal_msg *rmsg;
--	struct vchi_held_msg rmsg_handle;
-+	struct vchiq_header *rmsg_handle;
- 
- 	m.h.type = MMAL_MSG_TYPE_PORT_PARAMETER_GET;
- 
-@@ -1292,7 +1289,7 @@ static int port_parameter_get(struct vchiq_mmal_instance *instance,
- 		 ret, port->component->handle, port->handle, parameter_id);
- 
- release_msg:
--	vchi_held_msg_release(&rmsg_handle);
-+	vchiq_release_message(instance->service->handle, rmsg_handle);
- 
- 	return ret;
- }
--- 
-2.27.0
+Accordingly, patches [1-2/4] from the v3 (and earlier) are now replaced by one
+patch, the [1/2].
+
+> > However, it turns out that the "fast-path" mapping is still useful on top of
+> > the above to reduce the number of ioremap-iounmap cycles for the same address
+> > range and so it is introduced by patches [3-4/4].
+> 
+> Patches [3-4/4] still do what they did, but they have been simplified a bit
+> after rebasing on top of the new [1-2/4].
+
+Moreover, the ACPICA part of the old patches [3-4/4] can be reworked to always
+preserve memory mappings created by the memory opregion handler without the
+need to take additional references to memory mappings at the OS level, so
+patch [4/4] from the v3 (and earlier) is not needed now.
+
+Again, for details, please refer to the patch changelogs, but I'm kind of
+inclined to make these changes regardless, because they both are clear
+improvements to me.
+
+As before:
+
+> > The series is available from the git branch at
+> > 
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> >  acpica-osl
+> > 
+> > for easier testing.
+> 
+> Also the series have been tested locally.
+
+Cheers,
+Rafael
+
+
 
