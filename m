@@ -2,228 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6550AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D90206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C96206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="LtAdVclI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jfgz6+eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732311AbgF2TWx (ORCPT
+        id S1732320AbgF2TW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
+        Mon, 29 Jun 2020 15:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732291AbgF2TWp (ORCPT
+        with ESMTP id S1732293AbgF2TWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:22:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB7C8C02A567
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:23:42 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q5so16525114wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:23:42 -0700 (PDT)
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E22C030F3B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:56:54 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id u17so13400638qtq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:56:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nl0x/rj3yBVTOrqWd44sOW1I/hD8UFczEpT4mtDBCNM=;
-        b=LtAdVclIsirHV6gf2c3FZ96iX1T0MBL65geVPL/1DVKsInTNbiSxf7KKXibovUl3IN
-         laQHG1K69LOA68++MEgi8YiZFUXrMrjKq3wMq3LFxanxb5enPpmRI4povLAiQHXY8Bzg
-         wVg4P4IFT4Q7TqlgnSdX2XLJLo42kr6jWxix4zQb1SdCXI4MXmZdcGeJr2nooUKL0gtk
-         LXIOats5pbD8v3Hb2roSCdOAGCAfPfzmiVrGMSLwm7uvg5BWupSYSgmAj9Qg6P0QaDs9
-         TQmo872EEMJ0RqWD5+AHCmZhU48hpRisVPTlUFDGOpLn18DlG1orTkSGcNPZEiNEaxqu
-         ynWQ==
+        bh=gmp0D2tdeFRnXQgw7lSdvfRGqahLRtacjy20V4Dgy4c=;
+        b=Jfgz6+ehlKKKW4qoq8xVJu2q7caS/mX7d2eerQrmJ/I8fEtrkUoYA5pgWnWcfjvIDt
+         utQSsqPaOEgIRXKX03NaualVOXjO63W2a35ig0TSMcEvHD/PcZNONbY9GUUYfk1mDK7a
+         ouQynf+wqQT5N4M8740UpW12VB7n9Jgyl+lX2odBXE5pal3VZrz0Gun2gLsRDsoSeCn1
+         4izLQLIdLSK2kPxv32lSMlEo3LqIFrnsiB9ePxMtpwt8X5utuupEstYsFyha+jdQgRgh
+         WgnW+TwAW5sRiUUFiQ6MSEV88c8RfYaX8bxGe/hkSHOAZI8dMGVQyQmstOf6vv5SN6vx
+         oMTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nl0x/rj3yBVTOrqWd44sOW1I/hD8UFczEpT4mtDBCNM=;
-        b=XDB8/m/IIwyFVXJ2LyJ81MX1T7jgI+eiKZLQjTbxOsV8FRxg6M5UenqsM8nm3ZGiqt
-         GUDH4x+4hKT9ACwzPMjba6Ywo/lKJT0b/+pSXe+rqbITdVzSDjJDGvANaktc+3rqoDoH
-         zKHSOCFIfPa6Q5G5eM5x5HI49q3n+2sUasuQFdCFQKA07nXWIbHDyrgMX/0S5hfYkavi
-         w5MH+ap4CYc3h8e0HcJpMZqWmoVdEm0mceRI0Xt6v+EDqT5Ig/N2wQXZ85OqWyH6l9ss
-         D7eaCdrDKcGtMZaHTOa41hjI100bHRuRcpeBRb2jyZY0daZnq4yENUJdLGvEn8V8inqx
-         BT5A==
-X-Gm-Message-State: AOAM530DmzpY//mFbTtYddk8S6clOU1FMzVh+6JGH7zi+bWJWWTHOtnV
-        OgnTQd0tO9pcZanN0jAMhuO3YthCFGzDAjUNlNFwE83koqY=
-X-Google-Smtp-Source: ABdhPJzJBWqClEJDZQv9q0ZNu1Opq5ugaN0535ikS5lW4+LHEFUCVyYM9Bqob9+g6X02tXDoV5QIo9y5kmNqNv6dyC8=
-X-Received: by 2002:adf:ff87:: with SMTP id j7mr11366571wrr.128.1593437021175;
- Mon, 29 Jun 2020 06:23:41 -0700 (PDT)
+        bh=gmp0D2tdeFRnXQgw7lSdvfRGqahLRtacjy20V4Dgy4c=;
+        b=eGS9hzkIy2dX2D/M9MhsWAbwRdzOcQGFOVnuKmocdz2sO28mh2Sw768ieeYC6qKW7R
+         i5j0XzFiX1GSzU9BirFpC0IHiK1OQ083PpQYa0Drpvxj7KN3OXpERHklmV08+AlI/gmj
+         IIpYZq2GzvhCwwBZTcb3GYu5rVuo+w9hfb1wd7toY2SZCpUWU8KfRJZWwlEbujoS6AWO
+         dLcSt6sjLM0oHQ5Xp0M1fAUfYZbMGfShknxvM4+sgMiFrNm3e8j/1L0EcP8XG4J8jmyD
+         QgXrzfcNR0KeqmL5nKQzQ84l3Tt3/s6qB/hoN/pTNahuj1kJAypDEXXHXqv8CffaLs22
+         ZIOw==
+X-Gm-Message-State: AOAM530u7c5FbsaZmN9WTsxe+qP1AL/FvBALHk5RiUAsYjN2jhJIfuc0
+        6dvWdNiD3Vxvh0HM8VLgDJrkEGQQGvR6g1+dWattAw==
+X-Google-Smtp-Source: ABdhPJz4vWfkua2eG9MpTJ6k/kJDSLhEXhO0H2alk/afqT4ySNVYGzkUifS11LUHAxlT47DxEztZASWHQWqf40cxVOE=
+X-Received: by 2002:ac8:260b:: with SMTP id u11mr16891475qtu.380.1593449812975;
+ Mon, 29 Jun 2020 09:56:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <CAAhSdy1uFt3rqf8cSHqS=W90AoeQjo10R_Ak4Cknb_QUvH1SPQ@mail.gmail.com>
- <CANXhq0p_HoD6npHmoxxYHohBsgihfe5S-0DG04xLpQ3VO1w7oQ@mail.gmail.com>
- <CAAhSdy0Ed8zQ5LVZva6p2TWqTOzrDRtL0JJkAdmpzWFhzJLUfg@mail.gmail.com> <CANXhq0o9BMe6G6kv-zO7OvLTfKsz-4XKsoZJe3nxvX9_6uunvw@mail.gmail.com>
-In-Reply-To: <CANXhq0o9BMe6G6kv-zO7OvLTfKsz-4XKsoZJe3nxvX9_6uunvw@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 29 Jun 2020 18:53:29 +0530
-Message-ID: <CAAhSdy1fEge0AbKH6B72SwVHM-heN0QJPO0rQuCK5QhXq3uA0g@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Alan Kao <alankao@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <000000000000a4293f0598ef165e@google.com> <000000000000a1c96505a109a31b@google.com>
+In-Reply-To: <000000000000a1c96505a109a31b@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 29 Jun 2020 18:56:41 +0200
+Message-ID: <CACT4Y+bK_1tNXQoVHz=maMr-pCw4FK_chGzA7LuvChM6DGO-LA@mail.gmail.com>
+Subject: Re: KASAN: vmalloc-out-of-bounds Write in bitfill_aligned
+To:     syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>,
+        gk568005@gmail.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 6:23 PM Zong Li <zong.li@sifive.com> wrote:
+On Tue, Mar 17, 2020 at 10:34 AM syzbot
+<syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com> wrote:
 >
-> On Mon, Jun 29, 2020 at 4:28 PM Anup Patel <anup@brainfault.org> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 11:22 AM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > On Mon, Jun 29, 2020 at 12:53 PM Anup Patel <anup@brainfault.org> wrote:
-> > > >
-> > > > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > > > >
-> > > > > This patch set adds raw event support on RISC-V. In addition, we
-> > > > > introduce the DT mechanism to make our perf more generic and common.
-> > > > >
-> > > > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> > > > > would raise an illegal instruction exception and trap into m-mode to
-> > > > > emulate event selector CSRs access. It doesn't make sense because we
-> > > > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> > > > > selector through standard SBI call or the shadow CSRs of s-mode. We have
-> > > > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> > > > > but we also discussing the feasibility of accessing these PMU CSRs on
-> > > > > s-mode at the same time, such as delegation mechanism, so I was
-> > > > > wondering if we could use SBI calls first and make the PMU SBI extension
-> > > > > as legacy when s-mode access mechanism is accepted by Foundation? or
-> > > > > keep the current situation to see what would happen in the future.
-> > > > >
-> > > > > This patch set also introduces the DT mechanism, we don't want to add too
-> > > > > much platform-dependency code in perf like other architectures, so we
-> > > > > put the mapping of generic hardware events to DT, then we can easy to
-> > > > > transfer generic hardware events to vendor's own hardware events without
-> > > > > any platfrom-dependency stuff in our perf.
-> > > >
-> > > > Please re-write this series to have RISC-V PMU driver as a regular
-> > > > platform driver as drivers/perf/riscv_pmu.c.
-> > > >
-> > > > The PMU related sources will have to be removed from arch/riscv.
-> > > >
-> > > > Based on implementation of final drivers/perf/riscv_pmu.c we will
-> > > > come-up with drivers/perf/riscv_sbi_pmu.c driver for SBI perf counters.
-> > > >
-> > >
-> > > There are some different ways to implement perf, and current
-> > > implementation seems to be consensus when perf was introduced at the
-> > > beginning [0][1]. I don't persist to which one, I could change the
-> > > implementation as you mentioned if it is a new consensus one.
-> > >
-> > > [0] https://github.com/riscv/riscv-linux/pull/124#issuecomment-367563910
-> >
-> > I would not recommend taking the original RISC-V linux fork as reference.
-> >
-> > Rather we should study how things are done on other architectures.
-> >
-> > I really appreciate the attempt to make RISC-V PMU driver depend on DT
-> > but if we are going this route then we should maximize the use of Linux
-> > platform driver framework. In fact, whenever possible we should integrate
-> > RISC-V features as platform drivers under the drivers/ directory.
-> >
+> syzbot has found a reproducer for the following crash on:
 >
-> OK, I would change the implementation to platform driver if there is no
-> other voice.
+> HEAD commit:    fb33c651 Linux 5.6-rc6
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17dacd55e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e5fd3e65515b48c02a30
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b8ca75e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114800e5e00000
 >
-> > I thought about SBI PMU counters as well. In future, we can easily
-> > expose SBI PMU counters as RAW events in the same RISC-V PMU
-> > driver. The sbi_probe_extension() can be used in RISC-V PMU driver
-> > to check for SBI PMU counters so no special provisions needed in DT
-> > for SBI PMU counters.
-> >
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com
+
++George who may know what causes this
+
+> ==================================================================
+> BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+> BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
+> Write of size 8 at addr ffffc90009621000 by task syz-executor767/9337
 >
-> I thought about probing raw events by SBI extension too, I'm interested if you
-> have more detail about this.
+> CPU: 3 PID: 9337 Comm: syz-executor767 Not tainted 5.6.0-rc6-syzkaller #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:374
+>  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:641
+>  bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+>  bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
+>  sys_fillrect+0x415/0x7a0 drivers/video/fbdev/core/sysfillrect.c:291
+>  drm_fb_helper_sys_fillrect+0x1c/0x190 drivers/gpu/drm/drm_fb_helper.c:719
+>  bit_clear_margins+0x2d5/0x4a0 drivers/video/fbdev/core/bitblit.c:232
+>  fbcon_clear_margins+0x1de/0x240 drivers/video/fbdev/core/fbcon.c:1379
+>  fbcon_switch+0xd1b/0x1740 drivers/video/fbdev/core/fbcon.c:2361
+>  redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
+>  fbcon_modechanged+0x5bd/0x780 drivers/video/fbdev/core/fbcon.c:2998
+>  fbcon_update_vcs+0x3a/0x50 drivers/video/fbdev/core/fbcon.c:3045
+>  fb_set_var+0xad0/0xd40 drivers/video/fbdev/core/fbmem.c:1056
+>  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1109
+>  fb_ioctl+0xdd/0x130 drivers/video/fbdev/core/fbmem.c:1185
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x433d29
+> Code: c4 18 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb da fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fff33d61508 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000433d29
+> RDX: 00000000200001c0 RSI: 0000000000004601 RDI: 0000000000000003
+> RBP: 00000000006b2018 R08: 0000000000000000 R09: 00000000004002e0
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401bc0
+> R13: 0000000000401c50 R14: 0000000000000000 R15: 0000000000000000
 >
-> It seems to me that it is a little bit hard to return all events
-> through one SBI call,
-> so I thought we could map the generic hardware events and maintain their own
-> raw events by each platform in OpenSBI. But eventually, I thought the
-> DT mechanism
-> is more clear and easy than that. Let me know if you have any ideas about
-> probe function. Thanks.
-
-We can design SBI calls such that no SBI call is required to read
-the perf counter.
-
-The sbi_probe_extension() will only be used to check whether
-underlying SBI implementation supports SBI PMU extension.
-
-As-per my initial thoughts, we can potentially have the following SBI calls:
-
-1. SBI_PMU_NUM_COUNTERS
-    This call will return the number of SBI PMU counters
-2. SBI_PMU_COUNTER_DESCRIBE
-   This call takes two parameters: 1) physical address 2) counter index
-    It will write the description of SBI PMU counter at specified
-physical address.
-    The details of the SBI PMU counter will include name, type, etc
-3. SBI_PMU_COUNTER_START
-    This call takes two parameters: 1) physical address 2) counter index
-    It will inform SBI implementation to start counting specified counter on the
-    calling HART. The counter value will be written to the specified physical
-    address whenever it changes.
-4. SBI_PMU_COUNTER_STOP
-    This call takes one parameter: 1) counter index
-    It will inform SBI implementation to stop counting specified counters on
-    the calling HART.
-
-The above calls are generic enough to support any number of counters
-and we don't need any SBI call to read the counter. We can also assume
-all counters to be of fixed 64bit width. In fact, even Hypervisors can support
-it's own SBI PMU counters with SBI PMU extension.
-
-We still need to think more about the above calls because above SBI
-calls are just initial ideas.
-
-Maybe you can refine the above ideas and send a proposal to the
-UnixPlatformSpec mailing list ??
-
-Regards,
-Anup
-
 >
-> > Also, the RISC-V PMU driver can be implemented such that it will
-> > work for RV32, RV64, NoMMU RV32, and NoMMU RV64.
-> >
-> > Regards,
-> > Anup
-> >
-> > > [1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/f19TmCNP6yA
-> > >
-> > > > Regards,
-> > > > Anup
-> > > >
-> > > > >
-> > > > > Zong Li (6):
-> > > > >   dt-bindings: riscv: Add YAML documentation for PMU
-> > > > >   riscv: dts: sifive: Add DT support for PMU
-> > > > >   riscv: add definition of hpmcounter CSRs
-> > > > >   riscv: perf: Add raw event support
-> > > > >   riscv: perf: introduce DT mechanism
-> > > > >   riscv: remove PMU menu of Kconfig
-> > > > >
-> > > > >  .../devicetree/bindings/riscv/pmu.yaml        |  59 +++
-> > > > >  arch/riscv/Kconfig                            |  13 -
-> > > > >  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  13 +
-> > > > >  arch/riscv/include/asm/csr.h                  |  58 +++
-> > > > >  arch/riscv/include/asm/perf_event.h           | 100 ++--
-> > > > >  arch/riscv/kernel/Makefile                    |   2 +-
-> > > > >  arch/riscv/kernel/perf_event.c                | 471 +++++++++++-------
-> > > > >  7 files changed, 471 insertions(+), 245 deletions(-)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > >
-> > > > > --
-> > > > > 2.27.0
-> > > > >
+> Memory state around the buggy address:
+>  ffffc90009620f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffffc90009620f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >ffffc90009621000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>                    ^
+>  ffffc90009621080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>  ffffc90009621100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+> ==================================================================
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000a1c96505a109a31b%40google.com.
