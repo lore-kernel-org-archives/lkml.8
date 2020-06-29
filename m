@@ -2,101 +2,133 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E11C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222C6206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g5ReP8+J"
+	by mail.kernel.org (Postfix) with ESMTP id A2DC7206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460295;
+	bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J5OzQuMbyIhRDcO5zUHvpS8Gd7jw6/uW9D/joOZygD5AdLwpY4qUjnhT4uOYHAvWh
+	 UfAcllhOYzdh+6M1RYM4ReOp+vqVoEVVk7EeROnQcx/gt6V+V6F4ox126vSD7L8l69
+	 L/KpFJBjZ1xhNSuyUiXg+o5wPpLHsko9ov0Pwhms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733124AbgF2TvS (ORCPT
+        id S1726875AbgF2Tve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732493AbgF2Tkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387726AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:32 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B27C03E97B;
-        Mon, 29 Jun 2020 12:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=llOojDD3lqJfk9XWeWL9pqlJf45UocCmu2uEUE0dVqA=; b=g5ReP8+J7SiuD9MV4hutfiu9fF
-        LAQ6G1HKEbWQ7btY0lIlqWtQFgI+ZgvZnJdk18Czt0FPf4G7gNwRo7HcX3xI7nbdDRQ+krxs96lL5
-        +HuP7tUmxVsrvE1XkYoNMF4VXQwUOlwOTEsV2QZc176f0JIo+c2PNG4gKW3u+8BdtvAJi5oO5gJBW
-        37t8EEImIA/1JABc3HOtvByIjk1EaJNQxBOtQEExIXC6aPduMatEKzHKSwDb9fmqZG9m7UVxLhW7J
-        RQwJSo9KkIrGQPZYQe+thtllmkdKuj1wESyivOsd4SP/LW+bPGckN9Nif9YUH4KnBrFMLf2mXTQCN
-        Q80psA/w==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdW-0004Ls-U6; Mon, 29 Jun 2020 19:40:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 14/20] block: remove the NULL queue check in generic_make_request_checks
-Date:   Mon, 29 Jun 2020 21:39:41 +0200
-Message-Id: <20200629193947.2705954-15-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA9524898;
+        Mon, 29 Jun 2020 15:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444392;
+        bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oWFJ3pKk4TWfSIBxgpBe+C39fDmUFs8PEXKjHK5CBhTzkvM/2nFQTku5EaEmV6CEb
+         VAjfSXKqtIrh0sRAk4xHDwYEYAKNGKcs5OYh2w92I0x9g37ukARnLRvQCGnA06OfcD
+         YvADq+FjLZbKuL5eFD/maE0dwIxjhsum+CAulyvk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 069/178] ASoC: qcom: common: set correct directions for dailinks
+Date:   Mon, 29 Jun 2020 11:23:34 -0400
+Message-Id: <20200629152523.2494198-70-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All registers disks must have a valid queue pointer, so don't bother to
-log a warning for that case.
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit a2120089251f1fe221305e88df99af16f940e236 ]
+
+Currently both FE and BE dai-links are configured bi-directional,
+However the DSP BE dais are only single directional,
+so set the directions as supported by the BE dais.
+
+Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes)
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200612123711.29130-2-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-core.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ sound/soc/qcom/common.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 95dca74534ff73..37435d0d433564 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -973,22 +973,12 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
- static noinline_for_stack bool
- generic_make_request_checks(struct bio *bio)
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 6c20bdd850f33..8ada4ecba8472 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/module.h>
+ #include "common.h"
++#include "qdsp6/q6afe.h"
+ 
+ int qcom_snd_parse_of(struct snd_soc_card *card)
  {
--	struct request_queue *q;
-+	struct request_queue *q = bio->bi_disk->queue;
- 	int nr_sectors = bio_sectors(bio);
- 	blk_status_t status = BLK_STS_IOERR;
--	char b[BDEVNAME_SIZE];
+@@ -101,6 +102,15 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			}
+ 			link->no_pcm = 1;
+ 			link->ignore_pmdown_time = 1;
++
++			if (q6afe_is_rx_port(link->id)) {
++				link->dpcm_playback = 1;
++				link->dpcm_capture = 0;
++			} else {
++				link->dpcm_playback = 0;
++				link->dpcm_capture = 1;
++			}
++
+ 		} else {
+ 			dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
+ 			if (!dlc)
+@@ -113,12 +123,12 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			link->codecs->dai_name = "snd-soc-dummy-dai";
+ 			link->codecs->name = "snd-soc-dummy";
+ 			link->dynamic = 1;
++			link->dpcm_playback = 1;
++			link->dpcm_capture = 1;
+ 		}
  
- 	might_sleep();
+ 		link->ignore_suspend = 1;
+ 		link->nonatomic = 1;
+-		link->dpcm_playback = 1;
+-		link->dpcm_capture = 1;
+ 		link->stream_name = link->name;
+ 		link++;
  
--	q = bio->bi_disk->queue;
--	if (unlikely(!q)) {
--		printk(KERN_ERR
--		       "generic_make_request: Trying to access "
--			"nonexistent block-device %s (%Lu)\n",
--			bio_devname(bio, b), (long long)bio->bi_iter.bi_sector);
--		goto end_io;
--	}
--
- 	/*
- 	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
- 	 * if queue is not a request based queue.
 -- 
-2.26.2
+2.25.1
 
