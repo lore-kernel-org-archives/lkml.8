@@ -2,94 +2,174 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B88C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F883C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3DC20759
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00809206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466673;
-	bh=A0HsRLwh+waBhbXVnQZLMzvbWT6Z1RHzCRsAim/n1ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WIlnZjjvnWp5GjaNaasbLwFvC1JxU39cMX21bSyCTzZJKKn1Ne8BqirYtQ5w2Zm0w
-	 BVspn404zkcyplQ0lK4+Zdp9HUSdEoCS9/MBNWhvcPp+i8DmirLKRuxvdoiO7eZsOe
-	 D2IxXsiEussB6C21MzgdQ9ta5+r8iuIO2riJPLjE=
+	s=default; t=1593466677;
+	bh=FaYsE7JquzijpgqGxVh4UkKNz52dL+bO6o8rqPYsmqc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FAwcPkU61TOTQhVbGqPkcWpkc5ivPlbPxtaT3JBl/gCM2TJrE2EUYaGN+CK94pwHy
+	 +7wwz/gZnzFK6AHjXbHxfO0mdnbb9Vlf5osBhVfTC0DdkIs5Upkop3jHQc9pYa4Zpc
+	 IFlzM/w0d7PZQR1Q/V+GL1dzRCsfM6V0eujXjGdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbgF2Vhu (ORCPT
+        id S2391286AbgF2Vhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgF2Skd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728370AbgF2Skd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:33 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69CF220774;
-        Mon, 29 Jun 2020 04:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 616A823F57;
+        Mon, 29 Jun 2020 15:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593405719;
-        bh=A0HsRLwh+waBhbXVnQZLMzvbWT6Z1RHzCRsAim/n1ds=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yELho/jhyLvXCDpGccTqgeMDT6DBcXrWJCZuWHU2RcqLGOJ5NsJY58YMCERNs4Kh9
-         zidsGTXRlqMSV8n/zyCtAXdxZ0EjGbCVRv8OvqSBMM2PG4zVMIWMJnQg07pt1tIoZN
-         1ByoHTIgTBZSdt7rwXvaUxurf0UClDNtlcj182VE=
-Date:   Mon, 29 Jun 2020 07:41:54 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: add link to sparse's home page/internal docs
-Message-ID: <20200629044154.GB1492837@kernel.org>
-References: <20200626112349.1292a654@lwn.net>
- <20200628095034.69520-1-luc.vanoostenryck@gmail.com>
+        s=default; t=1593443916;
+        bh=FaYsE7JquzijpgqGxVh4UkKNz52dL+bO6o8rqPYsmqc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L2xfQTeFMNGXDJj2+5W1OpqEhyRztM3IjGzNOlSLC6Dzx04Gd+Rc+8OdU3weEDblo
+         Ez54ZFkvKx1lKuHz4gImVqA11PsxS/mXa8H111yRNBbVqGJxiZ+Db4cm44T+5SsmCT
+         kr5KqtJISgLUanLTyUHvDaopcEw3v7TrEQf5+3WI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 016/265] net: increment xmit_recursion level in dev_direct_xmit()
+Date:   Mon, 29 Jun 2020 11:14:09 -0400
+Message-Id: <20200629151818.2493727-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628095034.69520-1-luc.vanoostenryck@gmail.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 11:50:34AM +0200, Luc Van Oostenryck wrote:
-> Sparse's home page used to be a wiki (sparse.wiki.kernel.org)
-> but this wiki only contained a short intro and the release notes.
-> But nowadays, sparse's main page is sparse.docs.kernel.org,
-> which contains all what was in the wiki but also other documentation,
-> mainly oriented about sparse's internals.
-> 
-> So, add a link to this in the kernel documentation.
-> 
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
->  Documentation/dev-tools/sparse.rst | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
-> index 6f4870528226..e20b8b8b78ed 100644
-> --- a/Documentation/dev-tools/sparse.rst
-> +++ b/Documentation/dev-tools/sparse.rst
-> @@ -9,6 +9,8 @@ Sparse is a semantic checker for C programs; it can be used to find a
->  number of potential problems with kernel code.  See
->  https://lwn.net/Articles/689907/ for an overview of sparse; this document
->  contains some kernel-specific sparse information.
-> +More information on sparse, mainly about its internals, can be found in
-> +its official pages at https://sparse.docs.kernl.org.
+From: Eric Dumazet <edumazet@google.com>
 
-Nit:                                       ^ kernel
+[ Upstream commit 0ad6f6e767ec2f613418cbc7ebe5ec4c35af540c ]
 
->  
->  
->  Using sparse for typechecking
-> -- 
-> 2.27.0
-> 
+Back in commit f60e5990d9c1 ("ipv6: protect skb->sk accesses
+from recursive dereference inside the stack") Hannes added code
+so that IPv6 stack would not trust skb->sk for typical cases
+where packet goes through 'standard' xmit path (__dev_queue_xmit())
 
+Alas af_packet had a dev_direct_xmit() path that was not
+dealing yet with xmit_recursion level.
+
+Also change sk_mc_loop() to dump a stack once only.
+
+Without this patch, syzbot was able to trigger :
+
+[1]
+[  153.567378] WARNING: CPU: 7 PID: 11273 at net/core/sock.c:721 sk_mc_loop+0x51/0x70
+[  153.567378] Modules linked in: nfnetlink ip6table_raw ip6table_filter iptable_raw iptable_nat nf_nat nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 iptable_filter macsec macvtap tap macvlan 8021q hsr wireguard libblake2s blake2s_x86_64 libblake2s_generic udp_tunnel ip6_udp_tunnel libchacha20poly1305 poly1305_x86_64 chacha_x86_64 libchacha curve25519_x86_64 libcurve25519_generic netdevsim batman_adv dummy team bridge stp llc w1_therm wire i2c_mux_pca954x i2c_mux cdc_acm ehci_pci ehci_hcd mlx4_en mlx4_ib ib_uverbs ib_core mlx4_core
+[  153.567386] CPU: 7 PID: 11273 Comm: b159172088 Not tainted 5.8.0-smp-DEV #273
+[  153.567387] RIP: 0010:sk_mc_loop+0x51/0x70
+[  153.567388] Code: 66 83 f8 0a 75 24 0f b6 4f 12 b8 01 00 00 00 31 d2 d3 e0 a9 bf ef ff ff 74 07 48 8b 97 f0 02 00 00 0f b6 42 3a 83 e0 01 5d c3 <0f> 0b b8 01 00 00 00 5d c3 0f b6 87 18 03 00 00 5d c0 e8 04 83 e0
+[  153.567388] RSP: 0018:ffff95c69bb93990 EFLAGS: 00010212
+[  153.567388] RAX: 0000000000000011 RBX: ffff95c6e0ee3e00 RCX: 0000000000000007
+[  153.567389] RDX: ffff95c69ae50000 RSI: ffff95c6c30c3000 RDI: ffff95c6c30c3000
+[  153.567389] RBP: ffff95c69bb93990 R08: ffff95c69a77f000 R09: 0000000000000008
+[  153.567389] R10: 0000000000000040 R11: 00003e0e00026128 R12: ffff95c6c30c3000
+[  153.567390] R13: ffff95c6cc4fd500 R14: ffff95c6f84500c0 R15: ffff95c69aa13c00
+[  153.567390] FS:  00007fdc3a283700(0000) GS:ffff95c6ff9c0000(0000) knlGS:0000000000000000
+[  153.567390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  153.567391] CR2: 00007ffee758e890 CR3: 0000001f9ba20003 CR4: 00000000001606e0
+[  153.567391] Call Trace:
+[  153.567391]  ip6_finish_output2+0x34e/0x550
+[  153.567391]  __ip6_finish_output+0xe7/0x110
+[  153.567391]  ip6_finish_output+0x2d/0xb0
+[  153.567392]  ip6_output+0x77/0x120
+[  153.567392]  ? __ip6_finish_output+0x110/0x110
+[  153.567392]  ip6_local_out+0x3d/0x50
+[  153.567392]  ipvlan_queue_xmit+0x56c/0x5e0
+[  153.567393]  ? ksize+0x19/0x30
+[  153.567393]  ipvlan_start_xmit+0x18/0x50
+[  153.567393]  dev_direct_xmit+0xf3/0x1c0
+[  153.567393]  packet_direct_xmit+0x69/0xa0
+[  153.567394]  packet_sendmsg+0xbf0/0x19b0
+[  153.567394]  ? plist_del+0x62/0xb0
+[  153.567394]  sock_sendmsg+0x65/0x70
+[  153.567394]  sock_write_iter+0x93/0xf0
+[  153.567394]  new_sync_write+0x18e/0x1a0
+[  153.567395]  __vfs_write+0x29/0x40
+[  153.567395]  vfs_write+0xb9/0x1b0
+[  153.567395]  ksys_write+0xb1/0xe0
+[  153.567395]  __x64_sys_write+0x1a/0x20
+[  153.567395]  do_syscall_64+0x43/0x70
+[  153.567396]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  153.567396] RIP: 0033:0x453549
+[  153.567396] Code: Bad RIP value.
+[  153.567396] RSP: 002b:00007fdc3a282cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  153.567397] RAX: ffffffffffffffda RBX: 00000000004d32d0 RCX: 0000000000453549
+[  153.567397] RDX: 0000000000000020 RSI: 0000000020000300 RDI: 0000000000000003
+[  153.567398] RBP: 00000000004d32d8 R08: 0000000000000000 R09: 0000000000000000
+[  153.567398] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004d32dc
+[  153.567398] R13: 00007ffee742260f R14: 00007fdc3a282dc0 R15: 00007fdc3a283700
+[  153.567399] ---[ end trace c1d5ae2b1059ec62 ]---
+
+f60e5990d9c1 ("ipv6: protect skb->sk accesses from recursive dereference inside the stack")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/core/dev.c  | 2 ++
+ net/core/sock.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 096b0dfa95890..c9ee5d80d5ea1 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4109,10 +4109,12 @@ int dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
+ 
+ 	local_bh_disable();
+ 
++	dev_xmit_recursion_inc();
+ 	HARD_TX_LOCK(dev, txq, smp_processor_id());
+ 	if (!netif_xmit_frozen_or_drv_stopped(txq))
+ 		ret = netdev_start_xmit(skb, dev, txq, false);
+ 	HARD_TX_UNLOCK(dev, txq);
++	dev_xmit_recursion_dec();
+ 
+ 	local_bh_enable();
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index da244f4d00363..afe4a62adf8ff 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -707,7 +707,7 @@ bool sk_mc_loop(struct sock *sk)
+ 		return inet6_sk(sk)->mc_loop;
+ #endif
+ 	}
+-	WARN_ON(1);
++	WARN_ON_ONCE(1);
+ 	return true;
+ }
+ EXPORT_SYMBOL(sk_mc_loop);
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
