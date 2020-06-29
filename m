@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F178C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9070D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F4620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462076;
-	bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
+	s=default; t=1593462085;
+	bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLxku9xZ40deaO4uxa1NvwE3M8fjjvYp/eZmiofsD5B2hznj6KXRu1+uDGgoeF5YS
-	 8rnvzb31IBnmhL4mUCI9/o5sbdp4hroIU9oWkcnhaaO1vtAzcgg29fyJqftMRVVeUh
-	 yt//T7A0teBql1eX13eDYoWkLYtP1JT6yqCxRARw=
+	b=vfYD6PiBJVcC+rhyFjSzC83swbpZptQ4wIUz4Kv+J5LD/l1e6s9Km1Lg1irlmmUdT
+	 363rhsUE2XiTDmWFfoXFrqU4tx5yy2L5s5oWrK4LglO6MxIeWTrL/DR43pITm04GuD
+	 Ftmt1jkrvKIBUxcvW1ggyVSF6FONaN9tw7EtagGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732853AbgF2UVN (ORCPT
+        id S1732942AbgF2UVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgF2TZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:35 -0400
+        id S1732593AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD25325428;
-        Mon, 29 Jun 2020 15:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8B79253B8;
+        Mon, 29 Jun 2020 15:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445376;
-        bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
+        s=default; t=1593445281;
+        bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qlt20obUjlnb0bCL23QuUASCf3PV1+zEHYK1RIID3+TYw2a+8dfw2q+bhjq9A7cxL
-         eZA397ybwGyZbgIbVImSJuOBUAo4Cicj/BL9jSd7Jfz4Lr/wxgaX3h+H0d4vGCgfjN
-         72VeBJdaihFJ4tST6zSn7qYLqV7qDmlBsptSJyNE=
+        b=wxCPljBJ2ti76E5v3ec5F6w0Vb7ZEizRqqWVTlWyfGnPDAnbgCZ9sqXB9VIUcIuts
+         ccTcYlXdzBay5l8jnnLq5GEiCXEBEzdk3SEcrgr+95g6pWK8zlr/Bp0hX6fJPwfkIG
+         UBNLsrmoGhjpCHk3EKOOZNCgNOcQh2BHlM0gNCo8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 131/191] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
-Date:   Mon, 29 Jun 2020 11:39:07 -0400
-Message-Id: <20200629154007.2495120-132-sashal@kernel.org>
+Cc:     Fedor Tokarev <ftokarev@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 060/191] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
+Date:   Mon, 29 Jun 2020 11:37:56 -0400
+Message-Id: <20200629154007.2495120-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -63,43 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Fedor Tokarev <ftokarev@gmail.com>
 
-[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
+[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
 
-lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
+Fix off-by-one issues in 'rpc_ntop6':
+ - 'snprintf' returns the number of characters which would have been
+   written if enough space had been available, excluding the terminating
+   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
+   last character was dropped.
+ - 'strcat' adds a terminating null byte to the string, thus if len ==
+   buflen, the null byte is written past the end of the buffer.
 
-Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/ptrace_32.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index 396dbdea0cfa0..2f4316c142664 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -167,12 +167,17 @@ static int genregs32_set(struct task_struct *target,
- 	if (ret || !count)
- 		return ret;
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &regs->y,
-+				 &regs->npc,
- 				 34 * sizeof(u32), 35 * sizeof(u32));
- 	if (ret || !count)
- 		return ret;
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &regs->y,
-+				 35 * sizeof(u32), 36 * sizeof(u32));
-+	if (ret || !count)
-+		return ret;
- 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
--					 35 * sizeof(u32), 38 * sizeof(u32));
-+					 36 * sizeof(u32), 38 * sizeof(u32));
- }
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 2e0a6f92e563d..8391c27855501 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
  
- static int fpregs32_get(struct task_struct *target,
+ 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
+ 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
+-	if (unlikely((size_t)rc > sizeof(scopebuf)))
++	if (unlikely((size_t)rc >= sizeof(scopebuf)))
+ 		return 0;
+ 
+ 	len += rc;
+-	if (unlikely(len > buflen))
++	if (unlikely(len >= buflen))
+ 		return 0;
+ 
+ 	strcat(buf, scopebuf);
 -- 
 2.25.1
 
