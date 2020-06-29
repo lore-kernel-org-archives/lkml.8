@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308AB2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B66A2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459870;
-	bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+	s=default; t=1593459879;
+	bh=WcuCMKlaPKNUmEgNGaEVT8QUtg6D2i/bEXZXt9pM2vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCs4DaE3sg02WgfXZWF8N0taw6yJGb1AJ8Snb7mi6U9b1pZ6xKVw0M9sFcTo3K1+R
-	 3Du1EeNaYWpT34teVuU00NEOTkKKOI3n68doLsywPXbYMSGd+aO1fhxnayHp/GI0QE
-	 PldSzkhvCdsYjJ3wnqjP6Z18DBEqeOfrXe88zp80=
+	b=xxumv/zeeZmydGvbTx3C2IUqoJHpFJUnx/jJiRvyLFB4tH1Bu3MvUeaGVGCxcQiAH
+	 ke4eLQNE6Rry8nILYtJA77sUxEwpwsRk/NfCOvanHgpaaKNY27Tv7/BlGmjlXVzEkv
+	 jPZd1gFIwH1ejkipfg4DyrQjvS1AXMdRqhOJVUnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgF2To2 (ORCPT
+        id S1732036AbgF2Toh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:44:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387842AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:46 -0400
+        id S2387642AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C0A24801;
-        Mon, 29 Jun 2020 15:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D229248A1;
+        Mon, 29 Jun 2020 15:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444327;
-        bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+        s=default; t=1593444397;
+        bh=WcuCMKlaPKNUmEgNGaEVT8QUtg6D2i/bEXZXt9pM2vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ilP09Z4xeKf6zQt/Kzs6SQYpSA6iiCNtLvk9gc1onS2BlBOOXkSgh96XU7EP0NhLa
-         bNxoZe9i1G9XrxRs2FqNnvNEaM7lKVun7sq0LIC2bc1DV7KVSn14OcpYftf0Ukwxa3
-         fqz6PDZGdybJge8aAJAlF4cE/5LlST9Eeq4ey8Sc=
+        b=WOkdcr9aIJVpXAmOyw2+gLOoIoBHieqzp/wLZYkRM6HgLiQ11c9ex2gyu/iupGSgn
+         BuQSP4eBPt/yikstBtgjt7pjTPd8VWtzGI3F6jjiHemm8rXAm/eWN4LJTUi5kFLawq
+         6VE4hTbzcbk8lwJyzfSGf8SFFsE46K+x7JClIIkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        Bob Liu <bob.liu@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 001/178] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
-Date:   Mon, 29 Jun 2020 11:22:26 -0400
-Message-Id: <20200629152523.2494198-2-sashal@kernel.org>
+Cc:     Gaurav Singh <gaurav1086@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 074/178] bpf, xdp, samples: Fix null pointer dereference in *_user code
+Date:   Mon, 29 Jun 2020 11:23:39 -0400
+Message-Id: <20200629152523.2494198-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -68,39 +67,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
+[ Upstream commit 6903cdae9f9f08d61e49c16cbef11c293e33a615 ]
 
-commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
-a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
-the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
-'bio->bi_integrity' were set previousy in bio_integrity_alloc().
+Memset on the pointer right after malloc can cause a NULL pointer
+deference if it failed to allocate memory. A simple fix is to
+replace malloc()/memset() pair with a simple call to calloc().
 
-Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 1 -
- 1 file changed, 1 deletion(-)
+ samples/bpf/xdp_monitor_user.c      |  8 ++------
+ samples/bpf/xdp_redirect_cpu_user.c |  7 ++-----
+ samples/bpf/xdp_rxq_info_user.c     | 13 +++----------
+ 3 files changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index bf62c25cde8f4..ae07dd78e9518 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -278,7 +278,6 @@ bool bio_integrity_prep(struct bio *bio)
+diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
+index dd558cbb23094..ef53b93db5732 100644
+--- a/samples/bpf/xdp_monitor_user.c
++++ b/samples/bpf/xdp_monitor_user.c
+@@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	void *array;
+-	size_t size;
  
- 		if (ret == 0) {
- 			printk(KERN_ERR "could not attach integrity payload\n");
--			kfree(buf);
- 			status = BLK_STS_RESOURCE;
- 			goto err_end_io;
- 		}
+-	size = record_size * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, record_size);
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	int i;
+ 
+ 	/* Alloc main stats_record structure */
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(*rec));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
+diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
+index 767869e3b308f..0a76725568225 100644
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -210,11 +210,8 @@ static struct datarec *alloc_record_per_cpu(void)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	struct datarec *array;
+-	size_t size;
+ 
+-	size = sizeof(struct datarec) * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, sizeof(struct datarec));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -229,11 +226,11 @@ static struct stats_record *alloc_stats_record(void)
+ 
+ 	size = sizeof(*rec) + n_cpus * sizeof(struct record);
+ 	rec = malloc(size);
+-	memset(rec, 0, size);
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
+ 	}
++	memset(rec, 0, size);
+ 	rec->rx_cnt.cpu    = alloc_record_per_cpu();
+ 	rec->redir_err.cpu = alloc_record_per_cpu();
+ 	rec->kthread.cpu   = alloc_record_per_cpu();
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index b88df17853b84..21d6e5067a839 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	struct datarec *array;
+-	size_t size;
+ 
+-	size = sizeof(struct datarec) * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, sizeof(struct datarec));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
+ {
+ 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
+ 	struct record *array;
+-	size_t size;
+ 
+-	size = sizeof(struct record) * nr_rxqs;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_rxqs, sizeof(struct record));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
+ 		exit(EXIT_FAIL_MEM);
+@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	struct stats_record *rec;
+ 	int i;
+ 
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(struct stats_record));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
 -- 
 2.25.1
 
