@@ -2,94 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2F02063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD9E2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="m0swvNT5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsYeoNtN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgF2StF (ORCPT
+        id S1726015AbgF2StI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39194 "EHLO
+        Mon, 29 Jun 2020 14:49:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729330AbgF2Srn (ORCPT
+        with ESMTP id S1729136AbgF2Srm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:47:43 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043E0C02F03E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:09:50 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id u8so7882912pje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:09:49 -0700 (PDT)
+        Mon, 29 Jun 2020 14:47:42 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C001C02E2C4;
+        Mon, 29 Jun 2020 07:01:28 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id e3so1342915qvo.10;
+        Mon, 29 Jun 2020 07:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NqlmVG78iXs3ajjXsqe/luI6Bsp4Jqxp96Da7CCW4P0=;
-        b=m0swvNT5I4fsJ5e0cVdRCGoS4Gep1sPkCbXehbvbkq+AANBChxcAllGhlBu0NrflKc
-         i75XmYCkOQ7onW5AoCG6eCrz24Tr7rgsr7d0+eu0uJtAiS62ODVgPZ1+T+nd+gNZPk+K
-         tz9fcA9G3gIiKOVi0fOebGPrsDXPjX1qqHNGuq3d/S36WOD2Awto4/RKwsVUrRXp5l60
-         FbKtJnwhq8Nevr37M3deQWyv/IqzYPtC8a6O9fKz8k7GN7/N8WAuFzzUTmwtynKD2yuQ
-         Uf/lFdAUyyLcs3eJhIzvwxHyTImxc1Ln5ZACcRGG3UEFWISgdBleMn4XbujIAFsjsCmP
-         esIA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8FrjxWdY/Gjwce8t0JyeJsnYTMhQlskObJO/oLUWzfo=;
+        b=KsYeoNtN/hmKD60koJPvKXhY1HT5rh0BdsIymjK2OY+Ah5csm67fWOMInZoSB5MyiF
+         z81tpEOU7gbEs2Eu9dK1IU73/ldLFTcOuXQ4NQt1zxjMaUlUH9xpuPmQkDZyG2XpHE5A
+         z0rDQ6F3p6odfLFvjQ20/v+vqn3osPhCyUtrTurdqBrAHPO36wwugYL1OqGKXGdazN2M
+         p5mNNLqMsIqkd1lea0NNKZvGNZ4NvI4uksXON6N73LrjpsMxdX6M9+heVdl/zTyGvkYj
+         tkHXxI8XU7hiVfWyn9RhwdGCF2zdf8eMUPHFh6FNadOyOkvVyTEcnpjW7aa7VVLEWYLN
+         vdxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NqlmVG78iXs3ajjXsqe/luI6Bsp4Jqxp96Da7CCW4P0=;
-        b=uUzzHFSwVayn/gliwAlSspVN9M6lTrOvJawQzORbxxyZdf+aMcumaxcDQIrFyelaZ6
-         rEvkr9fUv3zwBLNZb53lYx1iLtd0Ogm2AbGDRFIBBU2V+iQflHo+ty8bENGtluTUm/oH
-         ATEgztcdw0zfg5128n1a3jAst4M08ab2Qw9U7pMf8N5bIkpmpjNSH5XcItm9QfW0fZxw
-         yjbWJmzc22XbzEhxVZ1PJ4KNQdR2PtQD+uNO/h7+heZ3gHa4BRQmkek6XGeCaX4Va7bj
-         LBStH80y6iCMCDhIXlPY514jiSzjd7iUGZc/3PQT/Wd4UE7T0f/p57ybaQYWrKBsTVGH
-         uogQ==
-X-Gm-Message-State: AOAM533I8EshlbelgJoZe8dIRK9+yvVdAu/AF4NWmtpSAemB9woh0beD
-        WjePCV3kAZrdnxCtbnBGsTN3ng==
-X-Google-Smtp-Source: ABdhPJxwZjsguM484F6sMiKLUZjrGQV40HFdBT3LN52GuV2BrrlgN4LhTVhem+onWXtopEtTIEUvTw==
-X-Received: by 2002:a17:90a:222d:: with SMTP id c42mr11700791pje.126.1593443389436;
-        Mon, 29 Jun 2020 08:09:49 -0700 (PDT)
-Received: from [192.168.86.197] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id p19sm83847pff.116.2020.06.29.08.09.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 08:09:48 -0700 (PDT)
-Subject: Re: drive-by blk-cgroup cleanups
-To:     Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>
-Cc:     Dennis Zhou <dennis@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-References: <20200627073159.2447325-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <90c404ed-58b0-274e-516f-b7c63ce34fcc@kernel.dk>
-Date:   Mon, 29 Jun 2020 09:09:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8FrjxWdY/Gjwce8t0JyeJsnYTMhQlskObJO/oLUWzfo=;
+        b=DSuuW0+07wcgDzTyrYqX0uyN8GZtYZA9b0ZFzEyTViLNb4h6pZE597I9G0VIgucvJD
+         aiZeyxbU/LSSBjt/pL+KcMGE7PdanaXo0F2JQdC4l7Q+lwLAbtqljTLF5jCwAHMlBPUx
+         g9V1dJ5kIS/ynUdt8Uj9EbrQvD1UKTOBhjBgT3ZyiKXpXLYea3P9JO587LRoRz2KeeNv
+         eZqifAnr1Wkk1Tbua5iQLkIIx1PjQ4rLVNJNpBwRZBFoa/yWLwkUM8sbJjjbKMZOzgjN
+         W751EaDIWYcQSSdewozHh8vpCX0MUn8gZqR6oLzx/ggkpNe6LzEx+ImM9X0Jc6Xo6gRe
+         H7ow==
+X-Gm-Message-State: AOAM531JKlq/ZGAplHoVs4tch6+PMhfQcqxtbGk2MjY0gdNj9heTXIcP
+        cO3qNZhciqnutr86w2breH3RRck7yxyKPa0VQlQ=
+X-Google-Smtp-Source: ABdhPJwRvnHK4e9FuZZ286EO2eHunvWxUS+jw1hxD70l+wfbFL9aDwHZRKLC21a2KPKCyOwmNUkOhP18WuRSaAVXDjg=
+X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr8130354qvz.114.1593439286277;
+ Mon, 29 Jun 2020 07:01:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200627073159.2447325-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200627143453.31835-1-rppt@kernel.org>
+In-Reply-To: <20200627143453.31835-1-rppt@kernel.org>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Mon, 29 Jun 2020 17:01:14 +0300
+Message-ID: <CAOJsxLE47WP9aMY3nh=E7C1a_esHt=sBFWCnsVA2umZ7TZ6TTA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] mm: cleanup usage of <asm/pgalloc.h>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org,
+        "list@ebiederm.org:DOCUMENTATION <linux-doc@vger.kernel.org>,
+        list@ebiederm.org:MEMORY MANAGEMENT <linux-mm@kvack.org>," 
+        <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        ia64 <linux-ia64@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/20 1:31 AM, Christoph Hellwig wrote:
-> Hi all,
-> 
-> while looking into another "project" I ended up wading through the
-> blkcq code for research and found a bunch of lose ends.  So here is
-> a bunch of drive-by cleanups for the code.
+On Sat, Jun 27, 2020 at 5:35 PM Mike Rapoport <rppt@kernel.org> wrote:
+> Most architectures have very similar versions of pXd_alloc_one() and
+> pXd_free_one() for intermediate levels of page table.
+> These patches add generic versions of these functions in
+> <asm-generic/pgalloc.h> and enable use of the generic functions where
+> appropriate.
 
-Applied, thanks.
+Very nice cleanup series to the page table code!
 
--- 
-Jens Axboe
+FWIW:
 
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
