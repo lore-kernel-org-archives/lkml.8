@@ -2,104 +2,139 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52613C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501A6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255FC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sNLU/2+B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vV6YiyYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390570AbgF2VVD (ORCPT
+        id S2390759AbgF2VVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35988 "EHLO
+        Mon, 29 Jun 2020 17:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390654AbgF2VUo (ORCPT
+        with ESMTP id S1729770AbgF2Swn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:20:44 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE786C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:44 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t4so2615690iln.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:44 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:43 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A027C030F18
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:25:44 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id by13so3471283edb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ikmoMwgWrI1HSTvIu3OsRZsmkzSggb5efR8I4lGwKfU=;
-        b=sNLU/2+B0nxI/itWKc1EQzh6GK7KMZMGj5NLUcnvhUyQrjoZJUGpniCudLZIxJRNH6
-         lu6+5OQe+k6rqJZ1/QFthfraObsnIne4IodPSIBP05ya0avWoVWlC85uVgbF2DzYo6eK
-         ZZucb9PINrN62vWvBTLNTRqpmIeyx5BVy2PKB+Xoipglj1h7B3SZshMox+7qySHR2N5H
-         XMjGf4qMiAd2WR8jXGaee1sSeSzEQ7Diyzhm1Jg5n2fHjGD3I8VSFpdPBMaszoT2OW1c
-         bXlVYGy3kcIsLw2YMc999fZ9kWiT9JUAAJSO22+X8FmWmDdqDkKpbPLd9TezaY7+nS0D
-         +apw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9JdwFaIk/SBsKiNUj1msSBe/13JfoNO8Wze0XSCM5ME=;
+        b=vV6YiyYs1Li40btnp4UbtO+zACr59gQjCO+fCxWJ2oVJh2GE5f3C2kHFkKAnvKvYBk
+         l798V8RyBS3FP1ZGoOQQeWMhNaPDt0kELzqS6LHIzUT+HYzPDUPt5cYpZi49ZhhYD3Hs
+         njjAgu3acTBMuW67l8TP+CrXdEAU1dhFv+hdpcguTdxG1DqWrMOXmmL9zYMYbRF7Vr5S
+         h4DaZJNz6AcqAcj6uGdgqUn9giOH69Tmkz0g7QznClxnwwCZadcUdbGwqNP9GuPK1E5m
+         2U+XA6A24SB+SooKyzJueP+H6LLlLsgETy9TtVd34JGr8kTUW1QSF2I5K2ctQjoM90EP
+         Vyuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ikmoMwgWrI1HSTvIu3OsRZsmkzSggb5efR8I4lGwKfU=;
-        b=FPJfB1yWKWoXCd2xixXgtdzJg+YMqLDBjZTSa2xuCzPh37t5EqpZEh68AajoNloZjv
-         G3hNO3n6YEI7JsC6TX1Jo3WKNwtbzXnrd/oi6RYmvidLn3x4qZAwU9fpYqKPUizWf28E
-         8fUsrThRJcMpNJI0tGWOyMDwT6wKf3dOGo8MDSYsCk2Xhyqfg+vz0qa6wcya58Kmy5iz
-         TjTHDDEYnmPCGinDJryIfONoVWL+z/eaZvFUZwr2xlJ27iuJdB8+IGwduAvoCJjJWtt7
-         K7ZDXW2lQaCd9QSeIU79NsPT39OC0Qe2lwlkCALP5Yc/m15u+xnlv0xFbvamk6X1LSxN
-         PhNQ==
-X-Gm-Message-State: AOAM533GnZ4uQRc6VAKXqBoj/NSNwVOu6Y2B3/lecwFAN/xIjfMQIvDV
-        fivqErzBpH1MzLMzloZ0aDsfHw==
-X-Google-Smtp-Source: ABdhPJzaAN/WcKfob045owqNeJnOq0QdhsRI7nvnbKBceIkYWSW5Vf6REkPoEjNAFbKHvMTEj0l51w==
-X-Received: by 2002:a92:d843:: with SMTP id h3mr18802430ilq.255.1593465644108;
-        Mon, 29 Jun 2020 14:20:44 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id f18sm564588ilj.15.2020.06.29.14.20.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:20:43 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/3] net: ipa: no checksum offload for SDM845 LAN RX
-Date:   Mon, 29 Jun 2020 16:20:37 -0500
-Message-Id: <20200629212038.1153054-3-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629212038.1153054-1-elder@linaro.org>
-References: <20200629212038.1153054-1-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9JdwFaIk/SBsKiNUj1msSBe/13JfoNO8Wze0XSCM5ME=;
+        b=uPQ0LXOXoM6i25WZUC6+F3KuVe2nsmaj9pT4XUwkg1Rl8LzjKwdceZzHSlGGkRrRwo
+         YWpv0nzuo6BGoO2LWDGlCuMtOf5m9perhOv2mHxvKtgu/RGPSxbiIPs60zVn4fSrs4SX
+         WqalU4+gDUYHrmDxpKyfH6LXV45l5c9rrpHKfLyn1fi4krpT5k1AygeYkMcNGa5h/ly8
+         rKTCaQ6fwrmRc57EHiwtrv+AR5zGOoDftMZOEbP/sQ7eqQBGN/+v5QdQUi6i0+iCygOu
+         Nma+qlFKXtCADCac40pbaOD5tYLbKDxi+tLSUkZRbDkeuEhWPZosf6Xb66ediPZ1/KAn
+         Ek8w==
+X-Gm-Message-State: AOAM530WK0KtEy70OIPxjedMNhkJ7bB5qsO2IAGjTnEjcRwNI9xns5zP
+        ++NniYXPHUaJUYsYgMHbuHtWBnm860tGhWKerXhxjg==
+X-Google-Smtp-Source: ABdhPJw/dx0pIba71K59e822Vxezxawzu1b4Q24KSpL6m//sHFjdfbI+QoKQ7V3kCj3C0FeVok/KJZm/ehl+h/H50Zo=
+X-Received: by 2002:a05:6402:22f0:: with SMTP id dn16mr18662329edb.83.1593447942682;
+ Mon, 29 Jun 2020 09:25:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629161333.2110327-1-pmalani@chromium.org> <20200629161333.2110327-2-pmalani@chromium.org>
+In-Reply-To: <20200629161333.2110327-2-pmalani@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 29 Jun 2020 09:25:31 -0700
+Message-ID: <CABXOdTe_t94GL6soaZbXp5TVxnG72zHRqh_qTa+zpmzTCw50ng@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Add PM support
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AP LAN RX endpoint should not have download checksum offload
-enabled.
+On Mon, Jun 29, 2020 at 9:13 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Define basic suspend resume functions for cros-ec-typec. On suspend, we
+> simply ensure that any pending port update work is completed, and on
+> resume, we re-poll the port state to account for any
+> changes/disconnections that might have occurred during suspend.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Remove #ifdef-ery, add __maybe_unused tag to functions.
+>
+>  drivers/platform/chrome/cros_ec_typec.c | 26 +++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 630170fb2cbe..b2e7e928e788 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -725,11 +725,37 @@ static int cros_typec_probe(struct platform_device *pdev)
+>         return ret;
+>  }
+>
+> +static int __maybe_unused cros_typec_suspend(struct device *dev)
+> +{
+> +       struct cros_typec_data *typec = dev_get_drvdata(dev);
+> +
+> +       cancel_work_sync(&typec->port_work);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused cros_typec_resume(struct device *dev)
+> +{
+> +       struct cros_typec_data *typec = dev_get_drvdata(dev);
+> +
+> +       /* Refresh port state. */
+> +       schedule_work(&typec->port_work);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops cros_typec_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
+> +};
+> +
+> +#define DEV_PM_OPS     (&cros_typec_pm_ops)
 
-The receive handler does properly accomodate the trailer that's
-added by the hardware, but we ignore it.
+I don't think this define adds any value.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_data-sdm845.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-index 52d4b84e0dac..de2768d71ab5 100644
---- a/drivers/net/ipa/ipa_data-sdm845.c
-+++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -44,7 +44,6 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
- 		.endpoint = {
- 			.seq_type	= IPA_SEQ_INVALID,
- 			.config = {
--				.checksum	= true,
- 				.aggregation	= true,
- 				.status_enable	= true,
- 				.rx = {
--- 
-2.25.1
-
+> +
+>  static struct platform_driver cros_typec_driver = {
+>         .driver = {
+>                 .name = DRV_NAME,
+>                 .acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+>                 .of_match_table = of_match_ptr(cros_typec_of_match),
+> +               .pm = DEV_PM_OPS,
+>         },
+>         .probe = cros_typec_probe,
+>  };
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
