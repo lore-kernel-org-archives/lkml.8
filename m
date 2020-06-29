@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A85C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED32C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1695B20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F28F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467268;
-	bh=Zqude5qnOBHirtcGbn+BkrWVsEzMD4IgtxHeVuUXb3I=;
+	s=default; t=1593467270;
+	bh=o/TYTOT46rvqTePLmOZ9wOwdpWqkKPYJbiOXuA4zRLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=niycpuhMYf3NBDabye7Cd8X7mwqbEpR9x/Ao+JXQDTk6WXN6XAFIOFCEm9yvAZzeJ
-	 Iihp++mfEHVWBB3W/ROQjw4zUnvbp/szjjsLjS0m8lcc7s1I6kPjuso07h+rqhUMOC
-	 Yp5v5L8xplN0YWqPxZzciJr4Jwq+EHMoqIpPkpyM=
+	b=D9kXQR96REJLXbv6UmlEbo2gpxsRmZEdjC8vZxole4exoSCi2Uh3lB0G0tWZY2fsO
+	 yK7+wh7b0MemOuVlCRATnRsd7KWUuSx6GxyNnseoEcEu83UwhN2J/AYy5BH8Yovhvy
+	 rMaSA5PN1NIB86YNl2o4x57cc0T1hPUR8qIvDqL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391468AbgF2Vrq (ORCPT
+        id S2391476AbgF2Vrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:47:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726730AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726723AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 498C5247C1;
-        Mon, 29 Jun 2020 15:22:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9FC24199;
+        Mon, 29 Jun 2020 15:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444129;
-        bh=Zqude5qnOBHirtcGbn+BkrWVsEzMD4IgtxHeVuUXb3I=;
+        s=default; t=1593443955;
+        bh=o/TYTOT46rvqTePLmOZ9wOwdpWqkKPYJbiOXuA4zRLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qY+fwUHSpn/TPC9Ory3EUlG87T2sB/szLoSAPniEASxguE1jmbAX5Uap3EGTgXokJ
-         a2U+bkV+qnAXj49b/N99BkxnW6/JNLOp8Up9c40KBoPnu+9CjarSDJ3P2lNNn1anQz
-         Rz/jm35XyfTmZdvl26QI3vz8OeqOzUchCyLObbZc=
+        b=QE1fMEf19wZKWZ4k9XdIKKVc6+Ur60u4I2T2iE9hOwFQVvoyWT5clwx4x/vnP9aT2
+         tVW9nOSSyYz8UQB7b1H/0PR1fC01AbTyJQADZW1unE0cuAoe9tjU7FF/ryYkX7vc20
+         SZrq18p1FAtVv68jUngL78POMq+hmjH4OTz/bwY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Muchun Song <songmuchun@bytedance.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 236/265] mm/memcontrol.c: add missed css_put()
-Date:   Mon, 29 Jun 2020 11:17:49 -0400
-Message-Id: <20200629151818.2493727-237-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 057/265] Revert "i2c: tegra: Fix suspending in active runtime PM state"
+Date:   Mon, 29 Jun 2020 11:14:50 -0400
+Message-Id: <20200629151818.2493727-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -70,44 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit 3a98990ae2150277ed34d3b248c60e68bf2244b2 upstream.
+[ Upstream commit 78ad73421831247e46c31899a7bead02740e4bef ]
 
-We should put the css reference when memory allocation failed.
+This reverts commit 9f42de8d4ec2304f10bbc51dc0484f3503d61196.
 
-Link: http://lkml.kernel.org/r/20200614122653.98829-1-songmuchun@bytedance.com
-Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's not safe to use pm_runtime_force_{suspend,resume}(), especially
+during the noirq phase of suspend. See also the guidance provided in
+commit 1e2ef05bb8cf ("PM: Limit race conditions between runtime PM
+and system sleep (v2)").
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-tegra.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1b05e25d8aef2..ef0e291a8cf46 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2790,8 +2790,10 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
- 		return;
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 4c4d17ddc96b9..7c88611c732c4 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1769,14 +1769,9 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+ {
+ 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+-	int err;
  
- 	cw = kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
--	if (!cw)
-+	if (!cw) {
-+		css_put(&memcg->css);
- 		return;
-+	}
+ 	i2c_mark_adapter_suspended(&i2c_dev->adapter);
  
- 	cw->memcg = memcg;
- 	cw->cachep = cachep;
+-	err = pm_runtime_force_suspend(dev);
+-	if (err < 0)
+-		return err;
+-
+ 	return 0;
+ }
+ 
+@@ -1797,10 +1792,6 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+ 	if (err)
+ 		return err;
+ 
+-	err = pm_runtime_force_resume(dev);
+-	if (err < 0)
+-		return err;
+-
+ 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+ 
+ 	return 0;
 -- 
 2.25.1
 
