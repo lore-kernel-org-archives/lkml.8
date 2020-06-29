@@ -2,90 +2,113 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8257420760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDaLUZ8i"
+	by mail.kernel.org (Postfix) with ESMTP id 361B32082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460018;
+	bh=YBsjVRUWqqmyL8LfYEeByOmsDlq4b2dOd9N1TYiQx0o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=p8TNtwCfJ+ZHM6cHCGc+rJk9cdHGewwU+3W0yvhst95emGQOg50YU8PvD3N2lblVi
+	 hw58EIb1eUSUaGGWxeTEgO7qM2NjEbWHciGwNirr2QhOd2xtet3KZ1qOsbfnUJQTYK
+	 r5FYreO1Mgtyq3xegnp+MhjBnoEssxxRCf1RhSW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbgF2Tqw (ORCPT
+        id S2387429AbgF2Tq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731908AbgF2Tqo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:46:44 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62FDC061755;
-        Mon, 29 Jun 2020 12:46:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id d17so4920232ljl.3;
-        Mon, 29 Jun 2020 12:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yW2N/sZTeFOka61e1CNf+2xQi6YWDt9t6wLYYbiilaA=;
-        b=VDaLUZ8iSqn7cD0QR9+EyF5l63jrz8oPVBC6du0FHfOEN6y945EeRP3j9IEZmYZXcP
-         TQdNSu+zX6KWHnsyuDARFJqAr3m+K8l/YYayM6tUhQ3t/lntVE4MnkOt/o+xphoa5qiO
-         yGBV5uF3vmYds+TZnfTjRK0TwZbRObCkWEFwfdJflN7OwVhapi1FvcFxdfl9evr2kHFz
-         05Il1pnJnGFrVE66TfJIR6ip27glEp+GVhUZ5P6OSY0fcl+3qlIOvAWanihgSmDk5c9m
-         9yDfLbioz8KAfjLIf3F5O/yjfF1uvpIdClo1zjPPmjV6A+MddlZhsdwtLwSFOhRjbQJc
-         +SAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yW2N/sZTeFOka61e1CNf+2xQi6YWDt9t6wLYYbiilaA=;
-        b=egH1k+LETXRqjEj26uSh5rTH7b0UmXuRz/s76KCfxuQgv4s8+5v/oUOvhSyoeg9B5T
-         j9WmfQR9SdR9jKRAfPAEy0TXF+9V4sh79zKsBdG11kYKKt/jjo8nWMfmAz9Dq4DwCAF7
-         rTOA2mh+fgIxv00rBMHgG/jsajvzsNVTbpMafFSKCiD+tKJXBiwPug2e6c9piFv5ZugM
-         xRR0OfvV296q+QeQ364S9h8hfnaI2c8Dx0jbtmdiYzfH0dpS/TRaHN3PxPOQ4V1rshcb
-         94Nj59gtohuXlcrVbZS7c+jWAgOmzGThVe6/JBkqIOtFYY50D8sXNGuOsvsll/JPRV4n
-         k79A==
-X-Gm-Message-State: AOAM530k0zTN5vZCCc3H51p9rv62uwY001rBrsYDtNi8RmqgJLh7QBNU
-        ErCBj69k59fynRP9owLo5Ag=
-X-Google-Smtp-Source: ABdhPJwHRLunzx+iZfO+XnOzdRcm6JIpPwrEGHua7lMghZlsvgzBExcytpP3CswdyVtIND48oleGDA==
-X-Received: by 2002:a2e:b8d5:: with SMTP id s21mr8386732ljp.34.1593460002225;
-        Mon, 29 Jun 2020 12:46:42 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
-        by smtp.gmail.com with ESMTPSA id q128sm154750ljb.140.2020.06.29.12.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:46:41 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 0/2] regulator/qcom: Constify static structs
-Date:   Mon, 29 Jun 2020 21:46:30 +0200
-Message-Id: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 29 Jun 2020 15:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387787AbgF2Tkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B84A24920;
+        Mon, 29 Jun 2020 15:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444477;
+        bh=YBsjVRUWqqmyL8LfYEeByOmsDlq4b2dOd9N1TYiQx0o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q1oIbJHZXFEKIMfjysI0NFhHaCVm6eg9qVcl72p7/STAuRxVUdVETDfwXXUjOjNcr
+         xVxQHL5b/2WsaCxGRo2oy7ALoFzgCbaF3hIymak5dvQeob8oz0Hc3KweIxw4KBSjvI
+         wwSxysJHt1bR+tBj6QtrNCw1Wnk15RdZmwJSgUsA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 156/178] ocfs2: load global_inode_alloc
+Date:   Mon, 29 Jun 2020 11:25:01 -0400
+Message-Id: <20200629152523.2494198-157-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify some static structs to allow the compiler to put them in
-read-only memory.
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-Rikard Falkeborn (2):
-  regulator: qcom_rpm: Constify struct regulator_ops
-  regulator: qcom_spmi: Constify struct regulator_ops
+commit 7569d3c754e452769a5747eeeba488179e38a5da upstream.
 
- drivers/regulator/qcom_rpm-regulator.c  |  6 +++---
- drivers/regulator/qcom_spmi-regulator.c | 24 ++++++++++++------------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+Set global_inode_alloc as OCFS2_FIRST_ONLINE_SYSTEM_INODE, that will
+make it load during mount.  It can be used to test whether some
+global/system inodes are valid.  One use case is that nfsd will test
+whether root inode is valid.
 
+Link: http://lkml.kernel.org/r/20200616183829.87211-3-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/ocfs2/ocfs2_fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
+index 0db4a7ec58a2d..46700f9b6b4cd 100644
+--- a/fs/ocfs2/ocfs2_fs.h
++++ b/fs/ocfs2/ocfs2_fs.h
+@@ -326,8 +326,8 @@ struct ocfs2_system_inode_info {
+ enum {
+ 	BAD_BLOCK_SYSTEM_INODE = 0,
+ 	GLOBAL_INODE_ALLOC_SYSTEM_INODE,
++#define OCFS2_FIRST_ONLINE_SYSTEM_INODE GLOBAL_INODE_ALLOC_SYSTEM_INODE
+ 	SLOT_MAP_SYSTEM_INODE,
+-#define OCFS2_FIRST_ONLINE_SYSTEM_INODE SLOT_MAP_SYSTEM_INODE
+ 	HEARTBEAT_SYSTEM_INODE,
+ 	GLOBAL_BITMAP_SYSTEM_INODE,
+ 	USER_QUOTA_SYSTEM_INODE,
 -- 
-2.27.0
+2.25.1
 
