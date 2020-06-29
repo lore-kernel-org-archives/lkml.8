@@ -2,192 +2,186 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD983C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D61520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CD720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SAidnYTv"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="DbOoHUOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389621AbgF2Ul5 (ORCPT
+        id S2389626AbgF2UmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
+        Mon, 29 Jun 2020 16:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731666AbgF2TOG (ORCPT
+        with ESMTP id S1731667AbgF2TOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:06 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5792EC008756
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:41:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q15so14548643wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:41:51 -0700 (PDT)
+        Mon, 29 Jun 2020 15:14:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C2FC08C5F5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:38:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so15119721wrm.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kELMG7Ol5vjIMHU3qC+BQXaaTJ8E8QYQvAWRNYeed9M=;
-        b=SAidnYTvCAvw4nM9pKaVGyUWYh4lBZdMjgSCjmPpa9D3LQBrQUc3RCKehpb6PKqggZ
-         TeaOqMvp6dCVKftm/uw0GaG8yXAySh/iP6DzwlDk2xCIwxhqxWoWKTW+iJ1pcCaOZfbB
-         DpZKB/oMAPAc3h6cmL+d2DN+Xo5dvzwAOBpglwMqaLhgudXwT45k2EN4EBQ3wKzjeCEj
-         q8iYSAM/hObjr4f78K4bmXmnCpKibZwbyiHAfSkWy3P+T72ouT3J3oje0riSVe13LDQX
-         WTI0E2PYLcV57jEmExGhOdtznJuDkUL5Gy6hx/fV9er78GznjRIovETaeom4xFrtDaFP
-         JG+g==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w5TN/E+I/toiXQHven0Tzugxh2KMUYh+rGvqZtXPFqc=;
+        b=DbOoHUOmfQBZBfBNFane+FwAaHv/bwA4VJs02OP7/NQNzlgmAGGz8UAXpjyqJYWkWO
+         lm3GQYeLEBYB3MeEeqbQ8mIgKzaeoKai8O7tfiiBvcCtspXG+x/4tAOj78h5r6vHLvJi
+         yWpC08Obs+4iBuqHftKl3Bn3SfBNIuigiw29OI0yJdgRBhoTj+or98IuAdcphVqfYb3m
+         HGv2tyNo26cQpy9n3zw2l/Zt7w/Z/D9LFKvVh10U+JkrO8gIm2hm18bn7L1OyF4/x29E
+         2bMCmsg58kYdvLQ7G4AexzjVTQyP9usYuuFQhVnufbsrxs7ANsbczV299xhg5jKhi7hE
+         o2XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kELMG7Ol5vjIMHU3qC+BQXaaTJ8E8QYQvAWRNYeed9M=;
-        b=RpZgy5UGKv2mzsKVd/nwsaNhrm0DVKClg2y6XJvulc8zcxHm3u4wIi9maMbP8V1H9u
-         ksnIoo/XetLfuFfYx5yTZxy4Snn4Ppo7KN/3yxFQHRprM8zBQqyhHQOoywp8wHDZjs1A
-         WfgfWOctbT7hLVr4Qj28l9YgwzvmU8GEkk29aWoG+dSbO+R+lXadv+bicLg9rTBv0Cw/
-         +1kT6XKc0moAv0aQZYdSZ/F4DZEBariq/hPc1gTd0hGQSbeJIjpZu2L53TbxHh5bBsdX
-         dH8WFywaCygFS19JEEIpvtYDBJLnGlSdCW3oWTUeLoDYqfNuMvu6WJ+sA1/6G3VcTZX2
-         kjng==
-X-Gm-Message-State: AOAM533FiLCxtTqOWRiZWh5eQDQScvuCAr2ZxSKtedCssevZMv7nTcF+
-        utUstQQRChmgHxpphhU7kU0rsqjRREJeQQ==
-X-Google-Smtp-Source: ABdhPJyIgWKnLVqOjW/TXd55cHSZefw2qzWi6tfdjxbEZPy9CjFBYVBt8aaWScCDu9aOFYS3XT3bmQ==
-X-Received: by 2002:a1c:b6c3:: with SMTP id g186mr16279573wmf.135.1593420109557;
-        Mon, 29 Jun 2020 01:41:49 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
-        by smtp.gmail.com with ESMTPSA id r1sm14414094wrw.24.2020.06.29.01.41.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 01:41:48 -0700 (PDT)
-Subject: Re: [PATCH 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return
- value when setting a GPIO
-To:     Doug Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
- <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
- <159186950406.242598.11120838219466948342@swboyd.mtv.corp.google.com>
- <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <e454746a-8137-a26f-d6ba-ca30adec036c@baylibre.com>
-Date:   Mon, 29 Jun 2020 10:41:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w5TN/E+I/toiXQHven0Tzugxh2KMUYh+rGvqZtXPFqc=;
+        b=npYs03amu7Yl+dP9dUp4Bg6SsRC71nEGlqLTHklyK95Ls8cTH3KtuWzOdxWKvPh1Gj
+         AsAw4UiUNW3K0BrTj4qapwGN/WXvNDacfE2GcUW7BH1lvD7m76qYUU24Jzmqv5x+CjXm
+         J/UpPwAicF395700Hbmpg/eDBK9qEN74LbKGggJIMsDnCX8otAC1afwap2Na/oi4yIjs
+         dGz2bAvPJM/loExiQ5rx6a9xV81JVTrcE0ZRUPhchlK/OWPHAklAtFwd6YtfR7jeMmQg
+         6KZDJB3OZKXp9myXGUkT4YezSuWqBf9gmsBIWOveI5L9TQbQF3qfYg3WHUBmwN4Nv70j
+         6gVA==
+X-Gm-Message-State: AOAM5321rUyJRSPXa1DV+jhT0pIZrUPHZJAjU7OqGZvM1GEpLEf5FG/t
+        Cc6tqBnrNfj6fXxT0T5VG7XvGILg12pfBZxkYwpi/g==
+X-Google-Smtp-Source: ABdhPJy4WGmlk07GX6E9BZevxe5hBGPhKL9rkFE7Ij8SPwuxHaxD6xGk7gGNB8l0qXzYGYzsZnvtJDPKE2OVK9ewiCA=
+X-Received: by 2002:a5d:4107:: with SMTP id l7mr15738900wrp.144.1593405491943;
+ Sun, 28 Jun 2020 21:38:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1593397455.git.zong.li@sifive.com> <3de3a480517d167a3faae086aa8ab0c0c7141d99.1593397455.git.zong.li@sifive.com>
+ <CAAhSdy3VBUTMg_b2tO12cTYuvHYtH=4dj9-qT-at35Whf3w_7w@mail.gmail.com> <CANXhq0pV87oSzyAt80ySoXGRXp26bCnahPW0r27J+wjj5yc=nw@mail.gmail.com>
+In-Reply-To: <CANXhq0pV87oSzyAt80ySoXGRXp26bCnahPW0r27J+wjj5yc=nw@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 29 Jun 2020 10:07:57 +0530
+Message-ID: <CAAhSdy3BUfPCS+LUWp9GKdnf960N-UkxtUtRArgkVd-1cGZxhQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/6] dt-bindings: riscv: Add YAML documentation for PMU
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/2020 16:34, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Jun 11, 2020 at 2:58 AM Stephen Boyd <swboyd@chromium.org> wrote:
->>
->> Quoting Douglas Anderson (2020-06-08 10:48:35)
->>> The ti_sn_bridge_gpio_set() got the return value of
->>> regmap_update_bits() but didn't check it.  The function can't return
->>> an error value, but we should at least print a warning if it didn't
->>> work.
->>>
->>> This fixes a compiler warning about setting "ret" but not using it.
->>>
->>> Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
->>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>> ---
->>>
->>>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> index 1080e4f9df96..526add27dc03 100644
->>> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> @@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
->>>         ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
->>>                                  BIT(SN_GPIO_OUTPUT_SHIFT + offset),
->>>                                  val << (SN_GPIO_OUTPUT_SHIFT + offset));
->>> +       if (ret)
->>> +               dev_warn(pdata->dev,
->>> +                        "Failed to set bridge GPIO %d: %d\n", offset, ret);
->>
->> GPIO %u because it's unsigned?
-> 
-> Sure.  I'll plan to spin tomorrow in case anyone else has any
-> feedback.  If any maintainer would prefer me not to spin and would
-> rather fix this when applying, please shout and I won't send out a v2.
-> 
-> -Doug
-> 
+On Mon, Jun 29, 2020 at 9:58 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> On Mon, Jun 29, 2020 at 12:09 PM Anup Patel <anup@brainfault.org> wrote:
+> >
+> > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
+> > >
+> > > Add device tree bindings for performance monitor unit. And it passes the
+> > > dt_binding_check verification.
+> > >
+> > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > ---
+> > >  .../devicetree/bindings/riscv/pmu.yaml        | 59 +++++++++++++++++++
+> > >  1 file changed, 59 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/riscv/pmu.yaml b/Documentation/devicetree/bindings/riscv/pmu.yaml
+> > > new file mode 100644
+> > > index 000000000000..f55ccbc6c685
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/riscv/pmu.yaml
+> > > @@ -0,0 +1,59 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/riscv/pmu.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: RISC-V Performance Monitor Units
+> > > +
+> > > +maintainers:
+> > > +  - Zong Li <zong.li@sifive.com>
+> > > +  - Paul Walmsley <paul.walmsley@sifive.com>
+> > > +  - Palmer Dabbelt <palmer@dabbelt.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - const: riscv,pmu
+> > > +
+> > > +  riscv,width-base-cntr:
+> > > +    description: The width of cycle and instret CSRs.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +  riscv,width-event-cntr:
+> > > +    description: The width of hpmcounter CSRs.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >
+> > The terms "base" and "event" is confusing because
+> > we only have counters with no interrupt associated with it.
+> >
+> > The RISC-V spec defines 3 counters and rest are all
+> > implementation specific counters.
+>
+> As I know, there are 2 counters of spec definition: cycle and instret.
+> What is the 3rd counter you mentioned?
 
-Yes please respin, ping me on IRC if I forget to apply..
+TIME is a counter CSR.
 
-Neil
+>
+> >
+> > I suggest using the terms "spec counters" and "impl counters"
+> > instead of "base counters" and "event counters".
+>
+> OK, they are good to me. Let me change it.
+>
+>
+> >
+> > Further, "riscv,width" properties are redundant because
+> > RISC-V spec clearly tells that counters are 64bit for both
+> > RV32 and RV64.
+> >
+> > > +
+> > > +  riscv,n-event-cntr:
+> > > +    description: The number of hpmcounter CSRs.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +  riscv,hw-event-map:
+> > > +    description: The mapping of generic hardware events. Default is no mapping.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +
+> > > +  riscv,hw-cache-event-map:
+> > > +    description: The mapping of generic hardware cache events.
+> > > +      Default is no mapping.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - riscv,width-base-cntr
+> > > +  - riscv,width-event-cntr
+> > > +  - riscv,n-event-cntr
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    pmu {
+> > > +      compatible = "riscv,pmu";
+> > > +      riscv,width-base-cntr = <64>;
+> > > +      riscv,width-event-cntr = <40>;
+> > > +      riscv,n-event-cntr = <2>;
+> > > +      riscv,hw-event-map = <0x0 0x0 0x1 0x1 0x3 0x0202 0x4 0x4000>;
+> > > +      riscv,hw-cache-event-map = <0x010201 0x0102 0x010204 0x0802>;
+> > > +    };
+> > > +
+> > > +...
+> > > --
+> > > 2.27.0
+> > >
+> >
+> > Regards,
+> > Anup
