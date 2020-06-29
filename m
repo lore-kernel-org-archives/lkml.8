@@ -2,129 +2,206 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA37DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6755206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AC1206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="qyMxtctP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgF2TYv (ORCPT
+        id S1732392AbgF2TYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:24:51 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22498 "EHLO mga11.intel.com"
+        Mon, 29 Jun 2020 15:24:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22494 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732144AbgF2TYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:24:12 -0400
-IronPort-SDR: fugI7SEnECD8AcUrpPHl2Xm5xd7GVForJiOXr6uS0/Q6baUz9pxuSsaMfB0N2rtQJ703BA3CAR
- mIqm26Bip02w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144218730"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="144218730"
+        id S1732229AbgF2TYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:24:13 -0400
+IronPort-SDR: QUFCqV4WzEX0DpclvzL0kBs6jwzVpcJXCgAbZajmy8zRTXEWlwaqFxl/9S1L8AgCnvJbldA9m2
+ HiGjVBczcpGg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144144724"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="144144724"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 11:43:17 -0700
-IronPort-SDR: 2J4kH3ECOEn2x8rudw4qFHfxJNd+hi7C5BzkjhtJL2RgnSBmdXcfphgfQtu1zmq40tmcXCkTVQ
- gfm3h3i66LWg==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 05:23:11 -0700
+IronPort-SDR: opdDwj+HB672U4xcrIPAvY6zveLUtMxy1iElSVFTqJnW264T+00B4NbPRsL5kliXRdqCrSGlvc
+ NHQTBcEv2rOQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="318924324"
-Received: from spandruv-mobl3.amr.corp.intel.com ([10.254.77.33])
-  by orsmga007.jf.intel.com with ESMTP; 29 Jun 2020 11:43:16 -0700
-Message-ID: <651b555b0723352ad5c624a68bf4ed76429314d8.camel@linux.intel.com>
-Subject: Re: [PATCH v3] HID: intel-ish-hid: Replace PCI_DEV_FLAGS_NO_D3 with
- pci_save_state
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Zhang Lixu <lixu.zhang@intel.com>, Even Xu <even.xu@intel.com>,
-        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
-        <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 29 Jun 2020 11:43:16 -0700
-In-Reply-To: <20200629041648.19113-1-kai.heng.feng@canonical.com>
-References: <20200629041648.19113-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="280847371"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 05:23:11 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 05:23:11 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jun 2020 05:23:10 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 29 Jun 2020 05:23:10 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.55) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 29 Jun 2020 05:23:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QnjE60hSEZAKsbXGaGUAkjzfO9Ak0ghaayHUURKPIWMcI3pZyQeP6WxldnyFh8uSPLF0q8xMNwRbpy4+wmCeztE2qt0FpBWpJ9OT/rbyg9fOxJ+4h7CsJcjI8aIb6kROdBejYx8bIMzndy4Hv6bkpwXsbDQsGfXeIRo+pBExZMrYiypBPOvbsD8Y1VMP+ocxYterhIHVzGtGdOUrUeSpAjXPify4ZHYTDK3DGL7RnrVI/vE3d22CkTposhexStjgN5KeigRtv0KogNGe/66FFuyfNdv+FbaqHz+N0CYrYnh+gCjMGNEZ1s2zLpah0W5RXBHPY9IWEw15GAHskwcGnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+13YzAJD7w6vO8YVDFkU3bnj5WWsLn2FcJvtsl34nog=;
+ b=djuyuHv91mc7zHBYZ9s/GyMQl7wZMtERlpgaoXWmtAtJ2Hx/bvAW6JSyI/1XwBr0gkhhuJLijsAHxdAftXOLsYvyCg6KKJMyHeg/0MMSAByV/KCqqsQzoyiXag8qyypesz3NAyeW30GVhLkSod45ypjERSDTzqG7rMk2BYTGeuyiwnCfPBmJtbgTEWTYRgAe9ZVB4VMYH1Jwov3sVk2Gx1135wu2KfhbRPksJNXyGIa+LkUgwjdukHW0E22BftOUZtgxOiFbSFZuFCAaXl3vlVSBNNwmQwvOwZuBP+ftuZeuhu3trZR1hPPlhrsJR7byNzLqBgIEH1j2NGS7YxGCWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+13YzAJD7w6vO8YVDFkU3bnj5WWsLn2FcJvtsl34nog=;
+ b=qyMxtctPMF3EICizAH45nFMO1V/X374vdeASqJkt5I1pInJ344MI4bJacVXBTyJTAxsk7UWxDFDM5IX/4dKXDBBJx4in2Il0ThSHnPDRJKZaHAg4fK9BEC0ae+AykaZS3fw+CRGLW3gNyt5KPIl4zM0oz0kzyQjwlprTfOrPwEs=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM6PR11MB3708.namprd11.prod.outlook.com (2603:10b6:5:146::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3131.20; Mon, 29 Jun 2020 12:23:08 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
+ 12:23:08 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Index: AQHWSgRQVmc9Qp+Xi0mQEumzIJrE0qjvWjsAgAAviUA=
+Date:   Mon, 29 Jun 2020 12:23:08 +0000
+Message-ID: <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+ <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
+ <20200629092448.GB31392@stefanha-x1.localdomain>
+In-Reply-To: <20200629092448.GB31392@stefanha-x1.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7594ca87-cb8d-44c5-121d-08d81c272e85
+x-ms-traffictypediagnostic: DM6PR11MB3708:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3708DF26A6EF34F93AD67AB8C36E0@DM6PR11MB3708.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EQH8LY1QihLjXelKVZq2O/b/4efcuOEmZtC8BcJ4RjdFaWWmwW5j9bkso1ZvYudT7jq+cKVjyseZRV8gqE1fFlJh2CiUYYvoIqd1V/PRN0lvMBVZG5oSUL+hnSsFFmxnk8jHFhmfqkFiwM8o7OyDM4rxjXHpiqho9EtWhBVYgF8fNYBMQdnzHBud+mWiF7CySu+O8gjPqS7E9q4Fn/brxp2lVu4tugVJ9PQLDJdd9GLlSqCdZabJU6/lapaOhXUM0jKGIs/O0KFEuojliRmAztgdFy6MyhN8B0jYhoJP+YIetswJ+ssoV1yK18xA/q+8Dhj4ER3tgDYSYWrR5ZFYyg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(478600001)(7696005)(316002)(2906002)(8676002)(8936002)(7416002)(66946007)(54906003)(76116006)(6916009)(6506007)(52536014)(33656002)(66476007)(64756008)(66446008)(5660300002)(66556008)(4326008)(186003)(86362001)(83380400001)(55016002)(9686003)(26005)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 4KlcjyTcElFwnXfazHOWtQu0g+uML7Q6H7w+nmdHAw1nS2NoQecUvYqe9Jno4HUduebghDfNRvU2zvTTnK4q8JGr4GJmsXoYXpOilrWWJW9XlGgcY0huqq91mvcPAJ+4bS2wjtmn0plz3WWldwZdv+DmDjCr4JRJLYkIAg6gkgqFi+P9SdqW/ggNGXQg26sCoefvwEdFo+yIv3AB15buhlUXu6Wu8NPfoiZmRjWj92V1TN3Lh5bx8G5rh7dsIw0Weop20t6GBH4j94wVKTrBGOLZSpn42EyQ79vrBnECSDCa2yHJPrzcTl55vA1LWdKhe4bHdAl4j5yqRwkFTEUDwUMTHDMRByvWIzcAsBsWksMJjDVOseXCBKKvCFgb3I3TPfLYMqIbGu6louX+1OBOuDXN+vXw3h5jdcy9TEsiYWTYj56KOia+ImxCZiwk7yV/alwjb1j70cT39WzQpFzd2g4wm7xb6KZkxMWhuZ2qdrFQ73wp37tyPy2UiJC/e3Al
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7594ca87-cb8d-44c5-121d-08d81c272e85
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 12:23:08.1141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rflPj9pyL03NnbKUQ8IK+h22QoRqwRqWwQ9I6kU8fvuLDsHk2nx0YtoAqoABRjezXpXygSB+PI3RiCPlCT4kjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3708
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-29 at 12:16 +0800, Kai-Heng Feng wrote:
-> PCI_DEV_FLAGS_NO_D3 should not be used outside of PCI core.
-> 
-> Instead, we can use pci_save_state() to hint PCI core that the device
-> should stay at D0 during suspend. By doing so, PCI core will let the
-> upstream bridges also stays at D0 so the entire hierarchy is in the
-> correct power state as PCI spec mandates.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Hi Stefan,
 
-> ---
-> v3:
->  - Use multi-line comments.
-> v2:
->  - Wording change.
-> 
->  drivers/hid/intel-ish-hid/ipc/pci-ish.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> index f491d8b4e24c..c6d48a8648b7 100644
-> --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> @@ -106,6 +106,11 @@ static inline bool ish_should_enter_d0i3(struct
-> pci_dev *pdev)
->  	return !pm_suspend_via_firmware() || pdev->device ==
-> CHV_DEVICE_ID;
->  }
->  
-> +static inline bool ish_should_leave_d0i3(struct pci_dev *pdev)
-> +{
-> +	return !pm_resume_via_firmware() || pdev->device ==
-> CHV_DEVICE_ID;
-> +}
-> +
->  /**
->   * ish_probe() - PCI driver probe callback
->   * @pdev:	pci device
-> @@ -215,9 +220,7 @@ static void __maybe_unused
-> ish_resume_handler(struct work_struct *work)
->  	struct ishtp_device *dev = pci_get_drvdata(pdev);
->  	int ret;
->  
-> -	/* Check the NO_D3 flag to distinguish the resume paths */
-> -	if (pdev->dev_flags & PCI_DEV_FLAGS_NO_D3) {
-> -		pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
-> +	if (ish_should_leave_d0i3(pdev) && !dev->suspend_flag) {
->  		disable_irq_wake(pdev->irq);
->  
->  		ishtp_send_resume(dev);
-> @@ -281,8 +284,11 @@ static int __maybe_unused ish_suspend(struct
-> device *device)
->  			 */
->  			ish_disable_dma(dev);
->  		} else {
-> -			/* Set the NO_D3 flag, the ISH would enter D0i3
-> */
-> -			pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
-> +			/*
-> +			 * Save state so PCI core will keep the device
-> at D0,
-> +			 * the ISH would enter D0i3
-> +			 */
-> +			pci_save_state(pdev);
->  
->  			enable_irq_wake(pdev->irq);
->  		}
+> From: Stefan Hajnoczi <stefanha@gmail.com>
+> Sent: Monday, June 29, 2020 5:25 PM
+>=20
+> On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
+> > +/*
+> > + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
+> > + *				user space should check it before using
+> > + *				nesting capability.
+> > + *
+> > + * @size:	size of the whole structure
+> > + * @format:	PASID table entry format, the same definition with
+> > + *		@format of struct iommu_gpasid_bind_data.
+> > + * @features:	supported nesting features.
+> > + * @flags:	currently reserved for future extension.
+> > + * @data:	vendor specific cap info.
+> > + *
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | feature       |  Notes                                           =
+  |
+> > + *
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =3D+
+> > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used=
+  |
+> > + * |               |  in the system should be allocated by host kernel=
+  |
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could =
+  |
+> > + * |               |  either be a host PASID passed in bind request or=
+  |
+> > + * |               |  default PASIDs (e.g. default PASID of aux-domain=
+) |
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU     =
+  |
+> > + * +---------------+--------------------------------------------------=
+--+
+>=20
+> This feature description is vague about what CACHE_INVLD does and how to
+> use it. If I understand correctly, the presence of this feature means
+> that VFIO_IOMMU_NESTING_OP_CACHE_INVLD must be used?
+>
+> The same kind of clarification could be done for SYSWIDE_PASID and
+> BIND_PGTBL too.
 
+For SYSWIDE_PASID and BIND_PGTBL, yes, presence of the feature bit
+means must use. So the two are requirements to user space if it wants
+to setup nesting. While for CACHE_INVLD, it's kind of availability
+here. How about removing CACHE_INVLD as presence of BIND_PGTBL should
+indicates support of CACHE_INVLD?
+
+Regards,
+Yi Liu
+
+> Stefan
