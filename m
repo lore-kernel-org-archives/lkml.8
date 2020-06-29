@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E514C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7179D20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC892088E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460173;
-	bh=X1QTeQGIFT0Nw/MaYnvhSE9VoOJzhh9LxSJcWWTKULY=;
+	s=default; t=1593460177;
+	bh=CvlSKTTDjePQe/WKeSqrmGecE7/eSJzVRRunVyWV4SM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+5VoiRFPmdn2Nkdh+3WgUp+sG7rO2+IX6NmQCk1W2DZgqmzTTM64TlZmKghvggnd
-	 Am074071IKOnn+RsvL7KudcARisMMm2WLzZfaM6EgRhAAJW4Ihwio/nST5IiN42enC
-	 ftsKU37iRzUt1swZ/LXitrMqacl+ZtSci3VdXiwQ=
+	b=OdeQJGO5IJolmHvXALxIi2TiA4sb3wy9+8maMh7dGPmgYkymeGZcwJvAvrs7TX39R
+	 knxIfiWdGLoR7rSrLAGVo4j2j1W5kvuluuJg2jhBvX0rWR+sookoLtHbdFXDhahLdO
+	 2cy2i/5CByymHc5EOmt5YjMVGHw34zrM3ZNiRowM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgF2Ttb (ORCPT
+        id S2388213AbgF2Tt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387758AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387754AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F4E24865;
-        Mon, 29 Jun 2020 15:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3797E24818;
+        Mon, 29 Jun 2020 15:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444364;
-        bh=X1QTeQGIFT0Nw/MaYnvhSE9VoOJzhh9LxSJcWWTKULY=;
+        s=default; t=1593444335;
+        bh=CvlSKTTDjePQe/WKeSqrmGecE7/eSJzVRRunVyWV4SM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRjy5KZE0YNpgEWilweDSoNcaHbIS5DYcZwST6kYe5JG0dakdDDaGIPwYw+aeAn2O
-         GJcn7Pv/p/L95Ahr9UIx/J37oQqgXNIlB+R4w4ZA29dJKTBrMmbxXIxllUc8qA1alz
-         dfKZ/QiyX7NDgkNpj0z8q01FAOAnULXPHiESpZLk=
+        b=x7w7scI8kHHFFqNILvAx918msEZfl1FstR6gp3JVJuDIQde7MH0x4ujMrIkjIW/Oz
+         tv8xSE8d88WBUuQyVClFhfJi+6+et9qcr8HNc7OQ0v6T3q85L/DOSNzg72r3eGBbLE
+         0aL3Z+SRpDMgp3Bfx02XSEPE6zAg/nU2clsHpyqQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Jun <jun.li@nxp.com>, John Stultz <john.stultz@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 041/178] usb: typec: tcpci_rt1711h: avoid screaming irq causing boot hangs
-Date:   Mon, 29 Jun 2020 11:23:06 -0400
-Message-Id: <20200629152523.2494198-42-sashal@kernel.org>
+Subject: [PATCH 5.4 010/178] net: fix memleak in register_netdevice()
+Date:   Mon, 29 Jun 2020 11:22:35 -0400
+Message-Id: <20200629152523.2494198-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,87 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Jun <jun.li@nxp.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit 302c570bf36e997d55ad0d60628a2feec76954a4 upstream.
+[ Upstream commit 814152a89ed52c722ab92e9fbabcac3cb8a39245 ]
 
-John reported screaming irq caused by rt1711h when system boot[1],
-this is because irq request is done before tcpci_register_port(),
-so the chip->tcpci has not been setup, irq handler is entered but
-can't do anything, this patch is to address this by moving the irq
-request after tcpci_register_port().
+I got a memleak report when doing some fuzz test:
 
-[1] https://lore.kernel.org/linux-usb/20200530040157.31038-1-john.stultz@linaro.org
+unreferenced object 0xffff888112584000 (size 13599):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    74 61 70 30 00 00 00 00 00 00 00 00 00 00 00 00  tap0............
+    00 ee d9 19 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002f60ba65>] __kmalloc_node+0x309/0x3a0
+    [<0000000075b211ec>] kvmalloc_node+0x7f/0xc0
+    [<00000000d3a97396>] alloc_netdev_mqs+0x76/0xfc0
+    [<00000000609c3655>] __tun_chr_ioctl+0x1456/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff888111845cc0 (size 8):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 8 bytes):
+    74 61 70 30 00 88 ff ff                          tap0....
+  backtrace:
+    [<000000004c159777>] kstrdup+0x35/0x70
+    [<00000000d8b496ad>] kstrdup_const+0x3d/0x50
+    [<00000000494e884a>] kvasprintf_const+0xf1/0x180
+    [<0000000097880a2b>] kobject_set_name_vargs+0x56/0x140
+    [<000000008fbdfc7b>] dev_set_name+0xab/0xe0
+    [<000000005b99e3b4>] netdev_register_kobject+0xc0/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff88811886d800 (size 512):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff c0 66 3d a3 ff ff ff ff  .........f=.....
+  backtrace:
+    [<0000000050315800>] device_add+0x61e/0x1950
+    [<0000000021008dfb>] netdev_register_kobject+0x17e/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: ce08eaeb6388 ("staging: typec: rt1711h typec chip driver")
-Cc: stable <stable@vger.kernel.org> # v4.18+
-Cc: John Stultz <john.stultz@linaro.org>
-Reported-and-tested-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Link: https://lore.kernel.org/r/20200604112118.38062-1-jun.li@nxp.com
+If call_netdevice_notifiers() failed, then rollback_registered()
+calls netdev_unregister_kobject() which holds the kobject. The
+reference cannot be put because the netdev won't be add to todo
+list, so it will leads a memleak, we need put the reference to
+avoid memleak.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/typec/tcpm/tcpci_rt1711h.c | 31 +++++++++-----------------
- 1 file changed, 10 insertions(+), 21 deletions(-)
+ net/core/dev.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-index 017389021b96a..b56a0880a0441 100644
---- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-+++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-@@ -179,26 +179,6 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
- 	return tcpci_irq(chip->tcpci);
- }
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 204d87e7c9b19..5b7d9c2b821d6 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -9114,6 +9114,13 @@ int register_netdevice(struct net_device *dev)
+ 		rcu_barrier();
  
--static int rt1711h_init_alert(struct rt1711h_chip *chip,
--			      struct i2c_client *client)
--{
--	int ret;
--
--	/* Disable chip interrupts before requesting irq */
--	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
--	if (ret < 0)
--		return ret;
--
--	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
--					rt1711h_irq,
--					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
--					dev_name(chip->dev), chip);
--	if (ret < 0)
--		return ret;
--	enable_irq_wake(client->irq);
--	return 0;
--}
--
- static int rt1711h_sw_reset(struct rt1711h_chip *chip)
- {
- 	int ret;
-@@ -260,7 +240,8 @@ static int rt1711h_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	ret = rt1711h_init_alert(chip, client);
-+	/* Disable chip interrupts before requesting irq */
-+	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -271,6 +252,14 @@ static int rt1711h_probe(struct i2c_client *client,
- 	if (IS_ERR_OR_NULL(chip->tcpci))
- 		return PTR_ERR(chip->tcpci);
- 
-+	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
-+					rt1711h_irq,
-+					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
-+					dev_name(chip->dev), chip);
-+	if (ret < 0)
-+		return ret;
-+	enable_irq_wake(client->irq);
-+
- 	return 0;
- }
- 
+ 		dev->reg_state = NETREG_UNREGISTERED;
++		/* We should put the kobject that hold in
++		 * netdev_unregister_kobject(), otherwise
++		 * the net device cannot be freed when
++		 * driver calls free_netdev(), because the
++		 * kobject is being hold.
++		 */
++		kobject_put(&dev->dev.kobj);
+ 	}
+ 	/*
+ 	 *	Prevent userspace races by waiting until the network
 -- 
 2.25.1
 
