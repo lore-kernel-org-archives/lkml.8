@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 045B620768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8AE20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464922;
-	bh=+DMUUgr9D6uvdJVqahzq9YkaVV0oxf2qaoM9WEMrPfs=;
+	s=default; t=1593464928;
+	bh=sAiNEf54H7tUH6Ot3FT8uPvmxim8eAexcw0I/inkF2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWPwqUJlynGbtwxVg9BWtIIuqXsqA5TjIezSVR7XOiIjbaHhvp8P1HfeCiOteXxCB
-	 qXDfDGVDLv3SSqZf1LkBiwYBPnxS72g8h9ZJxHskU0+rSCkisuiZ/3dUtWoQq2IMKp
-	 3LE14EDTfU9KDFR9sVUMPp7S4cNAZDvQB7SE2QvE=
+	b=KUD5i0k2EC6soLgG1iDO4YsZO4G9rWj5NPnFxmN9zpOr8UESiex5QfXbXWtg80Vb6
+	 zDB1zVtgNKX4meN1fKCzdxSM7uRau/AW1XQZkFgP+jrNlZMPncRimo6a+8GIHbV1l6
+	 EkW7l3L9IO2+CZ+K0iDEbaKpNELD2C4OCwql+PBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390428AbgF2VIk (ORCPT
+        id S2389907AbgF2VIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730331AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730330AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 076CD25521;
-        Mon, 29 Jun 2020 15:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B90425551;
+        Mon, 29 Jun 2020 15:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446083;
-        bh=+DMUUgr9D6uvdJVqahzq9YkaVV0oxf2qaoM9WEMrPfs=;
+        s=default; t=1593446114;
+        bh=sAiNEf54H7tUH6Ot3FT8uPvmxim8eAexcw0I/inkF2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPw0i8dcvYXQ39UyPpLAT0zJoJ2IMvHOB+t02BlEJeUX+PBGVkIqSuxAm5W1rWYcQ
-         iXBCFyffabhYHpRFSJIDb2L38qMvXGXs4QgUa4gh9fW3kX10SVkZgehoXf29xS9I8f
-         NumlDGrzxhwaG4D5N2YO0CNDU4STMEPd4ipL3D7s=
+        b=Djuw6pBW1zA3AHwqHCqHSRzYL5HL7EBkoM1NyJi/M+gJ14ktCBjMOZq+mJnQ/HQJx
+         Nj3Rq50k1ngmChq6mj42r3O00pEUqIzIT0I6ooJUfLc8Y9sqMnLmJFmvO/NT1/nGCF
+         SHjV+b5Mdte4aZLpQYMKyIWMIuUWMmPQ655K//qg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Wilck <mwilck@suse.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 078/135] scsi: scsi_devinfo: handle non-terminated strings
-Date:   Mon, 29 Jun 2020 11:52:12 -0400
-Message-Id: <20200629155309.2495516-79-sashal@kernel.org>
+Cc:     Daniel Mack <daniel@zonque.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 105/135] ALSA: usb-audio: allow clock source validity interrupts
+Date:   Mon, 29 Jun 2020 11:52:39 -0400
+Message-Id: <20200629155309.2495516-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,46 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Daniel Mack <daniel@zonque.org>
 
-commit ba69ead9e9e9bb3cec5faf03526c36764ac8942a upstream.
+[ Upstream commit 191227d99a281333b50aaf82ab4152fbfa249c19 ]
 
-devinfo->vendor and devinfo->model aren't necessarily
-zero-terminated.
+miniDSP USBStreamer UAC2 devices send clock validity changes with the
+control field set to zero. The current interrupt handler ignores all
+packets if the control field does not match the mixer element's, but
+it really should only do that in case that field is needed to
+distinguish multiple elements with the same ID.
 
-Fixes: b8018b973c7c "scsi_devinfo: fixup string compare"
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch implements a logic that lets notifications packets pass
+if the element ID is unique for a given device.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_devinfo.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/usb/mixer.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-index 4055cb7c212b9..3a9b6b61607e6 100644
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -443,7 +443,8 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
- 			/*
- 			 * vendor strings must be an exact match
- 			 */
--			if (vmax != strlen(devinfo->vendor) ||
-+			if (vmax != strnlen(devinfo->vendor,
-+					    sizeof(devinfo->vendor)) ||
- 			    memcmp(devinfo->vendor, vskip, vmax))
- 				continue;
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index a2a9712bd6fa7..eb98e60e57335 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2391,6 +2391,7 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 	__u8 unitid = (index >> 8) & 0xff;
+ 	__u8 control = (value >> 8) & 0xff;
+ 	__u8 channel = value & 0xff;
++	unsigned int count = 0;
  
-@@ -451,7 +452,7 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
- 			 * @model specifies the full string, and
- 			 * must be larger or equal to devinfo->model
- 			 */
--			mlen = strlen(devinfo->model);
-+			mlen = strnlen(devinfo->model, sizeof(devinfo->model));
- 			if (mmax < mlen || memcmp(devinfo->model, mskip, mlen))
- 				continue;
- 			return devinfo;
+ 	if (channel >= MAX_CHANNELS) {
+ 		usb_audio_dbg(mixer->chip,
+@@ -2399,6 +2400,12 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 		return;
+ 	}
+ 
++	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
++		count++;
++
++	if (count == 0)
++		return;
++
+ 	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
+ 		struct usb_mixer_elem_info *info;
+ 
+@@ -2406,7 +2413,7 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 			continue;
+ 
+ 		info = (struct usb_mixer_elem_info *)list;
+-		if (info->control != control)
++		if (count > 1 && info->control != control)
+ 			continue;
+ 
+ 		switch (attribute) {
 -- 
 2.25.1
 
