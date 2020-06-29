@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B23206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893AD206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459443;
-	bh=jC+AG3mTjlPMjRcj/yd1i1EAFIc8JNKo40nByaNX9OE=;
+	s=default; t=1593459449;
+	bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHGgxLpu3F44Ld8Tw18KFgjO+aRDvq4EXyOAd5QV5xIyY6J3kSK02uk4k3jPjOvcD
-	 5bWHKI2oOiaCv/KBJWGeqErI4Pstaiq41Wd8ffIlrajAiEHnb72x0ObipoquCyt+5G
-	 bbfFc2kL07vC2r7IPHD8iPcoV5FbwllOOWZowG84=
+	b=p0oNh71lJY/aR66izHtwDMhDOmfFKZqInMpVaz3IAZvFVsNSq5VZgoULp/0Dxk7dy
+	 zF7WcDk95xWKtccqM7nni3BGtnyey1hlhH5JDAWPN3tjKl5dlJ9Cl2jfOEcK+Jeq//
+	 I0oCD9Nw+OV+XN3gKjzDS6bRZ7LEUcza71M21+v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733312AbgF2ThQ (ORCPT
+        id S1729151AbgF2Th1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733015AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733010AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7CD825216;
-        Mon, 29 Jun 2020 15:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED972252AD;
+        Mon, 29 Jun 2020 15:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444933;
-        bh=jC+AG3mTjlPMjRcj/yd1i1EAFIc8JNKo40nByaNX9OE=;
+        s=default; t=1593445020;
+        bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AErx3r9LrmLp98mcttvVUku56KXoqgyrbfZ5jv/2Vr90agG0JuThrz03KJVxDGPlM
-         +c43s1MMfPcSGe3kNfsqvhNxchm9AbV1qjVinVMm3rQkj5337Fiys61MPThLXLRLfa
-         8UUlD8NsO4k+Jjp8xcCv7VsUhJXZg30I81CkRV3I=
+        b=jBZ6/bozrn+/rXxUZJ692DqIjmfRF51YtvoDvrTxrEM84QeGBde3sI+J2sYn7b5zt
+         f69PolOLZzIfoLuPM4PPgjtorOGCo3IaJEKUYqQPAOjRB9e4K9IACg8VPfcRzTBKpT
+         f+YG1f51QogB+AEXzXJiwi8Csxh9WlibxsDkQA+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Christensen <drc@linux.vnet.ibm.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Jiping Ma <jiping.ma2@windriver.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 030/131] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Mon, 29 Jun 2020 11:33:21 -0400
-Message-Id: <20200629153502.2494656-31-sashal@kernel.org>
+Subject: [PATCH 4.19 118/131] arm64: perf: Report the PC value in REGS_ABI_32 mode
+Date:   Mon, 29 Jun 2020 11:34:49 -0400
+Message-Id: <20200629153502.2494656-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,40 +66,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Christensen <drc@linux.vnet.ibm.com>
+From: Jiping Ma <jiping.ma2@windriver.com>
 
-[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
+commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+A 32-bit perf querying the registers of a compat task using REGS_ABI_32
+will receive zeroes from w15, when it expects to find the PC.
 
-Add check for pcierr_recovery which skips code already executed for the
-"Frozen" state.
+Return the PC value for register dwarf register 15 when returning register
+values for a compat task to perf.
 
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
+[will: Shuffled code and added a comment]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index a12962702611f..be845df050399 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18229,8 +18229,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+index 0bbac612146ea..666b225aeb3ad 100644
+--- a/arch/arm64/kernel/perf_regs.c
++++ b/arch/arm64/kernel/perf_regs.c
+@@ -15,15 +15,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 		return 0;
  
- 	rtnl_lock();
+ 	/*
+-	 * Compat (i.e. 32 bit) mode:
+-	 * - PC has been set in the pt_regs struct in kernel_entry,
+-	 * - Handle SP and LR here.
++	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
++	 * we're stuck with it for ABI compatability reasons.
++	 *
++	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
++	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
++	 * These correspond directly to a prefix of the registers saved in our
++	 * 'struct pt_regs', with the exception of the PC, so we copy that down
++	 * (x15 corresponds to SP_hyp in the architecture).
++	 *
++	 * So far, so good.
++	 *
++	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
++	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
++	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
++	 * PC registers would normally live. The initial idea was to allow a
++	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
++	 * how well that works in practice, somebody might be relying on it.
++	 *
++	 * At the time we make a sample, we don't know whether the consumer is
++	 * 32-bit or 64-bit, so we have to cater for both possibilities.
+ 	 */
+ 	if (compat_user_mode(regs)) {
+ 		if ((u32)idx == PERF_REG_ARM64_SP)
+ 			return regs->compat_sp;
+ 		if ((u32)idx == PERF_REG_ARM64_LR)
+ 			return regs->compat_lr;
++		if (idx == 15)
++			return regs->pc;
+ 	}
  
--	/* We probably don't have netdev yet */
--	if (!netdev || !netif_running(netdev))
-+	/* Could be second call or maybe we don't have netdev yet */
-+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
- 		goto done;
- 
- 	/* We needn't recover from permanent error */
+ 	if ((u32)idx == PERF_REG_ARM64_SP)
 -- 
 2.25.1
 
