@@ -2,52 +2,50 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DABFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A65820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D5C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460547;
-	bh=zKVcYxZ7pwGdvdRzSRYHpqasgfwum5iG35R7JTeTdwc=;
+	s=default; t=1593460553;
+	bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sr8J8kaRWeMYubvbMo99/oyWcGS+/7RO2/RGuAFKd2w+w+dEep39hB7QwQvZJzg9p
-	 BUZ+OmSivozV+M+DklEz4N9qtvdyeloZJJzCzuX4tVj/NUNjRSXwCJgn8Lj+yvbpzZ
-	 yyvIBolCLN7i6rCq24EAaSRSjUGfid8x8s8rxliA=
+	b=yrlvkxLiW7XNFmxk0VMBVjushQUe8zHPLb+inKGyOpqqMCpj07jFpwNxfrPSWgwDF
+	 KKELuawvJrvCm1HPQFGS7v4sf64D46P5PtUQC9lQbBUb07yYIh2RJBcT1m/1zNPCa7
+	 cLJwulTvfX30u1zIDgw0pUpLOTTII4wypOTUq9u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388395AbgF2Tzp (ORCPT
+        id S1732119AbgF2Tzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387653AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731876AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCDC24819;
-        Mon, 29 Jun 2020 15:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26E18248FF;
+        Mon, 29 Jun 2020 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444336;
-        bh=zKVcYxZ7pwGdvdRzSRYHpqasgfwum5iG35R7JTeTdwc=;
+        s=default; t=1593444452;
+        bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SL6EKP+IrXcI47CvrO73xRr4SRpiU/3HA0se+KvOKGJmaBsriRE0bvJPuhcsnKr9S
-         1e9kFwSnnNY3UIqNANM+wvTmLdPNPp9jAyze/J53RQzeY71hzg1UW5urWBiFNppxOZ
-         7bcn+SDsDB0dAUDx0OUQ3dhAuGQ+QIDt0pP0Kezg=
+        b=MnsGXEfZrSPP6uaUpxrnvUL1gfRz0jT3MVa7AcyMh77TJAL3v8UGjL7QEkODsj/RC
+         eYlCobyE7wkUcy8sF61ih5QzFzUyi596V/iAAbQJM64Dkn5gUI0CnhDydqnXyPov9v
+         2B9vxDVwKpqNHTnJdtTAUyfQthkLCCwBiFzXyljA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     guodeqing <geffrey.guo@huawei.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 011/178] net: Fix the arp error in some cases
-Date:   Mon, 29 Jun 2020 11:22:36 -0400
-Message-Id: <20200629152523.2494198-12-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 132/178] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
+Date:   Mon, 29 Jun 2020 11:24:37 -0400
+Message-Id: <20200629152523.2494198-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,53 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
+[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
 
-ie.,
-$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
+When I squashed the 'allnoconfig' compiler warning about the
+set_sve_default_vl() function being defined but not used in commit
+1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
+accidentally broke the build for configs where ARM64_SVE is enabled, but
+SYSCTL is not.
 
-$ ip rule add from 6.6.6.6 table 6666
+Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
+and CONFIG_SYSCTL=y.
 
-$ ip route add 9.9.9.9 via 6.6.6.6
-
-$ ping -I 6.6.6.6 9.9.9.9
-PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
-
-3 packets transmitted, 0 received, 100% packet loss, time 2079ms
-
-$ arp
-Address     HWtype  HWaddress           Flags Mask            Iface
-6.6.6.6             (incomplete)                              eth0
-
-The arp request address is error, this is because fib_table_lookup in
-fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
-the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
-Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
-
-Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_semantics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/fpsimd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index 01588eef0cee2..b1b3220917ca0 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -1100,7 +1100,7 @@ static int fib_check_nh_v4_gw(struct net *net, struct fib_nh *nh, u32 table,
- 		if (fl4.flowi4_scope < RT_SCOPE_LINK)
- 			fl4.flowi4_scope = RT_SCOPE_LINK;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index d8895251a2aac..338e0966d3ca2 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -349,7 +349,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
+ 	return sve_vl_from_vq(__bit_to_vq(bit));
+ }
  
--		if (table)
-+		if (table && table != RT_TABLE_MAIN)
- 			tbl = fib_get_table(net, table);
+-#ifdef CONFIG_SYSCTL
++#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
  
- 		if (tbl)
+ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  void __user *buffer, size_t *lenp,
+@@ -395,9 +395,9 @@ static int __init sve_sysctl_init(void)
+ 	return 0;
+ }
+ 
+-#else /* ! CONFIG_SYSCTL */
++#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ static int __init sve_sysctl_init(void) { return 0; }
+-#endif /* ! CONFIG_SYSCTL */
++#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ 
+ #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
+ 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
 -- 
 2.25.1
 
