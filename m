@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06527C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06786206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C970C206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466475;
-	bh=2wW1ZablLRZ2EYClWlZMOab5AEpw4UtTQ2CXvTCt/20=;
+	s=default; t=1593466480;
+	bh=RcecoPzbN6cMOUCOjvq9fcSh87a1r6/ArrUZGSnc7+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlYkCJJ5JtQy7baU2qtQobVI7ulMNLWYnCK4GcEyep4gCBrbP+rWRkQPRB3G2rXqN
-	 OLeIFps5YoC80JpFAgJXxFr773Lv5slFZUOsp2AVJLeXhCjyN8xlotyNpdtYi4LmKA
-	 H2cqWKwYl4Dh54X/4wpW3eXG34OnhDJi8pDjZj5U=
+	b=Ex5XNSdo2zrq8EpCP1Z0owEAAbhAcTgNtZGbLGNnkjJrCGuGFCCIDr8sel8VU1TlD
+	 HzdlVl7Ku+/DkcfTPKa4JtEdeFeO8wWXdTO9zEM0GZCWjE/s2JNHAbb9vAMWZJIo/r
+	 NCtuyZqmoT9VmMrHe0rLRjt69R4V0z/BGGbMg2p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbgF2Vee (ORCPT
+        id S2391278AbgF2Vej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgF2Sk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:57 -0400
+        id S1728593AbgF2Sk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015DA23ED0;
-        Mon, 29 Jun 2020 15:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5531D2410A;
+        Mon, 29 Jun 2020 15:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443904;
-        bh=2wW1ZablLRZ2EYClWlZMOab5AEpw4UtTQ2CXvTCt/20=;
+        s=default; t=1593443934;
+        bh=RcecoPzbN6cMOUCOjvq9fcSh87a1r6/ArrUZGSnc7+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bH6ZZnqZiAxhAmTEsCdTDc+7aZrLQJtvGI/OtaK0wVEUkyJO5mLfJeVMPRzdCYM4Q
-         hbDa0cn9mic0ZsQjo7xxZ82xLEeyqIeZaV8ChMzeB/L0xShCmi2r1dVaLfOxPqKpe5
-         VoohpH3uuLRrTPHU/CBj2uhABMnigOKsyt6cJyqQ=
+        b=vMIgc3QSFG4m4irqVpchU8KHBXkLo+ai/78rdmOLozAQzYa7PVGcgab+hOxltcY9L
+         eWAJA2vwl34Vx7PkeYQrx+x414YDnZ2EqcZe6FsIeOl/eXbFlmQ/tbgRbFqrOYIlMW
+         s5JrQPnRk+HTIAzFdg4Bv7aGEOHiZ6mujhZWEFNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gaurav Singh <gaurav1086@gmail.com>,
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 004/265] ethtool: Fix check in ethtool_rx_flow_rule_create
-Date:   Mon, 29 Jun 2020 11:13:57 -0400
-Message-Id: <20200629151818.2493727-5-sashal@kernel.org>
+Subject: [PATCH 5.7 036/265] sch_cake: fix a few style nits
+Date:   Mon, 29 Jun 2020 11:14:29 -0400
+Message-Id: <20200629151818.2493727-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.7.y
@@ -65,33 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 21a739c64d3e9871186483a0cc3e7b52638c3d59 ]
+[ Upstream commit 3f608f0c41360b11b04c763f348b712f651c8bac ]
 
-Fix check in ethtool_rx_flow_rule_create
+I spotted a few nits when comparing the in-tree version of sch_cake with
+the out-of-tree one: A redundant error variable declaration shadowing an
+outer declaration, and an indentation alignment issue. Fix both of these.
 
-Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Fixes: 046f6fd5daef ("sched: Add Common Applications Kept Enhanced (cake) qdisc")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ethtool/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_cake.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 89d0b1827aaff..d3eeeb26396cd 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -2957,7 +2957,7 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
- 			       sizeof(match->mask.ipv6.dst));
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index 3482f9569dce5..9475fa81ea7f6 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -2678,7 +2678,7 @@ static int cake_init(struct Qdisc *sch, struct nlattr *opt,
+ 	qdisc_watchdog_init(&q->watchdog, sch);
+ 
+ 	if (opt) {
+-		int err = cake_change(sch, opt, extack);
++		err = cake_change(sch, opt, extack);
+ 
+ 		if (err)
+ 			return err;
+@@ -2995,7 +2995,7 @@ static int cake_dump_class_stats(struct Qdisc *sch, unsigned long cl,
+ 			PUT_STAT_S32(BLUE_TIMER_US,
+ 				     ktime_to_us(
+ 					     ktime_sub(now,
+-						     flow->cvars.blue_timer)));
++						       flow->cvars.blue_timer)));
  		}
- 		if (memcmp(v6_m_spec->ip6src, &zero_addr, sizeof(zero_addr)) ||
--		    memcmp(v6_m_spec->ip6src, &zero_addr, sizeof(zero_addr))) {
-+		    memcmp(v6_m_spec->ip6dst, &zero_addr, sizeof(zero_addr))) {
- 			match->dissector.used_keys |=
- 				BIT(FLOW_DISSECTOR_KEY_IPV6_ADDRS);
- 			match->dissector.offset[FLOW_DISSECTOR_KEY_IPV6_ADDRS] =
+ 		if (flow->cvars.dropping) {
+ 			PUT_STAT_S32(DROP_NEXT_US,
 -- 
 2.25.1
 
