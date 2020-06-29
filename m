@@ -2,119 +2,144 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF297C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C95AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5AEA2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457284;
-	bh=iTb1TmiSIxWsy6PGti5hKwlxh7Anhvbfmt0aLsL/E5M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HSFaLnUWmlwWvlBLd+TpEQSv3+4RNFSTQEFO3I9KOhXMd8yAwrpZGb74FIB/n87zx
-	 JyxU8H+ZhevutThZNfJKTOTAkL6YgL8Q8vUWWziTLUv+2MyV74BDFW3aMfeaVZkZH4
-	 l7K7Tx9pv6H9t0qdejEbojyJGf55gbp8P+oEVa2E=
+	by mail.kernel.org (Postfix) with ESMTP id 687A320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgF2TBJ (ORCPT
+        id S1730438AbgF2TB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:01:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48448 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730362AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E71FD25529;
-        Mon, 29 Jun 2020 15:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446091;
-        bh=iTb1TmiSIxWsy6PGti5hKwlxh7Anhvbfmt0aLsL/E5M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulhfYApZktX+eAG9UO01LlPxBsItGL944IDTllBtChwQZEhHlyqoWqerY4USWvJn7
-         pLg58vmpKtg9pt+3dfQ1yNd+Txces2zVReJnIJJhKBmzzNSftzHKnm5HcmeTUFeBTI
-         RjrItxYlO2xf5wB/71Bq1p0j9qqC26NG9bv4bdMs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neal Cardwell <ncardwell@google.com>,
-        Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 086/135] tcp_cubic: fix spurious HYSTART_DELAY exit upon drop in min RTT
-Date:   Mon, 29 Jun 2020 11:52:20 -0400
-Message-Id: <20200629155309.2495516-87-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        id S1728101AbgF2TBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:01:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7BA11AD8D;
+        Mon, 29 Jun 2020 09:44:40 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 11:43:50 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux@rasmusvillemoes.dk, joe@perches.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
+ specifier which uses BTF
+Message-ID: <20200629094349.GQ8444@alley>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+ <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+ <20200626101523.GM8444@alley>
+ <alpine.LRH.2.21.2006261147130.417@localhost>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.21.2006261147130.417@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
+On Fri 2020-06-26 12:37:19, Alan Maguire wrote:
+> 
+> On Fri, 26 Jun 2020, Petr Mladek wrote:
+> 
+> > On Tue 2020-06-23 13:07:07, Alan Maguire wrote:
+> > > 
+> > >         printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> > > 
+> > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> > >   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> > > 
+> > > ...gives us:
+> > > 
+> > > (struct sk_buff){
+> > >  .transport_header = (__u16)65535,
+> > >  .mac_header = (__u16)65535,
+> > >  .end = (sk_buff_data_t)192,
+> > >  .head = (unsigned char *)0x000000006b71155a,
+> > >  .data = (unsigned char *)0x000000006b71155a,
+> > >  .truesize = (unsigned int)768,
+> > >  .users = (refcount_t){
+> > >   .refs = (atomic_t){
+> > >    .counter = (int)1,
+> > >   },
+> > >  },
+> > >  .extensions = (struct skb_ext *)0x00000000f486a130,
+> > > }
+> > > 
+> > > printk output is truncated at 1024 bytes.  For cases where overflow
+> > > is likely, the compact/no type names display modes may be used.
+> > 
+> > Hmm, this scares me:
+> > 
+> >    1. The long message and many lines are going to stretch printk
+> >       design in another dimensions.
+> > 
+> >    2. vsprintf() is important for debugging the system. It has to be
+> >       stable. But the btf code is too complex.
+> >
+> 
+> Right on both points, and there's no way around that really. Representing 
+> even small data structures will stretch us to or beyond the 1024 byte 
+> limit.  This can be mitigated by using compact display mode and not 
+> printing field names, but the output becomes hard to parse then.
+>
+> I think a better approach might be to start small, adding the core
+> btf_show functionality to BPF, allowing consumers to use it there,
+> perhaps via a custom helper.
 
-[ Upstream commit b344579ca8478598937215f7005d6c7b84d28aee ]
+Sounds good to me.
 
-Mirja Kuehlewind reported a bug in Linux TCP CUBIC Hystart, where
-Hystart HYSTART_DELAY mechanism can exit Slow Start spuriously on an
-ACK when the minimum rtt of a connection goes down. From inspection it
-is clear from the existing code that this could happen in an example
-like the following:
+> In the current model bpf_trace_printk() inherits the functionality
+> to display data from core printk, so a different approach would
+> be needed there.
 
-o The first 8 RTT samples in a round trip are 150ms, resulting in a
-  curr_rtt of 150ms and a delay_min of 150ms.
+BTW: Even the trace buffer has a limitation, see BUF_MAX_DATA_SIZE
+in kernel/trace/ring_buffer.c. It is internally implemented as
+a list of memory pages, see the comments above RB_BUFFER_OFF
+definition.
 
-o The 9th RTT sample is 100ms. The curr_rtt does not change after the
-  first 8 samples, so curr_rtt remains 150ms. But delay_min can be
-  lowered at any time, so delay_min falls to 100ms. The code executes
-  the HYSTART_DELAY comparison between curr_rtt of 150ms and delay_min
-  of 100ms, and the curr_rtt is declared far enough above delay_min to
-  force a (spurious) exit of Slow start.
+It is typically 4k. I think that you might hit this limit as well.
+We had to increase per-CPU buffers used by printk() in NMI context
+because 4k was not enough for some backtraces.
 
-The fix here is simple: allow every RTT sample in a round trip to
-lower the curr_rtt.
+So, using different approach would make sense even when using trace
+buffer.
 
-Fixes: ae27e98a5152 ("[TCP] CUBIC v2.3")
-Reported-by: Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_cubic.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Other consumers outside of BPF
+> could potentially avail of the show functionality directly via the btf_show
+> functions in the future, but at least it would have one consumer at the 
+> outset, and wouldn't present problems like these for printk.
 
-diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
-index 448c2615fece9..9fb3a5e83a7c7 100644
---- a/net/ipv4/tcp_cubic.c
-+++ b/net/ipv4/tcp_cubic.c
-@@ -414,6 +414,8 @@ static void hystart_update(struct sock *sk, u32 delay)
- 
- 	if (hystart_detect & HYSTART_DELAY) {
- 		/* obtain the minimum delay of more than sampling packets */
-+		if (ca->curr_rtt > delay)
-+			ca->curr_rtt = delay;
- 		if (ca->sample_cnt < HYSTART_MIN_SAMPLES) {
- 			if (ca->curr_rtt == 0 || ca->curr_rtt > delay)
- 				ca->curr_rtt = delay;
--- 
-2.25.1
+Sounds good to me.
 
+> > I would strongly prefer to keep this outside vsprintf and printk.
+> > Please, invert the logic and convert it into using separate printk()
+> > call for each printed line.
+> > 
+> 
+> I think the above is in line with what you're suggesting?
+
+Yes, as far as I understand it.
+
+> Yep, no way round this either. I'll try a different approach. Thanks for 
+> taking a look!
+
+Uff, thanks a lot for understanding. I hope that most of the code will
+be reusable in some form.
+
+Best Regards,
+Petr
