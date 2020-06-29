@@ -2,183 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D52C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7EBB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460407;
-	bh=dsXPPeg6cIv+Pkd9+QstYAyB8a1dU40W6wd0csB7Qx4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7mTnBcKJKkFIqrmYb2OMZpyL2DA3aLE19yba0UcNqmWBV0nAz+GL5uBe4uuesk3C
-	 wpXALzMh/L9gN9MxwpWhVNJPj/VSJap/xWF7TSlMJWS5OR2FYIYZ7xb83WUAERQHV4
-	 RJ1sySHKq6HW+SZ65ja3feXNMYPmQNofPxJqXMPw=
+	by mail.kernel.org (Postfix) with ESMTP id 1E07D206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVz8Oiap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387954AbgF2TxM (ORCPT
+        id S1731946AbgF2Txa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387692AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF216248EB;
-        Mon, 29 Jun 2020 15:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444443;
-        bh=dsXPPeg6cIv+Pkd9+QstYAyB8a1dU40W6wd0csB7Qx4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6tsQCPQlEkc9Vofa9/Rh5/XBxlj1Jb8Fwjv1YRat2crD+bJdZarLdZJKxCUcHGbv
-         SivCtkFivq4a6oivgR2xElKGhY4pGp6GWCdx70J3l48EJ4Cp9NIEbTnvCUra539qhg
-         PmO65E5cKWrNBbI+pAr7s0QOJQTG4IMWgWO3/6V8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Martin <Dave.Martin@arm.com>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/178] arm64/sve: Eliminate data races on sve_default_vl
-Date:   Mon, 29 Jun 2020 11:24:27 -0400
-Message-Id: <20200629152523.2494198-123-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 15:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387790AbgF2TxK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:53:10 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0969BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:11 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q198so16466075qka.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oyEodCgkXhNOrxY4Db2raIEhJBe/zcrPZ6JM1bawZr0=;
+        b=bVz8OiapgEka8x6YtNWVDwk6aWW04aYZrWQR1RhB3i8t5MbJ4ylwQLukcm9wzGU/40
+         tLZ0D7YQrL9fWT3i0zp4Tkh4NN+IDCF7wdSaKO5oN7ARFc6wClflvVFZ/queIBBjAB8T
+         nIMmXoJBEQL3RM7KH/VVoktOklJgn4lUTRkXFNq+dhL5EX6KCGfuIBdUKCU+xN6f6cQF
+         PTdLT6rqPyEouO2b8FWpA1wZFNGBo9w8WvD1v+/t+iF5AmjOlizau0LWULoERm93Ybkb
+         eYTNBycgPYOHH3JLAHWoaluu+mVeeqJpcD2aaRD9WwWAMgRy5ZOzbxxWH8LL4kF4O+Mo
+         2wKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oyEodCgkXhNOrxY4Db2raIEhJBe/zcrPZ6JM1bawZr0=;
+        b=fnsZwncZuomIte2eSc1uvp+1ooCOtc174jpQ5SvAccYlM8AkTPVrUu3mf7CNDKQfho
+         g/BrVu2lR7K45YNMqX9oM/MQVI49KQ15+T9lj3gm6rkJimzUUMk/wLzqRv7RTMQ0NBb7
+         wyVSi1/jmSCa2aMqeiVAdHLPDTJkmETE/zpWDWbd5OfiqoDpz6HBRjGXuYkxURKeIvt+
+         a6CXoCmjrIKc15mksFSUpBOiR5ikkx1+X77Spp+pakzDYfKaqNgRZlhmywIXV+F/Ev7O
+         uNlwGtUjBUZGAU3y4D0YtESFn3Wg3gXQE4kz8r+tG7N44yBMtDff0ESBP/H4Hf9zsAEu
+         D80Q==
+X-Gm-Message-State: AOAM531Mtse17K3h5BpwHsTtxm7em7p/mWo3AJ8TwesVU2uvojgCnNpO
+        xKXROSyQmueNK6rlmgHfQIo=
+X-Google-Smtp-Source: ABdhPJwX18jDoBGiBdMyQNJUUV/2hvnsDjfOh/ZD9ytFt9u/2MrGF+GqE0gb225g6POrhgTsWW24mg==
+X-Received: by 2002:ae9:f814:: with SMTP id x20mr16596296qkh.253.1593460390137;
+        Mon, 29 Jun 2020 12:53:10 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id e25sm655098qtc.93.2020.06.29.12.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:53:09 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mtd: spi-nor: Add support for Winbond w25q64jvm spi flash
+Date:   Mon, 29 Jun 2020 15:53:06 -0400
+Message-Id: <20200629195306.1030-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+This chip is (nearly) identical to the Winbond w25q64 which is
+already supported by Linux. Compared to the w25q64, the 'jvm'
+has a different JEDEC ID.
 
-[ Upstream commit 1e570f512cbdc5e9e401ba640d9827985c1bea1e ]
-
-sve_default_vl can be modified via the /proc/sys/abi/sve_default_vl
-sysctl concurrently with use, and modified concurrently by multiple
-threads.
-
-Adding a lock for this seems overkill, and I don't want to think any
-more than necessary, so just define wrappers using READ_ONCE()/
-WRITE_ONCE().
-
-This will avoid the possibility of torn accesses and repeated loads
-and stores.
-
-There's no evidence yet that this is going wrong in practice: this
-is just hygiene.  For generic sysctl users, it would be better to
-build this kind of thing into the sysctl common code somehow.
-
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Link: https://lore.kernel.org/r/1591808590-20210-3-git-send-email-Dave.Martin@arm.com
-[will: move set_sve_default_vl() inside #ifdef to squash allnoconfig warning]
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- arch/arm64/kernel/fpsimd.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 1765e5284994f..d8895251a2aac 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -12,6 +12,7 @@
- #include <linux/bug.h>
- #include <linux/cache.h>
- #include <linux/compat.h>
-+#include <linux/compiler.h>
- #include <linux/cpu.h>
- #include <linux/cpu_pm.h>
- #include <linux/kernel.h>
-@@ -119,10 +120,20 @@ struct fpsimd_last_state_struct {
- static DEFINE_PER_CPU(struct fpsimd_last_state_struct, fpsimd_last_state);
- 
- /* Default VL for tasks that don't set it explicitly: */
--static int sve_default_vl = -1;
-+static int __sve_default_vl = -1;
-+
-+static int get_sve_default_vl(void)
-+{
-+	return READ_ONCE(__sve_default_vl);
-+}
- 
- #ifdef CONFIG_ARM64_SVE
- 
-+static void set_sve_default_vl(int val)
-+{
-+	WRITE_ONCE(__sve_default_vl, val);
-+}
-+
- /* Maximum supported vector length across all CPUs (initially poisoned) */
- int __ro_after_init sve_max_vl = SVE_VL_MIN;
- int __ro_after_init sve_max_virtualisable_vl = SVE_VL_MIN;
-@@ -345,7 +356,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 				  loff_t *ppos)
- {
- 	int ret;
--	int vl = sve_default_vl;
-+	int vl = get_sve_default_vl();
- 	struct ctl_table tmp_table = {
- 		.data = &vl,
- 		.maxlen = sizeof(vl),
-@@ -362,7 +373,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 	if (!sve_vl_valid(vl))
- 		return -EINVAL;
- 
--	sve_default_vl = find_supported_vector_length(vl);
-+	set_sve_default_vl(find_supported_vector_length(vl));
- 	return 0;
- }
- 
-@@ -869,7 +880,7 @@ void __init sve_setup(void)
- 	 * For the default VL, pick the maximum supported value <= 64.
- 	 * VL == 64 is guaranteed not to grow the signal frame.
- 	 */
--	sve_default_vl = find_supported_vector_length(64);
-+	set_sve_default_vl(find_supported_vector_length(64));
- 
- 	bitmap_andnot(tmp_map, sve_vq_partial_map, sve_vq_map,
- 		      SVE_VQ_MAX);
-@@ -890,7 +901,7 @@ void __init sve_setup(void)
- 	pr_info("SVE: maximum available vector length %u bytes per vector\n",
- 		sve_max_vl);
- 	pr_info("SVE: default vector length %u bytes per vector\n",
--		sve_default_vl);
-+		get_sve_default_vl());
- 
- 	/* KVM decides whether to support mismatched systems. Just warn here: */
- 	if (sve_max_virtualisable_vl < sve_max_vl)
-@@ -1030,13 +1041,13 @@ void fpsimd_flush_thread(void)
- 		 * vector length configured: no kernel task can become a user
- 		 * task without an exec and hence a call to this function.
- 		 * By the time the first call to this function is made, all
--		 * early hardware probing is complete, so sve_default_vl
-+		 * early hardware probing is complete, so __sve_default_vl
- 		 * should be valid.
- 		 * If a bug causes this to go wrong, we make some noise and
- 		 * try to fudge thread.sve_vl to a safe value here.
- 		 */
- 		vl = current->thread.sve_vl_onexec ?
--			current->thread.sve_vl_onexec : sve_default_vl;
-+			current->thread.sve_vl_onexec : get_sve_default_vl();
- 
- 		if (WARN_ON(!sve_vl_valid(vl)))
- 			vl = SVE_VL_MIN;
+v1 -> v2:
+  - Tudor Ambarus: name the chip "w25q64jvm"
+
+Tree: 5.8-rc3
+
+To: Tudor Ambarus <tudor.ambarus@microchip.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Richard Weinberger <richard@nod.at>
+To: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+ drivers/mtd/spi-nor/winbond.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
+index 5062af10f138..18bdff02f57f 100644
+--- a/drivers/mtd/spi-nor/winbond.c
++++ b/drivers/mtd/spi-nor/winbond.c
+@@ -65,6 +65,7 @@ static const struct flash_info winbond_parts[] = {
+ 			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+ 	{ "w25x64", INFO(0xef3017, 0, 64 * 1024, 128, SECT_4K) },
+ 	{ "w25q64", INFO(0xef4017, 0, 64 * 1024, 128, SECT_4K) },
++	{ "w25q64jvm", INFO(0xef7017, 0, 64 * 1024, 128, SECT_4K) },
+ 	{ "w25q64dw", INFO(0xef6017, 0, 64 * 1024, 128,
+ 			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+ 			   SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
 -- 
-2.25.1
+2.17.1
 
