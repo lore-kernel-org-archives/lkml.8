@@ -2,118 +2,88 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6393EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02411206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CHK622U1"
+	by mail.kernel.org (Postfix) with ESMTP id 459AD206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593463821;
+	bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AoCOSrlNMQ2Z13MyPOUdbqoseQ70N/dtgYvWn7lQ+yGmtKmYmIeG8L+JUdQi8YNDT
+	 wHB6NvbsZB3Al9Fdu3NKOFm877srGvIws2I2PDVARQxSN0KdtSADR/cHNQ0y4Pct8z
+	 UvtesTUXlFMteOIE+jyFiWekd99Uu3nVa+GFdUQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733085AbgF2UuP (ORCPT
+        id S1732292AbgF2UuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731430AbgF2TNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C0CC008759
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:47:03 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k6so15681957wrn.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=buEQVHi4pYkYNi5xR5+kq0TuOVW4rWY7G/qVT+msh3E=;
-        b=CHK622U1BVBtpIrk5fAZb9epzcn8u+EYAoOwW9EKuHtj3CnEYWctFHBkGa+CdPTx7U
-         jEzR0bJBVp/+IRiDk1elxRlwcZgYuXAtj4v7XKjXobEORe+ppJIZ9z0M5CCibHMkXvLJ
-         BspjreQUVgczs1OCbvG73J0zXVXrd4OCoZ5d5+ciCL5ys7zkADOCMezlXYMxdrh48B/4
-         VnV/Xy33royF/SH39pMdpvokXsGHrjKRq0b/hQXHM6A/c1PJ2K7BEJbOWx/qmkmfN29H
-         1jMDcocpaT8rLEmUVHbKvS+LX1IzFj/MuI9XaAj+TN+f2uyDdU2VUEkU/ntcZytpj4Nl
-         xhgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=buEQVHi4pYkYNi5xR5+kq0TuOVW4rWY7G/qVT+msh3E=;
-        b=e088zRqcfOFcmMq0/d1cNgEqschNo071FBAkZL83a0cZabaVk/O20e3pA3IKqKVxGY
-         njXmEWdzR+slXkT2/o7EK54LtUtQAq7VGbB1cTrT4LTpH6OkEqgUddikxIt/241XnXVN
-         ozzgyaHoeDPoKx1PIrD8iUxsDbBTR9S82f2fjQqVkEqYBCbnY3yWzZXNV/rKkJ9eRYRb
-         37AcyAGJVRb4DYyo9IC26NKC8R+ruj2h7UhB2nK4/6X9vbfAQB35zClGSOQgSXwXEqHK
-         hWvGqulpBqJAeWB2xek9x+CJQa2lUv0HMAZdqJBTuvH5gJOZ8luu9qBOjxZEfHIMz1oq
-         PT1A==
-X-Gm-Message-State: AOAM533y0gWbpC3fJBELrNqVILqur7JOCpNWTpxdVYnrH8LOrY+OIzpn
-        /wfYXbIx0tV1t7TRLEPdFaCRfw==
-X-Google-Smtp-Source: ABdhPJzJclim0XefS2p9RYY3YoriemGjq3Rc/tzqywjW3o/beIt1fh72+EyPBH2YUhKJtI9OuNcyVA==
-X-Received: by 2002:a5d:6746:: with SMTP id l6mr16093673wrw.346.1593420421939;
-        Mon, 29 Jun 2020 01:47:01 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id b62sm17113004wmh.38.2020.06.29.01.47.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:47:01 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:46:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/10] misc: eeprom: eeprom_93cx6: Repair function arg
- descriptions
-Message-ID: <20200629084659.GI177734@dell>
-References: <20200626130525.389469-1-lee.jones@linaro.org>
- <20200626130525.389469-7-lee.jones@linaro.org>
- <20200627203357.GA954@ninjato>
- <20200629081436.GH177734@dell>
- <20200629082037.GA1063@kunai>
+        Mon, 29 Jun 2020 16:50:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731473AbgF2UuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:50:08 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DEE020720;
+        Mon, 29 Jun 2020 20:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593463807;
+        bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=13bkz6rT88bW5ozmcTVlIDpLKBOZ9RXp5Dr9YU/HxouH/lD3TjAXms857cHHw2KkV
+         /2ixNXRUdyyGI63P/xu6opcacLXslGJGqcQJutmchqqO/13Dp1GMejsr+c+vg2puDb
+         qanzweqYc6g3z+fdluowc8Z2mlJoZ+ONrT0Cw5pw=
+Received: by mail-ot1-f45.google.com with SMTP id d4so16724576otk.2;
+        Mon, 29 Jun 2020 13:50:07 -0700 (PDT)
+X-Gm-Message-State: AOAM530enl5d2ZGClclltXDXi9w2bAcDslvSppaGQZUxrk+FJUEOQVwb
+        E3C8G1nI7fIl4noVO/zSJ+k5EZMzh9Tx4SgQlg==
+X-Google-Smtp-Source: ABdhPJzzF4kN7KDy2z2NmYmJxIweiy6VO0KsRTtdXWY9U7ErrDy0wmMgtxFXM1W9UJjV4JYyi44/uK+KLXtRv6Qmytk=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr14052433otb.107.1593463806654;
+ Mon, 29 Jun 2020 13:50:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629082037.GA1063@kunai>
+References: <20200625170434.635114-1-masahiroy@kernel.org> <20200625170434.635114-5-masahiroy@kernel.org>
+In-Reply-To: <20200625170434.635114-5-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jun 2020 14:49:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: split DT schema check rules
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020, Wolfram Sang wrote:
+On Thu, Jun 25, 2020 at 11:05 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> When building %.dt.yaml from %.dts, two things happen in a row:
+>
+>  [1] Run DTC to convert %.dts into %.dt.yaml
+>
+>  [2] Run dt-validate against %.dt.yaml
+>
+> Currently, when any .yaml schema file is updated, processed-schema.yaml
+> is regenerated, then both [1] and [2] are rerun for all .dts files.
+>
+> Actually, we do not need to rerun [1] since the original .dts is not
+> updated.
 
-> 
-> > > > @@ -270,7 +270,7 @@ EXPORT_SYMBOL_GPL(eeprom_93cx6_readb);
-> > > >   * @eeprom: Pointer to eeprom structure
-> > > >   * @byte: Index from where we should start reading
-> > > >   * @data: target pointer where the information will have to be stored
-> > > > - * @words: Number of bytes that should be read.
-> > > > + * @bytes: Number of bytes that should be read.
-> > > 
-> > > Now we have 'byte' and 'bytes' here as arguments which is confusing. I
-> > > think renaming 'words' into 'num_bytes' would be even better.
-> > 
-> > I await your patch with bated breath. :)
-> 
-> ? You are touching it already, why a second patch?
+I have plans (and an intern working on it) to integrate the schema
+checks into dtc. That's going to make turning on the schema checks
+just a flag to dtc. I'm not sure if adding the complexity here is
+worth it as I'd expect much of this patch to go away again.
 
-Because it's a different change.  One that's orthogonal to this set,
-which is designed simply to ensure the documentation matches reality.
+Is there any negative impact on the absolute clean build time? I'm
+more concerned about that than optimizing rerunning.
 
-The author decided on this (less than ideal [in our humble opinion])
-nomenclature from the function's inception back in 2013.  Maybe there
-are good reasons for it to be this way.  Either way, it might require
-a dialogue.  For this set I'd rather stick to the script.
-
-That said, I genuinely don't mind drafting a patch to fix this.  If I
-am to do so, it would also be as part as a subsequent effort.
-
-You or me - your call.  Happy either way.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Rob
