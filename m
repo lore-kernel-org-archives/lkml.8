@@ -2,55 +2,123 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B85C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E398CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8AF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C719A2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jELQEPaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgF2Sql (ORCPT
+        id S1729215AbgF2Sqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:46:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:58878 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729200AbgF2Sqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:46:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8689868B02; Mon, 29 Jun 2020 10:08:31 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 10:08:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: drive-by blk-cgroup cleanups
-Message-ID: <20200629080831.GA32117@lst.de>
-References: <20200627073159.2447325-1-hch@lst.de> <SN4PR0401MB3598A198ACA6126D96E949B59B6E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+        Mon, 29 Jun 2020 14:46:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38690 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729306AbgF2Sqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:46:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593456401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lmeklZemL80Q7lsiy/DTnr9n71S9umll3AkykzC+jhc=;
+        b=jELQEPaTByRF52JD1NkVF/HAlxaFMnoUqkxDJHCmhrUgyJv37/aFjMB0ZrMBV/C8A5FGbg
+        77ERASuOjnxp0ZtdN362hVpw7foWi1msxVMBPwgbh+YnlcTnQV8MwSaGWLBRODWZ7lW2Ks
+        B4kgBLLhV/M9bniIF/RPvkHLTgqofYA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-qTZ19pRuPo682yuNxSFHLQ-1; Mon, 29 Jun 2020 09:44:50 -0400
+X-MC-Unique: qTZ19pRuPo682yuNxSFHLQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99FC6107ACF9;
+        Mon, 29 Jun 2020 13:44:48 +0000 (UTC)
+Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FDB35C1D4;
+        Mon, 29 Jun 2020 13:44:42 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 15:44:39 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200629154439.14cc5ae7.cohuck@redhat.com>
+In-Reply-To: <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+        <20200618002956.5f179de4.pasic@linux.ibm.com>
+        <20200619112051.74babdb1.cohuck@redhat.com>
+        <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN4PR0401MB3598A198ACA6126D96E949B59B6E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 08:05:07AM +0000, Johannes Thumshirn wrote:
-> Btw what ever happened to https://lore.kernel.org/r/20200430150356.35691-1-johannes.thumshirn@wdc.com?
+On Mon, 29 Jun 2020 15:14:04 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-You'll have to ask Jens :)  Note that your patch 2 overlaps with this
-series.  I thik my version is a little nicer, given that
-blkcg_bio_issue_check is a very strange function doing multiple things
-as-is.
+> On 2020-06-19 11:20, Cornelia Huck wrote:
+> > On Thu, 18 Jun 2020 00:29:56 +0200
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
+> >   
+> >> On Wed, 17 Jun 2020 12:43:57 +0200
+> >> Pierre Morel <pmorel@linux.ibm.com> wrote:  
+
+> >>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
+> >>>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> >>>   		return 0;
+> >>>   
+> >>> +	if (arch_needs_virtio_iommu_platform(dev) &&
+> >>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> >>> +		dev_warn(&dev->dev,
+> >>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
+
+[Side note: wasn't there a patch renaming this bit on the list? I think
+this name is only kept for userspace compat.]
+
+> >>
+> >> I'm not sure, divulging the current Linux name of this feature bit is a
+> >> good idea, but if everybody else is fine with this, I don't care that  
+> > 
+> > Not sure if that feature name will ever change, as it is exported in
+> > headers. At most, we might want to add the new ACCESS_PLATFORM define
+> > and keep the old one, but that would still mean some churn.
+> >   
+> >> much. An alternative would be:
+> >> "virtio: device falsely claims to have full access to the memory,
+> >> aborting the device"  
+> > 
+> > "virtio: device does not work with limited memory access" ?
+> > 
+> > But no issue with keeping the current message.
+> >   
+> 
+> If it is OK, I would like to specify that the arch is responsible to 
+> accept or not the device.
+> The reason why the device is not accepted without IOMMU_PLATFORM is arch 
+> specific.
+
+Hm, I'd think the reason is always the same (the device cannot access
+the memory directly), just the way to figure out whether that is the
+case or not is arch-specific, as with so many other things. No real
+need to go into detail here, I think.
 
