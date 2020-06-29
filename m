@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE93C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8459522281
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395BD21D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455767;
-	bh=TbuXKkWK6Wnle4WCzHVoxqRANxqbnVeGz1vYu64Bbkw=;
+	s=default; t=1593455770;
+	bh=oIYrLKBcbE1yGStjETpm0NAs49UI9Y8xkZBOAIb8+T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=llDaWwd5XkkRCtmSEwOur/o1ALGrAY7pi3jmae1V24dMEoREJF9n4FZzeJvgFJrR6
-	 A+xUbJzr2pl42urdiOkICbbb3CL2q26hhKjzfB21dzZEk7RgmYUVzL+4ilJY0QjNPI
-	 Ll++jxhYUssOqANdUl+UzmzBGu2JH8hjbiwiSFS4=
+	b=kVQYDqudIYzvaFjNqLQIEKbqkYAsul8M+Bniw7Bcpkw/ulNlL0lBxAgCiofT4TKu/
+	 Q8x3czpNFvWVOEmP87krn0GXOFig6DD07aaWuHQzsmYy3GdVkxjv/jkJ9mE9H+Sj71
+	 1c6y1SMvU9kWOUt93PQ7amLZbEsm9KeL0J2hXw60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgF2SgF (ORCPT
+        id S1726928AbgF2SgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726640AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CAC2417A;
-        Mon, 29 Jun 2020 15:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3766D2472E;
+        Mon, 29 Jun 2020 15:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443946;
-        bh=TbuXKkWK6Wnle4WCzHVoxqRANxqbnVeGz1vYu64Bbkw=;
+        s=default; t=1593444050;
+        bh=oIYrLKBcbE1yGStjETpm0NAs49UI9Y8xkZBOAIb8+T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzcQohNy+dtlPLXfrpnzOUIeJ51fbnngcxfEvP6dU6VZMJDb3L0jlIrxyAH8mjNZM
-         Ne3ofRY70kTomI5A3mQsZ6+zTG/fRD4wyAC0B2L/zg8CD4DiG/U+3jH53lBDHZVwLu
-         MPZSDFhn8nve5nRvjHhQYmzb2o2M7Y8FZlTRFGxM=
+        b=WQ9kz0T7yv5z00QXACz86disFifERmadzjt9SvYDwsngKV0hpcJMVr9Xsn/Nqt0cY
+         ICB8LlTjjPCRJd3HiLbN5vnTMceP+emLlLEz+FyVVSgXJ9Be1ZGp88SmVADDUqpgil
+         bounURSy4uLN9DwU3iuN4edcxZvn1K3LQSSGP4dQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin <martin.varghese@nokia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 048/265] bareudp: Fixed multiproto mode configuration
-Date:   Mon, 29 Jun 2020 11:14:41 -0400
-Message-Id: <20200629151818.2493727-49-sashal@kernel.org>
+Cc:     SeongJae Park <sjpark@amazon.de>,
+        James Smart <james.smart@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 158/265] scsi: lpfc: Avoid another null dereference in lpfc_sli4_hba_unset()
+Date:   Mon, 29 Jun 2020 11:16:31 -0400
+Message-Id: <20200629151818.2493727-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,34 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin <martin.varghese@nokia.com>
+From: SeongJae Park <sjpark@amazon.de>
 
-[ Upstream commit 4c98045c9b74feab837be58986c0517d3cc661f1 ]
+[ Upstream commit 46da547e21d6cefceec3fb3dba5ebbca056627fc ]
 
-Code to handle multiproto configuration is missing.
+Commit cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with
+general hdw_queues per cpu") has introduced static checker warnings for
+potential null dereferences in 'lpfc_sli4_hba_unset()' and commit 1ffdd2c0440d
+("scsi: lpfc: resolve static checker warning in lpfc_sli4_hba_unset") has
+tried to fix it.  However, yet another potential null dereference is
+remaining.  This commit fixes it.
 
-Fixes: 4b5f67232d95 ("net: Special handling for IP & MPLS")
-Signed-off-by: Martin <martin.varghese@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
+
+Link: https://lore.kernel.org/r/20200623084122.30633-1-sjpark@amazon.com
+Fixes: 1ffdd2c0440d ("scsi: lpfc: resolve static checker warning inlpfc_sli4_hba_unset")
+Fixes: cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with general hdw_queues per cpu")
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bareudp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/lpfc/lpfc_init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/bareudp.c b/drivers/net/bareudp.c
-index 5d3c691a1c668..3dd46cd551145 100644
---- a/drivers/net/bareudp.c
-+++ b/drivers/net/bareudp.c
-@@ -572,6 +572,9 @@ static int bareudp2info(struct nlattr *data[], struct bareudp_conf *conf,
- 	if (data[IFLA_BAREUDP_SRCPORT_MIN])
- 		conf->sport_min =  nla_get_u16(data[IFLA_BAREUDP_SRCPORT_MIN]);
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 4104bdcdbb6fd..70be1f5de8730 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -11895,7 +11895,8 @@ lpfc_sli4_hba_unset(struct lpfc_hba *phba)
+ 	lpfc_sli4_xri_exchange_busy_wait(phba);
  
-+	if (data[IFLA_BAREUDP_MULTIPROTO_MODE])
-+		conf->multi_proto_mode = true;
-+
- 	return 0;
- }
+ 	/* per-phba callback de-registration for hotplug event */
+-	lpfc_cpuhp_remove(phba);
++	if (phba->pport)
++		lpfc_cpuhp_remove(phba);
  
+ 	/* Disable PCI subsystem interrupt */
+ 	lpfc_sli4_disable_intr(phba);
 -- 
 2.25.1
 
