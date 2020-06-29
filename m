@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03F7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF2B2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467405;
-	bh=Ht9oBW9+GiV9POucHEmRG02sEXdW3uG9rcfD6XnO24g=;
+	s=default; t=1593467410;
+	bh=aOH9HybceEhdkBw2hpKtir49HQep7EQFMRd25mjVXiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5lZBSlTPnzyoZHC4NocVAsPr14Pp1e7cjLYvwszWyEYeCbtv9XGcHBDZzvFnj93U
-	 MPwOdjpPLbvivhrFLrH9P/Htmni3fs8hdEH7Q2L3dQbO0fO7LPgzvsk7pzKfE6abE+
-	 Tmdv35MAUg8x9yrvylcLVvJ+ZqPw8Nr/JapMcpvE=
+	b=zO13OqIGR1kbsnHTvIubSF7tVJMm0Kshw2fKxMd2Ol0sTJfxW6cL1CRHyfco9vBhI
+	 63JbHEUaGGPITEP/2EwwhU23LYD9AC9ciaCrQxHKlzZjlnPC+iDpPvda08G9jDQsDg
+	 BSSOv9cyFEPsj5XWunYxoExnzlwzd2uS7eLwyplE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404431AbgF2VuD (ORCPT
+        id S2404434AbgF2VuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726695AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A7324728;
-        Mon, 29 Jun 2020 15:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA06524752;
+        Mon, 29 Jun 2020 15:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444047;
-        bh=Ht9oBW9+GiV9POucHEmRG02sEXdW3uG9rcfD6XnO24g=;
+        s=default; t=1593444070;
+        bh=aOH9HybceEhdkBw2hpKtir49HQep7EQFMRd25mjVXiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWmldLe71n+UNtLg3JKqlUzWhCEM2AyKcDV1V4gaU1BXfXgN75GQ7Ndn1yj/4xfQ3
-         gPmfaDqrJvsF2dXQ33m0JCi8bD9RfvY1QUVR93DEgS9K3m21jB+ZRjdfWY/Ctl2mYY
-         AR3Lv9kY9TfuEq2dxXa1A7+9LcMkTMy0dzJoQya4=
+        b=mIZt2jUcj0E/+a4ybtnSfzMktb2DMOxIcujdw4OY82wirY9rYjFytyvJxtYVbXWBd
+         LiE5g211hMbDu2m3EdmTXwfFjdnU25pwdbF7i9bI6IJMTIqx1MCFKnvV32fVZgaEeT
+         Rngp4pIeR2Mwu7G/dE6xP2c4PJ/gvPkxTAE0vjpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Wagner <dwagner@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 154/265] net: qed: reset ILT block sizes before recomputing to fix crashes
-Date:   Mon, 29 Jun 2020 11:16:27 -0400
-Message-Id: <20200629151818.2493727-155-sashal@kernel.org>
+Subject: [PATCH 5.7 179/265] sched/deadline: Initialize ->dl_boosted
+Date:   Mon, 29 Jun 2020 11:16:52 -0400
+Message-Id: <20200629151818.2493727-180-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,61 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit c221dd1831732449f844e03631a34fd21c2b9429 ]
+[ Upstream commit ce9bc3b27f2a21a7969b41ffb04df8cf61bd1592 ]
 
-Sizes of all ILT blocks must be reset before ILT recomputing when
-disabling clients, or memory allocation may exceed ILT shadow array
-and provoke system crashes.
+syzbot reported the following warning triggered via SYSC_sched_setattr():
 
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 setup_new_dl_entity /kernel/sched/deadline.c:594 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_dl_entity /kernel/sched/deadline.c:1370 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_task_dl+0x1c17/0x2ba0 /kernel/sched/deadline.c:1441
+
+This happens because the ->dl_boosted flag is currently not initialized by
+__dl_clear_params() (unlike the other flags) and setup_new_dl_entity()
+rightfully complains about it.
+
+Initialize dl_boosted to 0.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20200617072919.818409-1-juri.lelli@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ kernel/sched/deadline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index 1880aa1d3bb59..aeed8939f410a 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -442,6 +442,20 @@ static struct qed_ilt_cli_blk *qed_cxt_set_blk(struct qed_ilt_cli_blk *p_blk)
- 	return p_blk;
- }
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 504d2f51b0d63..f63f337c7147a 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2692,6 +2692,7 @@ void __dl_clear_params(struct task_struct *p)
+ 	dl_se->dl_bw			= 0;
+ 	dl_se->dl_density		= 0;
  
-+static void qed_cxt_ilt_blk_reset(struct qed_hwfn *p_hwfn)
-+{
-+	struct qed_ilt_client_cfg *clients = p_hwfn->p_cxt_mngr->clients;
-+	u32 cli_idx, blk_idx;
-+
-+	for (cli_idx = 0; cli_idx < MAX_ILT_CLIENTS; cli_idx++) {
-+		for (blk_idx = 0; blk_idx < ILT_CLI_PF_BLOCKS; blk_idx++)
-+			clients[cli_idx].pf_blks[blk_idx].total_size = 0;
-+
-+		for (blk_idx = 0; blk_idx < ILT_CLI_VF_BLOCKS; blk_idx++)
-+			clients[cli_idx].vf_blks[blk_idx].total_size = 0;
-+	}
-+}
-+
- int qed_cxt_cfg_ilt_compute(struct qed_hwfn *p_hwfn, u32 *line_count)
- {
- 	struct qed_cxt_mngr *p_mngr = p_hwfn->p_cxt_mngr;
-@@ -461,6 +475,11 @@ int qed_cxt_cfg_ilt_compute(struct qed_hwfn *p_hwfn, u32 *line_count)
- 
- 	p_mngr->pf_start_line = RESC_START(p_hwfn, QED_ILT);
- 
-+	/* Reset all ILT blocks at the beginning of ILT computing in order
-+	 * to prevent memory allocation for irrelevant blocks afterwards.
-+	 */
-+	qed_cxt_ilt_blk_reset(p_hwfn);
-+
- 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
- 		   "hwfn [%d] - Set context manager starting line to be 0x%08x\n",
- 		   p_hwfn->my_id, p_hwfn->p_cxt_mngr->pf_start_line);
++	dl_se->dl_boosted		= 0;
+ 	dl_se->dl_throttled		= 0;
+ 	dl_se->dl_yielded		= 0;
+ 	dl_se->dl_non_contending	= 0;
 -- 
 2.25.1
 
