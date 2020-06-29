@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5338C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D89C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B23CC20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0197D20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464941;
-	bh=WtHvaAkbfjrMfJ5jfP+E55n4gaI0gk2nzaQF1Y7dwEc=;
+	s=default; t=1593464949;
+	bh=iyk7aEUo9yTnwoHe5Z2I8aXR1ATCXoZ5X7cVnr/kBVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pO5ZmzGfUmYA6WB6P2x+i2IF+7AFGDmhLDoIccOJ/7J3DeyZYqWiY+JO/BleF2bMZ
-	 pcK1VWTd3Syf70OIh3A+lSN7OTtodzuqmGokolHW+bV/f5BGsmWXdV1kvdPmmY0TNB
-	 VeZHBr9YonvEHzypNxe4e7UUKjql/9CqrLMPX3lM=
+	b=fVwPEvlWHxJaC7UvnCMa2hfOP2bb7FiSBLHe/ULFC6BZZ3SPIoo67PfYFKwp6taHp
+	 hJSMviZOEhywRO70Ly0aa/1/NSNat226X1qxVKantwPlwPQjRlZisD/vrn6C3eVb8d
+	 OvJDeEPj16VXSa6kvQU8TzGK1T/IBMqD73zyFsyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390434AbgF2VIn (ORCPT
+        id S2388440AbgF2VJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730313AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 083F12551E;
-        Mon, 29 Jun 2020 15:54:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB7325536;
+        Mon, 29 Jun 2020 15:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446081;
-        bh=WtHvaAkbfjrMfJ5jfP+E55n4gaI0gk2nzaQF1Y7dwEc=;
+        s=default; t=1593446099;
+        bh=iyk7aEUo9yTnwoHe5Z2I8aXR1ATCXoZ5X7cVnr/kBVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odGTnDB9cII5l51UCUHyLyoB7akwQMJy7TAMQ/S5OxiBzYhPvminQafVwONScEjgM
-         nxg275a0jiHIxw6O5cLEtcwqAV18YGGPGhHuBtHoAZwnxRiiV+PW2m/U2iMAezK6pB
-         0uU8DVCXUC3QXOzKQ5u/Hum/+8DauGniPL6OXA3w=
+        b=maHx1XmAYxd7JkbV2UPt0/Ertweku7ZuR1v5hrubwtfAy00Yh44ug2/EIbNP5rQMP
+         +/378IeVrcrURrKuWqkasN682BdtXHa8jr2Ph+F0UikPnv+TYGTolM321Kns/c3JEo
+         ZsFGKKTe57nSwwNGfc79V5k+gAH62LcZJXxcAvz0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 077/135] net: Revert "pkt_sched: fq: use proper locking in fq_dump_stats()"
-Date:   Mon, 29 Jun 2020 11:52:11 -0400
-Message-Id: <20200629155309.2495516-78-sashal@kernel.org>
+Subject: [PATCH 4.4 092/135] net: core: reduce recursion limit value
+Date:   Mon, 29 Jun 2020 11:52:26 -0400
+Message-Id: <20200629155309.2495516-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -65,65 +65,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-This reverts commit 191cf872190de28a92e1bd2b56d8860e37e07443 which is
-commit 695b4ec0f0a9cf29deabd3ac075911d58b31f42b upstream.
+[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
 
-That commit should never have been backported since it relies on a change in
-locking semantics that was introduced in v4.8 and not backported. Because of
-this, the backported commit to sch_fq leads to lockups because of the double
-locking.
+In the current code, ->ndo_start_xmit() can be executed recursively only
+10 times because of stack memory.
+But, in the case of the vxlan, 10 recursion limit value results in
+a stack overflow.
+In the current code, the nested interface is limited by 8 depth.
+There is no critical reason that the recursion limitation value should
+be 10.
+So, it would be good to be the same value with the limitation value of
+nesting interface depth.
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Test commands:
+    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
+    ip link set vxlan10 up
+    ip a a 192.168.10.1/24 dev vxlan10
+    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
+
+    for i in {9..0}
+    do
+        let A=$i+1
+	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
+	ip link set vxlan$i up
+	ip a a 192.168.$i.1/24 dev vxlan$i
+	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
+	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
+    done
+    hping3 192.168.10.2 -2 -d 60000
+
+Splat looks like:
+[  103.814237][ T1127] =============================================================================
+[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
+[  103.873187][ T1127] -----------------------------------------------------------------------------
+[  103.873187][ T1127]
+[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
+[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
+[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  103.883006][ T1127] Call Trace:
+[  103.883324][ T1127]  dump_stack+0x96/0xdb
+[  103.883716][ T1127]  slab_err+0xad/0xd0
+[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
+[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
+[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
+[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.886316][ T1127]  check_slab+0x97/0xb0
+[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
+[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
+[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
+[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
+[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
+[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
+[ ... ]
+
+Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_fq.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_fq.c b/net/sched/sch_fq.c
-index f4aa2ab4713a2..eb814ffc09023 100644
---- a/net/sched/sch_fq.c
-+++ b/net/sched/sch_fq.c
-@@ -830,24 +830,20 @@ static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
- static int fq_dump_stats(struct Qdisc *sch, struct gnet_dump *d)
- {
- 	struct fq_sched_data *q = qdisc_priv(sch);
--	struct tc_fq_qd_stats st;
--
--	sch_tree_lock(sch);
--
--	st.gc_flows		  = q->stat_gc_flows;
--	st.highprio_packets	  = q->stat_internal_packets;
--	st.tcp_retrans		  = q->stat_tcp_retrans;
--	st.throttled		  = q->stat_throttled;
--	st.flows_plimit		  = q->stat_flows_plimit;
--	st.pkts_too_long	  = q->stat_pkts_too_long;
--	st.allocation_errors	  = q->stat_allocation_errors;
--	st.time_next_delayed_flow = q->time_next_delayed_flow - ktime_get_ns();
--	st.flows		  = q->flows;
--	st.inactive_flows	  = q->inactive_flows;
--	st.throttled_flows	  = q->throttled_flows;
--	st.pad			  = 0;
--
--	sch_tree_unlock(sch);
-+	u64 now = ktime_get_ns();
-+	struct tc_fq_qd_stats st = {
-+		.gc_flows		= q->stat_gc_flows,
-+		.highprio_packets	= q->stat_internal_packets,
-+		.tcp_retrans		= q->stat_tcp_retrans,
-+		.throttled		= q->stat_throttled,
-+		.flows_plimit		= q->stat_flows_plimit,
-+		.pkts_too_long		= q->stat_pkts_too_long,
-+		.allocation_errors	= q->stat_allocation_errors,
-+		.flows			= q->flows,
-+		.inactive_flows		= q->inactive_flows,
-+		.throttled_flows	= q->throttled_flows,
-+		.time_next_delayed_flow	= q->time_next_delayed_flow - now,
-+	};
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 67725818d562d..09115c68f29dc 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3017,7 +3017,7 @@ static void skb_update_prio(struct sk_buff *skb)
+ DEFINE_PER_CPU(int, xmit_recursion);
+ EXPORT_SYMBOL(xmit_recursion);
  
- 	return gnet_stats_copy_app(d, &st, sizeof(st));
- }
+-#define RECURSION_LIMIT 10
++#define RECURSION_LIMIT 8
+ 
+ /**
+  *	dev_loopback_xmit - loop back @skb
 -- 
 2.25.1
 
