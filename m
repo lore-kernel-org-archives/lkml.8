@@ -2,104 +2,85 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8D2C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9AB320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457613;
-	bh=moWSrIfU+P1Yxb27qSo8YJtpW3dFfDsu52598MoiYoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tmVgWoOxQNKau2ScXhrM7XrCIQ8AsILZFBmB2oxMBECodC/NrNz+8Z/GejWrREtrn
-	 JA8xL6qKAiPcR+b5YjiP5xiUP9zEuwtC7/Sc5gCCqQ6qn43dI8WER1LF0DrOtCdql+
-	 Qrg0X50wJIW8dnpwXtTVwFBZyvqsMxSz5isNQMX4=
+	by mail.kernel.org (Postfix) with ESMTP id 9308220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgF2TGv (ORCPT
+        id S1730559AbgF2THA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:51 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39070 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgF2TGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q5so17657430wru.6;
-        Mon, 29 Jun 2020 12:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9kB1Yqxehc4mOOV+E+s8ly+87mL5I0qDl2+46tT33LU=;
-        b=FEd80YYsVCJ6pf74frJNQnajWBRVFV0QMHP/qy3W0W9HXQvypW8nvMlgqUbUnomnHi
-         O8YsWoOkY/0gsW1wuFENzG/2p0MVio6drckkCAWQhUX6YDslI8N05qYfTEXdmhP050ez
-         bhhL/WcbK3Get7wdtSpsPanlCdnMclxEMNQpfZM5K1TVukzTINfUA72OwM6DkmfPxH9t
-         /nSv3f411beyEx6DfQgAOSHjXwM11BzG+OadcwuOj4GrnqcsG3ZF6B8VfA3RAP+dKogT
-         E1J4xLWzGLTYfhBLP5IHDZsHCJwR02k3Inzl4qa08HVYqt+obUA97UjS6qAGnkjPz7dV
-         9u+w==
-X-Gm-Message-State: AOAM532gqGscXvj6dC9M5WbWWjQSodQTDCt6C2jhKsLmH65iLW6oWn1k
-        /XtV0uL03teTbKbOIBhaR8A=
-X-Google-Smtp-Source: ABdhPJzQcaoC3As2bwvXjFpEkhrTsir6J88mWLOgOu4Igyehnga3Bo7Tm9krH0O+TUUtcdYBw1n/EA==
-X-Received: by 2002:adf:de12:: with SMTP id b18mr19710508wrm.390.1593457606425;
-        Mon, 29 Jun 2020 12:06:46 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id e17sm728179wrr.88.2020.06.29.12.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:06:45 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 19:06:44 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andres Beltran <t-mabelt@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
-Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200629190644.hlem6jskyx26csaj@liuwe-devbox-debian-v2>
-References: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
+        Mon, 29 Jun 2020 15:07:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:59051 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730481AbgF2TGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:35 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1ED6168C65; Mon, 29 Jun 2020 17:29:13 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 17:29:12 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Message-ID: <20200629152912.GA26172@lst.de>
+References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com> <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:19:46PM +0000, Andres Beltran wrote:
-[...]
-> > >  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
-> > > +
-> > > +/*
-> > > + * vmbus_next_request_id - Returns a new request id. It is also
-> > > + * the index at which the guest memory address is stored.
-> > > + * Uses a spin lock to avoid race conditions.
-> > > + * @rqstor: Pointer to the requestor struct
-> > > + * @rqst_add: Guest memory address to be stored in the array
-> > > + */
-> > > +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	u64 current_id;
-> > > +
-> > > +	spin_lock_irqsave(&rqstor->req_lock, flags);
-> > 
-> > Do you really need the irqsave variant here? I.e. is there really a
-> > chance this code is reachable from an interrupt handler?
-> 
-> Other VMBus drivers will also need to use this functionality, and
-> some of them will be called with interrupts disabled. So, I think
-> we should keep the irqsave variant here.
-> 
+On Sat, Jun 27, 2020 at 09:33:03AM -0700, Linus Torvalds wrote:
+> I thought there was just one very specific case of "oh, in certain
+> cases of setsockopt we don't know what size this address is and optlen
+> is ignored", so we have to just pass the pointer down to the protocol,
+> which is the point that knows how much of an address it wants..
 
-Okay. This makes sense.
+The setsock issue is a little more complicated.  Let me try to summarize
+it:
 
-Wei.
+ - setsock takes a (user) pointer and len
+ - unfortunately while the designed of the BSD socket API designed the
+   len to be correct some protocol implementations have been sloppy
+   and just use a hardcoded len for the value plus some other funnies
+ - unfortunately there is some BPF magic that can attach to a socket
+   and be run, and that (and only that in the latest kernel) can cause
+   a setsockopt to take a kernel buffer.  One that was copied from
+   userspace earlier and had the BPF program run on it.
+ - unfortunately we have about 90 ->setsockopt instances, and the BPF
+   hook is not specific to one particular of them.  In fact the
+   BPF program can run for options that don't even exist, and based on
+   my previous dicussion Facebook has setups that rely on that.
+
+> Was that a misunderstanding on my part?
+> 
+> Because if there are tons and tons of places that want this "either
+> kernel or user" then we could still have a helper function for it, but
+> it means that the whole "limit the cases" advantage to some degree
+> goes away.
+
+But except for setsockopt we don't really have anything like that left.
+There is some alpha arch code that would need to be duplicated for
+user vs kernel pointers, but I suspect it will get cleaner by that,
+and the messy s390 crypto driver whіch will be a bit of work, but all
+internal to that driver.
+
+So based on that I'd rather get away without our flag and tag the
+kernel pointer case in setsockopt explicitly.
