@@ -2,117 +2,451 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E11AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8A820720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9083C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hO7YgCFE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7mI0xRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgF2Uk4 (ORCPT
+        id S1732987AbgF2Uk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        Mon, 29 Jun 2020 16:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730481AbgF2TOJ (ORCPT
+        with ESMTP id S1731687AbgF2TOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:09 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A42FC0A893A;
-        Mon, 29 Jun 2020 00:38:08 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id k6so13574332ili.6;
-        Mon, 29 Jun 2020 00:38:08 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E8AC08EAF8
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o22so2510972pjw.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zTLnTytmqwPo2QrVotAhwjgdIikFCW3Y9V9c+Ul628k=;
-        b=hO7YgCFEdPYQrvp3kFZV2OXX7bnz/HWxL/I8M9F3srON/2EpwrjADVZaSmO3wpR10e
-         xShjxgypbemlvSD4Bz2KZS86mWY4elE17aaWa4OOf7VRrcaMFZDnWR2kmmozvactxe8V
-         vM+6Leu3iiG3sATYROu72hMLLm2MvJ+916wUcSNvcmS/VTVDrNw4lnWf+BAIOfmSaLzi
-         0DWQpAEbhPYF8NHE2JoIR9A36MthArCCdlrbViQbFS8mqlUIyyL6FA3raDQc22IukKk8
-         hRi7ulSD+AEVcXSzY1xkQF/eQcZYVfkoF4U4jwu4IMEjvmBXghP0hrkbuxAD1I/tQvV6
-         mi2w==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6hZnstVfYoPOWJe22/uMPE3GyeVYaazSg9tzCfSWEM0=;
+        b=g7mI0xRQzDC9tX/D2EXTMfRLSef8L0Y2sQz/4glsjoZ6Yj2AbQGPaF4thtUQ8/mWod
+         vga4zH3CHMGXWR+3yabUgVfDV+o/W/uegg3rEYPkUquZyo2oihOokRRdS2JdBfO0z4ze
+         SBzOKgs3B+l+APXQtOllt1mwPV0/1S7vr/9R4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zTLnTytmqwPo2QrVotAhwjgdIikFCW3Y9V9c+Ul628k=;
-        b=cNaE0ttekSHwOIIfqsCLdzL+DKkW2lyjXcYGQH18Ro8/3pd0iT0Ru5nPnHpwbcayg4
-         g+CYWeZSxCXijoODh2ywCQtehaxUEK7tbGnjctTGKPExf8jt1DpTbC/kuCsIFiK4NjkT
-         /elxKQJG7ZtJOc1e3DRKONK+4GtIbQDRle2+NU42RRv6+eZWlmmO5WAjSQKJUWLg0Gk+
-         o6RPPt1wZJWl5wW80kGrrtHJBl7xfnSjEd+ubUsySb4xUXYlUvdfh/jqouhiOIupvLq4
-         lC9cLHWjNjWeD8JA6kd4pO4lypcv14SVBTdDj99uPQ76Vy2ZmdBbaPyLiewnMvvNAab5
-         5f0w==
-X-Gm-Message-State: AOAM5300mW8CXUI/OO5fkm26IgnI39xs+Xa01vGy1EBJmM/UHkO765Wq
-        a10E1mn+53yGO4VOKNrwJbDgNQUrLTZnJJtzBjQ=
-X-Google-Smtp-Source: ABdhPJzyfEuSvsvqAyieDmK4mMBIE5np8Cjw7UhIz6L0NfvR0InXzI9MesOfgOM7McMyA0mnJHM4y1HqDRacRIX8BDg=
-X-Received: by 2002:a92:940f:: with SMTP id c15mr15673200ili.204.1593416287611;
- Mon, 29 Jun 2020 00:38:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6hZnstVfYoPOWJe22/uMPE3GyeVYaazSg9tzCfSWEM0=;
+        b=Or7csKd02AN7ufS/i30yJ+dCy2ThjYdn8+/slogM23b8ZEirujoOtMCp1G1wdyg7SW
+         QkjoiDIb9dNSurdcQrE7sSeEVV87Z09ADsWjiiiP/iPGpcLHRjY0YtOrAT+I1Q78jYOE
+         2XQB3aHElsLR/wAAiaTf6lwxXZZXVCAgMW4USchqzsF9DYW1nupjwQ4lrhDdgXXOe8w4
+         L3bNzw7Dxv6HAWmpPJo+Jpi13pQAfbNAxvT4wqvNdgWYadxi/RCyVlDL2YtROuvU+59u
+         JYpJxOUIZRjrfTPbNLnBYQImsXtTUnUvRCaDStsdTGOQoEHI87kfPqBYK2BxfMemEYbo
+         v+vw==
+X-Gm-Message-State: AOAM531Bg+uTzFiYsY6WuDLFw3R2ZtBviDJT9gtI17WshIQUqtC5TIok
+        eQQ9ppmvifGly8y89KATqjaD1g==
+X-Google-Smtp-Source: ABdhPJyceFu/euSgU0RFtNpZAq+i0oZxpc9IB6mMNzAJGXQZb1GRHNknkn66laen/hCrjyrGME0o9g==
+X-Received: by 2002:a17:902:8a95:: with SMTP id p21mr11636474plo.230.1593411527513;
+        Sun, 28 Jun 2020 23:18:47 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f23sm17736216pja.8.2020.06.28.23.18.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:18:44 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 03/17] vmlinux.lds.h: Split ELF_DETAILS from STABS_DEBUG
+Date:   Sun, 28 Jun 2020 23:18:26 -0700
+Message-Id: <20200629061840.4065483-4-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
+References: <20200629061840.4065483-1-keescook@chromium.org>
 MIME-Version: 1.0
-References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
-In-Reply-To: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
-From:   Peter Chen <hzpeterchen@gmail.com>
-Date:   Mon, 29 Jun 2020 15:37:54 +0800
-Message-ID: <CAL411-qVjxYk7f+b74XHfj7jpxALS4LYUKe0XdSfwRZcQibNfA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] usb: mtu3: disable USB2 LPM
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 2:04 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> A SuperSpeed device shall include the USB 2.0 extension descriptor
-> and shall support LPM when operating in USB 2.0 HS mode(see usb3.2
-> spec9.6.2.1). But we always don't support it, so disable it by
-> default, otherwise device will enter LPM suspend mode when
-> connected to Win10 system.
+The .comment section doesn't belong in STABS_DEBUG. Split it out into a
+new macro named ELF_DETAILS. This will gain other non-debug sections
+that need to be accounted for when linking with --orphan-handling=warn.
 
-Linux also supports USB2 LPM. Besides, USB-IF CH9 test will check
-LPM support if the device is USB 2.1, how could you deal with it?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/alpha/kernel/vmlinux.lds.S           | 1 +
+ arch/arc/kernel/vmlinux.lds.S             | 1 +
+ arch/arm/kernel/vmlinux-xip.lds.S         | 1 +
+ arch/arm/kernel/vmlinux.lds.S             | 1 +
+ arch/arm64/kernel/vmlinux.lds.S           | 1 +
+ arch/csky/kernel/vmlinux.lds.S            | 1 +
+ arch/hexagon/kernel/vmlinux.lds.S         | 1 +
+ arch/ia64/kernel/vmlinux.lds.S            | 1 +
+ arch/mips/kernel/vmlinux.lds.S            | 1 +
+ arch/nds32/kernel/vmlinux.lds.S           | 1 +
+ arch/nios2/kernel/vmlinux.lds.S           | 1 +
+ arch/openrisc/kernel/vmlinux.lds.S        | 1 +
+ arch/parisc/boot/compressed/vmlinux.lds.S | 1 +
+ arch/parisc/kernel/vmlinux.lds.S          | 1 +
+ arch/powerpc/kernel/vmlinux.lds.S         | 2 +-
+ arch/riscv/kernel/vmlinux.lds.S           | 1 +
+ arch/s390/kernel/vmlinux.lds.S            | 1 +
+ arch/sh/kernel/vmlinux.lds.S              | 1 +
+ arch/sparc/kernel/vmlinux.lds.S           | 1 +
+ arch/um/kernel/dyn.lds.S                  | 2 +-
+ arch/um/kernel/uml.lds.S                  | 2 +-
+ arch/unicore32/kernel/vmlinux.lds.S       | 1 +
+ arch/x86/boot/compressed/vmlinux.lds.S    | 2 ++
+ arch/x86/kernel/vmlinux.lds.S             | 1 +
+ include/asm-generic/vmlinux.lds.h         | 8 ++++++--
+ 25 files changed, 31 insertions(+), 5 deletions(-)
 
-Peter
+diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
+index bc6f727278fd..5b78d640725d 100644
+--- a/arch/alpha/kernel/vmlinux.lds.S
++++ b/arch/alpha/kernel/vmlinux.lds.S
+@@ -72,6 +72,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/arc/kernel/vmlinux.lds.S b/arch/arc/kernel/vmlinux.lds.S
+index 54139a6f469b..33ce59d91461 100644
+--- a/arch/arc/kernel/vmlinux.lds.S
++++ b/arch/arc/kernel/vmlinux.lds.S
+@@ -122,6 +122,7 @@ SECTIONS
+ 	_end = . ;
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ 	DISCARDS
+ 
+ 	.arcextmap 0 : {
+diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
+index 6d2be994ae58..3d4e88f08196 100644
+--- a/arch/arm/kernel/vmlinux-xip.lds.S
++++ b/arch/arm/kernel/vmlinux-xip.lds.S
+@@ -152,6 +152,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ }
+ 
+ /*
+diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+index 7f24bc08403e..5592f14b7e35 100644
+--- a/arch/arm/kernel/vmlinux.lds.S
++++ b/arch/arm/kernel/vmlinux.lds.S
+@@ -151,6 +151,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ }
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 6827da7f3aa5..55ae731b6368 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -245,6 +245,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ 
+ 	HEAD_SYMBOLS
+ }
+diff --git a/arch/csky/kernel/vmlinux.lds.S b/arch/csky/kernel/vmlinux.lds.S
+index f05b413df328..f03033e17c29 100644
+--- a/arch/csky/kernel/vmlinux.lds.S
++++ b/arch/csky/kernel/vmlinux.lds.S
+@@ -109,6 +109,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/hexagon/kernel/vmlinux.lds.S b/arch/hexagon/kernel/vmlinux.lds.S
+index 0ca2471ddb9f..35b18e55eae8 100644
+--- a/arch/hexagon/kernel/vmlinux.lds.S
++++ b/arch/hexagon/kernel/vmlinux.lds.S
+@@ -67,5 +67,6 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ }
+diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
+index d259690eb91a..9b265783be6a 100644
+--- a/arch/ia64/kernel/vmlinux.lds.S
++++ b/arch/ia64/kernel/vmlinux.lds.S
+@@ -218,6 +218,7 @@ SECTIONS {
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	/* Default discards */
+ 	DISCARDS
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index f185a85a27c1..5e97e9d02f98 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -202,6 +202,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	/* These must appear regardless of  .  */
+ 	.gptab.sdata : {
+diff --git a/arch/nds32/kernel/vmlinux.lds.S b/arch/nds32/kernel/vmlinux.lds.S
+index 7a6c1cefe3fe..6a91b965fb1e 100644
+--- a/arch/nds32/kernel/vmlinux.lds.S
++++ b/arch/nds32/kernel/vmlinux.lds.S
+@@ -64,6 +64,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/nios2/kernel/vmlinux.lds.S b/arch/nios2/kernel/vmlinux.lds.S
+index c55a7cfa1075..126e114744cb 100644
+--- a/arch/nios2/kernel/vmlinux.lds.S
++++ b/arch/nios2/kernel/vmlinux.lds.S
+@@ -58,6 +58,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/openrisc/kernel/vmlinux.lds.S b/arch/openrisc/kernel/vmlinux.lds.S
+index 60449fd7f16f..d287dbb84d0f 100644
+--- a/arch/openrisc/kernel/vmlinux.lds.S
++++ b/arch/openrisc/kernel/vmlinux.lds.S
+@@ -115,6 +115,7 @@ SECTIONS
+ 	/* Throw in the debugging sections */
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+         /* Sections to be discarded -- must be last */
+ 	DISCARDS
+diff --git a/arch/parisc/boot/compressed/vmlinux.lds.S b/arch/parisc/boot/compressed/vmlinux.lds.S
+index 2ac3a643f2eb..ab7b43990857 100644
+--- a/arch/parisc/boot/compressed/vmlinux.lds.S
++++ b/arch/parisc/boot/compressed/vmlinux.lds.S
+@@ -84,6 +84,7 @@ SECTIONS
+ 	}
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ 	.note 0 : { *(.note) }
+ 
+ 	/* Sections to be discarded */
+diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlinux.lds.S
+index 53e29d88f99c..2769eb991f58 100644
+--- a/arch/parisc/kernel/vmlinux.lds.S
++++ b/arch/parisc/kernel/vmlinux.lds.S
+@@ -164,6 +164,7 @@ SECTIONS
+ 	_end = . ;
+ 
+ 	STABS_DEBUG
++	ELF_DETAILS
+ 	.note 0 : { *(.note) }
+ 
+ 	/* Sections to be discarded */
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 326e113d2e45..e0548b4950de 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -360,8 +360,8 @@ SECTIONS
+ 	PROVIDE32 (end = .);
+ 
+ 	STABS_DEBUG
+-
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ 	/DISCARD/ : {
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index e6f8016b366a..00a325289a26 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -97,6 +97,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index 37695499717d..177ccfbda40a 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -181,6 +181,7 @@ SECTIONS
+ 	/* Debugging sections.	*/
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	/* Sections to be discarded */
+ 	DISCARDS
+diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
+index bde7a6c01aaf..3161b9ccd2a5 100644
+--- a/arch/sh/kernel/vmlinux.lds.S
++++ b/arch/sh/kernel/vmlinux.lds.S
+@@ -76,6 +76,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
+index f99e99e58075..d55ae65a07ad 100644
+--- a/arch/sparc/kernel/vmlinux.lds.S
++++ b/arch/sparc/kernel/vmlinux.lds.S
+@@ -187,6 +187,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
+index f5001481010c..dacbfabf66d8 100644
+--- a/arch/um/kernel/dyn.lds.S
++++ b/arch/um/kernel/dyn.lds.S
+@@ -164,8 +164,8 @@ SECTIONS
+   PROVIDE (end = .);
+ 
+   STABS_DEBUG
+-
+   DWARF_DEBUG
++  ELF_DETAILS
+ 
+   DISCARDS
+ }
+diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
+index 3b6dab3d4501..45d957d7004c 100644
+--- a/arch/um/kernel/uml.lds.S
++++ b/arch/um/kernel/uml.lds.S
+@@ -108,8 +108,8 @@ SECTIONS
+   PROVIDE (end = .);
+ 
+   STABS_DEBUG
+-
+   DWARF_DEBUG
++  ELF_DETAILS
+ 
+   DISCARDS
+ }
+diff --git a/arch/unicore32/kernel/vmlinux.lds.S b/arch/unicore32/kernel/vmlinux.lds.S
+index 6fb320b337ef..22eb642c7280 100644
+--- a/arch/unicore32/kernel/vmlinux.lds.S
++++ b/arch/unicore32/kernel/vmlinux.lds.S
+@@ -54,6 +54,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS		/* Exit code and data */
+ }
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 8f1025d1f681..d88612e3091f 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -75,5 +75,7 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
+ 
++	ELF_DETAILS
++
+ 	DISCARDS
+ }
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 3bfc8dd8a43d..504d16968ed8 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -410,6 +410,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	ELF_DETAILS
+ 
+ 	DISCARDS
+ }
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index e53a2d4f47f6..c5d10bc53996 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -34,6 +34,7 @@
+  *
+  *	STABS_DEBUG
+  *	DWARF_DEBUG
++ *	ELF_DETAILS
+  *
+  *	DISCARDS		// must be the last
+  * }
+@@ -784,14 +785,17 @@
+ 		.debug_macro	0 : { *(.debug_macro) }			\
+ 		.debug_addr	0 : { *(.debug_addr) }
+ 
+-		/* Stabs debugging sections.  */
++/* Stabs debugging sections. */
+ #define STABS_DEBUG							\
+ 		.stab 0 : { *(.stab) }					\
+ 		.stabstr 0 : { *(.stabstr) }				\
+ 		.stab.excl 0 : { *(.stab.excl) }			\
+ 		.stab.exclstr 0 : { *(.stab.exclstr) }			\
+ 		.stab.index 0 : { *(.stab.index) }			\
+-		.stab.indexstr 0 : { *(.stab.indexstr) }		\
++		.stab.indexstr 0 : { *(.stab.indexstr) }
++
++/* Required sections not related to debugging. */
++#define ELF_DETAILS							\
+ 		.comment 0 : { *(.comment) }
+ 
+ #ifdef CONFIG_GENERIC_BUG
+-- 
+2.25.1
 
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  drivers/usb/mtu3/mtu3_core.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-> index 9dd0216..50d6a40 100644
-> --- a/drivers/usb/mtu3/mtu3_core.c
-> +++ b/drivers/usb/mtu3/mtu3_core.c
-> @@ -604,6 +604,8 @@ static void mtu3_regs_init(struct mtu3 *mtu)
->         mtu3_clrbits(mbase, U3D_MISC_CTRL, VBUS_FRC_EN | VBUS_ON);
->         /* enable automatical HWRW from L1 */
->         mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, LPM_HRWE);
-> +       /* always reject LPM request */
-> +       mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, LPM_MODE(1));
->
->         /* use new QMU format when HW version >= 0x1003 */
->         if (mtu->gen2cp)
-> --
-> 1.9.1
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
