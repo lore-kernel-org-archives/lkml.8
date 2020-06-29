@@ -2,81 +2,60 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B27CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160EA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AA520672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbgF2UtB (ORCPT
+        id S2389840AbgF2UtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
+        Mon, 29 Jun 2020 16:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731510AbgF2TNs (ORCPT
+        with ESMTP id S1731477AbgF2TNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:48 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33299C014AFC;
-        Mon, 29 Jun 2020 00:59:50 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: myjosserand)
-        with ESMTPSA id EA3EF2A1D14
-Subject: Re: [PATCH v4 0/2] ARM: Add Rockchip rk3288w support
-To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com
-Cc:     linux-clk@vger.kernel.org, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200602080644.11333-1-mylene.josserand@collabora.com>
- <159238429476.1470505.6023847362048785737.b4-ty@sntech.de>
-From:   Mylene Josserand <mylene.josserand@collabora.com>
-Message-ID: <66bfd77c-83e4-3689-d8c1-c5ae47b40f02@collabora.com>
-Date:   Mon, 29 Jun 2020 09:59:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <159238429476.1470505.6023847362048785737.b4-ty@sntech.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38DF2C08C5FB;
+        Sun, 28 Jun 2020 21:46:10 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A26E8129CF875;
+        Sun, 28 Jun 2020 21:46:09 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 21:46:09 -0700 (PDT)
+Message-Id: <20200628.214609.196707051608892793.davem@davemloft.net>
+To:     geliangtang@gmail.com
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] sctp: use list_is_singular in
+ sctp_list_single_entry
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1ae93f6e86ea0baf9ffb4068caed46d951076d12.1593336592.git.geliangtang@gmail.com>
+References: <1ae93f6e86ea0baf9ffb4068caed46d951076d12.1593336592.git.geliangtang@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 28 Jun 2020 21:46:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Heiko,
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Sun, 28 Jun 2020 17:32:25 +0800
 
-On 6/17/20 10:58 AM, Heiko Stuebner wrote:
-> On Tue, 2 Jun 2020 10:06:42 +0200, Mylène Josserand wrote:
->> Context
->> -------
->>
->> Here is my V4 of my patches that add the support for the Rockchip
->> RK3288w which is a revision of the RK3288. It is mostly the same SOC
->> except for, at least, one clock tree which is different.
->> This difference is only known by looking at the BSP kernel [1].
->>
->> [...]
+> Use list_is_singular() instead of open-coding.
 > 
-> Applied, thanks!
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 
-Thank you!
-
-Best regards,
-Mylène
-
-> 
-> [1/2] clk: rockchip: Handle clock tree for rk3288w variant
->        commit: 1627f683636df70fb25358b0a7b39a24e8fce5bf
-> [2/2] dt-bindings: clocks: add rk3288w variant compatible
->        commit: 00bd404144241155653bb0d0c15be51e4e6983aa
-> 
-> Best regards,
-> 
-
+Applied, thanks.
