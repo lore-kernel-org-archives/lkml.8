@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B463EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1B92082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F252082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460064;
-	bh=XZcpOh3AQvmUqyI5y4yxQ4ilPh6mZE/CsCqnpTt/IBA=;
+	s=default; t=1593460068;
+	bh=Q0/KPKdoE+l7DUi5F1eMTVmjpkyw2495FuaeHQCbkcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZihTgANuBLooseauc9uluSQ05klU1WN7O6zgCLh0oxc4sOFiCZWOSsBpYOUSP2rNA
-	 M0rdLLbuaJLdTeBu8wQYLAmrVUE5TTLLi9nsaw6TMk1CWPbVjhEIq1OFZ6HqGD6s6o
-	 /AVe/TZ8qSBEqE6/xq0OpsUCCTgaRHlEy7Ypoz6Y=
+	b=glcMEQ/+/63NE5w4R0A+C60P1QWZ6a1kz+i2HbBKWwMuX38oCFpzY7kzFT86YdW+0
+	 UfFtuzMsl9+eZjckEerZiGNtU5dB0QOKfP7/XkIhHqUQ3WFtWY7wDpnetxcApMSbKk
+	 QMJyGV4NsIQXYcmtbyCMEiNlCaYGefVVmq5IBlAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbgF2Trn (ORCPT
+        id S2388151AbgF2Trf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387778AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387785AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7BD42486D;
-        Mon, 29 Jun 2020 15:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B59BC24839;
+        Mon, 29 Jun 2020 15:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444368;
-        bh=XZcpOh3AQvmUqyI5y4yxQ4ilPh6mZE/CsCqnpTt/IBA=;
+        s=default; t=1593444349;
+        bh=Q0/KPKdoE+l7DUi5F1eMTVmjpkyw2495FuaeHQCbkcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdfUg8bhMOxVuB2KgR8ZhzC0R7FqDIwYZAr5EcUQr1n0f7V0udeHI0xcb4sf6Z9Gj
-         n2TPPuKVugxGdsN6vT74PlVpoqgMeu5lvYkLnRVMw7bBBpQRZNmQ52cDM+fyW961Zu
-         0SACxIwkATkHSrl7Q5QPT/hW/b4WSSL991ljhI+Q=
+        b=Psr7DSTw2vtkiSM+I67tXYla/BzZS/dm+bCnDtKAPrFktsWzgqHN3qiMqmr7+gcsu
+         G85lrvu2bpj7VC3GT840PBFyYOSh7hF2a1apVwS6jJ7EsDr022RIDorBycqFeZoHYw
+         GbMaYE9HIZdxEohYpwS0apoajqkk/Vbheo81m/ig=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+fb14314433463ad51625@syzkaller.appspotmail.com,
-        syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com,
+Cc:     Ilya Ponetayev <i.ponetaev@ndmsystems.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 045/178] ALSA: usb-audio: Fix OOB access of mixer element list
-Date:   Mon, 29 Jun 2020 11:23:10 -0400
-Message-Id: <20200629152523.2494198-46-sashal@kernel.org>
+Subject: [PATCH 5.4 024/178] sch_cake: don't try to reallocate or unshare skb unconditionally
+Date:   Mon, 29 Jun 2020 11:22:49 -0400
+Message-Id: <20200629152523.2494198-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -66,123 +67,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
 
-commit 220345e98f1cdc768eeb6e3364a0fa7ab9647fe7 upstream.
+[ Upstream commit 9208d2863ac689a563b92f2161d8d1e7127d0add ]
 
-The USB-audio mixer code holds a linked list of usb_mixer_elem_list,
-and several operations are performed for each mixer element.  A few of
-them (snd_usb_mixer_notify_id() and snd_usb_mixer_interrupt_v2())
-assume each mixer element being a usb_mixer_elem_info object that is a
-subclass of usb_mixer_elem_list, cast via container_of() and access it
-members.  This may result in an out-of-bound access when a
-non-standard list element has been added, as spotted by syzkaller
-recently.
+cake_handle_diffserv() tries to linearize mac and network header parts of
+skb and to make it writable unconditionally. In some cases it leads to full
+skb reallocation, which reduces throughput and increases CPU load. Some
+measurements of IPv4 forward + NAPT on MIPS router with 580 MHz single-core
+CPU was conducted. It appears that on kernel 4.9 skb_try_make_writable()
+reallocates skb, if skb was allocated in ethernet driver via so-called
+'build skb' method from page cache (it was discovered by strange increase
+of kmalloc-2048 slab at first).
 
-This patch adds a new field, is_std_info, in usb_mixer_elem_list to
-indicate that the element is the usb_mixer_elem_info type or not, and
-skip the access to such an element if needed.
+Obtain DSCP value via read-only skb_header_pointer() call, and leave
+linearization only for DSCP bleaching or ECN CE setting. And, as an
+additional optimisation, skip diffserv parsing entirely if it is not needed
+by the current configuration.
 
-Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
-Reported-by: syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200624122340.9615-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
+Signed-off-by: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
+[ fix a few style issues, reflow commit message ]
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/mixer.c        | 15 +++++++++++----
- sound/usb/mixer.h        |  9 +++++++--
- sound/usb/mixer_quirks.c |  3 ++-
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ net/sched/sch_cake.c | 41 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index f55afe3a98e3a..9079c380228fc 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -576,8 +576,9 @@ static int check_matrix_bitmap(unsigned char *bmap,
-  * if failed, give up and free the control instance.
-  */
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index 2277369feae58..8020d0829f1a9 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -1517,30 +1517,49 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
  
--int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
--			      struct snd_kcontrol *kctl)
-+int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
-+			   struct snd_kcontrol *kctl,
-+			   bool is_std_info)
+ static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
  {
- 	struct usb_mixer_interface *mixer = list->mixer;
- 	int err;
-@@ -591,6 +592,7 @@ int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
- 		return err;
- 	}
- 	list->kctl = kctl;
-+	list->is_std_info = is_std_info;
- 	list->next_id_elem = mixer->id_elems[list->id];
- 	mixer->id_elems[list->id] = list;
- 	return 0;
-@@ -3213,8 +3215,11 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
- 	unitid = delegate_notify(mixer, unitid, NULL, NULL);
+-	int wlen = skb_network_offset(skb);
++	const int offset = skb_network_offset(skb);
++	u16 *buf, buf_;
+ 	u8 dscp;
  
- 	for_each_mixer_elem(list, mixer, unitid) {
--		struct usb_mixer_elem_info *info =
--			mixer_elem_list_to_info(list);
-+		struct usb_mixer_elem_info *info;
+ 	switch (tc_skb_protocol(skb)) {
+ 	case htons(ETH_P_IP):
+-		wlen += sizeof(struct iphdr);
+-		if (!pskb_may_pull(skb, wlen) ||
+-		    skb_try_make_writable(skb, wlen))
++		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
++		if (unlikely(!buf))
+ 			return 0;
+ 
+-		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		/* ToS is in the second byte of iphdr */
++		dscp = ipv4_get_dsfield((struct iphdr *)buf) >> 2;
 +
-+		if (!list->is_std_info)
-+			continue;
-+		info = mixer_elem_list_to_info(list);
- 		/* invalidate cache, so the value is read from the device */
- 		info->cached = 0;
- 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
-@@ -3294,6 +3299,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
- 
- 		if (!list->kctl)
- 			continue;
-+		if (!list->is_std_info)
-+			continue;
- 
- 		info = mixer_elem_list_to_info(list);
- 		if (count > 1 && info->control != control)
-diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
-index 8e0fb7fdf1a00..01b5e5cc22210 100644
---- a/sound/usb/mixer.h
-+++ b/sound/usb/mixer.h
-@@ -66,6 +66,7 @@ struct usb_mixer_elem_list {
- 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
- 	struct snd_kcontrol *kctl;
- 	unsigned int id;
-+	bool is_std_info;
- 	usb_mixer_elem_dump_func_t dump;
- 	usb_mixer_elem_resume_func_t resume;
- };
-@@ -103,8 +104,12 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
- int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
- 				int request, int validx, int value_set);
- 
--int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
--			      struct snd_kcontrol *kctl);
-+int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
-+			   struct snd_kcontrol *kctl,
-+			   bool is_std_info);
++		if (wash && dscp) {
++			const int wlen = offset + sizeof(struct iphdr);
 +
-+#define snd_usb_mixer_add_control(list, kctl) \
-+	snd_usb_mixer_add_list(list, kctl, true)
++			if (!pskb_may_pull(skb, wlen) ||
++			    skb_try_make_writable(skb, wlen))
++				return 0;
++
+ 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
++		}
++
+ 		return dscp;
  
- void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
- 				 struct usb_mixer_interface *mixer,
-diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index dc181066c799e..d39bf5b648d1f 100644
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -157,7 +157,8 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
- 		return -ENOMEM;
- 	}
- 	kctl->private_free = snd_usb_mixer_elem_free;
--	return snd_usb_mixer_add_control(list, kctl);
-+	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
-+	return snd_usb_mixer_add_list(list, kctl, false);
- }
+ 	case htons(ETH_P_IPV6):
+-		wlen += sizeof(struct ipv6hdr);
+-		if (!pskb_may_pull(skb, wlen) ||
+-		    skb_try_make_writable(skb, wlen))
++		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
++		if (unlikely(!buf))
+ 			return 0;
  
- /*
+-		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		/* Traffic class is in the first and second bytes of ipv6hdr */
++		dscp = ipv6_get_dsfield((struct ipv6hdr *)buf) >> 2;
++
++		if (wash && dscp) {
++			const int wlen = offset + sizeof(struct ipv6hdr);
++
++			if (!pskb_may_pull(skb, wlen) ||
++			    skb_try_make_writable(skb, wlen))
++				return 0;
++
+ 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
++		}
++
+ 		return dscp;
+ 
+ 	case htons(ETH_P_ARP):
 -- 
 2.25.1
 
