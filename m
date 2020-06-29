@@ -2,133 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB504C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF37206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4D8206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfcENy/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgF2Xhn (ORCPT
+        id S1728237AbgF2XiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:37:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43437 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgF2Xhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:37:42 -0400
-IronPort-SDR: 4cumJfNVsshQcAZwUV/z2/5XrmTh3YEHAcl+lATjyizU7ghKVrBAQogBSE3//gOq3dlZCk/Qw6
- WgNJ/bp4EHeA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144289834"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="144289834"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:37:40 -0700
-IronPort-SDR: CDjs5miLLIZgGZ19yf5Yq8QdITReIs4RNN8/PqXo+b3RAooRc1pBLoRJ/WzT7WnNeQkYQPomw1
- C4Y2YmmTRAFA==
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="454378949"
-Received: from tclumbax-mobl2.gar.corp.intel.com (HELO [10.255.1.194]) ([10.255.1.194])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:37:38 -0700
-Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
-        akpm@linux-foundation.org, stable@kernel.org
-References: <20200626003459.D8E015CA@viggo.jf.intel.com>
- <20200629065203.GJ3346@MiWiFi-R3L-srv>
- <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
- <20200629233043.GK3346@MiWiFi-R3L-srv>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
- CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
- 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
- K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
- VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
- e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
- ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
- kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
- rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
- f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
- mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
- UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
- sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
- 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
- cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
- UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
- db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
- lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
- kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
- gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
- AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
- XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
- e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
- pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
- YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
- lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
- M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
- 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
- 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
- OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
- ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
- z5cecg==
-Message-ID: <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
-Date:   Mon, 29 Jun 2020 16:37:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 19:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgF2XiF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:38:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CCCC061755;
+        Mon, 29 Jun 2020 16:38:05 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u8so8391754pje.4;
+        Mon, 29 Jun 2020 16:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xDmndeuf6+uwXZ1m8jycymUjCeI0m9qm4ZAV+tpUoqg=;
+        b=hfcENy/nu+8E+qPHtGgHggPo6FrtxlNt1g3/qmAgrr2o/GeOEqJpOKezxPVlV2RrRh
+         0KzMSRt54d77uU3CRpOsadNGCSfoFK6qKedJodEwFFHR0W/ZF5AQzl06oNG3A3o+KFEn
+         MzKOf00Bp6rabpwXlPL5ygB6sxRt8CRt9wZM3XAODkEaa56JTdG16bmehUOHrMm/ZX89
+         s7hvtrUVekSR3hNK4AVPO83dr5GpeL6ncNfFHhKSgoXQ+frCdgB3GxuQ0GwG1mmNoWZL
+         F5yTQyy1amwtjAv9UtHUwiQpqAWx/D64f6YQW+qYlYLJn5apqAZIQMWwX2+/etDOzU8X
+         X0Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xDmndeuf6+uwXZ1m8jycymUjCeI0m9qm4ZAV+tpUoqg=;
+        b=SRTIaQDAt2G8c/jLDMjy4gJxDjI9HqjtHDlfZ+TpfsYhYIkvjls5R5e17Uz72cSQbC
+         bJL84BVDAoDZOoi2LiokUXvbeEw1On0hZS9aZa2IsI3I4ESqIeHEUAH+of8qn7B1/WyG
+         HT0NzhOmoxXfKF/hPS/ZwPOr2G5cKYGBVqGJ85xsJQo0MZ4SW+JsK7vxvZ+9KYbGB5OV
+         CRTKvElr+6iy1QBgjpjW89tTmC2Z0uXDWVtXuouL6v/2qwVb/N6vYmi3uFqH+DQAbTbp
+         HvARRTxAi2ktXneKA9svoA3EPYlCylJJnDJ6y9LqZst2wNR/Tx113pBgawfuUcsCJQyu
+         rBjg==
+X-Gm-Message-State: AOAM530lsp0t0DB13jWjgVHMdgNI6rFCXD073tMGXzaaQtO0t0r9IZOO
+        abDSEyJ8kMj/lJtbHGBedQ8=
+X-Google-Smtp-Source: ABdhPJw6Bo4vFRwwv/fuSCRqDQFKj4SZC42yqkHiNSoyybyL4QJ4pKH13OihOF5unIFYUS8sr+jhfg==
+X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr20182148pjo.85.1593473884458;
+        Mon, 29 Jun 2020 16:38:04 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id x69sm637205pfc.144.2020.06.29.16.38.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 16:38:03 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 16:37:57 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH] usb: gadget: fix langid kernel-doc warning in usbstring.c
+Message-ID: <20200629233756.GA25245@taoren-ubuntu-R90MNF91>
+References: <b49b7e07-8986-f185-3a99-a088419a532b@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200629233043.GK3346@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b49b7e07-8986-f185-3a99-a088419a532b@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/29/20 4:30 PM, Baoquan He wrote:
->> The only way I can plausibly think of "cleaning up" the RECLAIM_ZONE bit
->> would be to raise our confidence that it is truly unused.  That takes
->> time, and probably a warning if we see it being set.  If we don't run
->> into anybody setting it or depending on it being set in a few years, we
->> can remove it.
-> So adding the old bit back for compatibility looks good, thanks.
+On Sun, Jun 28, 2020 at 08:08:03PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> Then we have to be very careful when adding and reviewing new
-> interface introducing, should not leave one which might be used
-> in the future.
+> Fix spelling of the 'langid' function argument in the kernel-doc
+> notation to quieten a kernel-doc warning.
 > 
-> In fact, RECLAIM_ZONE is not completely useless. At least, when the old
-> bit 0 is set, it may enter into node_reclaim() in get_page_from_freelist(),
-> that makes it like a switch.
+> ../drivers/usb/gadget/usbstring.c:77: warning: Function parameter or member 'langid' not described in 'usb_validate_langid'
+> ../drivers/usb/gadget/usbstring.c:77: warning: Excess function parameter 'lang' description in 'usb_validate_langid'
 > 
-> get_page_from_freelist {
-> 
-> 	...
->                         if (node_reclaim_mode == 0 ||                                                                                             
->                             !zone_allows_reclaim(ac->preferred_zoneref->zone, zone))
->                                 continue;
-> 	...
-> }
+> Fixes: 17309a6a4356 ("usb: gadget: add "usb_validate_langid" function")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Tao Ren <rentao.bupt@gmail.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
 
-Oh, that's a very good point.  There are a couple of those around.  Let
-me circle back and update the documentation and the variable name.  I'll
-send out another version.
+Thanks for the fix, Randy!
 
+Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
+
+> ---
+>  drivers/usb/gadget/usbstring.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20200626.orig/drivers/usb/gadget/usbstring.c
+> +++ linux-next-20200626/drivers/usb/gadget/usbstring.c
+> @@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(usb_gadget_get_string)
+>  
+>  /**
+>   * usb_validate_langid - validate usb language identifiers
+> - * @lang: usb language identifier
+> + * @langid: usb language identifier
+>   *
+>   * Returns true for valid language identifier, otherwise false.
+>   */
+> 
