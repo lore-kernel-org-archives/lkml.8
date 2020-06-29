@@ -2,232 +2,135 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637DE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398E8206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WAQpUjle"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWI/Qpg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbgF2VR0 (ORCPT
+        id S2390579AbgF2VRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35394 "EHLO
+        Mon, 29 Jun 2020 17:17:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730116AbgF2VRU (ORCPT
+        with ESMTP id S1729536AbgF2Swv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:17:20 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BFFC061755;
-        Mon, 29 Jun 2020 14:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=FQONZLCxNSFZb1sXC8Tkaq9Lqm1oP8ToJp0lQbwhQuo=; b=WAQpUjlemzxM4jBwSWLATlfa8H
-        fI/iCi+M2v3b1GCJBCm/YYUY1lGd5Ooapahjre8NbyoFy90T0etv6nMYZMmQa5ImC+QUCw18ohpaR
-        gLMaJAbPwnyLNqLiFzrmqxG+2e67Z6yz9NqXz2rLYOxDGhXBIRQHqZeBGc6V5+a9kj3M7hhYtYQFH
-        42QBTLqVbsi83yqOculdzhcHdcjJSPsh+GKhuee1c+EtO+ScCXyXD1Zd7+VG+Co8JyZZsBjlrUUI+
-        kFoMXJQJG5CLCg2+FsyDk+nxsiluXklse49asdGZEK1YEouIBMAmy7CmTOEmCWtFHAzJEugWiDvql
-        XPAsVKhA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jq192-0005gR-KC; Mon, 29 Jun 2020 21:16:53 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
-        Markus Elfring <Markus.Elfring@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] Documentation: Coccinelle: fix typos and command example
-Message-ID: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
-Date:   Mon, 29 Jun 2020 14:16:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 14:52:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56515C02E2C9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:48 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so5406904wrl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=awbvdf/o8WJSBn2jZAYd3v4hbJ6rKznLBA9Uh+6bpSY=;
+        b=bWI/Qpg8KHMiyukEPTm6FGM05U/4gMMkQHOHo8Nz82wB1fM52NfEp9sQEYJxW2Admn
+         36jXiYmOkyXpV+MMfSlpZT8Z9s9TZYZBTkr+WU+AkV6levgYIww9eFqKcfy+b7aov0Ar
+         aSA6O4aQYnrIzAVcN2+hH+w3Fx7vH5ROlRP5Q22Uxuts5CNaQr/iw9JPKy3+nzLruCX5
+         rCb9EPkFb0B6QKG1l2+sEq1zz5+b6EgH7+TAMVkNi3o6cKbwRjBq67YFLhSGVkXgCcOv
+         8znzvVP02lrg2wbkpchzZYSHLbUR3k6W/ri5p3Tqp9XejF7alIJ68AbMxV5b4psyB5Oe
+         c7RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=awbvdf/o8WJSBn2jZAYd3v4hbJ6rKznLBA9Uh+6bpSY=;
+        b=ERnoRm3L0XFRDtuB00dcXFykdkVsWfGuu1IUWy4IZSe6nqCLMelczfBw6kqhEnCSO9
+         9XVO3j6xuSRJrvknxNub8cNFITfRZM9xIyTXSHXPI6q1D472GB3YUmwx5qvLGJ/SzfMB
+         HU/4K3iOcsnLOf6lCApah0TdX3DJmUcgBlXmtWEQkk9XjdThFvW9ZIQ+JLjZRzfQdWKq
+         0HSyNAxXiGIfSawFNscZrpW8INf2jjVwi7CsBEj+Dmxpgje7utZ+dLDXZRGnEdddbETV
+         CjsBVdIpLzoqJMu4vDNmRtBWFBVIqUcxGGSqSsxqHnemuG8VgeRP4qLYJE1OY/b3VP0p
+         jySw==
+X-Gm-Message-State: AOAM531dFpn3zb6sZgsy9aLhtLIqR2YU1uGsehokSTJYavkPzIacKhim
+        7LsKoxH2ZJ2/n8TVJX6rZmLuXA==
+X-Google-Smtp-Source: ABdhPJwlYoQKfNVdDrit+2utE+6X7YuQwjowoDK8uijEIVf5IcJ4q9wfncz9T8GKzXHC/FOuq3rmSw==
+X-Received: by 2002:a5d:4603:: with SMTP id t3mr18518133wrq.38.1593439487048;
+        Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 07:04:46 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        J Freyensee <james_p_freyensee@linux.intel.com>
+Subject: [PATCH 01/20] misc: pti: Repair kerneldoc formatting issues
+Date:   Mon, 29 Jun 2020 15:04:23 +0100
+Message-Id: <20200629140442.1043957-2-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+W=1 kernel builds report a lack of descriptions for various
+function arguments.  In reality they are documented, but the
+formatting was not as expected '@.*:'.  Instead, '-'s were
+used as separators.
 
-Fix various typos etc. in dev-tools/coccinelle.rst:
+This change fixes the following warnings:
 
-- punctuation, grammar, wording
-- add "path/to/file.c" when using Coccinelle to check a single file
+ drivers/misc/pti.c:748: warning: Function parameter or member 'port' not described in 'pti_port_activate'
+ drivers/misc/pti.c:748: warning: Function parameter or member 'tty' not described in 'pti_port_activate'
+ drivers/misc/pti.c:765: warning: Function parameter or member 'port' not described in 'pti_port_shutdown'
+ drivers/misc/pti.c:793: warning: Function parameter or member 'pdev' not described in 'pti_pci_probe'
+ drivers/misc/pti.c:793: warning: Function parameter or member 'ent' not described in 'pti_pci_probe'
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: cocci@systeme.lip6.fr
-Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: J Freyensee <james_p_freyensee@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
-v2: s/at minimum/a minimum/ (Julia and Markus)
- Documentation/dev-tools/coccinelle.rst |   44 +++++++++++------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/misc/pti.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- linux-next-20200629.orig/Documentation/dev-tools/coccinelle.rst
-+++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
-@@ -85,7 +85,7 @@ Four basic modes are defined: ``patch``,
-   file:line:column-column: message
- 
- - ``context`` highlights lines of interest and their context in a
--  diff-like style.Lines of interest are indicated with ``-``.
-+  diff-like style. Lines of interest are indicated with ``-``.
- 
- - ``org`` generates a report in the Org mode format of Emacs.
- 
-@@ -119,7 +119,7 @@ For each semantic patch, a commit messag
- description of the problem being checked by the semantic patch, and
- includes a reference to Coccinelle.
- 
--As any static code analyzer, Coccinelle produces false
-+As with any static code analyzer, Coccinelle produces false
- positives. Thus, reports must be carefully checked, and patches
- reviewed.
- 
-@@ -135,18 +135,18 @@ the parallelism, set the J= variable. Fo
- 
-    make coccicheck MODE=report J=4
- 
--As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
-+As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization;
- if support for this is detected you will benefit from parmap parallelization.
- 
- When parmap is enabled coccicheck will enable dynamic load balancing by using
--``--chunksize 1`` argument, this ensures we keep feeding threads with work
-+``--chunksize 1`` argument. This ensures we keep feeding threads with work
- one by one, so that we avoid the situation where most work gets done by only
- a few threads. With dynamic load balancing, if a thread finishes early we keep
- feeding it more work.
- 
- When parmap is enabled, if an error occurs in Coccinelle, this error
--value is propagated back, the return value of the ``make coccicheck``
--captures this return value.
-+value is propagated back, and the return value of the ``make coccicheck``
-+command captures this return value.
- 
- Using Coccinelle with a single semantic patch
- ---------------------------------------------
-@@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
- To apply Coccinelle on a file basis, instead of a directory basis, the
- following command may be used::
- 
--    make C=1 CHECK="scripts/coccicheck"
-+    make C=1 CHECK="scripts/coccicheck" path/to/file.c
- 
- To check only newly edited code, use the value 2 for the C flag, i.e.::
- 
--    make C=2 CHECK="scripts/coccicheck"
-+    make C=2 CHECK="scripts/coccicheck" path/to/file.c
- 
--In these modes, which works on a file basis, there is no information
-+In these modes, which work on a file basis, there is no information
- about semantic patches displayed, and no commit message proposed.
- 
- This runs every semantic patch in scripts/coccinelle by default. The
-@@ -198,12 +198,12 @@ Debugging Coccinelle SmPL patches
- 
- Using coccicheck is best as it provides in the spatch command line
- include options matching the options used when we compile the kernel.
--You can learn what these options are by using V=1, you could then
-+You can learn what these options are by using V=1; you could then
- manually run Coccinelle with debug options added.
- 
- Alternatively you can debug running Coccinelle against SmPL patches
--by asking for stderr to be redirected to stderr, by default stderr
--is redirected to /dev/null, if you'd like to capture stderr you
-+by asking for stderr to be redirected to stderr. By default stderr
-+is redirected to /dev/null; if you'd like to capture stderr you
- can specify the ``DEBUG_FILE="file.txt"`` option to coccicheck. For
- instance::
- 
-@@ -211,8 +211,8 @@ instance::
-     make coccicheck COCCI=scripts/coccinelle/free/kfree.cocci MODE=report DEBUG_FILE=cocci.err
-     cat cocci.err
- 
--You can use SPFLAGS to add debugging flags, for instance you may want to
--add both --profile --show-trying to SPFLAGS when debugging. For instance
-+You can use SPFLAGS to add debugging flags; for instance you may want to
-+add both --profile --show-trying to SPFLAGS when debugging. For example
- you may want to use::
- 
-     rm -f err.log
-@@ -229,7 +229,7 @@ DEBUG_FILE support is only supported whe
- --------------------
- 
- Coccinelle supports reading .cocciconfig for default Coccinelle options that
--should be used every time spatch is spawned, the order of precedence for
-+should be used every time spatch is spawned. The order of precedence for
- variables for .cocciconfig is as follows:
- 
- - Your current user's home directory is processed first
-@@ -237,7 +237,7 @@ variables for .cocciconfig is as follows
- - The directory provided with the --dir option is processed last, if used
- 
- Since coccicheck runs through make, it naturally runs from the kernel
--proper dir, as such the second rule above would be implied for picking up a
-+proper dir; as such the second rule above would be implied for picking up a
- .cocciconfig when using ``make coccicheck``.
- 
- ``make coccicheck`` also supports using M= targets. If you do not supply
-@@ -260,13 +260,13 @@ If not using the kernel's coccicheck tar
- order logic of .cocciconfig reading. If using the kernel's coccicheck target,
- override any of the kernel's .coccicheck's settings using SPFLAGS.
- 
--We help Coccinelle when used against Linux with a set of sensible defaults
-+We help Coccinelle when used against Linux with a set of sensible default
- options for Linux with our own Linux .cocciconfig. This hints to coccinelle
--git can be used for ``git grep`` queries over coccigrep. A timeout of 200
-+that git can be used for ``git grep`` queries over coccigrep. A timeout of 200
- seconds should suffice for now.
- 
- The options picked up by coccinelle when reading a .cocciconfig do not appear
--as arguments to spatch processes running on your system, to confirm what
-+as arguments to spatch processes running on your system. To confirm what
- options will be used by Coccinelle run::
- 
-       spatch --print-options-only
-@@ -290,7 +290,7 @@ given to it when options are in conflict
- 
- Coccinelle supports idutils as well but requires coccinelle >= 1.0.6.
- When no ID file is specified coccinelle assumes your ID database file
--is in the file .id-utils.index on the top level of the kernel, coccinelle
-+is in the file .id-utils.index on the top level of the kernel. Coccinelle
- carries a script scripts/idutils_index.sh which creates the database with::
- 
-     mkid -i C --output .id-utils.index
-@@ -317,7 +317,7 @@ SmPL patch specific options
- ---------------------------
- 
- SmPL patches can have their own requirements for options passed
--to Coccinelle. SmPL patch specific options can be provided by
-+to Coccinelle. SmPL patch-specific options can be provided by
- providing them at the top of the SmPL patch, for instance::
- 
- 	// Options: --no-includes --include-headers
-@@ -327,7 +327,7 @@ SmPL patch Coccinelle requirements
- 
- As Coccinelle features get added some more advanced SmPL patches
- may require newer versions of Coccinelle. If an SmPL patch requires
--at least a version of Coccinelle, this can be specified as follows,
-+a minimum version of Coccinelle, this can be specified as follows,
- as an example if requiring at least Coccinelle >= 1.0.5::
- 
- 	// Requires: 1.0.5
+diff --git a/drivers/misc/pti.c b/drivers/misc/pti.c
+index 07e9da7918ebd..e19988766aa69 100644
+--- a/drivers/misc/pti.c
++++ b/drivers/misc/pti.c
+@@ -733,8 +733,8 @@ static struct console pti_console = {
+  * pti_port_activate()- Used to start/initialize any items upon
+  * first opening of tty_port().
+  *
+- * @port- The tty port number of the PTI device.
+- * @tty-  The tty struct associated with this device.
++ * @port: The tty port number of the PTI device.
++ * @tty:  The tty struct associated with this device.
+  *
+  * Returns:
+  *	always returns 0
+@@ -754,7 +754,7 @@ static int pti_port_activate(struct tty_port *port, struct tty_struct *tty)
+  * pti_port_shutdown()- Used to stop/shutdown any items upon the
+  * last tty port close.
+  *
+- * @port- The tty port number of the PTI device.
++ * @port: The tty port number of the PTI device.
+  *
+  * Notes: The primary purpose of the PTI tty port 0 is to hook
+  * the syslog daemon to it; thus this port will be open for a
+@@ -780,8 +780,8 @@ static const struct tty_port_operations tty_port_ops = {
+  * pti_pci_probe()- Used to detect pti on the pci bus and set
+  *		    things up in the driver.
+  *
+- * @pdev- pci_dev struct values for pti.
+- * @ent-  pci_device_id struct for pti driver.
++ * @pdev: pci_dev struct values for pti.
++ * @ent:  pci_device_id struct for pti driver.
+  *
+  * Returns:
+  *	0 for success
+-- 
+2.25.1
 
