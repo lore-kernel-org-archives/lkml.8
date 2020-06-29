@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8809EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2259E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D7C206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460717;
-	bh=W4IM7D2E1FmkEYvPp8iWmlQ9o/pvtw/YUi/t1cXKruE=;
+	s=default; t=1593460718;
+	bh=h63UWjESisQE8n3eAG6r0gEX4O1AVAstfhT8AixWNGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmynLCVWqj124schEvOJTL9xxMnvV3Vv/KGbhmyGApHeADTPXabre3UQ2YTzT/Eyf
-	 glY+Qc27XPLJ1z4dL5YMv3k80YuZP+UBiwvi2YMa9bQ8JLVuhq7sBE4NtjWBapOSsZ
-	 ZLaI2hQ12nQ2vMkm1+ZXGQmbbvU8+pCDO0lvJt6A=
+	b=SRZDKFxYpi7+5LfGJoagqG5YyDWCK2TAOdU1ZW4tjCQBTmZbgAXQdRV7luIfDdKtF
+	 r8l5UtKuPm1TRAQ2kjRih+3AsBr0I1G/QUOrP3Ljr10s4DgicTpUgHpGwnepqNE60G
+	 AbtCZvZ7TkVUGR82cb/vDXsQIpSyBqvUX4uJjsc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbgF2T6g (ORCPT
+        id S2388500AbgF2T6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387601AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387594AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1498D248C8;
-        Mon, 29 Jun 2020 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C1312490A;
+        Mon, 29 Jun 2020 15:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444421;
-        bh=W4IM7D2E1FmkEYvPp8iWmlQ9o/pvtw/YUi/t1cXKruE=;
+        s=default; t=1593444459;
+        bh=h63UWjESisQE8n3eAG6r0gEX4O1AVAstfhT8AixWNGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4Y81AkSkE3OVSpGBpZ2TR/Jbw6/AY0+jUzBr9XzMGdm/dVHfg/Lh5cF9FaNAP8E7
-         6GWXN7uJsIg933wGzfl3Ex+OYWLZpMy9SS0gOcPPeLOi2DRrTctVvNCqGmLjlX7+F+
-         OsHzewZipz+xy+h284Tn5JySCmWPtwBKXBaqtqG8=
+        b=rlTrMlvN8qtqLpc1EnLs2KULqNeQ4dnhR3x8bHXAuzzqthJtX3SZAwRcdvLAUmClh
+         dJTP+GYpZI3tLQeE8kWxzWvQIQkE1+c1mJHrYprLIiL65zRtPhBKwK9I/R5i4i3Qsn
+         B5Rmsbk+C6Pqkh4fSVS/VuGe8jOI1Rx/tHABlV/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 099/178] cxgb4: move handling L2T ARP failures to caller
-Date:   Mon, 29 Jun 2020 11:24:04 -0400
-Message-Id: <20200629152523.2494198-100-sashal@kernel.org>
+Cc:     Aaron Plattner <aplattner@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 139/178] ALSA: hda: Add NVIDIA codec IDs 9a & 9d through a0 to patch table
+Date:   Mon, 29 Jun 2020 11:24:44 -0400
+Message-Id: <20200629152523.2494198-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,103 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Aaron Plattner <aplattner@nvidia.com>
 
-[ Upstream commit 11d8cd5c9f3b46f397f889cefdb66795518aaebd ]
+commit adb36a8203831e40494a92095dacd566b2ad4a69 upstream.
 
-Move code handling L2T ARP failures to the only caller.
+These IDs are for upcoming NVIDIA chips with audio functions that are largely
+similar to the existing ones.
 
-Fixes following sparse warning:
-skbuff.h:2091:29: warning: context imbalance in
-'handle_failed_resolution' - unexpected unlock
-
-Fixes: 749cb5fe48bb ("cxgb4: Replace arpq_head/arpq_tail with SKB double link-list code")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200611180845.39942-1-aplattner@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/l2t.c | 52 +++++++++++-------------
- 1 file changed, 24 insertions(+), 28 deletions(-)
+ sound/pci/hda/patch_hdmi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-index e6fe2870137b0..a440c1cf0b61e 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-@@ -506,41 +506,20 @@ u64 cxgb4_select_ntuple(struct net_device *dev,
- }
- EXPORT_SYMBOL(cxgb4_select_ntuple);
- 
--/*
-- * Called when address resolution fails for an L2T entry to handle packets
-- * on the arpq head.  If a packet specifies a failure handler it is invoked,
-- * otherwise the packet is sent to the device.
-- */
--static void handle_failed_resolution(struct adapter *adap, struct l2t_entry *e)
--{
--	struct sk_buff *skb;
--
--	while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
--		const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
--
--		spin_unlock(&e->lock);
--		if (cb->arp_err_handler)
--			cb->arp_err_handler(cb->handle, skb);
--		else
--			t4_ofld_send(adap, skb);
--		spin_lock(&e->lock);
--	}
--}
--
- /*
-  * Called when the host's neighbor layer makes a change to some entry that is
-  * loaded into the HW L2 table.
-  */
- void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
- {
--	struct l2t_entry *e;
--	struct sk_buff_head *arpq = NULL;
--	struct l2t_data *d = adap->l2t;
- 	unsigned int addr_len = neigh->tbl->key_len;
- 	u32 *addr = (u32 *) neigh->primary_key;
--	int ifidx = neigh->dev->ifindex;
--	int hash = addr_hash(d, addr, addr_len, ifidx);
-+	int hash, ifidx = neigh->dev->ifindex;
-+	struct sk_buff_head *arpq = NULL;
-+	struct l2t_data *d = adap->l2t;
-+	struct l2t_entry *e;
- 
-+	hash = addr_hash(d, addr, addr_len, ifidx);
- 	read_lock_bh(&d->lock);
- 	for (e = d->l2tab[hash].first; e; e = e->next)
- 		if (!addreq(e, addr) && e->ifindex == ifidx) {
-@@ -573,8 +552,25 @@ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
- 			write_l2e(adap, e, 0);
- 	}
- 
--	if (arpq)
--		handle_failed_resolution(adap, e);
-+	if (arpq) {
-+		struct sk_buff *skb;
-+
-+		/* Called when address resolution fails for an L2T
-+		 * entry to handle packets on the arpq head. If a
-+		 * packet specifies a failure handler it is invoked,
-+		 * otherwise the packet is sent to the device.
-+		 */
-+		while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
-+			const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
-+
-+			spin_unlock(&e->lock);
-+			if (cb->arp_err_handler)
-+				cb->arp_err_handler(cb->handle, skb);
-+			else
-+				t4_ofld_send(adap, skb);
-+			spin_lock(&e->lock);
-+		}
-+	}
- 	spin_unlock_bh(&e->lock);
- }
- 
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index d41c91468ab33..e78c4367b6c86 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -4146,6 +4146,11 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
+ HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
+ HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
+ HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
++HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
++HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
++HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
++HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
++HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
+ HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
+ HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
+ HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),
 -- 
 2.25.1
 
