@@ -2,52 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34B22225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7700A2225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455858;
-	bh=nrprgVrKWaE212S5kQMklskc6S41j0gruDt2Z+SoRXw=;
+	s=default; t=1593455859;
+	bh=PGAYS1/D/9xQhANcx3m13l7PCByYGFVBOre8nNONMlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixeV3aVUdYE5vMm1kzawXD3Ynkj24LgPq87relYMlhMALFa7eQmnmAeteag6r2EoB
-	 XKeQ2ozi7bxRIq1jSUKv6bHTZ2r34MdBaf363wOtkB9CfnQKrSIrG6Te07XBWCbfLR
-	 gJbN3hdtF63MRO6tAQyyGLYAq+C6f+Z72w7nbRaw=
+	b=sCrFnbx6WnFbxQDsZCHj/T+H9qi7+cS+ALou7Irfl2I8uUNv2ioS0Rp5KwlgSXFCM
+	 e/5KaALsT6p41x/0zP4RMWhorV/9CaZh3nZr+MCRR13MgbqY6J+vAyUUjXfYcL1NqT
+	 1tym4zdYuibWr5/6LKB6XgnEiH44bKOnpu4pDmGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgF2Shg (ORCPT
+        id S1727112AbgF2She (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726746AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34A024676;
-        Mon, 29 Jun 2020 15:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E580324793;
+        Mon, 29 Jun 2020 15:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443978;
-        bh=nrprgVrKWaE212S5kQMklskc6S41j0gruDt2Z+SoRXw=;
+        s=default; t=1593444101;
+        bh=PGAYS1/D/9xQhANcx3m13l7PCByYGFVBOre8nNONMlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iyUArARB29+vhF2+6vYDmh9N2OW2d4c8MBXWZR3sBisfA4cyu1DQRvOhnWgJdPEs+
-         lgVVtpvj1EX+ctJyzzo1jtJs8wND85Pgu/iwNuUPaI5yYpGKRbZaFjpDIh3MSm1tQm
-         q1lida8qg+cKz0PSq4YM3eMFrdS8Bez8TNFl4Aa8=
+        b=JjlsD8KgEGL+ZW615l41aHUSRP/u/qxw9p+Yf1fYMs2WXV97RKHqm6wIcJyksgzXJ
+         yezmifYsbt0RaFqRiiTlxJDsVhtekSowxxA0tSCvmTcEf5MOmasPn4bodDSn9SWShe
+         n8RA4Acm2iFGFr2y4zhyijxlu9VNCPu/H/U0exPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steffen Maier <maier@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        yuu ichii <byahu140@heisei.be>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 082/265] scsi: zfcp: Fix panic on ERP timeout for previously dismissed ERP action
-Date:   Mon, 29 Jun 2020 11:15:15 -0400
-Message-Id: <20200629151818.2493727-83-sashal@kernel.org>
+Subject: [PATCH 5.7 212/265] ACPI: sysfs: Fix pm_profile_attr type
+Date:   Mon, 29 Jun 2020 11:17:25 -0400
+Message-Id: <20200629151818.2493727-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,131 +66,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 936e6b85da0476dd2edac7c51c68072da9fb4ba2 upstream.
+commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
 
-Suppose that, for unrelated reasons, FSF requests on behalf of recovery are
-very slow and can run into the ERP timeout.
+When running a kernel with Clang's Control Flow Integrity implemented,
+there is a violation that happens when accessing
+/sys/firmware/acpi/pm_profile:
 
-In the case at hand, we did adapter recovery to a large degree.  However
-due to the slowness a LUN open is pending so the corresponding fc_rport
-remains blocked.  After fast_io_fail_tmo we trigger close physical port
-recovery for the port under which the LUN should have been opened.  The new
-higher order port recovery dismisses the pending LUN open ERP action and
-dismisses the pending LUN open FSF request.  Such dismissal decouples the
-ERP action from the pending corresponding FSF request by setting
-zfcp_fsf_req->erp_action to NULL (among other things)
-[zfcp_erp_strategy_check_fsfreq()].
+$ cat /sys/firmware/acpi/pm_profile
+0
 
-If now the ERP timeout for the pending open LUN request runs out, we must
-not use zfcp_fsf_req->erp_action in the ERP timeout handler.  This is a
-problem since v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
-timer_setup()"). Before that we intentionally only passed zfcp_erp_action
-as context argument to zfcp_erp_timeout_handler().
+$ dmesg
+...
+[   17.352564] ------------[ cut here ]------------
+[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
+[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
+[   17.352573] Modules linked in:
+[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
+[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
+[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
+[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
+[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
+[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
+[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
+[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
+[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
+[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
+[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
+[   17.352584] Call Trace:
+[   17.352586]  ? rev_id_show+0x8/0x8
+[   17.352587]  ? __cfi_check+0x45bac/0x4b640
+[   17.352589]  ? kobj_attr_show+0x73/0x80
+[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
+[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
+[   17.352593]  ? seq_read+0x180/0x600
+[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
+[   17.352596]  ? tlbflush_read_file+0x8/0x8
+[   17.352597]  ? __vfs_read+0x6b/0x220
+[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
+[   17.352599]  ? vfs_read+0xa2/0x130
+[   17.352599]  ? ksys_read+0x6a/0xd0
+[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
+[   17.352602]  ? do_syscall_64+0x72/0x120
+[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
 
-Note: The lifetime of the corresponding zfcp_fsf_req object continues until
-a (late) response or an (unrelated) adapter recovery.
+When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
+which in turn calls kobj_attr_show, which gets the ->show callback
+member by calling container_of on attr (casting it to struct
+kobj_attribute) then calls it.
 
-Just like the regular response path ignores dismissed requests
-[zfcp_fsf_req_complete() => zfcp_fsf_protstatus_eval() => return early] the
-ERP timeout handler now needs to ignore dismissed requests.  So simply
-return early in the ERP timeout handler if the FSF request is marked as
-dismissed in its status flags.  To protect against the race where
-zfcp_erp_strategy_check_fsfreq() dismisses and sets
-zfcp_fsf_req->erp_action to NULL after our previous status flag check,
-return early if zfcp_fsf_req->erp_action is NULL.  After all, the former
-ERP action does not need to be woken up as that was already done as part of
-the dismissal above [zfcp_erp_action_dismiss()].
+There is a CFI violation because pm_profile_attr is of type
+struct device_attribute but kobj_attr_show calls ->show expecting it
+to be from struct kobj_attribute. CFI checking ensures that function
+pointer types match when doing indirect calls. Fix pm_profile_attr to
+be defined in terms of kobj_attribute so there is no violation or
+mismatch.
 
-This fixes the following panic due to kernel page fault in IRQ context:
-
-Unable to handle kernel pointer dereference in virtual kernel address space
-Failing address: 0000000000000000 TEID: 0000000000000483
-Fault in home space mode while using kernel ASCE.
-AS:000009859238c00b R2:00000e3e7ffd000b R3:00000e3e7ffcc007 S:00000e3e7ffd7000 P:000000000000013d
-Oops: 0004 ilc:2 [#1] SMP
-Modules linked in: ...
-CPU: 82 PID: 311273 Comm: stress Kdump: loaded Tainted: G            E  X   ...
-Hardware name: IBM 8561 T01 701 (LPAR)
-Krnl PSW : 0404c00180000000 001fffff80549be0 (zfcp_erp_notify+0x40/0xc0 [zfcp])
-           R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-Krnl GPRS: 0000000000000080 00000e3d00000000 00000000000000f0 0000000000030000
-           000000010028e700 000000000400a39c 000000010028e700 00000e3e7cf87e02
-           0000000010000000 0700098591cb67f0 0000000000000000 0000000000000000
-           0000033840e9a000 0000000000000000 001fffe008d6bc18 001fffe008d6bbc8
-Krnl Code: 001fffff80549bd4: a7180000            lhi     %r1,0
-           001fffff80549bd8: 4120a0f0            la      %r2,240(%r10)
-          #001fffff80549bdc: a53e0003            llilh   %r3,3
-          >001fffff80549be0: ba132000            cs      %r1,%r3,0(%r2)
-           001fffff80549be4: a7740037            brc     7,1fffff80549c52
-           001fffff80549be8: e320b0180004        lg      %r2,24(%r11)
-           001fffff80549bee: e31020e00004        lg      %r1,224(%r2)
-           001fffff80549bf4: 412020e0            la      %r2,224(%r2)
-Call Trace:
- [<001fffff80549be0>] zfcp_erp_notify+0x40/0xc0 [zfcp]
- [<00000985915e26f0>] call_timer_fn+0x38/0x190
- [<00000985915e2944>] expire_timers+0xfc/0x190
- [<00000985915e2ac4>] run_timer_softirq+0xec/0x218
- [<0000098591ca7c4c>] __do_softirq+0x144/0x398
- [<00000985915110aa>] do_softirq_own_stack+0x72/0x88
- [<0000098591551b58>] irq_exit+0xb0/0xb8
- [<0000098591510c6a>] do_IRQ+0x82/0xb0
- [<0000098591ca7140>] ext_int_handler+0x128/0x12c
- [<0000098591722d98>] clear_subpage.constprop.13+0x38/0x60
-([<000009859172ae4c>] clear_huge_page+0xec/0x250)
- [<000009859177e7a2>] do_huge_pmd_anonymous_page+0x32a/0x768
- [<000009859172a712>] __handle_mm_fault+0x88a/0x900
- [<000009859172a860>] handle_mm_fault+0xd8/0x1b0
- [<0000098591529ef6>] do_dat_exception+0x136/0x3e8
- [<0000098591ca6d34>] pgm_check_handler+0x1c8/0x220
-Last Breaking-Event-Address:
- [<001fffff80549c88>] zfcp_erp_timeout_handler+0x10/0x18 [zfcp]
-Kernel panic - not syncing: Fatal exception in interrupt
-
-Link: https://lore.kernel.org/r/20200623140242.98864-1-maier@linux.ibm.com
-Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
-Cc: <stable@vger.kernel.org> #4.15+
-Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1051
+Reported-by: yuu ichii <byahu140@heisei.be>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/s390/scsi/zfcp_erp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/acpi/sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index 3d0bc000f5005..c621e8f0897f2 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -576,7 +576,10 @@ static void zfcp_erp_strategy_check_fsfreq(struct zfcp_erp_action *act)
- 				   ZFCP_STATUS_ERP_TIMEDOUT)) {
- 			req->status |= ZFCP_STATUS_FSFREQ_DISMISSED;
- 			zfcp_dbf_rec_run("erscf_1", act);
--			req->erp_action = NULL;
-+			/* lock-free concurrent access with
-+			 * zfcp_erp_timeout_handler()
-+			 */
-+			WRITE_ONCE(req->erp_action, NULL);
- 		}
- 		if (act->status & ZFCP_STATUS_ERP_TIMEDOUT)
- 			zfcp_dbf_rec_run("erscf_2", act);
-@@ -612,8 +615,14 @@ void zfcp_erp_notify(struct zfcp_erp_action *erp_action, unsigned long set_mask)
- void zfcp_erp_timeout_handler(struct timer_list *t)
- {
- 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
--	struct zfcp_erp_action *act = fsf_req->erp_action;
-+	struct zfcp_erp_action *act;
- 
-+	if (fsf_req->status & ZFCP_STATUS_FSFREQ_DISMISSED)
-+		return;
-+	/* lock-free concurrent access with zfcp_erp_strategy_check_fsfreq() */
-+	act = READ_ONCE(fsf_req->erp_action);
-+	if (!act)
-+		return;
- 	zfcp_erp_notify(act, ZFCP_STATUS_ERP_TIMEDOUT);
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index 3a89909b50a6c..76c668c05fa03 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -938,13 +938,13 @@ static void __exit interrupt_stats_exit(void)
  }
  
+ static ssize_t
+-acpi_show_profile(struct device *dev, struct device_attribute *attr,
++acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
+ 		  char *buf)
+ {
+ 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
+ }
+ 
+-static const struct device_attribute pm_profile_attr =
++static const struct kobj_attribute pm_profile_attr =
+ 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
+ 
+ static ssize_t hotplug_enabled_show(struct kobject *kobj,
 -- 
 2.25.1
 
