@@ -2,113 +2,165 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99323C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59FD2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F4520780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ml6IcAS0"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NMbZJxwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404092AbgF2Vpj (ORCPT
+        id S2404098AbgF2Vpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        Mon, 29 Jun 2020 17:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgF2Shm (ORCPT
+        with ESMTP id S1727768AbgF2Shm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:42 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E089CC00F836
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:48:00 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so16424980wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FwP8JJPtcWzsdQkUuHadbU0oZNWmZu/tGYbst3cTQzw=;
-        b=ml6IcAS0tlGAbS5Yi35OokE45RxF0PlZ3JGt98gnPLKHcCqHbUXqmS9PdkMcW8MEeD
-         nAdpEJRjuEjU33LDGSs8mOeNqej9cQUUwV1oCjYWIHXAYFjc4hoa+NFfqLh2BrXsxGwU
-         Aey8Ph72mumwG5PBRJkqa4N/anKJnrLqbygS9IIuId3q0EAMBtuaQiQXgQyF6j0tM5NJ
-         JtVTP07i2EIYkDv2ZhkHbxs0BLIMjYw+V1AyJY+Fvv4337ZFXkSSEqBTG0yBYsjHR1+N
-         KQfzuVk2r5gIZPDsYhj0V7yJQ2QsN/K2PUwgfx987ITORglch9ODjqGaZTYGtKkfKysx
-         VoOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FwP8JJPtcWzsdQkUuHadbU0oZNWmZu/tGYbst3cTQzw=;
-        b=a38cbfIyYWigE6geVJfMELlCIcyK/2cv+DDwUk4BRoaXpgSAzr0HGFsmBi/zItnnzd
-         XF0TfvH2VCE/YD8lyNpNQ90bqU1/Z4JN6l1vn3BRmm3v3ZX3b6voE12a7HZ8ZmvNxVyX
-         2ExFaIBihrr90f8GLU1khRDubUVXZJCsxiy9qWRGkJeqhfUWNMow5a9SW8hxiw1RB6Nm
-         wMo9JddRx16h5ABekhMTu8UYFhKJ8PKgp8CBl0m/AbIe0+X6Mi/GlaG82eUiS/gxV5cG
-         deHdXAMYFq+X4ol+f8sXX+kMkzocrivz/5BwvQLmzVGUFdbBpkoamlSUkLukoOU+AD18
-         CuMw==
-X-Gm-Message-State: AOAM533vnGArLsP9fsnfMjpx3QAi1LCh64nMt3I2IUqIf7/W7fej/0+v
-        qoEoCHXrnAHOoeMm6gzP3JXBRg==
-X-Google-Smtp-Source: ABdhPJyQbkunaPWZht+ebwYU90pHFsz7tFovsxHwg6ZqsdgLm+mjM/1dJO07LLGXW+vHYNN8S/XRew==
-X-Received: by 2002:adf:f350:: with SMTP id e16mr16440164wrp.43.1593434879632;
-        Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Joachim Eastwood <manabian@gmail.com>,
-        NeilBrown <neilb@suse.de>, Grant Erickson <marathon96@gmail.com>
-Subject: [PATCH 4/4] pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc header
-Date:   Mon, 29 Jun 2020 13:47:52 +0100
-Message-Id: <20200629124752.1018358-5-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
-References: <20200629124752.1018358-1-lee.jones@linaro.org>
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2070f.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::70f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835AAC033C04;
+        Mon, 29 Jun 2020 11:19:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DIW0mgVbQ7lznWL2uE+oUU21+PgPrUNG5DdeTaiUUfRzreunXJdWCUb/4CAnIvL5BzhdcRAtuL/2BEpc4sJrCetkicq8LFfZWjDWsYYZVOwRxdJOWYmU0jBR18F3vVWRevxZ765nsUsT4dSEigxnnuGrOT1dOSfFYaY8SAi86uMeZdtfm1seRoQ8q7RbrjbLp4bTHNSBfVBJ+ZJV+qEL6w5Hi3wLobdM9AWa2YiS+quAYN/VtL1VQ5gQf+LCZYbrMLBNp9juX9s2B2l+LiCUiRSzaKkOpoA9iPu1ozQrYREEt1B/HcV1OJPtBDYrK3m9LqaziqCusTTU9QXlpGKoqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RDVOpS4Zq4PbrFq84IfdgGkud64uuSfF/OuG/y6JjBQ=;
+ b=Rywsbns31puqjE8/Ce3L91cMKV8DGJcadlhN294pvZ2IgACLlDW98UaWtaw2W1HWSXr08QQar3dxBNHlXLJdd0p6halE/8rsJXYrT91eTx6FX5040Pl17pAWWZLt1Ur7CS+9yYtN86RAzfLRabXmvgWbBRy/iCH3eN48W1mPDcsR/YTqCrbnMbBZObtRUVElWoh7C+gSVYJT7gPHQCdO1SiXWYEt8QcAlgyoDdH5kW7sju4bS2C3P85G9TWypo44xfXqnNqW0NFPPE+poxpkwzmR6XnWuUqSBDwGeNAnXjY32H9rx7geeICRKGLbLJIim5z/CHHzv8B7mouZVSLiEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RDVOpS4Zq4PbrFq84IfdgGkud64uuSfF/OuG/y6JjBQ=;
+ b=NMbZJxwhiUDi0IdathPc84k3iXQvYKfOOYPqLD/nJMQ2vFwzfclUJHsNuHxj7d5wFJmAcVR6wH8FtkOVDjHV/XYbaF7a5jdoEb785KjX03jqS+zrH+oZyzKDyHPgo8Hh5hC/ttb+9Dw15ZZ8O6mixb7BufDxcGBIvDjTBAxhr2k=
+Received: from CH2PR21MB1494.namprd21.prod.outlook.com (2603:10b6:610:88::7)
+ by CH2PR21MB1413.namprd21.prod.outlook.com (2603:10b6:610:8c::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.1; Mon, 29 Jun
+ 2020 18:19:46 +0000
+Received: from CH2PR21MB1494.namprd21.prod.outlook.com
+ ([fe80::38eb:8b9e:8de7:c954]) by CH2PR21MB1494.namprd21.prod.outlook.com
+ ([fe80::38eb:8b9e:8de7:c954%7]) with mapi id 15.20.3174.003; Mon, 29 Jun 2020
+ 18:19:46 +0000
+From:   Andres Beltran <t-mabelt@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
+Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Topic: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Index: AdZOQUsO/cQOS8e4TziUV5xXjrfxNQ==
+Date:   Mon, 29 Jun 2020 18:19:46 +0000
+Message-ID: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [129.22.22.76]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cf10a0cd-0618-45d2-a06e-08d81c590123
+x-ms-traffictypediagnostic: CH2PR21MB1413:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR21MB14132173B1D3300E766ED0F68B6E0@CH2PR21MB1413.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 14Fgy03NiD7ib4NbWt+PWydkwG9JMFI8i0vgDpQeLyGXxCZLSgNBCZKzhZXLoRaSu653VRGMH2evUAfzVqzl6JYYDV5LU5FS3AKtgSlsjnlgB8QicZbSdgbvacDxGgZnJq7cOd8rGn4o3+N/5bF5ZUdApS14gA3F6PtBvYWo1cK2oHEAe8sYYPwc+O94pndmpkcCgfqjiU0/uhrB3WS5jU7SHx+ubSuqdbtZ+LGO93v9CcfDI685b2yJC6dGqTxk04V6cL2rrxSASqTEZhjfqZjKeDcTvjplq+zR1IZED+7ktZ1HC5XCO1yiEeLCv5mT
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR21MB1494.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(346002)(396003)(136003)(39860400002)(66446008)(9686003)(64756008)(66556008)(4326008)(478600001)(82950400001)(82960400001)(2906002)(55016002)(86362001)(66476007)(66946007)(76116006)(8676002)(8936002)(26005)(10290500003)(7696005)(33656002)(5660300002)(71200400001)(316002)(110136005)(83380400001)(54906003)(52536014)(6506007)(186003)(8990500004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Psw4uNWZEdO16cUD8rjfLFpgL574dctsiqNSV6LbGIwih1PLpM+3PAZvHjNeBzoyF+tuBLV/jKfMTA4NEuqjlct73Jrs+BY65kyPPA/ZZn20WCUn7WRHOdbDYtLqkYJRsIGEslUMae2IetKKuWgNJ2jaJ5Gkold1CBwsCBESDg74IgQhc1DRIfcjE3eCn9NHB3EmVfspCEMq91JSift0uMKwFW5bzcpDFp8vCF2iUW805efDtTOCKgp3hq9xs+WeVz5yCPON9a2haI0ecvJyXstTplIjuj3n9dXoX1UvjCWohWIk4KYxHVFKWMmTWQlrVfFVhMdtVrzm30JR26rUr1DGAJKfAJ042b1d7IlWqZG+rG+r+r5ve4gZtemUzrEDJb7NSG571rq0uBw+Jg8+qW3RlqbJ6a6iODfq+xTQqdo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR21MB1494.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf10a0cd-0618-45d2-a06e-08d81c590123
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 18:19:46.9047
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KHCFVe+dJ1XvTTvlz0uLdD+eB+ZPcA5d9+SplQylOtZhPXnAyn90meqpVDd25cv2OJQRL5geu9RK+zggmqaLOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argument descriptions must be prepended with a '@' to be understood
-by the kerneldoc tooling/parsers/validators.
+From: linux-hyperv-owner@vger.kernel.org <linux-hyperv-owner@vger.kernel.or=
+g> On Behalf
+Of Wei Liu. Sent: Friday, June 26, 2020 9:20 AM
+> >  static int __vmbus_open(struct vmbus_channel *newchannel,
+> >  		       void *userdata, u32 userdatalen,
+> >  		       void (*onchannelcallback)(void *context), void *context)
+> > @@ -122,6 +186,7 @@ static int __vmbus_open(struct vmbus_channel *newch=
+annel,
+> >  	u32 send_pages, recv_pages;
+> >  	unsigned long flags;
+> >  	int err;
+> > +	int rqstor;
+> >
+> >  	if (userdatalen > MAX_USER_DEFINED_BYTES)
+> >  		return -EINVAL;
+> > @@ -132,6 +197,14 @@ static int __vmbus_open(struct vmbus_channel *newc=
+hannel,
+> >  	if (newchannel->state !=3D CHANNEL_OPEN_STATE)
+> >  		return -EINVAL;
+> >
+> > +	/* Create and init requestor */
+> > +	if (newchannel->rqstor_size) {
+> > +		rqstor =3D vmbus_alloc_requestor(&newchannel->requestor,
+> > +					       newchannel->rqstor_size);
+>=20
+> You can simply use err here to store the return value or even get rid of
+> rqstor by doing
 
-Fixes the following W=1 warning:
+Right. I will do that.
 
-  drivers/pwm/pwm-omap-dmtimer.c:70: warning: Function parameter or member 'dm_timer_pdev' not described in 'pwm_omap_dmtimer_chip'
+> > @@ -937,3 +1014,75 @@ int vmbus_recvpacket_raw(struct vmbus_channel *ch=
+annel, void
+> *buffer,
+> >  				  buffer_actual_len, requestid, true);
+> >  }
+> >  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
+> > +
+> > +/*
+> > + * vmbus_next_request_id - Returns a new request id. It is also
+> > + * the index at which the guest memory address is stored.
+> > + * Uses a spin lock to avoid race conditions.
+> > + * @rqstor: Pointer to the requestor struct
+> > + * @rqst_add: Guest memory address to be stored in the array
+> > + */
+> > +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_add=
+r)
+> > +{
+> > +	unsigned long flags;
+> > +	u64 current_id;
+> > +
+> > +	spin_lock_irqsave(&rqstor->req_lock, flags);
+>=20
+> Do you really need the irqsave variant here? I.e. is there really a
+> chance this code is reachable from an interrupt handler?
 
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Joachim Eastwood <manabian@gmail.com>
-Cc: NeilBrown <neilb@suse.de>
-Cc: Grant Erickson <marathon96@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/pwm/pwm-omap-dmtimer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Other VMBus drivers will also need to use this functionality, and
+some of them will be called with interrupts disabled. So, I think
+we should keep the irqsave variant here.
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 0d31833db2e2c..75cea7f2aff5e 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -58,7 +58,7 @@
-  * @mutex:		Mutex to protect pwm apply state
-  * @dm_timer:		Pointer to omap dm timer.
-  * @pdata:		Pointer to omap dm timer ops.
-- * dm_timer_pdev:	Pointer to omap dm timer platform device
-+ * @dm_timer_pdev:	Pointer to omap dm timer platform device
-  */
- struct pwm_omap_dmtimer_chip {
- 	struct pwm_chip chip;
--- 
-2.25.1
+Andres.
 
