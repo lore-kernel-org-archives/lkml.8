@@ -2,50 +2,138 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31253C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1729C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1728420702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87372206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459433;
+	bh=dtqLu1m1J2roq7efb5x4Fu7ijYgPk7csKPlExGmhc6k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l4lNSbJ3UfN1/KRzc+cUcx/9tZUKbDaQfGn3SVL4rB27jq0gbk8AnE09Lu7HUzfdY
+	 xs3uYAtau2i9H+ZJRv7LcxSHbNE3fz0ZIvAUrVZKfkCTP8gwJCQm8Ham4IAB5bWoM6
+	 mCw7YVadZulapIV0p3HGR9dOWAn4GzRt4WhtQNmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733268AbgF2Tgz (ORCPT
+        id S1732720AbgF2ThK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:55 -0400
-Received: from gentwo.org ([3.19.106.255]:55696 "EHLO gentwo.org"
+        Mon, 29 Jun 2020 15:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732976AbgF2Tgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:36:52 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 3FF583F57C; Mon, 29 Jun 2020 14:49:28 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 3D0293EA72;
-        Mon, 29 Jun 2020 14:49:28 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 14:49:28 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Long Li <lonuxli.64@gmail.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mm:free unused pages in kmalloc_order
-In-Reply-To: <20200629024253.GB25523@casper.infradead.org>
-Message-ID: <alpine.DEB.2.22.394.2006291448110.27163@www.lameter.com>
-References: <20200627045507.GA57675@lilong> <20200629024253.GB25523@casper.infradead.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        id S1733016AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0CB523E55;
+        Mon, 29 Jun 2020 15:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444905;
+        bh=dtqLu1m1J2roq7efb5x4Fu7ijYgPk7csKPlExGmhc6k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PW5aJ9uInORg2uffgTjr4RbSVThpTO5qeTBZB5ZSJKzE81P+6wKF02U2oZT9MyxHm
+         85gWwx8S9yVgr6CF6ztGpfEo1zWZNI1GNOvfvYD+ll7Xss15E1BTPYduodhqJBNhRf
+         r/6rjfWgYeWOM8//XWiBINrDneteOfa6m/zDw03g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 001/131] net: be more gentle about silly gso requests coming from user
+Date:   Mon, 29 Jun 2020 11:32:52 -0400
+Message-Id: <20200629153502.2494656-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020, Matthew Wilcox wrote:
+From: Eric Dumazet <edumazet@google.com>
 
-> Slab used to disallow GFP_HIGHMEM allocations earlier than this,
+commit 7c6d2ecbda83150b2036a2b36b21381ad4667762 upstream.
 
-It is still not allowed and not supported.
+Recent change in virtio_net_hdr_to_skb() broke some packetdrill tests.
+
+When --mss=XXX option is set, packetdrill always provide gso_type & gso_size
+for its inbound packets, regardless of packet size.
+
+	if (packet->tcp && packet->mss) {
+		if (packet->ipv4)
+			gso.gso_type = VIRTIO_NET_HDR_GSO_TCPV4;
+		else
+			gso.gso_type = VIRTIO_NET_HDR_GSO_TCPV6;
+		gso.gso_size = packet->mss;
+	}
+
+Since many other programs could do the same, relax virtio_net_hdr_to_skb()
+to no longer return an error, but instead ignore gso settings.
+
+This keeps Willem intent to make sure no malicious packet could
+reach gso stack.
+
+Note that TCP stack has a special logic in tcp_set_skb_tso_segs()
+to clear gso_size for small packets.
+
+Fixes: 6dd912f82680 ("net: check untrusted gso_size at kernel entry")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/virtio_net.h | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
+index 1c296f370e461..f32fe7080d2ec 100644
+--- a/include/linux/virtio_net.h
++++ b/include/linux/virtio_net.h
+@@ -109,16 +109,17 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
+ 
+ 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
+ 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
++		struct skb_shared_info *shinfo = skb_shinfo(skb);
+ 
+-		if (skb->len - p_off <= gso_size)
+-			return -EINVAL;
+-
+-		skb_shinfo(skb)->gso_size = gso_size;
+-		skb_shinfo(skb)->gso_type = gso_type;
++		/* Too small packets are not really GSO ones. */
++		if (skb->len - p_off > gso_size) {
++			shinfo->gso_size = gso_size;
++			shinfo->gso_type = gso_type;
+ 
+-		/* Header must be checked, and gso_segs computed. */
+-		skb_shinfo(skb)->gso_type |= SKB_GSO_DODGY;
+-		skb_shinfo(skb)->gso_segs = 0;
++			/* Header must be checked, and gso_segs computed. */
++			shinfo->gso_type |= SKB_GSO_DODGY;
++			shinfo->gso_segs = 0;
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.1
+
