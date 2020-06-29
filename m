@@ -2,96 +2,154 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AC820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E9A2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593462466;
+	bh=QldoJRBScWTWhUxMpvHpThJ417XbVGgJxHTvKimOy10=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UIQMo+NkWax8hVnXJ+omMfYiEZGMiayv+CkknWEsOUHkHnJam9dbxz4WT9SxqrdcB
+	 c9aV6/bQq3OHoju9eEwX5VqLysXkvuIfBdo/N14+F7ML1O/O4yWG8pyvJGG6xCEq8l
+	 4Vkw4Eon/h4ZTqyFdbhEUAyExyL6i/IJkd+LWJ9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgF2U1i (ORCPT
+        id S2389146AbgF2U1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:27:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:36333 "EHLO mga04.intel.com"
+        Mon, 29 Jun 2020 16:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732517AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732509AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:24 -0400
-IronPort-SDR: GVMgacdmGUkbW+ffhO2gdvKlvkWPQ2O3fzLe5ZUGIVWDmmTXdMANqnNA13P2RYS23XFd8aCO4Z
- 4GzpZCMrxMmA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143475983"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="143475983"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 09:24:53 -0700
-IronPort-SDR: 62afR1hi7+NIlYXmM50Jcl16b+Vm/woAty1FR5P9n+HqfEBNErhKyZ64sGMTbgA/bZkvchdUeW
- WVP1tG8ShNyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="264877717"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2020 09:24:51 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jprOg-00Gdw6-TX; Mon, 29 Jun 2020 13:52:22 +0300
-Date:   Mon, 29 Jun 2020 13:52:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/7] Some atomisp fixes and improvements
-Message-ID: <20200629105222.GF3703480@smile.fi.intel.com>
-References: <cover.1593180146.git.mchehab+huawei@kernel.org>
- <20200626150021.GY3703480@smile.fi.intel.com>
- <20200626175216.7955c374@coco.lan>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A5C253D9;
+        Mon, 29 Jun 2020 15:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445312;
+        bh=QldoJRBScWTWhUxMpvHpThJ417XbVGgJxHTvKimOy10=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J/mvlNHeogkCCYPmQRt2yjf7mv6QVNM8wCgEb+2sEi4FiYYawW5CWBPl75CzCCHRW
+         58ag/goB6OQDh+Ma2e/5NaTm4TwrzYFRSRXMD+eLMzK2Xz5iLxtVUY22hchmCZG3zt
+         6LZVso2CbWMdJmk0eLC1eaxKvB2XT8cKd9rk6mGs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 080/191] libata: Use per port sync for detach
+Date:   Mon, 29 Jun 2020 11:38:16 -0400
+Message-Id: <20200629154007.2495120-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626175216.7955c374@coco.lan>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:52:16PM +0200, Mauro Carvalho Chehab wrote:
-> Em Fri, 26 Jun 2020 18:00:21 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> escreveu:
-> 
-> > On Fri, Jun 26, 2020 at 04:04:52PM +0200, Mauro Carvalho Chehab wrote:
-> > > Those patches are meant to improve device detection by the atomisp driver,
-> > > relying on ACPI bios when possible.
-> > > 
-> > > It also adds a basis for using ACPI PM, but only if the DSDT tables have
-> > > a description about how to turn on the resources needed by the cameras.
-> > > 
-> > > At least on the device I'm using for tests, this is not the case.  
-> > 
-> > Is this in your experimental tree? 
-> 
-> Yes. 
-> 
-> > I'll rebase mine on top and test.
-> > After I will send the rest from my series and give a tag to this.
-> 
-> It would be helpful if you could test removing the DMI match table from
-> your board. If your device has a DSDT table close to the one I have, the
-> new code may be able to get everything from DSDT.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-I have checked the atomisp_v5 branch and it doesn't bring any regression to my
-case. So, feel free to add
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
 
-I'll send rebased patches soon.
+Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+detach") may cause system freeze during suspend.
 
+Using async_synchronize_full() in PM callbacks is wrong, since async
+callbacks that are already scheduled may wait for not-yet-scheduled
+callbacks, causes a circular dependency.
+
+Instead of using big hammer like async_synchronize_full(), use async
+cookie to make sure port probe are synced, without affecting other
+scheduled PM callbacks.
+
+Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+Suggested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: John Garry <john.garry@huawei.com>
+BugLink: https://bugs.launchpad.net/bugs/1867983
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ata/libata-core.c | 11 +++++------
+ include/linux/libata.h    |  3 +++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index ba0cffbd0bb6e..46bf7e9d00aba 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -57,7 +57,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+-#include <linux/async.h>
+ #include <linux/log2.h>
+ #include <linux/slab.h>
+ #include <linux/glob.h>
+@@ -6410,7 +6409,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+ 	/* perform each probe asynchronously */
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+-		async_schedule(async_port_probe, ap);
++		ap->cookie = async_schedule(async_port_probe, ap);
+ 	}
+ 
+ 	return 0;
+@@ -6550,11 +6549,11 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
+ 
+-	/* Ensure ata_port probe has completed */
+-	async_synchronize_full();
+-
+-	for (i = 0; i < host->n_ports; i++)
++	for (i = 0; i < host->n_ports; i++) {
++		/* Ensure ata_port probe has completed */
++		async_synchronize_cookie(host->ports[i]->cookie + 1);
+ 		ata_port_detach(host->ports[i]);
++	}
+ 
+ 	/* the host is dead now, dissociate ACPI */
+ 	ata_acpi_dissociate(host);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index cdfb67b22317b..780ccde2c3127 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -38,6 +38,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+ #include <linux/sched.h>
++#include <linux/async.h>
+ 
+ /*
+  * Define if arch has non-standard setup.  This is a _PCI_ standard
+@@ -878,6 +879,8 @@ struct ata_port {
+ 	struct timer_list	fastdrain_timer;
+ 	unsigned long		fastdrain_cnt;
+ 
++	async_cookie_t		cookie;
++
+ 	int			em_message_type;
+ 	void			*private_data;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
