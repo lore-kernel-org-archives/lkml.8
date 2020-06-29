@@ -2,94 +2,113 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B56DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E50C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434C8206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB0D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466759;
-	bh=TinwdUAZToJYD7egtBNB4xARFfc3FZud3Ictzq3+erI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PqOEcu6ajPOlMN3J4kKM0qxTMDg7mZfvOm1WEc1f0qIF7p5R0HEhlsgMKYq+VyD/D
-	 hoymrYrUqozJzsNBdWijEzbYLHqcrJaiAwADyJTCJ7A3qJPJkRQKhZWCslPGCxOj2q
-	 4i8lB0+6MfEDnmMLL6taVn1rzmVlf8PKsKIPy/4M=
+	s=default; t=1593466762;
+	bh=eV1hwMrZg/nVMqycfjegu4dbxpDijmSyrwC/bRAfnqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YVCaOdR81zVo+f71U+Msak1kFwj+GazydTt89b+uaq5CUJ5Oudoihwb6AKxPLjssB
+	 vj82Nf2Qhx6Fnlk+Ytt2T7kThMPOWplazw7x2ii3FIS2k9tkg6lzCT7DDeliuHBRax
+	 +YkdXCAwpdhNICz+HHmppxebpCBb9CKUkqIusUOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgF2VjO (ORCPT
+        id S1730594AbgF2VjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgF2Skb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728280AbgF2Skb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:31 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 241D123403;
-        Mon, 29 Jun 2020 09:39:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 242832415F;
+        Mon, 29 Jun 2020 15:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423590;
-        bh=TinwdUAZToJYD7egtBNB4xARFfc3FZud3Ictzq3+erI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jx2KXQ6ef0yTIysJsCaHS6ElwJ0URrcG5mCHBaVbUC3kV98dGmqUtimtkEBriuOii
-         fcuHYyPCi2Nxt0OvurxzzAvU/3UYZ1o6XR7LEC4Zos20CBHkOCuVvrEWtmAqO498Yo
-         s6GDk0RUbJcBPoqoM1l/UtlFO2Xpxt8BwEXCbtTo=
-Date:   Mon, 29 Jun 2020 15:09:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v8 0/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
- Gigabit Transceiver
-Message-ID: <20200629093943.GB2599@vkoul-mobl>
-References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+        s=default; t=1593443942;
+        bh=eV1hwMrZg/nVMqycfjegu4dbxpDijmSyrwC/bRAfnqI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1OdjMbDnjB9s4LKIz2Ox0KvUw7tje7N1AC1AGksLj+QybNVvlnIQLmKLNRsc3L5LD
+         rzMllGK1DB5zWBsmaqogooRyXfxrB+nzco/FlzgO8PHNTTdhMtVpLIhmUh2Oy/8b45
+         nLMI4gjK9FNwbTVCpemc7VRBBjMZpSyKF7LdmeQQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 044/265] net: macb: call pm_runtime_put_sync on failure path
+Date:   Mon, 29 Jun 2020 11:14:37 -0400
+Message-Id: <20200629151818.2493727-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-05-20, 20:22, Laurent Pinchart wrote:
-> Hello,
-> 
-> The patch series adds a PHY driver for the Xilinx ZynqMP gigabit serial
-> transceivers (PS-GTR). The PS-GTR is a set of 4 PHYs that can be used by
-> the PCIe, USB 3.0, DisplayPort, SATA and Ethernet controllers that are
-> part of the Serial I/O Unit (SIOU).
-> 
-> The code is based on a previous version sent by Anurag Kumar Vulisha and
-> available at [1]. The DT bindings have been converted to YAML, and both
-> the bindings and the driver have been considerably reworked (and
-> simplified). The most notable changes is the removal of manual handling
-> of the reset lines of the PHY users (which belongs to the PHY users
-> themselves), and moving to the standard PHY .power_on() and .configure()
-> operations to replace functions that were previously exported by the
-> driver. Please see individual patches for a more detailed changelog.
-> 
-> Compared to v7, review comments on the PHY driver have been taken into
-> account, and the DT bindings have switched to the GPL-2.0-only OR
-> BSD-2-Clause license
-> 
-> The code is based on v5.6 and has been tested with DisplayPort on the
-> Xilinx ZC106 board.
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-This (dt patch and 8.1 update) fails to apply for me, can you please
-rebased on phy-next and resend. Also I saw this while trying to apply:
+[ Upstream commit 0eaf228d574bd82a9aed73e3953bfb81721f4227 ]
 
-WARNING: Misordered MAINTAINERS entry - list 'S:' before 'T:'
-#403: FILE: MAINTAINERS:18605:
-+T:	git https://github.com/Xilinx/linux-xlnx.git
-+S:	Supported
+Call pm_runtime_put_sync() on failure path of at91ether_open.
 
-Thanks
+Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 257c4920cb886..5705359a36124 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3837,7 +3837,7 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	ret = at91ether_start(dev);
+ 	if (ret)
+-		return ret;
++		goto pm_exit;
+ 
+ 	/* Enable MAC interrupts */
+ 	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
+@@ -3850,11 +3850,15 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	ret = macb_phylink_connect(lp);
+ 	if (ret)
+-		return ret;
++		goto pm_exit;
+ 
+ 	netif_start_queue(dev);
+ 
+ 	return 0;
++
++pm_exit:
++	pm_runtime_put_sync(&lp->pdev->dev);
++	return ret;
+ }
+ 
+ /* Close the interface */
 -- 
-~Vinod
+2.25.1
+
