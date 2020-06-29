@@ -2,171 +2,347 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2493EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6F520780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Mfb92SXj"
+	by mail.kernel.org (Postfix) with ESMTP id EDDF0206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593471397;
+	bh=hPb07BQUD5hHuiQtt1CD+uVbgKCqjdAhw2tFsRIno3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jEdT2qVwm37T8YwDnlxH8UKLxPLO7woPd6SuiTmqy/8D+2/7vrZgM6WXYp6nAkvx4
+	 01YoFz2INd17qtU6SsGxdsO/O3Cn1P3uaDRFsFCED4A2i37PRlXr3vTrOB67Cun9Qn
+	 BjMXg9ZlvCIv2XpaGb1YMDlvTNGygcXSWRuVj6iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgF2Wtm (ORCPT
+        id S1728675AbgF2W4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:49:42 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:57638 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgF2Wtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:49:40 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efa70000000>; Tue, 30 Jun 2020 06:49:36 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jun 2020 15:49:36 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Mon, 29 Jun 2020 15:49:36 -0700
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jun
- 2020 22:49:34 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
- by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 29 Jun 2020 22:49:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+W3L2aQLF/+gCBvY1dsNw52GYDx6mK5EMQDDPalXMvf2YuXggytZoihXyhWyNGduiCq5HVpP1wSdFBbJleFLua6cMLMElMv6XJtmNWT+7I6Zxcn7bmfqoC4WUcojJVde2wVPLZLIt2IkuwMHopAtn9QFnxgQm7ZNTZEmaOy+4Fe7Ald1pTH+K0PIsgVOWql5Eywj52TN01hFBCMYVRowtmdXxZ+g0Uz+6+77s3dLpdbaPS+bf259/N703gQkTTugqnbQmXp8x+WBsKxJf7eoSKiBiImhPDmMue/A/WYkwDJS4uHpfhseBu8+Yt1ydxN9oh1Fc9mHYhGiZGXslrmFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rMdq0jcxClCvw1XMup4Zj0QigQxmMhEszOOyvIDfYro=;
- b=YOWneq93OF6koeMCXg9A2pd3SJDAIa+oSurSWe1Zrow+iEOwwvmsisQmmzc03gzpxvLf87KnVvMnSTqdcPoFS2o5wwXYCYSNciL1jU28D5S9UEdyHOPerDiiUNOr+R1sWvtjqBFE7E2dES4efBWKOcc3jWmvSqDCz5AsBAWOlJl4CS9gnixFfbWz0BIYoTPEaR9bhtQ854xne83D+G2WgooMqY/rz1foIXVK2yBrQHHIZogxCsG1vWIz6Kv4wWTWThnvZB90JFY4sqqK6BVIhMnSSndZyzWuJs0b2MUSiID4hcROWJLBwsCiYk/gun7IOGbsud8gLjmfdbNR3cEv1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
- by BY5PR12MB3794.namprd12.prod.outlook.com (2603:10b6:a03:1aa::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Mon, 29 Jun
- 2020 22:49:31 +0000
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 22:49:31 +0000
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>
-Subject: RE: [PATCH v7 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
- ARM MMU-500 usage
-Thread-Topic: [PATCH v7 1/3] iommu/arm-smmu: add NVIDIA implementation for
- dual ARM MMU-500 usage
-Thread-Index: AQHWTb0G2UEMAqNHrkOgcRrhP8CA7qjwI2MAgAAPBoA=
-Date:   Mon, 29 Jun 2020 22:49:31 +0000
-Message-ID: <BYAPR12MB2822B08564C7BD7212DCCEFEB36E0@BYAPR12MB2822.namprd12.prod.outlook.com>
-References: <20200629022838.29628-1-vdumpa@nvidia.com>
- <20200629022838.29628-2-vdumpa@nvidia.com>
- <20200629215124.GD27967@Asurada-Nvidia>
-In-Reply-To: <20200629215124.GD27967@Asurada-Nvidia>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-06-29T22:49:29.8686239Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=a052f27e-78de-44b4-b458-4c70cf5aabda;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [71.202.129.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1aabfaf4-ec45-4f73-ffb5-08d81c7eb01d
-x-ms-traffictypediagnostic: BY5PR12MB3794:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR12MB3794AAB75EC6068C9A91930AB36E0@BY5PR12MB3794.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xfZ5ge8rYKhSGk4l41in1luJgLOBSCKFrDIw20ZBo805lky0WMmoXsWZ1OJWbcFr+m3ZUEfruxsKDW8L3zL6nQlx5gWSdNOwlsi5YOQMiisGmQ3wqWd4BzXJZWcHFBiOdISsq4j7ZW+bY0zssQyl8OCYHBXyPCGvLr96fCTFzNWil9BxhA3ZW1tomucwej0+cyB1VASN7kqPzHgUDOw1cyj27YaQOaLmys379Ajx1gS848+epmQZxMe3bi4OwUtkYKxQjdNM2FtillTCWgwl73NtCWSWGO8TQDzxuchAQtgXtUdA715qgkvFzaTvv4Ro7XwfJxisyaMeKsGe/xkrBQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(396003)(136003)(346002)(366004)(26005)(66556008)(66946007)(4326008)(6916009)(64756008)(54906003)(66446008)(186003)(86362001)(8936002)(8676002)(66476007)(76116006)(7696005)(316002)(4744005)(71200400001)(478600001)(83380400001)(9686003)(107886003)(52536014)(2906002)(33656002)(55016002)(6506007)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: T29X3EMXOWZ9sj5Pazw/b8vd+Y3UCvd+YeP0VeAdhWHLTFpWziaDGeebDsycEod1zni1Rj8hpPo4a4xXaYxWIQcSpS9joKj5E+lawtVBfHgwPG/a3k0a98PHSJZ8fqwFyI1OZHiBlV9NrhgN4aNjPIacuVFwGhaxC3zV19EPWPw5NZH+JfZuMffyMxq9dB9LVGkOKxR1g42EnFxe8PNinEp98Fb/4S/80p+5nFZK2b5KmBgXt6tnFfT2x/7bXULamkBMyNlGOvSGLEgJssXyNqL2tMLD9W5dj5RCVZV6YIb1wM/6Fc2LM0s/x8zoNLyd9B5CQxQtN9aCBz1Txv71MIWy53nXTtILsMO87RpFYI7yvNEHWW6dOQo3n4h6rWkfQtFCOiQvN5opgyiFzKdSlLPLj9ZOgU3jIXDV1Bnoep+iB6nE8Za/fIEg7fV129QG3OUbb/SmFCjfO2t6B2IJA4OboMR+VOreX6PMc5CRUJA=
+        Mon, 29 Jun 2020 18:56:35 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40597 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgF2W4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:56:34 -0400
+Received: by mail-il1-f194.google.com with SMTP id e18so5317701ilr.7;
+        Mon, 29 Jun 2020 15:56:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NqexIc7qhHu2Klyjnf9V65iQEq7Y/hdfcOm+KR8EJ2A=;
+        b=ol8u+ivSvXFwm3JlxN+MuXyZNox/vYdDYVFdskGnSX70dl46yHimLEt2vZhcLYP0Zm
+         dxRQZs3363PuBc2/siI7DkgCizah1eqGACPo4+HlhhKvulR1ihIsRsPoMyuFCansyK9r
+         xKNAL6+NQ973xWb4akloPrW7TN/ybXIxznFN2sbxpo+U9JiLc4KNrUV26JaDX+uvDQmj
+         JluwyfPu/5bzs/1B2DgVYpEN4hVOvt8Sq9RxmbKsptx301VfKemmatq+zEHCOBlMJvqs
+         SZY9FIHrKcrNX9I/ffQX8Rg/BKsjVnBdCc9MJygEHgx+SFSMOcHU/DUwKtKtlHfSn8aB
+         QnLg==
+X-Gm-Message-State: AOAM533z7scD6lpRWVSlRctx8+5iYbzRmHfhGD6G9rS2ihRCsCL81vVM
+        mu8Sg7b5zIGN0XhfP4KoGw==
+X-Google-Smtp-Source: ABdhPJz5KZo0ydsLmooJljrJ7lRFnExX0VLkSspFa5wh9mY67aT3ByYf1xJN923T7l0Kz69WUpMQnQ==
+X-Received: by 2002:a05:6e02:f42:: with SMTP id y2mr11977175ilj.264.1593471392490;
+        Mon, 29 Jun 2020 15:56:32 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id k3sm681546ils.8.2020.06.29.15.56.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 15:56:31 -0700 (PDT)
+Received: (nullmailer pid 3122607 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:56:30 -0000
+Date:   Mon, 29 Jun 2020 16:56:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     sre@kernel.org, pali@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [PATCH v13 2/4] dt-bindings: power: Convert battery.txt to
+ battery.yaml
+Message-ID: <20200629225630.GA3114703@bogus>
+References: <20200622191837.9326-1-r-rivera-matos@ti.com>
+ <20200622191837.9326-3-r-rivera-matos@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aabfaf4-ec45-4f73-ffb5-08d81c7eb01d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 22:49:31.8678
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MPqsMVJn3MmD1iDuXnOHh4vpaOxOVCgkiaa1TzuU709qq1EyQ/PlvQ8qJN6SvtxlkHqt3qBGhFXxyk27O6u+dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3794
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593470976; bh=rMdq0jcxClCvw1XMup4Zj0QigQxmMhEszOOyvIDfYro=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=Mfb92SXj7dRCu/0OuV9WJI1G1+Pfl/1uY7DMkS7Wd1vj2MO5GKQEX5zXhUo3YYaTm
-         xgYxXu5THzvzUUQkD6UmaDT9Pls/jsVdXiIXS4Ybq3q+D3rlkNKqMHQFu/onX0iDV0
-         3cI/c8lZENbQgJ7cIiA92AnXtqJtry7xynA1kxWxce0gqaBy7rQnbMhkzY9ImIzSrQ
-         E0pTejRrgShEnKO9ITgt+wlGxKz2psgtCIJTxrcRuJgvZ5fPTGiTvFIFmmrzLXV2fw
-         bkCtpKUPOIjld5YvTAnN14SoEIQfuvWcYYEty72v2DyC8bOQy820vWvtlddJfAiS7E
-         Ai0PB4vNFesTw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622191837.9326-3-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +     if (!nvidia_smmu->bases[0])
->> +             nvidia_smmu->bases[0] =3D smmu->base;
->> +
->> +     return nvidia_smmu->bases[inst] + (page << smmu->pgshift); }
+On Mon, Jun 22, 2020 at 02:18:35PM -0500, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
+> 
+> Convert the battery.txt file to yaml and fix up the examples.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/power/supply/battery.txt         |  83 +----------
+>  .../bindings/power/supply/battery.yaml        | 139 ++++++++++++++++++
+>  2 files changed, 141 insertions(+), 81 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 5e29595edd74..4c5216fcb760 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -1,87 +1,8 @@
+> -Battery Characteristics
+> -
+> -The devicetree battery node provides static battery characteristics.
+> -In smart batteries, these are typically stored in non-volatile memory
+> -on a fuel gauge chip. The battery node should be used where there is
+> -no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> -
+> -Upstream dts files should not include battery nodes, unless the battery
+> -represented cannot easily be replaced in the system by one of a
+> -different type. This prevents unpredictable, potentially harmful,
+> -behavior should a replacement that changes the battery type occur
+> -without a corresponding update to the dtb.
+> +The contents of this file has been moved to battery.yaml
+>  
+>  Please note that not all charger drivers respect all of the properties.
+>  
+> -Required Properties:
+> - - compatible: Must be "simple-battery"
+> -
+> -Optional Properties:
+>   - over-voltage-threshold-microvolt: battery over-voltage limit
+>   - re-charge-voltage-microvolt: limit to automatically start charging again
 
->Not critical -- just a nit: why not put the bases[0] in init()?
+Why are some things not moved?
 
-smmu->base is not available during nvidia_smmu_impl_init() call. It is set =
-afterwards in arm-smmu.c.
-It can't be avoided without changing the devm_ioremap() and impl_init() cal=
-l order in arm-smmu.c.=20
+> - - voltage-min-design-microvolt: drained battery voltage
+> - - voltage-max-design-microvolt: fully charged battery voltage
+> - - energy-full-design-microwatt-hours: battery design energy
+> - - charge-full-design-microamp-hours: battery design capacity
+>   - trickle-charge-current-microamp: current for trickle-charge phase
+> - - precharge-current-microamp: current for pre-charge phase
+> - - precharge-upper-limit-microvolt: limit when to change to constant charging
+> - - charge-term-current-microamp: current for charge termination phase
+> - - constant-charge-current-max-microamp: maximum constant input current
+> - - constant-charge-voltage-max-microvolt: maximum constant input voltage
+> - - factory-internal-resistance-micro-ohms: battery factory internal resistance
+> - - ocv-capacity-table-0: An array providing the open circuit voltage (OCV)
+> -   of the battery and corresponding battery capacity percent, which is used
+> -   to look up battery capacity according to current OCV value. And the open
+> -   circuit voltage unit is microvolt.
+> - - ocv-capacity-table-1: Same as ocv-capacity-table-0
+> - ......
+> - - ocv-capacity-table-n: Same as ocv-capacity-table-0
+> - - ocv-capacity-celsius: An array containing the temperature in degree Celsius,
+> -   for each of the battery capacity lookup table. The first temperature value
+> -   specifies the OCV table 0, and the second temperature value specifies the
+> -   OCV table 1, and so on.
+> - - resistance-temp-table: An array providing the temperature in degree Celsius
+> -   and corresponding battery internal resistance percent, which is used to look
+> -   up the resistance percent according to current temperature to get a accurate
+> -   batterty internal resistance in different temperatures.
+> -
+> -Battery properties are named, where possible, for the corresponding
+> -elements in enum power_supply_property, defined in
+> -https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/power_supply.h
+> -
+> -Batteries must be referenced by chargers and/or fuel-gauges
+> -using a phandle. The phandle's property should be named
+> -"monitored-battery".
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible = "simple-battery";
+> -		voltage-min-design-microvolt = <3200000>;
+> -		voltage-max-design-microvolt = <4200000>;
+> -		energy-full-design-microwatt-hours = <5290000>;
+> -		charge-full-design-microamp-hours = <1430000>;
+> -		precharge-current-microamp = <256000>;
+> -		charge-term-current-microamp = <128000>;
+> -		constant-charge-current-max-microamp = <900000>;
+> -		constant-charge-voltage-max-microvolt = <4200000>;
+> -		factory-internal-resistance-micro-ohms = <250000>;
+> -		ocv-capacity-celsius = <(-10) 0 10>;
+> -		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+> -		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+> -		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+> -		resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> -	};
+> -
+> -	charger: charger@11 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> -
+> -	fuel_gauge: fuel-gauge@22 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> + - precharge-upper-limit-microvolt: limit when to change to constant charging
 
--KR
+And new things added?
+
+> \ No newline at end of file
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.yaml b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> new file mode 100644
+> index 000000000000..a3dca0b0347e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> @@ -0,0 +1,139 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/battery.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Battery Characteristics
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  The devicetree battery node provides static battery characteristics.
+> +  In smart batteries, these are typically stored in non-volatile memory
+> +  on a fuel gauge chip. The battery node should be used where there is
+> +  no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> +
+> +  Upstream dts files should not include battery nodes, unless the battery
+> +  represented cannot easily be replaced in the system by one of a
+> +  different type. This prevents unpredictable, potentially harmful,
+> +  behavior should a replacement that changes the battery type occur
+> +  without a corresponding update to the dtb.
+> +
+> +  Battery properties are named, where possible, for the corresponding elements
+> +  in enum power_supply_property, defined in include/linux/power_supply.h
+> +
+> +  Batteries must be referenced by chargers and/or fuel-gauges using a phandle.
+> +  The phandle's property should be named "monitored-battery".
+> +
+> +properties:
+> +  compatible:
+> +    const: simple-battery
+> +
+> +  voltage-min-design-microvolt:
+> +    description: drained battery voltage
+> +
+> +  voltage-max-design-microvolt:
+> +    description: fully charged battery voltage
+> +
+> +  energy-full-design-microwatt-hours:
+> +    description: battery design energy
+> +
+> +  charge-full-design-microamp-hours:
+> +    description: battery design capacity
+> +
+> +  precharge-current-microamp:
+> +    description: current for pre-charge phase
+> +
+> +  charge-term-current-microamp:
+> +    description: current for charge termination phase
+> +
+> +  constant-charge-current-max-microamp:
+> +    description: maximum constant input current
+> +
+> +  constant-charge-voltage-max-microvolt:
+> +    description: maximum constant input voltage
+> +
+> +  factory-internal-resistance-micro-ohms:
+> +    description: battery factory internal resistance
+> +
+> +  monitored-battery:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the battery node being monitored
+> +
+> +required:
+> +  - compatible
+> +
+> +patternProperties:
+> +  '^ocv-capacity-table-[0-100]$':
+> +    description: |
+> +      An array providing the open circuit voltage (OCV)
+> +      of the battery and corresponding battery capacity percent, which is used
+> +      to look up battery capacity according to current OCV value. And the open
+> +      circuit voltage unit is microvolt.
+
+You need a type reference to uint32-matrix.
+
+> +    maxItems: 100
+> +    items:
+> +      items:
+> +        - description: open circuit voltage (OCV) in microvolts
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +  '^resistance-temp-table-[0-100]$':
+> +    description: |
+> +      An array providing the temperature in degree Celsius
+> +      and corresponding battery internal resistance percent, which is used to
+> +      look up the resistance percent according to current temperature to get an
+> +      accurate batterty internal resistance in different temperatures.
+
+And here...
+
+> +    maxItems: 100
+> +    items:
+> +      items:
+> +        - description: internal resistance percent
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +  '^ocv-capacity-celsius-[0-100]$':
+> +    description: |
+> +      An array containing the temperature in degree Celsius,
+> +      for each of the battery capacity lookup table.
+
+A ref to uint32-array.
+
+> +    maxItems: 100
+> +    items:
+> +      items:
+> +        - description: temperature in degree Celsius
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      battery:battery {
+> +        compatible = "simple-battery";
+> +        voltage-min-design-microvolt = <3200000>;
+> +        voltage-max-design-microvolt = <4200000>;
+> +        energy-full-design-microwatt-hours = <5290000>;
+> +        charge-full-design-microamp-hours = <1430000>;
+> +        precharge-current-microamp = <256000>;
+> +        charge-term-current-microamp = <128000>;
+> +        constant-charge-current-max-microamp = <900000>;
+> +        constant-charge-voltage-max-microvolt = <4200000>;
+> +        factory-internal-resistance-micro-ohms = <250000>;
+> +        ocv-capacity-celsius-0 = <(-10) 10>;
+> +        ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>;
+> +        resistance-temp-table-0 = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> +      };
+> +
+> +      charger@11 {
+> +        reg = <0x11>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +
+> +      fuel-gauge@22 {
+> +        reg = <0x22>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +    };
+> \ No newline at end of file
+
+Fix this.
+
+> -- 
+> 2.27.0
+> 
