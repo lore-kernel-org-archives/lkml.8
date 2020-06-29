@@ -2,126 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C4420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3594B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbIxwA8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgF2Swl (ORCPT
+        id S1729780AbgF2Sws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:52:41 -0400
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:49426 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726889AbgF2Swc (ORCPT
+        Mon, 29 Jun 2020 14:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729687AbgF2Swm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:32 -0400
-X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 14:52:31 EDT
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Mon, 29 Jun
- 2020 19:21:36 +0800
-Received: from tony-HX002EA.zhaoxin.com (10.32.56.13) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Mon, 29 Jun
- 2020 19:21:33 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>,
-        <pawan.kumar.gupta@linux.intel.com>, <jpoimboe@redhat.com>,
-        <peterz@infradead.org>, <thellstrom@vmware.com>,
-        <mgross@linux.intel.com>, <kim.phillips@amd.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
-        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>,
-        <CobeChen@zhaoxin.com>
-Subject: [PATCH] x86/cpufeatures: Add new Zhaoxin CPU features
-Date:   Mon, 29 Jun 2020 19:21:29 +0800
-Message-ID: <1593429689-25131-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Jun 2020 14:52:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D98C02E2CF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:55 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f139so16235430wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xnIhP+BLJCkXHxO9I8vb7t4ZYrl34I7GGa9NV7vqaQI=;
+        b=PbIxwA8vy7vWwp3PD1xYvC/boLvJezju8OhuIn1WM5qPXlK2MdHIieYvhn934I/UGA
+         OURRy4f4bR0e0ymv4gSsOjdvPt+GDIeqZW65pRyK3+1U3jg+H4I2SGTL5572ec1SsDNz
+         N+VMvXp2ig6KCBI/kKZM7CZ0OLIimgEUoYBfBhg8GeUjawTAJC3doOiPq6oJOzVJ/12U
+         dMXCjVQc6LifoAl9uBJ8pFrHlHAMFF5aB10GKWdxKort9tIty0y2pSIcGpIivF9NIPmn
+         nOQycVd1S4Orevvtr0YBONdbpszrq0tUfl6hfN8a9UI2cpYPDvBQcA+vULw12+lFAIZP
+         5OxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xnIhP+BLJCkXHxO9I8vb7t4ZYrl34I7GGa9NV7vqaQI=;
+        b=rjXebj7YDA5D04dB5LbZeHHIqKJOwzmD3MsED9R4urdTdb6e5aW6fscN/2+UMsUkcf
+         1R6MRF4WZxcasuNJG9am8bUWjaKX9czySLRtYi1zsZ2AJqY2dB9vtwSmjdndaEzoEvYa
+         teTBy5UzzZYR9LZZ97YjGu2zvg3t2Yx0jJKy0F35JFZQJsHa/afzMyzNf8+B6qJ8PQPs
+         GLJKiDN3pdt0igRu6dpYfermhxV98M2LK4bnTraH5w45ZlDYs1q2QcbM0KUPd6tBVX7+
+         Xdpp9AmQVzblbSu0HOefthU/jb2yCV09CZYORxCsrbiZD/XeY/l2c7tEI7S5+gRDUpyT
+         GZoQ==
+X-Gm-Message-State: AOAM533Dv7KW2xlR/4AvM/3vPUxgZgbdfOamVsMz4k4VL77AeCMSbKPj
+        +ka7Ow+o8mjIod32DncE+StlnA==
+X-Google-Smtp-Source: ABdhPJzOeMnbeszmHXXVmi9cS1WP+C6v+N9/fl+FfYjF90m7DrLtS9Wxsh//Et3QXAUgw7l8F9buNA==
+X-Received: by 2002:a1c:e908:: with SMTP id q8mr6088247wmc.59.1593439494664;
+        Mon, 29 Jun 2020 07:04:54 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 07:04:54 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 07/20] misc: habanalabs: pci: Scrub documentation for non-present function argument
+Date:   Mon, 29 Jun 2020 15:04:29 +0100
+Message-Id: <20200629140442.1043957-8-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.32.56.13]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new Zhaoxin CPU features for enumeration in /proc/cpuinfo:
-SM2, SM2_EN, SM3, SM4, SM3_EN, SM4_EN, PARALLAX, PARALLAX_EN,
-TM3, TM3_EN, RNG2, RNG2_EN, PHE2, PHE2_EN, RSA, RSA_EN.
+'dma_mask' is not passed directly into hl_pci_set_dma_mask() as
+an argument.  Instead, it is pulled from struct hl_device *hdev.
 
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 0]  SM2
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 1]  SM2_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 4]  SM3 SM4
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 5]  SM3_EN SM4_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 16] PARALLAX
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 17] PARALLAX_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 20] TM3
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 21] TM3_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 22] RNG2
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 23] RNG2_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 25] PHE2
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 26] PHE2_EN
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 27] RSA
-CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 28] RSA_EN
+Fixed the following W=1 warning:
 
-SM2, SM3, SM4 are Chinese Cipher Security algorithm.
-PARALLAX is a feature that automatically adjusts processors's voltage
-as a function of temperature.
-TM3 is Zhaoxin CPU Thermal Monitor v3.
-RNG2 is Zhaoxin Random Number Generation v2.
-PHE2 is Zhaoxin Padlock Hash Engine v2.
-RSA is Zhaoxin hardware support for RSA algorithm.
+ drivers/misc/habanalabs/pci.c:328: warning: Excess function parameter 'dma_mask' description in 'hl_pci_set_dma_mask
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc: Oded Gabbay <oded.gabbay@gmail.com>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/x86/include/asm/cpufeatures.h | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/pci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index c693ebf..a6c2d2b 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -145,9 +145,13 @@
- #define X86_FEATURE_RDRAND		( 4*32+30) /* RDRAND instruction */
- #define X86_FEATURE_HYPERVISOR		( 4*32+31) /* Running on a hypervisor */
- 
--/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
-+/* VIA/Cyrix/Centaur/Zhaoxin-defined CPU features, CPUID level 0xC0000001, word 5 */
-+#define X86_FEATURE_SM2			( 5*32+ 0) /* Chinese cipher security hardware support of SM2 */
-+#define X86_FEATURE_SM2_EN		( 5*32+ 1) /* SM2 enabled */
- #define X86_FEATURE_XSTORE		( 5*32+ 2) /* "rng" RNG present (xstore) */
- #define X86_FEATURE_XSTORE_EN		( 5*32+ 3) /* "rng_en" RNG enabled */
-+#define X86_FEATURE_CCS			( 5*32+ 4) /* "sm3 sm4" Chinese Cipher Security hardware support*/
-+#define X86_FEATURE_CCS_EN		( 5*32+ 5) /* "sm3_en sm4_en" sm3 sm4 enabled */
- #define X86_FEATURE_XCRYPT		( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
- #define X86_FEATURE_XCRYPT_EN		( 5*32+ 7) /* "ace_en" on-CPU crypto enabled */
- #define X86_FEATURE_ACE2		( 5*32+ 8) /* Advanced Cryptography Engine v2 */
-@@ -156,6 +160,16 @@
- #define X86_FEATURE_PHE_EN		( 5*32+11) /* PHE enabled */
- #define X86_FEATURE_PMM			( 5*32+12) /* PadLock Montgomery Multiplier */
- #define X86_FEATURE_PMM_EN		( 5*32+13) /* PMM enabled */
-+#define X86_FEATURE_PARALLAX		( 5*32+16) /* Parallax auto adjust processor voltage */
-+#define X86_FEATURE_PARALLAX_EN		( 5*32+17) /* Parallax auto adjust processor voltage enabled */
-+#define X86_FEATURE_TM3			( 5*32+20) /* Thermal Monitor v3 support */
-+#define X86_FEATURE_TM3_EN		( 5*32+21) /* TM3 enabled */
-+#define X86_FEATURE_RNG2		( 5*32+22) /* RNG v2 present */
-+#define X86_FEATURE_RNG2_EN		( 5*32+23) /* RNG v2 enabled */
-+#define X86_FEATURE_PHE2		( 5*32+25) /* PHE v2 present */
-+#define X86_FEATURE_PHE2_EN		( 5*32+26) /* PHE v2 enabled */
-+#define X86_FEATURE_RSA			( 5*32+27) /* RSA hardware support */
-+#define X86_FEATURE_RSA_EN		( 5*32+28) /* RSA enabled */
- 
- /* More extended AMD flags: CPUID level 0x80000001, ECX, word 6 */
- #define X86_FEATURE_LAHF_LM		( 6*32+ 0) /* LAHF/SAHF in long mode */
+diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
+index 24073e8eb8df9..61a8bb07262cf 100644
+--- a/drivers/misc/habanalabs/pci.c
++++ b/drivers/misc/habanalabs/pci.c
+@@ -317,7 +317,6 @@ int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
+ /**
+  * hl_pci_set_dma_mask() - Set DMA masks for the device.
+  * @hdev: Pointer to hl_device structure.
+- * @dma_mask: number of bits for the requested dma mask.
+  *
+  * This function sets the DMA masks (regular and consistent) for a specified
+  * value. If it doesn't succeed, it tries to set it to a fall-back value
 -- 
-2.7.4
+2.25.1
 
