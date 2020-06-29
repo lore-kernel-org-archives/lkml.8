@@ -2,61 +2,61 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E57C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6F82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7AA20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462556;
-	bh=/r3RPMZ9OsyCm8GFmyLipy/4QEc9XoGNAz7DblwtmsA=;
+	s=default; t=1593462559;
+	bh=z9HC8fjtE91zDOgMhT+LLjIAS45FRJcu+53+IAN2WII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piaZF9MNjMxPFquQZz7wAcdHKjVvEfzhrRMbTWbGTTWq8nFrdcu4XfQrOguPvYFxG
-	 93LxYa/6ohFOsN1D0AijP4J742YymGjxm3XQWvwFEMK3utP7O+989rs2FeJ3OFqNAK
-	 N83rUCx3O2q6RKSpZG+JzJ+2htgOF7JjWzLuiDg0=
+	b=FYELq62IwC7nRbff6ZaSgpO2DPkEAn6ibzhtML3e1TbrBOwsoO3N5xT3hdb//LNSS
+	 f2zhOv7TREHHe3G08zn65pjTh58adYVP4LivV0yancudI9a/U7vUuWPdN659Zp7+a6
+	 R1ZrNgROXva4NL4stO+ItWBViCQCJ+TsvEAK5wj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388761AbgF2U3P (ORCPT
+        id S1732757AbgF2U3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbgF2TZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732440AbgF2TZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 240B725386;
-        Mon, 29 Jun 2020 15:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E802533C;
+        Mon, 29 Jun 2020 15:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445253;
-        bh=/r3RPMZ9OsyCm8GFmyLipy/4QEc9XoGNAz7DblwtmsA=;
+        s=default; t=1593445179;
+        bh=z9HC8fjtE91zDOgMhT+LLjIAS45FRJcu+53+IAN2WII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYJkawvliQyv79NNqMWK7/Miz8AGeOCFX14eTmTo/+kYY48U5R4pwJ7YNEV3cORdj
-         MrAajII1a9u1CG/Ynz99ZF39PuuOtKLUHjOdz5aQGd7WjwNmp9KPSneMhCcu4YkkGn
-         GjJwEho7c3/0hz2gveUmfxjCKI8etzqKDf5/mdFw=
+        b=he6xZo3N+1K3Z19hlNiaL1laJQNFGyPDDXTiFB9Oc/w2SWk0W5cHd41xQxlnwVlAn
+         /JNq9Jyo1QboEK/o8i1jXdMM8LWhmWS2f4FdQvbLCudWv5SmcNPkaJ4mOd1Ci4BVRU
+         etoXUie5poofX/9RFT2x9PCpE5eP5R/RYBDyZV5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 035/191] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
-Date:   Mon, 29 Jun 2020 11:37:31 -0400
-Message-Id: <20200629154007.2495120-36-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 70/78] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Mon, 29 Jun 2020 11:37:58 -0400
+Message-Id: <20200629153806.2494953-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,68 +65,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
+commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
 
-In the probe function, in case of error, resources allocated in
-'lp8788_setup_adc_channel()' must be released.
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-This can be achieved easily by using the devm_ variant of
-'iio_channel_get()'.
-This has the extra benefit to simplify the remove function and to axe the
-'lp8788_release_adc_channel()' function which is now useless.
-
-Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/power/supply/lp8788-charger.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
-index cd614fe69d149..c3075ea011b64 100644
---- a/drivers/power/supply/lp8788-charger.c
-+++ b/drivers/power/supply/lp8788-charger.c
-@@ -603,27 +603,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
- 		return;
+diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
+index 9416e72f86aaf..d491b3aa124f3 100644
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2126,7 +2126,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
+ 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
+ 			ret = -EINVAL;
  
- 	/* ADC channel for battery voltage */
--	chan = iio_channel_get(dev, pdata->adc_vbatt);
-+	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
- 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
  
- 	/* ADC channel for battery temperature */
--	chan = iio_channel_get(dev, pdata->adc_batt_temp);
-+	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
- 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
- }
- 
--static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
--{
--	int i;
--
--	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
--		if (!pchg->chan[i])
--			continue;
--
--		iio_channel_release(pchg->chan[i]);
--		pchg->chan[i] = NULL;
--	}
--}
--
- static ssize_t lp8788_show_charger_status(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
-@@ -744,7 +731,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
- 	lp8788_irq_unregister(pdev, pchg);
- 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
- 	lp8788_psy_unregister(pchg);
--	lp8788_release_adc_channel(pchg);
- 
- 	return 0;
- }
+ 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
 -- 
 2.25.1
 
