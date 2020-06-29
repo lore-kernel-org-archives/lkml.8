@@ -2,140 +2,71 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D518C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8AA206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E47206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466631;
-	bh=JxS7qG1TBN6E09S+KrZbuW/QoJaZC8vZAevnWONK0Vo=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=CrUSPjXTcx+LKcnvJSeJ69jHmNhOlY69hNQk5zen0P6QOr+JNBEQJ3QMPOT6GrR2K
-	 QtGdPC+I7RMzxoTOyQ0ZoTvaknRIZvdVEPFNLW3JMFiC21ZFKoPGY08//Vs+Ic9PLV
-	 rc3tdpHsf0Z6mwjpR8La+CU1df0GnGdySQYLt8vQ=
+	s=default; t=1593466633;
+	bh=mPGiTVcftIoSXUZ6f1pWsVTJ28Byph4d25oaNFRkBPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G7DhPP88ib5gMDlzVL/7m40kDKqW3GvGcoqRbJhrn6FztJ/m+WPo12Skl0p0F/MM3
+	 6oiY4FjtQ1uSYhqu8mXHapZX0kFj5C7Pn0njsuLus9W9nsJaEovz6G23iaLtV7hfhw
+	 gSjVVmOl1iOV++cYHXUvOqn0O/LU/r9OfKFLDb94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388554AbgF2VhJ (ORCPT
+        id S2390448AbgF2VhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:37:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbgF2Skj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:39 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1728417AbgF2Ski (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:38 -0400
+Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D543F233F9;
-        Mon, 29 Jun 2020 09:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5E1423437;
+        Mon, 29 Jun 2020 09:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423343;
-        bh=JxS7qG1TBN6E09S+KrZbuW/QoJaZC8vZAevnWONK0Vo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yap008obp4KXXBTi7vzlQ84ybSpi0OZY1NOtylkU/7C4HW0pvvZ8SNDpKlW3/DYzu
-         p6unDyDIPAtgfVloBtlGC2t1HarckC+bgB1MNZiDt6rkPEKR1uiDcd3iYuHZLCZPS1
-         745yr1hXLGK2ih1KsHSEd2AhJRSF9ENhLhBX4Dc4=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jpqCS-006cAV-Jc; Mon, 29 Jun 2020 11:35:40 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] kconfig: qconf: navigate menus on hyperlinks
-Date:   Mon, 29 Jun 2020 11:35:39 +0200
-Message-Id: <45fa5ad583de1766de6169366df1df5837c5dc7c.1593423060.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593423060.git.mchehab+huawei@kernel.org>
-References: <cover.1593423060.git.mchehab+huawei@kernel.org>
+        s=default; t=1593424174;
+        bh=mPGiTVcftIoSXUZ6f1pWsVTJ28Byph4d25oaNFRkBPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GkBvIT/XpoNOV/3SQ5LCkp7Sta+rrT6l0NHlJ87pF/Ct/Sm1OBCD2lf5OiCN723X/
+         ANew8yU8tLPCBqz32Jzge5OMl9ifu7G7DAkRh9dU3Fl9tcHTOoxvLXIyjxUbx/ALSE
+         uBlg1hU9MDuDLlGsuj0g+R2HCfOz3iARq19Lsolo=
+Date:   Mon, 29 Jun 2020 15:19:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: phy: qcom: Fix missing 'ranges' and example
+ addresses
+Message-ID: <20200629094930.GF2599@vkoul-mobl>
+References: <20200611151835.1100883-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611151835.1100883-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of just changing the helper window to show a
-dependency, also navigate to it at the config and menu
-widgets.
+On 11-06-20, 09:18, Rob Herring wrote:
+> The QCom QMP PHY bindings have child nodes with translatable (MMIO)
+> addresses, so a 'ranges' property is required in the parent node.
+> Additionally, the examples default to 1 address and size cell, so let's
+> fix that, too.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- scripts/kconfig/qconf.cc | 24 +++++-------------------
- 1 file changed, 5 insertions(+), 19 deletions(-)
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 49f0688fceb8..d8870b15a178 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -1232,7 +1232,6 @@ void ConfigInfoView::clicked(const QUrl &url)
- 	char *data = new char[count + 1];
- 	struct symbol **result;
- 	struct menu *m = NULL;
--	char type;
- 
- 	if (count < 1) {
- 		qInfo() << "Clicked link is empty";
-@@ -1242,7 +1241,6 @@ void ConfigInfoView::clicked(const QUrl &url)
- 
- 	memcpy(data, str.constData(), count);
- 	data[count] = '\0';
--	type = data[0];
- 
- 	/* Seek for exact match */
- 	data[0] = '^';
-@@ -1255,15 +1253,8 @@ void ConfigInfoView::clicked(const QUrl &url)
- 	}
- 
- 	sym = *result;
--	if (type == 's') {
--		symbolInfo();
--		emit showDebugChanged(true);
--		free(result);
--		delete data;
--		return;
--	}
- 
--	/* URL is a menu */
-+	/* Seek for the menu which holds the symbol */
- 	for (struct property *prop = sym->prop; prop; prop = prop->next) {
- 		    if (prop->type != P_PROMPT && prop->type != P_MENU)
- 			    continue;
-@@ -1271,17 +1262,11 @@ void ConfigInfoView::clicked(const QUrl &url)
- 		    break;
- 	}
- 
--	if (!m) {
-+	if (!m)
- 		qInfo() << "Clicked menu is invalid:" << data;
--		free(result);
--		delete data;
--		return;
--	}
-+	else
-+		emit menuSelected(m);
- 
--	_menu = m;
--	menuInfo();
--
--	emit showDebugChanged(true);
- 	free(result);
- 	delete data;
- }
-@@ -1750,6 +1735,7 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 			item->setSelected(true);
- 			list->scrollToItem(item);
- 			list->setFocus();
-+			helpText->setInfo(menu);
- 		}
- 	}
- }
 -- 
-2.26.2
-
+~Vinod
