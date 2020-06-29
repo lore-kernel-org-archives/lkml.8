@@ -2,52 +2,50 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E61C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8365CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6A0D207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A88207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461355;
-	bh=g5GMusCJAl+kxwQXLRfhojISqOeZ1LeALycbFAuhyU8=;
+	s=default; t=1593461366;
+	bh=npWxp2xapokEr23yVAS0nhuBjBN+VC1AkCUTZrVl9F0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCTlwe3NRxhNK2PAGxVmGGSfApWPAp0hdIsEPYNGkBA+akNXTkHrkImkY27YIZkVq
-	 qYzpkq2JzjIayBqmHynIhaSPS/P/ZxvwBKUMkMUrIW2vh3fwvrdoNgkIXV1ctSd2zN
-	 Wkc30sRFDku4SHMwQoTd2Ql+pOvmVWBhaCbgmzkU=
+	b=w/uw5+QP+tGZsyGbcVr1y97nfuywoVC7MUbvhHazmO7v7ERYkNv+j3xOf66YvHCi4
+	 KCPp2j4yZRaWWgyh6CONtYDcq/fWCHv0oa1PnxkMOY36aFHS/4B8ipn5zJqMXb/74C
+	 0hSQvq7UpMO1vr7717EGCHGVWEHNDTc5ZmUcQGyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgF2UJN (ORCPT
+        id S1727098AbgF2UJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732941AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:23 -0400
+        id S1732920AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36A1325253;
-        Mon, 29 Jun 2020 15:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFA925290;
+        Mon, 29 Jun 2020 15:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444965;
-        bh=g5GMusCJAl+kxwQXLRfhojISqOeZ1LeALycbFAuhyU8=;
+        s=default; t=1593445000;
+        bh=npWxp2xapokEr23yVAS0nhuBjBN+VC1AkCUTZrVl9F0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpCWMayGXukkhsVVGc9V4Fp8GSYSJa59TkGMVy/XkwTrLtU1zwkSDjEzKEmqu82WC
-         /jFzuaK9hvDKSEBT8PRRyNjfEKLV4ne2slV6pNqRpk57iIr4XSl3pIsfzQTDoYXV6R
-         8J6p0do1vIGlrEjNcir4m81nOpjgpi829bBFcK78=
+        b=tYwwUSrsuljfp6v4uhmOToJdTNo6IvnX8ZDWjLdbJ9ctSvA4RXaB4TLR32HS133NA
+         0zqih2vrI33rZIYkz6abeTaOVavZKAbX/ZfQlm9gVPHKNGRCVG5xv+PaxOwMbRCrBl
+         HCjbjAHHLnRNiHD19scWGGYb3uHiefD2WDrYy7lg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Christophe Meynard <Christophe.Meynard@ign.fr>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/131] regualtor: pfuze100: correct sw1a/sw2 on pfuze3000
-Date:   Mon, 29 Jun 2020 11:33:55 -0400
-Message-Id: <20200629153502.2494656-65-sashal@kernel.org>
+Subject: [PATCH 4.19 101/131] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:34:32 -0400
+Message-Id: <20200629153502.2494656-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,119 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 6f1cf5257acc6e6242ddf2f52bc7912aed77b79f ]
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-PFUZE100_SWB_REG is not proper for sw1a/sw2, because enable_mask/enable_reg
-is not correct. On PFUZE3000, sw1a/sw2 should be the same as sw1a/sw2 on
-pfuze100 except that voltages are not linear, so add new PFUZE3000_SW_REG
-and pfuze3000_sw_regulator_ops which like the non-linear PFUZE100_SW_REG
-and pfuze100_sw_regulator_ops.
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-Fixes: 1dced996ee70 ("regulator: pfuze100: update voltage setting for pfuze3000 sw1a")
-Reported-by: Christophe Meynard <Christophe.Meynard@ign.fr>
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Link: https://lore.kernel.org/r/1592171648-8752-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
+
+For example, -gsplit-dwarf creates a .dwo file.
+
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
+
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pfuze100-regulator.c | 60 +++++++++++++++++---------
- 1 file changed, 39 insertions(+), 21 deletions(-)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 69a377ab26041..30e92a9cc97e9 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -196,6 +196,19 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index ce53639a864a1..c830750d725b7 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -81,20 +81,21 @@ cc-cross-prefix =  \
+ 		fi)))
  
- };
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
-+static const struct regulator_ops pfuze3000_sw_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_ascend,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.set_ramp_delay = pfuze100_set_ramp_delay,
-+
-+};
-+
- #define PFUZE100_FIXED_REG(_chip, _name, base, voltage)	\
- 	[_chip ## _ ## _name] = {	\
- 		.desc = {	\
-@@ -305,23 +318,28 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 	.stby_mask = 0x20,	\
- }
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" serves as a temporary file and is
+ # automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
  
--
--#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
--	.desc = {	\
--		.name = #_name,\
--		.n_voltages = ((max) - (min)) / (step) + 1,	\
--		.ops = &pfuze100_sw_regulator_ops,	\
--		.type = REGULATOR_VOLTAGE,	\
--		.id = _chip ## _ ## _name,	\
--		.owner = THIS_MODULE,	\
--		.min_uV = (min),	\
--		.uV_step = (step),	\
--		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
--		.vsel_mask = 0x7,	\
--	},	\
--	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
--	.stby_mask = 0x7,	\
--}
-+/* No linar case for the some switches of PFUZE3000 */
-+#define PFUZE3000_SW_REG(_chip, _name, base, mask, voltages)	\
-+	[_chip ## _ ##  _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ARRAY_SIZE(voltages),	\
-+			.ops = &pfuze3000_sw_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = _chip ## _ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.volt_table = voltages,	\
-+			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+			.vsel_mask = (mask),	\
-+			.enable_reg = (base) + PFUZE100_MODE_OFFSET,	\
-+			.enable_mask = 0xf,	\
-+			.enable_val = 0x8,	\
-+			.enable_time = 500,	\
-+		},	\
-+		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+		.stby_mask = (mask),	\
-+		.sw_reg = true,		\
-+	}
- 
- #define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
- 	.desc = {	\
-@@ -377,9 +395,9 @@ static struct pfuze_regulator pfuze200_regulators[] = {
- };
- 
- static struct pfuze_regulator pfuze3000_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
- 	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
--	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
- 	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-@@ -393,8 +411,8 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
- };
- 
- static struct pfuze_regulator pfuze3001_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
--	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
- 	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
