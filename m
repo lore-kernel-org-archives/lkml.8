@@ -2,33 +2,32 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32931C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F66C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153402053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334C52053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbgF2TEu (ORCPT
+        id S1726871AbgF2TEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:04:50 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41056 "EHLO inva021.nxp.com"
+        Mon, 29 Jun 2020 15:04:54 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41098 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730535AbgF2TEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:04:45 -0400
+        id S1730647AbgF2TEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:04:48 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 963BF20016E;
-        Mon, 29 Jun 2020 08:06:01 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D4EFF200F30;
+        Mon, 29 Jun 2020 08:05:57 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CA76E200F02;
-        Mon, 29 Jun 2020 08:05:50 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 13A74200FB7;
+        Mon, 29 Jun 2020 08:05:47 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2F6FA402E8;
-        Mon, 29 Jun 2020 14:05:38 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 630294032B;
+        Mon, 29 Jun 2020 14:05:34 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
@@ -39,42 +38,66 @@ To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         viro@zeniv.linux.org.uk, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for module build
-Date:   Mon, 29 Jun 2020 13:53:54 +0800
-Message-Id: <1593410042-10598-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V3 00/10] Support building i.MX8 SoCs clock driver as module
+Date:   Mon, 29 Jun 2020 13:53:52 +0800
+Message-Id: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keep __setup_param() to use same parameters for both built in
-and built as module, it can make the drivers which call it easier
-when the drivers can be built in or built as module.
+Nowdays, there are more and more requirements of building SoC specific drivers
+as modules, such as Android GKI (generic kernel image), this patch set supports
+building i.MX8 SoCs clock drivers as modules, including i.MX8MQ/MM/MN/MP/QXP,
+the common clock modules are: mxc-clk.ko for i.MX8MQ/MM/MN/MP, mxc-clk-scu.ko
+for i.MX8QXP and later SoCs with SCU inside, normally, each platform can ONLY
+insmod 1 common i.MX clock driver and its own SoC clock driver.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-new patch.
----
- include/linux/init.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Since i.MX common clk driver will support module build and no longer selected
+by default, so for i.MX ARMv7 platforms, need to manually select it to make
+build pass.
 
-diff --git a/include/linux/init.h b/include/linux/init.h
-index 212fc9e..8f27299 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -293,7 +293,7 @@ void __init parse_early_options(char *cmdline);
- 
- #else /* MODULE */
- 
--#define __setup_param(str, unique_id, fn)	/* nothing */
-+#define __setup_param(str, unique_id, fn, early)	/* nothing */
- #define __setup(str, func) 			/* nothing */
- #endif
- 
+Changes since V2:
+	- fix __setup_param() instead of handling module build inside clk driver;
+	- improve makefile format to include each file in separated line;
+	- add linux/export.h where necessary.
+
+Anson Huang (10):
+  clk: composite: Export clk_hw_register_composite()
+  init.h: Fix the __setup_param() macro for module build
+  ARM: imx: Select MXC_CLK for each SoC
+  clk: imx: Support building SCU clock driver as module
+  clk: imx: Support building i.MX common clock driver as module
+  clk: imx8mm: Support module build
+  clk: imx8mn: Support module build
+  clk: imx8mp: Support module build
+  clk: imx8mq: Support module build
+  clk: imx8qxp: Support module build
+
+ arch/arm/mach-imx/Kconfig          | 11 +++++++++
+ drivers/clk/clk-composite.c        |  1 +
+ drivers/clk/imx/Kconfig            | 22 ++++++++++--------
+ drivers/clk/imx/Makefile           | 46 +++++++++++++++++++-------------------
+ drivers/clk/imx/clk-composite-8m.c |  2 ++
+ drivers/clk/imx/clk-cpu.c          |  2 ++
+ drivers/clk/imx/clk-frac-pll.c     |  2 ++
+ drivers/clk/imx/clk-gate2.c        |  2 ++
+ drivers/clk/imx/clk-imx8mm.c       |  1 +
+ drivers/clk/imx/clk-imx8mn.c       |  1 +
+ drivers/clk/imx/clk-imx8mp.c       |  1 +
+ drivers/clk/imx/clk-imx8mq.c       |  1 +
+ drivers/clk/imx/clk-imx8qxp-lpcg.c |  1 +
+ drivers/clk/imx/clk-imx8qxp.c      |  1 +
+ drivers/clk/imx/clk-lpcg-scu.c     |  2 ++
+ drivers/clk/imx/clk-pll14xx.c      |  5 +++++
+ drivers/clk/imx/clk-scu.c          |  5 +++++
+ drivers/clk/imx/clk-sscg-pll.c     |  2 ++
+ drivers/clk/imx/clk.c              | 20 ++++++++++++-----
+ include/linux/init.h               |  2 +-
+ 20 files changed, 91 insertions(+), 39 deletions(-)
+
 -- 
 2.7.4
 
