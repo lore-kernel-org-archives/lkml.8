@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C96C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAFDF20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A3F20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460837;
-	bh=eyHmQB9Z/yvGy0UPdwRfvNnC+Pc8b1C8bJqVPS9nQMA=;
+	s=default; t=1593460841;
+	bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kXcoab4yX/b3rqc8aQKVIJX6/6LOsl0ouKsS54PN2YWmxk9iltNb3r/11gwUKskF8
-	 UVg1J47puk/FWF150J8UiVBkMN581N3jCj/rkJWt2HvP7LfG24PB8dZgNEL9gZ7oyC
-	 0kCty1ecEFe5iWx27MXJEsFHklxmvykfdtWIVL+o=
+	b=PwWdE763AftqOrs6IGzigmb1vmfhGCvLwZAooZGCIeZObuPTQjhPJJLLLZSuC7mFK
+	 hkLKY43ftuubrQMyY8NZ2BE2pYjS4yuIVydSDaikfFLZZNE3WKirm9KxvHGfK35JAv
+	 2VlcAFGhphYIyK2GM5tWJT3bJT7AVId5kFwE98rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbgF2UAf (ORCPT
+        id S2387644AbgF2UAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387567AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387572AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F3624884;
-        Mon, 29 Jun 2020 15:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F71C2492A;
+        Mon, 29 Jun 2020 15:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444381;
-        bh=eyHmQB9Z/yvGy0UPdwRfvNnC+Pc8b1C8bJqVPS9nQMA=;
+        s=default; t=1593444483;
+        bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sW6nHVa5ux2uCEpfF+nAD84eEopxPvyxuLozSwYx7Y3FvtNQRbS5pjTd4AUvjONU2
-         pXWDtGqUqxzG39WNc8qxCxurxsPPSh470joMVE3P9DyRMJqud9YHNpBtbfJqwQZ9C7
-         Jc9y7Lo1ep2drWQm1Kjvhh+sk8jnHGmfH48SF8pM=
+        b=SoJoRCVkvyL/SEQ4Tb1kZ9BGCiOl0Q+RZwPB+Y5VDrmoFZgQxpTPej/AtDBG6dPZr
+         au84CXal7710IkersB9Ov15twi+g5SYJWnSzevkvC4HkVnMNJNY3WHahwxoc9ZCGv4
+         Rbo6akfV4GkfuiupZ25rH50poiRZ9FUMCLTJjluE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>,
+Cc:     Jiping Ma <jiping.ma2@windriver.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 058/178] loop: replace kill_bdev with invalidate_bdev
-Date:   Mon, 29 Jun 2020 11:23:23 -0400
-Message-Id: <20200629152523.2494198-59-sashal@kernel.org>
+Subject: [PATCH 5.4 160/178] arm64: perf: Report the PC value in REGS_ABI_32 mode
+Date:   Mon, 29 Jun 2020 11:25:05 -0400
+Message-Id: <20200629152523.2494198-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,67 +66,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Jiping Ma <jiping.ma2@windriver.com>
 
-commit f4bd34b139a3fa2808c4205f12714c65e1548c6c upstream.
+commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
 
-When a filesystem is mounted on a loop device and on a loop ioctl
-LOOP_SET_STATUS64, because of kill_bdev, buffer_head mappings are getting
-destroyed.
-kill_bdev
-  truncate_inode_pages
-    truncate_inode_pages_range
-      do_invalidatepage
-        block_invalidatepage
-          discard_buffer  -->clear BH_Mapped flag
+A 32-bit perf querying the registers of a compat task using REGS_ABI_32
+will receive zeroes from w15, when it expects to find the PC.
 
-sb_bread
-  __bread_gfp
-  bh = __getblk_gfp
-  -->discard_buffer clear BH_Mapped flag
-  __bread_slow
-    submit_bh
-      submit_bh_wbc
-        BUG_ON(!buffer_mapped(bh))  --> hit this BUG_ON
+Return the PC value for register dwarf register 15 when returning register
+values for a compat task to perf.
 
-Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
+[will: Shuffled code and added a comment]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/loop.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 57ed6b70d2950..565e35e69f249 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1284,7 +1284,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	if (lo->lo_offset != info->lo_offset ||
- 	    lo->lo_sizelimit != info->lo_sizelimit) {
- 		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
-+		invalidate_bdev(lo->lo_device);
+diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+index 0bbac612146ea..666b225aeb3ad 100644
+--- a/arch/arm64/kernel/perf_regs.c
++++ b/arch/arm64/kernel/perf_regs.c
+@@ -15,15 +15,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 		return 0;
+ 
+ 	/*
+-	 * Compat (i.e. 32 bit) mode:
+-	 * - PC has been set in the pt_regs struct in kernel_entry,
+-	 * - Handle SP and LR here.
++	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
++	 * we're stuck with it for ABI compatability reasons.
++	 *
++	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
++	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
++	 * These correspond directly to a prefix of the registers saved in our
++	 * 'struct pt_regs', with the exception of the PC, so we copy that down
++	 * (x15 corresponds to SP_hyp in the architecture).
++	 *
++	 * So far, so good.
++	 *
++	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
++	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
++	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
++	 * PC registers would normally live. The initial idea was to allow a
++	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
++	 * how well that works in practice, somebody might be relying on it.
++	 *
++	 * At the time we make a sample, we don't know whether the consumer is
++	 * 32-bit or 64-bit, so we have to cater for both possibilities.
+ 	 */
+ 	if (compat_user_mode(regs)) {
+ 		if ((u32)idx == PERF_REG_ARM64_SP)
+ 			return regs->compat_sp;
+ 		if ((u32)idx == PERF_REG_ARM64_LR)
+ 			return regs->compat_lr;
++		if (idx == 15)
++			return regs->pc;
  	}
  
- 	/* I/O need to be drained during transfer transition */
-@@ -1558,12 +1558,12 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- 
- 	if (lo->lo_queue->limits.logical_block_size != arg) {
- 		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
-+		invalidate_bdev(lo->lo_device);
- 	}
- 
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
--	/* kill_bdev should have truncated all the pages */
-+	/* invalidate_bdev should have truncated all the pages */
- 	if (lo->lo_queue->limits.logical_block_size != arg &&
- 			lo->lo_device->bd_inode->i_mapping->nrpages) {
- 		err = -EAGAIN;
+ 	if ((u32)idx == PERF_REG_ARM64_SP)
 -- 
 2.25.1
 
