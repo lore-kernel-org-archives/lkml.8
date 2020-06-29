@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94491C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B275C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B9C20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AB920890
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459747;
-	bh=eeqBxFNzqz9GKNAdsaG+9pW4Xgjp7docAW6M9uGrd9Y=;
+	s=default; t=1593459750;
+	bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNrpo9B5Z6EmyjuTY7YPyDR+CeKU/79ZVJpoh1wUMiMHKCkiO17F5Jle16P5nB62s
-	 ktdqc8V339ncP9lsRBJajhDXODBlanasRNiqiU0QgiPjxom+XOraJ48bsO0wxfkc1A
-	 qS5U3uWFh/Sn2w5NUuRoTpe3KyxyOt2+vGiVwlLc=
+	b=qMDguGKwh/382fwgIeatiYg+5FYC0mowP/rdzBt2EETxe7LO5HMuIhZ84JDhxEVam
+	 hrI8LDKhqBIDRaUnwdEWjZTD3Kl0DvsYnQT40HUyiIZj6NA7CM2UH0LxWqiy87qimB
+	 MjhabvlmXM253YA1ZY3dAgUxi3W5DKTqegMo2weY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgF2TmZ (ORCPT
+        id S1728045AbgF2Tm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387843AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387845AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D382487E;
-        Mon, 29 Jun 2020 15:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACA8248C9;
+        Mon, 29 Jun 2020 15:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444378;
-        bh=eeqBxFNzqz9GKNAdsaG+9pW4Xgjp7docAW6M9uGrd9Y=;
+        s=default; t=1593444422;
+        bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hvr4BXDrpmQwD2n1Iv8KNS1xtDAOwIxfDy5R0m5BABl2gD+rzHzc42987ptOEbAke
-         R6kT9y7qm8I643LDPL+Cxy27n7XqqzRRxmNXhL2UfrV6wOMIZJVKrCkLmJXclI0WJ0
-         /Yis1dSZ839L8eEJf7KTCdNXj0sbudXcFBH0z2kQ=
+        b=pyUnBhYRFyMERUIxOny6Nqx8QJhvZd14Wfk82dZtSZQxKBv/0DTgJT3EW7aBRn2mP
+         7PN7deRyBb1NijHh/5YQbTBUs3r+ALrhuZvQI+OxVadV2Buo6/E6/MWTJFpHXKB9zF
+         HBCFirAMpSSB9hDXByWijfnyC4SeRKEfLa9cxfKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 055/178] xhci: Fix enumeration issue when setting max packet size for FS devices.
-Date:   Mon, 29 Jun 2020 11:23:20 -0400
-Message-Id: <20200629152523.2494198-56-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 100/178] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
+Date:   Mon, 29 Jun 2020 11:24:05 -0400
+Message-Id: <20200629152523.2494198-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,45 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+From: yu kuai <yukuai3@huawei.com>
 
-commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
+[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
 
-Unable to complete the enumeration of a USB TV Tuner device.
+if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
+have a corresponding put_device(). Thus add a jump target to fix the
+exception handling for this function implementation.
 
-Per XHCI spec (4.6.5), the EP state field of the input context shall
-be cleared for a set address command. In the special case of an FS
-device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
-not do this before evaluating the context. With an XHCI controller
-that checks the EP state field for parameter context error this
-causes a problem in cases such as the device getting reset again
-after enumeration.
-
-When that field is cleared, the problem does not occur.
-
-This was found and fixed by Sasi Kumar.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-imx/pm-imx5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index f913bc9344d2b..13d2971c35445 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1430,6 +1430,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
- 				xhci->devs[slot_id]->out_ctx, ep_index);
+diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
+index f057df813f83a..e9962b48e30cb 100644
+--- a/arch/arm/mach-imx/pm-imx5.c
++++ b/arch/arm/mach-imx/pm-imx5.c
+@@ -295,14 +295,14 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
  
- 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
-+		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
- 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
- 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+ 	ocram_base = gen_pool_alloc(ocram_pool, size);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -312,6 +312,8 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (virt_out)
+ 		*virt_out = virt;
+ 
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
  
 -- 
 2.25.1
