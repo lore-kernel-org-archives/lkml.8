@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCDE206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E899E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457774;
-	bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
+	s=default; t=1593457778;
+	bh=eeeNIit5or7+3I43gaGDDQBYmpZY9fzuqV7ODljrCSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DScmIzmryEe3KG5/Tf72C40igyoYjeGk1NhGRWxft41U6c1e6BK2xOI+DMHq3iUgq
-	 AR3B3+tcbmRgVZtorWjKPQcSdY8imKzpNAoa+/VjQ3Av5QIAA+dSFB6zd7tn3iyF/s
-	 2WVuH3XeCMi9Q9t31rmup4Qk/CTpCnrAd0rFCafQ=
+	b=NdtK650Dh6EhgLM8FBAA0vdjiuGVeImXBKiAQyWwWJ3TIRej0C1Skw+AC9c4Ctl2D
+	 5036nmyRDKvyOdguaBIXpHUkJvXHiFQB1gskXUInDWKhYfEmNeQJEhU27YbW2kwQ0i
+	 XzZmrDoP0kSB3GN8NFHpBtTwtCbWMC6acPGB7cxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgF2TJd (ORCPT
+        id S1729489AbgF2TJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730302AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730337AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FCB254DD;
-        Mon, 29 Jun 2020 15:53:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34FAD2552D;
+        Mon, 29 Jun 2020 15:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446035;
-        bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
+        s=default; t=1593446093;
+        bh=eeeNIit5or7+3I43gaGDDQBYmpZY9fzuqV7ODljrCSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfbqlZEmwhE1M94Ow5DNn9DkCUS1PhNEgxExYjtdNdZAxmWh3kbcVyNHyibpMMOZG
-         sPGEWmJUy8DzlqJm4IS2DQA+h1EQ+1n4+p86HfKMrvyMjfIRryGqGwzaabm6yNc+D4
-         w2vvlakQaf+7KNX13Pkh9mrvlwxsk+O8ICWGIfKo=
+        b=MlrzDNs+wF49lj1zosGH1itX2pwT3bQbqvpYYEXGMHrUIi8amdEwkRo8C2cXOZfHN
+         hW5LTzOZZBdjZ47iM3MyWi4mynRucw6BhV6yl8ctqIMHxAfqBJ9ZvYJl3EKXqJpu68
+         oxGsCgUfk3qIDhbS1QpGhrWnadypcF47auBRL9CU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 040/135] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Mon, 29 Jun 2020 11:51:34 -0400
-Message-Id: <20200629155309.2495516-41-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 087/135] ip6_gre: fix use-after-free in ip6gre_tunnel_lookup()
+Date:   Mon, 29 Jun 2020 11:52:21 -0400
+Message-Id: <20200629155309.2495516-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,47 +66,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit dafabb6590cb15f300b77c095d50312e2c7c8e0f ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+In the datapath, the ip6gre_tunnel_lookup() is used and it internally uses
+fallback tunnel device pointer, which is fb_tunnel_dev.
+This pointer variable should be set to NULL when a fb interface is deleted.
+But there is no routine to set fb_tunnel_dev pointer to NULL.
+So, this pointer will be still used after interface is deleted and
+it eventually results in the use-after-free problem.
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
+Test commands:
+    ip netns add A
+    ip netns add B
+    ip link add eth0 type veth peer name eth1
+    ip link set eth0 netns A
+    ip link set eth1 netns B
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    ip netns exec A ip link set lo up
+    ip netns exec A ip link set eth0 up
+    ip netns exec A ip link add ip6gre1 type ip6gre local fc:0::1 \
+	    remote fc:0::2
+    ip netns exec A ip -6 a a fc:100::1/64 dev ip6gre1
+    ip netns exec A ip link set ip6gre1 up
+    ip netns exec A ip -6 a a fc:0::1/64 dev eth0
+    ip netns exec A ip link set ip6gre0 up
+
+    ip netns exec B ip link set lo up
+    ip netns exec B ip link set eth1 up
+    ip netns exec B ip link add ip6gre1 type ip6gre local fc:0::2 \
+	    remote fc:0::1
+    ip netns exec B ip -6 a a fc:100::2/64 dev ip6gre1
+    ip netns exec B ip link set ip6gre1 up
+    ip netns exec B ip -6 a a fc:0::2/64 dev eth1
+    ip netns exec B ip link set ip6gre0 up
+    ip netns exec A ping fc:100::2 -s 60000 &
+    ip netns del B
+
+Splat looks like:
+[   73.087285][    C1] BUG: KASAN: use-after-free in ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.088361][    C1] Read of size 4 at addr ffff888040559218 by task ping/1429
+[   73.089317][    C1]
+[   73.089638][    C1] CPU: 1 PID: 1429 Comm: ping Not tainted 5.7.0+ #602
+[   73.090531][    C1] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   73.091725][    C1] Call Trace:
+[   73.092160][    C1]  <IRQ>
+[   73.092556][    C1]  dump_stack+0x96/0xdb
+[   73.093122][    C1]  print_address_description.constprop.6+0x2cc/0x450
+[   73.094016][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.094894][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.095767][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.096619][    C1]  kasan_report+0x154/0x190
+[   73.097209][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.097989][    C1]  ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.098750][    C1]  ? gre_del_protocol+0x60/0x60 [gre]
+[   73.099500][    C1]  gre_rcv+0x1c5/0x1450 [ip6_gre]
+[   73.100199][    C1]  ? ip6gre_header+0xf00/0xf00 [ip6_gre]
+[   73.100985][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   73.101830][    C1]  ? ip6_input_finish+0x5/0xf0
+[   73.102483][    C1]  ip6_protocol_deliver_rcu+0xcbb/0x1510
+[   73.103296][    C1]  ip6_input_finish+0x5b/0xf0
+[   73.103920][    C1]  ip6_input+0xcd/0x2c0
+[   73.104473][    C1]  ? ip6_input_finish+0xf0/0xf0
+[   73.105115][    C1]  ? rcu_read_lock_held+0x90/0xa0
+[   73.105783][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   73.106548][    C1]  ipv6_rcv+0x1f1/0x300
+[ ... ]
+
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c12b395a4664 ("gre: Support GRE over IPv6")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ net/ipv6/ip6_gre.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index daeb645fcea8a..519419136ce8f 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -94,11 +94,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
+diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+index b25f4ad28b032..546172bfaba1e 100644
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -125,6 +125,7 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
+ 	int dev_type = (gre_proto == htons(ETH_P_TEB)) ?
+ 		       ARPHRD_ETHER : ARPHRD_IP6GRE;
+ 	int score, cand_score = 4;
++	struct net_device *ndev;
  
- 	return regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
+ 	for_each_ip_tunnel_rcu(t, ign->tunnels_r_l[h0 ^ h1]) {
+ 		if (!ipv6_addr_equal(local, &t->parms.laddr) ||
+@@ -227,9 +228,9 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
+ 	if (cand)
+ 		return cand;
+ 
+-	dev = ign->fb_tunnel_dev;
+-	if (dev->flags & IFF_UP)
+-		return netdev_priv(dev);
++	ndev = READ_ONCE(ign->fb_tunnel_dev);
++	if (ndev && ndev->flags & IFF_UP)
++		return netdev_priv(ndev);
+ 
+ 	return NULL;
+ }
+@@ -364,6 +365,8 @@ static void ip6gre_tunnel_uninit(struct net_device *dev)
+ 	struct ip6gre_net *ign = net_generic(t->net, ip6gre_net_id);
+ 
+ 	ip6gre_tunnel_unlink(ign, t);
++	if (ign->fb_tunnel_dev == dev)
++		WRITE_ONCE(ign->fb_tunnel_dev, NULL);
+ 	dst_cache_reset(&t->dst_cache);
+ 	dev_put(dev);
+ }
 -- 
 2.25.1
 
