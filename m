@@ -2,147 +2,116 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56549C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56474C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332DB20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKlzs4sb"
+	by mail.kernel.org (Postfix) with ESMTP id 2DAC620675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461945;
+	bh=48s3Xz4kc7u4FZNVKO6n+YOqtbnStGjUXYAV3in3A9Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gcJriXSD3Ge1H87GkdkSTi60lgUSuOjUVXKejdEl10qJGu+hxWebLCsTx30qPN5wV
+	 JIEDxbMo3p/Fhke6NhiGqLN6En3/ucA8T/sLxWMHlBrRWlCV6pTSJ7cOmtAeQspHTm
+	 6We8E/9Jz6PJw23eusgLh0PnTLCxCdROXsYP5ykE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbgF2USy (ORCPT
+        id S1729259AbgF2USc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:18:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388538AbgF2USj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:18:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8720EC061755;
-        Mon, 29 Jun 2020 13:18:38 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so16139293ljp.6;
-        Mon, 29 Jun 2020 13:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8KS8I9Q3x2kXGfX+XyyK1sOmdPbnTRSOpvvTvwkAeTs=;
-        b=kKlzs4sb6gvS9zYIlKdtNO9qZQptM0LCZ/5tTmz0g8zeAuvX6L7DG9YSQv5O6J8o0t
-         +CfV51o+Z9H4vt+N0eAH1ce3eZwBa+rTl+XL8Hf1acezphKbNdejOR7/uTqpvIv9SfQA
-         2KWUGHa9aRo43YP5EqG7Hx9mGJwieKRlykPLqMKejsyZIky6Rpy0C0LZHNa3HINiVxpa
-         MEuoN5HtplNVLYZFprLtWZFMPJ3H2GbFy+unFlOKGfRMW6Tbn6F2doUdsuu+6jTP+uWQ
-         nvvaoXQQPTxy7YodFAQgWWGj5w3UiZCX3Y67jQeJz9wcdsDAK+XaohzCuEGB9fN7piJ+
-         ahYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8KS8I9Q3x2kXGfX+XyyK1sOmdPbnTRSOpvvTvwkAeTs=;
-        b=KsE/W+rfDYRWXsZsV0vEPeO4m2I8BnQfISLxWwOGtmoFlB9ZXp3T7ukjSXuPLDlj7/
-         Lf4xy7+4cL01mKYGweluUT0/2ONBfOzLFso/UimyzlhQCa1Z/jjKXTtEKxrrYW9V9f/K
-         1JJYYrPeAGlqEyVGgHYMFuHWRXfgIJUeqz+tVMOQrhpWgdjrfEjXZwSswOWuQrJ7uedy
-         lfl4PBR7oCb90Q4khyrBbGkvpMaT8fWyUfoP68v02RraaIfdpNOtc5DbiReY8mw3+fao
-         8ncno4+QxpzC6L6c9eBVxjtykwjCKunDZ2AMqFoD/z6twJA89jhbTuLkt+iGT4iVVS6a
-         oEIg==
-X-Gm-Message-State: AOAM531wiCNvQQWz9dUIZ6HnAPli7IyRKMfwpbbDRPVNhcEX/U3YUmyN
-        P5Dk4rTmfYYNPpvTM4KSaqk=
-X-Google-Smtp-Source: ABdhPJxxtuESaMskdjQR3zZ4lP77PTmYj17q1RARRdk3vtTHJODW8Xdzzd0fpl4TxUPk/wOQ6/FF6w==
-X-Received: by 2002:a2e:b88e:: with SMTP id r14mr8307120ljp.197.1593461917004;
-        Mon, 29 Jun 2020 13:18:37 -0700 (PDT)
-Received: from localhost ([80.64.86.170])
-        by smtp.gmail.com with ESMTPSA id x64sm154660lff.14.2020.06.29.13.18.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 13:18:36 -0700 (PDT)
-From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
-To:     balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] usb: gadget: epautoconf: claim smallest endpoints first
-Date:   Mon, 29 Jun 2020 23:18:45 +0300
-Message-Id: <20200629201845.28138-1-ruslan.bilovol@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Jun 2020 16:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732636AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:41 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68B425422;
+        Mon, 29 Jun 2020 15:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445374;
+        bh=48s3Xz4kc7u4FZNVKO6n+YOqtbnStGjUXYAV3in3A9Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MeiOJc7HCZTnoEMp1pLZzWFlr4PL9JFQ54a7+Bzewn/A4co5/wL3MZ1MkgkJoPEyR
+         CY511Y2Ivtar23qNBjifB8JGoXLV4IKIgWYTf0eodlHbhQfKkHIM3eEKVTjEu+40ZR
+         Xn9BwRZEsgbuWTiQJYYXKl/0mW9e0YLLNyNTJyS8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
+        James Chapman <jchapman@katalix.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 129/191] l2tp: Allow duplicate session creation with UDP
+Date:   Mon, 29 Jun 2020 11:39:05 -0400
+Message-Id: <20200629154007.2495120-130-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UDC hardware may have endpoints with different maxpacket
-size. Current endpoint matching code takes first matching
-endpoint from the list.
+From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
 
-It's always possible that gadget allocates endpoints for
-small transfers (maxpacket size) first, then larger ones.
-That works fine if all matching UDC endpoints have same
-maxpacket size or are big enough to serve that allocation.
+commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 upstream.
 
-However, some UDCs have first endpoints in the list with
-bigger maxpacket size, whereas last endpoints are much
-smaller. In this case endpoint allocation will fail for
-the gadget (which allocates smaller endpoints first) on
-final endpoint allocations.
+In the past it was possible to create multiple L2TPv3 sessions with the
+same session id as long as the sessions belonged to different tunnels.
+The resulting sessions had issues when used with IP encapsulated tunnels,
+but worked fine with UDP encapsulated ones. Some applications began to
+rely on this behaviour to avoid having to negotiate unique session ids.
 
-To make endpoint allocation fair, pick up smallest
-matching endpoints first, leaving bigger ones for
-heavier applications.
+Some time ago a change was made to require session ids to be unique across
+all tunnels, breaking the applications making use of this "feature".
 
-Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+This change relaxes the duplicate session id check to allow duplicates
+if both of the colliding sessions belong to UDP encapsulated tunnels.
+
+Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
+Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+Acked-by: James Chapman <jchapman@katalix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ net/l2tp/l2tp_core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-v2: rebased onto latest balbi/next branch
-
- drivers/usb/gadget/epautoconf.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
-index 1eb4fa2e623f..6c453b5d87bb 100644
---- a/drivers/usb/gadget/epautoconf.c
-+++ b/drivers/usb/gadget/epautoconf.c
-@@ -66,7 +66,7 @@ struct usb_ep *usb_ep_autoconfig_ss(
- 	struct usb_ss_ep_comp_descriptor *ep_comp
- )
- {
--	struct usb_ep	*ep;
-+	struct usb_ep	*ep, *ep_min = NULL;
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index fdc1de1cb4fa6..c191ea65a6c7f 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -351,8 +351,13 @@ int l2tp_session_register(struct l2tp_session *session,
  
- 	if (gadget->ops->match_ep) {
- 		ep = gadget->ops->match_ep(gadget, desc, ep_comp);
-@@ -74,14 +74,27 @@ struct usb_ep *usb_ep_autoconfig_ss(
- 			goto found_ep;
- 	}
+ 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
  
--	/* Second, look at endpoints until an unclaimed one looks usable */
-+	/*
-+	 * Second, look at endpoints until an unclaimed one looks usable.
-+	 * Try to find one with smallest maxpacket limit, leaving larger
-+	 * endpoints for heavier applications
-+	 */
- 	list_for_each_entry (ep, &gadget->ep_list, ep_list) {
--		if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp))
--			goto found_ep;
-+		if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp)) {
-+			if (desc->wMaxPacketSize == 0)
-+				goto found_ep;
-+			else if (!ep_min)
-+				ep_min = ep;
-+			else if (ep->maxpacket_limit < ep_min->maxpacket_limit)
-+				ep_min = ep;
-+		}
- 	}
- 
- 	/* Fail */
--	return NULL;
-+	if (!ep_min)
-+		return NULL;
-+
-+	ep = ep_min;
- found_ep:
- 
- 	/*
++		/* IP encap expects session IDs to be globally unique, while
++		 * UDP encap doesn't.
++		 */
+ 		hlist_for_each_entry(session_walk, g_head, global_hlist)
+-			if (session_walk->session_id == session->session_id) {
++			if (session_walk->session_id == session->session_id &&
++			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
++			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
+ 				err = -EEXIST;
+ 				goto err_tlock_pnlock;
+ 			}
 -- 
-2.17.1
+2.25.1
 
