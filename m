@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E343207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CF9207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461276;
-	bh=zgoXs/RsTAQ/e/fGoosL0x1He5G/+vUgYLrwDiM1y9w=;
+	s=default; t=1593461282;
+	bh=rPto9vj7EYd3sNTWtGXieSOjGEPordy/tJhM6w0k1Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMokOpDQd/8S3x+o2qeQoZkIPccFrLkuwzIqNbqB8pTX4l0Jbjh0ioztMGVTIO29N
-	 dZCX4ct5m48NeOJkc5eKglHsp5NvHqrQoe7YZpJtzFAVTjZQcAvt6T9r70wpsB4bwC
-	 bwpsfc344AxCkkUUowYigJfLl2gGKpLT3+qyggfs=
+	b=hfIScIhIY7S7Ks0HR/pkjZJsv/EJezKSFRWnT6PzATKekfwDFH716O2gLbvLOlz+s
+	 HcAJ6tBqx1BynSMFgPrWcYAHV7HIFXGm5wPa6/nCrjyCpfVPWSMp44+KARVj/N1MRG
+	 VoDTLsrsrfOtz57Uou6PZXj/V2y6STOshGSOqOAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388907AbgF2UHo (ORCPT
+        id S2388773AbgF2UIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40562 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732939AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732944AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0463D23407;
-        Mon, 29 Jun 2020 15:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDC025297;
+        Mon, 29 Jun 2020 15:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444921;
-        bh=zgoXs/RsTAQ/e/fGoosL0x1He5G/+vUgYLrwDiM1y9w=;
+        s=default; t=1593445004;
+        bh=rPto9vj7EYd3sNTWtGXieSOjGEPordy/tJhM6w0k1Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+65gp33/tBQbxnsN0s9yUlkCyYryDIh9xyMfbNTOt6skASxmJ5uwGoqPfqCkk7oc
-         WSnz6xfeRMkFQy7Vwy13IOT3bnHUYsQqG1GOl1RrF1IIOhlnRgHx4fmzpCglwi9SAd
-         Y+9iqBjQBGK+4mCCbEcUOj9UiHEPKS84uoAGApdY=
+        b=HAb9QJyuNEre79TLN9D0s3/B8VpBcGKAcv35qARKsNFNi4TvS01G9QceQ5rlU304j
+         e2gwfrNWiVyHRdLObBUC4b+WTrLhC/B+cS/rHZ7oxRd94L8eilfNVo97NJgoDz1l7D
+         QVGWhiFTzWFaHoqO3nFuS82zAVytIQb64J49ZOHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 018/131] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Mon, 29 Jun 2020 11:33:09 -0400
-Message-Id: <20200629153502.2494656-19-sashal@kernel.org>
+Subject: [PATCH 4.19 105/131] ALSA: hda/realtek - Add quirk for MSI GE63 laptop
+Date:   Mon, 29 Jun 2020 11:34:36 -0400
+Message-Id: <20200629153502.2494656-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,60 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
+commit a0b03952a797591d4b6d6fa7b9b7872e27783729 upstream.
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
+MSI GE63 laptop with ALC1220 codec requires the very same quirk
+(ALC1220_FIXUP_CLEVO_P950) as other MSI devices for the proper sound
+output.
 
-Using ip6_mc_clear_src() to take care of the missing free.
-
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208057
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200616132150.8778-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/mcast.c | 1 +
+ sound/pci/hda/patch_realtek.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 2d80e913b82f1..f2f8551416c33 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2620,6 +2620,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
- 
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 54887a87bddb1..beec9e3b62054 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2446,6 +2446,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x11f7, "MSI-GE63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
 -- 
 2.25.1
 
