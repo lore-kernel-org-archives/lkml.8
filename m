@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E74C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594AF20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C3020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460514;
-	bh=xiHZeVbkn0uJvIcAhgkE6AUFOK1vtmvL1otQOIYYmE0=;
+	s=default; t=1593460521;
+	bh=qXhl6f3tE/AFL2UssmPeIznukIP+VOVhMpj7CYLZ9QQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lF5wdHemkr1PiJtP9sh6ZHrH6mhtI9zhKQzLDkimCMFwww4aGcsGeuRlG6Ntd+M3z
-	 UXwKv3A2ouFVCWCE0EbcIBQqd0AjQXJajXTaeJlYz9bNV5BPLEbekmsW3kotpII3oX
-	 097HUWdYsmKrEr+aYYzDu2qCbOJAZXTIN2lq+zDA=
+	b=iCFBAKJYv4Gt2X8uhcACWzZPRz5eRsnHrebVYb8d3iI+g4G0paaaD/2Gz4AMa7NLU
+	 0VSs+ptPXKQXHYbfcm2o72tDbaafB3qKDuxoxXGIsbT1n3wkilXPs+Xc7Dyy3m0xUu
+	 FCCGSrmSbF9IPJWfKnlxGXeln5wg/x404aB/hhgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731939AbgF2TzM (ORCPT
+        id S2388375AbgF2TzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387664AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387661AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22C0724811;
-        Mon, 29 Jun 2020 15:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265C224878;
+        Mon, 29 Jun 2020 15:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444333;
-        bh=xiHZeVbkn0uJvIcAhgkE6AUFOK1vtmvL1otQOIYYmE0=;
+        s=default; t=1593444375;
+        bh=qXhl6f3tE/AFL2UssmPeIznukIP+VOVhMpj7CYLZ9QQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pATzCdRiq+cwvamuYzE8VjSRr2oVtFYM2w6lxv9vDi6/KBbNAR+f92h0W4xNMhhol
-         Ifvugk8dy466leNu16GZTfSVRcRIMjffcCIFA5w+tI/NuyjewMa+rOydELFgdS0qMI
-         fHlB8nF80T2wgcUoF0IpvUY+cNtCndBx2t/McJgI=
+        b=FsDT3nl88xSkVSmWbE7e45Ey29UTCmvSbEZxonGVBT9+3umR33rfa0QVkpC8KS9vB
+         cYO3aP/PdfszOqK9Zr7lhoN8fINiicSkrPVGTz1Skf/tqVGwntOBILxlOXASLzKyYP
+         OoICQG9QPx7dwAyq9FK4ZB1jZiQFQKOQPSP8Ty1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Martitz <t.martitz@avm.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 007/178] net: bridge: enfore alignment for ethernet address
-Date:   Mon, 29 Jun 2020 11:22:32 -0400
-Message-Id: <20200629152523.2494198-8-sashal@kernel.org>
+Subject: [PATCH 5.4 052/178] cifs/smb3: Fix data inconsistent when punch hole
+Date:   Mon, 29 Jun 2020 11:23:17 -0400
+Message-Id: <20200629152523.2494198-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -68,46 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Martitz <t.martitz@avm.de>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit db7202dec92e6caa2706c21d6fc359af318bde2e ]
+commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 upstream.
 
-The eth_addr member is passed to ether_addr functions that require
-2-byte alignment, therefore the member must be properly aligned
-to avoid unaligned accesses.
+When punch hole success, we also can read old data from file:
+  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
+           -c "fpunch 20 40" -c"pread 20 40" file
+  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
+  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
 
-The problem is in place since the initial merge of multicast to unicast:
-commit 6db6f0eae6052b70885562e1733896647ec1d807 bridge: multicast to unicast
+CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
+remote file to zero, but local page caches not updated, then the
+local page caches inconsistent with server.
 
-Fixes: 6db6f0eae605 ("bridge: multicast to unicast")
-Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Martitz <t.martitz@avm.de>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Also can be found by xfstests generic/316.
+
+So, we need to remove the page caches before send the SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server.
+
+Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
+Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org # v3.17
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_private.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2ops.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index ce2ab14ee6057..cecb4223440e7 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -208,8 +208,8 @@ struct net_bridge_port_group {
- 	struct rcu_head			rcu;
- 	struct timer_list		timer;
- 	struct br_ip			addr;
-+	unsigned char			eth_addr[ETH_ALEN] __aligned(2);
- 	unsigned char			flags;
--	unsigned char			eth_addr[ETH_ALEN];
- };
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index f5e893ed48aaa..e38f21c44133d 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -3036,6 +3036,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
+ 		return rc;
+ 	}
  
- struct net_bridge_mdb_entry {
++	/*
++	 * We implement the punch hole through ioctl, so we need remove the page
++	 * caches first, otherwise the data may be inconsistent with the server.
++	 */
++	truncate_pagecache_range(inode, offset, offset + len - 1);
++
+ 	cifs_dbg(FYI, "Offset %lld len %lld\n", offset, len);
+ 
+ 	fsctl_buf.FileOffset = cpu_to_le64(offset);
 -- 
 2.25.1
 
