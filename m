@@ -2,143 +2,115 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45921C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15003C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279712063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD412064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DG6XkUqQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bEMO9AAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgF2Sst (ORCPT
+        id S1729404AbgF2StC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:48:49 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:5895 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgF2Ssl (ORCPT
+        Mon, 29 Jun 2020 14:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729332AbgF2Srn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:48:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593456521; x=1624992521;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=Run3GENLouqiI3KFuPSxjv38R2dIhbzS6TvTzsq3i0I=;
-  b=DG6XkUqQBl41oUV7NXHXQm4PG5EwbPwzsWRCr8wJMsMWj6G4fIbDosuu
-   7QbxwO79r2D9f7pdD347D8hOPp5fao2sYASCA2lWZPXNh/6CuFgok5Exd
-   jIsHO388szr3DuM70BwWfa3iQwqo+phxbat+Omq9AmbDWc/sA/YviyhAh
-   peADQvPQN/Th4w/Vqn9IITJ5rVdrTh5q47aWPlDv94SLRchVYcQEM8H8m
-   gOlsQffSv9oL6ESQxYFOEyMHQynsfPoEAuX5qwzWoaFmI0naUZ2A5FVvT
-   lRJ/0ZhICF8mmEv1GNPz/2wTaUX2nwQTtARox2tfnjIB+nZq4uNAPez3d
-   Q==;
-IronPort-SDR: rgltqBgr/JxVsqjfvmEX0jX2J7XKiIcvSnR/OTPgtT/PBNeK8WuC/8w4xWXnF4E5mXtJ9UQUNi
- +zAsn3D4FoF3uN16WTyvGajStdCFiXMFQeoQGkL6byEiDyvbPjMENoRSk7cAmay+IGBcgZdGMW
- V8Eu+Lt4PvEQibEGUi1VvN2rHU9UvKBnjCpZY0vpelgbpEs2JfKf6/A0OMJvnSflhXqZou5r2H
- OhQS+aK8RSKg1bD3fgp9QKIuj07d4Iq2VuOwiLGYHUwdpCv0I2qtpaz4QKebfZvZHEFbaOTmH1
- aYM=
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="17378207"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jun 2020 00:26:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 29 Jun 2020 00:26:26 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 29 Jun 2020 00:26:39 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] of: of_mdio: count number of regitered phys
-Date:   Mon, 29 Jun 2020 10:26:36 +0300
-Message-ID: <1593415596-9487-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Jun 2020 14:47:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010F7C02E2C0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:58:15 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so10969348lji.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uCQ8gnTNmCbw3Jp4/ShmxDGjAQ3pvSFd1R7iQkCtV0o=;
+        b=bEMO9AAnWp5LTsNLVdXW9Oe7mzKQhGXAj0e5OEmfEtAkG1cNaFNZSh2Qdo5mWbPuMY
+         9DiqUdT+MsXYwleFvjrGxmVJqwyvuKXhxlQUK3rtF7VdMnvX7cTOhwoxwrJJLOVzNu5i
+         2XK9FlT9eHx+sLquBViH/xZ5rB5rAhbPqcP9GuagM0OXFUt9wlcNzUKNy1aLnFdNwo+V
+         8Ruz/vdEgYh0uNq8BnFoCh6EqK2N49EfB0DJU88m7ryxOsAPu8lNbY+iq10lCSBY9Mui
+         ZPg6x5swpeRbq9anXoM2U2j46UxRzipSI496ZyBwvvY+KYVNwgj+Iwoz/AD7OkkAul0p
+         isLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uCQ8gnTNmCbw3Jp4/ShmxDGjAQ3pvSFd1R7iQkCtV0o=;
+        b=K8z7CbZ7f/bIKEL2UZNNiAyqeJ+zcH+MDRnGYkjcIiq8neWjAMCYMxY2O7dpv9Pb8x
+         ehcrmg7fmNYNAnpjTndqZU3Q03IG+IRfpgfgditp1nqYII2Y0JcZB/fhwEWn4pr8GTfg
+         IbQa79BKkfc91sZ/RHlsT1Q+DWzLzeE9Zlbgm0AmZLVx2AIOOyoNUaksUhbwUyreII/m
+         R/6qDbhVL0ygq8eimHkeQuuGCTglWqJMPsQpF2YO0eqAgX22VMjd6zuyQdN4sw34ArXU
+         VsVSjfGPrXSEOZ9xUPzP+bvjw1Kze5vAPCKRZSdN6z05NZlNF1ccXNWnPi7MFyJ1dk4O
+         m/Yg==
+X-Gm-Message-State: AOAM530fbl4cLveudISBXg4kyHN0JroKLDY0vid0h36KLkR5UueZcxo5
+        Q3eIPacDzYm+58HrABLHDjeyjs41Glu5roQCHEHOsw==
+X-Google-Smtp-Source: ABdhPJyszh+KKJKX6JxEpQEiu36tPTXZ+lFvnrC92R82eADyKCIBV3+TFvVd2yAYiyqz2uUbOeMX15KpV7G5lmjJkoI=
+X-Received: by 2002:a2e:3504:: with SMTP id z4mr8452019ljz.283.1593439093501;
+ Mon, 29 Jun 2020 06:58:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200629123003.1014387-1-lee.jones@linaro.org>
+In-Reply-To: <20200629123003.1014387-1-lee.jones@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jun 2020 15:58:02 +0200
+Message-ID: <CACRpkdYxRsCmK+3Zu9ywMZD=Y1c4N-27gj-w4eTwpRGGd2=-hw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] crypto: ux500: hash: Add namespacing to hash_init()
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of_mdiobus_register_phy()/of_mdiobus_register_device()
-returns -ENODEV for all PHYs in device tree or for all scanned
-PHYs there is a chance that of_mdiobus_register() to
-return success code although no PHY devices were registered.
-Add a counter that increments every time a PHY was registered
-to avoid the above scenario.
+On Mon, Jun 29, 2020 at 2:30 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+> A recent change to the Regulator consumer API (which this driver
+> utilises) add prototypes for the some suspend functions.  These
+> functions require including header file include/linux/suspend.h.
+>
+> The following tree of includes affecting this driver will be
+> present:
+>
+>    In file included from include/linux/elevator.h:6,
+>                     from include/linux/blkdev.h:288,
+>                     from include/linux/blk-cgroup.h:23,
+>                     from include/linux/writeback.h:14,
+>                     from include/linux/memcontrol.h:22,
+>                     from include/linux/swap.h:9,
+>                     from include/linux/suspend.h:5,
+>                     from include/linux/regulator/consumer.h:35,
+>                     from drivers/crypto/ux500/hash/hash_core.c:28:
+>
+> include/linux/elevator.h pulls in include/linux/hashtable.h which
+> contains its own version of hash_init().  This confuses the build
+> system and results in the following error (amongst others):
+>
+>  drivers/crypto/ux500/hash/hash_core.c:1362:19: error: passing argument 1 of '__hash_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
+>  1362 |  return hash_init(req);
+>
+> Fix this by namespacing the local hash_init() such that the
+> source of confusion is removed.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: linux-crypto@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Though I haven't encountered the scenario described in commit
-message. Just went through this code and seemed to me that it
-could be enhanved by checking the number of successfuly
-registered devices.
+This looks reasonable.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thank you,
-Claudiu Beznea
-
- drivers/of/of_mdio.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index eb84507de28a..bbf1d42d27f8 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -249,7 +249,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- {
- 	struct device_node *child;
- 	bool scanphys = false;
--	int addr, rc;
-+	int addr, rc, devices = 0;
- 
- 	if (!np)
- 		return mdiobus_register(mdio);
-@@ -293,9 +293,11 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 				addr);
- 		else if (rc)
- 			goto unregister;
-+		else
-+			devices++;
- 	}
- 
--	if (!scanphys)
-+	if (!scanphys && devices)
- 		return 0;
- 
- 	/* auto scan for PHYs with empty reg property */
-@@ -319,14 +321,21 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 				 * scanning should continue.
- 				 */
- 				rc = of_mdiobus_register_phy(mdio, child, addr);
--				if (!rc)
-+				if (!rc) {
-+					devices++;
- 					break;
-+				}
- 				if (rc != -ENODEV)
- 					goto unregister;
- 			}
- 		}
- 	}
- 
-+	if (!devices) {
-+		rc = -ENODEV;
-+		goto unregister;
-+	}
-+
- 	return 0;
- 
- unregister:
--- 
-2.7.4
-
+Yours,
+Linus Walleij
