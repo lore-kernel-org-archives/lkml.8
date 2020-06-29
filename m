@@ -2,215 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471FFC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226EF20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D1D20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NLY5fPYX"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WOBCG3x6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732711AbgF2Ujd (ORCPT
+        id S2389574AbgF2UjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
+        Mon, 29 Jun 2020 16:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389249AbgF2UjP (ORCPT
+        with ESMTP id S1731727AbgF2TOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:39:15 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478F4C061755;
-        Mon, 29 Jun 2020 13:39:15 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d18so8510658edv.6;
-        Mon, 29 Jun 2020 13:39:15 -0700 (PDT)
+        Mon, 29 Jun 2020 15:14:15 -0400
+Received: from APC01-HK2-obe.outbound.protection.outlook.com (mail-hk2apc01on0708.outbound.protection.outlook.com [IPv6:2a01:111:f400:febc::708])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B38C08E81A;
+        Sun, 28 Jun 2020 22:16:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FbwSdYtd2/mf/m7RXuPMTauDzJ3pWf8RvE+Wz/bKtsinBV0ukAO8zHlo/cCwognWYOH+DGLronSpaKQPdkoKy4jVte6wOfQitUSHjmFrdU/FM5Ctspgx0endem3uvqSsedYB7MTrQFtqSGIqR1m6dFzsM9I21hs9vMF3BzZSTuVsUpl3LQb9jYbiXwY3I7OC83RRNus/fMGVCqCyi6ldu0J07KZRlqDI7LuB71denGRPJjbm2Up7cOh+NP+7FQEZky7NkZvCbyWCQxcXwozLLd3AxMNBSGQJtqodqOV4nkaaj2V9kJa+vI82WoT4Y1MQHfdir3vsWhVi9vLjNrjENg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jU6bJVp5twjwAufNmBP/C37WJ4RjFc7sz331r/5OrWI=;
+ b=RJPX2DV5f9wRtQghopIoE/iHsGv78YBsKT9U6PkkXtHOTsoeaDDFaPijE8W5nzBn0tVFZB4AH4H0rWIuIn6xsW8cJ/j4B2xbtxV+wsprFtvMPgxgIzVx92Yma3lsRvKg4YCcLxCWkhlJlFxDUzTJSTdfaIeAukQYJZXTY52rgjgD6ecz+RxCrN7Pqlw6l6I592HKTLIASlxxCOqM6e12kaqV7B3RZQTxXM0uZMwzFbCjNHvrQCV1xKfzpFYuxmv5zlvidRY2TghynuRery1DiEBTI9cIXwKFpowrzDu9Cpr2KO76puOYAWmQ1ghyboRKupscqTXnUsUrnbhbOwKIZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vTs3Rq4IbWVMmMHH93Lm2y/PA0bfnEGRKSYzqgnP6SQ=;
-        b=NLY5fPYXn0I6gh/w7i0Eu1FUwGf/7pbkboNqwMIbaxSFfSC05DW6oxnNXpxZLxYnnm
-         Zd5ZooI54w3kxw4ntankssNg0P5hjHsKKLgg7U8nq9HKC64J81/bamncV+rW5ikGnbg8
-         mIq6EiK0b/TY2ZFKDQodVkHBYcrOIbOWT1jNBw+yBGM6jJPXCYDf2G6c9f2nnNNoc90b
-         SuZFvwROQnYILK97Op6YsDOGt/EETEWH0l9fNnYOY+v3qBvdJfaPa+3j4/QfsApcYkCy
-         rbG59mjOu/DrxK2kI6pQFmQHNwSOyGify7rW9+pu8VIEe18CJA8MHTTb+SBfJ3eFNK5F
-         iMgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vTs3Rq4IbWVMmMHH93Lm2y/PA0bfnEGRKSYzqgnP6SQ=;
-        b=bUsjttovgDZ4BjXWDhBQddUaracq171up4hMQVdnTsGxCPlGeRhqufyc6M3M0zNbB8
-         BY3JyXcU2vPaIL+ghfTUFreY4D0IlI2yP/xL4j8S4M/qboV3opXTwXNcDnCOW9+k2em7
-         qA+L7BC0mNn1n7jiScFXVxmgfx92cP9M1EL7IlBTHrQA+5jvYvBHnKTWoQ3P5LJU9UpU
-         O64Ns4HpLLNcniJ1hOlrstIm8lLWcToq6gO1uFSsSLf1+/gbBYF3u0qsHE6uxd6rduCL
-         CXXkqDJrWUpdQaGm9W+qh2r0oOdZUicRWlrY8omiQHj9sSgnkqg3DT+JB1axKUAsk9Lv
-         9SZg==
-X-Gm-Message-State: AOAM5318coWfeBqSHkpHGG9juzInlQ6g7mYTDZ1GglMXozYVmONF3fnZ
-        18sZR5DwJG66jS8Smy+rV7M=
-X-Google-Smtp-Source: ABdhPJwstmBLv3LnE1mWJtfxcf7VEywqVy8MpB9W+MHF6U4ffXHxmKAeBOGqVRMDM6hbpvf6PbtjWQ==
-X-Received: by 2002:a05:6402:1346:: with SMTP id y6mr19708710edw.192.1593463154011;
-        Mon, 29 Jun 2020 13:39:14 -0700 (PDT)
-Received: from localhost.localdomain (p200300f137396800428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3739:6800:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id j24sm706741edp.22.2020.06.29.13.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 13:39:13 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     narmstrong@baylibre.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] clk: meson: meson8b: add the vclk2_en gate clock
-Date:   Mon, 29 Jun 2020 22:39:04 +0200
-Message-Id: <20200629203904.2989007-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629203904.2989007-1-martin.blumenstingl@googlemail.com>
-References: <20200629203904.2989007-1-martin.blumenstingl@googlemail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jU6bJVp5twjwAufNmBP/C37WJ4RjFc7sz331r/5OrWI=;
+ b=WOBCG3x6dry9y9wWJbxj7umJK2XwMaiBpHH28O4m36BGOVSZAfKR/BaJOWbOodqWd0a+QhmqKACIiHUe57fPf1UjqML7laUmuTbIICGRKCgTcSsvgDxLEi7cM4Nqqs/qtUKgtgoyuJ1t0+xXKu/UzH06hEq/YGVvkh3vRTNb/Js=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB2329.jpnprd01.prod.outlook.com (2603:1096:404:6b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Mon, 29 Jun
+ 2020 05:16:46 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 05:16:46 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>
+Subject: RE: [PATCH/RFC v4 3/4] mmc: core: Call mmc_poweroff_nofity() if
+ regulators are disabled
+Thread-Topic: [PATCH/RFC v4 3/4] mmc: core: Call mmc_poweroff_nofity() if
+ regulators are disabled
+Thread-Index: AQHWS5y2P9SOm+4ShEmD+FQrAiQE9qjrDL+AgAQErAA=
+Date:   Mon, 29 Jun 2020 05:16:46 +0000
+Message-ID: <TY2PR01MB3692D8D02FF1680B2A7391B8D86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <059bced3-00d3-cf2e-6628-a8c9f1544909@cogentembedded.com>
+In-Reply-To: <059bced3-00d3-cf2e-6628-a8c9f1544909@cogentembedded.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: cogentembedded.com; dkim=none (message not signed)
+ header.d=none;cogentembedded.com; dmarc=none action=none
+ header.from=renesas.com;
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b318ef9b-1faf-430c-3a10-08d81beb9ec8
+x-ms-traffictypediagnostic: TY2PR01MB2329:
+x-microsoft-antispam-prvs: <TY2PR01MB2329B5A32CB041739EE4BC83D86E0@TY2PR01MB2329.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wsdhJlkxId8q8l9Xot95x7fdTmruznnK7H/b5WqTXp1/HFfdyuHRrsP5VuARnvTGxdnAGYX7NitkQLPzfZnB6Ta4MOMMExhHnEl9r3RyNySD/x6SdZzsQU3NXavwhNtaMw3DCYB84AWMcAqT8wOLbwF4NF9OKYnh38RrNnw+nRDCx07in6erEuIGERn6quxwntapDaOcStpkqecm0VB4phoYiWYuuWj/yIYt9/qfGcckMhLTDIeeHccTUhRScwfMBIl+fdjVoHzyAASLvgUIWozZga1g6463GSEkkcLrBHwVIk8t+fXCuCHS1pwK+aXBWhmyWoZgG+492MSt37uFxA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(366004)(71200400001)(7696005)(83380400001)(86362001)(26005)(4744005)(186003)(64756008)(66476007)(66446008)(76116006)(53546011)(52536014)(5660300002)(66556008)(66946007)(55236004)(6506007)(54906003)(4326008)(316002)(8936002)(2906002)(55016002)(8676002)(9686003)(478600001)(33656002)(6916009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: cebFixr0WPYa6cLiz0eUHvHULn7AoKnVNh1ma2O1geG9RwPD3yxpMfdW7i26hiF3qKU5CmiHWnit49byFN0ze6Lzrij0fdInCYxncKDW9b043/HwUrT4wvYol1tPuRag1p3Dr3Zf/DGmyXjMW+HkvOb2gY5t1h4IwUsKREEkPHETYjGIPPBEmaHfG++3t8YUHWURNX603CDuyVcN2sCilt8hUCpt2S0bBshJP4BgAOvw4rCw1rYeinVSdrMwykZFjJIZVBY+WyYb2ud0F1YbCivDbHF2xIHI/clEZUhNVv6oFKHY0hkEtQND9Y84EEhWpVXjFMugknij3tnC7mnP9PGtwb4ZeVDqdP+i6LpHyqRRf0A5YNldFlzz0xEfQHvlpV2My4nX43fg8vUWHOV0FLdT0aIqXjnoDQZxF4sZNT5JZiWBQJKp/wqUJSK9RPFbirRVIMfBI+hls1LTGXowTrGlt3ukrMge9nQSAun3wy/2lyvcGcXPzhEIOAGnaNjz
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b318ef9b-1faf-430c-3a10-08d81beb9ec8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 05:16:46.6422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlNaZPy/8Ky5AW437YMByKVrNHdIYbjQGWmyD71atULmP1JJCm7OqzZrQcQz8/QYyapVBLx95i5I4yj6S3zYUecObVVYTO/sOW1AtdPeD9y7XULErtHHEVrTAq5V0Vcl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2329
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HHI_VIID_CLK_CNTL[19] is not part of the public S805 datasheet. However,
-the GXBB driver defines this bit as a gate called "vclk2" and in the
-3.10 kernel GPL code dump the following line can found:
-  WRITE_LCD_CBUS_REG_BITS(HHI_VIID_CLK_CNTL, 0, 19, 1); //disable vclk2_en
-
-Add this gate clock to the Meson8/Meson8b/Meson8m2 clock controller to
-complete the VCLK2 clock tree.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/meson8b.c | 30 +++++++++++++++++++++++++-----
- drivers/clk/meson/meson8b.h |  3 ++-
- 2 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index d5b90d61a530..862f0756b50f 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1387,6 +1387,22 @@ static struct clk_regmap meson8b_vclk2_clk_in_en = {
- 	},
- };
- 
-+static struct clk_regmap meson8b_vclk2_clk_en = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VIID_CLK_DIV,
-+		.bit_idx = 19,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vclk2_en",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson8b_vclk2_clk_in_en.hw
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
- static struct clk_regmap meson8b_vclk2_div1_gate = {
- 	.data = &(struct clk_regmap_gate_data){
- 		.offset = HHI_VIID_CLK_DIV,
-@@ -1396,7 +1412,7 @@ static struct clk_regmap meson8b_vclk2_div1_gate = {
- 		.name = "vclk2_div1_en",
- 		.ops = &clk_regmap_gate_ro_ops,
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_vclk2_clk_in_en.hw
-+			&meson8b_vclk2_clk_en.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1410,7 +1426,7 @@ static struct clk_fixed_factor meson8b_vclk2_div2_div = {
- 		.name = "vclk2_div2",
- 		.ops = &clk_fixed_factor_ops,
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_vclk2_clk_in_en.hw
-+			&meson8b_vclk2_clk_en.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1440,7 +1456,7 @@ static struct clk_fixed_factor meson8b_vclk2_div4_div = {
- 		.name = "vclk2_div4",
- 		.ops = &clk_fixed_factor_ops,
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_vclk2_clk_in_en.hw
-+			&meson8b_vclk2_clk_en.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1470,7 +1486,7 @@ static struct clk_fixed_factor meson8b_vclk2_div6_div = {
- 		.name = "vclk2_div6",
- 		.ops = &clk_fixed_factor_ops,
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_vclk2_clk_in_en.hw
-+			&meson8b_vclk2_clk_en.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1500,7 +1516,7 @@ static struct clk_fixed_factor meson8b_vclk2_div12_div = {
- 		.name = "vclk2_div12",
- 		.ops = &clk_fixed_factor_ops,
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_vclk2_clk_in_en.hw
-+			&meson8b_vclk2_clk_en.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -2848,6 +2864,7 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
- 		[CLKID_VCLK_DIV12]	    = &meson8b_vclk_div12_div_gate.hw,
- 		[CLKID_VCLK2_IN_SEL]	    = &meson8b_vclk2_in_sel.hw,
- 		[CLKID_VCLK2_IN_EN]	    = &meson8b_vclk2_clk_in_en.hw,
-+		[CLKID_VCLK2_EN]	    = &meson8b_vclk2_clk_en.hw,
- 		[CLKID_VCLK2_DIV1]	    = &meson8b_vclk2_div1_gate.hw,
- 		[CLKID_VCLK2_DIV2_DIV]	    = &meson8b_vclk2_div2_div.hw,
- 		[CLKID_VCLK2_DIV2]	    = &meson8b_vclk2_div2_div_gate.hw,
-@@ -3054,6 +3071,7 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
- 		[CLKID_VCLK_DIV12]	    = &meson8b_vclk_div12_div_gate.hw,
- 		[CLKID_VCLK2_IN_SEL]	    = &meson8b_vclk2_in_sel.hw,
- 		[CLKID_VCLK2_IN_EN]	    = &meson8b_vclk2_clk_in_en.hw,
-+		[CLKID_VCLK2_EN]	    = &meson8b_vclk2_clk_en.hw,
- 		[CLKID_VCLK2_DIV1]	    = &meson8b_vclk2_div1_gate.hw,
- 		[CLKID_VCLK2_DIV2_DIV]	    = &meson8b_vclk2_div2_div.hw,
- 		[CLKID_VCLK2_DIV2]	    = &meson8b_vclk2_div2_div_gate.hw,
-@@ -3271,6 +3289,7 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
- 		[CLKID_VCLK_DIV12]	    = &meson8b_vclk_div12_div_gate.hw,
- 		[CLKID_VCLK2_IN_SEL]	    = &meson8b_vclk2_in_sel.hw,
- 		[CLKID_VCLK2_IN_EN]	    = &meson8b_vclk2_clk_in_en.hw,
-+		[CLKID_VCLK2_EN]	    = &meson8b_vclk2_clk_en.hw,
- 		[CLKID_VCLK2_DIV1]	    = &meson8b_vclk2_div1_gate.hw,
- 		[CLKID_VCLK2_DIV2_DIV]	    = &meson8b_vclk2_div2_div.hw,
- 		[CLKID_VCLK2_DIV2]	    = &meson8b_vclk2_div2_div_gate.hw,
-@@ -3470,6 +3489,7 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- 	&meson8b_vclk_div12_div_gate,
- 	&meson8b_vclk2_in_sel,
- 	&meson8b_vclk2_clk_in_en,
-+	&meson8b_vclk2_clk_en,
- 	&meson8b_vclk2_div1_gate,
- 	&meson8b_vclk2_div2_div_gate,
- 	&meson8b_vclk2_div4_div_gate,
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index c8ab2a632295..699c5bc7c817 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -181,8 +181,9 @@
- #define CLKID_CTS_MCLK_I958_SEL	210
- #define CLKID_CTS_MCLK_I958_DIV	211
- #define CLKID_VCLK_EN		214
-+#define CLKID_VCLK2_EN		215
- 
--#define CLK_NR_CLKS		215
-+#define CLK_NR_CLKS		216
- 
- /*
-  * include the CLKID and RESETID that have
--- 
-2.27.0
-
+SGVsbG8hDQoNCj4gRnJvbTogU2VyZ2VpIFNodHlseW92LCBTZW50OiBTYXR1cmRheSwgSnVuZSAy
+NywgMjAyMCAxMjo1NCBBTQ0KPiANCj4gSGVsbG8hDQo+IA0KPiBPbiAwNi8yNi8yMDIwIDEyOjMy
+IFBNLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gDQo+ID4gSWYgcmVndWxhdG9yX2lzX2Vu
+YWJsZWQoKSBvZiBib3RoIHZtbWMgYW5kIHZxbW1jIHJldHVybnMgZmFsc2UsDQo+ID4gX21tY19z
+dXNwZW5kKCkgc2hvdWxkIGNhbGwgbW1jX3Bvd2Vyb2ZmX25vZml0eSgpIGluc3RlYWQgb2YNCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXl5eXl5eDQo+ICAgVGhh
+dCBoYXJkIHdvcmQgYWdhaW4uIDotKQ0KDQpPb3BzISBUaGFuayB5b3UgZm9yIHBvaW50ZWQgaXQg
+b3V0IQ0KIyBBbHNvLCB0aGUgc3ViamVjdCB3YXMgaW5jb3JyZWN0Li4uDQoNCkJlc3QgcmVnYXJk
+cywNCllvc2hpaGlybyBTaGltb2RhDQoNCg0K
