@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A6A2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F39620826
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461145;
-	bh=ynMIqF5vEp8/euxzrnMtKLqP5VfXQbGHU3Ru9xX2DgA=;
+	s=default; t=1593461148;
+	bh=TCCkuqH489hXhYC0XfzyB8vf2AK77+HJyNN5X/SHct8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FaUKDJQDdMP2EpFG04h4I442x4c0dDV38kefXpHK2/uvvsLjsqeE9nGHR+DgAfpYn
-	 CcoA47Hc57YOdm9VifmVugPkj5Smhr1bUdGthPAL2ZDOkbVE5FXYa8AMb2hfS+v8OU
-	 y7FOIgSVvoWrw2/zqip0fxetFJnPqkqg7bWHuguc=
+	b=oEf/NLMolMVZbgRcqWhgYH7livHAO8R0keVzKfMPNaXEf138765tQwfU4CC9bljYD
+	 7uBf09l56uJc7VktaMKl26Eww4R9g/HKhrVJzpifVwAsFYVgWcWgyES8zMndgT3flt
+	 Z6xP/S4n8xrytc4+VTljfZPz2MgRsxogvFLGpPZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgF2UFo (ORCPT
+        id S2388846AbgF2UFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732975AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732963AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AC7252A6;
-        Mon, 29 Jun 2020 15:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B56A8252F6;
+        Mon, 29 Jun 2020 15:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445015;
-        bh=ynMIqF5vEp8/euxzrnMtKLqP5VfXQbGHU3Ru9xX2DgA=;
+        s=default; t=1593445124;
+        bh=TCCkuqH489hXhYC0XfzyB8vf2AK77+HJyNN5X/SHct8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhHH2C43Uvl3w7eWFwTy8/XxRjrATuMKwJjPW2TOpgwigLARcefZNwfc1UJWx4qA3
-         2XVAZLJ/xjeD1XCHOUJiENcqwt/W/f/RsmyY8kq5KXb8BSsqprizSGQ6PV4Z3DAjCW
-         IO5+CKNVdvIqsVRAD5wAaegO47mxJt7OhlxgCIqw=
+        b=1CjgLl7e2pdApg2ICLwxRQ2v8BMkm2Igb+rtFPip+2y3dSm+RyaN5I4oYAJRKj/ad
+         cRcWXURyCz4FdLd+CgdjYx4pIJPrklPldMzuY1iDhpjQ1iqI7Bw9L+kbBrUbGNRPRl
+         Jcx6UW+im/pRuJB559E7cK4bCTvsvtbzGMUtVh0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 114/131] ocfs2: avoid inode removal while nfsd is accessing it
-Date:   Mon, 29 Jun 2020 11:34:45 -0400
-Message-Id: <20200629153502.2494656-115-sashal@kernel.org>
+Subject: [PATCH 4.14 31/78] xhci: Fix enumeration issue when setting max packet size for FS devices.
+Date:   Mon, 29 Jun 2020 11:37:19 -0400
+Message-Id: <20200629153806.2494953-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -70,101 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Al Cooper <alcooperx@gmail.com>
 
-commit 4cd9973f9ff69e37dd0ba2bd6e6423f8179c329a upstream.
+commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
 
-Patch series "ocfs2: fix nfsd over ocfs2 issues", v2.
+Unable to complete the enumeration of a USB TV Tuner device.
 
-This is a series of patches to fix issues on nfsd over ocfs2.  patch 1
-is to avoid inode removed while nfsd access it patch 2 & 3 is to fix a
-panic issue.
+Per XHCI spec (4.6.5), the EP state field of the input context shall
+be cleared for a set address command. In the special case of an FS
+device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
+not do this before evaluating the context. With an XHCI controller
+that checks the EP state field for parameter context error this
+causes a problem in cases such as the device getting reset again
+after enumeration.
 
-This patch (of 4):
+When that field is cleared, the problem does not occur.
 
-When nfsd is getting file dentry using handle or parent dentry of some
-dentry, one cluster lock is used to avoid inode removed from other node,
-but it still could be removed from local node, so use a rw lock to avoid
-this.
+This was found and fixed by Sasi Kumar.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-1-junxiao.bi@oracle.com
-Link: http://lkml.kernel.org/r/20200616183829.87211-2-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ocfs2/dlmglue.c | 17 ++++++++++++++++-
- fs/ocfs2/ocfs2.h   |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index 178cb9e6772ac..c141b06811a6c 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -682,6 +682,12 @@ static void ocfs2_nfs_sync_lock_res_init(struct ocfs2_lock_res *res,
- 				   &ocfs2_nfs_sync_lops, osb);
- }
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 6c0a0ca316d3e..d727cbbad44a2 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1346,6 +1346,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
+ 				xhci->devs[slot_id]->out_ctx, ep_index);
  
-+static void ocfs2_nfs_sync_lock_init(struct ocfs2_super *osb)
-+{
-+	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	init_rwsem(&osb->nfs_sync_rwlock);
-+}
-+
- void ocfs2_trim_fs_lock_res_init(struct ocfs2_super *osb)
- {
- 	struct ocfs2_lock_res *lockres = &osb->osb_trim_fs_lockres;
-@@ -2851,6 +2857,11 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
- 	if (ocfs2_is_hard_readonly(osb))
- 		return -EROFS;
- 
-+	if (ex)
-+		down_write(&osb->nfs_sync_rwlock);
-+	else
-+		down_read(&osb->nfs_sync_rwlock);
-+
- 	if (ocfs2_mount_local(osb))
- 		return 0;
- 
-@@ -2869,6 +2880,10 @@ void ocfs2_nfs_sync_unlock(struct ocfs2_super *osb, int ex)
- 	if (!ocfs2_mount_local(osb))
- 		ocfs2_cluster_unlock(osb, lockres,
- 				     ex ? LKM_EXMODE : LKM_PRMODE);
-+	if (ex)
-+		up_write(&osb->nfs_sync_rwlock);
-+	else
-+		up_read(&osb->nfs_sync_rwlock);
- }
- 
- int ocfs2_trim_fs_lock(struct ocfs2_super *osb,
-@@ -3314,7 +3329,7 @@ int ocfs2_dlm_init(struct ocfs2_super *osb)
- local:
- 	ocfs2_super_lock_res_init(&osb->osb_super_lockres, osb);
- 	ocfs2_rename_lock_res_init(&osb->osb_rename_lockres, osb);
--	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	ocfs2_nfs_sync_lock_init(osb);
- 	ocfs2_orphan_scan_lock_res_init(&osb->osb_orphan_scan.os_lockres, osb);
- 
- 	osb->cconn = conn;
-diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-index 4f86ac0027b5b..2319336183005 100644
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -406,6 +406,7 @@ struct ocfs2_super
- 	struct ocfs2_lock_res osb_super_lockres;
- 	struct ocfs2_lock_res osb_rename_lockres;
- 	struct ocfs2_lock_res osb_nfs_sync_lockres;
-+	struct rw_semaphore nfs_sync_rwlock;
- 	struct ocfs2_lock_res osb_trim_fs_lockres;
- 	struct ocfs2_dlm_debug *osb_dlm_debug;
+ 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
++		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
+ 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
+ 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
  
 -- 
 2.25.1
