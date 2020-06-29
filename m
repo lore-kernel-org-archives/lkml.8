@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01798206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE8420768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464787;
-	bh=AgRFdOEPmRGhMwYWEDiAD/ydaphTjPBnO+pOw4nCiM8=;
+	s=default; t=1593464791;
+	bh=YTZTX/HW4bzFCEoWYcFvAJ8JvT4/2afAu5EYeErSCCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHPyF3As8mUBpPhIicVMVLqBWRxxdgM0DwBmWi6NYTwTlJomgwSEbb+sfmQdPRsl1
-	 V/q4sheeKrf57wf3iwDZldB4845jwLz1OE9gSZM6IPUFdciYEtsA8FGKiVpmGx7Kv9
-	 z7rHQ1HRwzkUMcz1zBWnFygYCc7mgvGUyLH0booA=
+	b=fy3/ohY4oOqQEJOnQl+RA1FtSRrxzGiuZSbCcLflNHqpxkAFFEefcVvt94IzWeq7u
+	 Ff4jQwMZ6LB+i3jcG27QG9NVX+l3Gf8umklA2cLxIZ9K7SAva2L0QSajvkX252NBeq
+	 tOJXh5vRfqFzCvqA143lVQ/AUvd8JJvnU3lMbGvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389691AbgF2VGZ (ORCPT
+        id S2388371AbgF2VG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53738 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730748AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730963AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE53E254B6;
-        Mon, 29 Jun 2020 15:53:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82AF0254BD;
+        Mon, 29 Jun 2020 15:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446011;
-        bh=AgRFdOEPmRGhMwYWEDiAD/ydaphTjPBnO+pOw4nCiM8=;
+        s=default; t=1593446015;
+        bh=YTZTX/HW4bzFCEoWYcFvAJ8JvT4/2afAu5EYeErSCCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivqGkrn8GCp+UeowK/7yCYprxII02l4YWmuzhtTMujhjcBh4VFHadXsdzlObGvG6u
-         xiSXRv+PnqxzdMjjjVZEtflzR56eI57lm4kAm/cYaSBYFJHXjBcLWOUS1glAMVHC6+
-         fxvOrFHwsW5HwRXu+YqqbLbfcbO11QxyIcIQ4vjQ=
+        b=xekcbaSRvuPnq4f3MfuVyuItIpQuO5y3vmNLYLSSKZ05FCe08MrjZNXvuOqjwP26g
+         Vmy+BHqa1j7P2ScxqRM08/wNKJhr/eikFI/ZZdfQ13lD6FfjNpMzin0WvxJuT+Ns8i
+         ngmFmhK1X9t/0oescYeGftXBsPQRxT3q2EZeLm/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 018/135] scsi: ibmvscsi: Don't send host info in adapter info MAD after LPM
-Date:   Mon, 29 Jun 2020 11:51:12 -0400
-Message-Id: <20200629155309.2495516-19-sashal@kernel.org>
+Subject: [PATCH 4.4 022/135] staging: sm750fb: add missing case while setting FB_VISUAL
+Date:   Mon, 29 Jun 2020 11:51:16 -0400
+Message-Id: <20200629155309.2495516-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,44 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Matej Dujava <mdujava@kocurkovo.cz>
 
-[ Upstream commit 4919b33b63c8b69d8dcf2b867431d0e3b6dc6d28 ]
+[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
 
-The adapter info MAD is used to send the client info and receive the host
-info as a response. A persistent buffer is used and as such the client info
-is overwritten after the response. During the course of a normal adapter
-reset the client info is refreshed in the buffer in preparation for sending
-the adapter info MAD.
+Switch statement does not contain all cases: 8, 16, 24, 32.
+This patch will add missing one (24)
 
-However, in the special case of LPM where we reenable the CRQ instead of a
-full CRQ teardown and reset we fail to refresh the client info in the
-adapter info buffer. As a result, after Live Partition Migration (LPM) we
-erroneously report the host's info as our own.
-
-[mkp: typos]
-
-Link: https://lore.kernel.org/r/20200603203632.18426-1-tyreld@linux.ibm.com
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
+Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
+Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/sm750fb/sm750.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index e26747a1b35a1..e7075aae15daa 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -427,6 +427,8 @@ static int ibmvscsi_reenable_crq_queue(struct crq_queue *queue,
- 	int rc = 0;
- 	struct vio_dev *vdev = to_vio_dev(hostdata->dev);
- 
-+	set_adapter_info(hostdata);
-+
- 	/* Re-enable the CRQ */
- 	do {
- 		if (rc)
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index 860e1c288ad5e..75b47d61318a1 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -894,6 +894,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
+ 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
+ 		break;
+ 	case 16:
++	case 24:
+ 	case 32:
+ 		fix->visual = FB_VISUAL_TRUECOLOR;
+ 		break;
 -- 
 2.25.1
 
