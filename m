@@ -2,50 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05CEF206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B50820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461432;
-	bh=H+8j4J+pfTWSkqYdP+zN1ylFUFSYrabQRnCKMN7E/+I=;
+	s=default; t=1593461438;
+	bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rpjXWrGQLj/zG0D8NCivF0hziGwCtsExHkIxYPvm8ifC2X7ZS4MOWXRQlFGCWh2w/
-	 SMhVLkZ/Bv1FyjbIIW7IANcM3rbHjSoByufkC+0Q3Qy62vNr6KO+l6bsOwr7eiMDu4
-	 CVRw6MLGkwBKXNrXWP9aPMKHe0pCrrCtyNAcAvD0=
+	b=ScM1ZstvtS1dSt66HN44gNeWtU6os/Uu6WoF77iNN2Zmy/M3CLZn5Pb1V7lB7sjsT
+	 MDCA6aulFL/juCBG4dQI54lxsbT0a2q94N02DgSSdaAJWENXZNYt1spUlQRbPbrQD7
+	 E5iLNcKU/YEOhPatKUppLqJ2+daftntAkWDToQjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgF2UKa (ORCPT
+        id S1729159AbgF2UKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732913AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732904AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563BD2524F;
-        Mon, 29 Jun 2020 15:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33062527F;
+        Mon, 29 Jun 2020 15:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444964;
-        bh=H+8j4J+pfTWSkqYdP+zN1ylFUFSYrabQRnCKMN7E/+I=;
+        s=default; t=1593444993;
+        bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFm25tSs0aSrilbTzBI227acSp8LamWF6Rndo4GAR5ctGEhAxRSeCDxgO4NUxvV6X
-         +/hA3oRNgTtLFC4ILKNbBdibXULwFq8eqeC0znFX0I36ZLqq2q8S3S+2ttjy0+YSt3
-         HrI4Ye9GRyd9BiBq9DP8am0TgDl/mM90cwREascw=
+        b=IykKIHQ4wf9oHFTw9SRDTTGZlXETjWCnMcoYgk/YguPFIC16bS/U79BLFD4EMM5nz
+         biTcTc+8keJ7C6ogLivxR3KwE2JW+GxMGsQfrMrtGdmhK4BmV00MKc0tFX6Sg9IWPd
+         4RjUH/rFRI4ykm+n7gHPUzK/lTNBSSfin/1SW/Gs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Ard Biesheuvel <ardb@kernel.org>,
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/131] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
-Date:   Mon, 29 Jun 2020 11:33:54 -0400
-Message-Id: <20200629153502.2494656-64-sashal@kernel.org>
+Subject: [PATCH 4.19 093/131] riscv/atomic: Fix sign extension for RV64I
+Date:   Mon, 29 Jun 2020 11:34:24 -0400
+Message-Id: <20200629153502.2494656-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,37 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit 4ddf4739be6e375116c375f0a68bf3893ffcee21 ]
+[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+The argument passed to cmpxchg is not guaranteed to be sign
+extended, but lr.w sign extends on RV64I. This makes cmpxchg
+fail on clang built kernels when __old is negative.
 
-Fixes: 0bb549052d33 ("efi: Add esrt support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200528183804.4497-1-wu000273@umn.edu
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+To fix this, we just cast __old to long which sign extends on
+RV64I. With this fix, clang built RISC-V kernels now boot.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/867
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/esrt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/include/asm/cmpxchg.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-index 5d06bd247d073..2f6204b2fdd38 100644
---- a/drivers/firmware/efi/esrt.c
-+++ b/drivers/firmware/efi/esrt.c
-@@ -180,7 +180,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
- 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
- 					  "entry%d", entry_num);
- 		if (rc) {
--			kfree(entry);
-+			kobject_put(&entry->kobj);
- 			return rc;
- 		}
- 	}
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index c12833f7b6bd1..42978aac99d53 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -187,7 +187,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -232,7 +232,7 @@
+ 			RISCV_ACQUIRE_BARRIER				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -278,7 +278,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -324,7 +324,7 @@
+ 			"	fence rw, rw\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
 -- 
 2.25.1
 
