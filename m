@@ -2,80 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE09C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4271206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2283206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OTvKQIU8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N58gW58i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgF2TIF (ORCPT
+        id S1730695AbgF2TIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
+        Mon, 29 Jun 2020 15:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730826AbgF2THn (ORCPT
+        with ESMTP id S1730697AbgF2THn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:07:43 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50862C00E3FB;
-        Mon, 29 Jun 2020 05:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IEJE4pzTKwBckHnN8MJnYUJtj55RnUgeieprz/ielos=; b=OTvKQIU8NCpuynReFPzOX7sxPG
-        BTVSLs55stmmHraBnRi26uem12+KaQj+V1eI4nr9kOJ5204WgoR9TEDgeWykyEJEGueWoT6zz5Lyn
-        JyMjdjzxZuirLVi32k2alVYtkO02n8ePgQVbFBstHngo7UtOTcHEWnd01Xa0KUNi7R5ILAv29WWix
-        tUNoRbV17Am92l88NVeSasyGJGdEcZ5maoj/2ZG1Jln2bvXxkxbcWyGOMifdiAetgP2Q5beo1uiI6
-        qdSwFTgXdx9bahX+TOjD8VzRMT30ZHxxZY9z+GPv0FVIiW1r26VCh5KcPfDwcqQWEqgWK0thaROa6
-        a2mxmwPQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpsjo-00026M-RY; Mon, 29 Jun 2020 12:18:16 +0000
-Date:   Mon, 29 Jun 2020 13:18:16 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 6/6] mm: Add memalloc_nowait
-Message-ID: <20200629121816.GC25523@casper.infradead.org>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625113122.7540-7-willy@infradead.org>
- <20200629050851.GC1492837@kernel.org>
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A934C00E3FC
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:19:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l2so14418236wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:19:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=BWB95FXlnWSWC7pmv6iNCOZmz4YpgGsIhyG2MjJbpo4=;
+        b=N58gW58idePYUeGL1drtPtk1W+iqzF24SWCw2HBLAV0vp3qEuHkZW2dI/4ssxsgyre
+         XhAlPO1jp2eEvhOD9QYPTKxs9mPdUcxOMQq/W5Ooy2mc3XBGsAC41oGpQq8+T6CnCxbA
+         vkGQ3CRVkU6lJSFGwBdggPw0a1ag6LWmNwh/umdnv/G0LSbWWTCohGmlBcNHDS01jF1I
+         Msp3cIpwCA27zcn/0Z9nPbZQsy5wiSzmGJSGK7hBDgl/iNP1on9n3h5LT3USl4Y6YZcO
+         fzmt+JXbP+CgWRe+LEpEbT26gEEaBXVexzbh4EWcF3YLe7pOd9S52sP3K3bS4CjME0et
+         PoLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BWB95FXlnWSWC7pmv6iNCOZmz4YpgGsIhyG2MjJbpo4=;
+        b=q/WinCHJ1bkqaoK69Sb9qZVDq6So6jO1NnKQk+3qC3txNi6q12/6zNhxiZw3mf0lXW
+         k+E2SuRnqdOuXU1KdzCY6kFBU5fk9yHz0S4c3ZLUTXA6+N1UsVk9Ylof6oAjLScxtNYn
+         nHaWmntX/Lr6yVONVkG22LO4EsQAt5HAhp5KM4xdlTwIeyLukuQRBYWZt3Jh6l6VABD+
+         UPBFZK1nSxW1RawXLkMbBl8c0YAqlT10HzKLk+9Z0hmS/iPrFRh1AVIpGVZqO6I7q7H4
+         +IGp8qNNKGiaqiCrsdIoqTkj5nQeNMScvwmRkq/9KX22brKYF/kB26z/t/wAP1cODKea
+         Ee8w==
+X-Gm-Message-State: AOAM530KJM5ahB65KP7m/QmMXp1cmXRyptk1esfyZAWdzRM1rGTWrESf
+        ycPvOOYv/ubdMfprVnt2ov6JidDm
+X-Google-Smtp-Source: ABdhPJxsJ/a8uRcZMmS5qF2+741IxPP19IPww3Tkszrt9a6qnKY1QTB+KhKgqwkCkqeaasFsid3Mnw==
+X-Received: by 2002:a1c:5f45:: with SMTP id t66mr17358596wmb.144.1593433170908;
+        Mon, 29 Jun 2020 05:19:30 -0700 (PDT)
+Received: from [192.168.178.22] (dslb-178-011-230-168.178.011.pools.vodafone-ip.de. [178.11.230.168])
+        by smtp.gmail.com with ESMTPSA id p8sm12250146wrq.29.2020.06.29.05.19.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 05:19:30 -0700 (PDT)
+Subject: Re: [PATCH] staging: rtl8188eu: include: ieee80211.h: fixed multiple
+ blank line coding style issues.
+To:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200629080927.ivzvczusduxtrc2g@pesu-pes-edu>
+From:   Michael Straube <straube.linux@gmail.com>
+Message-ID: <e3b9a1f7-b0ad-1815-df0f-733203d09602@gmail.com>
+Date:   Mon, 29 Jun 2020 14:17:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629050851.GC1492837@kernel.org>
+In-Reply-To: <20200629080927.ivzvczusduxtrc2g@pesu-pes-edu>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 08:08:51AM +0300, Mike Rapoport wrote:
-> > @@ -886,8 +868,12 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
-> >  			return NULL;
-> >  
-> >  		if (dm_bufio_cache_size_latch != 1 && !tried_noio_alloc) {
-> > +			unsigned noio_flag;
-> > +
-> >  			dm_bufio_unlock(c);
-> > -			b = alloc_buffer(c, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
-> > +			noio_flag = memalloc_noio_save();
-> 
-> I've read the series twice and I'm still missing the definition of
-> memalloc_noio_save().
-> 
-> And also it would be nice to have a paragraph about it in
-> Documentation/core-api/memory-allocation.rst
 
-Documentation/core-api/gfp_mask-from-fs-io.rst:``memalloc_nofs_save``, ``memalloc_nofs_restore`` respectively ``memalloc_noio_save``,
-Documentation/core-api/gfp_mask-from-fs-io.rst:   :functions: memalloc_noio_save memalloc_noio_restore
-Documentation/core-api/gfp_mask-from-fs-io.rst:allows nesting so it is safe to call ``memalloc_noio_save`` or
+On 2020-06-29 10:09, B K Karthik wrote:
+> removed multiple blank lines to improve code readability.
+> 
+> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> ---
+>   drivers/staging/rtl8188eu/include/ieee80211.h | 9 ---------
+>   1 file changed, 9 deletions(-)
 
+Hi, those lines are already removed in
+
+commit 5bfb7eadc5874a3a08dd173d66a16a1ed0548444 ("staging: rtl8188eu: remove blank lines in header files")
+
+regards,
+Michael
