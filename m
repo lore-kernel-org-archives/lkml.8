@@ -4,81 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A52C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A806F206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCF9206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466791;
-	bh=vAO465OpKk+SCS9PET52HZA+147K8jdSjeL8eN7Ow4U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SOwB4Sys/D+Y9rujoy7i4CLhXMBnvcRqemCfyufPywk2ppNOMSNTflqNn8LE3RbLu
-	 SeQEJuB072HE8LtP1U4uI9x70q1BueeECVS6Oeub3R0h0uXq6H3scmHtOibt/s/xg1
-	 PHiBK3ae+/fxIR9tjXE2Y2zyalCOIK8c5ozWQwTA=
+	s=default; t=1593466803;
+	bh=PPeWyYS4FCFQJSFCRFag4CcXyIoAO/wk/iRh2ObDfuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=czbiuvPy188YsULJxK6jzSZvfvg/79m81KRRgRkqVw7U4xwo9091nf2kpfzZRh1Mf
+	 /vTPzDw/un+uFDnqvM2xYf7cYHbKycZHsdmoN1i7THoS9y8zcdUomOFvtxdeYbjoXx
+	 2VkzZi01ZjGSO+yMrBKY4nr7gJyPhQI52W83UEcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgF2Vju (ORCPT
+        id S2388475AbgF2VkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:39:50 -0400
+        Mon, 29 Jun 2020 17:40:01 -0400
 Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgF2Ska (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:30 -0400
-Received: from localhost.localdomain (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728307AbgF2Sk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254F423A32;
-        Mon, 29 Jun 2020 14:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8E923EF2;
+        Mon, 29 Jun 2020 15:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593442246;
-        bh=vAO465OpKk+SCS9PET52HZA+147K8jdSjeL8eN7Ow4U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nB0aBvqX5FCtYmZxYXZ1jxyYema6RWPmKMQl0LPvkPpBTMVI+xHAorVerQaIe3J9w
-         m7tWtyzBTnSFO4hy3bjauGc6o94QXy/hytEyx4Xr7aPPKmu7V3uxY158fdNQqwJ6dc
-         +z8oGbmJv6FZR0TkwEAPdfWP7vmXUbMPSWLe76kY=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] phy: core: fix code style in devm_of_phy_provider_unregister
-Date:   Mon, 29 Jun 2020 20:20:07 +0530
-Message-Id: <20200629145010.122675-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        s=default; t=1593443906;
+        bh=PPeWyYS4FCFQJSFCRFag4CcXyIoAO/wk/iRh2ObDfuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CtHRuCCP3jaIG/tWjp4XvAH9i7bhSO2/CtnEBcXYshvbrK26DiNdva4YOpbU8c98k
+         mSloObqj4X0A8I+M6PA/KH304lnHTs0EdX9vMxslDr/t7xmZiRUtEqww3kzImhKilV
+         XdvlBRfa0n05nLI2FapFEaCXqgXC35fBHFQ1kuuE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 006/265] ibmveth: Fix max MTU limit
+Date:   Mon, 29 Jun 2020 11:13:59 -0400
+Message-Id: <20200629151818.2493727-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/process/coding-style.rst says:
-"functions: they have the opening brace at the beginning of the next
-line"
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-devm_of_phy_provider_unregister() function has opening brace at same
-line, so fix it up.
+[ Upstream commit 5948378b26d89f8aa5eac37629dbd0616ce8d7a7 ]
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The max MTU limit defined for ibmveth is not accounting for
+virtual ethernet buffer overhead, which is twenty-two additional
+bytes set aside for the ethernet header and eight additional bytes
+of an opaque handle reserved for use by the hypervisor. Update the
+max MTU to reflect this overhead.
+
+Fixes: d894be57ca92 ("ethernet: use net core MTU range checking in more drivers")
+Fixes: 110447f8269a ("ethernet: fix min/max MTU typos")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/phy/phy-core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a27b8d578d7f..b54522f06245 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -1122,7 +1122,8 @@ EXPORT_SYMBOL_GPL(of_phy_provider_unregister);
-  * of_phy_provider_unregister to unregister the phy provider.
-  */
- void devm_of_phy_provider_unregister(struct device *dev,
--	struct phy_provider *phy_provider) {
-+	struct phy_provider *phy_provider)
-+{
- 	int r;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 96d36ae5049e1..c5c732601e35e 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1715,7 +1715,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	}
  
- 	r = devres_destroy(dev, devm_phy_provider_release, devm_phy_match,
+ 	netdev->min_mtu = IBMVETH_MIN_MTU;
+-	netdev->max_mtu = ETH_MAX_MTU;
++	netdev->max_mtu = ETH_MAX_MTU - IBMVETH_BUFF_OH;
+ 
+ 	memcpy(netdev->dev_addr, mac_addr_p, ETH_ALEN);
+ 
 -- 
-2.26.2
+2.25.1
 
