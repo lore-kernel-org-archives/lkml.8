@@ -2,215 +2,129 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF36C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE99BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 939BB22281
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE2B21D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="ppw5zcIi"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0Vr/iUCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgF2SjZ (ORCPT
+        id S1726754AbgF2Sja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:39:25 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:32568 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726120AbgF2SjQ (ORCPT
+        Mon, 29 Jun 2020 14:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbgF2Sh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:39:16 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5ghl029788;
-        Mon, 29 Jun 2020 04:06:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=NtX0T5CFmELPfbKTe7Qime63AOwMwqjGySKmn+kwvHc=;
- b=ppw5zcIiv9W6p4ZDPDrlZW4dtW+EDq0/v9pGFoEmYdZOyVS2Ulei8NjEC2yPCOp5oWjs
- bx7RCv8IaW8gdoZUomUXostcTG/8SL5crg7+kv2OlVgKb3kY85Uhf4rrjccL3Hv2qH8z
- bBqQ/XuFrfLaQGu/n9dai9C1br3CPh8XRNTcKPTCexVmTiF2RXF11zyfvMUTwirEj/cb
- 7x4uQbzXJlzjOg6awPYxsOPvEh3S+rXR62o2PzJEFrkVaqtmo4ySRhkDc1EfvKONYEwu
- vY2mfXk2lSPcLfPS3sXLXAckYEZoyWFoj6vSo5PcDAlHT4xjv1aWF+g29+46mv2cIMq+ vQ== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31y0wrtg06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 04:06:20 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
- 2020 04:06:19 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 29 Jun 2020 04:06:19 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 0E41B3F703F;
-        Mon, 29 Jun 2020 04:06:15 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Alexander Lobakin" <alobakin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 6/6] net: qede: update copyright years
-Date:   Mon, 29 Jun 2020 14:05:12 +0300
-Message-ID: <20200629110512.1812-7-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
-References: <20200629110512.1812-1-alobakin@marvell.com>
+        Mon, 29 Jun 2020 14:37:59 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF58C031428
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:07 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l6so15970195qkc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=acMY/PDEeXIX2iUBf49C2Sg8svQXM/66G883KF7yr14=;
+        b=0Vr/iUCTL0YCeERQJU5A4XFXP9WRqstSxzdmUQD6ykn1ca7JzGnnei2ewZDfArLcSu
+         CYypdB2pqO57zT6zodFJ+ZD2IJlbzrIK+M+0o5ZTdkG8QVZhgL9zkp0H1qxCaw466lPK
+         6Bvj8YaLOMYtN4/izEybXm6/6yU52gkFLcOx+I3rM5FhrNY74YEXLbbNt48iXwhoEPPu
+         iXBbUAWO7sDhCLWBK888xnmlUL60CSL1wubqDtYE+gsqRKrAtDHB1OF8tXE7vDS8nrL4
+         PTrSsSyc3GZc2W9tFD0ZGVWlquLpWeYBoT0Xyb1zNWMo124SuQuu2KPXpOSkUPdRlH8B
+         rUHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=acMY/PDEeXIX2iUBf49C2Sg8svQXM/66G883KF7yr14=;
+        b=qd30uSyngEo6+leg7nSN7/i3hi5FZ8YjUfeM4ozY1yPd7s7UYZu4yH18K8dPa/3AYc
+         /1/fUvUjpUphUMRoLQ/MUjSPayOirpbHeTBpfzr5CdLulisIncm8PC0Q0WiOTahMwpWF
+         DF4Knt9Nn9h7ArmCA0RPE6HsnzZagSPNyrSppljWOYsvf+0bLIQO1j8fUjUbhhKDvIIK
+         gPm5Uzx6fRce8lVXV+2/g2n3Hv39tL2vSq0kAAjVM09i4bolKE+RixpTgptEBfBdPnKy
+         YmiKRDyU0YDIQaAH8xLMkj0K+noRwhQOLlFY5i0A+1ryGtr09fUH1bVR607DRzyN42l4
+         In3A==
+X-Gm-Message-State: AOAM533FPH1kGvaL7zX4XQ5PRCotPUK0DJKw9Wb9pJy73W69uleDgTc2
+        KG2iAagnBcONl4xxgzdRTEXRkg==
+X-Google-Smtp-Source: ABdhPJyEZvgI7BCAXGHakCfxARGoDPMIkgxM8m5Edq3X5e6ibIASdaGalKlTTXkySTsiXwmys77+LA==
+X-Received: by 2002:a05:620a:483:: with SMTP id 3mr15187886qkr.299.1593451266376;
+        Mon, 29 Jun 2020 10:21:06 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:21:06 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 05/13] clk: qcom: gcc: remove unnecessary vco_table from SM8150
+Date:   Mon, 29 Jun 2020 13:20:35 -0400
+Message-Id: <20200629172049.30452-6-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
+References: <20200629172049.30452-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the actual copyright holder and years in all qede source files.
+The fixed alpha pll ops only use it for clamping in round_rate, which is
+unnecessary. This is consistent with SM8250 GCC not using vco_table.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/net/ethernet/qlogic/qede/Makefile       | 1 +
- drivers/net/ethernet/qlogic/qede/qede.h         | 1 +
- drivers/net/ethernet/qlogic/qede/qede_dcbnl.c   | 5 +++--
- drivers/net/ethernet/qlogic/qede/qede_ethtool.c | 1 +
- drivers/net/ethernet/qlogic/qede/qede_filter.c  | 1 +
- drivers/net/ethernet/qlogic/qede/qede_fp.c      | 1 +
- drivers/net/ethernet/qlogic/qede/qede_main.c    | 1 +
- drivers/net/ethernet/qlogic/qede/qede_ptp.c     | 1 +
- drivers/net/ethernet/qlogic/qede/qede_ptp.h     | 1 +
- drivers/net/ethernet/qlogic/qede/qede_rdma.c    | 1 +
- 10 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/Makefile b/drivers/net/ethernet/qlogic/qede/Makefile
-index 1d26ffc82290..a6e8d9fc8832 100644
---- a/drivers/net/ethernet/qlogic/qede/Makefile
-+++ b/drivers/net/ethernet/qlogic/qede/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+# Copyright (c) 2019-2020 Marvell International Ltd.
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index d7778def37da..8e9b5b3cceaf 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -34,14 +34,8 @@ enum {
+ 	P_SLEEP_CLK,
+ };
  
- obj-$(CONFIG_QEDE) := qede.o
+-static const struct pll_vco trion_vco[] = {
+-	{ 249600000, 2000000000, 0 },
+-};
+-
+ static struct clk_alpha_pll gpll0 = {
+ 	.offset = 0x0,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
+@@ -85,8 +79,6 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
  
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index 8567f295a12f..591dd4051d06 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
+ static struct clk_alpha_pll gpll7 = {
+ 	.offset = 0x1a000,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
+@@ -105,8 +97,6 @@ static struct clk_alpha_pll gpll7 = {
  
- #ifndef _QEDE_H_
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c b/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
-index f6b7ee51e056..2763369bbc61 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
-@@ -1,7 +1,8 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
--* Copyright (c) 2015 QLogic Corporation
--*/
-+ * Copyright (c) 2015 QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-+ */
- 
- #include <linux/types.h>
- #include <linux/netdevice.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-index 26acfb380dc3..d3fc7403d095 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include <linux/version.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index e03d6a957ceb..db17a675bd02 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include <linux/netdevice.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-index c21d4c53121b..1c4ece0713f8 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include <linux/netdevice.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 01c20b2d81e2..8cd27f8f1b3a 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include <linux/crash_dump.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-index 797ce187d683..60a29a937a94 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include "qede_ptp.h"
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-index 00ff981efa66..1db0f021c645 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #ifndef _QEDE_PTP_H_
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-index 2228f1d1166f..769ec2f4d0b7 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qedr NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-+ * Copyright (c) 2019-2020 Marvell International Ltd.
-  */
- 
- #include <linux/pci.h>
+ static struct clk_alpha_pll gpll9 = {
+ 	.offset = 0x1c000,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
 -- 
-2.25.1
+2.26.1
 
