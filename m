@@ -2,51 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA80C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE65CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B9821D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3C322269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455723;
-	bh=WtMcDFcoVkqmSmFB9fi4UUXLZ3w+ig53ufzkYtp4ooo=;
+	s=default; t=1593455725;
+	bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0ZKqXVF1h8NpS0IQhpJgQB072lDAUGLda4O8lgkQitgkFtuYHKB2SthawTs7e3oQ
-	 T/M0m4EeCuIZtA34/ck3pjfgv4E6TsMZFb/hIza3Y6HPIGB528Ec0cxvntv0UmljLQ
-	 jdqXV018x4X3zydTeVjBDvcbU6Y81U55LY9gw508=
+	b=jZhwFd+Z+kX8zls0YZHTiNeODKJqRRd6RAaU8r9VpB0KdlRNUrLLGcx5RQybBr5ak
+	 dWN7y3/7n6HzUHmJGGSaPvKzbgxUQXUwpDRSHIWQRw1yvYWW96mFvxoP+KmNiG/xNh
+	 M7eN0EzIR3cmgKKHIuipnTX9H5MNzRE7iVNSwEZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgF2SfU (ORCPT
+        id S1726346AbgF2SfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgF2SfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:15 -0400
+        id S1726126AbgF2SfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BE36246E6;
-        Mon, 29 Jun 2020 15:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C2D24779;
+        Mon, 29 Jun 2020 15:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444030;
-        bh=WtMcDFcoVkqmSmFB9fi4UUXLZ3w+ig53ufzkYtp4ooo=;
+        s=default; t=1593444088;
+        bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zz6A2LX6BpeLhHL6rhURsJfmdtr1o8fF3KVD2uEwfYawQx0K7zBIZU7pYrA3V57nW
-         3MDltxNhoI6/IRRnQ5O8pCWSssVS5KR47nFJ7fGixO3PKkehqlcZokDIqq0ynlO828
-         hHWLdT7jNQ3H1VLewMDcC/dH/6ozdf5cR3hMjPgM=
+        b=EQ/1xmDIRwhsQKmFdQNqzyW2BzHioBimgrTq7eDBlQ6S5td0E/i9AGaGoMHS8v9jv
+         M37JOgG6kdG7oKvu8T4xKS5DBskr2kFk8I0bTjp3Jj+WZ8yco6BWOk+yOE+ShWCKdt
+         bfllvPrfLhVywEVKLn4Oky+Kej/0raFeHTOrFWR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 137/265] s390/qeth: fix error handling for isolation mode cmds
-Date:   Mon, 29 Jun 2020 11:16:10 -0400
-Message-Id: <20200629151818.2493727-138-sashal@kernel.org>
+Subject: [PATCH 5.7 198/265] s390/vdso: Use $(LD) instead of $(CC) to link vDSO
+Date:   Mon, 29 Jun 2020 11:17:11 -0400
+Message-Id: <20200629151818.2493727-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,50 +67,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e2dfcfba00ba4a414617ef4c5a8501fe21567eb3 ]
+[ Upstream commit 2b2a25845d534ac6d55086e35c033961fdd83a26 ]
 
-Current(?) OSA devices also store their cmd-specific return codes for
-SET_ACCESS_CONTROL cmds into the top-level cmd->hdr.return_code.
-So once we added stricter checking for the top-level field a while ago,
-none of the error logic that rolls back the user's configuration to its
-old state is applied any longer.
+Currently, the VDSO is being linked through $(CC). This does not match
+how the rest of the kernel links objects, which is through the $(LD)
+variable.
 
-For this specific cmd, go back to the old model where we peek into the
-cmd structure even though the top-level field indicated an error.
+When clang is built in a default configuration, it first attempts to use
+the target triple's default linker, which is just ld. However, the user
+can override this through the CLANG_DEFAULT_LINKER cmake define so that
+clang uses another linker by default, such as LLVM's own linker, ld.lld.
+This can be useful to get more optimized links across various different
+projects.
 
-Fixes: 686c97ee29c8 ("s390/qeth: fix error handling in adapter command callbacks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+However, this is problematic for the s390 vDSO because ld.lld does not
+have any s390 emulatiom support:
+
+https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+
+Thus, if a user is using a toolchain with ld.lld as the default, they
+will see an error, even if they have specified ld.bfd through the LD
+make variable:
+
+$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+                       LD=s390x-linux-gnu-ld \
+                       defconfig arch/s390/kernel/vdso64/
+ld.lld: error: unknown emulation: elf64_s390
+clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
+
+Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+can be fragile, depending on paths and variable naming. The cleaner
+solution for the kernel is to take advantage of the fact that $(LD) can
+be invoked directly, which bypasses the heuristics of $(CC) and respects
+the user's choice. Similar changes have been done for ARM, ARM64, and
+MIPS.
+
+Link: https://lkml.kernel.org/r/20200602192523.32758-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[heiko.carstens@de.ibm.com: add --build-id flag]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/s390/kernel/vdso64/Makefile | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 569966bdc5138..60d675fefac7d 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4265,9 +4265,6 @@ static int qeth_setadpparms_set_access_ctrl_cb(struct qeth_card *card,
- 	int fallback = *(int *)reply->param;
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index bec19e7e6e1cf..4a66a1cb919b1 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
  
- 	QETH_CARD_TEXT(card, 4, "setaccb");
--	if (cmd->hdr.return_code)
--		return -EIO;
--	qeth_setadpparms_inspect_rc(cmd);
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+-KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+-		    -Wl,--hash-style=both
++ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
++	     --hash-style=both --build-id -T
  
- 	access_ctrl_req = &cmd->data.setadapterparms.data.set_access_ctrl;
- 	QETH_CARD_TEXT_(card, 2, "rc=%d",
-@@ -4277,7 +4274,7 @@ static int qeth_setadpparms_set_access_ctrl_cb(struct qeth_card *card,
- 		QETH_DBF_MESSAGE(3, "ERR:SET_ACCESS_CTRL(%#x) on device %x: %#x\n",
- 				 access_ctrl_req->subcmd_code, CARD_DEVID(card),
- 				 cmd->data.setadapterparms.hdr.return_code);
--	switch (cmd->data.setadapterparms.hdr.return_code) {
-+	switch (qeth_setadpparms_inspect_rc(cmd)) {
- 	case SET_ACCESS_CTRL_RC_SUCCESS:
- 		if (card->options.isolation == ISOLATION_MODE_NONE) {
- 			dev_info(&card->gdev->dev,
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
+-	$(call if_changed,vdso64ld)
++$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
++	$(call if_changed,ld)
+ 
+ # strip rule for the .so file
+ $(obj)/%.so: OBJCOPYFLAGS := -S
+@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso64as)
+ 
+ # actual build commands
+-quiet_cmd_vdso64ld = VDSO64L $@
+-      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
+ quiet_cmd_vdso64as = VDSO64A $@
+       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+ 
 -- 
 2.25.1
 
