@@ -2,112 +2,170 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A46CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5036C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12289204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C738F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456323;
-	bh=O/nZ0BxK4nESVxMtlEZ3aR9HUzEjAJ3vpNzo90oK+Gw=;
+	s=default; t=1593456327;
+	bh=NEhWqT6taQdowOynhDameXkf6905hTNtjqIfzcRYrBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g5T3vYkYoxr8oAZzCQB0SALIlc5JMemVpYLB7lREX2vcrLh7WOiMzP23+iCUizMZT
-	 sFPEYt3tfrHOYtOFVFtCcImdFvKuRHi6ardlaDXwEjeilcEJaRmK5RWkW2uWsU6Zbn
-	 YSemwDA1dWrLEAAotDdR5yGOp1Ga28bujU3+P//M=
+	b=hd+drMUnNbD+7GVBX7+Rl0Jr7wkOZUSPKQ4NzdfGWwL/KVfJmlczMKn3bBMvOAZdY
+	 ysLXvTBjtp+wWV+ukBPMU8RHkO+QmKUOSJNex1XH9H7f4F/BVA/6dN8TF6ej3sKs5W
+	 SleVpHacNDFdu3DWRGFaKFMrGlAV/Z2/cbS7DbWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgF2SpV (ORCPT
+        id S1728363AbgF2Sp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbgF2SpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729261AbgF2SpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:45:15 -0400
-Received: from kernel.org (unknown [87.71.40.38])
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E93025581;
-        Mon, 29 Jun 2020 15:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF69B255C2;
+        Mon, 29 Jun 2020 17:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446372;
-        bh=O/nZ0BxK4nESVxMtlEZ3aR9HUzEjAJ3vpNzo90oK+Gw=;
+        s=default; t=1593451613;
+        bh=NEhWqT6taQdowOynhDameXkf6905hTNtjqIfzcRYrBc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ve2Rt8tVmffLLnlIRt4m0+FLkplbTh12wsmkxiiXh2shMIztHBj9/nk/f9S/ai5jU
-         3BFQpw5Dz/XZFCZs/y8ymsBDt+3vvNo/l/kVYqcYBemM5Bac+QbcUhusbQGI9QlPev
-         vYsxGXmlFAgYBNiTAVuThytC5RkEIP2ptiiEd7Jg=
-Date:   Mon, 29 Jun 2020 18:59:20 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Joerg Roedel <joro@8bytes.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stafford Horne <shorne@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 4/8] asm-generic: pgalloc: provide generic
- pmd_alloc_one() and pmd_free_one()
-Message-ID: <20200629155920.GD1492837@kernel.org>
-References: <20200627143453.31835-1-rppt@kernel.org>
- <20200627143453.31835-5-rppt@kernel.org>
- <20200627190304.GG25039@casper.infradead.org>
+        b=tRvbZq+V8GAi1XR6fsdfTyZqUnQD6qsLEkSNXClnAsUgl7l7D+dS/4O4i+laHUAry
+         hADus1Gr34xID1++4+cU+AQJJBv4+18dKmA8OUSiTYH2Oe4mQkQXUBLrfdkXCd20ja
+         PoPEI9G+g1ylnQVzYa511YeI+CvVBjhjOM1pk7z4=
+Date:   Mon, 29 Jun 2020 18:26:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Message-ID: <20200629172651.GG5499@sirena.org.uk>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200626143914.GE5289@sirena.org.uk>
+ <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+ <20200629125756.GC5499@sirena.org.uk>
+ <20200629134011.GA23284@bogus>
+ <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
+ <20200629150728.GA27911@bogus>
+ <20200629161450.GE5499@sirena.org.uk>
+ <20200629164207.GB27911@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="B8ONY/mu/bqBak9m"
 Content-Disposition: inline
-In-Reply-To: <20200627190304.GG25039@casper.infradead.org>
+In-Reply-To: <20200629164207.GB27911@bogus>
+X-Cookie: Real programs don't eat cache.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 08:03:04PM +0100, Matthew Wilcox wrote:
-> On Sat, Jun 27, 2020 at 05:34:49PM +0300, Mike Rapoport wrote:
-> > More elaborate versions on arm64 and x86 account memory for the user page
-> > tables and call to pgtable_pmd_page_ctor() as the part of PMD page
-> > initialization.
-> > 
-> > Move the arm64 version to include/asm-generic/pgalloc.h and use the generic
-> > version on several architectures.
-> > 
-> > The pgtable_pmd_page_ctor() is a NOP when ARCH_ENABLE_SPLIT_PMD_PTLOCK is
-> > not enabled, so there is no functional change for most architectures except
-> > of the addition of __GFP_ACCOUNT for allocation of user page tables.
-> 
-> Thanks for including this line; it reminded me that we're not setting
-> the PageTable flag on the page, nor accounting it to the zone page stats.
-> Hope you don't mind me tagging a patch to do that on as 9/8.
 
-We also never set PageTable flag for early page tables and for the page
-tables allocated directly with get_free_page(), e.g PTI, KASAN.
+--B8ONY/mu/bqBak9m
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> We could also do with a pud_page_[cd]tor and maybe even p4d/pgd versions.
-> But that brings me to the next question -- could/should some of this
-> be moved over to asm-generic/pgalloc.h?  The ctor/dtor aren't called
-> from anywhere else, and there's value to reducing the total amount of
-> code in mm.h, but then there's also value to keeping all the ifdef
-> ARCH_ENABLE_SPLIT_PMD_PTLOCK code together too.  So I'm a bit torn.
-> What do you think?
+On Mon, Jun 29, 2020 at 05:42:07PM +0100, Sudeep Holla wrote:
+> On Mon, Jun 29, 2020 at 05:14:50PM +0100, Mark Brown wrote:
+> > On Mon, Jun 29, 2020 at 04:07:28PM +0100, Sudeep Holla wrote:
+> >
+> > > The specification states clearly:
+> > > "... all devices in the system must be in a state that is compatible
+> > > with entry into the system state. These preconditions are beyond the =
+scope
+> > > of this specification and are therefore not described here."
+> > > "Prior to the call, the OS must disable all sources of wakeup other t=
+han
+> > > those it needs to support for its implementation of suspend to RAM."
 
--- 
-Sincerely yours,
-Mike.
+> > This gets a bit circular for a generic OS since the OS needs some way to
+> > figure out what it's supposed to do on a given platform - for example
+> > the OS may be happy to use wakeup sources that the firmware is just
+> > going to cut power on.
+
+> While I understand the sentiments here, PSCI is targeted to address CPU
+> power state management mainly and system states like suspend/reset and
+> poweroff which involves last CPU. This is one of the reason it is out of
+> the scope of the specification.
+
+Sure, but as soon as we start talking about the last CPU stuff we're
+inevitably talking about the system as a whole.
+
+> Here is my understanding. DT specifies all the wakeup sources. Linux
+> can configure those and user may choose to enable a subset of them is
+> wakeup. As stated in the spec and also based on what we already do in
+> the kernel, we disable all other wakeup sources.
+
+> The PSCI firmware can then either read those from the interrupt controller
+> or based on static platform understanding, must not disable those wakeup
+> sources.
+
+That bit about static platform understanding isn't super helpful for the
+OS, so long as the firmware might do that the OS is pretty much out of
+luck. =20
+
+> > > I see nothing has been fixed in the firmware too and we are still
+> > > discussing the same after 3 years =F0=9F=98=84. Clearly we should sta=
+rt trusting
+> > > firmware and built capability to fix and replace it if there are bugs
+> > > just like kernel and stop hacking around in the kernel to deal with
+> > > just broken platform/psci firmware.
+
+> > This isn't just an issue of buggy firmware as far as I can see, it's
+> > also a lack of ability for the OS and firmware to communicate
+> > information about their intentions to each other.  As things stand you'd
+> > need to put static information in the DT.
+
+> It is easy for DT to get out of sync with firmware unless it is generated
+> by the same firmware. That's the reason why I am against such multiple
+
+The ability for things to get out of sync also concerns me as I said
+further back in the thread but I'm not sure we have much alternative,
+realistically we're going to need some facility to work around firmware
+that isn't ideal.
+
+> sources of information. I understand ACPI has more flexibility and I did
+
+ACPI has a much stronger idea of what the system looks like which helps
+it a lot here.
+
+> Each device or platform having its specific property in DT is not scalabl=
+e.
+> Not sure if it is a generic problem. If it is, I would like to understand
+> more details on such lack of ability for communtication between OS and
+> firmware.
+
+It seems like a generic issue from where I'm sitting.
+
+--B8ONY/mu/bqBak9m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl76JFoACgkQJNaLcl1U
+h9ARmAf/eOU+nb6NN4s2U2ScdRWwL/oDde7MOef13lrNOPZdZIqSIdT+sRSnVS8l
+SmIj9eQyDbwsJkc0rniYOlKtsW7MJj92RRC5HVokdkpKy73l8MPaoD8V++npPt2H
+iAZoW9vmf15vNzxMZ0Hx2SnnZ/GJFKBF8c99NMdAQ9GyImRU9Bxhn/sdUxU8p1It
+3v4Gr0a7/RBXnsdBXoKdqfSE5BAdME/jtLsPgQYgb6lp2CDpuh4IW3pEqpuSjKr+
+LciDOtHSSjA7grLtjWn0A3zVPwAgxsfr7+eRWo3Qll7xPQSrNx/O3aa8PFxAuym6
+m3fRJ9QVFfGPQoMokOTqE5HnGMI9ag==
+=qpfT
+-----END PGP SIGNATURE-----
+
+--B8ONY/mu/bqBak9m--
