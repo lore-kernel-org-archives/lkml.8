@@ -2,117 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BCF2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1222081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461116;
-	bh=wQq2d3fy/7yNpl+BXWHi56yLi/aUisRKVh+58QC2WqI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSVmNomTt9BYelIT/swyymn8zq8Db7GdkDLt0So1u9Jed/f1MNKQzOgYBMqQnWiti
-	 IV9Kr8rWjtGfFSHF8BJ34ia8u9f0VWDOXSkOC7wZvDLrL6Io4pSxXEa5ivXcXP1T7x
-	 6KrzpX9qS608I0LHw70NjbZ5A4DiG5E0cbsZ31nw=
+	s=default; t=1593461121;
+	bh=u/7iyrvQ3LzsCNLl/ZBd2xHjBP2XLskqDAzPtHt/Jw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1uh4unf0OUw5k3T4f5OQ9dxqhHAcqnI2Knn9tMjF7b8SukYQrdz7fYtmwWDFWESG6
+	 Q4M9Ab1Poy1GJ0+PXFc99ns0Mv7W9g/0Fcs9jdzTU8qmqqj5GjXExfzyh9py+9Thtb
+	 DaW0CFiwzvGnr3JjI+u4V9a7eiDmCbz8xbweJVf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbgF2UFO (ORCPT
+        id S2388823AbgF2UFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732978AbgF2Ta3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732035AbgF2UFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:05:16 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30B5252E2;
-        Mon, 29 Jun 2020 15:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A2020702;
+        Mon, 29 Jun 2020 20:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445113;
-        bh=wQq2d3fy/7yNpl+BXWHi56yLi/aUisRKVh+58QC2WqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbKwso5xK9uVW0ln8Qc5qlsJw5qUj7QSNJggh4B5GdRxt+SslMUvas6OtX+IdN6Jx
-         k5q6YpsARNcZx8s8sNu0/HQry97r580W3zECOztJnAzkttgsCSNAhP/YesxoPDFbv6
-         ckz9jMltGuEtwNqIw5+dE18Prj+ZPmm8OV7/A7ig=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     guodeqing <geffrey.guo@huawei.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 20/78] net: Fix the arp error in some cases
-Date:   Mon, 29 Jun 2020 11:37:08 -0400
-Message-Id: <20200629153806.2494953-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        s=default; t=1593461116;
+        bh=u/7iyrvQ3LzsCNLl/ZBd2xHjBP2XLskqDAzPtHt/Jw4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QHUr5A6mJj30a5qZEXoAkoLFDQ0EUls2Wd/7WNsTQhe16JoK8NOEYZuv25mCbFGME
+         Ythz2afVpxY19lU4XHuWTN74WSn4/wSjmScPOHt1Et5R5+9bNn+qN7Fif8scE5iVha
+         V/nVKaNKwuiaPjYveohhRgIDPVLqujmjyYn3CGLA=
+Date:   Mon, 29 Jun 2020 23:05:09 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] doc: add link to sparse's home page/internal docs
+Message-ID: <20200629200509.GE1492837@kernel.org>
+References: <20200629044154.GB1492837@kernel.org>
+ <20200629161310.89783-1-luc.vanoostenryck@gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629161310.89783-1-luc.vanoostenryck@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+On Mon, Jun 29, 2020 at 06:13:10PM +0200, Luc Van Oostenryck wrote:
+> Sparse's home page used to be a wiki (sparse.wiki.kernel.org)
+> but this wiki only contained a short intro and the release notes.
+> But nowadays, sparse's main page is sparse.docs.kernel.org,
+> which contains all what was in the wiki but also other documentation,
+> mainly oriented about sparse's internals.
+> 
+> So, add a link to this in the kernel documentation.
+> 
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-ie.,
-$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
+> ---
+> 
+> Changes since v1:
+> * fix a typo (s/kernl/kernel/) thanks to Mike Rapoport.
+> 
+>  Documentation/dev-tools/sparse.rst | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
+> index 8a7055593c31..02102be7ff49 100644
+> --- a/Documentation/dev-tools/sparse.rst
+> +++ b/Documentation/dev-tools/sparse.rst
+> @@ -9,6 +9,8 @@ Sparse is a semantic checker for C programs; it can be used to find a
+>  number of potential problems with kernel code.  See
+>  https://lwn.net/Articles/689907/ for an overview of sparse; this document
+>  contains some kernel-specific sparse information.
+> +More information on sparse, mainly about its internals, can be found in
+> +its official pages at https://sparse.docs.kernel.org.
+>  
+>  
+>  Using sparse for typechecking
+> -- 
+> 2.27.0
+> 
 
-$ ip rule add from 6.6.6.6 table 6666
-
-$ ip route add 9.9.9.9 via 6.6.6.6
-
-$ ping -I 6.6.6.6 9.9.9.9
-PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
-
-3 packets transmitted, 0 received, 100% packet loss, time 2079ms
-
-$ arp
-Address     HWtype  HWaddress           Flags Mask            Iface
-6.6.6.6             (incomplete)                              eth0
-
-The arp request address is error, this is because fib_table_lookup in
-fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
-the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
-Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
-
-Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/fib_semantics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index eff703cb13b6f..bc233fdfae0fe 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -839,7 +839,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_info *fi,
- 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
- 				fl4.flowi4_scope = RT_SCOPE_LINK;
- 
--			if (cfg->fc_table)
-+			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
- 				tbl = fib_get_table(net, cfg->fc_table);
- 
- 			if (tbl)
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
