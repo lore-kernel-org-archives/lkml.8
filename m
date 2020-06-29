@@ -2,102 +2,294 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF751C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF11020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4F320720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S4KcnfRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731020AbgF2TKw (ORCPT
+        id S1730257AbgF2TK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:10:52 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:48069 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730767AbgF2TKm (ORCPT
+        Mon, 29 Jun 2020 15:10:59 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:16458 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729845AbgF2TKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:42 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MN4ux-1jZ2rM0CP7-00J2oD for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 14:55:37 +0200
-Received: by mail-qv1-f42.google.com with SMTP id g11so7553578qvs.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:55:36 -0700 (PDT)
-X-Gm-Message-State: AOAM531AddKxbPCElwxBeXP8CG6S0lt+aGjjVypushYSzpM4yk1xkddl
-        OOzCNwJic9tFwX32lc0Hnra1+7ZMUN0RjrBf0Wg=
-X-Google-Smtp-Source: ABdhPJwTUgWBKuCYHhm9IfBDK7FIWMaC5caJVsnREcVoFi6MO3w8Y1aC9gRnZGddm1b731YJ/OBzbCxzjKv7KsI7YTw=
-X-Received: by 2002:a0c:f385:: with SMTP id i5mr15431499qvk.4.1593435335949;
- Mon, 29 Jun 2020 05:55:35 -0700 (PDT)
+        Mon, 29 Jun 2020 15:10:41 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629120111epoutp0174cf8e687ccd198101952d84d99a302e~dAgbDZ_YF2734827348epoutp01N
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:01:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629120111epoutp0174cf8e687ccd198101952d84d99a302e~dAgbDZ_YF2734827348epoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593432071;
+        bh=Nkwx+fzu3X0xc6Y/GQe/dfl93aOi9to2z0NjebNWLAk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=S4KcnfRxe8kvj+5KLtOW02fH0HRyd7Rlm2Wcnc/PrRxLqT7+8v//oYwOwqZFtimGv
+         k+dut8KvSVROgRD7sVdAPQQrctLvRuZfg2jGcaZO3MAcLKPkgOVcV9Vmua5ixJ88fP
+         LyLkPE6R17zgeKuRRhMdW3BNPEHYs1RT2hRQgmug=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200629120110epcas1p40f28ff568b492deb15a1eb663584ef3c~dAgae_U0E3257632576epcas1p4_;
+        Mon, 29 Jun 2020 12:01:10 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49wR0N3krPzMqYlp; Mon, 29 Jun
+        2020 12:01:08 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A3.07.28578.408D9FE5; Mon, 29 Jun 2020 21:01:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200629120107epcas1p3d599c93a005a36d3caba86785d27da27~dAgXxD_z71595315953epcas1p3u;
+        Mon, 29 Jun 2020 12:01:07 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200629120107epsmtrp1088d1483b95573ad0fbe7ba43562b3d2~dAgXwTlHr1642016420epsmtrp1B;
+        Mon, 29 Jun 2020 12:01:07 +0000 (GMT)
+X-AuditID: b6c32a39-8c9ff70000006fa2-bd-5ef9d804583f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        03.C9.08303.308D9FE5; Mon, 29 Jun 2020 21:01:07 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200629120107epsmtip246ec2fee9326708f827b30a009d3db48~dAgXcx1352885228852epsmtip2e;
+        Mon, 29 Jun 2020 12:01:07 +0000 (GMT)
+Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when
+ rockchip,pmu is absent
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <566d2f93-b5ff-b583-3965-83d4b9188c36@samsung.com>
+Date:   Mon, 29 Jun 2020 21:12:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com> <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
- <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
- <DB3PR0402MB3916192607A09C7061740087F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a1NoyMGNK90WzbgJ7opPbiVL8vwnMEuBeeNPNyvB+5sqQ@mail.gmail.com> <DB3PR0402MB39162138624705E5A296A047F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39162138624705E5A296A047F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 14:55:19 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3n6c5i_RqxxO9N4SdBswmyXbpu3LBi4udfSUHy3mJPsQ@mail.gmail.com>
-Message-ID: <CAK8P3a3n6c5i_RqxxO9N4SdBswmyXbpu3LBi4udfSUHy3mJPsQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rSY+zoLBo+mwL1X7TzIIpQI8/fd7K6+NGn4xf8+tddJ6ggX+Yoz
- 2cdpWv9puKYj8LGWQ/jwHLkatFvui2vMLY3LdEU3Jv5w/vMqjYZHSXSOBzwsD2etOsn9rWP
- fKL7qDR9IsUnheQlUg8DhMr1XUne0in4K3YHdqqu8Ugx2vAwT0ut2fvaG0ZyPTXQLPtG0sN
- 1Sm3/r7rV90o502vju47A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y44tv8Ismyo=:ccWvjKYeZjh1aZQpi6seDN
- e92JgIO60xnSqOmpzDJyeRglqq8E/xqtFRpeT9yr+K4jGOXkh0SOq6XMCSfcidc/MbMP1xuxZ
- MRxK1S3QwPgLmUdrNGpislA4KO4ownQu+eSFek2bgRpLNNW7CmxsWRud6TbPqvq7TuNxohNbA
- 8036bjuqTLFkzoWbSvKWUD5oJVDvjZKJOs+Ok9poKhXEWyarPgiuGKAmzw+M5SsqUR9BpI6An
- IrLAM74lnGhR+1KrLWGXzPfb7dOerkb6HfsyxznUnubystYkulBBQlUn40kVZczidH4qCWH9+
- 8JotgytQfFzcE+nanvDmF4jOW/rtE9jyxdmqx7ZenXjwZpdf9Q4wealEWeM8C+ZLRZgyBZH3F
- O1jDJux8w0OWVKLJzYlxE5mdMtfKyi6WNgbxzqeSQ81D16Zvak1UfRpW8S2Nbyj1+q1CqDQeo
- BGx2l0+aOmeAFmB+SYBcG++cpVVkNmkR9zyx59kICGDpJiHvvvBtvcdyCp7jsGMt8jFeGKaOo
- yGMlkRO6hYsqT2WyM0Hj5LIDv+xC26TRrFXRVazbqCvqVRkhNITxDdkXXoFxmKuBH0JYi/GEu
- atvpGY2OhW4FOGdQ/Qjxj43oA7J8ujiMHbYuKNMZ9vBHpVsHx/QACuWdUVnx/PuJUCbuZcIGF
- yjXiYoNunGSeOCowG/IDdcEA2JAe2HzEXfKGOfO+6PjS7xDnhM61qMYGsCl0JHfOPeF6g2IqB
- OuGcLn5OhtXi+GJlPPZxVRBJlSlTD4kddG38vuwJuifpYoYPNUyaZZCNR3UrVw84SaUILVHXe
- VYvaTtYTivuRjhwYhSLU/Ks9EptLpZQGhC+67PfovAcrci/YQHgZdP6m7abZObLpOrpx1hWc+
- GMGS7iv5PkDsVcMbsUHN6m0MLpBIr3avocpgJUVmk9uFl6an56ohDLd74NOIUR6hTyHeDK23G
- ifSg3KeKGxf/H5QzJYbsoKivQSPZBtpMwALtyErdNFYSqdjM0LTff
+In-Reply-To: <267623b3-9fc5-886e-3554-b86fa1e57ccb@collabora.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCJsWRmVeSWpSXmKPExsWy7bCmri7LjZ9xBvv/S1msuX2I0eL/o9es
+        Fju2i1icbXrDbnF51xw2i8+9Rxgtds45yWpxu3EFm8WCjY8YHTg9tu3exuqx4+4SRo9NqzrZ
+        PPq2rGL02H5tHrPH501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5
+        ibmptkouPgG6bpk5QEcpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgosC/SKE3OL
+        S/PS9ZLzc60MDQyMTIEKE7Iztn+5ylawTL9iXusv9gbGX6pdjJwcEgImEvNXb2TuYuTiEBLY
+        wSgx68E5dgjnE6NEy7mzTBDOZ0aJaz+fAzkcYC0Nf6Hiuxgler6vZAIZJSTwnlFi4vciEFtY
+        IF7iRssdVhBbRCBKov/jN7AGZoFJTBKTln0AS7AJaEnsf3GDDcTmF1CUuPrjMSOIzStgJ3H9
+        0hawoSwCqhIr3s0Es0UFwiRObmuBqhGUODnzCQvIQZwCjhJ/PgaDhJkFxCVuPZnPBGHLS2x/
+        OwfsNQmBHRwSJzoOsEI84CIx/SsvxPvCEq+Ob2GHsKUkXva3QdnVEitPHmGD6O1glNiy/wIr
+        RMJYYv/SyeCAYBbQlFi/Sx8irCix8/dcRoi9fBLvvvZAreKV6GgTgihRlrj84C4ThC0psbi9
+        k20Co9IsJM/MQvLBLCQfzEJYtoCRZRWjWGpBcW56arFhgSlyXG9iBCdXLcsdjNPfftA7xMjE
+        wXiIUYKDWUmE97P1tzgh3pTEyqrUovz4otKc1OJDjKbA4J3ILCWanA9M73kl8YamRsbGxhYm
+        hmamhoZK4rxO1hfihATSE0tSs1NTC1KLYPqYODilGpjW+N7MFS38GxJxlO94uQYbVzzHzoUb
+        hQ5/0/2/nWnDlV+2Ng/+fplz86DSdhnR+JpZDzbsWXD+g7Jn7Iwl5cn9h5SDEpLTNncZ+58N
+        +7h1+29xud3beurudb3475Dy5Le+zKzm/8w+3cdkZv3fzPCB2/3wM+7HihbPts/8Ez1dWuzy
+        scz+VXfuMhVqzzzad5TxJtNrhZZTv5trc3dZr/Tu+dbr8ujWuUbGz5P3mfKL6Z1Jm1O883GZ
+        g8zNoIPhFbovbKfczll24tyf3g0ace8Dvv5gPBmRrbN48cWmm7xxD99JzYjg+9L/++wPjnzj
+        zXL/9+Qt+z75z9k7gq8XOvS5zO6+Vb5e1iFIP6lI89eiq0osxRmJhlrMRcWJADb1Pfc3BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvC7zjZ9xBqv6FS3W3D7EaPH/0WtW
+        ix3bRSzONr1ht7i8aw6bxefeI4wWO+ecZLW43biCzWLBxkeMDpwe23ZvY/XYcXcJo8emVZ1s
+        Hn1bVjF6bL82j9nj8ya5ALYoLpuU1JzMstQifbsEroztX66yFSzTr5jX+ou9gfGXahcjB4eE
+        gIlEw1+mLkYuDiGBHYwSpx8uY+ti5ASKS0pMu3iUGaJGWOLw4WKImreMEo8/PWAFqREWiJe4
+        0XIHzBYRiJI41HOHHaSIWWAKk8T9P7vZIDq2M0usebyZBaSKTUBLYv+LG2Ab+AUUJa7+eMwI
+        YvMK2Elcv7SFCcRmEVCVWPFuJpgtKhAmsXPJYyaIGkGJkzOfsIBcxCngKPHnYzBImFlAXeLP
+        vEvMELa4xK0n85kgbHmJ7W/nME9gFJ6FpHsWkpZZSFpmIWlZwMiyilEytaA4Nz232LDAKC+1
+        XK84Mbe4NC9dLzk/dxMjONK0tHYw7ln1Qe8QIxMH4yFGCQ5mJRHez9bf4oR4UxIrq1KL8uOL
+        SnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXAdE5H0CJ27ZNpnMWBl+9MjXWa
+        ut5twakjV36Knj3G7XPw4KR5/+ct2SV26lFS5fTZ7q9394n2lstqbHh+Ze3nf0Hzqh/+DFe2
+        fRSp6n376ny1pRnyNf6cBp+bls06XvOK54LU9LqWq+dtVBv23vylcEP7/C53V5mb0T63cjy2
+        3HMImyRYN+msRv6TAyvXcYq6NOje8WEPP7DF9p3ZdVmpNP51aQ2LL97ZnarbuCsz4nr34jdN
+        C7eY3Jiw9d0Cfrf1BobqRRYNMuz/3239LLa2/f+WSRG9FYbhR7g2tYSfDApPeCd0vsLoo3vE
+        +wtGc7M1U/o/aN5t3jGroHN24aya0jMP8pynaJ2Sl7HoY0k9HKPEUpyRaKjFXFScCADYtlxw
+        IwMAAA==
+X-CMS-MailID: 20200629120107epcas1p3d599c93a005a36d3caba86785d27da27
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569
+References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
+        <20200622152824.1054946-1-maz@kernel.org>
+        <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
+        <87tuyue142.wl-maz@kernel.org>
+        <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
+        <3de68490-d788-e416-dd5f-d4d6e7eca61a@collabora.com>
+        <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
+        <267623b3-9fc5-886e-3554-b86fa1e57ccb@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 2:46 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by
-> > default
+Hi Enric,
 
-> Thanks for detailed info about PCI loadable module support, I copy our PCI owner
-> here to help on the support of i.MX6 PCIe driver to support loadable module. Meanwhile,
-> in this patch series, I will add the short-term workaround as I described upper, and then remove
-> this short-term workaround either in the i.MX6 PCI driver's loadable module support patch later
-> or adding a new patch if necessary.
+On 6/29/20 8:26 PM, Enric Balletbo i Serra wrote:
+> Hi Chanwoo,
+> 
+> On 29/6/20 13:29, Chanwoo Choi wrote:
+>> Hi Enric and Mark,
+>>
+>> On 6/29/20 8:05 PM, Enric Balletbo i Serra wrote:
+>>> Hi Chanwoo and Marc,
+>>>
+>>> On 29/6/20 13:09, Chanwoo Choi wrote:
+>>>> Hi Enric,
+>>>>
+>>>> Could you check this issue? Your patch[1] causes this issue.
+>>>> As Marc mentioned, although rk3399-dmc.c handled 'rockchip,pmu'
+>>>> as the mandatory property, your patch[1] didn't add the 'rockchip,pmu'
+>>>> property to the documentation. 
+>>>>
+>>>
+>>> I think the problem is that the DT binding patch, for some reason, was missed
+>>> and didn't land. The patch seems to have all the required reviews and acks.
+>>>
+>>>   https://patchwork.kernel.org/patch/10901593/
+>>>
+>>> Sorry because I didn't notice this issue when 9173c5ceb035 landed. And thanks
+>>> for fixing the issue.
+>>
+>> If the 'rockchip,pmu' propery is mandatory, instead of Mark's patch,
+>> we better to require the merge of patch[1] to DT maintainer.
+>>
+>> [1] https://patchwork.kernel.org/patch/10901593/
+>>
+> 
+> Give me some time to double check, because I think that at this point, is needed
+> on some devices with old firmware but not now. It's been a while since I worked
+> on this, but I suspect that being optional is the right way.
 
-Ok, sounds good. Thanks,
+OK. Thanks for your reply.
 
-     Arnd
+> 
+> Maybe Heiko, who IIRC worked on TF-A has a more clear thought on this?
+> 
+> Thanks,
+>  Enric
+> 
+>>>
+>>> Best regards,
+>>>  Enric
+>>>
+>>>> [1] 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT
+>>>> and auto power down parameters to TF-A.")
+>>>>
+>>>>
+>>>> On 6/29/20 5:18 PM, Marc Zyngier wrote:
+>>>>> Hi Chanwoo,
+>>>>>
+>>>>> On Mon, 29 Jun 2020 03:43:37 +0100,
+>>>>> Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>>>>>
+>>>>>> Hi Marc,
+>>>>>>
+>>>>>> On 6/23/20 12:28 AM, Marc Zyngier wrote:
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> It looks good to me. But, I think that it is not necessary
+>>>>>> fully kernel panic log about NULL pointer. It is enoughspsp
+>>>>>> just mentioning the NULL pointer issue without full kernel panic log.
+>>>>>
+>>>>> I personally find the backtrace useful as it allows people with the
+>>>>> same issue to trawl the kernel log and find whether it has already be
+>>>>> fixed upstream. But it's only me, and I'm not attached to it.
+>>>>>
+>>>>>> So, how about editing the patch description as following or others simply?
+>>>>>> and we need to add 'stable@vger.kernel.org' to Cc list for applying it
+>>>>>> to stable branch.
+>>>>>
+>>>>> Looks good to me.
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>   PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+>>>>>>
+>>>>>>     Booting a recent kernel on a rk3399-based system (nanopc-t4),
+>>>>>>     equipped with a recent u-boot and ATF results in the kernel panic
+>>>>>>     about NULL pointer issue.
+>>>>>
+>>>>> nit: "results in a kernel panic on dereferencing a NULL pointer".
+>>>>>
+>>>>>>
+>>>>>>     This turns out to be due to the rk3399-dmc driver looking for
+>>>>>>     an *undocumented* property (rockchip,pmu), and happily using
+>>>>>>     a NULL pointer when the property isn't there.
+>>>>>>
+>>>>>>     Instead, make most of what was brought in with 9173c5ceb035
+>>>>>>     ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
+>>>>>>     to TF-A.") conditioned on finding this property in the device-tree,
+>>>>>>     preventing the driver from exploding.
+>>>>>>
+>>>>>>     Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
+>>>>>>     Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>>>>>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>
+>>>>>
+>>>>> Note that the biggest issue is still there: the driver is using an
+>>>>> undocumented property, and this patch is just papering over it.
+>>>>> Since I expect this property to be useful for something, it would be
+>>>>> good for whoever knows what it does to document it.
+>>>>
+>>>> Hi Marc,
+>>>>
+>>>> You are right. We have to do two step:
+>>>> 1. Add missing explanation of 'rockchip,pmu' property to dt-binding document
+>>>> 2. If possible, add 'rockchip,pmu' property node to rk3399_dmc dt node.
+>>>>
+>>>> When I tried to find usage example of 'rockchip,pmu' property,
+>>>> I found them as following: The 'rockchip,pmu' property[2] indicates
+>>>> 'PMU (Power Management Unit)'. 
+>>>>
+>>>> $ grep -rn "rockchip,pmu" arch/arm64/boot/dts/
+>>>> arch/arm64/boot/dts/rockchip/px30.dtsi:1211:		rockchip,pmu = <&pmugrf>;
+>>>> arch/arm64/boot/dts/rockchip/rk3399.dtsi:1909:		rockchip,pmu = <&pmugrf>;
+>>>> arch/arm64/boot/dts/rockchip/rk3368.dtsi:807:		rockchip,pmu = <&pmugrf>;
+>>>>
+>>>> [2] the description of 'rockchip,pmu' property
+>>>> - https://protect2.fireeye.com/url?k=e55f0ba3-b8384f85-e55e80ec-0cc47a31384a-d9c5f6b28aba9be6&q=1&u=https%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv5.7.2%2Fsource%2FDocumentation%2Fdevicetree%2Fbindings%2Fpinctrl%2Frockchip%2Cpinctrl.txt%23L40
+>>>>
+>>>>
+>>>> If don't receive the any reply, I'll add as following:
+>>>>
+>>>> cwchoi00@chan-linux-pc:~/kernel/git.kernel/linux.chanwoo$ d
+>>>> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+>>>> index 0ec68141f85a..161e60ea874b 100644
+>>>> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+>>>> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+>>>> @@ -18,6 +18,8 @@ Optional properties:
+>>>>                          format depends on the interrupt controller.
+>>>>                          It should be a DCF interrupt. When DDR DVFS finishes
+>>>>                          a DCF interrupt is triggered.
+>>>> +- rockchip,pmu:                 Phandle to the syscon managing the "pmu general
+>>>> +                        register files".
+>>>>  
+>>>>  Following properties relate to DDR timing:
+>>>>  
+>>>>
+>>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
