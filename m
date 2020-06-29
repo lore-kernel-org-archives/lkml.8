@@ -2,132 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1345C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20850C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B797A20885
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460071;
-	bh=3CglZHuljkkADsd4TkG/kpq6POnEr9MsIg4EbCynKUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3LwwotsGcZGZyyGLSRzqcyTP4nThffv9StMQsmcidwxKBfJP3TaTGd7+Yjlo7lPh
-	 ceJTTnCgRyzZc4Ab/JhKdYX/Jh0ejPakQnoQEIQjqEPsTrq5FKl3kzEFjN0mu2/ah6
-	 +OPwHgz9mjVd4B/hQePyc1Yec5vRjOq4lrFHCDcw=
+	by mail.kernel.org (Postfix) with ESMTP id 053192082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbgF2Tr0 (ORCPT
+        id S1731008AbgF2Try (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387793AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:39 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 885782488B;
-        Mon, 29 Jun 2020 15:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444387;
-        bh=3CglZHuljkkADsd4TkG/kpq6POnEr9MsIg4EbCynKUc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vb2nf2gxupDj+2Yx5ARvqPfoR3BWt8DW8sff9XKYCPqMZ+3lnspFWkTBefuvJ8XbB
-         iA/BgV6vfsQ/izmGzmHSK1SY6o8sNHkM7Ng2boy5mLMKNB12AUcuxAGHrNKRwWqc/j
-         8kF5AFvNPFgL2CuVgwTLhuZ+Cq3MXscNtVbJCV+A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huy Nguyen <huyn@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/178] xfrm: Fix double ESP trailer insertion in IPsec crypto offload.
-Date:   Mon, 29 Jun 2020 11:23:29 -0400
-Message-Id: <20200629152523.2494198-65-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388133AbgF2TrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:47:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E399FC08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:47:17 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzkK-0008PU-2x; Mon, 29 Jun 2020 21:47:16 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzkJ-0005Sp-1p; Mon, 29 Jun 2020 21:47:15 +0200
+Date:   Mon, 29 Jun 2020 21:47:14 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <blogic@openwrt.org>,
+        Zhi Mao <zhi.mao@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 3/4] pwm: mediatek: Provide missing kerneldoc description
+ for 'soc' arg
+Message-ID: <20200629194714.ghbxzwoi3mtahqvz@pengutronix.de>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-4-lee.jones@linaro.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7c7d6dluu6fljbvj"
+Content-Disposition: inline
+In-Reply-To: <20200629124752.1018358-4-lee.jones@linaro.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
 
-[ Upstream commit 94579ac3f6d0820adc83b5dc5358ead0158101e9 ]
+--7c7d6dluu6fljbvj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-During IPsec performance testing, we see bad ICMP checksum. The error packet
-has duplicated ESP trailer due to double validate_xmit_xfrm calls. The first call
-is from ip_output, but the packet cannot be sent because
-netif_xmit_frozen_or_stopped is true and the packet gets dev_requeue_skb. The second
-call is from NET_TX softirq. However after the first call, the packet already
-has the ESP trailer.
+Hello Lee,
 
-Fix by marking the skb with XFRM_XMIT bit after the packet is handled by
-validate_xmit_xfrm to avoid duplicate ESP trailer insertion.
+On Mon, Jun 29, 2020 at 01:47:51PM +0100, Lee Jones wrote:
+> Kerneldoc syntax is used, but not complete.
+>=20
+> Descriptions are required for all arguments.
+>=20
+> Fixes the following W=3D1 build warning:
+>=20
+>  drivers/pwm/pwm-mediatek.c:57: warning: Function parameter or member 'so=
+c' not described in 'pwm_mediatek_chip'
+>=20
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: John Crispin <blogic@openwrt.org>
+> Cc: Zhi Mao <zhi.mao@mediatek.com>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: linux-mediatek@lists.infradead.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pwm/pwm-mediatek.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index b94e0d09c300f..ab001ce55178e 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -46,6 +46,7 @@ struct pwm_mediatek_of_data {
+>   * @clk_main: the clock used by PWM core
+>   * @clk_pwms: the clock used by each PWM channel
+>   * @clk_freq: the fix clock frequency of legacy MIPS SoC
+> + * @soc: pointer to chip's platform data
+>   */
+>  struct pwm_mediatek_chip {
+>  	struct pwm_chip chip;
 
-Fixes: f6e27114a60a ("net: Add a xfrm validate function to validate_xmit_skb")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Reviewed-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/net/xfrm.h     | 1 +
- net/xfrm/xfrm_device.c | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+LGTM:
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index aa08a7a5f6ac5..fb391c00c19ac 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1012,6 +1012,7 @@ struct xfrm_offload {
- #define	XFRM_GRO		32
- #define	XFRM_ESP_NO_TRAILER	64
- #define	XFRM_DEV_RESUME		128
-+#define	XFRM_XMIT		256
- 
- 	__u32			status;
- #define CRYPTO_SUCCESS				1
-diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
-index c365b918be35c..bb2292b5260c2 100644
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -82,7 +82,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 	struct xfrm_offload *xo = xfrm_offload(skb);
- 	struct sec_path *sp;
- 
--	if (!xo)
-+	if (!xo || (xo->flags & XFRM_XMIT))
- 		return skb;
- 
- 	if (!(features & NETIF_F_HW_ESP))
-@@ -103,6 +103,8 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 		return skb;
- 	}
- 
-+	xo->flags |= XFRM_XMIT;
-+
- 	if (skb_is_gso(skb)) {
- 		struct net_device *dev = skb->dev;
- 
--- 
-2.25.1
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7c7d6dluu6fljbvj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76RUAACgkQwfwUeK3K
+7An+ngf+Jlga9AaJKTihcMBmxrJi1R1xaaZaF6OJdVgbcu6obgMcHv4WGJ0GPLcL
+287z0rdXVRztAM0GZfSZwCY3E/+OIw9kn9OoUsj9qovBhDw1aUp2xNvHtZ9pZ+r2
+BJJbdZgr8fshM6pEDGw/pWaDI427REXKOAyR1Fwwq6uYPCLpn4vIrwu0m/cIlv83
+EDqGaa94CeJkzospKoh0ClsFcDnWKtM4psI2FHaum8knktvMyKpx8PzYIPTkzg4W
+1UW7qItd+KkU8yDrURYnlOvdHb6PeeL9NaEBuw7+CTAK27ap3wiafzyUJlHSHbkA
+WQD60Tq7dOh3eI7Er8VGNxImjFs/BQ==
+=BMmT
+-----END PGP SIGNATURE-----
+
+--7c7d6dluu6fljbvj--
