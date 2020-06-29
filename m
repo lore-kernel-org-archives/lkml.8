@@ -2,77 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F03C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE80C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E432053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VWuRDzoV"
+	by mail.kernel.org (Postfix) with ESMTP id 1FEAE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457314;
+	bh=jnk5Zme9d9tz2syJJU7ak+cKFbMjS6pv4B0XXXnJ2Qw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d4dWR16CLSbYjVLrXuyVxlFJOxJpa1V/Bqs4FnJjjamjOD5BpQltxOJrG5JjyK26S
+	 ZRdFf5uMZVkJbtI4gQwEFMfUXh5S29OFx7goZjVF4cKvzYKVo77XHx+rvOuCFibQyn
+	 sL8F2oDqCI2YPoAqUmMaiMWyuC9TKsX73WoFgbFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgF2TBt (ORCPT
+        id S1730453AbgF2TBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:49 -0400
-Received: from m12-14.163.com ([220.181.12.14]:51505 "EHLO m12-14.163.com"
+        Mon, 29 Jun 2020 15:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgF2TBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:01:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=Hvy7C
-        q8rT4BgdG7jY1sZ9yj6W+j3Whjfwevbqonqeco=; b=VWuRDzoVvVJbps476+X/O
-        pxQcQfJ0RRSNyB2SDRUJtYfI7W7p1bwlziWLZe2YAQy4ef7Xecs6TLDh7DDmLiw6
-        ZVmAby0PFGJ7AddKuqkq2S+j37/MpAPNK2H3HtyFs81Zlvfwsc++d91kIzS2Kkvw
-        IGSbttAyOkTaBgJbeTUym0=
-Received: from localhost (unknown [101.86.215.249])
-        by smtp10 (Coremail) with SMTP id DsCowADHscVHJfpeN+61Iw--.48796S2;
-        Tue, 30 Jun 2020 01:30:48 +0800 (CST)
-Date:   Tue, 30 Jun 2020 01:30:47 +0800
-From:   Su Hui <sh_def@163.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH] mm: remove the redundancy code
-Message-ID: <20200629173047.GA38128@ubuntu>
+        id S1730356AbgF2TAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A67F25532;
+        Mon, 29 Jun 2020 15:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446098;
+        bh=jnk5Zme9d9tz2syJJU7ak+cKFbMjS6pv4B0XXXnJ2Qw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rxqEVP4RN9w2CtVydoltKmbLhihlCii2c/8zDEsWu8wWAThcEmqbqx+8MiSq0xPoG
+         2izy758zf1oRfEwI9VyB5LtiFsOXF8dOQkKfxTGiESrsB8di/UCUGI4UB1fNq0Cg3U
+         mFpH0iXDF3dbKlDYisiNLqji6iAYzO3hu6Dy19Rc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 091/135] net: Do not clear the sock TX queue in sk_set_socket()
+Date:   Mon, 29 Jun 2020 11:52:25 -0400
+Message-Id: <20200629155309.2495516-92-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-CM-TRANSID: DsCowADHscVHJfpeN+61Iw--.48796S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtw18Zw15uryDZw1xAFWrXwb_yoWxCrgEvw
-        12y34FkrWYyF4S9w48Aa17Krn2qryvkF18GF13KF13t3W2y3ZYq3WkAwnxAryUWrZ7uryU
-        Cr4DZFWxtryaqjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0PPE3UUUUU==
-X-Originating-IP: [101.86.215.249]
-X-CM-SenderInfo: xvkbvvri6rljoofrz/1tbiLghSX1SIoztm4wAAsq
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove the redundancy code, the zone_start_pfn
-is assigned from zone->zone_start_pfn
-Signed-off-by: Su Hui <sh_def@163.com>
----
- mm/page_alloc.c | 2 --
- 1 file changed, 2 deletions(-)
+From: Tariq Toukan <tariqt@mellanox.com>
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..3372a8c9fbc4 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6215,8 +6215,6 @@ void __meminit init_currently_empty_zone(struct zone *zone,
- 	if (zone_idx > pgdat->nr_zones)
- 		pgdat->nr_zones = zone_idx;
+[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
+
+Clearing the sock TX queue in sk_set_socket() might cause unexpected
+out-of-order transmit when called from sock_orphan(), as outstanding
+packets can pick a different TX queue and bypass the ones already queued.
+
+This is undesired in general. More specifically, it breaks the in-order
+scheduling property guarantee for device-offloaded TLS sockets.
+
+Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
+explicitly only where needed.
+
+Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/sock.h | 1 -
+ net/core/sock.c    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/net/sock.h b/include/net/sock.h
+index be5ec94020f1a..426a57874964c 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1678,7 +1678,6 @@ static inline int sk_tx_queue_get(const struct sock *sk)
  
--	zone->zone_start_pfn = zone_start_pfn;
--
- 	mminit_dprintk(MMINIT_TRACE, "memmap_init",
- 			"Initialising map node %d zone %lu pfns %lu -> %lu\n",
- 			pgdat->node_id,
+ static inline void sk_set_socket(struct sock *sk, struct socket *sock)
+ {
+-	sk_tx_queue_clear(sk);
+ 	sk->sk_socket = sock;
+ }
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 60b19c3bb0f7d..120d5058d81ae 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1435,6 +1435,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 
+ 		sock_update_classid(sk);
+ 		sock_update_netprioidx(sk);
++		sk_tx_queue_clear(sk);
+ 	}
+ 
+ 	return sk;
+@@ -1601,6 +1602,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		 */
+ 		sk_refcnt_debug_inc(newsk);
+ 		sk_set_socket(newsk, NULL);
++		sk_tx_queue_clear(newsk);
+ 		newsk->sk_wq = NULL;
+ 
+ 		sk_update_clone(sk, newsk);
 -- 
 2.25.1
-
 
