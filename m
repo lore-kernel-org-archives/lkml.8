@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36467C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 179A320672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B23206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459440;
-	bh=4bzO8lKbvDkBF64UwGEL5SVtyrk3gewKVO6JyZYk3hA=;
+	s=default; t=1593459443;
+	bh=jC+AG3mTjlPMjRcj/yd1i1EAFIc8JNKo40nByaNX9OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyHHSodXo0LlMy2+815jAjZeO5qvUaMpLqOH07NwcplPCJ4Z5lhDqTMWLzGZ3FuRf
-	 CKNiILLmci8UuvTnmgsTji4t8koN1s1eL0JKZUz+m5XhQaldNAZCcKdBlnwHE6BRuF
-	 Ah0beMlSuq6FBCx21gPP0z1q+IgMA/ctSLzuFVkw=
+	b=eHGgxLpu3F44Ld8Tw18KFgjO+aRDvq4EXyOAd5QV5xIyY6J3kSK02uk4k3jPjOvcD
+	 5bWHKI2oOiaCv/KBJWGeqErI4Pstaiq41Wd8ffIlrajAiEHnb72x0ObipoquCyt+5G
+	 bbfFc2kL07vC2r7IPHD8iPcoV5FbwllOOWZowG84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbgF2ThT (ORCPT
+        id S1733312AbgF2ThQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:37:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733014AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733015AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E184E251F5;
-        Mon, 29 Jun 2020 15:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7CD825216;
+        Mon, 29 Jun 2020 15:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444913;
-        bh=4bzO8lKbvDkBF64UwGEL5SVtyrk3gewKVO6JyZYk3hA=;
+        s=default; t=1593444933;
+        bh=jC+AG3mTjlPMjRcj/yd1i1EAFIc8JNKo40nByaNX9OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1BLy8L7ghXlemOq9gOcfwGdaCQWIZtc8F34m0rAoUKBeg/zVr/Pq7mjZ48SbqT+v
-         dcF4K7rPGR1qThQUBXQvex6wE3zte/NgK4xxud3sxSZBdRbVYl5SWjUUGgWLaoI/7L
-         XjF6ApEywakZ+FpRO4uQbglG/4/EWkLWM6V5QFFQ=
+        b=AErx3r9LrmLp98mcttvVUku56KXoqgyrbfZ5jv/2Vr90agG0JuThrz03KJVxDGPlM
+         +c43s1MMfPcSGe3kNfsqvhNxchm9AbV1qjVinVMm3rQkj5337Fiys61MPThLXLRLfa
+         8UUlD8NsO4k+Jjp8xcCv7VsUhJXZg30I81CkRV3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/131] i2c: tegra: Add missing kerneldoc for some fields
-Date:   Mon, 29 Jun 2020 11:33:00 -0400
-Message-Id: <20200629153502.2494656-10-sashal@kernel.org>
+Cc:     David Christensen <drc@linux.vnet.ibm.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 030/131] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
+Date:   Mon, 29 Jun 2020 11:33:21 -0400
+Message-Id: <20200629153502.2494656-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,64 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: David Christensen <drc@linux.vnet.ibm.com>
 
-[ Upstream commit 0604ee4aefa20f493a32dc223599f922fb615367 ]
+[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
 
-Not all fields were properly documented. Add kerneldoc for the missing
-fields to prevent the build from flagging them.
+The driver function tg3_io_error_detected() calls napi_disable twice,
+without an intervening napi_enable, when the number of EEH errors exceeds
+eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
 
-Reported-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add check for pcierr_recovery which skips code already executed for the
+"Frozen" state.
+
+Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/ethernet/broadcom/tg3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 9a6b9a1b88aef..917f416787b10 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -154,6 +154,16 @@ enum msg_end_type {
-  * @clk_divisor_std_fast_mode: Clock divisor in standard/fast mode. It is
-  *		applicable if there is no fast clock source i.e. single clock
-  *		source.
-+ * @clk_divisor_fast_plus_mode: Clock divisor in fast mode plus. It is
-+ *		applicable if there is no fast clock source (i.e. single
-+ *		clock source).
-+ * @has_multi_master_mode: The I2C controller supports running in single-master
-+ *		or multi-master mode.
-+ * @has_slcg_override_reg: The I2C controller supports a register that
-+ *		overrides the second level clock gating.
-+ * @has_mst_fifo: The I2C controller contains the new MST FIFO interface that
-+ *		provides additional features and allows for longer messages to
-+ *		be transferred in one go.
-  */
- struct tegra_i2c_hw_feature {
- 	bool has_continue_xfer_support;
-@@ -175,9 +185,11 @@ struct tegra_i2c_hw_feature {
-  * @adapter: core I2C layer adapter information
-  * @div_clk: clock reference for div clock of I2C controller
-  * @fast_clk: clock reference for fast clock of I2C controller
-+ * @rst: reset control for the I2C controller
-  * @base: ioremapped registers cookie
-  * @cont_id: I2C controller ID, used for packet header
-  * @irq: IRQ number of transfer complete interrupt
-+ * @irq_disabled: used to track whether or not the interrupt is enabled
-  * @is_dvc: identifies the DVC I2C controller, has a different register layout
-  * @msg_complete: transfer completion notifier
-  * @msg_err: error code for completed message
-@@ -185,6 +197,9 @@ struct tegra_i2c_hw_feature {
-  * @msg_buf_remaining: size of unsent data in the message buffer
-  * @msg_read: identifies read transfers
-  * @bus_clk_rate: current I2C bus clock rate
-+ * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
-+ * @is_multimaster_mode: track if I2C controller is in multi-master mode
-+ * @xfer_lock: lock to serialize transfer submission and processing
-  */
- struct tegra_i2c_dev {
- 	struct device *dev;
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index a12962702611f..be845df050399 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -18229,8 +18229,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+ 
+ 	rtnl_lock();
+ 
+-	/* We probably don't have netdev yet */
+-	if (!netdev || !netif_running(netdev))
++	/* Could be second call or maybe we don't have netdev yet */
++	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
+ 		goto done;
+ 
+ 	/* We needn't recover from permanent error */
 -- 
 2.25.1
 
