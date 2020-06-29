@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A23BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFC520781
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE97920780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgF2Xsq (ORCPT
+        id S1728367AbgF2Xs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:48:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20791 "EHLO mga17.intel.com"
+        Mon, 29 Jun 2020 19:48:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17894 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728046AbgF2Xsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:48:37 -0400
-IronPort-SDR: UeJUiyI6kFkiQHagFx4jkwU9AUui9VOQlLu65sypQoOjBTeDk7nu9acxACqUiKjxMqB8g16HhG
- XjINgkned6gw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126231412"
+        id S1728187AbgF2Xso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:48:44 -0400
+IronPort-SDR: /IUzi5FFn77QQM8QS0EQEmJXav3sDFEKqcBghYcUaz1odXF6Y1vxMUdo7lt1k74T8o6EJ3jj0q
+ wc2+62LIY9Gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="230951621"
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="126231412"
+   d="scan'208";a="230951621"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:48:33 -0700
-IronPort-SDR: rosivuZVqsR+f2mcpCVNi34KmZaj0dmcK4Th1oUitjdUfnoEQXXwVYQrB0S8Q+WvQJS6aHhxb3
- K1Ea70Nbwg9A==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:48:36 -0700
+IronPort-SDR: 9l3t0L3FlRaHvDVcoJ77HngWdERhkzcih1h5VWLn7eVK4RJzOSkeBYVW6kA/mTCYqKE3Kpzh8F
+ hn55odvfiS5A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="313216928"
+   d="scan'208";a="312203671"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jun 2020 16:48:32 -0700
-Subject: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of discard
+  by orsmga008.jf.intel.com with ESMTP; 29 Jun 2020 16:48:36 -0700
+Subject: [RFC][PATCH 5/8] mm/numa: automatically generate node migration order
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        kbusch@kernel.org, yang.shi@linux.alibaba.com, rientjes@google.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com,
         ying.huang@intel.com, dan.j.williams@intel.com
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Mon, 29 Jun 2020 16:45:09 -0700
+Date:   Mon, 29 Jun 2020 16:45:12 -0700
 References: <20200629234503.749E5340@viggo.jf.intel.com>
 In-Reply-To: <20200629234503.749E5340@viggo.jf.intel.com>
-Message-Id: <20200629234509.8F89C4EF@viggo.jf.intel.com>
+Message-Id: <20200629234512.F34EDC44@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,202 +53,224 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-If a memory node has a preferred migration path to demote cold pages,
-attempt to move those inactive pages to that migration node before
-reclaiming. This will better utilize available memory, provide a faster
-tier than swapping or discarding, and allow such pages to be reused
-immediately without IO to retrieve the data.
+When memory fills up on a node, memory contents can be
+automatically migrated to another node.  The biggest problems are
+knowing when to migrate and to where the migration should be
+targeted.
 
-When handling anonymous pages, this will be considered before swap if
-enabled. Should the demotion fail for any reason, the page reclaim
-will proceed as if the demotion feature was not enabled.
+The most straightforward way to generate the "to where" list
+would be to follow the page allocator fallback lists.  Those
+lists already tell us if memory is full where to look next.  It
+would also be logical to move memory in that order.
 
-Some places we would like to see this used:
+But, the allocator fallback lists have a fatal flaw: most nodes
+appear in all the lists.  This would potentially lead to
+migration cycles (A->B, B->A, A->B, ...).
 
-  1. Persistent memory being as a slower, cheaper DRAM replacement
-  2. Remote memory-only "expansion" NUMA nodes
-  3. Resolving memory imbalances where one NUMA node is seeing more
-     allocation activity than another.  This helps keep more recent
-     allocations closer to the CPUs on the node doing the allocating.
+Instead of using the allocator fallback lists directly, keep a
+separate node migration ordering.  But, reuse the same data used
+to generate page allocator fallback in the first place:
+find_next_best_node().
 
-Yang Shi's patches used an alternative approach where to-be-discarded
-pages were collected on a separate discard list and then discarded
-as a batch with migrate_pages().  This results in simpler code and
-has all the performance advantages of batching, but has the
-disadvantage that pages which fail to migrate never get swapped.
+This means that the firmware data used to populate node distances
+essentially dictates the ordering for now.  It should also be
+architecture-neutral since all NUMA architectures have a working
+find_next_best_node().
 
-#Signed-off-by: Keith Busch <keith.busch@intel.com>
+The protocol for node_demotion[] access and writing is not
+standard.  It has no specific locking and is intended to be read
+locklessly.  Readers must take care to avoid observing changes
+that appear incoherent.  This was done so that node_demotion[]
+locking has no chance of becoming a bottleneck on large systems
+with lots of CPUs in direct reclaim.
+
+This code is unused for now.  It will be called later in the
+series.
+
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Keith Busch <kbusch@kernel.org>
 Cc: Yang Shi <yang.shi@linux.alibaba.com>
 Cc: David Rientjes <rientjes@google.com>
 Cc: Huang Ying <ying.huang@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 ---
 
- b/include/linux/migrate.h        |    6 ++++
- b/include/trace/events/migrate.h |    3 +-
- b/mm/debug.c                     |    1 
- b/mm/migrate.c                   |   52 +++++++++++++++++++++++++++++++++++++++
- b/mm/vmscan.c                    |   25 ++++++++++++++++++
- 5 files changed, 86 insertions(+), 1 deletion(-)
+ b/mm/internal.h   |    1 
+ b/mm/migrate.c    |  130 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ b/mm/page_alloc.c |    2 
+ 3 files changed, 131 insertions(+), 2 deletions(-)
 
-diff -puN include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/linux/migrate.h
---- a/include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.950312604 -0700
-+++ b/include/linux/migrate.h	2020-06-29 16:34:38.963312604 -0700
-@@ -25,6 +25,7 @@ enum migrate_reason {
- 	MR_MEMPOLICY_MBIND,
- 	MR_NUMA_MISPLACED,
- 	MR_CONTIG_RANGE,
-+	MR_DEMOTION,
- 	MR_TYPES
- };
+diff -puN mm/internal.h~auto-setup-default-migration-path-from-firmware mm/internal.h
+--- a/mm/internal.h~auto-setup-default-migration-path-from-firmware	2020-06-29 16:34:41.629312597 -0700
++++ b/mm/internal.h	2020-06-29 16:34:41.638312597 -0700
+@@ -192,6 +192,7 @@ extern int user_min_free_kbytes;
  
-@@ -78,6 +79,7 @@ extern int migrate_huge_page_move_mappin
- 				  struct page *newpage, struct page *page);
- extern int migrate_page_move_mapping(struct address_space *mapping,
- 		struct page *newpage, struct page *page, int extra_count);
-+extern int migrate_demote_mapping(struct page *page);
- #else
+ extern void zone_pcp_update(struct zone *zone);
+ extern void zone_pcp_reset(struct zone *zone);
++extern int find_next_best_node(int node, nodemask_t *used_node_mask);
  
- static inline void putback_movable_pages(struct list_head *l) {}
-@@ -104,6 +106,10 @@ static inline int migrate_huge_page_move
- 	return -ENOSYS;
+ #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+ 
+diff -puN mm/migrate.c~auto-setup-default-migration-path-from-firmware mm/migrate.c
+--- a/mm/migrate.c~auto-setup-default-migration-path-from-firmware	2020-06-29 16:34:41.631312597 -0700
++++ b/mm/migrate.c	2020-06-29 16:34:41.639312597 -0700
+@@ -1128,6 +1128,10 @@ out:
+ 	return rc;
  }
  
-+static inline int migrate_demote_mapping(struct page *page)
-+{
-+	return -ENOSYS;
-+}
- #endif /* CONFIG_MIGRATION */
- 
- #ifdef CONFIG_COMPACTION
-diff -puN include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/trace/events/migrate.h
---- a/include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.952312604 -0700
-+++ b/include/trace/events/migrate.h	2020-06-29 16:34:38.963312604 -0700
-@@ -20,7 +20,8 @@
- 	EM( MR_SYSCALL,		"syscall_or_cpuset")		\
- 	EM( MR_MEMPOLICY_MBIND,	"mempolicy_mbind")		\
- 	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
--	EMe(MR_CONTIG_RANGE,	"contig_range")
-+	EM( MR_CONTIG_RANGE,	"contig_range")			\
-+	EMe(MR_DEMOTION,	"demotion")
- 
- /*
-  * First define the enums in the above macros to be exported to userspace
-diff -puN mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/debug.c
---- a/mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.954312604 -0700
-+++ b/mm/debug.c	2020-06-29 16:34:38.963312604 -0700
-@@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPE
- 	"mempolicy_mbind",
- 	"numa_misplaced",
- 	"cma",
-+	"demotion",
- };
- 
- const struct trace_print_flags pageflag_names[] = {
-diff -puN mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/migrate.c
---- a/mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.956312604 -0700
-+++ b/mm/migrate.c	2020-06-29 16:34:38.964312604 -0700
-@@ -1151,6 +1151,58 @@ int next_demotion_node(int node)
- 	return node;
- }
- 
-+static struct page *alloc_demote_node_page(struct page *page, unsigned long node)
-+{
-+	/*
-+	 * 'mask' targets allocation only to the desired node in the
-+	 * migration path, and fails fast if the allocation can not be
-+	 * immediately satisfied.  Reclaim is already active and heroic
-+	 * allocation efforts are unwanted.
-+	 */
-+	gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
-+			__GFP_NOMEMALLOC | __GFP_THISNODE | __GFP_HIGHMEM |
-+			__GFP_MOVABLE;
-+	struct page *newpage;
-+
-+	if (PageTransHuge(page)) {
-+		mask |= __GFP_COMP;
-+		newpage = alloc_pages_node(node, mask, HPAGE_PMD_ORDER);
-+		if (newpage)
-+			prep_transhuge_page(newpage);
-+	} else
-+		newpage = alloc_pages_node(node, mask, 0);
-+
-+	return newpage;
-+}
-+
-+/**
-+ * migrate_demote_mapping() - Migrate this page and its mappings to its
-+ *                            demotion node.
-+ * @page: A locked, isolated, non-huge page that should migrate to its current
-+ *        node's demotion target, if available. Since this is intended to be
-+ *        called during memory reclaim, all flag options are set to fail fast.
-+ *
-+ * @returns: MIGRATEPAGE_SUCCESS if successful, -errno otherwise.
++/*
++ * Writes to this array occur without locking.  READ_ONCE()
++ * is recommended for readers.
 + */
-+int migrate_demote_mapping(struct page *page)
+ static int node_demotion[MAX_NUMNODES] = {[0 ...  MAX_NUMNODES - 1] = NUMA_NO_NODE};
+ 
+ /**
+@@ -1141,7 +1145,13 @@ int next_demotion_node(int node)
+ {
+ 	get_online_mems();
+ 	while (true) {
+-		node = node_demotion[node];
++		/*
++		 * node_demotion[] is updated without excluding
++		 * this function from running.  READ_ONCE() avoids
++		 * 'node' checks reading different values from
++		 * node_demotion[].
++		 */
++		node = READ_ONCE(node_demotion[node]);
+ 		if (node == NUMA_NO_NODE)
+ 			break;
+ 		if (node_online(node))
+@@ -3086,3 +3096,121 @@ void migrate_vma_finalize(struct migrate
+ }
+ EXPORT_SYMBOL(migrate_vma_finalize);
+ #endif /* CONFIG_DEVICE_PRIVATE */
++
++/* Disable reclaim-based migration. */
++static void disable_all_migrate_targets(void)
 +{
-+	int next_nid = next_demotion_node(page_to_nid(page));
++	int node;
 +
-+	VM_BUG_ON_PAGE(!PageLocked(page), page);
-+	VM_BUG_ON_PAGE(PageHuge(page), page);
-+	VM_BUG_ON_PAGE(PageLRU(page), page);
-+
-+	if (next_nid == NUMA_NO_NODE)
-+		return -ENOSYS;
-+	if (PageTransHuge(page) && !thp_migration_supported())
-+		return -ENOMEM;
-+
-+	/* MIGRATE_ASYNC is the most light weight and never blocks.*/
-+	return __unmap_and_move(alloc_demote_node_page, NULL, next_nid,
-+				page, MIGRATE_ASYNC, MR_DEMOTION);
++	for_each_online_node(node)
++		node_demotion[node] = NUMA_NO_NODE;
 +}
 +
++/*
++ * Find an automatic demotion target for 'node'.
++ * Failing here is OK.  It might just indicate
++ * being at the end of a chain.
++ */
++static int establish_migrate_target(int node, nodemask_t *used)
++{
++	int migration_target;
 +
- /*
-  * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
-  * around it.
-diff -puN mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/vmscan.c
---- a/mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.959312604 -0700
-+++ b/mm/vmscan.c	2020-06-29 16:34:38.965312604 -0700
-@@ -1077,6 +1077,7 @@ static unsigned long shrink_page_list(st
- 	LIST_HEAD(free_pages);
- 	unsigned nr_reclaimed = 0;
- 	unsigned pgactivate = 0;
-+	int rc;
- 
- 	memset(stat, 0, sizeof(*stat));
- 	cond_resched();
-@@ -1229,6 +1230,30 @@ static unsigned long shrink_page_list(st
- 			; /* try to reclaim the page below */
- 		}
- 
-+		rc = migrate_demote_mapping(page);
-+		/*
-+		 * -ENOMEM on a THP may indicate either migration is
-+		 * unsupported or there was not enough contiguous
-+		 * space. Split the THP into base pages and retry the
-+		 * head immediately. The tail pages will be considered
-+		 * individually within the current loop's page list.
-+		 */
-+		if (rc == -ENOMEM && PageTransHuge(page) &&
-+		    !split_huge_page_to_list(page, page_list))
-+			rc = migrate_demote_mapping(page);
++	/*
++	 * Can not set a migration target on a
++	 * node with it already set.
++	 *
++	 * No need for READ_ONCE() here since this
++	 * in the write path for node_demotion[].
++	 * This should be the only thread writing.
++	 */
++	if (node_demotion[node] != NUMA_NO_NODE)
++		return NUMA_NO_NODE;
 +
-+		if (rc == MIGRATEPAGE_SUCCESS) {
-+			unlock_page(page);
-+			if (likely(put_page_testzero(page)))
-+				goto free_it;
-+			/*
-+			 * Speculative reference will free this page,
-+			 * so leave it off the LRU.
-+			 */
-+			nr_reclaimed++;
++	migration_target = find_next_best_node(node, used);
++	if (migration_target == NUMA_NO_NODE)
++		return NUMA_NO_NODE;
++
++	node_demotion[node] = migration_target;
++
++	return migration_target;
++}
++
++/*
++ * When memory fills up on a node, memory contents can be
++ * automatically migrated to another node instead of
++ * discarded at reclaim.
++ *
++ * Establish a "migration path" which will start at nodes
++ * with CPUs and will follow the priorities used to build the
++ * page allocator zonelists.
++ *
++ * The difference here is that cycles must be avoided.  If
++ * node0 migrates to node1, then neither node1, nor anything
++ * node1 migrates to can migrate to node0.
++ *
++ * This function can run simultaneously with readers of
++ * node_demotion[].  However, it can not run simultaneously
++ * with itself.  Exclusion is provided by memory hotplug events
++ * being single-threaded.
++ */
++void set_migration_target_nodes(void)
++{
++	nodemask_t next_pass = NODE_MASK_NONE;
++	nodemask_t this_pass = NODE_MASK_NONE;
++	nodemask_t used_targets = NODE_MASK_NONE;
++	int node;
++
++	get_online_mems();
++	/*
++	 * Avoid any oddities like cycles that could occur
++	 * from changes in the topology.  This will leave
++	 * a momentary gap when migration is disabled.
++	 */
++	disable_all_migrate_targets();
++
++	/*
++	 * Ensure that the "disable" is visible across the system.
++	 * Readers will see either a combination of before+disable
++	 * state or disable+after.  They will never see before and
++	 * after state together.
++	 *
++	 * The before+after state together might have cycles and
++	 * could cause readers to do things like loop until this
++	 * function finishes.  This ensures they can only see a
++	 * single "bad" read and would, for instance, only loop
++	 * once.
++	 */
++	smp_wmb();
++
++	/*
++	 * Allocations go close to CPUs, first.  Assume that
++	 * the migration path starts at the nodes with CPUs.
++	 */
++	next_pass = node_states[N_CPU];
++again:
++	this_pass = next_pass;
++	next_pass = NODE_MASK_NONE;
++	/*
++	 * To avoid cycles in the migration "graph", ensure
++	 * that migration sources are not future targets by
++	 * setting them in 'used_targets'.
++	 *
++	 * But, do this only once per pass so that multiple
++	 * source nodes can share a target node.
++	 */
++	nodes_or(used_targets, used_targets, this_pass);
++	for_each_node_mask(node, this_pass) {
++		int target_node = establish_migrate_target(node, &used_targets);
++
++		if (target_node == NUMA_NO_NODE)
 +			continue;
-+		}
 +
- 		/*
- 		 * Anonymous process memory has backing store?
- 		 * Try to allocate it some swap space here.
++		/* Visit targets from this pass in the next pass: */
++		node_set(target_node, next_pass);
++	}
++	/* Is another pass necessary? */
++	if (!nodes_empty(next_pass))
++		goto again;
++
++	put_online_mems();
++}
+diff -puN mm/page_alloc.c~auto-setup-default-migration-path-from-firmware mm/page_alloc.c
+--- a/mm/page_alloc.c~auto-setup-default-migration-path-from-firmware	2020-06-29 16:34:41.634312597 -0700
++++ b/mm/page_alloc.c	2020-06-29 16:34:41.641312597 -0700
+@@ -5591,7 +5591,7 @@ static int node_load[MAX_NUMNODES];
+  *
+  * Return: node id of the found node or %NUMA_NO_NODE if no node is found.
+  */
+-static int find_next_best_node(int node, nodemask_t *used_node_mask)
++int find_next_best_node(int node, nodemask_t *used_node_mask)
+ {
+ 	int n, val;
+ 	int min_val = INT_MAX;
 _
