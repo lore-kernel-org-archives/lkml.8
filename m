@@ -7,60 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58230C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B81AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F2E206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36453206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462742;
-	bh=kYsb13L89PcxuRWw63qL+iydoXCyWZmdmCmmqxVTOCA=;
+	s=default; t=1593462749;
+	bh=sAkVKI621eDeDT4uF2NaiOTlWuImgW05lxPhwdMEAwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=St67/j1OdHsDRm1v+fHsC1ZUc9EcjNcwscjvpIShPzmis62xdTeFE+QXjgrlgad4N
-	 H8+9UiqdgRL/HPHpJcxJIhepzuPN6qwhjZNZLJKJzvhn5c+42oUnIGOFO2Sa7c8CS9
-	 JIndqdVpO0AYlv8jh6OTPo6n0tzAtHdMs6lVF154=
+	b=KVxVu/JLeOm+ZOvqg5GO8CHfKkOEyt56MQ961V5bBPLX8+wI6pG8HFwrGwCdnnFGm
+	 NLpKDzfvnMIu+oRBzK9MK1LsAfImMBFpa2tkQhSyGMK9+7W0Q+gbZHoXKOSr7TwGsB
+	 4wPf87NSsefnyw87B22bzvz+PlvrhIHv4DDPgrGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389219AbgF2UcU (ORCPT
+        id S1732935AbgF2Uc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732416AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:19 -0400
+        id S1732410AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1408325466;
-        Mon, 29 Jun 2020 15:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD0C2532C;
+        Mon, 29 Jun 2020 15:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445421;
-        bh=kYsb13L89PcxuRWw63qL+iydoXCyWZmdmCmmqxVTOCA=;
+        s=default; t=1593445160;
+        bh=sAkVKI621eDeDT4uF2NaiOTlWuImgW05lxPhwdMEAwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imDrjyhgqKAzNVa1DkMTR9j16UGGnyXA11dMexVzDFJL4Ce1peG6uTtpzSjkvgsP1
-         Lcb8JpH63shSnAfo4beD3x8LGst4vs4a8fhBXuLablltivn/EJ5nLUlBod78qgxCHZ
-         jWK1DtroRJLc3OD92QBbrKVQYa3Y9E3eCM0lklxs=
+        b=GuylTHnvrfFWdw16Shuo6aoFt5OMDMg4k0YiZiodZUTNx+Iyl5LKJkY6La3T4U47m
+         M0Qyjqa+VypATgWrZIY9f2nbI74v8E+jVvRD+iooZ4iLbCK7T0oV3+iB6C5O6lo8jn
+         f8RDA8e0LdwYHgEdi84hjkCzNaopFuJVX3bFUY+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 169/191] sched/core: Fix PI boosting between RT and DEADLINE tasks
-Date:   Mon, 29 Jun 2020 11:39:45 -0400
-Message-Id: <20200629154007.2495120-170-sashal@kernel.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 61/78] KVM: X86: Fix MSR range of APIC registers in X2APIC mode
+Date:   Mon, 29 Jun 2020 11:37:49 -0400
+Message-Id: <20200629153806.2494953-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,73 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
+commit bf10bd0be53282183f374af23577b18b5fbf7801 upstream.
 
-syzbot reported the following warning:
+Only MSR address range 0x800 through 0x8ff is architecturally reserved
+and dedicated for accessing APIC registers in x2APIC mode.
 
- WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
- enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
-
-At deadline.c:628 we have:
-
- 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
- 624 {
- 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
- 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
- 627
- 628 	WARN_ON(dl_se->dl_boosted);
- 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
-        [...]
-     }
-
-Which means that setup_new_dl_entity() has been called on a task
-currently boosted. This shouldn't happen though, as setup_new_dl_entity()
-is only called when the 'dynamic' deadline of the new entity
-is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
-condition.
-
-Digging through the PI code I noticed that what above might in fact happen
-if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
-first branch of boosting conditions we check only if a pi_task 'dynamic'
-deadline is earlier than mutex holder's and in this case we set mutex
-holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
-initialized if such tasks get boosted at some point (or if they become
-DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
-to 0 and this verifies the aforementioned condition.
-
-Fix it by checking that the potential donor task is actually (even if
-temporary because in turn boosted) running at DEADLINE priority before
-using its 'dynamic' deadline value.
-
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Message-Id: <20200616073307.16440-1-xiaoyao.li@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 82cec9a666e7b..870d802c46f90 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3697,7 +3697,8 @@ void rt_mutex_setprio(struct task_struct *p, int prio)
- 	if (dl_prio(prio)) {
- 		struct task_struct *pi_task = rt_mutex_get_top_task(p);
- 		if (!dl_prio(p->normal_prio) ||
--		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
-+		    (pi_task && dl_prio(pi_task->prio) &&
-+		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
- 			p->dl.dl_boosted = 1;
- 			queue_flag |= ENQUEUE_REPLENISH;
- 		} else
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3401061a22314..0db7f5cd9c720 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2344,7 +2344,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		return kvm_mtrr_set_msr(vcpu, msr, data);
+ 	case MSR_IA32_APICBASE:
+ 		return kvm_set_apic_base(vcpu, msr_info);
+-	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
++	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+ 		return kvm_x2apic_msr_write(vcpu, msr, data);
+ 	case MSR_IA32_TSCDEADLINE:
+ 		kvm_set_lapic_tscdeadline_msr(vcpu, data);
+@@ -2629,7 +2629,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_IA32_APICBASE:
+ 		msr_info->data = kvm_get_apic_base(vcpu);
+ 		break;
+-	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
++	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+ 		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
+ 		break;
+ 	case MSR_IA32_TSCDEADLINE:
 -- 
 2.25.1
 
