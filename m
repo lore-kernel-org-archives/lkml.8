@@ -2,181 +2,167 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D50EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AE9206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89F220768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qXVVp9Wb"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Jvnqd6NG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgF2ANg (ORCPT
+        id S1726667AbgF2A33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 20:13:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46916 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgF2ANg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 20:13:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05T08stq026656;
-        Mon, 29 Jun 2020 00:13:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=nf/pH693pK95+3C0v0zgkOwnWp0br/VkiuBJYye+DOw=;
- b=qXVVp9WbDg8zgp0rUGelYosNSWBm4gPNETXuqGquCN/xCvQz+AF6IXntT5xUnzYdxSgn
- HFsKcevUganbOiTPG16dgTXzz01oJplAGuYK9WB3HhZkhyb3WiA0WTZjLjl3k2wvEXIX
- rWOzlkO2zUUkNjXNFrGoEk6yJVzy24MZvTkCnCswc+SqcoAYz8gnqYS+/gKLIGtEctC7
- lxIG6UUhYtHisA0DYLjsrCOrDGpYc4c410VusE6htxPAjWr+q28kvLw0EhacVpJBrixo
- 8FEcqly1VFjtLH5IxVLr5MApVVqJHFQ1nkuao9Kk6JhL1EPS6rMEV3enBjLnlf5okOzF hw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31wxrmupk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 29 Jun 2020 00:13:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05T0CXH1069935;
-        Mon, 29 Jun 2020 00:13:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 31xg0xu5rj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 00:13:28 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05T0DQNl003139;
-        Mon, 29 Jun 2020 00:13:26 GMT
-Received: from [192.168.0.110] (/183.246.145.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Jun 2020 00:11:44 +0000
-Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
-To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        open-iscsi@googlegroups.com, lduncan@suse.com,
-        michael.christie@oracle.com
-References: <20200611100717.27506-1-bob.liu@oracle.com>
- <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <52fa1d81-e585-37eb-55e5-0ed07ce7adc0@oracle.com>
-Date:   Mon, 29 Jun 2020 08:11:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Sun, 28 Jun 2020 20:29:29 -0400
+Received: from mail-vi1eur05on2053.outbound.protection.outlook.com ([40.107.21.53]:64703
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbgF2A32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 20:29:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LzjKM0kqJ6gSObphKK6Rq19m6pnwU42CFkrRR0MNP/CkoMyfmEmi7rUpuiP4NKyHQpoM5+w4gFr5nrcFnnRmZOwfLxzq6oRGSrnCCpyGs/nSdvAAQADQ/e98c9xM08wZ94TUJYWaTcO4Z9v6s+OqZei7rWnmer8tJwlI6rcwmixgFwwc2BhxJjL6QgM4ieigOMOSzqlAUAbE/ksl6wr7LB67bCAM07jA3aSNdQnqZtMxgxbuQQsSLzM9taiPZnm7b5P96Ukay8i/b1jqQ8k97EZdkA2h9hDN9iizAyhic/N+dMHFFBCvALXynvs6kTXmpyPjBlINK7zdx6W4dbX+Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zN0vR1oSSYIdNgzDbY+8GkQYgBVGYiavz98DhgwaHFA=;
+ b=n8i3w/RHkfcLiKG1dJEqZeTQ9G2fK15KG+O9553kuYuQ0shYhn84HWOus2epOa7bEIJzYv6uA6nDo+NP3Oac0fL8DBjzsxnZZMAs9sob7N11f2LJeQd7/U8fHfPCjEbWB3QmeUjQSnbHTRA6dymhx65fpqnis2AUElclAR+/neK6klz2wLOMu6XS1MMMedxhlLF9Lvz89k1OLVo7CkJ497MojwDQqzlEEky4GCSU02DeWr/cbKFeqSEw8oP+FEMzNcr/Oj/Z5GdvypbcO1UCCO7A4/fT7TI7DG0WuAxeN7afKweRGvPDG/6kmzXIhnTu6gl5j87BUCvGrqt2nSQTKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zN0vR1oSSYIdNgzDbY+8GkQYgBVGYiavz98DhgwaHFA=;
+ b=Jvnqd6NGM/qSRiDypPhhveLg8sk8/kDiRHySu0l+0fs43q5oyq9eRSeIY3xYZ83Biv2dJYEBv29vXZoU5D2N/KS2u7m5u+g1qbybwHGAGYecPaH90ET+CyGf1my817FUeiOlskZhWCK/YmMi2Sc5gTw6RGqAYTnWkSbXH37V7FM=
+Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11c::13)
+ by DB8PR10MB3418.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:eb::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 00:29:22 +0000
+Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::843a:1bdd:adc4:3a56]) by DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::843a:1bdd:adc4:3a56%8]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 00:29:21 +0000
+From:   Roy Im <roy.im.opensource@diasemi.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Roy Im <roy.im.opensource@diasemi.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: RE: [PATCH v14 3/3] Input: new da7280 haptic driver
+Thread-Topic: [PATCH v14 3/3] Input: new da7280 haptic driver
+Thread-Index: AQHWSttjHK/j6/E1ykmZ1XiOSN6cvKjqbZ2AgAB09ICAACxPAIADrkvg
+Date:   Mon, 29 Jun 2020 00:29:21 +0000
+Message-ID: <DB8PR10MB33566ABB47A00C8A5F281BE1856E0@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1593017969.git.Roy.Im@diasemi.com>
+ <8b05f5bd46eac415c628e965f59b2b57aff86bbe.1593017969.git.Roy.Im@diasemi.com>
+ <20200626061853.hyb7dwta6ths2qo2@taurus.defre.kleine-koenig.org>
+ <DB8PR10MB33563278561DFC2E50420F1C85930@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+ <20200626155604.poqryunm7fyqmgek@pengutronix.de>
+In-Reply-To: <20200626155604.poqryunm7fyqmgek@pengutronix.de>
+Accept-Language: ko-KR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9666 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006290000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9666 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1011
- malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
- lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006280181
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [1.234.57.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5486bb98-7cd1-49f4-e07a-08d81bc37800
+x-ms-traffictypediagnostic: DB8PR10MB3418:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR10MB3418540EC439C1FA55095117A26E0@DB8PR10MB3418.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2DV0RDYfNnclPwGH8aBouSDFVqt3VgkS4kR31qdHI8mGFyOnMu9wfGEv9SNpvjJs/ohg6cFKxfS5Bw0vo598BSTiAHDNOLFpuCvGxlX1nkPr/gWgulOlYlpo7AFT+/ouEDFQeVa/Ns9XU8lUJpw/ygLUDm8ak/CA2otw8u3p3Kvx9bgnG7yjsnXViSqfF/olHo04p0iPYrQAopb1zkVqMT/7o74NOdQYDt6S8rP5RyVxABMCKjjPJzxajXVHXR8DJs7DyCqPpPYdd/ZC6gGFCP3lSxmuo63sBgvI3nayYeZu3T9XlWoZpH6TMtOBkLwbRNV08DcTR5dL73VUuLGpdBTDBBIY0XQ37bS/CzwrewRZnxY3qgVhflS/VaE9Fa0brYZ3WHM6TFaISBmB/LlyFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39850400004)(55016002)(7696005)(33656002)(5660300002)(6506007)(66946007)(76116006)(66556008)(71200400001)(66446008)(64756008)(110136005)(66476007)(53546011)(9686003)(2906002)(86362001)(966005)(186003)(52536014)(8676002)(83380400001)(4326008)(66574015)(54906003)(7416002)(8936002)(26005)(316002)(478600001)(83080400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: wDKF4vZHlusa4+6uE5WQWnUDGx/Qo4+c+YtmXsGfjz/Gu0CxDjgmBfqbQrkJmWZ7P27am8VG5If3wgXb+MGmsn9TJuAlYpP+jRjwfp2GdkChbSNtxGNCc0LaG+wDQ53smfzcHWLhp2QFdYqhDagzykpZb3jPp3MfeoBwOrv8BShyfnWa4UwuA9tnQAKKbRotVf+tmBRFpg2o4iT6Mnxv9xWSKGiLXS5eG+3Gqcu4SerwJvtgyls6bkRpv80Kx0zkuF+C6Ricmc4jERqrlIU2MN+Kd3qO1kYv6G7XHp/B3tCWs8P6V3nCf9CFqQPylBsbXIcQUgPXwSU+KTUGNSZyAF7e9/RNEzjMc1SLUbzMY837kI8M7FLsPFyEkNzBvK+3NcTASMZMFuE3xsx9Q0g36kyu9LnCeCM+jBIUH+A5yXhac3I/1jcoMZNHIt5f3H3neudC7gKnEuVCdSOMw5S4lEuhiPrmadpMI5nzBv8oCkg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5486bb98-7cd1-49f4-e07a-08d81bc37800
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 00:29:21.6750
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ezceQSXo0amf4ZoUeHZ/Y7i6Qlt5rFvPHpI8C0DGp5cPAAMN9Tg8xvnSJsInAMlQaV66w8zYEscj9F66DgJJwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3418
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/20 11:54 PM, Lai Jiangshan wrote:
-> On Thu, Jun 11, 2020 at 6:29 PM Bob Liu <bob.liu@oracle.com> wrote:
->>
->> Current code always set 'Unbound && max_active == 1' workqueues to ordered
->> implicitly, while this may be not an expected behaviour for some use cases.
->>
->> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
->> to different cpu so as to get better isolation, but their cpumask can't be
->> changed because WQ_ORDERED is set implicitly.
-> 
-> Hello
-> 
-> If I read the code correctly, the reason why their cpumask can't
-> be changed is because __WQ_ORDERED_EXPLICIT, not __WQ_ORDERED.
-> 
->>
->> This patch adds a flag __WQ_ORDERED_DISABLE and also
->> create_singlethread_workqueue_noorder() to offer an new option.
->>
->> Signed-off-by: Bob Liu <bob.liu@oracle.com>
->> ---
->>  include/linux/workqueue.h | 4 ++++
->>  kernel/workqueue.c        | 4 +++-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
->> index e48554e..4c86913 100644
->> --- a/include/linux/workqueue.h
->> +++ b/include/linux/workqueue.h
->> @@ -344,6 +344,7 @@ enum {
->>         __WQ_ORDERED            = 1 << 17, /* internal: workqueue is ordered */
->>         __WQ_LEGACY             = 1 << 18, /* internal: create*_workqueue() */
->>         __WQ_ORDERED_EXPLICIT   = 1 << 19, /* internal: alloc_ordered_workqueue() */
->> +       __WQ_ORDERED_DISABLE    = 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
->>
->>         WQ_MAX_ACTIVE           = 512,    /* I like 512, better ideas? */
->>         WQ_MAX_UNBOUND_PER_CPU  = 4,      /* 4 * #cpus for unbound wq */
->> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
->>  #define create_singlethread_workqueue(name)                            \
->>         alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
->>
->> +#define create_singlethread_workqueue_noorder(name)                    \
->> +       alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
->> +                       WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
-> 
-> I think using __WQ_ORDERED without __WQ_ORDERED_EXPLICIT is what you
-> need, in which case cpumask is allowed to be changed.
-> 
+On Sat, June 27, 2020 12:56 AM, Uwe Kleine-K=F6nig wrote:
+> On Fri, Jun 26, 2020 at 01:17:29PM +0000, Roy Im wrote:
+> > > On Fri, June 26, 2020 3:19 PM, Uwe Kleine-K=F6nig wrote:
+> > > Hello,
+> > > from the PWM POV I'm happy now. Just a few minor comments that I noti=
+ced while checking the PWM details.
+> >
+> > Many thanks for your comments.
+> >
+> > >
+> > > On Thu, Jun 25, 2020 at 01:59:29AM +0900, Roy Im wrote:
+> > > > +		val =3D haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
+> > > > +			haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
+> > >
+> > > If you write this as:
+> > >
+> > > 	val =3D FIELD_PREP(DA7280_PS_SEQ_ID_MASK, haptics->ps_seq_id) |
+> > > 		FIELD_PREP(DA7280_PS_SEQ_LOOP_MASK, haptics->ps_seq_loop);
+> > >
+> > > you get some additional checks for free and can drop all defines for =
+..._SHIFT .
+> >
+> > It is not difficult to update that as you advise, but I think having
+> > the shift there explicitly makes it more readable, so most of the
+> > drivers from my team have the defines(shift) up to now. I guess this
+> > is a kind of subjective thing.
+> > Do you think it is still necessary? Then I will update as you said.
+>=20
+> No, from my side it's not a hard requirement (and after all I'm not the o=
+ne who will take your commit). I personally like it better
+> with FIELD_PREP, but I can still sleep if you don't agree :-)
+>=20
+> What I don't like about having both ..._SHIFT and ..._MASK is that there =
+is some duplication as ..._SHIFT can be calculated
+> from ..._MASK:
+>=20
+> 	#define LALA_SHIFT (ffs(LALA_MASK) - 1)
 
-I don't think so, see function workqueue_apply_unbound_cpumask():
+OK, I got it and I will update.
 
-wq_unbound_cpumask_store()
- > workqueue_set_unbound_cpumask()
-   > workqueue_apply_unbound_cpumask() {
-     ...
-5276                 /* creating multiple pwqs breaks ordering guarantee */
-5277                 if (wq->flags & __WQ_ORDERED)
-5278                         continue;
-                     	  ^^^^
-                          Here will skip apply cpumask if only __WQ_ORDERED is set.
-
-5280                 ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs);
-
-     }
-
-Thanks for your review.
-Bob
-
-> Just use alloc_workqueue() with __WQ_ORDERED and max_active=1. It can
-> be wrapped as a new function or macro, but I don't think> create_singlethread_workqueue_noorder() is a good name for it.
-> 
->>  extern void destroy_workqueue(struct workqueue_struct *wq);
->>
->>  struct workqueue_attrs *alloc_workqueue_attrs(void);
->> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
->> index 4e01c44..2167013 100644
->> --- a/kernel/workqueue.c
->> +++ b/kernel/workqueue.c
->> @@ -4237,7 +4237,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
->>          * on NUMA.
->>          */
->>         if ((flags & WQ_UNBOUND) && max_active == 1)
->> -               flags |= __WQ_ORDERED;
->> +               /* the caller may don't want __WQ_ORDERED to be set implicitly. */
->> +               if (!(flags & __WQ_ORDERED_DISABLE))
->> +                       flags |= __WQ_ORDERED;
->>
->>         /* see the comment above the definition of WQ_POWER_EFFICIENT */
->>         if ((flags & WQ_POWER_EFFICIENT) && wq_power_efficient)
->> --
->> 2.9.5
->>
-
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
