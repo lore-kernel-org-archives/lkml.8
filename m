@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1025C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E74C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F9020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594AF20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460503;
-	bh=3cOiptvMgCO/QJO7RSsbOX4c0Fd17ZHS8ude4fJCyoY=;
+	s=default; t=1593460514;
+	bh=xiHZeVbkn0uJvIcAhgkE6AUFOK1vtmvL1otQOIYYmE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABXXL//jZoxatM5v7iW9PZ88jUURdDjZNA4ZK5oAtt9RZF3QRsWumBeOjUe3imKSO
-	 yplY00ScnsEGKuSpPrD00WYTV5+i1UEyb+/pSy91Ktj0DzumKfICq1ImavtrLMKNXw
-	 /fMZXZWdA3iCrpwFa80sQLe6qy5S5Ok41akYfRzU=
+	b=lF5wdHemkr1PiJtP9sh6ZHrH6mhtI9zhKQzLDkimCMFwww4aGcsGeuRlG6Ntd+M3z
+	 UXwKv3A2ouFVCWCE0EbcIBQqd0AjQXJajXTaeJlYz9bNV5BPLEbekmsW3kotpII3oX
+	 097HUWdYsmKrEr+aYYzDu2qCbOJAZXTIN2lq+zDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbgF2TzB (ORCPT
+        id S1731939AbgF2TzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387665AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387664AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA4B24877;
-        Mon, 29 Jun 2020 15:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22C0724811;
+        Mon, 29 Jun 2020 15:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444374;
-        bh=3cOiptvMgCO/QJO7RSsbOX4c0Fd17ZHS8ude4fJCyoY=;
+        s=default; t=1593444333;
+        bh=xiHZeVbkn0uJvIcAhgkE6AUFOK1vtmvL1otQOIYYmE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wygQyurDZYibW+ZBC1W8BC/JiIWgAmu9WfQCLmppIZxxBjvkx3fgjObIyldtF9a1M
-         0qIdJQmbsB3skkVx0xTtXdZ15xTf3KZVQDl0slaw9I/acHZHWH23iFytGLv3OZhjXz
-         HaBPlvIkWPb+YFhmRDoDfkpto0IRap8TTbu/zROs=
+        b=pATzCdRiq+cwvamuYzE8VjSRr2oVtFYM2w6lxv9vDi6/KBbNAR+f92h0W4xNMhhol
+         Ifvugk8dy466leNu16GZTfSVRcRIMjffcCIFA5w+tI/NuyjewMa+rOydELFgdS0qMI
+         fHlB8nF80T2wgcUoF0IpvUY+cNtCndBx2t/McJgI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Thomas Martitz <t.martitz@avm.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Felix Fietkau <nbd@nbd.name>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 051/178] cifs: Fix cached_fid refcnt leak in open_shroot
-Date:   Mon, 29 Jun 2020 11:23:16 -0400
-Message-Id: <20200629152523.2494198-52-sashal@kernel.org>
+Subject: [PATCH 5.4 007/178] net: bridge: enfore alignment for ethernet address
+Date:   Mon, 29 Jun 2020 11:22:32 -0400
+Message-Id: <20200629152523.2494198-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,46 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Thomas Martitz <t.martitz@avm.de>
 
-commit 77577de64167aa0643d47ffbaacf3642632b321b upstream.
+[ Upstream commit db7202dec92e6caa2706c21d6fc359af318bde2e ]
 
-open_shroot() invokes kref_get(), which increases the refcount of the
-"tcon->crfid" object. When open_shroot() returns not zero, it means the
-open operation failed and close_shroot() will not be called to decrement
-the refcount of the "tcon->crfid".
+The eth_addr member is passed to ether_addr functions that require
+2-byte alignment, therefore the member must be properly aligned
+to avoid unaligned accesses.
 
-The reference counting issue happens in one normal path of
-open_shroot(). When the cached root have been opened successfully in a
-concurrent process, the function increases the refcount and jump to
-"oshr_free" to return. However the current return value "rc" may not
-equal to 0, thus the increased refcount will not be balanced outside the
-function, causing a refcnt leak.
+The problem is in place since the initial merge of multicast to unicast:
+commit 6db6f0eae6052b70885562e1733896647ec1d807 bridge: multicast to unicast
 
-Fix this issue by setting the value of "rc" to 0 before jumping to
-"oshr_free" label.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Fixes: 6db6f0eae605 ("bridge: multicast to unicast")
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Martitz <t.martitz@avm.de>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/smb2ops.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/bridge/br_private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 58915d882285c..f5e893ed48aaa 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -736,6 +736,7 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon, struct cifs_fid *pfid)
- 			/* close extra handle outside of crit sec */
- 			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
- 		}
-+		rc = 0;
- 		goto oshr_free;
- 	}
+diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+index ce2ab14ee6057..cecb4223440e7 100644
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -208,8 +208,8 @@ struct net_bridge_port_group {
+ 	struct rcu_head			rcu;
+ 	struct timer_list		timer;
+ 	struct br_ip			addr;
++	unsigned char			eth_addr[ETH_ALEN] __aligned(2);
+ 	unsigned char			flags;
+-	unsigned char			eth_addr[ETH_ALEN];
+ };
  
+ struct net_bridge_mdb_entry {
 -- 
 2.25.1
 
