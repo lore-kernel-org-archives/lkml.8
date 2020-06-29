@@ -2,241 +2,172 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8B520760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461221;
-	bh=mnT2yJesXZAOGtKIXAb3DzWwFxtj/hQi1jbByk/WOt8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GArp6C00PvMjTp6m6r4eUwQ5ejIJ6WEEDpbEo3UDLUVEHC8eSclWVeo4R1jxuCWyg
-	 r6gBfPdnYxX1uwEz0Oc5qjb2t0u2X58sUFiG9eZ3urYvnPW8+x0JwvnHCW08B6GVNi
-	 7cMpg9epJVDnfZmLZ/qcR7XbD/Dy1tV/eKrOW8XE=
+	by mail.kernel.org (Postfix) with ESMTP id 5B11620760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388587AbgF2UG7 (ORCPT
+        id S2388702AbgF2UHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732757AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1F725281;
-        Mon, 29 Jun 2020 15:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444991;
-        bh=mnT2yJesXZAOGtKIXAb3DzWwFxtj/hQi1jbByk/WOt8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzqzDg7+Hl6/GLUAJ4af77t+O6BW99+J71JL/PyY+aCBpX61p/+06IHOC4RdSV2Pb
-         i5udTH0yhPz6hxQQnvCdtYnGoVtoKCNnE0VfAq9mkPaF4WjES+gQ6xbe0sIXhFj+Cp
-         xoICSdROCXXgG8Qlg0cTMezv+XmkE+/2xeXo6vMc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ye Bin <yebin10@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/131] ata/libata: Fix usage of page address by page_address in ata_scsi_mode_select_xlat function
-Date:   Mon, 29 Jun 2020 11:34:22 -0400
-Message-Id: <20200629153502.2494656-92-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:07:05 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:36126 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732757AbgF2UHB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:07:01 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq03P-0003QP-La; Mon, 29 Jun 2020 14:06:59 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq03O-00044y-HS; Mon, 29 Jun 2020 14:06:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 15:02:27 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <87366d63os.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jq03O-00044y-HS;;;mid=<87366d63os.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19gwZGq9LfYG7qMeJVaSLTCNUd+z0ghDAE=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 07/15] umd: Rename umd_info.cmdline umd_info.driver_name
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
 
-[ Upstream commit f650ef61e040bcb175dd8762164b00a5d627f20e ]
+The only thing supplied in the cmdline today is the driver name so
+rename the field to clarify the code.
 
-BUG: KASAN: use-after-free in ata_scsi_mode_select_xlat+0x10bd/0x10f0
-drivers/ata/libata-scsi.c:4045
-Read of size 1 at addr ffff88803b8cd003 by task syz-executor.6/12621
+As this value is always supplied stop trying to handle the case of
+a NULL cmdline.
 
-CPU: 1 PID: 12621 Comm: syz-executor.6 Not tainted 4.19.95 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xac/0xee lib/dump_stack.c:118
-print_address_description+0x60/0x223 mm/kasan/report.c:253
-kasan_report_error mm/kasan/report.c:351 [inline]
-kasan_report mm/kasan/report.c:409 [inline]
-kasan_report.cold+0xae/0x2d8 mm/kasan/report.c:393
-ata_scsi_mode_select_xlat+0x10bd/0x10f0 drivers/ata/libata-scsi.c:4045
-ata_scsi_translate+0x2da/0x680 drivers/ata/libata-scsi.c:2035
-__ata_scsi_queuecmd drivers/ata/libata-scsi.c:4360 [inline]
-ata_scsi_queuecmd+0x2e4/0x790 drivers/ata/libata-scsi.c:4409
-scsi_dispatch_cmd+0x2ee/0x6c0 drivers/scsi/scsi_lib.c:1867
-scsi_queue_rq+0xfd7/0x1990 drivers/scsi/scsi_lib.c:2170
-blk_mq_dispatch_rq_list+0x1e1/0x19a0 block/blk-mq.c:1186
-blk_mq_do_dispatch_sched+0x147/0x3d0 block/blk-mq-sched.c:108
-blk_mq_sched_dispatch_requests+0x427/0x680 block/blk-mq-sched.c:204
-__blk_mq_run_hw_queue+0xbc/0x200 block/blk-mq.c:1308
-__blk_mq_delay_run_hw_queue+0x3c0/0x460 block/blk-mq.c:1376
-blk_mq_run_hw_queue+0x152/0x310 block/blk-mq.c:1413
-blk_mq_sched_insert_request+0x337/0x6c0 block/blk-mq-sched.c:397
-blk_execute_rq_nowait+0x124/0x320 block/blk-exec.c:64
-blk_execute_rq+0xc5/0x112 block/blk-exec.c:101
-sg_scsi_ioctl+0x3b0/0x6a0 block/scsi_ioctl.c:507
-sg_ioctl+0xd37/0x23f0 drivers/scsi/sg.c:1106
-vfs_ioctl fs/ioctl.c:46 [inline]
-file_ioctl fs/ioctl.c:501 [inline]
-do_vfs_ioctl+0xae6/0x1030 fs/ioctl.c:688
-ksys_ioctl+0x76/0xa0 fs/ioctl.c:705
-__do_sys_ioctl fs/ioctl.c:712 [inline]
-__se_sys_ioctl fs/ioctl.c:710 [inline]
-__x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:710
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
-f7 48
-89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-ff 0f
-83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb0e9602c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fb0e96036d4 RCX: 000000000045c479
-RDX: 0000000020000040 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000046d R14: 00000000004c6e1a R15: 000000000076bfcc
+Additionally since we now have a name we can count on use the
+driver_name any place where the code is looking for a name
+of the binary.
 
-Allocated by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-kasan_kmalloc mm/kasan/kasan.c:553 [inline]
-kasan_kmalloc+0xbf/0xe0 mm/kasan/kasan.c:531
-__kmalloc+0xf3/0x1e0 mm/slub.c:3749
-kmalloc include/linux/slab.h:520 [inline]
-load_elf_phdrs+0x118/0x1b0 fs/binfmt_elf.c:441
-load_elf_binary+0x2de/0x4610 fs/binfmt_elf.c:737
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-__kasan_slab_free+0x129/0x170 mm/kasan/kasan.c:521
-slab_free_hook mm/slub.c:1370 [inline]
-slab_free_freelist_hook mm/slub.c:1397 [inline]
-slab_free mm/slub.c:2952 [inline]
-kfree+0x8b/0x1a0 mm/slub.c:3904
-load_elf_binary+0x1be7/0x4610 fs/binfmt_elf.c:1118
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88803b8ccf00
-which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 259 bytes inside of
-512-byte region [ffff88803b8ccf00, ffff88803b8cd100)
-The buggy address belongs to the page:
-page:ffffea0000ee3300 count:1 mapcount:0 mapping:ffff88806cc03080
-index:0xffff88803b8cc780 compound_mapcount: 0
-flags: 0x100000000008100(slab|head)
-raw: 0100000000008100 ffffea0001104080 0000000200000002 ffff88806cc03080
-raw: ffff88803b8cc780 00000000800c000b 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-ffff88803b8ccf00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8ccf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88803b8cd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-^
-ffff88803b8cd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8cd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-
-You can refer to "https://www.lkml.org/lkml/2019/1/17/474" reproduce
-this error.
-
-The exception code is "bd_len = p[3];", "p" value is ffff88803b8cd000
-which belongs to the cache kmalloc-512 of size 512. The "page_address(sg_page(scsi_sglist(scmd)))"
-maybe from sg_scsi_ioctl function "buffer" which allocated by kzalloc, so "buffer"
-may not page aligned.
-This also looks completely buggy on highmem systems and really needs to use a
-kmap_atomic.      --Christoph Hellwig
-To address above bugs, Paolo Bonzini advise to simpler to just make a char array
-of size CACHE_MPAGE_LEN+8+8+4-2(or just 64 to make it easy), use sg_copy_to_buffer
-to copy from the sglist into the buffer, and workthere.
-
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lkml.kernel.org/r/87imfef0k3.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- drivers/ata/libata-scsi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ include/linux/umd.h         |  2 +-
+ kernel/umd.c                | 11 ++++-------
+ net/ipv4/bpfilter/sockopt.c |  2 +-
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 0c1572a1cc5ed..6c2c2b07f029e 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -3995,12 +3995,13 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
+diff --git a/include/linux/umd.h b/include/linux/umd.h
+index 58a9c603c78d..d827fb038d00 100644
+--- a/include/linux/umd.h
++++ b/include/linux/umd.h
+@@ -18,7 +18,7 @@ static inline void exit_umh(struct task_struct *tsk)
+ #endif
+ 
+ struct umd_info {
+-	const char *cmdline;
++	const char *driver_name;
+ 	struct file *pipe_to_umh;
+ 	struct file *pipe_from_umh;
+ 	struct list_head list;
+diff --git a/kernel/umd.c b/kernel/umd.c
+index f7dacb19c705..7fe08a8eb231 100644
+--- a/kernel/umd.c
++++ b/kernel/umd.c
+@@ -67,9 +67,6 @@ static void umd_cleanup(struct subprocess_info *info)
+  * @len: length of the blob
+  * @info: information about usermode process (shouldn't be NULL)
+  *
+- * If info->cmdline is set it will be used as command line for the
+- * user process, else "usermodehelper" is used.
+- *
+  * Returns either negative error or zero which indicates success
+  * in executing a blob of bytes as a usermode process. In such
+  * case 'struct umd_info *info' is populated with two pipes
+@@ -79,7 +76,6 @@ static void umd_cleanup(struct subprocess_info *info)
+  */
+ int fork_usermode_blob(void *data, size_t len, struct umd_info *info)
  {
- 	struct scsi_cmnd *scmd = qc->scsicmd;
- 	const u8 *cdb = scmd->cmnd;
--	const u8 *p;
- 	u8 pg, spg;
- 	unsigned six_byte, pg_len, hdr_len, bd_len;
- 	int len;
- 	u16 fp = (u16)-1;
- 	u8 bp = 0xff;
-+	u8 buffer[64];
-+	const u8 *p = buffer;
+-	const char *cmdline = (info->cmdline) ? info->cmdline : "usermodehelper";
+ 	struct subprocess_info *sub_info;
+ 	char **argv = NULL;
+ 	struct file *file;
+@@ -87,7 +83,7 @@ int fork_usermode_blob(void *data, size_t len, struct umd_info *info)
+ 	loff_t pos = 0;
+ 	int err;
  
- 	VPRINTK("ENTER\n");
+-	file = shmem_kernel_file_setup("", len, 0);
++	file = shmem_kernel_file_setup(info->driver_name, len, 0);
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
  
-@@ -4034,12 +4035,14 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
- 	if (!scsi_sg_count(scmd) || scsi_sglist(scmd)->length < len)
- 		goto invalid_param_len;
+@@ -100,11 +96,12 @@ int fork_usermode_blob(void *data, size_t len, struct umd_info *info)
+ 	}
  
--	p = page_address(sg_page(scsi_sglist(scmd)));
--
- 	/* Move past header and block descriptors.  */
- 	if (len < hdr_len)
- 		goto invalid_param_len;
+ 	err = -ENOMEM;
+-	argv = argv_split(GFP_KERNEL, cmdline, NULL);
++	argv = argv_split(GFP_KERNEL, info->driver_name, NULL);
+ 	if (!argv)
+ 		goto out;
  
-+	if (!sg_copy_to_buffer(scsi_sglist(scmd), scsi_sg_count(scmd),
-+			       buffer, sizeof(buffer)))
-+		goto invalid_param_len;
-+
- 	if (six_byte)
- 		bd_len = p[3];
- 	else
+-	sub_info = call_usermodehelper_setup("none", argv, NULL, GFP_KERNEL,
++	sub_info = call_usermodehelper_setup(info->driver_name, argv, NULL,
++					     GFP_KERNEL,
+ 					     umd_setup, umd_cleanup, info);
+ 	if (!sub_info)
+ 		goto out;
+diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
+index c0dbcc86fcdb..5050de28333d 100644
+--- a/net/ipv4/bpfilter/sockopt.c
++++ b/net/ipv4/bpfilter/sockopt.c
+@@ -70,7 +70,7 @@ static int __init bpfilter_sockopt_init(void)
+ {
+ 	mutex_init(&bpfilter_ops.lock);
+ 	bpfilter_ops.stop = true;
+-	bpfilter_ops.info.cmdline = "bpfilter_umh";
++	bpfilter_ops.info.driver_name = "bpfilter_umh";
+ 	bpfilter_ops.info.cleanup = &bpfilter_umh_cleanup;
+ 
+ 	return 0;
 -- 
-2.25.1
+2.25.0
 
