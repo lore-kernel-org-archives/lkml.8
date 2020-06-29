@@ -2,120 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C648DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D5C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B76206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593462656;
+	bh=z9yTdWWDExmKZdumpqCEeq0n//HjC4fsspk4qh9Eowg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TzKuKf0HPR9uKaFySNS5GjNZNwz/SdX5udyZgLly7lACQmo2QZqyljpELLiQwbSYz
+	 g+KlMYbAdxpBmCHTiPEIAN+dONrNUQYsTI7EhdWizv06bKztyzmHXj6lRA4yVk5ycq
+	 vTKm4mL2FX1+2lThiSDY4FZ+whPCW4jIVNb1VVk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgF2Uaq (ORCPT
+        id S1732830AbgF2Uay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730127AbgF2Uah (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:30:37 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E53C061755;
-        Mon, 29 Jun 2020 13:30:36 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jq0Q8-002Jaj-5k; Mon, 29 Jun 2020 20:30:28 +0000
-Date:   Mon, 29 Jun 2020 21:30:28 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 18/41] regset: new method and helpers for it
-Message-ID: <20200629203028.GB2786714@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
- <20200629182628.529995-18-viro@ZenIV.linux.org.uk>
- <CAHk-=wjd5HML-EuPGH7J8CjWJrbnMhst3NJbcUyt-P0RV649nA@mail.gmail.com>
+        Mon, 29 Jun 2020 16:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732483AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBD725426;
+        Mon, 29 Jun 2020 15:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445375;
+        bh=z9yTdWWDExmKZdumpqCEeq0n//HjC4fsspk4qh9Eowg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EPT9F07ZsmwUSlTHoCjQv63gPVWhKbMaGc8iLx6mPOtVn0FvGmbxeuirYeo5an3Zc
+         SWZIJEGLN6ibBnH44fTbpbInPnUGSeE6cKQ0ktosXzeWlcrptwVjHSOAyv6nNbEUIE
+         sHINcleuAKCQteJkgDjxG+Ubi8On1Miefkk8J9u8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Valentin Longchamp <valentin@longchamp.me>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 130/191] net: sched: export __netdev_watchdog_up()
+Date:   Mon, 29 Jun 2020 11:39:06 -0400
+Message-Id: <20200629154007.2495120-131-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjd5HML-EuPGH7J8CjWJrbnMhst3NJbcUyt-P0RV649nA@mail.gmail.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:23:34PM -0700, Linus Torvalds wrote:
-> On Mon, Jun 29, 2020 at 11:28 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > ->get2() takes task+regset+buffer, returns the amount of free space
-> > left in the buffer on success and -E... on error.
-> 
-> Can we please give it a better name than "get2"?
-> 
-> That's not a great name to begin with, and it's a completely
-> nonsensical name by the end of this series when you've removed the
-> original "get" function.
-> 
-> So either:
-> 
->  (a) add one final patch to rename "get2" all back to "get" after you
-> got rid of the old "get"
+From: Valentin Longchamp <valentin@longchamp.me>
 
-Bad idea, IMO...
+[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
 
->  (b) or just call it something better to begin with. Maybe just
-> "get_regset" instead?
+Since the quiesce/activate rework, __netdev_watchdog_up() is directly
+called in the ucc_geth driver.
 
-<nod>
+Unfortunately, this function is not available for modules and thus
+ucc_geth cannot be built as a module anymore. Fix it by exporting
+__netdev_watchdog_up().
 
-Frankly, other field names there are also nasty - 'set' is not
-fun to grep for, but there are 'n' and 'size' as well.  There's
-also 'bias'  and 'align' (both completely unused)...
+Since the commit introducing the regression was backported to stable
+branches, this one should ideally be as well.
 
-> I'd prefer (b) just because I think it will be a lot clearer if we
-> ever end up having old patches forward-ported (or, more likely,
-> newpatches back-ported), so having a "get" function that changed
-> semantics but got back the old name sounds bad to me.
-> 
-> Other than that, I can't really argue with the numbers:
-> 
->  41 files changed, 1368 insertions(+), 2347 deletions(-)
-> 
-> looks good to me, and the code seems more understandable.
+Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/sched/sch_generic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-FWIW, there's also ->set() side of that thing.  Tons of boilerplate
-in those; I hadn't seriously looked into that part, but I suspect
-that "do copyin in the caller, pass the kernel buffer to the
-method, always start at offset 0" would also trim a lot of crap.
-I'd rather leave that one for later - this series had been painful
-enough.
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 88ce8edf12614..04ca08f852209 100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -337,6 +337,7 @@ void __netdev_watchdog_up(struct net_device *dev)
+ 			dev_hold(dev);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
+ 
+ static void dev_watchdog_up(struct net_device *dev)
+ {
+-- 
+2.25.1
 
-Other things in the same area: conversion of fdpic coredumps to
-regset (fairly easy, I've a patch series doing that in the local
-tree), conversion of the few remaining non-regset architectures
-to regset-based coredump (kill a large chunk of rotting code in
-fs/binfmt_elf.c, along with quite a few pieces of old per-arch
-coredump helpers), unification of compat ELF (done locally,
-mipsn32/mipso32 gone, all compat done via compat_binfmt_elf.c,
-x32 horrors sanitized - IMO
-#define PRSTATUS_SIZE \
-       (test_thread_flag(TIF_X32) \
-               ? sizeof(struct compat_elf_prstatus) \
-               : sizeof(struct i386_elf_prstatus))
-#define SET_PR_FPVALID(S) \
-       (*(test_thread_flag(TIF_X32) \
-               ? &(S)->pr_fpvalid      \
-               : &((struct i386_elf_prstatus *)(S))->pr_fpvalid) = 1)
-is much better than
-#define PRSTATUS_SIZE(S, R) (R != sizeof(S.pr_reg) ? 144 : 296)
-#define SET_PR_FPVALID(S, V, R) \
-  do { *(int *) (((void *) &((S)->pr_reg)) + R) = (V); } \
-  while (0)
-) and a bunch of assorted cleanups that got trimmed from the
-regset series...
-
-I'll probably post fdpic and compat series tonight and get
-back to uaccess and VFS stuff.
