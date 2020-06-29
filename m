@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7768BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5841F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741E620760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467519;
-	bh=jMfwoJdsKP0RmTBoO2cdnVTnTbpVcsC+aElQbPfJfsQ=;
+	s=default; t=1593467522;
+	bh=VK3L9BGAbCNv1q6ujaJ7mqqUR7iptXCtRvdtc56LAmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hN3NknUj2tivXbH9JZDwMF2ImdKhYcRFFdjh+jIoOg6hba/mXecxXI9pLO+XbgiGG
-	 aKUZrBJ4YsdWRd222yw8XV1slcCsSdVr2IxhSc8hhE2EwTIyro5lrVd3kiyPMPFkeQ
-	 OdhVNGtQvY+wFaZ3VzZY2VsmWsYYUjMYzr4hRXKs=
+	b=z8rU+th02RWKG8Fyv9zmWpgQlBeFlnvn92nhqPIFATQ38a7/at63YB1sxlOQOwldE
+	 oXbrMGnBEVU+nVroqHG5vdPrTN05lMnvpjXkcZvXuzql5VZWFqXovw3UoLJqHUZ3Pn
+	 9whZ5CMGkx0YcqlLpJIA86EWGviu81zyV75sZMbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404578AbgF2Vv5 (ORCPT
+        id S2404586AbgF2VwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726669AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B476B2473F;
-        Mon, 29 Jun 2020 15:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD2C424795;
+        Mon, 29 Jun 2020 15:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444061;
-        bh=jMfwoJdsKP0RmTBoO2cdnVTnTbpVcsC+aElQbPfJfsQ=;
+        s=default; t=1593444103;
+        bh=VK3L9BGAbCNv1q6ujaJ7mqqUR7iptXCtRvdtc56LAmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTYwJZhAnd4zvERCovYAsEbS5lLlHeLe8yx4sf1ByLQRLpgC11wBAPiev2GEBFIgc
-         1UeSz68kcjifuMGPLk70T/SFNeHoWR8n+tfbYOqekZ+Zc5qHIK7xnyOPbWlq9lH5Na
-         oj0iFb41474PdJ4Cr779ldyaHt7vpab7KtBG/tHg=
+        b=mOdaz3jOqaAD9paXt9eHzDw5YMZ0hjvMG6BGQF80eD/zTNI9HTgjFJjArFdbGQKWH
+         r4jtszacwyiA9yhRsM4dKgOpGVnD88q88pxh+BdW6Y3dx+GOpWLdMr3iuhenPQLpye
+         1z8U8QEWvuptV3+8ZmZdj5fpOsnnJbzIyYGlvqQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 169/265] io_uring: fix hanging iopoll in case of -EAGAIN
-Date:   Mon, 29 Jun 2020 11:16:42 -0400
-Message-Id: <20200629151818.2493727-170-sashal@kernel.org>
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Hongyu Jin <hongyu.jin@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 214/265] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Date:   Mon, 29 Jun 2020 11:17:27 -0400
+Message-Id: <20200629151818.2493727-215-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,56 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-[ Upstream commit cd664b0e35cb1202f40c259a1a5ea791d18c879d ]
+commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
 
-io_do_iopoll() won't do anything with a request unless
-req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
-it, otherwise io_do_iopoll() will poll a file again and again even
-though the request of interest was completed long time ago.
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
 
-Also, remove -EAGAIN check from io_issue_sqe() as it races with
-the changed lines. The request will take the long way and be
-resubmitted from io_iopoll*().
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
 
-io_kiocb's result and iopoll_completed")
+Let's fix it now.
 
-Fixes: bbde017a32b3 ("io_uring: add memory barrier to synchronize
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/io_uring.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/erofs/zdata.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 1829be7f63a35..4ab1728de247c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1942,10 +1942,8 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index 7824f5563a552..9b66c28b3ae9d 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
+ {
+-	unsigned long *p, o, v, id;
+-repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
++	int orig, orig_index, val;
  
- 	WRITE_ONCE(req->result, res);
- 	/* order with io_poll_complete() checking ->result */
--	if (res != -EAGAIN) {
--		smp_wmb();
--		WRITE_ONCE(req->iopoll_completed, 1);
--	}
-+	smp_wmb();
-+	WRITE_ONCE(req->iopoll_completed, 1);
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++repeat:
++	orig = atomic_read(u.o);
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
+ 
+-		DBG_BUGON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
+ 
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
  }
  
- /*
-@@ -5425,9 +5423,6 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	if ((ctx->flags & IORING_SETUP_IOPOLL) && req->file) {
- 		const bool in_async = io_wq_current_is_worker();
- 
--		if (req->result == -EAGAIN)
--			return -EAGAIN;
--
- 		/* workqueue context doesn't hold uring_lock, grab it now */
- 		if (in_async)
- 			mutex_lock(&ctx->uring_lock);
 -- 
 2.25.1
 
