@@ -2,153 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF41C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22379C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC1A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467883;
-	bh=0V9LpGvwu46MBFnwcEy1Q6J7udxjm8FaxSsiywu298U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycdYg2umGdO+CUAeVbtysqKHKuXa1ZZZMWHIUsxzuY0iDjKL2XOXe8DmnSXq8hoYZ
-	 PFLt0WqdRShlGag+KEnGMqJiZcO7y5x/7FIg+nTKYJT1Wa/6b6z8nxzThUrPfqXXC1
-	 GGSVSXOAlyKiOhoXXeyd6No6HaTyLwcT5SAhf820=
+	by mail.kernel.org (Postfix) with ESMTP id 04D14206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="atALUCdR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0UaMBvXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404765AbgF2V6C (ORCPT
+        id S2391512AbgF2V6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DD224738;
-        Mon, 29 Jun 2020 15:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444056;
-        bh=0V9LpGvwu46MBFnwcEy1Q6J7udxjm8FaxSsiywu298U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7oDvbLvISdolKsP5JSxwzA+L1pjeKuD7AXha3ttxMf4C7U9dNIOaDN0l709ZQXPA
-         KyAedZhybjzrjOUD5WuAmU0k97sU8udyipksSDx5NSyMZVxrAC8QvvHSTgEjq3ZwNX
-         7Gun/mdGVbJuvw5eDdrOxKpXRIfR3tiifPpA1tys=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 164/265] nvme: don't protect ns mutation with ns->head->lock
-Date:   Mon, 29 Jun 2020 11:16:37 -0400
-Message-Id: <20200629151818.2493727-165-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:58:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728939AbgF2V6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:58:05 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FEDC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:58:05 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593467881;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qCfJAHafYa/AK9R1oGXdsMRC8dDD1+/B6dAzjfz2e8A=;
+        b=atALUCdRSCjttKOnEF7ACaejPFRnLCROGTU2TYcrTGB+x4/vvCK2w3z0nOYKLM29guozda
+        v7GCs60PvZimi55BI+pF9yKr/oUNB2pfhzkq7fNd86NV8iVTuqfRYKSZwZexUdfeagQSsQ
+        r1F6NS0luJXHyEo3nMPC7GqnxrpGXEVvOdhan1/v12ZxlCOJrLWrUEucsY22IFVjXWjuhM
+        YrYO6Zgzj0fEHOiEM+CO2MkJKNZZmCoA+gIHSwB53Ee5SDqiG6MXljMOzzertMSSFJkEGB
+        dyhtUpSOIV8vYMaows5UqYXNooA2Afc7Lu0+X+b8nSliReFAIoK1N09pDp8WnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593467881;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qCfJAHafYa/AK9R1oGXdsMRC8dDD1+/B6dAzjfz2e8A=;
+        b=0UaMBvXKer7+fp5NEnvGteOT9ErcAAfKjSd3iwxofOplHufM1dhe3a4AYC6EWgF6qzN1Oq
+        lry2ysi0HSt+ASBQ==
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless ringbuffer
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+        <20200618144919.9806-4-john.ogness@linutronix.de>
+        <20200625082838.GF6156@alley> <87sgeh3m5j.fsf@jogness.linutronix.de>
+        <20200629140445.GK6156@alley>
+Date:   Mon, 29 Jun 2020 23:57:59 +0200
+In-Reply-To: <20200629140445.GK6156@alley> (Petr Mladek's message of "Mon, 29
+        Jun 2020 16:04:45 +0200")
+Message-ID: <87ftad8rh4.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+On 2020-06-29, Petr Mladek <pmladek@suse.com> wrote:
+>> @@ @@ void __init setup_log_buf(int early)
+>> +	prb_init(&printk_rb_dynamic,
+>> +		 new_log_buf, order_base_2(new_log_buf_len),
+>> +		 new_dict_buf, order_base_2(new_log_buf_len),
+>> +		 new_descs, order_base_2(new_descs_count));
+>
+> order_base_2() is safe. But the result might be tat some allocated
+> space is not used.
+>
+> I would prefer to make sure that new_log_buf_len is rounded, e.g.
+> by roundup_pow_of_two(), at the beginning of the function. Then we
+> could use ilog2() here.
 
-[ Upstream commit e164471dcf19308d154adb69e7760d8ba426a77f ]
+new_log_buf_len can only be set within log_buf_len_update(), and it
+is already doing exactly what you want:
 
-Right now ns->head->lock is protecting namespace mutation
-which is wrong and unneeded. Move it to only protect
-against head mutations. While we're at it, remove unnecessary
-ns->head reference as we already have head pointer.
+        if (size)
+                size = roundup_pow_of_two(size);
+        if (size > log_buf_len)
+                new_log_buf_len = (unsigned long)size;
 
-The problem with this is that the head->lock spans
-mpath disk node I/O that may block under some conditions (if
-for example the controller is disconnecting or the path
-became inaccessible), The locking scheme does not allow any
-other path to enable itself, preventing blocked I/O to complete
-and forward-progress from there.
+I can switch to ilog2() instead of the more conservative order_base_2().
 
-This is a preparation patch for the fix in a subsequent patch
-where the disk I/O will also be done outside the head->lock.
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/multipath.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index fece4654fa3e7..f4287d8550a9f 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -410,11 +410,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- {
- 	struct nvme_ns_head *head = ns->head;
- 
--	lockdep_assert_held(&ns->head->lock);
--
- 	if (!head->disk)
- 		return;
- 
-+	mutex_lock(&head->lock);
- 	if (!(head->disk->flags & GENHD_FL_UP))
- 		device_add_disk(&head->subsys->dev, head->disk,
- 				nvme_ns_id_attr_groups);
-@@ -427,9 +426,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 			__nvme_find_path(head, node);
- 		srcu_read_unlock(&head->srcu, srcu_idx);
- 	}
-+	mutex_unlock(&head->lock);
- 
--	synchronize_srcu(&ns->head->srcu);
--	kblockd_schedule_work(&ns->head->requeue_work);
-+	synchronize_srcu(&head->srcu);
-+	kblockd_schedule_work(&head->requeue_work);
- }
- 
- static int nvme_parse_ana_log(struct nvme_ctrl *ctrl, void *data,
-@@ -484,14 +484,12 @@ static inline bool nvme_state_is_live(enum nvme_ana_state state)
- static void nvme_update_ns_ana_state(struct nvme_ana_group_desc *desc,
- 		struct nvme_ns *ns)
- {
--	mutex_lock(&ns->head->lock);
- 	ns->ana_grpid = le32_to_cpu(desc->grpid);
- 	ns->ana_state = desc->state;
- 	clear_bit(NVME_NS_ANA_PENDING, &ns->flags);
- 
- 	if (nvme_state_is_live(ns->ana_state))
- 		nvme_mpath_set_live(ns);
--	mutex_unlock(&ns->head->lock);
- }
- 
- static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
-@@ -670,10 +668,8 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 			nvme_update_ns_ana_state(&desc, ns);
- 		}
- 	} else {
--		mutex_lock(&ns->head->lock);
- 		ns->ana_state = NVME_ANA_OPTIMIZED; 
- 		nvme_mpath_set_live(ns);
--		mutex_unlock(&ns->head->lock);
- 	}
- 
- 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--- 
-2.25.1
-
+John Ogness
