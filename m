@@ -2,210 +2,178 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC81FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCEDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4921204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459DE2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="rESw7DDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgF2S7U (ORCPT
+        id S1729231AbgF2S7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:59:20 -0400
+        Mon, 29 Jun 2020 14:59:30 -0400
 Received: from mga09.intel.com ([134.134.136.24]:65096 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbgF2S6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:58:54 -0400
-IronPort-SDR: RWeeJ/8RlA8iam6h8rbkXQySlJPKg8Z8etXIA2PTHkj4OQbn5OXZrrwy1WPNeaYMZIpLnY12r3
- SoN2lGVZg+wg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147540174"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="147540174"
+        id S1729580AbgF2S6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:58:53 -0400
+IronPort-SDR: XY9UMfX/hneGulcR8bC1PWmfEBgLLgbZ9iiaXxXXkwuyx9IhOXxMiLYWrczpHSD8MoLh1QN6Ip
+ 8POW4h6I9lHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147481331"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="147481331"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 08:27:19 -0700
-IronPort-SDR: rGBMpfACiG1z4qkmaDQmtluftmaItl/SFgyVE8IlcTxjEYsTQkMzUpPHkLlLoyg+bUyRjEZRro
- RXKZLVmhfq9w==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:24:54 -0700
+IronPort-SDR: tI5Ohju9i3K+OadxL2HBTr9fOzcCn+beT76uV7xRaQYyW9I/YuorN5TKT8sBqVJzVUD+8/TSqU
+ KHRjoSN9A8Jw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="318245592"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga007.jf.intel.com with ESMTP; 29 Jun 2020 08:27:19 -0700
-Date:   Mon, 29 Jun 2020 08:27:19 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200629152718.GA12312@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200627174335.GC15585@zn.tnic>
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="266156684"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Jun 2020 02:24:53 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 02:24:53 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jun 2020 02:24:52 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 29 Jun 2020 02:24:52 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 02:24:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CzOkKJDar7ZVVw4EZ4o11kfys8JauxTJrk1vHIfASW0gAzrxmbl6khyzhdin+iqw509eK3ZeP9twrmfn1KdRMMUi82EpdscYFd2iNUu85ePzmHTypUt/mM+wA8wbUoOr2Fm7LmmTmZW52QDsBKk2lTRGFJoSqLBnpj2/1b6rIdjXLC6dfywV8qgw1KLrrB+gPtlf3FG0O6Jo+TKaIN+2WvPBGI794f0oinQiQca/ZkVYDR4MQ+eKijnyJXtwtOJGecCili0hnQvdLCqkyqJ5do9/X1FWO0MgvlGeoABQG9+An0zH04PooH/baG6bXXvSgsWQ9pGzkUaFpga4LVEaHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jRk8u28uye2ch7b4Wxc0y7sbq3f/DByKJkO9iEZUIDk=;
+ b=A5B+LeROEw4ByHjoNPKS7TKtA63cJruW5DokNIc/PyxK3cCuFpYIJIeG8SrUyu/RA57YJXhVRaWzH6FLPYJxJyQZsHjBB8BOWlhR6HFBwwtsNASvV2nxZmQyQfIGmF+Ngi4MhRtLdOP9qIAFKVDLNpc/GrYqo7wAEOrXahN3YR8YMc58R77knZWrVjZGG3bxbMKkkP1sSRqOkaMJeYQsgk28ODH0E9sMBc+pZs7SD7x7fwXyaIl16ySMzP95LqVUcZMNdolBLzvvagNmdpLVQgA4MjoHwEANXSsGsboASVryuYo6mkfM0s6yXPDuHQy8owyGrrwJPR5c2tSjVuXErA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jRk8u28uye2ch7b4Wxc0y7sbq3f/DByKJkO9iEZUIDk=;
+ b=rESw7DDbmfDGzqHa0JuKbp8EcJD4Tb0WkR7NmDJRzoVSQRfY0ZRxGKF75mHJHVDr8G6tQY+6Z5ESelx46EI7z2dtnrCg6unp0X8iLpVFSQ0BPiIYDFHCt1AAk/zf+Lc/CaJZqX+2VAIsSSWphlngsURB4VZ76oF6en/O+R7LUoM=
+Received: from CY4PR11MB1432.namprd11.prod.outlook.com (2603:10b6:910:5::22)
+ by CY4PR11MB1574.namprd11.prod.outlook.com (2603:10b6:910:f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Mon, 29 Jun
+ 2020 09:24:51 +0000
+Received: from CY4PR11MB1432.namprd11.prod.outlook.com
+ ([fe80::b46e:9dcb:b46b:884a]) by CY4PR11MB1432.namprd11.prod.outlook.com
+ ([fe80::b46e:9dcb:b46b:884a%4]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 09:24:51 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 13/14] vfio: Document dual stage control
+Thread-Topic: [PATCH v3 13/14] vfio: Document dual stage control
+Thread-Index: AQHWSgRSM+uqgdGjpEOT7nvP3+zeDKjvWVIAgAAAwoA=
+Date:   Mon, 29 Jun 2020 09:24:50 +0000
+Message-ID: <CY4PR11MB14322E99A64BC0B2E06CD33CC36E0@CY4PR11MB1432.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+ <1592988927-48009-14-git-send-email-yi.l.liu@intel.com>
+ <20200629092132.GA31392@stefanha-x1.localdomain>
+In-Reply-To: <20200629092132.GA31392@stefanha-x1.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cea3d932-ea3b-480e-c016-08d81c0e4677
+x-ms-traffictypediagnostic: CY4PR11MB1574:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB157442D535B74B1AAC0C281FC36E0@CY4PR11MB1574.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AmcsE1Cv0tmD0bWGatIpr6AXEY+73/1COSqlXY8LFVZdV9vioG4VjIzR+GZWMZQN9dp7Xavf2jqzB3uzH3l4CrdNMSFUi9G4bU9gw7P76S3751vX5+OlVh6FrKHCenfGUbT7U/SWd4MOciFIeRVTjz1J99P3981RW5tkb+cc9Btm5YWsMiHXL4cTxs/8QLDcvgJjsi50nc2ynCM4kU6/2LXcgrxVJkESAtjJw9kpH6uy3YQ7Xy5RQMmDtmy7ZjWnItIT83ZTnABbVDFAcPm5P43ZHkBlXED4rwuKbZtw36VXfCPSugVhcUweYfUAEAwl
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1432.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(6506007)(9686003)(7416002)(33656002)(55016002)(2906002)(6916009)(66446008)(64756008)(66476007)(66946007)(66556008)(76116006)(4326008)(54906003)(8936002)(26005)(71200400001)(8676002)(86362001)(5660300002)(52536014)(186003)(478600001)(7696005)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ot80ypviLdqi2cWASLCsQLRJOskY5BSGNYBIRehnxaz+VA90nybLJQMHEDTlbmVH622PIJ6mnO7byc0+AkhZzShX6q60jyb8beZjuOvYxSKtzl974TPblF8yi/OY6XF3hhQeLWr+oECK6yY4luNVwApm7LMh3IXr5GUXIcl7K94ZsTg4xhvFimehTvMVKwz69dwE38E7XpaY5dc6UbWUBdG6rifhu2PKxIqDd0XtliJ3HNetY+//kuxAmcoBVUehZgDNkhh/IsspT9PloJUxIJw9Lr3OZc19InhlzrYCkQViKOzhE38CId4xDGy+C8dp5LzdzbWOKnxAux4VrJJ7yscLey0a1byYSHpI3R4Ln3P5t575VGWosSdYwzckjod0lLWkWE40QkXO9ul5opPHbu2+hcPQL+9MnuG9aKq0z3+3OL7GBM9/SnQqkRr0/MpktvggWPZ0js7g0Pmg4lqi8CQloN7xTH92OwHajKyYWpbXm2nD/XpsfvfDJ7gldLlA
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627174335.GC15585@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1432.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cea3d932-ea3b-480e-c016-08d81c0e4677
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 09:24:50.8738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kaMH13DW3Uvu2QUbZdgwyXwcjj5R7CJMtVaDu10oI76uIjyyWqK5YOfhR10xp9HjjZNjFKjfFfiTdiVCYjSANw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1574
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 07:43:35PM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> > +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
-> > +			 void *token)
-> > +{
-> > +	u64 mrsigner[4];
-> > +	int ret;
-> > +	int i;
-> > +	int j;
+> From: Stefan Hajnoczi <stefanha@gmail.com>
+> Sent: Monday, June 29, 2020 5:22 PM
+>=20
+> On Wed, Jun 24, 2020 at 01:55:26AM -0700, Liu Yi L wrote:
+> > +Details can be found in Documentation/userspace-api/iommu.rst. For
+> > +Intel VT-d, each stage 1 page table is bound to host by:
 > > +
-> > +	/* Check that the required attributes have been authorized. */
-> > +	if (encl->secs_attributes & ~encl->allowed_attributes)
-> > +		return -EACCES;
+> > +    nesting_op->flags =3D VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
+> > +    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
+> > +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
 > > +
-> > +	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	mutex_lock(&encl->lock);
-> > +
-> > +	if (atomic_read(&encl->flags) & SGX_ENCL_INITIALIZED) {
-> > +		ret = -EFAULT;
-> > +		goto err_out;
-> > +	}
-> 
-> That test should be the first thing this function or its caller does.
+> > +As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA->GP=
+A.
+> > +GVA->GPA page tables are available when PASID (Process Address Space
+> > +GVA->ID)
+> > +is exposed to guest. e.g. guest with PASID-capable devices assigned.
+> > +For such page table binding, the bind_data should include PASID info,
+> > +which is allocated by guest itself or by host. This depends on
+> > +hardware vendor e.g. Intel VT-d requires to allocate PASID from host.
+> > +This requirement is defined by the Virtual Command Support in VT-d
+> > +3.0 spec, guest software running on VT-d should allocate PASID from
+> > +host kernel. To allocate PASID from host, user space should +check
+> > +the IOMMU_NESTING_FEAT_SYSWIDE_PASID
+>=20
+> s/+check/check/g
 
-Hmm, I was going to say that SGX_ENCL_INITIALIZED can't be checked until
-encl->lock is held, but that's not true for this path as mutual exclusion
-is provided by the SGX_ENCL_IOCTL flag.  So yeah, this can be checked at
-the same time as SGX_ENCL_CREATED in sgx_ioc_enclave_init().
+got it.
 
-> > +	for (i = 0; i < SGX_EINIT_SLEEP_COUNT; i++) {
-> > +		for (j = 0; j < SGX_EINIT_SPIN_COUNT; j++) {
-> 
-> Ew, what's that double-loop for?
-> 
-> It tries to init an enclave a bunch of times. Why does it need to init
-> more than once?
+> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-ENCLS[EINIT] is interruptible because it has such a high latency, e.g. 50k+
-cycles on success.  If an IRQ/NMI/SMI becomes pending, EINIT may fail with
-SGX_UNMASKED_EVENT so that the event can be serviced.
+thanks :-)
 
-The idea behind the double loop is to try EINIT in a tight loop, then back
-off and sleep for a while before retrying that tight inner loop.
-
-> > +			ret = sgx_einit(sigstruct, token, encl->secs.epc_page,
-> > +					mrsigner);
-> > +			if (ret == SGX_UNMASKED_EVENT)
-> > +				continue;
-> > +			else
-> > +				break;
-> > +		}
-> > +
-> > +		if (ret != SGX_UNMASKED_EVENT)
-> > +			break;
-> > +
-> > +		msleep_interruptible(SGX_EINIT_SLEEP_TIME);
-> > +
-> > +		if (signal_pending(current)) {
-> > +			ret = -ERESTARTSYS;
-> > +			goto err_out;
-> > +		}
-> > +	}
-> > +
-> > +	if (ret & ENCLS_FAULT_FLAG) {
-> > +		if (encls_failed(ret))
-> > +			ENCLS_WARN(ret, "EINIT");
-> > +
-> > +		sgx_encl_destroy(encl);
-> > +		ret = -EFAULT;
-> > +	} else if (ret) {
-> > +		pr_debug("EINIT returned %d\n", ret);
-> > +		ret = -EPERM;
-> > +	} else {
-> > +		atomic_or(SGX_ENCL_INITIALIZED, &encl->flags);
-> > +	}
-> > +
-> > +err_out:
-> > +	mutex_unlock(&encl->lock);
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
-> > + *
-> > + * @filep:	open file to /dev/sgx
-> 
-> @encl:       pointer to an enclave instance (via ioctl() file pointer)
-> 
-> > + * @arg:	userspace pointer to a struct sgx_enclave_init instance
-> > + *
-> > + * Flush any outstanding enqueued EADD operations and perform EINIT.  The
-> > + * Launch Enclave Public Key Hash MSRs are rewritten as necessary to match
-> > + * the enclave's MRSIGNER, which is caculated from the provided sigstruct.
-> > + *
-> > + * Return:
-> > + *   0 on success,
-> > + *   SGX error code on EINIT failure,
-> > + *   -errno otherwise
-> > + */
-> > +static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
-> > +{
-> > +	struct sgx_sigstruct *sigstruct;
-> > +	struct sgx_enclave_init einit;
-> > +	struct page *initp_page;
-> > +	void *token;
-> > +	int ret;
-> > +
-> > +	if (!(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
-> 
-> Might just as well check the other flags: doing EINIT on an already
-> initialized enclave - SGX_ENCL_INITIALIZED - is perhaps a nono or
-> similarly on a SGX_ENCL_DEAD enclave.
-> 
-> And you could do similar sanity checks in the other ioctl functions.
-
-Ya, as above, SGX_ENCL_INITIALIZED can be checked here.
-
-SGX_ENCL_DEAD is actually already checked in in the top level sgx_ioctl(),
-i.e. the check in sgx_encl_add_page() can technically be flat out dropped.
-
-I say "technically" because I'm a bit torn over SGX_ENCL_DEAD; encl->lock
-must be held to SGX_ENCL_DEAD (the page fault and reclaim flows rely on
-this), but as it stands today only ioctl() paths (guarded by SGX_ENCL_IOCTL)
-and sgx_release() (makes the ioctls() unreachable) set SGX_ENCL_DEAD.
-
-So it's safe to check SGX_ENCL_DEAD from ioctl() context without holding
-encl->lock, at least in the current code base, but it feels weird/sketchy.
-
-In the end I don't think I have a strong opinion.  Removing the technically
-unnecessary DEAD check in sgx_encl_add_page() is the simplest change, so it
-may make sense to do that and nothing more for initial upstreaming.  Long
-term, I fully expect we'll add paths that set SGX_ENCL_DEAD outside of
-ioctl() context, e.g. to handle EPC OOM, but it wouldn't be a bad thing to
-have a standalone commit in a future series to add DEAD checks (under
-encl->lock) in the ADD and INIT flows.
+Regards,
+Yi Liu
