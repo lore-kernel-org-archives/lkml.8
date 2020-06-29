@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09979C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A95206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2372206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467177;
-	bh=bsVnmFnwHQX1Iq9XkTHGGqBJy3pS/LOLzkSfDILiQOo=;
+	s=default; t=1593467181;
+	bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLfjskLccht/xcOF2fPiorWNsIKnRpmMR05xRUnuzwXPptu4ut+EuoRiYoRCIYwTS
-	 piuXNhnqb3LHepZgRipLHnLcnAhmsGVc64Zhmp9zsO6H0P0uAOTJiHY/aqmd5Uxsvw
-	 1XS08kaz0ysMhIsZbYM/5JqbRjQJEa8To3i/UKIs=
+	b=aqYzVeamqO+5uuMRDJmUGZi5PbB4ckd97M6HOYaAxpK9jwHQ3xf+K8ZEynLmqQSdv
+	 H40YuN+0JAPxc6inxiq0B1DRwLE1Eg9Qzzfe6LgMvTqxCragWRdfi1G5y4j9o55Z8+
+	 eSpSHnWJwPeYCVUTcjV0cnBjhlRhhGnIfEp1YYQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgF2VqQ (ORCPT
+        id S2404131AbgF2VqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726778AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFB9E246A0;
-        Mon, 29 Jun 2020 15:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFB02476B;
+        Mon, 29 Jun 2020 15:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443997;
-        bh=bsVnmFnwHQX1Iq9XkTHGGqBJy3pS/LOLzkSfDILiQOo=;
+        s=default; t=1593444085;
+        bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QUNBc7/gXtY5vLNKN9uaDm0ZamYFoLENq+MOhkv426Yd2fdjCt8TPnBd7vrGdfrAM
-         GAcpIDf4BSoXQl2DdR5uI7Q0df55XZGCF0dntPn+wn4/K1CsoMziImr/4jOq6tOM6k
-         ruQ7M9oSM9+SO1HeCxP4Wf0E6fwPoEZXgtNbQfi0=
+        b=nKvq5L/782ij95RqgY/Eb/z4sPGL/Fo6nBTHlT9nqNXcNrMDXMdc6O+DpmYMBagRG
+         hq6OHb+MQmEFwvdxazGDMX9TMvhRo/sTAX2Ar3Fohdf9Fmssgc1osWEWAqYPHHiYA7
+         GXtxjgUSL3MpfyPjfNFxlfgAGb23VnnKVni0kCTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        kernel test robot <lkp@intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 102/265] regulator: da9063: fix LDO9 suspend and warning.
-Date:   Mon, 29 Jun 2020 11:15:35 -0400
-Message-Id: <20200629151818.2493727-103-sashal@kernel.org>
+Subject: [PATCH 5.7 195/265] s390/ptrace: return -ENOSYS when invalid syscall is supplied
+Date:   Mon, 29 Jun 2020 11:17:08 -0400
+Message-Id: <20200629151818.2493727-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,43 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit d7442ba13d62de9afc4e57344a676f9f4623dcaa ]
+[ Upstream commit cd29fa798001075a554b978df3a64e6656c25794 ]
 
-Commit 99f75ce66619 ("regulator: da9063: fix suspend") converted
-the regulators to use a common (corrected) suspend bit setting but
-one of regulators (LDO9) slipped through the crack.
+The current code returns the syscall number which an invalid
+syscall number is supplied and tracing is enabled. This makes
+the strace testsuite fail.
 
-This means that the original problem was not fixed for LDO9 and
-also leads to a warning found by the test robot.
-	da9063-regulator.c:515:3: warning: initialized field overwritten
-
-Fix this by converting that regulator too like the others.
-
-Fixes: 99f75ce66619 ("regulator: da9063: fix suspend")
-Reported-by: kernel test robot <lkp@intel.com>
-
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Link: https://lore.kernel.org/r/1591959073-16792-1-git-send-email-martin.fuzzey@flowbird.group
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/da9063-regulator.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/s390/kernel/ptrace.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-index e1d6c8f6d40bb..fe65b5acaf280 100644
---- a/drivers/regulator/da9063-regulator.c
-+++ b/drivers/regulator/da9063-regulator.c
-@@ -512,7 +512,6 @@ static const struct da9063_regulator_info da9063_regulator_info[] = {
- 	},
- 	{
- 		DA9063_LDO(DA9063, LDO9, 950, 50, 3600),
--		.suspend = BFIELD(DA9063_REG_LDO9_CONT, DA9063_VLDO9_SEL),
- 	},
- 	{
- 		DA9063_LDO(DA9063, LDO11, 900, 50, 3600),
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 9eee345568890..3f29646313e82 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -838,6 +838,7 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ {
+ 	unsigned long mask = -1UL;
++	long ret = -1;
+ 
+ 	if (is_compat_task())
+ 		mask = 0xffffffff;
+@@ -854,8 +855,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 		 * debugger stored an invalid system call number. Skip
+ 		 * the system call and the system call restart handling.
+ 		 */
+-		clear_pt_regs_flag(regs, PIF_SYSCALL);
+-		return -1;
++		goto skip;
+ 	}
+ 
+ #ifdef CONFIG_SECCOMP
+@@ -871,7 +871,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 			sd.arch = AUDIT_ARCH_S390X;
+ 		}
+ 
+-		sd.nr = regs->gprs[2] & 0xffff;
++		sd.nr = regs->int_code & 0xffff;
+ 		sd.args[0] = regs->orig_gpr2 & mask;
+ 		sd.args[1] = regs->gprs[3] & mask;
+ 		sd.args[2] = regs->gprs[4] & mask;
+@@ -880,19 +880,26 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 		sd.args[5] = regs->gprs[7] & mask;
+ 
+ 		if (__secure_computing(&sd) == -1)
+-			return -1;
++			goto skip;
+ 	}
+ #endif /* CONFIG_SECCOMP */
+ 
+ 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
+-		trace_sys_enter(regs, regs->gprs[2]);
++		trace_sys_enter(regs, regs->int_code & 0xffff);
+ 
+ 
+-	audit_syscall_entry(regs->gprs[2], regs->orig_gpr2 & mask,
++	audit_syscall_entry(regs->int_code & 0xffff, regs->orig_gpr2 & mask,
+ 			    regs->gprs[3] &mask, regs->gprs[4] &mask,
+ 			    regs->gprs[5] &mask);
+ 
++	if ((signed long)regs->gprs[2] >= NR_syscalls) {
++		regs->gprs[2] = -ENOSYS;
++		ret = -ENOSYS;
++	}
+ 	return regs->gprs[2];
++skip:
++	clear_pt_regs_flag(regs, PIF_SYSCALL);
++	return ret;
+ }
+ 
+ asmlinkage void do_syscall_trace_exit(struct pt_regs *regs)
 -- 
 2.25.1
 
