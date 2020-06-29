@@ -2,121 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B70208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AE1208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459729;
+	bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YIIbiQgoo85ulOoXSs/XAY5QfZwOSyJ52/QCWG5Cff+5X+zqO3kNjRbdT3vZrtjdL
+	 ksJ/idJgDDbOS0Ybx7/BRFTJhMPePICpM5eT0RYr8JUBzUaD2r/wncDz6ZgpPKyLFs
+	 jJt7b+vIyOzTmAUVdwGckMSkycHETT7+IcpdCiwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgF2TmB (ORCPT
+        id S2387931AbgF2Tl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:01 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53093 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387848AbgF2Tlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:41:49 -0400
-Received: from oxbsgw01.schlund.de ([172.19.248.2]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MAwoL-1jfEO91yHZ-00BIvF; Mon, 29 Jun 2020 17:31:28 +0200
-Date:   Mon, 29 Jun 2020 17:31:27 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Message-ID: <1069735883.1017676.1593444687939@mailbusiness.ionos.de>
-In-Reply-To: <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
- <84270660.632865.1593072688966@mailbusiness.ionos.de>
- <20200626200815.GC2454695@iweiny-DESK2.sc.intel.com>
-Subject: Re: DMA Engine: Transfer From Userspace
+        Mon, 29 Jun 2020 15:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387849AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88F724900;
+        Mon, 29 Jun 2020 15:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444455;
+        bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bc342iEoLXa135VjLEIkGct8bRl9wte/kxHn5PIAyH71KZbbf8XMOkdhqRN2sBemF
+         XXjZZABpGbW+/poJZTLZvx7AA1JXj+IHifPBYH30l2SF8VhflWD3UJQRlBJbsi3MXc
+         61q8Vx+WVSkw0Fu42j0YP50eOz82yPTS/RX44aok=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 135/178] kprobes: Suppress the suspicious RCU warning on kprobes
+Date:   Mon, 29 Jun 2020 11:24:40 -0400
+Message-Id: <20200629152523.2494198-136-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:dABFUE9hOYEeaSPGRIAHWnjrmhG8vVCmzLaqIdCeOnnh1tiEHQI
- vdkFa/eFxsOt4s3Zfi3svuvVqRBm3WW8D/fuRMTYhg+PL9WB0KdnpooNPV03KpC6qvD5E6g
- Gz4bVWEYiyJZEpcxqPirT+lx/Ub3foXXxtgVJLcrEM+GHCgPZqj+bG/loMydZA8pNh1ojXc
- XOv4GGvT9EdYNlpQdzTQw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y7lIeaDHkvM=:jK0VZSZpSE43lB6t8f0jwC
- EKx9/u9HKjqiuANOvdCd5NxZJRSUdIeJZtKILBv9fh0Mez/Evkywa5SzbjiQ0DXCN/ggM3EI1
- NCZVsyM57982j1icauTCx+2Wy/aICTIufkT7DsdpbYdcyL8592YlOIh+rLpGjj4JyOqzVdqIZ
- kM/soseAEykH7IjIOG5bihBpxY3Clmuon/3WuKnBWYfMuwutepTt7KdFMNzkzUg7yfuDwXIZQ
- udjjWOztZnbRt6DgvF98Kgo/Cd9VvSb+GGyYbVbL548vW/c+imL2PmYjQ5Dwos/c64PYkPShL
- wzD1ltuxxUTeDrlNsUmPn00DtpxfOB3IXFh04dCjEHnwjgByUyIrxlzyaVAIhE7TLvThlE8U4
- 5PAwjtPpMG5z05SjR9DS3KRY0bP3WGNQVTQlVh07FttswcCJoKYSmtSl50TdcFd6yb5SjeZpr
- Igf2JHv6faIYyQO/MqTsYPOBR4KuScVo9r76atNRA3jtflcPq3vA5YcJSgjXKSPXZ6q3KvQUS
- BjqTd9uDrNouQwhPHgD681/oNZ0khOCX9YTCKdU/gBR5oKY8nh1CIBqYShep0xYYh/DeAQKId
- ZF7oVAr+OOONzyKwxeRxWDvm6JO0r/mbHEGaafU7R4eX4NU1zY0nfU7KLUnmw9ojoHeLoKjqs
- W4VwPiUBrEUr6wN0pi/imb59dZj8A9TiDJPIIe5TOm5tde9S1mBNvinuSuwwhgJmdp4BmNRjY
- Ssi5nCiw5qwneZbD2hj/DwIwiK4QRxTFV9yxMN6WPz4V8fKBRNsM7OJIV4CKfsMHE8CJeCdse
- ibSoDv3AnozUoTGGDvYhspytf4eZ67bXlRYllLYCI+FAqgAPec=
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-> On 26 June 2020 at 22:08 Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-> 
-> On Thu, Jun 25, 2020 at 10:11:28AM +0200, Thomas Ruf wrote:
-> > 
-> > > On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
-> > > 
-> > > 
-> > > 
-> > > 
-> > > On 6/21/2020 12:24 AM, Vinod Koul wrote:
-> > > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > >>
-> > > >>
-> > > >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > >>> Hello,
-> > > >>>
-> > > >>> is there the possibility of using a DMA engine channel from userspace?
-> > > >>>
-> > > >>> Something like:
-> > > >>> - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > >>> - read() or write() to trigger the transfer
-> > > >>>
-> > > >>
-> > > >> I may have supposedly promised Vinod to look into possibly providing
-> > > >> something like this in the future. But I have not gotten around to do that
-> > > >> yet. Currently, no such support.
-> > > > 
-> > > > And I do still have serious reservations about this topic :) Opening up
-> > > > userspace access to DMA does not sound very great from security point of
-> > > > view.
-> > > 
-> > > What about doing it with DMA engine that supports PASID? That way the user can 
-> > > really only trash its own address space and kernel is protected.
-> > 
-> > Sounds interesting! Not sure if this is really needed in that case...
-> > I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
-> 
-> FWIW there is a new pin_user_pages_fast()/unpin_user_page() interface now.
+[ Upstream commit 6743ad432ec92e680cd0d9db86cb17b949cf5a43 ]
 
-Thanks for that info. But at the moment we are mainly interested in a solution which can be easily backported to Xilinix Release 2020.1 with kernel 5.4.x where i could not find that new functionality.
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
 
-> > But i will do some checks if my code is really suitable to avoid misusage.
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
 
-Did some basic tests today and was not able to break out of my own checks done via follow_pfn() respectively get_user_pages_fast(). If this stands "advanced attacks" my proxy driver shouldn't be more dangerous as an ordinary memcpy, i know that there will always remain some doubts ;-)
+Joel suggested that we can silent that warning by passing
+lockdep_is_held() to the last argument of
+hlist_for_each_entry_rcu().
 
-best regards,
-Thomas
+Add lockdep_is_held(&kprobe_mutex) at the end of the
+hlist_for_each_entry_rcu() to suppress the warning.
+
+Link: http://lkml.kernel.org/r/158927055350.27680.10261450713467997503.stgit@devnote2
+
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/kprobes.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 195ecb955fcc5..950a5cfd262ce 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
+ 
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 lockdep_is_held(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
+ 	}
+-- 
+2.25.1
+
