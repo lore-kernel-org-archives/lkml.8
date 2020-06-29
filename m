@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D347E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467766;
-	bh=0R3XCmUNuL+kYoppJ/RgTC3SwhrEGN//D49RSvOc3oM=;
+	s=default; t=1593467769;
+	bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzzBfgK1ywi3XBo668vVvBP2X9Z5snywT0JORDcH6DaZvNsZTExePwK/nxjE3uBOe
-	 bFdxhkgpK3xd63cRe60fuJCYjKQG82Nar8jnuGpyZ+Y0YPwk3YkPTHKgJL9FAF9Ljp
-	 uaQvsuSc3C0MnYHh4ngk82u7uen/heg+0wExwgrU=
+	b=MwejtSqXWDWx/lyGCHOpblL0fJy/D/1nJwT8sU3ZT9q1WYOY2e92KUmqf3+/JQ9Gw
+	 zBqImA0oLh4ZhaEFXITf40HcQ0j6+xpajc5STOYm3xzBruEpYVINLCH6Cyy9M0eHn1
+	 Bz1efF5HKG3q+Zy/DqpGOmHfWbp7tGrNHgSBv9QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404540AbgF2V4E (ORCPT
+        id S2391537AbgF2V4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726529AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DFB5247E0;
-        Mon, 29 Jun 2020 15:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549A02472B;
+        Mon, 29 Jun 2020 15:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444148;
-        bh=0R3XCmUNuL+kYoppJ/RgTC3SwhrEGN//D49RSvOc3oM=;
+        s=default; t=1593444049;
+        bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1l35/1wE4/2lCGBGlrX/H1eAxWufWAzRnD0rftyRkOiv8aDLvgx3pWFb8uJLkIjM
-         zPqFojxz1ZUYmHLmUbPinykWWVYDeHrsr4cWd+wEjcOt4YZxKHCKZBsSPOwskAKN3G
-         s1yOZ590mmY6HmVtJ8krg6Y1/R3ACpSRkmNNFLKE=
+        b=pPCwjQXKpiVkyv1XmYU2lvdS0bsOQUKu8oAJ6JSM3k90OAbRc/FOsTg2ZYel7jXwA
+         +338EP+7h4aYYUwyW9cHpR3ABcTIgGOy4CX/eULhuRjIQqCSBM+UAxUR0F69HPp/4r
+         gfgSVGSNfxEIl3TnQtahDqa4YJKs9a5md6yWXgfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 253/265] ARM: dts: imx6ul-kontron: Move watchdog from Kontron i.MX6UL/ULL board to SoM
-Date:   Mon, 29 Jun 2020 11:18:06 -0400
-Message-Id: <20200629151818.2493727-254-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 157/265] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
+Date:   Mon, 29 Jun 2020 11:16:30 -0400
+Message-Id: <20200629151818.2493727-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,84 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: yu kuai <yukuai3@huawei.com>
 
-commit 04a2c05179b732a4c097f0a9c701ef4c9a37e1e3 upstream.
+[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
 
-The watchdog's WDOG_ANY signal is used to trigger a POR of the SoC,
-if a soft reset is issued. As the SoM hardware connects the WDOG_ANY
-and the POR signals, the watchdog node itself and the pin
-configuration should be part of the common SoM devicetree.
-Let's move it from the baseboard's devicetree to its proper place.
+if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
+have a corresponding put_device(). Thus add a jump target to fix the
+exception handling for this function implementation.
 
-Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi       | 13 -------------
- .../boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi   | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ arch/arm/mach-imx/pm-imx5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-index f05e918412027..53a25fba34f69 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-@@ -232,13 +232,6 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
+index f057df813f83a..e9962b48e30cb 100644
+--- a/arch/arm/mach-imx/pm-imx5.c
++++ b/arch/arm/mach-imx/pm-imx5.c
+@@ -295,14 +295,14 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
  
--&wdog1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_wdog>;
--	fsl,ext-reset-output;
--	status = "okay";
--};
--
- &iomuxc {
- 	pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
+ 	ocram_base = gen_pool_alloc(ocram_pool, size);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
  
-@@ -409,10 +402,4 @@
- 			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
- 		>;
- 	};
--
--	pinctrl_wdog: wdoggrp {
--		fsl,pins = <
--			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY	0x30b0
--		>;
--	};
- };
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-index a17af4d9bfdf9..fc316408721d0 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-@@ -57,6 +57,13 @@
- 	status = "okay";
- };
+ 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -312,6 +312,8 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (virt_out)
+ 		*virt_out = virt;
  
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_reset_out>;
-@@ -106,4 +113,10 @@
- 			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x1b0b0
- 		>;
- 	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
-+		>;
-+	};
- };
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
+ 
 -- 
 2.25.1
 
