@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E980C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8246206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E171206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467603;
-	bh=0RjzG34x4n3ocMS+b94pUtVOFEowTxSu6nALCesgX8s=;
+	s=default; t=1593467608;
+	bh=qk3PqaYN3K8ht8hxfcYu2z1uz6TSo+5efZS26xagav0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQBnSp1C4HaVMvVDKi4eFmQiUuPtSOr7Z0eIWFlLGyNCaaiJBK9We9c9tEemyOi+A
-	 a+hZo2d5ByKUe5vtqqYOtGSwMv97WnDWe5LXxEqtbxNkADbyMPVzVR0p9USmBNsPcX
-	 IU8xtavkLT0m0ob3ilBBamHiudr79PB+ZKZK0+jQ=
+	b=UfnzQNOE/s5b1rMQNpkKRw2RJPJGq4Z/Rz/+z/cY4Xhehm0ewVCaxGKUMv2RCTJS/
+	 ZfnDcagmWn7tUF+5UrKKHA2YkbLKPpF10GljWOQob2CsJIMowr/bYezJY/EXpEC79D
+	 oKRkyArZTfhfjvqJCvdoSCDyrYZFz72nAEAH5o4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404626AbgF2VxW (ORCPT
+        id S2404633AbgF2Vx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726611AbgF2Sfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:37 -0400
+        id S1726612AbgF2Sfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08C7F24248;
-        Mon, 29 Jun 2020 15:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A384247C7;
+        Mon, 29 Jun 2020 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443959;
-        bh=0RjzG34x4n3ocMS+b94pUtVOFEowTxSu6nALCesgX8s=;
+        s=default; t=1593444133;
+        bh=qk3PqaYN3K8ht8hxfcYu2z1uz6TSo+5efZS26xagav0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wfwc5suGqvc9kCKRuPU+/dxaDfqXtmXNtwh3SYdLBAhZngjOY7l0Gj9hs68ukOdzd
-         EnMahw7Rz1SjDKaoVLP2YR9vnxnDnZ6DwkzKSK0jHeEH/YVcoYwTmmKQ94KI5t7ttk
-         udzGsKngxyoL1gxyDKOb1Sp+EXrtydNEr7PTs8Js=
+        b=MAzbI5hUwtxWqWOBjaiQ5Z0qV2LR+jj0DChZ5qcqa+s476OiZOEai4vgt0TM7V+hk
+         ccpoi4Hg7XMdgWHYbDQCDDyS+givmW+GIBUapDuxIdeUpcVo8wZ8om62JavuSXVAEL
+         YUhrfLyauB90quixT14Ce18he93TGvV0VmhwgIok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 062/265] Revert "usb: dwc3: exynos: Add support for Exynos5422 suspend clk"
-Date:   Mon, 29 Jun 2020 11:14:55 -0400
-Message-Id: <20200629151818.2493727-63-sashal@kernel.org>
+Subject: [PATCH 5.7 240/265] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2 voltage range
+Date:   Mon, 29 Jun 2020 11:17:53 -0400
+Message-Id: <20200629151818.2493727-241-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,53 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Moon <linux.amoon@gmail.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit ad38beb373a14e082f4e64b68c0b6e6b09764680 upstream.
+commit cfb12c8952f617df58d73d24161e539a035d82b0 upstream.
 
-This reverts commit 07f6842341abe978e6375078f84506ec3280ece5.
+Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
+(1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mn
+datasheet as the below warning log in kernel:
 
-Since SCLK_SCLK_USBD300 suspend clock need to be configured
-for phy module, I wrongly mapped this clock to DWC3 code.
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 07f6842341ab ("usb: dwc3: exynos: Add support for Exynos5422 suspend clk")
-Link: https://lore.kernel.org/r/20200623074637.756-1-linux.amoon@gmail.com
+Fixes: 3e44dd09736d ("arm64: dts: imx8mn-ddr4-evk: Add rohm,bd71847 PMIC support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/dwc3/dwc3-exynos.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 48b68b6f0dc82..90bb022737da8 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -162,12 +162,6 @@ static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
- 	.suspend_clk_idx = -1,
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 2497eebb57393..fe49dbc535e1f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -101,7 +101,7 @@
  
--static const struct dwc3_exynos_driverdata exynos5420_drvdata = {
--	.clk_names = { "usbdrd30", "usbdrd30_susp_clk"},
--	.num_clks = 2,
--	.suspend_clk_idx = 1,
--};
--
- static const struct dwc3_exynos_driverdata exynos5433_drvdata = {
- 	.clk_names = { "aclk", "susp_clk", "pipe_pclk", "phyclk" },
- 	.num_clks = 4,
-@@ -184,9 +178,6 @@ static const struct of_device_id exynos_dwc3_match[] = {
- 	{
- 		.compatible = "samsung,exynos5250-dwusb3",
- 		.data = &exynos5250_drvdata,
--	}, {
--		.compatible = "samsung,exynos5420-dwusb3",
--		.data = &exynos5420_drvdata,
- 	}, {
- 		.compatible = "samsung,exynos5433-dwusb3",
- 		.data = &exynos5433_drvdata,
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -109,7 +109,7 @@
+ 
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
 -- 
 2.25.1
 
