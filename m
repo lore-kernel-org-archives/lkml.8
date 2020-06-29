@@ -2,79 +2,152 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B142CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2001AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5E6206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC7D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464843;
-	bh=luNaPCU/6jbnS0K+V5U2aqJY+/BTW9KAGTO5MmkTewg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qqIQGEjsqThQceWEsLcIzFlkrgj2vXWMm4eukB5K2Tt16vhqwYTfsqfS2911IZnBY
-	 Jfr4IMkUwL/xu3APLn0nCKsLd63w0NYc6LJ35ik4FXdVuYM7iTRxhMdP+YqVntEdUt
-	 tmOuwI1J+ds/KM5VKD7NDV0xJj5SM6/oNKMxdXdU=
+	s=default; t=1593464845;
+	bh=OnfXXT+AQvrD+v/2vMYn5PqETvnzchA6CKbftUpsUns=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IXAFg2ShQ1JNp8qC4dHjcx7McX8Op8+HkqM0XglzLqU3cpKYKc2tuxzDXmdxhcqll
+	 iloOzXBKAq26upwtJkub44exsX/feqceENty30Q2EfiPmHjGnFj60nzMOew6dt9DcR
+	 vHXJ9dd/9zocq4y8NeMDJPMXqmw0QE5eUxanh1UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390365AbgF2VHW (ORCPT
+        id S2388217AbgF2VHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730953AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730952AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:17 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D75125598;
-        Mon, 29 Jun 2020 16:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51091254C1;
+        Mon, 29 Jun 2020 15:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593448949;
-        bh=luNaPCU/6jbnS0K+V5U2aqJY+/BTW9KAGTO5MmkTewg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xVG63WHkl2xs6+ia1HETs24YSoPxEOtOo15i0bFAo8HQPhr0Anl1yaLLPGXv6teOz
-         fFNJADDTapRPEgPSm8b1NGC0958Mp8t6wlOsYCdm4eWlA/3LwvRaVZ2HJVdBnjd7Bb
-         8wQc3cho/y49Go37ii4Z0xAIcUtAP++zIf96px/A=
-Date:   Mon, 29 Jun 2020 09:42:27 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+95910cea1a7ad8850a0f@syzkaller.appspotmail.com>
-Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- __syscall_return_slowpath
-Message-ID: <20200629164227.GB1752982@gmail.com>
-References: <00000000000077c48b05a93b96fa@google.com>
+        s=default; t=1593446017;
+        bh=OnfXXT+AQvrD+v/2vMYn5PqETvnzchA6CKbftUpsUns=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rb1BzWSrIWEiUyIkWEz3GPQdWFibicExBLA9UB69/Hee8OFVLbdhf9CLY+LHSZFFv
+         SaiWa0OTxpynsAtwFVW9+EPwlY77HI8L90lWVgTRYiefr8lRIApVNtekaKQgQ2uTqq
+         GkNcwJxSR89z+cI9tfpJgxYpbg4TXKz551ddU2s4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 024/135] serial: amba-pl011: Make sure we initialize the port.lock spinlock
+Date:   Mon, 29 Jun 2020 11:51:18 -0400
+Message-Id: <20200629155309.2495516-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000077c48b05a93b96fa@google.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:31:16AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=116abdd3100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-> dashboard link: https://syzkaller.appspot.com/bug?extid=95910cea1a7ad8850a0f
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> userspace arch: i386
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17020755100000
+From: John Stultz <john.stultz@linaro.org>
 
-Looks like ioctl$FBIOPUT_VSCREENINFO on /dev/fb0 striking again.  There are like
-20-30 open syzbot reports for this.
+[ Upstream commit 8508f4cba308f785b2fd4b8c38849c117b407297 ]
 
-See https://lkml.kernel.org/lkml/000000000000ff323f05a053100c@google.com/T/#u
-for some previous discussion.
+Valentine reported seeing:
 
-#syz dup: general protection fault in syscall_return_slowpath
+[    3.626638] INFO: trying to register non-static key.
+[    3.626639] the code is fine but needs lockdep annotation.
+[    3.626640] turning off the locking correctness validator.
+[    3.626644] CPU: 7 PID: 51 Comm: kworker/7:1 Not tainted 5.7.0-rc2-00115-g8c2e9790f196 #116
+[    3.626646] Hardware name: HiKey960 (DT)
+[    3.626656] Workqueue: events deferred_probe_work_func
+[    3.632476] sd 0:0:0:0: [sda] Optimal transfer size 8192 bytes not a multiple of physical block size (16384 bytes)
+[    3.640220] Call trace:
+[    3.640225]  dump_backtrace+0x0/0x1b8
+[    3.640227]  show_stack+0x20/0x30
+[    3.640230]  dump_stack+0xec/0x158
+[    3.640234]  register_lock_class+0x598/0x5c0
+[    3.640235]  __lock_acquire+0x80/0x16c0
+[    3.640236]  lock_acquire+0xf4/0x4a0
+[    3.640241]  _raw_spin_lock_irqsave+0x70/0xa8
+[    3.640245]  uart_add_one_port+0x388/0x4b8
+[    3.640248]  pl011_register_port+0x70/0xf0
+[    3.640250]  pl011_probe+0x184/0x1b8
+[    3.640254]  amba_probe+0xdc/0x180
+[    3.640256]  really_probe+0xe0/0x338
+[    3.640257]  driver_probe_device+0x60/0xf8
+[    3.640259]  __device_attach_driver+0x8c/0xd0
+[    3.640260]  bus_for_each_drv+0x84/0xd8
+[    3.640261]  __device_attach+0xe4/0x140
+[    3.640263]  device_initial_probe+0x1c/0x28
+[    3.640265]  bus_probe_device+0xa4/0xb0
+[    3.640266]  deferred_probe_work_func+0x7c/0xb8
+[    3.640269]  process_one_work+0x2c0/0x768
+[    3.640271]  worker_thread+0x4c/0x498
+[    3.640272]  kthread+0x14c/0x158
+[    3.640275]  ret_from_fork+0x10/0x1c
+
+Which seems to be due to the fact that after allocating the uap
+structure, nothing initializes the spinlock.
+
+Its a little confusing, as uart_port_spin_lock_init() is one
+place where the lock is supposed to be initialized, but it has
+an exception for the case where the port is a console.
+
+This makes it seem like a deeper fix is needed to properly
+register the console, but I'm not sure what that entails, and
+Andy suggested that this approach is less invasive.
+
+Thus, this patch resolves the issue by initializing the spinlock
+in the driver, and resolves the resulting warning.
+
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-serial@vger.kernel.org
+Reported-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-and-tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lore.kernel.org/r/20200428184050.6501-1-john.stultz@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/serial/amba-pl011.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 899a77187bdea..c5da46f7b9093 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2323,6 +2323,7 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
+ 	uap->port.fifosize = uap->fifosize;
+ 	uap->port.flags = UPF_BOOT_AUTOCONF;
+ 	uap->port.line = index;
++	spin_lock_init(&uap->port.lock);
+ 
+ 	amba_ports[index] = uap;
+ 
+-- 
+2.25.1
+
