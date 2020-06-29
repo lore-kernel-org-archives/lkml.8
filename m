@@ -2,164 +2,158 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49850C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA9F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hJloRbJx"
+	by mail.kernel.org (Postfix) with ESMTP id 3587E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgF2S5a (ORCPT
+        id S1730110AbgF2S5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:57:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
+        Mon, 29 Jun 2020 14:57:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57279 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgF2S5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:57:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593457045; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=no+lY7+XNcfI1t+JikLNx6A15a/ghQbWaISNj3s3yLs=; b=hJloRbJx3cD1r0+Hj70xF6KpO2OxoLooM20U5tktDqlGsWw8aWD8aMHMCu2Gd8SBGEiem+lv
- 7i6jskiXoI36JkoW3Tv24q86NyFpC1mjCkE1Jdkme+6h09+8f/s2LA/Uovkw+7gkIIJQeqGm
- BdqByh2unJ7amYxN85s8C/Y7I6I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5efa195af3deea03f3cded9d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE0DAC433CB; Mon, 29 Jun 2020 16:39:54 +0000 (UTC)
-Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E9F8CC43395;
-        Mon, 29 Jun 2020 16:39:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E9F8CC43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 5/9] bus: mhi: core: Use generic name field for an MHI device
-Date:   Mon, 29 Jun 2020 09:39:38 -0700
-Message-Id: <1593448782-8385-6-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+        id S1729847AbgF2S5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:57:33 -0400
+IronPort-SDR: 6vsMOgbGYcMt1ZHGcMZSH+75h2h0ld/P6ibxsCj3/Gnyp8RzoS9kxsqZvLp3+QG7O4O9Dq2fJH
+ PN/yM3eh5T/A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="230816141"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="230816141"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 08:12:12 -0700
+IronPort-SDR: j2KamSBj8xliJFX76goLSWvtUaCr1ceFqJcdJUpb5K/K1mEEwtccZaF4zdMF9IvsBvgRkEjMiw
+ uzCCpDkS/bhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="318198466"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 29 Jun 2020 08:11:58 -0700
+Received: from [10.249.227.168] (abudanko-mobl.ccr.corp.intel.com [10.249.227.168])
+        by linux.intel.com (Postfix) with ESMTP id 491A9580107;
+        Mon, 29 Jun 2020 08:11:53 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+ <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+ <20200625171405.GL2719003@krava>
+ <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
+ <20200626093745.GM2719003@krava>
+ <6582201a-9570-709f-f6e9-5a644296f49d@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b2a868bb-b434-7814-d577-944efc5369aa@linux.intel.com>
+Date:   Mon, 29 Jun 2020 18:11:52 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <6582201a-9570-709f-f6e9-5a644296f49d@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An MHI device is not necessarily associated with only channels as we can
-have one associated with the controller itself. Hence, the chan_name
-field within the mhi_device structure should instead be replaced with a
-generic name to accurately reflect any type of MHI device.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- drivers/bus/mhi/core/init.c | 5 +++--
- drivers/bus/mhi/core/main.c | 6 +++---
- include/linux/mhi.h         | 8 ++++----
- 3 files changed, 10 insertions(+), 9 deletions(-)
+On 26.06.2020 13:06, Alexey Budankov wrote:
+> 
+> On 26.06.2020 12:37, Jiri Olsa wrote:
+>> On Thu, Jun 25, 2020 at 10:32:29PM +0300, Alexey Budankov wrote:
+>>>
+>>> On 25.06.2020 20:14, Jiri Olsa wrote:
+>>>> On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
+>>>>>
+>>>>> On 17.06.2020 11:35, Alexey Budankov wrote:
+>>>>>>
+>>>>>> Skip fds with zeroed revents field from count and avoid fds moving
+>>>>>> at fdarray__filter() call so fds indices returned by fdarray__add()
+>>>>>> call stay the same and can be used for direct access and processing
+>>>>>> of fd revents status field at entries array of struct fdarray object.
+>>>>>>
+>>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>>>> ---
+>>>>>>  tools/lib/api/fd/array.c   | 11 +++++------
+>>>>>>  tools/perf/tests/fdarray.c | 20 ++------------------
+>>>>>>  2 files changed, 7 insertions(+), 24 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+>>>>>> index 58d44d5eee31..97843a837370 100644
+>>>>>> --- a/tools/lib/api/fd/array.c
+>>>>>> +++ b/tools/lib/api/fd/array.c
+>>>>>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>>>>>>  		return 0;
+>>>>>>  
+>>>>>>  	for (fd = 0; fd < fda->nr; ++fd) {
+>>>>>> +		if (!fda->entries[fd].revents)
+>>>>>> +			continue;
+>>>>>> +
+>>>>>
+>>>>> So it looks like this condition also filters out non signaling events fds, not only
+>>>>> control and others fds, and this should be somehow avoided so such event related fds
+>>>>> would be counted. Several options have been proposed so far:
+>>>>>
+>>>>> 1) Explicit typing of fds via API extension and filtering based on the types:
+>>>>>    a) with separate fdarray__add_stat() call
+>>>>>    b) with type arg of existing fdarray__add() call
+>>>>>    c) various memory management design is possible
+>>>>>
+>>>>> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
+>>>>>    - looks more like a hack than a designed solution
+>>>>>
+>>>>> 3) Rewrite of fdarray class to allocate separate object for every added fds
+>>>>>    - can be replaced with nonscrewing of fds by __filter()
+>>>>>
+>>>>> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
+>>>>>    - seems to have corner cases and thus not applicable
+>>>>>
+>>>>> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
+>>>>>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
+>>>>>
+>>>>> 6) Rewrite of fdarray class on epoll() call basis
+>>>>>    - introduces new scalability restrictions for Perf tool
+>>>>
+>>>> hum, how many fds for polling do you expect in your workloads?
+>>>
+>>> Currently it is several hundreds so default of 1K is easily hit and 
+>>> "Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
+>>> recommends:
+>>>
+>>> soft nofile 65535
+>>> hard nofile 65535
+>>
+>> I'm confused, are you talking about file descriptors limit now?
+>> this wont be affected by epoll change.. what do I miss?
+> 
+> Currently there is already uname -n limit on the amount of open file descriptors
+> and Perf tool process is affected by that limit.
+> 
+> Moving to epoll() will impose one more max_user_watches limit and that can additionally
+> confine Perf applicability even though default value on some machines currently
+> is high enough.
 
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index e43a190..e2011ec 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -904,6 +904,7 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
- 	mhi_dev->dev_type = MHI_DEVICE_CONTROLLER;
- 	mhi_dev->mhi_cntrl = mhi_cntrl;
- 	dev_set_name(&mhi_dev->dev, "%s", dev_name(mhi_cntrl->cntrl_dev));
-+	mhi_dev->name = dev_name(mhi_cntrl->cntrl_dev);
- 
- 	/* Init wakeup source */
- 	device_init_wakeup(&mhi_dev->dev, true);
-@@ -1249,7 +1250,7 @@ static int mhi_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	struct mhi_device *mhi_dev = to_mhi_device(dev);
- 
- 	return add_uevent_var(env, "MODALIAS=" MHI_DEVICE_MODALIAS_FMT,
--					mhi_dev->chan_name);
-+					mhi_dev->name);
- }
- 
- static int mhi_match(struct device *dev, struct device_driver *drv)
-@@ -1266,7 +1267,7 @@ static int mhi_match(struct device *dev, struct device_driver *drv)
- 		return 0;
- 
- 	for (id = mhi_drv->id_table; id->chan[0]; id++)
--		if (!strcmp(mhi_dev->chan_name, id->chan)) {
-+		if (!strcmp(mhi_dev->name, id->chan)) {
- 			mhi_dev->id = id;
- 			return 1;
- 		}
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 8d6ec34..3af0ce6 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -249,7 +249,7 @@ int mhi_destroy_device(struct device *dev, void *data)
- 		put_device(&mhi_dev->dl_chan->mhi_dev->dev);
- 
- 	dev_dbg(&mhi_cntrl->mhi_dev->dev, "destroy device for chan:%s\n",
--		 mhi_dev->chan_name);
-+		 mhi_dev->name);
- 
- 	/* Notify the client and remove the device from MHI bus */
- 	device_del(dev);
-@@ -327,10 +327,10 @@ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
- 		}
- 
- 		/* Channel name is same for both UL and DL */
--		mhi_dev->chan_name = mhi_chan->name;
-+		mhi_dev->name = mhi_chan->name;
- 		dev_set_name(&mhi_dev->dev, "%s_%s",
- 			     dev_name(mhi_cntrl->cntrl_dev),
--			     mhi_dev->chan_name);
-+			     mhi_dev->name);
- 
- 		/* Init wakeup source if available */
- 		if (mhi_dev->dl_chan && mhi_dev->dl_chan->wake_capable)
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index b008914..7ed785e 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -436,10 +436,10 @@ struct mhi_controller {
- };
- 
- /**
-- * struct mhi_device - Structure representing a MHI device which binds
-- *                     to channels
-+ * struct mhi_device - Structure representing an MHI device which binds
-+ *                     to channels or is associated with controllers
-  * @id: Pointer to MHI device ID struct
-- * @chan_name: Name of the channel to which the device binds
-+ * @name: Name of the associated MHI device
-  * @mhi_cntrl: Controller the device belongs to
-  * @ul_chan: UL channel for the device
-  * @dl_chan: DL channel for the device
-@@ -451,7 +451,7 @@ struct mhi_controller {
-  */
- struct mhi_device {
- 	const struct mhi_device_id *id;
--	const char *chan_name;
-+	const char *name;
- 	struct mhi_controller *mhi_cntrl;
- 	struct mhi_chan *ul_chan;
- 	struct mhi_chan *dl_chan;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Prior making v9 I would prefer to agree on some design to be implemented in order to
+avoid guessing and redundant reiterating.
 
+Options that I see as good balanced ones are 1) or 5), + non screwing of fds to fix
+staleness of pos(=fdarray__add()).
+
+Are there any thoughts so far?
+
+~Aleksei
