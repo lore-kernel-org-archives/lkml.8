@@ -2,102 +2,132 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F66C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FE8C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334C52053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DEE2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eVgVYnsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgF2TEy (ORCPT
+        id S1730449AbgF2TE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:04:58 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:48704 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730681AbgF2TEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:04:54 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41098 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730647AbgF2TEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:04:48 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D4EFF200F30;
-        Mon, 29 Jun 2020 08:05:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 13A74200FB7;
-        Mon, 29 Jun 2020 08:05:47 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 630294032B;
-        Mon, 29 Jun 2020 14:05:34 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
-        sboyd@kernel.org, oleksandr.suvorov@toradex.com,
-        stefan.agner@toradex.com, arnd@arndb.de, peng.fan@nxp.com,
-        abel.vesa@nxp.com, aisheng.dong@nxp.com, fugang.duan@nxp.com,
-        daniel.baluta@nxp.com, yuehaibing@huawei.com, sfr@canb.auug.org.au,
-        viro@zeniv.linux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 00/10] Support building i.MX8 SoCs clock driver as module
-Date:   Mon, 29 Jun 2020 13:53:52 +0800
-Message-Id: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id AEAE920B4901;
+        Mon, 29 Jun 2020 07:16:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEAE920B4901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593440177;
+        bh=v+wyGBDonImB9MBWCw9EMxRuWEDmYg128Fe9bnY0g6c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eVgVYnscENhuNhNQTyhZbFymcwHwtaCB1JVO/5//WlJM4Nv5RhfXHxEmzNS8HBHRk
+         p5XfObD9Ymg9erl91qvwxM3XsQMB/o/hLnkyCgNzIHXK+B6Dg2Bykqevr0UVq7cUGd
+         ArzJcUXJf0dxujES9z46s7zXvQxC856nBBvZzEaE=
+Date:   Mon, 29 Jun 2020 09:16:14 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
+ conditional into ima_validate_rule()
+Message-ID: <20200629141614.GD4694@sequoia>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+ <0e7012e7-e1df-466d-9d51-a691f779570a@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e7012e7-e1df-466d-9d51-a691f779570a@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nowdays, there are more and more requirements of building SoC specific drivers
-as modules, such as Android GKI (generic kernel image), this patch set supports
-building i.MX8 SoCs clock drivers as modules, including i.MX8MQ/MM/MN/MP/QXP,
-the common clock modules are: mxc-clk.ko for i.MX8MQ/MM/MN/MP, mxc-clk-scu.ko
-for i.MX8QXP and later SoCs with SCU inside, normally, each platform can ONLY
-insmod 1 common i.MX clock driver and its own SoC clock driver.
+On 2020-06-27 16:49:46, Lakshmi Ramasubramanian wrote:
+> On 6/26/20 3:38 PM, Tyler Hicks wrote:
+> 
+> > Use ima_validate_rule() to ensure that the combination of a hook
+> > function and the keyrings conditional is valid and that the keyrings
+> > conditional is not specified without an explicit KEY_CHECK func
+> > conditional. This is a code cleanup and has no user-facing change.
+> 
+> In addition to checking for func=KEY_CHECK and the keyrings conditional, the
+> patch also validates the flags for other IMA hooks (such as
+> KEXEC_KERNEL_CHECK, POLICY_CHECK, etc.) Would be good to mention that in the
+> patch description.
 
-Since i.MX common clk driver will support module build and no longer selected
-by default, so for i.MX ARMv7 platforms, need to manually select it to make
-build pass.
+It actually doesn't do any additional validation of other IMA hooks at
+this time. That check on entry->flags is an allowlist of every possible
+conditional flag except IMA_KEYRINGS. The ima_parse_rule() function is
+already validating all of these conditional flags.
 
-Changes since V2:
-	- fix __setup_param() instead of handling module build inside clk driver;
-	- improve makefile format to include each file in separated line;
-	- add linux/export.h where necessary.
+Tyler
 
-Anson Huang (10):
-  clk: composite: Export clk_hw_register_composite()
-  init.h: Fix the __setup_param() macro for module build
-  ARM: imx: Select MXC_CLK for each SoC
-  clk: imx: Support building SCU clock driver as module
-  clk: imx: Support building i.MX common clock driver as module
-  clk: imx8mm: Support module build
-  clk: imx8mn: Support module build
-  clk: imx8mp: Support module build
-  clk: imx8mq: Support module build
-  clk: imx8qxp: Support module build
-
- arch/arm/mach-imx/Kconfig          | 11 +++++++++
- drivers/clk/clk-composite.c        |  1 +
- drivers/clk/imx/Kconfig            | 22 ++++++++++--------
- drivers/clk/imx/Makefile           | 46 +++++++++++++++++++-------------------
- drivers/clk/imx/clk-composite-8m.c |  2 ++
- drivers/clk/imx/clk-cpu.c          |  2 ++
- drivers/clk/imx/clk-frac-pll.c     |  2 ++
- drivers/clk/imx/clk-gate2.c        |  2 ++
- drivers/clk/imx/clk-imx8mm.c       |  1 +
- drivers/clk/imx/clk-imx8mn.c       |  1 +
- drivers/clk/imx/clk-imx8mp.c       |  1 +
- drivers/clk/imx/clk-imx8mq.c       |  1 +
- drivers/clk/imx/clk-imx8qxp-lpcg.c |  1 +
- drivers/clk/imx/clk-imx8qxp.c      |  1 +
- drivers/clk/imx/clk-lpcg-scu.c     |  2 ++
- drivers/clk/imx/clk-pll14xx.c      |  5 +++++
- drivers/clk/imx/clk-scu.c          |  5 +++++
- drivers/clk/imx/clk-sscg-pll.c     |  2 ++
- drivers/clk/imx/clk.c              | 20 ++++++++++++-----
- include/linux/init.h               |  2 +-
- 20 files changed, 91 insertions(+), 39 deletions(-)
-
--- 
-2.7.4
-
+> 
+>  -lakshmi
+> 
+> > 
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> > 
+> > * v2
+> >    - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
+> >      IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
+> >      present in the rule entry flags for non-buffer hook functions.
+> > 
+> >   security/integrity/ima/ima_policy.c | 13 +++++++++++--
+> >   1 file changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > index 8cdca2399d59..43d49ad958fb 100644
+> > --- a/security/integrity/ima/ima_policy.c
+> > +++ b/security/integrity/ima/ima_policy.c
+> > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> >   		case KEXEC_KERNEL_CHECK:
+> >   		case KEXEC_INITRAMFS_CHECK:
+> >   		case POLICY_CHECK:
+> > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
+> > +					     IMA_PERMIT_DIRECTIO |
+> > +					     IMA_MODSIG_ALLOWED |
+> > +					     IMA_CHECK_BLACKLIST))
+> > +				return false;
+> > +
+> >   			break;
+> >   		case KEXEC_CMDLINE:
+> >   			if (entry->action & ~(MEASURE | DONT_MEASURE))
+> > @@ -1027,7 +1036,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> >   		default:
+> >   			return false;
+> >   		}
+> > -	}
+> > +	} else if (entry->flags & IMA_KEYRINGS)
+> > +		return false;
+> >   	return true;
+> >   }
+> > @@ -1209,7 +1219,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+> >   			keyrings_len = strlen(args[0].from) + 1;
+> >   			if ((entry->keyrings) ||
+> > -			    (entry->func != KEY_CHECK) ||
+> >   			    (keyrings_len < 2)) {
+> >   				result = -EINVAL;
+> >   				break;
+> > 
