@@ -2,221 +2,104 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07CDD2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AB320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457613;
+	bh=moWSrIfU+P1Yxb27qSo8YJtpW3dFfDsu52598MoiYoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tmVgWoOxQNKau2ScXhrM7XrCIQ8AsILZFBmB2oxMBECodC/NrNz+8Z/GejWrREtrn
+	 JA8xL6qKAiPcR+b5YjiP5xiUP9zEuwtC7/Sc5gCCqQ6qn43dI8WER1LF0DrOtCdql+
+	 Qrg0X50wJIW8dnpwXtTVwFBZyvqsMxSz5isNQMX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgF2TGi (ORCPT
+        id S1730809AbgF2TGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:38 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62620 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbgF2TGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:34 -0400
-IronPort-SDR: FIGKWO91R3zr8k5X9AUH4xn6JFnFDqeYWRqHIwlD+n9oCePsMtFbXSHd+s1HxLMFWEvyTWOrRf
- d65IKmnryDug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126075726"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="126075726"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:20:38 -0700
-IronPort-SDR: NDYKaM6CLSGEW0MTqi9U3mVb3TT9hfe/kst4wiBSW3tvGIgJ74WE04p8LkizDDC2fNYu4bstem
- M5i03pX40wDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="303001173"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Jun 2020 02:20:35 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] perf record: Fix duplicated sideband events with Intel PT system wide tracing
-Date:   Mon, 29 Jun 2020 12:19:51 +0300
-Message-Id: <20200629091955.17090-3-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629091955.17090-1-adrian.hunter@intel.com>
-References: <20200629091955.17090-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Mon, 29 Jun 2020 15:06:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39070 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbgF2TGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q5so17657430wru.6;
+        Mon, 29 Jun 2020 12:06:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9kB1Yqxehc4mOOV+E+s8ly+87mL5I0qDl2+46tT33LU=;
+        b=FEd80YYsVCJ6pf74frJNQnajWBRVFV0QMHP/qy3W0W9HXQvypW8nvMlgqUbUnomnHi
+         O8YsWoOkY/0gsW1wuFENzG/2p0MVio6drckkCAWQhUX6YDslI8N05qYfTEXdmhP050ez
+         bhhL/WcbK3Get7wdtSpsPanlCdnMclxEMNQpfZM5K1TVukzTINfUA72OwM6DkmfPxH9t
+         /nSv3f411beyEx6DfQgAOSHjXwM11BzG+OadcwuOj4GrnqcsG3ZF6B8VfA3RAP+dKogT
+         E1J4xLWzGLTYfhBLP5IHDZsHCJwR02k3Inzl4qa08HVYqt+obUA97UjS6qAGnkjPz7dV
+         9u+w==
+X-Gm-Message-State: AOAM532gqGscXvj6dC9M5WbWWjQSodQTDCt6C2jhKsLmH65iLW6oWn1k
+        /XtV0uL03teTbKbOIBhaR8A=
+X-Google-Smtp-Source: ABdhPJzQcaoC3As2bwvXjFpEkhrTsir6J88mWLOgOu4Igyehnga3Bo7Tm9krH0O+TUUtcdYBw1n/EA==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr19710508wrm.390.1593457606425;
+        Mon, 29 Jun 2020 12:06:46 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id e17sm728179wrr.88.2020.06.29.12.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:06:45 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 19:06:44 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andres Beltran <t-mabelt@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
+Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Message-ID: <20200629190644.hlem6jskyx26csaj@liuwe-devbox-debian-v2>
+References: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0a892c1c9472 ("perf record: Add dummy event during system wide
-synthesis") reveals an issue with Intel PT system wide tracing.
-Specifically that Intel PT already adds a dummy tracking event, and it is
-not the first event.  Adding another dummy tracking event causes duplicated
-sideband events.  Fix by checking for an existing dummy tracking event
-first.
+On Mon, Jun 29, 2020 at 06:19:46PM +0000, Andres Beltran wrote:
+[...]
+> > >  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
+> > > +
+> > > +/*
+> > > + * vmbus_next_request_id - Returns a new request id. It is also
+> > > + * the index at which the guest memory address is stored.
+> > > + * Uses a spin lock to avoid race conditions.
+> > > + * @rqstor: Pointer to the requestor struct
+> > > + * @rqst_add: Guest memory address to be stored in the array
+> > > + */
+> > > +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
+> > > +{
+> > > +	unsigned long flags;
+> > > +	u64 current_id;
+> > > +
+> > > +	spin_lock_irqsave(&rqstor->req_lock, flags);
+> > 
+> > Do you really need the irqsave variant here? I.e. is there really a
+> > chance this code is reachable from an interrupt handler?
+> 
+> Other VMBus drivers will also need to use this functionality, and
+> some of them will be called with interrupts disabled. So, I think
+> we should keep the irqsave variant here.
+> 
 
-Example showing duplicated switch events:
+Okay. This makes sense.
 
- Before:
-
-   # perf record -a -e intel_pt//u uname
-   Linux
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.895 MB perf.data ]
-   # perf script --no-itrace --show-switch-events | head
-            swapper     0 [007]  6390.516222: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:    11/11
-            swapper     0 [007]  6390.516222: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:    11/11
-          rcu_sched    11 [007]  6390.516223: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0
-          rcu_sched    11 [007]  6390.516224: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0
-          rcu_sched    11 [007]  6390.516227: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0
-          rcu_sched    11 [007]  6390.516227: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0
-            swapper     0 [007]  6390.516228: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:    11/11
-            swapper     0 [007]  6390.516228: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:    11/11
-            swapper     0 [002]  6390.516415: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  5556/5559
-            swapper     0 [002]  6390.516416: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  5556/5559
-
- After:
-
-   # perf record -a -e intel_pt//u uname
-   Linux
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.868 MB perf.data ]
-   #  perf script --no-itrace --show-switch-events | head
-            swapper     0 [005]  6450.567013: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  7179/7181
-               perf  7181 [005]  6450.567014: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0
-               perf  7181 [005]  6450.567028: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0
-            swapper     0 [005]  6450.567029: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  7179/7181
-            swapper     0 [005]  6450.571699: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:    11/11
-          rcu_sched    11 [005]  6450.571700: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0
-          rcu_sched    11 [005]  6450.571702: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0
-            swapper     0 [005]  6450.571703: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:    11/11
-            swapper     0 [005]  6450.579703: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:    11/11
-          rcu_sched    11 [005]  6450.579704: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/builtin-record.c | 18 +++++++++---------
- tools/perf/util/evlist.c    | 12 ++++++++++++
- tools/perf/util/evlist.h    |  1 +
- tools/perf/util/evsel.c     |  8 +-------
- tools/perf/util/evsel.h     |  6 ++++++
- 5 files changed, 29 insertions(+), 16 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e108d90ae2ed..a37e7910e9e9 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -852,20 +852,20 @@ static int record__open(struct record *rec)
- 	 * event synthesis.
- 	 */
- 	if (opts->initial_delay || target__has_cpu(&opts->target)) {
--		if (perf_evlist__add_dummy(evlist))
--			return -ENOMEM;
-+		pos = perf_evlist__get_tracking_event(evlist);
-+		if (!evsel__is_dummy_event(pos)) {
-+			/* Set up dummy event. */
-+			if (perf_evlist__add_dummy(evlist))
-+				return -ENOMEM;
-+			pos = evlist__last(evlist);
-+			perf_evlist__set_tracking_event(evlist, pos);
-+		}
- 
--		/* Disable tracking of mmaps on lead event. */
--		pos = evlist__first(evlist);
--		pos->tracking = 0;
--		/* Set up dummy event. */
--		pos = evlist__last(evlist);
--		pos->tracking = 1;
- 		/*
- 		 * Enable the dummy event when the process is forked for
- 		 * initial_delay, immediately for system wide.
- 		 */
--		if (opts->initial_delay)
-+		if (opts->initial_delay && !pos->immediate)
- 			pos->core.attr.enable_on_exec = 1;
- 		else
- 			pos->immediate = 1;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 173b4f0e0e6e..ab48be4cf258 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1566,6 +1566,18 @@ void perf_evlist__to_front(struct evlist *evlist,
- 	list_splice(&move, &evlist->core.entries);
- }
- 
-+struct evsel *perf_evlist__get_tracking_event(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->tracking)
-+			return evsel;
-+	}
-+
-+	return evlist__first(evlist);
-+}
-+
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel)
- {
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index b6f325dfb4d2..a8081dfc19cf 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -335,6 +335,7 @@ void perf_evlist__to_front(struct evlist *evlist,
- 	evlist__cpu_iter_start(evlist);			\
- 	perf_cpu_map__for_each_cpu (cpu, index, (evlist)->core.all_cpus)
- 
-+struct evsel *perf_evlist__get_tracking_event(struct evlist *evlist);
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel);
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 96e5171dce41..a68ac3632ae6 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -898,12 +898,6 @@ static void evsel__apply_config_terms(struct evsel *evsel,
- 	}
- }
- 
--static bool is_dummy_event(struct evsel *evsel)
--{
--	return (evsel->core.attr.type == PERF_TYPE_SOFTWARE) &&
--	       (evsel->core.attr.config == PERF_COUNT_SW_DUMMY);
--}
--
- struct evsel_config_term *__evsel__get_config_term(struct evsel *evsel, enum evsel_term_type type)
- {
- 	struct evsel_config_term *term, *found_term = NULL;
-@@ -1161,7 +1155,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	 * The software event will trigger -EOPNOTSUPP error out,
- 	 * if BRANCH_STACK bit is set.
- 	 */
--	if (is_dummy_event(evsel))
-+	if (evsel__is_dummy_event(evsel))
- 		evsel__reset_sample_bit(evsel, BRANCH_STACK);
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 0f963c2a88a5..35e3f6d66085 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -399,6 +399,12 @@ static inline bool evsel__has_br_stack(const struct evsel *evsel)
- 	       evsel->synth_sample_type & PERF_SAMPLE_BRANCH_STACK;
- }
- 
-+static inline bool evsel__is_dummy_event(struct evsel *evsel)
-+{
-+	return (evsel->core.attr.type == PERF_TYPE_SOFTWARE) &&
-+	       (evsel->core.attr.config == PERF_COUNT_SW_DUMMY);
-+}
-+
- struct perf_env *evsel__env(struct evsel *evsel);
- 
- int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
--- 
-2.17.1
-
+Wei.
