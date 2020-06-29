@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03823C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D52C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D197220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EBB20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460405;
-	bh=7rccOV63Vtj0065zeobOG3izF1tba9oFIHbjELXfIYk=;
+	s=default; t=1593460407;
+	bh=dsXPPeg6cIv+Pkd9+QstYAyB8a1dU40W6wd0csB7Qx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LwZ7OUIkvWnCFlJMqUfi00tfKR5I5LRhJVYUNJOHwXhbkA7xuBcNPYZbA9F80fspN
-	 l/iARs/xisVXbLrQOiqlM52gwLoXzE/1zRKsBXEO7IBs5CcXwsnCoHwJWcvYaX3+fZ
-	 iAEVdw4E1AnuJCA0jvzmv9iYg4Dt5eBeNVterqHs=
+	b=Z7mTnBcKJKkFIqrmYb2OMZpyL2DA3aLE19yba0UcNqmWBV0nAz+GL5uBe4uuesk3C
+	 wpXALzMh/L9gN9MxwpWhVNJPj/VSJap/xWF7TSlMJWS5OR2FYIYZ7xb83WUAERQHV4
+	 RJ1sySHKq6HW+SZ65ja3feXNMYPmQNofPxJqXMPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387723AbgF2TxO (ORCPT
+        id S2387954AbgF2TxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387697AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387692AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD80924829;
-        Mon, 29 Jun 2020 15:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF216248EB;
+        Mon, 29 Jun 2020 15:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444345;
-        bh=7rccOV63Vtj0065zeobOG3izF1tba9oFIHbjELXfIYk=;
+        s=default; t=1593444443;
+        bh=dsXPPeg6cIv+Pkd9+QstYAyB8a1dU40W6wd0csB7Qx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yI88cJM2+1UtdtUviz8U7oXKTbLM7LyWWxuualu0H6l2K7u6VKtYtuKQWb84ZPCVR
-         DZQ2AEhVwqowpXAK6f5p26tV0+SvD+loZ4caxKx9i+5lLHSxUjRz3KrLbBTsjwRfZK
-         skTq4nJKkQROYbcFZjB66SnVgK7CBryYnvagC2NU=
+        b=n6tsQCPQlEkc9Vofa9/Rh5/XBxlj1Jb8Fwjv1YRat2crD+bJdZarLdZJKxCUcHGbv
+         SivCtkFivq4a6oivgR2xElKGhY4pGp6GWCdx70J3l48EJ4Cp9NIEbTnvCUra539qhg
+         PmO65E5cKWrNBbI+pAr7s0QOJQTG4IMWgWO3/6V8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Christensen <drc@linux.vnet.ibm.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 020/178] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Mon, 29 Jun 2020 11:22:45 -0400
-Message-Id: <20200629152523.2494198-21-sashal@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 122/178] arm64/sve: Eliminate data races on sve_default_vl
+Date:   Mon, 29 Jun 2020 11:24:27 -0400
+Message-Id: <20200629152523.2494198-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,40 +64,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Christensen <drc@linux.vnet.ibm.com>
+From: Dave Martin <Dave.Martin@arm.com>
 
-[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
+[ Upstream commit 1e570f512cbdc5e9e401ba640d9827985c1bea1e ]
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+sve_default_vl can be modified via the /proc/sys/abi/sve_default_vl
+sysctl concurrently with use, and modified concurrently by multiple
+threads.
 
-Add check for pcierr_recovery which skips code already executed for the
-"Frozen" state.
+Adding a lock for this seems overkill, and I don't want to think any
+more than necessary, so just define wrappers using READ_ONCE()/
+WRITE_ONCE().
 
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This will avoid the possibility of torn accesses and repeated loads
+and stores.
+
+There's no evidence yet that this is going wrong in practice: this
+is just hygiene.  For generic sysctl users, it would be better to
+build this kind of thing into the sysctl common code somehow.
+
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Link: https://lore.kernel.org/r/1591808590-20210-3-git-send-email-Dave.Martin@arm.com
+[will: move set_sve_default_vl() inside #ifdef to squash allnoconfig warning]
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/fpsimd.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index ca3aa1250dd13..e12ba81288e64 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18176,8 +18176,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 1765e5284994f..d8895251a2aac 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -12,6 +12,7 @@
+ #include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/compat.h>
++#include <linux/compiler.h>
+ #include <linux/cpu.h>
+ #include <linux/cpu_pm.h>
+ #include <linux/kernel.h>
+@@ -119,10 +120,20 @@ struct fpsimd_last_state_struct {
+ static DEFINE_PER_CPU(struct fpsimd_last_state_struct, fpsimd_last_state);
  
- 	rtnl_lock();
+ /* Default VL for tasks that don't set it explicitly: */
+-static int sve_default_vl = -1;
++static int __sve_default_vl = -1;
++
++static int get_sve_default_vl(void)
++{
++	return READ_ONCE(__sve_default_vl);
++}
  
--	/* We probably don't have netdev yet */
--	if (!netdev || !netif_running(netdev))
-+	/* Could be second call or maybe we don't have netdev yet */
-+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
- 		goto done;
+ #ifdef CONFIG_ARM64_SVE
  
- 	/* We needn't recover from permanent error */
++static void set_sve_default_vl(int val)
++{
++	WRITE_ONCE(__sve_default_vl, val);
++}
++
+ /* Maximum supported vector length across all CPUs (initially poisoned) */
+ int __ro_after_init sve_max_vl = SVE_VL_MIN;
+ int __ro_after_init sve_max_virtualisable_vl = SVE_VL_MIN;
+@@ -345,7 +356,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  loff_t *ppos)
+ {
+ 	int ret;
+-	int vl = sve_default_vl;
++	int vl = get_sve_default_vl();
+ 	struct ctl_table tmp_table = {
+ 		.data = &vl,
+ 		.maxlen = sizeof(vl),
+@@ -362,7 +373,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 	if (!sve_vl_valid(vl))
+ 		return -EINVAL;
+ 
+-	sve_default_vl = find_supported_vector_length(vl);
++	set_sve_default_vl(find_supported_vector_length(vl));
+ 	return 0;
+ }
+ 
+@@ -869,7 +880,7 @@ void __init sve_setup(void)
+ 	 * For the default VL, pick the maximum supported value <= 64.
+ 	 * VL == 64 is guaranteed not to grow the signal frame.
+ 	 */
+-	sve_default_vl = find_supported_vector_length(64);
++	set_sve_default_vl(find_supported_vector_length(64));
+ 
+ 	bitmap_andnot(tmp_map, sve_vq_partial_map, sve_vq_map,
+ 		      SVE_VQ_MAX);
+@@ -890,7 +901,7 @@ void __init sve_setup(void)
+ 	pr_info("SVE: maximum available vector length %u bytes per vector\n",
+ 		sve_max_vl);
+ 	pr_info("SVE: default vector length %u bytes per vector\n",
+-		sve_default_vl);
++		get_sve_default_vl());
+ 
+ 	/* KVM decides whether to support mismatched systems. Just warn here: */
+ 	if (sve_max_virtualisable_vl < sve_max_vl)
+@@ -1030,13 +1041,13 @@ void fpsimd_flush_thread(void)
+ 		 * vector length configured: no kernel task can become a user
+ 		 * task without an exec and hence a call to this function.
+ 		 * By the time the first call to this function is made, all
+-		 * early hardware probing is complete, so sve_default_vl
++		 * early hardware probing is complete, so __sve_default_vl
+ 		 * should be valid.
+ 		 * If a bug causes this to go wrong, we make some noise and
+ 		 * try to fudge thread.sve_vl to a safe value here.
+ 		 */
+ 		vl = current->thread.sve_vl_onexec ?
+-			current->thread.sve_vl_onexec : sve_default_vl;
++			current->thread.sve_vl_onexec : get_sve_default_vl();
+ 
+ 		if (WARN_ON(!sve_vl_valid(vl)))
+ 			vl = SVE_VL_MIN;
 -- 
 2.25.1
 
