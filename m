@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C09C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC33C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C7420780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0E82076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467449;
-	bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
+	s=default; t=1593467455;
+	bh=HQUvo0mlc9rK+gcTau9SRds3qCJmeoUzrohT/q4RGEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqjsD9zhcYBMKNJF0zsz7WEWNowniRiWoQgiWFxW6LapkeCvHLyaEZNu0Ru8C6OvB
-	 PnAsrj/ApPIG3ZgQKYaEXDDAHSYXoz8yJTfd3zl3KfHYjM05cFgf3P2xcmrv2aDsY4
-	 6pU6PwE1AvYS5YOXmNKBhE70LjUFv8CxG8BbvRpM=
+	b=b0QstQfxnv1wCecaez3h5xMlzP/CjqwZxTplZ0zhCs9EFvwmCm9x8TKFaEggZLCr+
+	 rZggz7I1Oz70UiJIqqfsIO6thLwIiW6eRGrgi9UTEMZV6laQbUapIXDqu0SE2kTgXH
+	 jo8/dcUVCXCZ2Dhv7A757rxmtKJxmkqKpt/7gJeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404494AbgF2Vus (ORCPT
+        id S2404192AbgF2Vuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726679AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854FD24787;
-        Mon, 29 Jun 2020 15:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AC4E24764;
+        Mon, 29 Jun 2020 15:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444093;
-        bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
+        s=default; t=1593444080;
+        bh=HQUvo0mlc9rK+gcTau9SRds3qCJmeoUzrohT/q4RGEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXSs+QkcT5DpZnoC/988wM3j/N/gWXfYrsSYXI/7KUdJtixmMlnDEKBApaLWhnh3T
-         DDEkC0BSGQIxro4eBSkZ6BsXg/6rtTDaGukqugsuc2zVPeuJwS2VCYRtUoDVuNT35r
-         xvvSoYiB0korG8Ok1n2KuUi9yUWZFFXDem6YBuqo=
+        b=Pg+7Ey24USpSefxMpXBpF7n5vwlU1nIv3izzB8C2ZS7o/bSHLHh8r8RDSKjrCHEqf
+         f0vumDrIzAiGx7GQ7ygUcktw/UcLC4T2ZbMRUNjM1JTsfWXHH6OHaAheTkmkj3n5Rd
+         iMKeFcSIJCuY0FyA5+PZ9PLfzW/qbw+jShn+oY4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 203/265] kprobes: Suppress the suspicious RCU warning on kprobes
-Date:   Mon, 29 Jun 2020 11:17:16 -0400
-Message-Id: <20200629151818.2493727-204-sashal@kernel.org>
+Subject: [PATCH 5.7 189/265] ibmvnic: Harden device login requests
+Date:   Mon, 29 Jun 2020 11:17:02 -0400
+Message-Id: <20200629151818.2493727-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,56 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 6743ad432ec92e680cd0d9db86cb17b949cf5a43 ]
+[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
 
-Anders reported that the lockdep warns that suspicious
-RCU list usage in register_kprobe() (detected by
-CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-access kprobe_table[] by hlist_for_each_entry_rcu()
-without rcu_read_lock.
+The VNIC driver's "login" command sequence is the final step
+in the driver's initialization process with device firmware,
+confirming the available device queue resources to be utilized
+by the driver. Under high system load, firmware may not respond
+to the request in a timely manner or may abort the request. In
+such cases, the driver should reattempt the login command
+sequence. In case of a device error, the number of retries
+is bounded.
 
-If we call get_kprobe() from the breakpoint handler context,
-it is run with preempt disabled, so this is not a problem.
-But in other cases, instead of rcu_read_lock(), we locks
-kprobe_mutex so that the kprobe_table[] is not updated.
-So, current code is safe, but still not good from the view
-point of RCU.
-
-Joel suggested that we can silent that warning by passing
-lockdep_is_held() to the last argument of
-hlist_for_each_entry_rcu().
-
-Add lockdep_is_held(&kprobe_mutex) at the end of the
-hlist_for_each_entry_rcu() to suppress the warning.
-
-Link: http://lkml.kernel.org/r/158927055350.27680.10261450713467997503.stgit@devnote2
-
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Suggested-by: Joel Fernandes <joel@joelfernandes.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 195ecb955fcc5..950a5cfd262ce 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
- 	struct kprobe *p;
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 1b4d04e4474bb..2baf7b3ff4cbf 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -842,12 +842,13 @@ static int ibmvnic_login(struct net_device *netdev)
+ 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
+ 	unsigned long timeout = msecs_to_jiffies(30000);
+ 	int retry_count = 0;
++	int retries = 10;
+ 	bool retry;
+ 	int rc;
  
- 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
--	hlist_for_each_entry_rcu(p, head, hlist) {
-+	hlist_for_each_entry_rcu(p, head, hlist,
-+				 lockdep_is_held(&kprobe_mutex)) {
- 		if (p->addr == addr)
- 			return p;
- 	}
+ 	do {
+ 		retry = false;
+-		if (retry_count > IBMVNIC_MAX_QUEUES) {
++		if (retry_count > retries) {
+ 			netdev_warn(netdev, "Login attempts exceeded\n");
+ 			return -1;
+ 		}
+@@ -862,11 +863,23 @@ static int ibmvnic_login(struct net_device *netdev)
+ 
+ 		if (!wait_for_completion_timeout(&adapter->init_done,
+ 						 timeout)) {
+-			netdev_warn(netdev, "Login timed out\n");
+-			return -1;
++			netdev_warn(netdev, "Login timed out, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			continue;
+ 		}
+ 
+-		if (adapter->init_done_rc == PARTIALSUCCESS) {
++		if (adapter->init_done_rc == ABORTED) {
++			netdev_warn(netdev, "Login aborted, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			/* FW or device may be busy, so
++			 * wait a bit before retrying login
++			 */
++			msleep(500);
++		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
+ 			retry_count++;
+ 			release_sub_crqs(adapter, 1);
+ 
 -- 
 2.25.1
 
