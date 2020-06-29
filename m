@@ -2,78 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B241C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCD020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C07020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467237;
-	bh=Sf3fgStsrUyF1JZW9gNQ9fUsCF7HtLMfWRNqJtTJmaA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=WFv2EvwMtn7fDwDGvhakUVZQJL9nMkd7+DU2v3R0PgFd2e1WbObpc43qZA2Gtq2Ws
-	 a7zgPxQdtiskYPNA0e6ph5u6vKVvE1VDqqsMb+EJxhewmRbF2W7dAuSwiLwRWSBaZV
-	 9AgMJEY4JOnWDkel/TcEeind5r1fz2oFFci2oAqo=
+	s=default; t=1593467241;
+	bh=7+ckgGs+391OquPJTLjfCaTeAqMTU6Gyltn8EGzmfDU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cslKvfwHveWScKP9d3f3rwnQf6nc84L10ha/vA29/AvcBC9by3Dwzzr7fH4M+LHZM
+	 lFt1+gM4y6ODB6Dt20CyeBDem746b261Fb6LOUPd7HaAlyZFHZx1r83B2Xo0sSONDA
+	 dzjCGQhGYt77HRZSSmpaYX9RBoF8u5g3q8yVQwdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbgF2VrP (ORCPT
+        id S2404212AbgF2VrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726740AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:44 -0400
-Subject: Re: [GIT PULL] Crypto Fixes for 5.8
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4421424699;
+        Mon, 29 Jun 2020 15:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593450914;
-        bh=Sf3fgStsrUyF1JZW9gNQ9fUsCF7HtLMfWRNqJtTJmaA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=V6P5V5YEAio5SN5KUVGZa+DAnvllREp7oNvQPH+NCFl8fgTZHq9LjCdp9YiA9rgcK
-         K+JZJ7tuMWbBYZ0i3RJQXGcpc3W2Aj7wysKN/qhphDV15heN1wmAE+geGzQog6127H
-         8KLNggj2diWH5zUqPHjx4Ak6UWofeG9kp9fYBD5s=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200629021627.GA13792@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
- <20200611040544.GA27603@gondor.apana.org.au>
- <20200621082303.GA30729@gondor.apana.org.au>
- <20200629021627.GA13792@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200629021627.GA13792@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: e04ec0de61c1eb9693179093e83ab8ca68a30d08
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2cfa46dadd203eef88cc70131df7a81ebc34b8ff
-Message-Id: <159345091425.2382.6853137988813099953.pr-tracker-bot@kernel.org>
-Date:   Mon, 29 Jun 2020 17:15:14 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        s=default; t=1593443992;
+        bh=7+ckgGs+391OquPJTLjfCaTeAqMTU6Gyltn8EGzmfDU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0EKnlx6NOnMUdkVvaTSOSmXqVh/Gg1z94Stsdx5hBt++vXfTeIqZ5lhrWAHy8d2HW
+         VgVmEn5SjuVqQ/Aqg7ZiWyoZn9Meg9vy6H+JHxvM9f+ZRYyZz4LDCtGrtwsP7XYIxE
+         T2msGaUE/6q2PEuT4lHSn47ziMnXgiOIZVZUtot4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 097/265] ARM: OMAP2+: Fix legacy mode dss_reset
+Date:   Mon, 29 Jun 2020 11:15:30 -0400
+Message-Id: <20200629151818.2493727-98-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 29 Jun 2020 12:16:27 +1000:
+From: Tony Lindgren <tony@atomide.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+[ Upstream commit 77cad9dbc957f23a73169e8a8971186744296614 ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2cfa46dadd203eef88cc70131df7a81ebc34b8ff
+We must check for "dss_core" instead of "dss" to avoid also matching
+also "dss_dispc". This only matters for the mixed case of data
+configured in device tree but with legacy booting ti,hwmods property
+still enabled.
 
-Thank you!
+Fixes: 8b30919a4e3c ("ARM: OMAP2+: Handle reset quirks for dynamically allocated modules")
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/mach-omap2/omap_hwmod.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+index 82706af307dee..c630457bb228e 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.c
++++ b/arch/arm/mach-omap2/omap_hwmod.c
+@@ -3489,7 +3489,7 @@ static const struct omap_hwmod_reset dra7_reset_quirks[] = {
+ };
+ 
+ static const struct omap_hwmod_reset omap_reset_quirks[] = {
+-	{ .match = "dss", .len = 3, .reset = omap_dss_reset, },
++	{ .match = "dss_core", .len = 8, .reset = omap_dss_reset, },
+ 	{ .match = "hdq1w", .len = 5, .reset = omap_hdq1w_reset, },
+ 	{ .match = "i2c", .len = 3, .reset = omap_i2c_reset, },
+ 	{ .match = "wd_timer", .len = 8, .reset = omap2_wd_timer_reset, },
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
+
