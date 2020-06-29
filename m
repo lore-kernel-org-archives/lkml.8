@@ -2,109 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4161C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F49C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A275206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khSkOa1i"
+	by mail.kernel.org (Postfix) with ESMTP id 510BB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467541;
+	bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XfrQO62CQ94uDffY+5HgtoOBYF7XGEjxv3tbp0T2xzYgERuNEh7WIvKz+GcLjsRa3
+	 wOLLlPTtk97oTWlfoOQZhpLCN5nnr/YbJJjCq6ub8V6MxNnv5jZI6eONLBc13VrGw7
+	 5aZ/Yy1i122aR2TJa6mxdQqyNzCGyjaRVOtANNsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404010AbgF2VwN (ORCPT
+        id S2391482AbgF2VwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404581AbgF2Vv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:51:57 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09482C061755;
-        Mon, 29 Jun 2020 14:51:58 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id j12so8457123pfn.10;
-        Mon, 29 Jun 2020 14:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RvMj5yET6zod7vEbQyQ+dyCF/KGdDXqpRazv7Nh0/qE=;
-        b=khSkOa1iOR9sKq/l2Lwg2R+70F1qzc3rAWzT1DL81iYJKmfl0OXAKmLaQcEHYh75HD
-         Dim7FCtnFG0m3Y7kmHUxgsykRsUHZT5JQ3g87aZYI4UDZCCTRHwPIe67iXeMWm5sEQfb
-         S3DB34IC0Dv9F409Wj8gM0iG9PKhXAsgikpd3QtZ0pNSzZcG6ZPjeTArTudFcF1akU6m
-         eYGILAK+dTr82RFhdBeh3NutZ5dWsG+VNNMJoyuEh2Ok8m/Rse1bW+zrHLKD0opEhiNz
-         FdieyEh5ErWKSTF9nDD3gmex2heXZGcC2WmHB7o+O5FROMQJFQSgrf+aYMzwv6arrIWW
-         yfQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RvMj5yET6zod7vEbQyQ+dyCF/KGdDXqpRazv7Nh0/qE=;
-        b=HSsi7Fq8hp9gkuwklbw1hKl22Tt/NzIJr2bwDAzPYWU+LDW/9Nr/8Su7a8UWdqgF4X
-         mHh9YqMsIWMtTO83LkVn2dYmhkIWKrhWapHQ4z71kS7eqH62QgTo8R2Ao5WsEDp8dwjZ
-         UfPI4gBqoUZeHOy9ykLa8cMX5P3kFNSnYa1P4spKBrIdR6sZkHyMA9JTMqK28/dDeJ+X
-         qMRukOgzSy5MEng0wRZfVZm0WuPoJ+29TmkBoxYsZPGGcgMe5N8WINZg2K93c3oyXuKF
-         T5Onr/L1rcUCN1Tk6F5mup284eEnS7cEHovRt0/NNAzKyN6nIjRVloDWr2BZ9Z6PXpOC
-         nupw==
-X-Gm-Message-State: AOAM5317Gpx/3R5rDrwoE61vAqlLp5KTssLYOifpC1QAUTozxUDod+JM
-        fSwbXFnTi2nqY4nVNL7MfLQ=
-X-Google-Smtp-Source: ABdhPJxC8Fgjn8RTlD0SKk0xsVZpbiGlo9R3VT7A5mIZwpCLggeB5EdfCEKblPcw3+omhGtZUjddyQ==
-X-Received: by 2002:a63:f903:: with SMTP id h3mr12511677pgi.437.1593467517533;
-        Mon, 29 Jun 2020 14:51:57 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id p189sm542487pfb.217.2020.06.29.14.51.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 14:51:57 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 14:51:24 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, treding@nvidia.com, yhsu@nvidia.com,
-        snikam@nvidia.com, praithatha@nvidia.com, talho@nvidia.com,
-        bbiswas@nvidia.com, mperttunen@nvidia.com, nicolinc@nvidia.com,
-        bhuntsman@nvidia.com
-Subject: Re: [PATCH v7 1/3] iommu/arm-smmu: add NVIDIA implementation for
- dual ARM MMU-500 usage
-Message-ID: <20200629215124.GD27967@Asurada-Nvidia>
-References: <20200629022838.29628-1-vdumpa@nvidia.com>
- <20200629022838.29628-2-vdumpa@nvidia.com>
+        Mon, 29 Jun 2020 17:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA730246C3;
+        Mon, 29 Jun 2020 15:20:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444015;
+        bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hJdsom3totfyQtHlOZHJeN1kyRQ393ObY3h5+WOFV0D8jElHpkWOV9N9l+wWCr505
+         St6EJ6hXr/pqBIhfDf+ZdMfToh0tACcUtuipahtSMeVXSSxk/THN+ff4rUbwHv5GdH
+         Ax+DYzj28rykqQwRryjU18js+BXEwwt1hG8gTrVk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 121/265] ARM: dts: Fix duovero smsc interrupt for suspend
+Date:   Mon, 29 Jun 2020 11:15:54 -0400
+Message-Id: <20200629151818.2493727-122-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629022838.29628-2-vdumpa@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 07:28:36PM -0700, Krishna Reddy wrote:
-> NVIDIA's Tegra194 SoC uses two ARM MMU-500s together to interleave
-> IOVA accesses across them.
-> Add NVIDIA implementation for dual ARM MMU-500s and add new compatible
-> string for Tegra194 SoC SMMU topology.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
 
-> +static inline void __iomem *nvidia_smmu_page(struct arm_smmu_device *smmu,
-> +			       unsigned int inst, int page)
-> +{
-> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
-> +
-> +	if (!nvidia_smmu->bases[0])
-> +		nvidia_smmu->bases[0] = smmu->base;
-> +
-> +	return nvidia_smmu->bases[inst] + (page << smmu->pgshift);
-> +}
+[ Upstream commit 9cf28e41f9f768791f54ee18333239fda6927ed8 ]
 
-Not critical -- just a nit: why not put the bases[0] in init()?
+While testing the recent suspend and resume regressions I noticed that
+duovero can still end up losing edge gpio interrupts on runtime
+suspend. This causes NFSroot easily stopping working after resume on
+duovero.
 
-Everything else looks good to me:
+Let's fix the issue by using gpio level interrupts for smsc as then
+the gpio interrupt state is seen by the gpio controller on resume.
 
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Fixes: 731b409878a3 ("ARM: dts: Configure duovero for to allow core retention during idle")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/omap4-duovero-parlor.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+index 8047e8cdb3af0..4548d87534e37 100644
+--- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
++++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+@@ -139,7 +139,7 @@
+ 	ethernet@gpmc {
+ 		reg = <5 0 0xff>;
+ 		interrupt-parent = <&gpio2>;
+-		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;	/* gpio_44 */
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;		/* gpio_44 */
+ 
+ 		phy-mode = "mii";
+ 
+-- 
+2.25.1
+
