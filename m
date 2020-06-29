@@ -2,110 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07531C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD42EC433DF
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2D8820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D4620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqyEV5/8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kQvFRp2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389886AbgF2Uww (ORCPT
+        id S2389878AbgF2Uwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
+        Mon, 29 Jun 2020 16:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730527AbgF2TNX (ORCPT
+        with ESMTP id S1731347AbgF2TNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:23 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD43EC0005E1;
-        Mon, 29 Jun 2020 04:49:34 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w16so16268548ejj.5;
-        Mon, 29 Jun 2020 04:49:34 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:24 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4FFC0086FF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:55:32 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so15472136wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GLjynTsVrR6VbalMpEbWa6xOYmDXyiUF5lBzn2Cag8M=;
-        b=eqyEV5/8wo72dYbOmPN4wgCvRYBqfaAoyfDWTA/CziIDDGjlgp5AMb9qLoJ1vL2AN7
-         hmGOj1A/wyNdaKWhtlgIZLRLxiX2fEpb4IOPAhSdmzJ7oGaVY+axBuEfBypjDhCz/Zg8
-         EXIfHry5/6cYajE3ATmDROKLRJ4k3bYc/6CrcuWhsgyAlMAHp3ZnckE0m+pMIEZhymLz
-         P26GvXuz2urtiK7i65JWdY1i9xYu2sbgLPUcqRMzLNuBZXzatJWsx+KkjjF3QXnjNKOl
-         75gpg48B6xD+z5UzuML/n8RJdX2buPaYyuSPKy05xio8NsmF4TxI8sHXJJ75QnI+f38e
-         HCQQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LfaVHK95vP+/yqyPSsgOJ96CzY9z3S8IGFhM8d1JksE=;
+        b=kQvFRp2JCmd6+CWcro1viq1NDZbcQv9QXvxVyS+hc5tHddsqQYQk7lFWuGFM+wLAWb
+         0Mj3h23R6/dowPu/lo0Vo8jHCAyPBgh1OTB2rrKQBkT8Y8D7I+JI1OAH3OnoXii6MDbh
+         nx7md3+03mL4EQdUjNWheQ+4NJcnnVEps8ShZdhsAqwODJA2rxxrCHtksxuMIm9kxLl5
+         WDGMUj35pWLJxEHxpPTLQWvJX8U0iGBXmg6SjDN/D9KARgH5LqqQoVBBgndxNH5etBts
+         cgPdp7PM5zn9sYE7VF7zerZt8LyMmO4keA94BFx7ItlgpkhocVTH9laEg29GIW5W8RMY
+         /JUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GLjynTsVrR6VbalMpEbWa6xOYmDXyiUF5lBzn2Cag8M=;
-        b=pxQYIkMZjc3LEJjjFcTk9hHmDgTJPLSGCu9LCU+jj+6NYZ8LDP1FZ4Z3tM7SRDG2bC
-         xm/MNNI7PATOfVzvTw4NvCUT2GG+Vr3qRS4g7AF4x6wfsGcRY1N7MHxUPH3oiJ1uDhz5
-         uNHIDztFPkjVhiJbq27atZkEZVTPDZwxWkciiybXV5GT90zVUVv1KpiUSTfDn+loGjt1
-         1LqYdybqxBJI6JdsU+4aiITHoXz0rwk02aIJpLz55qNiWJm3HyPw+im3N8fEWo8q3E5A
-         DrlEVjmYCvH03QDVfZEc/8w0qhPSjaadWnpU2SsJcbr8zR58O9fPTivYJAOfpqkIKHqc
-         qjkA==
-X-Gm-Message-State: AOAM530+ECgnXufHSdHz6mFbIIZd9SHCHNOSOOhgdzNd1KowT2esqq/Y
-        eQjSTje4tyt+dYTdtrXh2v0wxViityE=
-X-Google-Smtp-Source: ABdhPJwqTPpW4lJkydjKNl2Ck5Ak3OQZa+r9ZAz2vMIOcNY6+NsQKHqERgvNSE0oQIqUe9KpwlAafg==
-X-Received: by 2002:a17:906:fc20:: with SMTP id ov32mr12827208ejb.531.1593431373396;
-        Mon, 29 Jun 2020 04:49:33 -0700 (PDT)
-Received: from xps13.lan (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
-        by smtp.googlemail.com with ESMTPSA id z20sm9818006edq.97.2020.06.29.04.49.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LfaVHK95vP+/yqyPSsgOJ96CzY9z3S8IGFhM8d1JksE=;
+        b=RmEqwfzTZyj6xdfw85iMMeFkQL0Z7AWdgPVv1Eo5W5DHos4BAop8C12l4whCh0KEoY
+         TnmPNxAqAhzA0lfKO56des/vZrVhwdZFNKcEE9CDh37T5VuBmU/EmXag2iJJWi6z0Ydj
+         hBIjwne18N2zSvhei+ssz+f1oaef3D+bICr326dR0Z3KqPfxoRa+EIcJGTxUuvVPKz13
+         y4BpengK/Q+Vb2aV5OZ2gp57Y0/6lCXhV4OZY153vbBgplybgj1hbHfIvBa2n8B1VVqE
+         C4hE7v9tYNg3uH079rZSLpLjvWam4q0Ea4hb7ebhAoqdf17oYivTpIlONnjS/cu2IH01
+         H2Mg==
+X-Gm-Message-State: AOAM533ML3UrgDfRKaI7SCjwPWGarS0Z4vVtpuSpJOcuIXDg3ufK5kgv
+        wJbNI/KTfTSyNuK+rY51BcsicQ==
+X-Google-Smtp-Source: ABdhPJzJxBVIN7hpGpbilBwf8akgBE11lXjQGHA8rMwku6sqv13n9ShBOAAlVqTSAR4t6FB2yXe43w==
+X-Received: by 2002:a1c:48e:: with SMTP id 136mr15305628wme.164.1593424531474;
+        Mon, 29 Jun 2020 02:55:31 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id u84sm16341010wmg.7.2020.06.29.02.55.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 04:49:32 -0700 (PDT)
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of Kamstrup DTS
-Date:   Mon, 29 Jun 2020 13:49:27 +0200
-Message-Id: <20200629114927.17379-3-bruno.thomsen@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629114927.17379-1-bruno.thomsen@gmail.com>
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+        Mon, 29 Jun 2020 02:55:30 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:55:27 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 3/3] cpufreq: Specify default governor on command line
+Message-ID: <20200629095527.GA1232873@google.com>
+References: <cover.1593418662.git.viresh.kumar@linaro.org>
+ <96b6e6ca02b664194ff3e57e1ec768fbc597bf38.1593418662.git.viresh.kumar@linaro.org>
+ <20200629094452.GB1228312@google.com>
+ <20200629094627.jh7pwhftcdqj6nhm@vireshk-i7>
+ <20200629094825.GA1231692@google.com>
+ <20200629095038.GB1231692@google.com>
+ <20200629095423.xengjk5z2ezshrdb@vireshk-i7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629095423.xengjk5z2ezshrdb@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as reviewer of device trees for Kamstrup
-Concentrators.
+On Monday 29 Jun 2020 at 15:24:23 (+0530), Viresh Kumar wrote:
+> On 29-06-20, 10:50, Quentin Perret wrote:
+> > On Monday 29 Jun 2020 at 10:48:25 (+0100), Quentin Perret wrote:
+> > > On Monday 29 Jun 2020 at 15:16:27 (+0530), Viresh Kumar wrote:
+> > > > On 29-06-20, 10:44, Quentin Perret wrote:
+> > > > > On Monday 29 Jun 2020 at 13:55:00 (+0530), Viresh Kumar wrote:
+> > > > > >  static int __init cpufreq_core_init(void)
+> > > > > >  {
+> > > > > > +	struct cpufreq_governor *gov = cpufreq_default_governor();
+> > > > > > +
+> > > > > >  	if (cpufreq_disabled())
+> > > > > >  		return -ENODEV;
+> > > > > >  
+> > > > > >  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+> > > > > >  	BUG_ON(!cpufreq_global_kobject);
+> > > > > >  
+> > > > > > +	if (!strlen(default_governor))
+> > > > > 
+> > > > > Should we test '!strlen(default_governor) && gov' here actually?
+> > > > > We check the return value of cpufreq_default_governor() in
+> > > > > cpufreq_init_policy(), so I'm guessing we should do the same here to be
+> > > > > on the safe side.
+> > > > 
+> > > > With the current setup (the Kconfig option being a choice which
+> > > > selects one governor at least), it is not possible for gov to be NULL
+> > > > here. And so I didn't worry about it :)
+> > > 
+> > > Right, so should we remove the check in cpufreq_init_policy() then?
+> > > I don't mind either way as long as we are consitent :)
+> > 
+> > And actually maybe we should remove the weakly defined
+> > cpufreq_default_governor() implementation too? That'd make sure we get a
+> > link-time error if for some reason things change in the Kconfig options.
+> 
+> That would be fine I believe. I will do all that in a separate patch
+> then and let this series go through with no more changes :)
 
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
----
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+OK, that works for me.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 496fd4eafb68..97fc112309af 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9282,6 +9282,11 @@ S:	Maintained
- F:	Documentation/hwmon/k8temp.rst
- F:	drivers/hwmon/k8temp.c
- 
-+KAMSTRUP CONCENTRATORS
-+R:	Bruno Thomsen <bruno.thomsen@gmail.com>
-+S:	Maintained
-+F:	arch/arm/boot/dts/imx7d-flex-concentrator*.dts
-+
- KASAN
- M:	Andrey Ryabinin <aryabinin@virtuozzo.com>
- R:	Alexander Potapenko <glider@google.com>
--- 
-2.26.2
-
+Thanks!
+Quentin
