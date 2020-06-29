@@ -2,115 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFE720672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463080;
-	bh=JaToVEPg96WlYm3ztJ5uXKp0r8nvTwnJt6eGF53wvDg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=zYSJSoLcFQPGghdRmc4XP81kpS3fqfADfoeK0zMqaOSGAZVL267ek1ROKDpGUuBIJ
-	 w0Gc6J5bFRoOgNvD2dNPElREXyTiScxBlbmSujThpQEVXbpcN2jgc3B/21ZqirawFh
-	 TKYvXkgLkyCKkmbQvOGmX45keaH5zPmmk1XkJ2Ig=
+	by mail.kernel.org (Postfix) with ESMTP id C1F8920672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389537AbgF2Uh7 (ORCPT
+        id S2389546AbgF2UiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388942AbgF2Uh4 (ORCPT
+        Mon, 29 Jun 2020 16:38:03 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36938 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgF2TSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:37:56 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14501C03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:37:56 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 76so2265343otu.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fm46DHlI8TQvkZHu+cmRB2IdIOYCe5xNqBHbvb86YyI=;
-        b=V2Y3vTGJ12Ll/zYo3s2cphA4SCNvy6j4fT/a3ty8OKVVsQYsdqWJ227S2Q04r/yETO
-         h+WFXtp2g82jsnVpQ55K1BaUAT6r6jDmYafNQeIrtx27I17+9xkY5SMcWC1b7EuJVqW7
-         J5tQYaClR7vkxyDmmz3EYV/8sbafzTBaw0184=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fm46DHlI8TQvkZHu+cmRB2IdIOYCe5xNqBHbvb86YyI=;
-        b=kmkvA2QoI+9MGO4i2VqfZll8hIVOdrZh90wktnpoTLEBkgA/3g7QXclAfj+2oqKLYD
-         VQWl4aAVoNqATt6kkUJTc5TVjabBVtFWqhhbyn9S7kSr4qrtZ3jFhXSbHLL+4xfBj9wf
-         HFCOeuRE0EX+NGnW9SO9D0Jwl72zqaCSIUuk6sf+RBcyoTHFe50aWPMNhcTH097ogNym
-         Bxt3Ivbw98fosEx5nX8NWVgqqbWb+ZNMRW7ENum/EVLkHOX3uixOZLihSfGUL2r+vFk3
-         YN6aRRuBsXamSNRoz5o2K3mgJr6J3+fnTXEL6gu6gI6eVyf5QY8xQJdApUkan0+PtX2A
-         h27g==
-X-Gm-Message-State: AOAM531MgW4u8y6I3+rPy0xfRcvFvXqgQVUqCH6nUaVEcnxKhioBbVy7
-        qAYKjslaZsfyxYoAeQgSAQCAbA==
-X-Google-Smtp-Source: ABdhPJzNAvuk+0W2NxftJEP+MRskEe2g3Brg83ppvWRminnOPpTlroZr/g6WX21bBuN68CdAychIPg==
-X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr15826182otf.77.1593463075332;
-        Mon, 29 Jun 2020 13:37:55 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g126sm187086oia.41.2020.06.29.13.37.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 13:37:54 -0700 (PDT)
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
-Date:   Mon, 29 Jun 2020 14:37:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 15:18:52 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 5F29F20024;
+        Mon, 29 Jun 2020 21:18:49 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 21:18:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
+ bindings to DT schema
+Message-ID: <20200629191847.GA318506@ravnborg.org>
+References: <20200618224413.1115849-1-robh@kernel.org>
+ <20200619215341.GA6857@ravnborg.org>
+ <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
+ <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8
+        a=wNlRYuuYm4J86z4hMpcA:9 a=hv1kb02ZR_FIT1_D:21 a=XilPnIEmbnQ7gt8O:21
+        a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
-
-On 6/29/20 9:13 AM, Sasha Levin wrote:
+On Mon, Jun 29, 2020 at 11:57:37AM -0600, Rob Herring wrote:
+> On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..7e1f109a38a4
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > > @@ -0,0 +1,98 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: pwm-backlight bindings
+> > > > +
+> > > > +maintainers:
+> > > > +  - Lee Jones <lee.jones@linaro.org>
+> > > > +  - Daniel Thompson <daniel.thompson@linaro.org>
+> > > > +  - Jingoo Han <jingoohan1@gmail.com>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: pwm-backlight
+> > > > +
+> > > > +  pwms:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  pwm-names: true
+> > > > +
+> > > > +  power-supply:
+> > > > +    description: regulator for supply voltage
+> > > > +
+> > > > +  enable-gpios:
+> > > > +    description: Contains a single GPIO specifier for the GPIO which enables
+> > > > +      and disables the backlight
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  post-pwm-on-delay-ms:
+> > > > +    description: Delay in ms between setting an initial (non-zero) PWM and
+> > > > +      enabling the backlight using GPIO.
+> > > > +
+> > > > +  pwm-off-delay-ms:
+> > > > +    description: Delay in ms between disabling the backlight using GPIO
+> > > > +      and setting PWM value to 0.
+> > > > +
+> > > > +  brightness-levels:
+> > > > +    description: Array of distinct brightness levels. Typically these are
+> > > > +      in the range from 0 to 255, but any range starting at 0 will do. The
+> > > > +      actual brightness level (PWM duty cycle) will be interpolated from
+> > > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
+> > > > +      value in the array represents a 100% duty cycle (brightest).
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > +
+> > > > +  default-brightness-level:
+> > > > +    description: The default brightness level (index into the array defined
+> > > > +      by the "brightness-levels" property).
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > Same comment as before...
+> >
+> > Sorry the "ditto" meant I didn't thing about PWM as much as I should
+> > have.
+> >
+> > The situation for PWM is a little different to LED. That's mostly
+> > because we decided not to clutter the LED code with
+> > "num-interpolated-steps".
+> >
+> > The PWM code implements the default-brightness-level as an index into
+> > the brightness array *after* it has been expanded using interpolation.
+> > In other words today Linux treats the default-brightness-level more
+> > like[1].
+> >
+> >     description: The default brightness level. When
+> >       num-interpolated-steps is not set this is simply an index into
+> >       the array defined by the "brightness-levels" property. If
+> >       num-interpolated-steps is set the brightness array will be
+> >       expanded by interpolation before we index to get a default
+> >       level.
+> >
+> > This is the best I have come up with so far... but I concede it still
+> > lacks elegance.
 > 
-> This is the start of the stable review cycle for the 5.7.7 release.
-> There are 265 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
-> 
+> Happy to add this or whatever folks want if there's agreement, but I
+> don't want to get bogged down on re-reviewing and re-writing the
+> binding on what is just a conversion. There's a mountain of bindings
+> to convert.
+The original explanation is ok, as pointed out by Daniel.
+So I suggest moving forward with that and then others can improve the
+descriptions later as necessary.
 
-Looks like patch naming convention has changed. My scripts look
-for the following convention Greg uses. Are you planning to use
-the above going forward? My scripts failed looking for the usual
-naming convention.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-and the diffstat can be found below.
-
-thanks,
--- Shuah
+	Sam
