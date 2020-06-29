@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE809C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C9D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF4A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461800;
-	bh=Mexa4EipNkHkN58XW6bo6kyGbN+IljX5NLie9H/M6sg=;
+	s=default; t=1593461808;
+	bh=LJCuUSZBQy9uGSZuNnnL9kR2KmZ+rfiBdMZ024+64qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frairX4NCgUTsFvXanXYhDr8qTqKmDc2WCcR1flVE/OE/BOh8eygWHmnQnaweOZR6
-	 Is4pSt7ARj8lHKQGXvoypCt9uJzWaZbY/o9cJOmhQIrMudjNI9P0ynYr9NGYcmcR2o
-	 Rg/87EnX3v6yEp4Qk8ixn09BgApSUK6VMHH/UJ+k=
+	b=qBpGXTn94fowcbjhEMpZDGgcqdmcihwDXT/auvaLCxdpVzp9ckJcFcM9UTnky34NH
+	 8o7WdiPhk92RfeviPOZMTJZszNJXvpjo3QIPy9fJQU83tahHKG4yJfCVUk3ZzqAR72
+	 iiBuUgo7WBjKYeJdoEqGy8aG47ytp8G834bnvogY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgF2UQj (ORCPT
+        id S1732924AbgF2UQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732813AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732773AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C3972523C;
-        Mon, 29 Jun 2020 15:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9693525289;
+        Mon, 29 Jun 2020 15:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444955;
-        bh=Mexa4EipNkHkN58XW6bo6kyGbN+IljX5NLie9H/M6sg=;
+        s=default; t=1593444997;
+        bh=LJCuUSZBQy9uGSZuNnnL9kR2KmZ+rfiBdMZ024+64qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx72nvOn0Grjkf5hAlLOV84VD0Smux5ngYXxiSp32zndkWUSRf93Ka0jafQ7Pxc0Q
-         bTHF6C9R+B6bDrZQ7WSgDtkoVfygat0rTgSEZUZ0pVZdq9VJ8Xae6FUfwrzByJp8Y2
-         DM3uDI4vQzdSjCdUCnCi8WhXmSVKefRaOSKnKWqQ=
+        b=arOQUulaDNvnoxbCk+q7TuHo1o65m2wJJbocbWhEUnEShcX20kvhHrTAPRwLk3P0p
+         scsSnZAHnkawz376uEmZXiaMwzndQQ8Vn+KbsQMOSlhZTNh4mn91nZ8QBC3Oh7wmQZ
+         v650bWtwtk4gWWrB41Wk/A6rm4xOgA3Us005tIEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 053/131] xhci: Fix incorrect EP_STATE_MASK
-Date:   Mon, 29 Jun 2020 11:33:44 -0400
-Message-Id: <20200629153502.2494656-54-sashal@kernel.org>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 097/131] net: alx: fix race condition in alx_remove
+Date:   Mon, 29 Jun 2020 11:34:28 -0400
+Message-Id: <20200629153502.2494656-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,39 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-EP_STATE_MASK should be 0x7 instead of 0xf
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-xhci spec 6.2.3 shows that the EP state field in the endpoint context data
-structure consist of bits [2:0].
-The old value included a bit from the next field which fortunately is a
- RsvdZ region. So hopefully this hasn't caused too much harm
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 4dedc822237fc..39efbcf63c11d 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -716,7 +716,7 @@ struct xhci_ep_ctx {
-  * 4 - TRB error
-  * 5-7 - reserved
-  */
--#define EP_STATE_MASK		(0xf)
-+#define EP_STATE_MASK		(0x7)
- #define EP_STATE_DISABLED	0
- #define EP_STATE_RUNNING	1
- #define EP_STATE_HALTED		2
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index 6d32211349275..dd63b993ce7b3 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1250,8 +1250,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
+ 
+ static void __alx_stop(struct alx_priv *alx)
+ {
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
++
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
+ 	alx_free_napis(alx);
+ }
+@@ -1861,9 +1865,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
+ 
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
 -- 
 2.25.1
 
