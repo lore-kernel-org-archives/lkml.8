@@ -2,121 +2,188 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E710C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5AB20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABF220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="T1IpLJ34"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAvk3F/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389713AbgF2UoJ (ORCPT
+        id S2389717AbgF2UoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        Mon, 29 Jun 2020 16:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731547AbgF2TOA (ORCPT
+        with ESMTP id S1731608AbgF2TOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:00 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD76AC02E2F1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:26:55 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z63so15350626qkb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:26:55 -0700 (PDT)
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71518C008743;
+        Mon, 29 Jun 2020 01:29:51 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so5008361pgf.0;
+        Mon, 29 Jun 2020 01:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h9h6iUTLSlaM8ZKedUbrDjAeuBkCXn2xjNjPFH6ekn4=;
-        b=T1IpLJ344rgGaAa+SleIJFka/PpqQpfHOmwwxhlqA4Suwr5L752jeOu5N30x6rcKz8
-         KF20wG2FJZQGA4AztiZaX4TzOwDhVPTEKfW0sOaPHxxZXhHWKs5AlLiSCTAg8sFusRgp
-         PeZguF1j71pS4edUg3CM/8vlS2RLY3+JL23breZejkSX4dCEFuIuecM+9Zp34UrFAdZY
-         GWzcWmJsDujFB78JLRZS4i3yxZ8gc8y9UibuKmXikPPbfHYvTNqIpHPz2Vvto1L1wdFI
-         4Ri5cK36BuL8D113uj2oCGfqYuOBE5J0COAuRf5g6TIXA+LImkTnIQvPIvdfMRToNHqS
-         ivpQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=utWWFklWALofIM9bV7ToCXee3PvUOGzhWQpDC33de7M=;
+        b=IAvk3F/kG69804ZwlJ0UWXHoVCPCaWP7DEh5wo8+T5c3r7p9l2Dsc1giGQ3ZP3t6Nk
+         Za9YYSclySFOZoMiKb+4olFPBJw87ldQfKBB8/DHtQpqTm5DqMLVumY9dCpiofuuOSXN
+         svbeGi8Rq7oQ/iQgUI0dMXNQLIyc8oSDQvhpv+SZK25D+xK/QbOF1CWjQIroHgmwJWOS
+         dDCoQr7uKdT+NEOWtHmst+PPnFsQv5Bv5hEafJ23Lm22IeZeXWtZAO2NdvuosoVdQN7Z
+         4nfEJv+iuCXYfrHOBkToxVB2X9WjIZZGTyz+n7RuurK1XrPBc1MPG0HzxH0f1iJmAON6
+         w4IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h9h6iUTLSlaM8ZKedUbrDjAeuBkCXn2xjNjPFH6ekn4=;
-        b=Zm6cBiMtLukqlfBz+W4ASGk/HwQhei84uJ3Ekrcg+sNXcvekwftMcHXAN8vAsLmH4N
-         qAKvIWd9kuigXIhG+JWCZJFttOJUXgR4aqIH5M+GeTie4VqvTPNiZMwv4TaCqytR5baz
-         PswOPAPMCKMXImBFxX2fFJhUMhR2NZfRJw+3ommyiC8f6CtoM4RvpB8ruFMvWhgAi7Ip
-         /G/sf7YIG4FGkXJwsmkVaX82f3WhWy95AuVM4gtapyAHC3ylRMRW2VoY/nXePLKM/9Fr
-         XH5kiKHQkPHBJhMjS6DsGVwV2R+SzB6fJH4MztGKQx6UzZXy0XGnLWAwnJc4uuTnOXFy
-         A/Gg==
-X-Gm-Message-State: AOAM5309Nbexwm5FIOjD0VqOYcVaOal8Px3f5aqQT+fENL9IpDyHpLfR
-        kNLx3YCXTiQIF751oPHiFFkqEBTLIHwdDCsjZTtxewavkB8=
-X-Google-Smtp-Source: ABdhPJzADHgjRYun7EFvcNevrS1w88lT8h+z8+W9iN0INfkGcrVrm59SoEI2bpu5gUwfXvpzn98HJaI1jOgo7YMD9Lc=
-X-Received: by 2002:a37:9c81:: with SMTP id f123mr14194552qke.21.1593440814965;
- Mon, 29 Jun 2020 07:26:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=utWWFklWALofIM9bV7ToCXee3PvUOGzhWQpDC33de7M=;
+        b=fR7x/vCd1jU7VgrVmevZA71zXZcSDbcyUgdJiTmEik30RAbYQZIwIl4SWivag5IpHY
+         RvYvxrIZ92o3HVc76tiGKyEd9f1+gdGPNA5NynnQh7LrsTjUPjpgwx/1OZSCgwmFakWy
+         GVKljfMYpl3AtM33mk5lphOc1pt7Ct3crr60fTMZFlFhS3M1JbvyPwP9bQD5ZSuwiEXl
+         dmBbpSzwjJLmIn1SM1wBoSzWF6Ms7YA3gGuE9hF4/lKzAYnxHN8U+18YMEqn2KWKrZaW
+         soC5dK2n/CioDa+yQXa5mivzs7HBSz/ixFOVP67AE4HOiZhWO1JcB2iNLVfg0kLsNYdq
+         1uzQ==
+X-Gm-Message-State: AOAM5339DlJ4Aq9BG0FkDlmmlB0Il8wUyMlG/ZrjJscMh5rchA8GwbSZ
+        hjys3I7THkGPqLhUqJoxpRoBcuyByyc=
+X-Google-Smtp-Source: ABdhPJx+1nrz9ERbholIN/oCa3fEtNyBH/9ECJY/jcUkSF9VHQTmtUfpe5alelpBY9CCtWoonaZKVw==
+X-Received: by 2002:aa7:818e:: with SMTP id g14mr8107221pfi.27.1593419390963;
+        Mon, 29 Jun 2020 01:29:50 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id 202sm9133790pfw.84.2020.06.29.01.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 01:29:50 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 1/4] qlge/qlge_main.c: use genric power management
+Date:   Mon, 29 Jun 2020 13:58:16 +0530
+Message-Id: <20200629082819.216405-2-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
+References: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-16-warthog618@gmail.com>
-In-Reply-To: <20200623040107.22270-16-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 29 Jun 2020 16:26:44 +0200
-Message-ID: <CAMpxmJWoXWk4t08gM8ieMrMSgYPNODjt6Jx3k_L+a9X00891sQ@mail.gmail.com>
-Subject: Re: [PATCH 15/22] gpiolib: add build option for CDEV V1 ABI
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 6:03 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add a build option to allow the removal of the CDEV v1 ABI.
->
-> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
->
-> ---
->
-> This patch is before the V2 implementation, and is non-functional until
-> that patch, as some parts of that patch would be written slightly
-> differently if removing V1 was not considered.
-> Adding this patch after that would necessitate revisiting the V2 changes,
-> so this ordering results in two simpler patches.
->
->  drivers/gpio/Kconfig | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index affc1524bc2c..b966a7dc1c9a 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -81,6 +81,18 @@ config GPIO_CDEV
->
->           If unsure, say Y.
->
-> +config GPIO_CDEV_V1
-> +       bool "Support GPIO ABI Version 1"
-> +       default y
-> +       depends on GPIO_CDEV
-> +       help
-> +         Say Y here to support version 1 of the GPIO CDEV ABI.
-> +
-> +         This ABI version is deprecated and will be removed in the future.
-> +         Please use the latest ABI for new developments.
-> +
-> +         If unsure, say Y.
-> +
->  config GPIO_GENERIC
->         depends on HAS_IOMEM # Only for IOMEM drivers
->         tristate
-> --
-> 2.27.0
->
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-As long as the series remains bisectable:
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/staging/qlge/qlge_main.c | 36 ++++++++------------------------
+ 1 file changed, 9 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 402edaeffe12..b6f6f681c77b 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -4763,9 +4763,9 @@ static const struct pci_error_handlers qlge_err_handler = {
+ 	.resume = qlge_io_resume,
+ };
+ 
+-static int qlge_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused qlge_suspend(struct device *dev_d)
+ {
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev_d);
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
+ 	int err;
+ 
+@@ -4779,35 +4779,19 @@ static int qlge_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	}
+ 
+ 	ql_wol(qdev);
+-	err = pci_save_state(pdev);
+-	if (err)
+-		return err;
+-
+-	pci_disable_device(pdev);
+-
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+ 
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int qlge_resume(struct pci_dev *pdev)
++static int __maybe_unused qlge_resume(struct device *dev_d)
+ {
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev_d);
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
+ 	int err;
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	err = pci_enable_device(pdev);
+-	if (err) {
+-		netif_err(qdev, ifup, qdev->ndev, "Cannot enable PCI device from suspend\n");
+-		return err;
+-	}
+ 	pci_set_master(pdev);
+ 
+-	pci_enable_wake(pdev, PCI_D3hot, 0);
+-	pci_enable_wake(pdev, PCI_D3cold, 0);
++	device_wakeup_disable(dev_d);
+ 
+ 	if (netif_running(ndev)) {
+ 		err = ql_adapter_up(qdev);
+@@ -4820,22 +4804,20 @@ static int qlge_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static void qlge_shutdown(struct pci_dev *pdev)
+ {
+-	qlge_suspend(pdev, PMSG_SUSPEND);
++	qlge_suspend(&pdev->dev);
+ }
+ 
++static SIMPLE_DEV_PM_OPS(qlge_pm_ops, qlge_suspend, qlge_resume);
++
+ static struct pci_driver qlge_driver = {
+ 	.name = DRV_NAME,
+ 	.id_table = qlge_pci_tbl,
+ 	.probe = qlge_probe,
+ 	.remove = qlge_remove,
+-#ifdef CONFIG_PM
+-	.suspend = qlge_suspend,
+-	.resume = qlge_resume,
+-#endif
++	.driver.pm = &qlge_pm_ops,
+ 	.shutdown = qlge_shutdown,
+ 	.err_handler = &qlge_err_handler
+ };
+-- 
+2.27.0
+
