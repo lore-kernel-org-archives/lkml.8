@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A711BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14722065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7993D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468292;
-	bh=yP2iUUsoD9wU6n3FXJD0Asi3/uyg3v8g2KmgWtmx3Mg=;
+	s=default; t=1593468295;
+	bh=5ZilBD8b4awJ7XRyq9tntI+OmekGDGgyK6digP59zWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Whp5lmWMtA5EcvZvdimUTQUCu5GTmdbDconq6mTTMlBqBsEYJ3q9vQTXp/9Eb2KZe
-	 nRUQGzhQNWyexkwmE47+6HrbkWy73LFJ/MJyfpwfQg5WO/fOTYU40ft5SE1uQDt+ae
-	 EWaC0ivo/UBtSeaqxzyrTrY6k1KRORMLrbEQVgvA=
+	b=2uo/F9B/CzSG5w0EzlFKaubCE9MFURCXi+HPK4dzkB05/joSV3K03ChPxM0CiLegV
+	 9d/iydNuBWxmECJVGX+ax/wQ04sbZc/tYUMeoAKcUtA2oNKBiM72aQuWbgdLTYxgR/
+	 5/zzjL9zeCSSkJ2VtbjySXyXGFNpHiHrSU75YGlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391844AbgF2WEu (ORCPT
+        id S2391855AbgF2WEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726177AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A83246A1;
-        Mon, 29 Jun 2020 15:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E61C246B3;
+        Mon, 29 Jun 2020 15:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443996;
-        bh=yP2iUUsoD9wU6n3FXJD0Asi3/uyg3v8g2KmgWtmx3Mg=;
+        s=default; t=1593444008;
+        bh=5ZilBD8b4awJ7XRyq9tntI+OmekGDGgyK6digP59zWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qW4162CXrxI1ua6gu2B7JJHqra8yY5YRbwcQULF9nahYn10Vm1IfUmc+fkkUY1sj0
-         AY+UhnyOsE1R1x1Pkeoag3oHlljBFkaYipc5FrnLNuucMgvv08rn35F95N0IitbzyX
-         CGvxGXEE3A9Bksx4G3LWQX3SWVQpORHD55nQ5oIM=
+        b=wCkvbJGFbiBANH7/FwctO1Z8OfhA5FwYLsgoIafDOe+hKjA/0Zzb2kx1vSpmTc6Vh
+         ew8BOd7AIjfGIxvIMTuC/T3OUzH5VwI+VIXCEmgwspxDATy88p0BwRRkYentBJYjwU
+         esMYfwgzau/bfostSp0v/NDQlZoGmysUB1ona0SM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Philipp Fent <fent@in.tum.de>, Ard Biesheuvel <ardb@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 101/265] ASoC: q6asm: handle EOS correctly
-Date:   Mon, 29 Jun 2020 11:15:34 -0400
-Message-Id: <20200629151818.2493727-102-sashal@kernel.org>
+Subject: [PATCH 5.7 114/265] efi/libstub: Fix path separator regression
+Date:   Mon, 29 Jun 2020 11:15:47 -0400
+Message-Id: <20200629151818.2493727-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,58 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Philipp Fent <fent@in.tum.de>
 
-[ Upstream commit 6476b60f32866be49d05e2e0163f337374c55b06 ]
+[ Upstream commit 7a88a6227dc7f2e723bba11ece05e57bd8dce8e4 ]
 
-Successful send of EOS command does not indicate that EOS is actually
-finished, correct event to wait EOS is finished is EOS_RENDERED event.
-EOS_RENDERED means that the DSP has finished processing all the buffers
-for that particular session and stream.
+Commit 9302c1bb8e47 ("efi/libstub: Rewrite file I/O routine") introduced a
+regression that made a couple of (badly configured) systems fail to
+boot [1]: Until 5.6, we silently accepted Unix-style file separators in
+EFI paths, which might violate the EFI standard, but are an easy to make
+mistake. This fix restores the pre-5.7 behaviour.
 
-This patch fixes EOS handling!
+[1] https://bbs.archlinux.org/viewtopic.php?id=256273
 
-Fixes: 68fd8480bb7b ("ASoC: qdsp6: q6asm: Add support to audio stream apis")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200611124159.20742-3-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9302c1bb8e47 ("efi/libstub: Rewrite file I/O routine")
+Signed-off-by: Philipp Fent <fent@in.tum.de>
+Link: https://lore.kernel.org/r/20200615115109.7823-1-fent@in.tum.de
+[ardb: rewrite as chained if/else statements]
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6asm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/libstub/file.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index 0e0e8f7a460ab..ae4b2cabdf2d6 100644
---- a/sound/soc/qcom/qdsp6/q6asm.c
-+++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -25,6 +25,7 @@
- #define ASM_STREAM_CMD_FLUSH			0x00010BCE
- #define ASM_SESSION_CMD_PAUSE			0x00010BD3
- #define ASM_DATA_CMD_EOS			0x00010BDB
-+#define ASM_DATA_EVENT_RENDERED_EOS		0x00010C1C
- #define ASM_NULL_POPP_TOPOLOGY			0x00010C68
- #define ASM_STREAM_CMD_FLUSH_READBUFS		0x00010C09
- #define ASM_STREAM_CMD_SET_ENCDEC_PARAM		0x00010C10
-@@ -622,9 +623,6 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 		case ASM_SESSION_CMD_SUSPEND:
- 			client_event = ASM_CLIENT_EVENT_CMD_SUSPEND_DONE;
- 			break;
--		case ASM_DATA_CMD_EOS:
--			client_event = ASM_CLIENT_EVENT_CMD_EOS_DONE;
--			break;
- 		case ASM_STREAM_CMD_FLUSH:
- 			client_event = ASM_CLIENT_EVENT_CMD_FLUSH_DONE;
- 			break;
-@@ -727,6 +725,9 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 			spin_unlock_irqrestore(&ac->lock, flags);
- 		}
+diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
+index ea66b1f16a79d..f1c4faf58c764 100644
+--- a/drivers/firmware/efi/libstub/file.c
++++ b/drivers/firmware/efi/libstub/file.c
+@@ -104,12 +104,20 @@ static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
+ 	if (!found)
+ 		return 0;
  
-+		break;
-+	case ASM_DATA_EVENT_RENDERED_EOS:
-+		client_event = ASM_CLIENT_EVENT_CMD_EOS_DONE;
- 		break;
++	/* Skip any leading slashes */
++	while (cmdline[i] == L'/' || cmdline[i] == L'\\')
++		i++;
++
+ 	while (--result_len > 0 && i < cmdline_len) {
+-		if (cmdline[i] == L'\0' ||
+-		    cmdline[i] == L'\n' ||
+-		    cmdline[i] == L' ')
++		efi_char16_t c = cmdline[i++];
++
++		if (c == L'\0' || c == L'\n' || c == L' ')
+ 			break;
+-		*result++ = cmdline[i++];
++		else if (c == L'/')
++			/* Replace UNIX dir separators with EFI standard ones */
++			*result++ = L'\\';
++		else
++			*result++ = c;
  	}
- 
+ 	*result = L'\0';
+ 	return i;
 -- 
 2.25.1
 
