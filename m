@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F615C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4FE20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF472067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458748;
-	bh=igXIQ9KhOPwaPpl0b/JdivR6aj4//a+EAr8lZskRhz8=;
+	s=default; t=1593458751;
+	bh=ypQggd1jTN90dgiL1MA75jtztYY5Xc4dxZIh5jqZWCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BBpIGT5ZH0uuALsMdzNjh6KUltTjTQRZiWbmUBqXX43up9epDFXfk6UaodVJHhCf5
-	 INgeXpsB3Gy0UEcdRWIhgukQb86aVlz53ZV1Q/rKsKSHxBXArqwgzemxE5bY1XWi3s
-	 UyU0+nQvVPyiY4MAY94snIlxHd2p9Xqum63UYqQ8=
+	b=vPlUG+qGR7OV57NORo6Wz0ZHtP1C2e9KPvbZ3Y3xeDv62PleRqERRUAjT96X9dxSs
+	 jYAJMY7cJOOlLUUezIfITOo7Jx8JDktCA0qdNCTNj9azAvLrrc/RgaiXk2089R/vKG
+	 zYHmA3jZDfYJ/GvKjQiiLPMOZM9TB2QeSQwgbZZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732690AbgF2TZr (ORCPT
+        id S1730962AbgF2TZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731759AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:23 -0400
+        id S1732506AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0C42543C;
-        Mon, 29 Jun 2020 15:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D932537D;
+        Mon, 29 Jun 2020 15:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445389;
-        bh=igXIQ9KhOPwaPpl0b/JdivR6aj4//a+EAr8lZskRhz8=;
+        s=default; t=1593445244;
+        bh=ypQggd1jTN90dgiL1MA75jtztYY5Xc4dxZIh5jqZWCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWHVvkh9j89ol+aCa/e1cJ1b8tsWdelSfe8Ph0xOuQZdpSsBIeOlbnJnincHLN5rk
-         EjSfLAciiokUgADnPQqOtHL+S6+w1gvpD/3ZjlsgDyII1Hu67TiSd6zwveWWJ1ojol
-         WkbXcu1ElyiBmBH54Om5wKQEesEzrH+8cXwaGHOg=
+        b=IZMaIWJHs0ynEWyBtnWRuVYi5bhu5FBji4qsW6BrpzGRaE+hE8s3A8j6/uLVNIxmr
+         SqKlH7kzLui3A/tkxgGovAoHYqzMpG687brkuTRgrHZ3DS2eS5Z0R7+T8kp3NbgIQR
+         u2+Cg6alNa9pACXJmnC0fARswDzvR53+fuBlTu2g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     guodeqing <geffrey.guo@huawei.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 143/191] net: Fix the arp error in some cases
-Date:   Mon, 29 Jun 2020 11:39:19 -0400
-Message-Id: <20200629154007.2495120-144-sashal@kernel.org>
+Cc:     Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 028/191] tty: hvc: Fix data abort due to race in hvc_open
+Date:   Mon, 29 Jun 2020 11:37:24 -0400
+Message-Id: <20200629154007.2495120-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,53 +65,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+From: Raghavendra Rao Ananta <rananta@codeaurora.org>
 
-[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
+[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
 
-ie.,
-$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
+Potentially, hvc_open() can be called in parallel when two tasks calls
+open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
+callback in the function fails, where it sets the tty->driver_data to
+NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
+Hence, serialize hvc_open and check if tty->private_data is NULL before
+proceeding ahead.
 
-$ ip rule add from 6.6.6.6 table 6666
+The issue can be easily reproduced by launching two tasks simultaneously
+that does nothing but open() and close() on /dev/hvcX.
+For example:
+$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
 
-$ ip route add 9.9.9.9 via 6.6.6.6
-
-$ ping -I 6.6.6.6 9.9.9.9
-PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
-
-3 packets transmitted, 0 received, 100% packet loss, time 2079ms
-
-$ arp
-Address     HWtype  HWaddress           Flags Mask            Iface
-6.6.6.6             (incomplete)                              eth0
-
-The arp request address is error, this is because fib_table_lookup in
-fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
-the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
-Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
-
-Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_semantics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index 6aec95e1fc134..305104d116d62 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -776,7 +776,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_info *fi,
- 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
- 				fl4.flowi4_scope = RT_SCOPE_LINK;
+diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+index 985f49a659068..35d591287734d 100644
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -89,6 +89,8 @@ static LIST_HEAD(hvc_structs);
+  */
+ static DEFINE_SPINLOCK(hvc_structs_lock);
  
--			if (cfg->fc_table)
-+			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
- 				tbl = fib_get_table(net, cfg->fc_table);
++/* Mutex to serialize hvc_open */
++static DEFINE_MUTEX(hvc_open_mutex);
+ /*
+  * This value is used to assign a tty->index value to a hvc_struct based
+  * upon order of exposure via hvc_probe(), when we can not match it to
+@@ -333,16 +335,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
+  */
+ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ {
+-	struct hvc_struct *hp = tty->driver_data;
++	struct hvc_struct *hp;
+ 	unsigned long flags;
+ 	int rc = 0;
  
- 			if (tbl)
++	mutex_lock(&hvc_open_mutex);
++
++	hp = tty->driver_data;
++	if (!hp) {
++		rc = -EIO;
++		goto out;
++	}
++
+ 	spin_lock_irqsave(&hp->port.lock, flags);
+ 	/* Check and then increment for fast path open. */
+ 	if (hp->port.count++ > 0) {
+ 		spin_unlock_irqrestore(&hp->port.lock, flags);
+ 		hvc_kick();
+-		return 0;
++		goto out;
+ 	} /* else count == 0 */
+ 	spin_unlock_irqrestore(&hp->port.lock, flags);
+ 
+@@ -370,6 +380,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ 	/* Force wakeup of the polling thread */
+ 	hvc_kick();
+ 
++out:
++	mutex_unlock(&hvc_open_mutex);
+ 	return rc;
+ }
+ 
 -- 
 2.25.1
 
