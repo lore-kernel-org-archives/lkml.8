@@ -2,233 +2,90 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099C12082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8257420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5xniw6N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDaLUZ8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbgF2Tqq (ORCPT
+        id S2387849AbgF2Tqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        Mon, 29 Jun 2020 15:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387797AbgF2Tkk (ORCPT
+        with ESMTP id S1731908AbgF2Tqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:40 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11805C03E97B;
-        Mon, 29 Jun 2020 12:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=pbP8zrg1Y/6opjqaCVyxx2r08m87DrQRXDirr0/HxNM=; b=B5xniw6N/Ks7z1YpV9+yP7BXgn
-        5/pt5gaOOQx1f+3IVHDShmbIhdOMyl+IqVmfsLvHrGZwPWhicBoYVvKMhbSkKNmJwYZiIbMHvUk8+
-        HbPDCb0Fvrlz4Q+puZk56OottxxAouTYgeaAczW0j8mNOpkqybQrK8MQUVcYtMHe8yNOf23xKnzCQ
-        e4OWuYvaiTUPpmUL3pzJlcYTPZI/nHHF7e/0x19bs3VTQ9x7NudNjRAcGPpGvK6Paiw+QBC6d/+2B
-        1unQ9QEgUyCUCwzriHLFslP9rfHfgngtd8yULGxrxxc6O5rgKKG1mRvnlDse+mGQk+VIk4lR5YfSE
-        xk+2C9WQ==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdi-0004Ou-F4; Mon, 29 Jun 2020 19:40:27 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 18/20] block: refator submit_bio_noacct
-Date:   Mon, 29 Jun 2020 21:39:45 +0200
-Message-Id: <20200629193947.2705954-19-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+        Mon, 29 Jun 2020 15:46:44 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62FDC061755;
+        Mon, 29 Jun 2020 12:46:43 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so4920232ljl.3;
+        Mon, 29 Jun 2020 12:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yW2N/sZTeFOka61e1CNf+2xQi6YWDt9t6wLYYbiilaA=;
+        b=VDaLUZ8iSqn7cD0QR9+EyF5l63jrz8oPVBC6du0FHfOEN6y945EeRP3j9IEZmYZXcP
+         TQdNSu+zX6KWHnsyuDARFJqAr3m+K8l/YYayM6tUhQ3t/lntVE4MnkOt/o+xphoa5qiO
+         yGBV5uF3vmYds+TZnfTjRK0TwZbRObCkWEFwfdJflN7OwVhapi1FvcFxdfl9evr2kHFz
+         05Il1pnJnGFrVE66TfJIR6ip27glEp+GVhUZ5P6OSY0fcl+3qlIOvAWanihgSmDk5c9m
+         9yDfLbioz8KAfjLIf3F5O/yjfF1uvpIdClo1zjPPmjV6A+MddlZhsdwtLwSFOhRjbQJc
+         +SAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yW2N/sZTeFOka61e1CNf+2xQi6YWDt9t6wLYYbiilaA=;
+        b=egH1k+LETXRqjEj26uSh5rTH7b0UmXuRz/s76KCfxuQgv4s8+5v/oUOvhSyoeg9B5T
+         j9WmfQR9SdR9jKRAfPAEy0TXF+9V4sh79zKsBdG11kYKKt/jjo8nWMfmAz9Dq4DwCAF7
+         rTOA2mh+fgIxv00rBMHgG/jsajvzsNVTbpMafFSKCiD+tKJXBiwPug2e6c9piFv5ZugM
+         xRR0OfvV296q+QeQ364S9h8hfnaI2c8Dx0jbtmdiYzfH0dpS/TRaHN3PxPOQ4V1rshcb
+         94Nj59gtohuXlcrVbZS7c+jWAgOmzGThVe6/JBkqIOtFYY50D8sXNGuOsvsll/JPRV4n
+         k79A==
+X-Gm-Message-State: AOAM530k0zTN5vZCCc3H51p9rv62uwY001rBrsYDtNi8RmqgJLh7QBNU
+        ErCBj69k59fynRP9owLo5Ag=
+X-Google-Smtp-Source: ABdhPJwHRLunzx+iZfO+XnOzdRcm6JIpPwrEGHua7lMghZlsvgzBExcytpP3CswdyVtIND48oleGDA==
+X-Received: by 2002:a2e:b8d5:: with SMTP id s21mr8386732ljp.34.1593460002225;
+        Mon, 29 Jun 2020 12:46:42 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
+        by smtp.gmail.com with ESMTPSA id q128sm154750ljb.140.2020.06.29.12.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:46:41 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH 0/2] regulator/qcom: Constify static structs
+Date:   Mon, 29 Jun 2020 21:46:30 +0200
+Message-Id: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split out a __submit_bio_noacct helper for the actual de-recursion
-algorithm, and simplify the loop by using a continue when we can't
-enter the queue for a bio.
+Constify some static structs to allow the compiler to put them in
+read-only memory.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-core.c | 131 +++++++++++++++++++++++++----------------------
- 1 file changed, 71 insertions(+), 60 deletions(-)
+Rikard Falkeborn (2):
+  regulator: qcom_rpm: Constify struct regulator_ops
+  regulator: qcom_spmi: Constify struct regulator_ops
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 1caeb01e127768..b82f48c86e6f7a 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1085,6 +1085,74 @@ static blk_qc_t do_make_request(struct bio *bio)
- 	return ret;
- }
- 
-+/*
-+ * The loop in this function may be a bit non-obvious, and so deserves some
-+ * explanation:
-+ *
-+ *  - Before entering the loop, bio->bi_next is NULL (as all callers ensure
-+ *    that), so we have a list with a single bio.
-+ *  - We pretend that we have just taken it off a longer list, so we assign
-+ *    bio_list to a pointer to the bio_list_on_stack, thus initialising the
-+ *    bio_list of new bios to be added.  ->submit_bio() may indeed add some more
-+ *    bios through a recursive call to submit_bio_noacct.  If it did, we find a
-+ *    non-NULL value in bio_list and re-enter the loop from the top.
-+ *  - In this case we really did just take the bio of the top of the list (no
-+ *    pretending) and so remove it from bio_list, and call into ->submit_bio()
-+ *    again.
-+ *
-+ * bio_list_on_stack[0] contains bios submitted by the current ->submit_bio.
-+ * bio_list_on_stack[1] contains bios that were submitted before the current
-+ *	->submit_bio_bio, but that haven't been processed yet.
-+ */
-+static blk_qc_t __submit_bio_noacct(struct bio *bio)
-+{
-+	struct bio_list bio_list_on_stack[2];
-+	blk_qc_t ret = BLK_QC_T_NONE;
-+
-+	BUG_ON(bio->bi_next);
-+
-+	bio_list_init(&bio_list_on_stack[0]);
-+	current->bio_list = bio_list_on_stack;
-+
-+	do {
-+		struct request_queue *q = bio->bi_disk->queue;
-+		struct bio_list lower, same;
-+
-+		if (unlikely(bio_queue_enter(bio) != 0))
-+			continue;
-+
-+		/*
-+		 * Create a fresh bio_list for all subordinate requests.
-+		 */
-+		bio_list_on_stack[1] = bio_list_on_stack[0];
-+		bio_list_init(&bio_list_on_stack[0]);
-+
-+		ret = do_make_request(bio);
-+
-+		/*
-+		 * Sort new bios into those for a lower level and those for the
-+		 * same level.
-+		 */
-+		bio_list_init(&lower);
-+		bio_list_init(&same);
-+		while ((bio = bio_list_pop(&bio_list_on_stack[0])) != NULL)
-+			if (q == bio->bi_disk->queue)
-+				bio_list_add(&same, bio);
-+			else
-+				bio_list_add(&lower, bio);
-+
-+		/*
-+		 * Now assemble so we handle the lowest level first.
-+		 */
-+		bio_list_merge(&bio_list_on_stack[0], &lower);
-+		bio_list_merge(&bio_list_on_stack[0], &same);
-+		bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
-+	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
-+
-+	current->bio_list = NULL;
-+	return ret;
-+}
-+
- /**
-  * submit_bio_noacct - re-submit a bio to the block device layer for I/O
-  * @bio:  The bio describing the location in memory and on the device.
-@@ -1096,17 +1164,8 @@ static blk_qc_t do_make_request(struct bio *bio)
-  */
- blk_qc_t submit_bio_noacct(struct bio *bio)
- {
--	/*
--	 * bio_list_on_stack[0] contains bios submitted by the current
--	 * ->submit_bio.
--	 * bio_list_on_stack[1] contains bios that were submitted before the
--	 * current ->submit_bio_bio, but that haven't been processed yet.
--	 */
--	struct bio_list bio_list_on_stack[2];
--	blk_qc_t ret = BLK_QC_T_NONE;
--
- 	if (!submit_bio_checks(bio))
--		goto out;
-+		return BLK_QC_T_NONE;
- 
- 	/*
- 	 * We only want one ->submit_bio to be active at a time, else
-@@ -1120,58 +1179,10 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
- 	 */
- 	if (current->bio_list) {
- 		bio_list_add(&current->bio_list[0], bio);
--		goto out;
-+		return BLK_QC_T_NONE;
- 	}
- 
--	/* following loop may be a bit non-obvious, and so deserves some
--	 * explanation.
--	 * Before entering the loop, bio->bi_next is NULL (as all callers
--	 * ensure that) so we have a list with a single bio.
--	 * We pretend that we have just taken it off a longer list, so
--	 * we assign bio_list to a pointer to the bio_list_on_stack,
--	 * thus initialising the bio_list of new bios to be
--	 * added.  ->submit_bio() may indeed add some more bios
--	 * through a recursive call to submit_bio_noacct.  If it
--	 * did, we find a non-NULL value in bio_list and re-enter the loop
--	 * from the top.  In this case we really did just take the bio
--	 * of the top of the list (no pretending) and so remove it from
--	 * bio_list, and call into ->submit_bio() again.
--	 */
--	BUG_ON(bio->bi_next);
--	bio_list_init(&bio_list_on_stack[0]);
--	current->bio_list = bio_list_on_stack;
--	do {
--		struct request_queue *q = bio->bi_disk->queue;
--
--		if (likely(bio_queue_enter(bio) == 0)) {
--			struct bio_list lower, same;
--
--			/* Create a fresh bio_list for all subordinate requests */
--			bio_list_on_stack[1] = bio_list_on_stack[0];
--			bio_list_init(&bio_list_on_stack[0]);
--			ret = do_make_request(bio);
--
--			/* sort new bios into those for a lower level
--			 * and those for the same level
--			 */
--			bio_list_init(&lower);
--			bio_list_init(&same);
--			while ((bio = bio_list_pop(&bio_list_on_stack[0])) != NULL)
--				if (q == bio->bi_disk->queue)
--					bio_list_add(&same, bio);
--				else
--					bio_list_add(&lower, bio);
--			/* now assemble so we handle the lowest level first */
--			bio_list_merge(&bio_list_on_stack[0], &lower);
--			bio_list_merge(&bio_list_on_stack[0], &same);
--			bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
--		}
--		bio = bio_list_pop(&bio_list_on_stack[0]);
--	} while (bio);
--	current->bio_list = NULL; /* deactivate */
--
--out:
--	return ret;
-+	return __submit_bio_noacct(bio);
- }
- EXPORT_SYMBOL(submit_bio_noacct);
- 
+ drivers/regulator/qcom_rpm-regulator.c  |  6 +++---
+ drivers/regulator/qcom_spmi-regulator.c | 24 ++++++++++++------------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
 -- 
-2.26.2
+2.27.0
 
