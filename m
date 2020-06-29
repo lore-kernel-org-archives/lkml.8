@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C313F20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14907206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464833;
-	bh=XGuWL52K+qAbtTA70o3IBFExy55ErqwDzLBqz/ZsfZU=;
+	s=default; t=1593464836;
+	bh=Wbpjtpg84Kks/heMA4+5KkUNS4Oj/ZQKLOymbYfgQVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NSuquG2//jP5tCe7OoRFAgvxGsfEAmtJCxrIf6aFojit2o2pbApozGF6y4VnLeaUr
-	 Rk+svzPYAkCvDOtvZWdfbxDaLvbJEF9RKdFFK3JszYvr6ojaJvluaHsiy1CFnVFYtD
-	 5QmcL2NVlOMugC6bmoLrD5heOSJO99NUgQQZOyPc=
+	b=nIDvWMVzskbvQuKvG6WhhmFHV2Q5NkcwYioneoe4Poh9DQyGlFQ/pgDR7ow/32TAz
+	 V7VdKIDMCh3IOYipnAdjHPBD+GMOVOMuBVlc+0whjAJlQdQyz+MFgQw8fCZ3buL9Nv
+	 J1uTbo5iLB61+U1lke67ZE0BX3DSzr9IqVNRREm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbgF2VHM (ORCPT
+        id S2390349AbgF2VHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53756 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730946AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36503254CA;
-        Mon, 29 Jun 2020 15:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62663254DC;
+        Mon, 29 Jun 2020 15:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446024;
-        bh=XGuWL52K+qAbtTA70o3IBFExy55ErqwDzLBqz/ZsfZU=;
+        s=default; t=1593446036;
+        bh=Wbpjtpg84Kks/heMA4+5KkUNS4Oj/ZQKLOymbYfgQVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYubyoltP+z/2jeiqTfZXc7luL1gAvngx30Yt8wZHBjEFjxE5Yi3bXDB85Sp7Agmu
-         AalogZ+EG9gc7aswzHzGU68E0JtAnN8Ps6T4O/Zpbf919Ws6FfLhBV2WDE5cpK8wgY
-         Xkzueyn/VJmkHD1Vri5dkV2jDeGZXstBsxnFhv+0=
+        b=CQ/Kl7eqa6fwjbPwsL8bEQ0s4zTe+uVXKNSxTgGRgmhxrMKAHOjAcD5dNP0TVPvIh
+         Mmr2ec2juHyorsKHyljpEeyKU+i7b+l+LtxJZL3scodO7s9Ux5ZzHGvVjJycB5NGGq
+         wpXLMzmJBVGBnMNUL0DxEEboZoIicdRjcfK0Hsn4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 030/135] clk: ti: composite: fix memory leak
-Date:   Mon, 29 Jun 2020 11:51:24 -0400
-Message-Id: <20200629155309.2495516-31-sashal@kernel.org>
+Subject: [PATCH 4.4 041/135] usb: dwc2: gadget: move gadget resume after the core is in L0 state
+Date:   Mon, 29 Jun 2020 11:51:35 -0400
+Message-Id: <20200629155309.2495516-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,36 +66,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
+[ Upstream commit 8c935deacebb8fac8f41378701eb79d12f3c2e2d ]
 
-The parent_names is never released for a component clock definition,
-causing some memory leak. Fix by releasing it once it is no longer
-needed.
+When the remote wakeup interrupt is triggered, lx_state is resumed from L2
+to L0 state. But when the gadget resume is called, lx_state is still L2.
+This prevents the resume callback to queue any request. Any attempt
+to queue a request from resume callback will result in:
+- "submit request only in active state" debug message to be issued
+- dwc2_hsotg_ep_queue() returns -EAGAIN
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Call the gadget resume routine after the core is in L0 state.
+
+Fixes: f81f46e1f530 ("usb: dwc2: implement hibernation during bus suspend/resume")
+
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc2/core_intr.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index dbef218fe5ecd..14201c52b44bc 100644
---- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -228,6 +228,7 @@ static void __init _register_composite(struct clk_hw *hw,
- 		if (!cclk->comp_clks[i])
- 			continue;
- 		list_del(&cclk->comp_clks[i]->link);
-+		kfree(cclk->comp_clks[i]->parent_names);
- 		kfree(cclk->comp_clks[i]);
- 	}
+diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+index 27daa42788b1a..796d60d49ac5f 100644
+--- a/drivers/usb/dwc2/core_intr.c
++++ b/drivers/usb/dwc2/core_intr.c
+@@ -363,10 +363,13 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+ 			if (ret && (ret != -ENOTSUPP))
+ 				dev_err(hsotg->dev, "exit hibernation failed\n");
  
++			/* Change to L0 state */
++			hsotg->lx_state = DWC2_L0;
+ 			call_gadget(hsotg, resume);
++		} else {
++			/* Change to L0 state */
++			hsotg->lx_state = DWC2_L0;
+ 		}
+-		/* Change to L0 state */
+-		hsotg->lx_state = DWC2_L0;
+ 	} else {
+ 		if (hsotg->core_params->hibernation) {
+ 			dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
 -- 
 2.25.1
 
