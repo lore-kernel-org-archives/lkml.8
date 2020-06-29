@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C11C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB663206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6682920760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467566;
-	bh=oqOzstyS6Poeb0QoznX9WUTIjyYQlORjyJQqIL90QTk=;
+	s=default; t=1593467570;
+	bh=vabRyVgDkFUg3lNiwlmdoEUpny39lVxyEzxQS9PmrX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfU95HQBrK1E03Xo5pcPMsapOY4R74IYZ/AsRgGgpo6D5nykg4h85d3mgxZ79iJvE
-	 0l1RSciV1sObqZ7FlC7039z1dYwAgPArxohuBU8SbsZZGWKdBJJrB33cWZKCUfrgBv
-	 Ua3g2iJJnF1zBuDjyXcr8H27ultGc0NFHboQgTcg=
+	b=Tvp1jnp4mOh9DKNU43OS/AwnMSTaANsadHsTy/TDKIL/O0+vckEi2C0r4WCFfljNX
+	 Ty4hsJTSmxfL/J9UpXGnd0RRnUlpXgPF1z5EFzFkvnCLr/40V//07oGdR6AuH6/Jlr
+	 4MU2saB8yjzZcDGlbRmZc6ExZq/5cg0N6ikKu5v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404194AbgF2Vwp (ORCPT
+        id S2404382AbgF2Vws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726615AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4F9247DF;
-        Mon, 29 Jun 2020 15:22:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A55B246EB;
+        Mon, 29 Jun 2020 15:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444148;
-        bh=oqOzstyS6Poeb0QoznX9WUTIjyYQlORjyJQqIL90QTk=;
+        s=default; t=1593444032;
+        bh=vabRyVgDkFUg3lNiwlmdoEUpny39lVxyEzxQS9PmrX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8Un/ZsZ9m65JMdw9VSunrlT0xD9Gbh+f7l6GTFOK/Gl0OYvrUeC3agBibZ/ZarNb
-         B1uBXLmSztgLFV+ZpDGbtulNE8oSTfjANr8AT4UqTfBYt7yVeveqM5fj2Q8P3ulPrx
-         HZc26eeLueQjlrUCuh64MVJ2G1LVW66ZOeYN1PvE=
+        b=xY2HGCBzCWcXRC0YnqoOiFBFvs25R2qm0qdHzOLWW4WZ9F7UXZiOK9nxeIdPx/E5V
+         TNm9bJEPwraWTDGGoKo6Z/NselJrWPkxoThAni0Td02oJ6LSBhofbMRRUAPtJZjQVD
+         XuerHe2UPf8UxriBu5+Jx750K+fkgW2MdbhFZhb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 254/265] ARM: dts: imx6ul-kontron: Change WDOG_ANY signal from push-pull to open-drain
-Date:   Mon, 29 Jun 2020 11:18:07 -0400
-Message-Id: <20200629151818.2493727-255-sashal@kernel.org>
+Cc:     Shannon Nelson <snelson@pensando.io>,
+        Jonathan Toppins <jtoppins@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 140/265] ionic: tame the watchdog timer on reconfig
+Date:   Mon, 29 Jun 2020 11:16:13 -0400
+Message-Id: <20200629151818.2493727-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,42 +66,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Shannon Nelson <snelson@pensando.io>
 
-commit d22a16cc92e04d053fd807ef3587e4f135e4206f upstream.
+[ Upstream commit b59eabd23ee53e8c3492602722e1697f9a2f63ad ]
 
-The WDOG_ANY signal is connected to the RESET_IN signal of the SoM
-and baseboard. It is currently configured as push-pull, which means
-that if some external device like a programmer wants to assert the
-RESET_IN signal by pulling it to ground, it drives against the high
-level WDOG_ANY output of the SoC.
+Even with moving netif_tx_disable() to an earlier point when
+taking down the queues for a reconfiguration, we still end
+up with the occasional netdev watchdog Tx Timeout complaint.
+The old method of using netif_trans_update() works fine for
+queue 0, but has no effect on the remaining queues.  Using
+netif_device_detach() allows us to signal to the watchdog to
+ignore us for the moment.
 
-To fix this we set the WDOG_ANY signal to open-drain configuration.
-That way we make sure that the RESET_IN can be asserted by the
-watchdog as well as by external devices.
-
-Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: beead698b173 ("ionic: Add the basic NDO callbacks for netdev support")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Acked-by: Jonathan Toppins <jtoppins@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-index fc316408721d0..61ba21a605a81 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-@@ -116,7 +116,7 @@
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 2729b0bb12739..790d4854b8ef5 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -1682,8 +1682,8 @@ static void ionic_stop_queues(struct ionic_lif *lif)
+ 	if (!test_and_clear_bit(IONIC_LIF_F_UP, lif->state))
+ 		return;
  
- 	pinctrl_wdog: wdoggrp {
- 		fsl,pins = <
--			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
-+			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x18b0
- 		>;
- 	};
- };
+-	ionic_txrx_disable(lif);
+ 	netif_tx_disable(lif->netdev);
++	ionic_txrx_disable(lif);
+ }
+ 
+ int ionic_stop(struct net_device *netdev)
+@@ -1949,18 +1949,19 @@ int ionic_reset_queues(struct ionic_lif *lif)
+ 	bool running;
+ 	int err = 0;
+ 
+-	/* Put off the next watchdog timeout */
+-	netif_trans_update(lif->netdev);
+-
+ 	err = ionic_wait_for_bit(lif, IONIC_LIF_F_QUEUE_RESET);
+ 	if (err)
+ 		return err;
+ 
+ 	running = netif_running(lif->netdev);
+-	if (running)
++	if (running) {
++		netif_device_detach(lif->netdev);
+ 		err = ionic_stop(lif->netdev);
+-	if (!err && running)
++	}
++	if (!err && running) {
+ 		ionic_open(lif->netdev);
++		netif_device_attach(lif->netdev);
++	}
+ 
+ 	clear_bit(IONIC_LIF_F_QUEUE_RESET, lif->state);
+ 
 -- 
 2.25.1
 
