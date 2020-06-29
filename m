@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14886C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5B420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB69B2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461731;
-	bh=A/iejyMXASVuRe9IDxE5ScubzxcWtQAlOBvnIvtXnDo=;
+	s=default; t=1593461733;
+	bh=aHJvosfP7d43KJpeh6puslOWNdY/vjt/a2wFCH5S5XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fDMMfbizcTpEbc9gcjlR0p2o5sleFSPeaDemfsGDVyVGzhS24T2VUqD7oP6ZXw75/
-	 K3hfFgMDX4vw3P//0mhlMm9+T83k03xb4aBt1/6jmjZQEzteu2u7BzGr9EoNWGX0Lk
-	 XFVxzIgzvUv41GC48F51Mwoywkl7Jl3+jjRGPX8w=
+	b=dK/tSVIehBQ/+nsl7RwyNz9HQZFlxvO5a24jORkOWjlkZZyib8Q3KFbXB3Z4OAl4C
+	 YNHRL0ABJN/Q7VsJYs2KclVguAfcYoaJHp3iYzO8kkJDEeGFklk1379SjJqamxyHFq
+	 hVnCVYbA2plJ0vSmXUNUcHnHOyAU0lOIxewFDk6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgF2UPU (ORCPT
+        id S1731798AbgF2UPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732827AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732829AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3B02527D;
-        Mon, 29 Jun 2020 15:36:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE7F25279;
+        Mon, 29 Jun 2020 15:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444990;
-        bh=A/iejyMXASVuRe9IDxE5ScubzxcWtQAlOBvnIvtXnDo=;
+        s=default; t=1593444986;
+        bh=aHJvosfP7d43KJpeh6puslOWNdY/vjt/a2wFCH5S5XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6ziL9k0XTfFaUigGr6gNf4GkV3D6BAQvLVE2fYSiMlT5M7hMnWla6e37ecBIdFEU
-         mnzpYpEENHz8Mm6GcVoEbMDTRhE67snfjDPUJDi7mJwF1y3AQrCuTQJGK9koFIXHpi
-         fpUtvCuXPnHaMgcqg+HhjFFUPGNiffM5bM7pMNJg=
+        b=Pn1ZGXT2iE4RAPytg64WWr3pnDeRP4ZPwQmiVTnf3gLfSuMpooFi3UyNxmmsWG3Dz
+         79lZmh/uyNg1rt19tosd8aDLlcfBDmHKPDWpBMLgmGAl0jC/mBWAcwljbsBhTZhWZs
+         9cfjCtIIox6ZSTkjBFyMQPsU49cokNNc0wS5Hlwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/131] sched/core: Fix PI boosting between RT and DEADLINE tasks
-Date:   Mon, 29 Jun 2020 11:34:20 -0400
-Message-Id: <20200629153502.2494656-90-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 086/131] i2c: fsi: Fix the port number field in status register
+Date:   Mon, 29 Jun 2020 11:34:17 -0400
+Message-Id: <20200629153502.2494656-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -69,73 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
+[ Upstream commit 502035e284cc7e9efef22b01771d822d49698ab9 ]
 
-syzbot reported the following warning:
+The port number field in the status register was not correct, so fix it.
 
- WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
- enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
-
-At deadline.c:628 we have:
-
- 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
- 624 {
- 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
- 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
- 627
- 628 	WARN_ON(dl_se->dl_boosted);
- 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
-        [...]
-     }
-
-Which means that setup_new_dl_entity() has been called on a task
-currently boosted. This shouldn't happen though, as setup_new_dl_entity()
-is only called when the 'dynamic' deadline of the new entity
-is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
-condition.
-
-Digging through the PI code I noticed that what above might in fact happen
-if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
-first branch of boosting conditions we check only if a pi_task 'dynamic'
-deadline is earlier than mutex holder's and in this case we set mutex
-holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
-initialized if such tasks get boosted at some point (or if they become
-DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
-to 0 and this verifies the aforementioned condition.
-
-Fix it by checking that the potential donor task is actually (even if
-temporary because in turn boosted) running at DEADLINE priority before
-using its 'dynamic' deadline value.
-
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
+Fixes: d6ffb6300116 ("i2c: Add FSI-attached I2C master algorithm")
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-fsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0325ccf3a8e45..843394d0ea426 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3862,7 +3862,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 	 */
- 	if (dl_prio(prio)) {
- 		if (!dl_prio(p->normal_prio) ||
--		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
-+		    (pi_task && dl_prio(pi_task->prio) &&
-+		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
- 			p->dl.dl_boosted = 1;
- 			queue_flag |= ENQUEUE_REPLENISH;
- 		} else
+diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+index 1e2be2219a602..46aef609fb708 100644
+--- a/drivers/i2c/busses/i2c-fsi.c
++++ b/drivers/i2c/busses/i2c-fsi.c
+@@ -98,7 +98,7 @@
+ #define I2C_STAT_DAT_REQ	BIT(25)
+ #define I2C_STAT_CMD_COMP	BIT(24)
+ #define I2C_STAT_STOP_ERR	BIT(23)
+-#define I2C_STAT_MAX_PORT	GENMASK(19, 16)
++#define I2C_STAT_MAX_PORT	GENMASK(22, 16)
+ #define I2C_STAT_ANY_INT	BIT(15)
+ #define I2C_STAT_SCL_IN		BIT(11)
+ #define I2C_STAT_SDA_IN		BIT(10)
 -- 
 2.25.1
 
