@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D4D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B839C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468067;
-	bh=Tp4oBHPGfd8p24YkN3+BS4LvQkkurIqnCJ0Eu188tlM=;
+	s=default; t=1593468071;
+	bh=kgKSgbhJFxqjd7S1q5GMoHLJNOMvL3+iUYsxkVv9pHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUJNsfPzdbwoJ1p4p0Ag1byUqVfY6blZ/HPvjF586dAWYG4dJNMQ7uK56IXEleVqF
-	 gwEbb96tkv5Lwr4VSFWC8ooTElaa+gX+bC7fYk82qV5PGga5SdhEc3z6YBnGK/0+UO
-	 f6rWh/t7BxN74iN4Dva2pvlg2Q/5hCyHHJKGSKKI=
+	b=lWLEIvW0YnLluPoEewfyjWUBfZZUJFPZIuZ+QKzqeuZP+5gqDl6LbxuUQyM3vjiEQ
+	 2yfOeQoKpWZMHwDqWbpNACJ6QpR8MFzsMLvr2BB8ITLixbrHIzulCqsZIMlCbgJxDk
+	 O9YOjQW3vtZw2wHsL0o58Bi3r1R39QRLlThANVes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404836AbgF2WBE (ORCPT
+        id S2404742AbgF2WBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726265AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279D0246D1;
-        Mon, 29 Jun 2020 15:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E46C2464E;
+        Mon, 29 Jun 2020 15:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444021;
-        bh=Tp4oBHPGfd8p24YkN3+BS4LvQkkurIqnCJ0Eu188tlM=;
+        s=default; t=1593443966;
+        bh=kgKSgbhJFxqjd7S1q5GMoHLJNOMvL3+iUYsxkVv9pHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXQRe/kTT7Z+Kmr2VToBkhvn4oE6oo/cZTuamx2eRQDhlSKalKIr16j/K998Jdobg
-         9f23rfMlaM4QsY7iWwZg0cREK09r0EQqdK+JTdqGbIZvkSiWhmJOqRyB2U2i+xVtrG
-         ZoEDTXiwClXXLfU4HQE9it1LmbjOVxeSG2M/7KRY=
+        b=VsaJQv6y8SzKLA9aHdTm4bvfEZ9ieg3sM33HhnhGC0Jn9ElmDDZmI1/HSmZMmMgjl
+         YOaxTLxCKAoX2YlOEJxGAvnmPGd25pI0dvwL+MRN0JnSyUqO2HNJf4g1i2R8BXp90K
+         ZXRklxTZHTK3MO9P/8no0wdXMESEKP9bpHfmWdA8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 128/265] bpf: Don't return EINVAL from {get,set}sockopt when optlen > PAGE_SIZE
-Date:   Mon, 29 Jun 2020 11:16:01 -0400
-Message-Id: <20200629151818.2493727-129-sashal@kernel.org>
+Cc:     Li Jun <jun.li@nxp.com>, John Stultz <john.stultz@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 070/265] usb: typec: tcpci_rt1711h: avoid screaming irq causing boot hangs
+Date:   Mon, 29 Jun 2020 11:15:03 -0400
+Message-Id: <20200629151818.2493727-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,158 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Li Jun <jun.li@nxp.com>
 
-[ Upstream commit d8fe449a9c51a37d844ab607e14e2f5c657d3cf2 ]
+commit 302c570bf36e997d55ad0d60628a2feec76954a4 upstream.
 
-Attaching to these hooks can break iptables because its optval is
-usually quite big, or at least bigger than the current PAGE_SIZE limit.
-David also mentioned some SCTP options can be big (around 256k).
+John reported screaming irq caused by rt1711h when system boot[1],
+this is because irq request is done before tcpci_register_port(),
+so the chip->tcpci has not been setup, irq handler is entered but
+can't do anything, this patch is to address this by moving the irq
+request after tcpci_register_port().
 
-For such optvals we expose only the first PAGE_SIZE bytes to
-the BPF program. BPF program has two options:
-1. Set ctx->optlen to 0 to indicate that the BPF's optval
-   should be ignored and the kernel should use original userspace
-   value.
-2. Set ctx->optlen to something that's smaller than the PAGE_SIZE.
+[1] https://lore.kernel.org/linux-usb/20200530040157.31038-1-john.stultz@linaro.org
 
-v5:
-* use ctx->optlen == 0 with trimmed buffer (Alexei Starovoitov)
-* update the docs accordingly
-
-v4:
-* use temporary buffer to avoid optval == optval_end == NULL;
-  this removes the corner case in the verifier that might assume
-  non-zero PTR_TO_PACKET/PTR_TO_PACKET_END.
-
-v3:
-* don't increase the limit, bypass the argument
-
-v2:
-* proper comments formatting (Jakub Kicinski)
-
-Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Link: https://lore.kernel.org/bpf/20200617010416.93086-1-sdf@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ce08eaeb6388 ("staging: typec: rt1711h typec chip driver")
+Cc: stable <stable@vger.kernel.org> # v4.18+
+Cc: John Stultz <john.stultz@linaro.org>
+Reported-and-tested-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Link: https://lore.kernel.org/r/20200604112118.38062-1-jun.li@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/cgroup.c | 53 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ drivers/usb/typec/tcpm/tcpci_rt1711h.c | 31 +++++++++-----------------
+ 1 file changed, 10 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index cb305e71e7deb..25aebd21c15b1 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1240,16 +1240,23 @@ static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
- 
- static int sockopt_alloc_buf(struct bpf_sockopt_kern *ctx, int max_optlen)
- {
--	if (unlikely(max_optlen > PAGE_SIZE) || max_optlen < 0)
-+	if (unlikely(max_optlen < 0))
- 		return -EINVAL;
- 
-+	if (unlikely(max_optlen > PAGE_SIZE)) {
-+		/* We don't expose optvals that are greater than PAGE_SIZE
-+		 * to the BPF program.
-+		 */
-+		max_optlen = PAGE_SIZE;
-+	}
-+
- 	ctx->optval = kzalloc(max_optlen, GFP_USER);
- 	if (!ctx->optval)
- 		return -ENOMEM;
- 
- 	ctx->optval_end = ctx->optval + max_optlen;
- 
--	return 0;
-+	return max_optlen;
+diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+index 017389021b96a..b56a0880a0441 100644
+--- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
++++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+@@ -179,26 +179,6 @@ out:
+ 	return tcpci_irq(chip->tcpci);
  }
  
- static void sockopt_free_buf(struct bpf_sockopt_kern *ctx)
-@@ -1283,13 +1290,13 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
- 	 */
- 	max_optlen = max_t(int, 16, *optlen);
- 
--	ret = sockopt_alloc_buf(&ctx, max_optlen);
--	if (ret)
--		return ret;
-+	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
-+	if (max_optlen < 0)
-+		return max_optlen;
- 
- 	ctx.optlen = *optlen;
- 
--	if (copy_from_user(ctx.optval, optval, *optlen) != 0) {
-+	if (copy_from_user(ctx.optval, optval, min(*optlen, max_optlen)) != 0) {
- 		ret = -EFAULT;
- 		goto out;
- 	}
-@@ -1317,8 +1324,14 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
- 		/* export any potential modifications */
- 		*level = ctx.level;
- 		*optname = ctx.optname;
--		*optlen = ctx.optlen;
--		*kernel_optval = ctx.optval;
-+
-+		/* optlen == 0 from BPF indicates that we should
-+		 * use original userspace data.
-+		 */
-+		if (ctx.optlen != 0) {
-+			*optlen = ctx.optlen;
-+			*kernel_optval = ctx.optval;
-+		}
- 	}
- 
- out:
-@@ -1350,12 +1363,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 	    __cgroup_bpf_prog_array_is_empty(cgrp, BPF_CGROUP_GETSOCKOPT))
- 		return retval;
- 
--	ret = sockopt_alloc_buf(&ctx, max_optlen);
--	if (ret)
+-static int rt1711h_init_alert(struct rt1711h_chip *chip,
+-			      struct i2c_client *client)
+-{
+-	int ret;
+-
+-	/* Disable chip interrupts before requesting irq */
+-	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+-	if (ret < 0)
 -		return ret;
 -
- 	ctx.optlen = max_optlen;
- 
-+	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
-+	if (max_optlen < 0)
-+		return max_optlen;
-+
- 	if (!retval) {
- 		/* If kernel getsockopt finished successfully,
- 		 * copy whatever was returned to the user back
-@@ -1369,10 +1382,8 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 			goto out;
- 		}
- 
--		if (ctx.optlen > max_optlen)
--			ctx.optlen = max_optlen;
+-	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
+-					rt1711h_irq,
+-					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+-					dev_name(chip->dev), chip);
+-	if (ret < 0)
+-		return ret;
+-	enable_irq_wake(client->irq);
+-	return 0;
+-}
 -
--		if (copy_from_user(ctx.optval, optval, ctx.optlen) != 0) {
-+		if (copy_from_user(ctx.optval, optval,
-+				   min(ctx.optlen, max_optlen)) != 0) {
- 			ret = -EFAULT;
- 			goto out;
- 		}
-@@ -1401,10 +1412,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 		goto out;
- 	}
+ static int rt1711h_sw_reset(struct rt1711h_chip *chip)
+ {
+ 	int ret;
+@@ -260,7 +240,8 @@ static int rt1711h_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
  
--	if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
--	    put_user(ctx.optlen, optlen)) {
--		ret = -EFAULT;
--		goto out;
-+	if (ctx.optlen != 0) {
-+		if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
-+		    put_user(ctx.optlen, optlen)) {
-+			ret = -EFAULT;
-+			goto out;
-+		}
- 	}
+-	ret = rt1711h_init_alert(chip, client);
++	/* Disable chip interrupts before requesting irq */
++	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+ 	if (ret < 0)
+ 		return ret;
  
- 	ret = ctx.retval;
+@@ -271,6 +252,14 @@ static int rt1711h_probe(struct i2c_client *client,
+ 	if (IS_ERR_OR_NULL(chip->tcpci))
+ 		return PTR_ERR(chip->tcpci);
+ 
++	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
++					rt1711h_irq,
++					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
++					dev_name(chip->dev), chip);
++	if (ret < 0)
++		return ret;
++	enable_irq_wake(client->irq);
++
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
