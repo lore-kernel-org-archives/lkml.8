@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A47C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF96BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFE820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D87207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461382;
-	bh=WcwcWtLCHVk5avc1l8MLwJSQ8mF0Qpzh/HG6UIJq678=;
+	s=default; t=1593461391;
+	bh=rgjFd7XLbY3wbJEkO8jXFp/dzki2gWM5Ij7g6djwNOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDw7Ztxjo6m5J+IUrXOzd+LYsJDMnbFQnBwOngkIHf5ZnUdX2KQmGeJw25YKyvqlw
-	 RQFt3bgDeXusOfkZwwWnSqPKEp9gf+Zsm/WGYsiQTkKYKQRappmgx9wWwyNMt7kSfe
-	 tirfFjnHi8gijZVL6U8/HkOgpPc1TuNqqIYdSY2o=
+	b=gu9E9jjm0iaFUmIjt60i/crwSr5iJL7GOdIJ/GlzO9VOBYPgPitCPJQKfcSh1TIjA
+	 I5moKxJEZwA9FBcdNTAAcdYXmtkf8jUxTgM5Z+uq6VzNebSMlaKoej/yTvQLT7v8rv
+	 o5SJ8E3OvbhZKDIFDjWffJxfsA5CkA1N1gy50HK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgF2UJV (ORCPT
+        id S1728064AbgF2UJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732921AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732915AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 079F22520D;
-        Mon, 29 Jun 2020 15:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 599A5252B4;
+        Mon, 29 Jun 2020 15:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444948;
-        bh=WcwcWtLCHVk5avc1l8MLwJSQ8mF0Qpzh/HG6UIJq678=;
+        s=default; t=1593445025;
+        bh=rgjFd7XLbY3wbJEkO8jXFp/dzki2gWM5Ij7g6djwNOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOHQevzkBC6VSdmfnmmJSl0WoCVEdOIqEa+BwkYyzdUDx03eD/094ahbzQV5oWUYo
-         dke7lkzp8LYLxC/cYZXrKe7sDUT8P0dH5woFZoWRTt0WZ1jPP1atw7asQcsEAKLTOy
-         w5uemuEHdTNOYNnwuY1BhJwLs2QG4WyRFXH1DTHA=
+        b=tYC1augFz9mWbntBqcjtJW5JMOYBEFWygauOP/tk56JC8qqSbtASXGzNSaLXGgRsV
+         h2E9GvFei3nplB5l0Py5XdOhLKe/pUTVImdu6jC2V1FM4cyvQl7dvYYo1K7OT+mZNk
+         S5RbqW6qu5cP+Z6APIev9YBLWGRXWRecQXqekHEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 046/131] xhci: Poll for U0 after disabling USB2 LPM
-Date:   Mon, 29 Jun 2020 11:33:37 -0400
-Message-Id: <20200629153502.2494656-47-sashal@kernel.org>
+Subject: [PATCH 4.19 123/131] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
+Date:   Mon, 29 Jun 2020 11:34:54 -0400
+Message-Id: <20200629153502.2494656-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,61 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit b3d71abd135e6919ca0b6cab463738472653ddfb upstream.
+commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
 
-USB2 devices with LPM enabled may interrupt the system suspend:
-[  932.510475] usb 1-7: usb suspend, wakeup 0
-[  932.510549] hub 1-0:1.0: hub_suspend
-[  932.510581] usb usb1: bus suspend, wakeup 0
-[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
-[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
-..
-[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
-..
-[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
-[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
-[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
+The "ie_len" variable is in the 0-255 range and it comes from the
+network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
+lead to memory corruption.
 
-During system suspend, USB core will let HC suspends the device if it
-doesn't have remote wakeup enabled and doesn't have any children.
-However, from the log above we can see that the usb 1-7 doesn't get bus
-suspended due to not in U0. After a while the port finished U2 -> U0
-transition, interrupts the suspend process.
-
-The observation is that after disabling LPM, port doesn't transit to U0
-immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
-maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
-the affected device is advertised as 400us, which is still not enough
-based on my testing result.
-
-So let's use the maximum permitted latency, 10000, to poll for U0
-status to solve the issue.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/host/xhci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index b4177287d7d0f..b02b83a38dca1 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4385,6 +4385,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 			mutex_lock(hcd->bandwidth_mutex);
- 			xhci_change_max_exit_latency(xhci, udev, 0);
- 			mutex_unlock(hcd->bandwidth_mutex);
-+			readl_poll_timeout(ports[port_num]->addr, pm_val,
-+					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
-+					   100, 10000);
- 			return 0;
- 		}
- 	}
+diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+index 2c65af319a604..6c6bf03ac38aa 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+@@ -1856,12 +1856,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+ 	if (!pIE)
+ 		return _FAIL;
++	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
++		return _FAIL;
+ 
+ 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
+ 	supportRateNum = ie_len;
+ 
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+-	if (pIE)
++	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
+ 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
+ 
+ 	return _SUCCESS;
 -- 
 2.25.1
 
