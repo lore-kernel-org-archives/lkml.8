@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD345C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A40CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8F320874
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F268720760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460158;
-	bh=v+crxahijm911DuNDyKvGSVyfJ4WlY+YO/iBkJxHw24=;
+	s=default; t=1593460162;
+	bh=TJrWSuxOiDvcM9/5Ii7LFvS+uNhA52liC/S6Nrw3aG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MOahfhW76OTo2NBnF7POoKehgS+n8bZ0eU29b5Jgv8RG7ZS6NELC6zewpQrQG48Hv
-	 msOsKSWMkhwBOg5NlSHYyee8f8gFYwpQLWx2zCZ8XrMmOXCFiCZ/GvGJmJ0+MzaXgt
-	 WbkezBiCUbMXMgHGuZr6vGwbvmAna0FIz31L65Fw=
+	b=b4vaBpdPQSXDMWZ9Cv0WBhnR1VpX6PNz2YdX9+WwyFB0NFUOWN5/yZv3Uzq2V4esM
+	 PXR+QyrfZiaVshTHI3fwQN+x2j0VK4Vwej8SkraFgL/Bbl3TndAFDfC5cJRoc7iZAl
+	 l/Ldz6e+LGQIhV3GCIIKGAHsBWFNS7glM7BohIMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387906AbgF2TtP (ORCPT
+        id S2387993AbgF2TtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387756AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F91248C6;
-        Mon, 29 Jun 2020 15:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D248E4;
+        Mon, 29 Jun 2020 15:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444420;
-        bh=v+crxahijm911DuNDyKvGSVyfJ4WlY+YO/iBkJxHw24=;
+        s=default; t=1593444438;
+        bh=TJrWSuxOiDvcM9/5Ii7LFvS+uNhA52liC/S6Nrw3aG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pt2WxAj2THw+feiWj9bgNm4KSO82GVklT7lW+zAMEFDYEsOmimOxLF5UpoNhp78Tu
-         z78vaQgnWAFTH/sXRkRKwawEDjp8nEEkkrVcnsimnmCo0VXqCFFQBeJBDlH++lUWzC
-         L7nlQDonYR1RJqwJf9gJY9CzD+8ng2fAobcSKtdc=
+        b=TfZ5DBBm+qM+o8oGXIXVbespzRtmUQ5LDSZY45ATc8WuEwId3QOroK6KdrpYLnqQ0
+         P6N20SfVDuWf8slLfu2ryqBZn2gDTJkwmdyxoo61IxfD1s1zMuChZDMTuT8v+MFbew
+         DfAufzvPdqzkQzmPfN4FVDSpLL1zF1PyfV7seneA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Daniel Wagner <dwagner@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/178] net: qede: fix use-after-free on recovery and AER handling
-Date:   Mon, 29 Jun 2020 11:24:03 -0400
-Message-Id: <20200629152523.2494198-99-sashal@kernel.org>
+Subject: [PATCH 5.4 116/178] sched/core: Fix PI boosting between RT and DEADLINE tasks
+Date:   Mon, 29 Jun 2020 11:24:21 -0400
+Message-Id: <20200629152523.2494198-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,35 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit ec6c80590bde6b5dfa4970fffa3572f1acd313ca ]
+[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
 
-Set edev->cdev pointer to NULL after calling remove() callback to avoid
-using of already freed object.
+syzbot reported the following warning:
 
-Fixes: ccc67ef50b90 ("qede: Error recovery process")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
+ enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
+
+At deadline.c:628 we have:
+
+ 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
+ 624 {
+ 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
+ 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
+ 627
+ 628 	WARN_ON(dl_se->dl_boosted);
+ 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
+        [...]
+     }
+
+Which means that setup_new_dl_entity() has been called on a task
+currently boosted. This shouldn't happen though, as setup_new_dl_entity()
+is only called when the 'dynamic' deadline of the new entity
+is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
+condition.
+
+Digging through the PI code I noticed that what above might in fact happen
+if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
+first branch of boosting conditions we check only if a pi_task 'dynamic'
+deadline is earlier than mutex holder's and in this case we set mutex
+holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
+initialized if such tasks get boosted at some point (or if they become
+DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
+to 0 and this verifies the aforementioned condition.
+
+Fix it by checking that the potential donor task is actually (even if
+temporary because in turn boosted) running at DEADLINE priority before
+using its 'dynamic' deadline value.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 361a1d759b0b5..2c3d654c84543 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1247,6 +1247,7 @@ static void __qede_remove(struct pci_dev *pdev, enum qede_remove_mode mode)
- 	if (system_state == SYSTEM_POWER_OFF)
- 		return;
- 	qed_ops->common->remove(cdev);
-+	edev->cdev = NULL;
- 
- 	/* Since this can happen out-of-sync with other flows,
- 	 * don't release the netdevice until after slowpath stop
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 361cbc2dc9667..7238ef445dafb 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4447,7 +4447,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+ 	 */
+ 	if (dl_prio(prio)) {
+ 		if (!dl_prio(p->normal_prio) ||
+-		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
++		    (pi_task && dl_prio(pi_task->prio) &&
++		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
+ 			p->dl.dl_boosted = 1;
+ 			queue_flag |= ENQUEUE_REPLENISH;
+ 		} else
 -- 
 2.25.1
 
