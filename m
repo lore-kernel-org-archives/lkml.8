@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C56AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2819D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A8120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467248;
-	bh=sNOLCnFtuh+m9OD5TG/Nxs/Wi7fC45jIgNmN74LSD68=;
+	s=default; t=1593467251;
+	bh=XecgsmYHkcxJy99zryETRJnXYqzJdoT+HrcTpnNLm5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=useLAB3NVUcaMmYRBeWnzx1XYOC07W0pLqCveu6Tuc1xPTIlHvda+NLpx54dETwbW
-	 b7Vuyxo1nW8/jUl8z/XEmcOdftkhxiRuk73OdERA7TL4QTAqCwXLfOPc9dVaeupcpC
-	 V1pm+O/VAJIyLHXUvUc4OvteMfvXhrWbNu6540N0=
+	b=XwyqJ1pHPwuwAfR4dYqyr9tHi2I95FJaPbdYnRePJEuyutFNH372dGE2murlSd84j
+	 DAX+V3Tum1JOlYA0yuYNywi6vPE9KABzMiS/QGnSJlFsO5nNmi7JfPGnLMsa/W/nh2
+	 njh47kKDW8J4xBD2Cl483KGev/Jl9EGpHQdmmLMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404225AbgF2VrZ (ORCPT
+        id S2404230AbgF2Vra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726737AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726738AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B6EB24697;
-        Mon, 29 Jun 2020 15:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A83C247B5;
+        Mon, 29 Jun 2020 15:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443992;
-        bh=sNOLCnFtuh+m9OD5TG/Nxs/Wi7fC45jIgNmN74LSD68=;
+        s=default; t=1593444118;
+        bh=XecgsmYHkcxJy99zryETRJnXYqzJdoT+HrcTpnNLm5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVEWP8b0vlhVIVqeevq5CPd8itlP4SPQmY8b7Da82wwqCw1Z4NIZWMYPBFkQA0ofH
-         NvAZg6CRcLZ3tbjz9IRXCerji041kHGiofvxw4dwP4PDoHdpc3mCBr40l+oos865+A
-         lSX9Ck+vGSSH4fbUKekEH8yBsVj6f3m8tIlAeipo=
+        b=aaowFgYUDBtHyEZS7MiDOokoodUQN4/tjwl5sYmYFLXQQryk+n50vaP9RAvxpsR5o
+         JxV6n2cDYQtYsucaaUfpJfD3Imq7b9mSeOFg4M3NBiNmG+55ztJC7zDYs6WbosBZ3d
+         +YioNKb3DD1njocFxkzrht9vaRLCe/FDZabBSX+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 096/265] bus: ti-sysc: Fix uninitialized framedonetv_irq
-Date:   Mon, 29 Jun 2020 11:15:29 -0400
-Message-Id: <20200629151818.2493727-97-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, Roman Gushchin <guro@fb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 229/265] mm, slab: fix sign conversion problem in memcg_uncharge_slab()
+Date:   Mon, 29 Jun 2020 11:17:42 -0400
+Message-Id: <20200629151818.2493727-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,44 +74,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 085bc0e576a4bf53b67a917c54908f299a2fb949 ]
+commit d7670879c5c4aa443d518fb234a9e5f30931efa3 upstream.
 
-We are currently only setting the framedonetv_irq disabled for the SoCs
-that don't have it. But we are never setting it enabled for the SoCs that
-have it. Let's initialized it to true by default.
+It was found that running the LTP test on a PowerPC system could produce
+erroneous values in /proc/meminfo, like:
 
-Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  MemTotal:       531915072 kB
+  MemFree:        507962176 kB
+  MemAvailable:   1100020596352 kB
+
+Using bisection, the problem is tracked down to commit 9c315e4d7d8c ("mm:
+memcg/slab: cache page number in memcg_(un)charge_slab()").
+
+In memcg_uncharge_slab() with a "int order" argument:
+
+  unsigned int nr_pages = 1 << order;
+    :
+  mod_lruvec_state(lruvec, cache_vmstat_idx(s), -nr_pages);
+
+The mod_lruvec_state() function will eventually call the
+__mod_zone_page_state() which accepts a long argument.  Depending on the
+compiler and how inlining is done, "-nr_pages" may be treated as a
+negative number or a very large positive number.  Apparently, it was
+treated as a large positive number in that PowerPC system leading to
+incorrect stat counts.  This problem hasn't been seen in x86-64 yet,
+perhaps the gcc compiler there has some slight difference in behavior.
+
+It is fixed by making nr_pages a signed value.  For consistency, a similar
+change is applied to memcg_charge_slab() as well.
+
+Link: http://lkml.kernel.org/r/20200620184719.10994-1-longman@redhat.com
+Fixes: 9c315e4d7d8c ("mm: memcg/slab: cache page number in memcg_(un)charge_slab()").
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/bus/ti-sysc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/slab.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 4f640a635ded1..db9541f385055 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1552,7 +1552,7 @@ static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
- 	bool lcd_en, digit_en, lcd2_en = false, lcd3_en = false;
- 	const int lcd_en_mask = BIT(0), digit_en_mask = BIT(1);
- 	int manager_count;
--	bool framedonetv_irq;
-+	bool framedonetv_irq = true;
- 	u32 val, irq_mask = 0;
+diff --git a/mm/slab.h b/mm/slab.h
+index 207c83ef6e06d..74f7e09a7cfd1 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -348,7 +348,7 @@ static __always_inline int memcg_charge_slab(struct page *page,
+ 					     gfp_t gfp, int order,
+ 					     struct kmem_cache *s)
+ {
+-	unsigned int nr_pages = 1 << order;
++	int nr_pages = 1 << order;
+ 	struct mem_cgroup *memcg;
+ 	struct lruvec *lruvec;
+ 	int ret;
+@@ -388,7 +388,7 @@ out:
+ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+ 						struct kmem_cache *s)
+ {
+-	unsigned int nr_pages = 1 << order;
++	int nr_pages = 1 << order;
+ 	struct mem_cgroup *memcg;
+ 	struct lruvec *lruvec;
  
- 	switch (sysc_soc->soc) {
-@@ -1569,6 +1569,7 @@ static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
- 		break;
- 	case SOC_AM4:
- 		manager_count = 1;
-+		framedonetv_irq = false;
- 		break;
- 	case SOC_UNKNOWN:
- 	default:
 -- 
 2.25.1
 
