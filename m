@@ -2,111 +2,104 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E037CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D58C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD72206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CAB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468228;
-	bh=Lf6jb8z4iIF/Glg9uv3XNjE9mqcTEL/2yKtxJnHNVOI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYjtIj1q37DTpBsiQqMrfaQnBdT4p4lk/cCyvcmAcK0eTyq5XvIGdwqQPzfd6jye8
-	 hfL7MRFBTOhF5TtA8WVpnq4A9cW2h8gpqwdpYxmds9UdwB2SpQFkOK8bmqHqLQaTxc
-	 FmRKk3nRAzG7Paa/U87CJT/78cn/cpmXc/9kdbZE=
+	s=default; t=1593468233;
+	bh=uhgx90ReH2lg8RDTwDIx75LdlJVQowsGqEzwBIC1kXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xmKj6WTQZOzmOED6NCjqvxAar1QZeV4Yf/7KYy+RV0vmQ86ErcKzRPEBvcwb8jS1g
+	 vAylPC4ooZkGSaCKDDNZ8lgjO61Nac58SZPxO36oJOX/nwpmmW+Z56yxxaxw4cS9Mk
+	 +4n99sA+SWJhRVk9iXlS7xMVHmyt3ZCGS7EvFoAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391736AbgF2WDr (ORCPT
+        id S2391779AbgF2WDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B0424680;
-        Mon, 29 Jun 2020 15:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443981;
-        bh=Lf6jb8z4iIF/Glg9uv3XNjE9mqcTEL/2yKtxJnHNVOI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9KOxRM9E2xGZuZ0BuT+KZlPHSQVqvKu9ysiBVzAzTH7fEkATmmFMeddlSr3jX0d0
-         OfGV2t6vzBgi9LzuUrV2+cR0ioUkOj3pyWPhcHMYELXNz5nf2py2pWJA7VSRrO28fn
-         e9lQEkbDvSJOcyeO7GlJTmqC8XdfOnwDJpMy3klI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 085/265] cifs/smb3: Fix data inconsistent when zero file range
-Date:   Mon, 29 Jun 2020 11:15:18 -0400
-Message-Id: <20200629151818.2493727-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 18:03:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38804 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726235AbgF2WDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:03:30 -0400
+Received: by mail-io1-f68.google.com with SMTP id f6so3269520ioj.5;
+        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cCuA/1H5zPFkQibB/1FVyUKxdfeDC7D9Mc34Pi/i1Bk=;
+        b=TahneyMEvXAwMXkAVcepLu2TEJe6a44UQUlMXNF588bh9E55ftMgEnRjslBkwEgFVw
+         1lZzxACgKsSVl6pjB4KC9BNsrfZMYLlquQjcL5aJJyGyTIEUcE1EHhoui6UU/KczTLW9
+         7O9CWwnKCNEpBlRU3aIUhBg/eM8KcxsQ7kWBPN7lFvnmyQhb/Ulkc9SqCyhR9y2o7ZrT
+         h21xnilNaHQvr8jsIy/zecePgniZ2DAafmMsywrPAZVxP3bmOMgWjqKBBscBPYfzDT/1
+         NI4b181pR4dyVKwxeYDW6+5wp3VAWeIbq7uzjcVlYSAtWjXL+rfvzDqOfEJ5hsPTpglL
+         dWcw==
+X-Gm-Message-State: AOAM532+uLIIMkfIpxfH4BUtPK0VxNet1PjRUEJjUGcVvR0QVeOuvsHW
+        +vCEikfAogM1rVgd/Pa3xg==
+X-Google-Smtp-Source: ABdhPJzQNlss41FGC2hfOql88X+H8ZgwM3IXBHQO6+dHsWdZNlR+AYQSnEQVWlioy6ByTnwwWVx/Bg==
+X-Received: by 2002:a5e:9b0b:: with SMTP id j11mr19140572iok.17.1593468209250;
+        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id q4sm606515ils.11.2020.06.29.15.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 15:03:28 -0700 (PDT)
+Received: (nullmailer pid 3018066 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:03:26 -0000
+Date:   Mon, 29 Jun 2020 16:03:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Pawel Laszczak <pawell@cadence.com>
+Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, ben.dooks@codethink.co.uk,
+        jpawar@cadence.com, sparmar@cadence.com, weiyongjun1@huawei.com,
+        rogerq@ti.com, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com, robh+dt@kernel.org,
+        colin.king@canonical.com, balbi@kernel.org, kurahul@cadene.com,
+        peter.chen@nxp.com
+Subject: Re: [PATCH RFC 1/5] dt-bindings: add binding for CDNSP-DRD controller
+Message-ID: <20200629220326.GA3017609@bogus>
+References: <20200626045450.10205-1-pawell@cadence.com>
+ <20200626045450.10205-2-pawell@cadence.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626045450.10205-2-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+On Fri, 26 Jun 2020 06:54:46 +0200, Pawel Laszczak wrote:
+> This patch aim at documenting USB related dt-bindings for the
+> Cadence CDNSP-DRD controller.
+> 
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+>  .../devicetree/bindings/usb/cdns-cdnsp.yaml   | 104 ++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-cdnsp.yaml
+> 
 
-commit 6b69040247e14b43419a520f841f2b3052833df9 upstream.
 
-CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page cache not update, then the data
-inconsistent with server, which leads the xfstest generic/008 failed.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-So we need to remove the local page caches before send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
-re-cache it.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:0: [0, 29437952, 0, 1024] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:1: [0, 4076929024, 0, 65536] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:2: [0, 4076994560, 0, 65536] is too long
 
-Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/cifs/smb2ops.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 3de9113eb8e35..6fc69c3b2749d 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3145,6 +3145,11 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
- 	trace_smb3_zero_enter(xid, cfile->fid.persistent_fid, tcon->tid,
- 			      ses->Suid, offset, len);
- 
-+	/*
-+	 * We zero the range through ioctl, so we need remove the page caches
-+	 * first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
- 
- 	/* if file not oplocked can't be sure whether asking to extend size */
- 	if (!CIFS_CACHE_READ(cifsi))
--- 
-2.25.1
+See https://patchwork.ozlabs.org/patch/1317380
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
