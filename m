@@ -2,151 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A08C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3392C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27AB2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="CN262X2B"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE7D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733249AbgF2TdU (ORCPT
+        id S1733267AbgF2Td3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
+        Mon, 29 Jun 2020 15:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733231AbgF2Tcp (ORCPT
+        with ESMTP id S1733228AbgF2Tco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:32:45 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6EAC02F007
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d10so7182720pls.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jLORGp6VfrDrQA8PpUsXn5+mhrmQSe4/xK3Vs+cmlnA=;
-        b=CN262X2BWpTSqbB1xZLnzt3P6PXjtlLIfYiIegWD8/RQLngh8QXv28Rke8t+T7ErjV
-         0xoehil5YqUKWFNf9122vK/5Bl/5hRrynVReUB3J5JnMTxyoit84XWPf/TXz1ioFztsx
-         AHVRLwqLna0A2h1BfWLa6SpiqcFSvanAVPhajVV+GYLDx6Q8/BDHlmGdGmlSXzWQ/ZTX
-         IFWxdidVNy4yIbMMgL2eFDLZh1gon3kWRo1AzuR3WxbQGW5UDDAdyMMFy5F/qo91WYm7
-         qo+N+qOh3A/N7rL4UKaOo4Xf7ki/gntOiUCTeRRDcT02wPU4+AzS2xOjl9YaWxHfl1JS
-         T3HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jLORGp6VfrDrQA8PpUsXn5+mhrmQSe4/xK3Vs+cmlnA=;
-        b=qCVPkv8JqWMRbYUhK8LMeic1idMygjtLPoqEY8kSXLMvbdi5AUZZmXX2RWIkVU7Xmd
-         C06O3edf+tWXQsN89QxxzUdbmMMo7nZmtadX/YB/vbm+LJ67zNB8RFEznHhBG0xFg1AI
-         2toGKbAutoYCgbXoffUTJ1gHvgJa504mEAIQahwQwSDOEq5HByKyAhzph2jzWrrxTtn5
-         ep5bDyu2sGpx4mUOpiMr4HpN0lx1Xd8LrhyEI+3jAxuzZApivkW/8DFLe0j6M52X5yC2
-         We4uN+JQyY9eSHdtxUi6muFOXbBd5sx4lXpHpSIHfIIPSsiKoMetGdFpozsEZfy1YYym
-         E6gQ==
-X-Gm-Message-State: AOAM53074DSoCv9FTIFvO9cXhJJEePTA0yOJoIubeiWkAHqAtl0v9SEr
-        aKFVMctJLBSWgBucoxsjC2LdJQ==
-X-Google-Smtp-Source: ABdhPJyirQnsQiQuhswSo/uIYV1ui5LyLyvg/sRt0KpvA9WEl1ByzdHprHAFfNPsV1N0i2xDWfS+Eg==
-X-Received: by 2002:a17:90a:a413:: with SMTP id y19mr4591589pjp.59.1593441822678;
-        Mon, 29 Jun 2020 07:43:42 -0700 (PDT)
-Received: from localhost ([2406:7400:73:703c:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id s9sm101062pgo.22.2020.06.29.07.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:43:41 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:43:36 -0400
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-To:     B K Karthik <karthik.bk2000@live.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mon, 29 Jun 2020 15:32:44 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [IPv6:2a00:da80:fff0:2::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5576C02A56E;
+        Mon, 29 Jun 2020 06:36:47 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2E0DD1C0C23; Mon, 29 Jun 2020 15:36:45 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 15:36:44 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Merlijn Wajer <merlijn@wizzup.org>, jikos@suse.cz, vojtech@suse.cz
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Beno??t Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: media: atomisp: i2c: atomisp-ov2680.c: fixed a
- brace coding style issue.
-Message-ID: <20200629144336.fhykjoqrhfhifmes@pesu-pes-edu>
-References: <20200628043833.3dodctrmkec6aoe5@pesu-pes-edu>
+        Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mark Gross <mgross@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>
+Subject: input maintainer -- are you there? was Re: [PATCH 1/2] Input: add
+ `SW_MACHINE_COVER`
+Message-ID: <20200629133644.GA22227@amd>
+References: <20200612125402.18393-1-merlijn@wizzup.org>
+ <20200612125402.18393-2-merlijn@wizzup.org>
+ <20200616105045.GB1718@bug>
+ <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i3ho2sv5roir6t7m"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
 Content-Disposition: inline
-In-Reply-To: <20200628043833.3dodctrmkec6aoe5@pesu-pes-edu>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---i3ho2sv5roir6t7m
+--0F1p//8PRICkK4MW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Did this get burried in along with a bunch of other patches? I am sending t=
-his email only because I did not recieve a negetive acknowledgement on the =
-patch.
+Hi!
 
-I apologize if this message was hurtful / disrespectfull in any manner,
-thank you for reading this message.
-
-karthik
-
-On 20/06/28 12:38AM, B K Karthik wrote:
-> Fixed a coding style issue.
+> Looks like we're blocking on this input patch.
 >=20
-> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> ---
->  drivers/staging/media/atomisp/i2c/atomisp-ov2680.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 16/06/2020 12:50, Pavel Machek wrote:
+> > On Fri 2020-06-12 14:53:58, Merlijn Wajer wrote:
+> >> This event code represents the state of a removable cover of a device.
+> >> Value 0 means that the cover is open or removed, value 1 means that the
+> >> cover is closed.
+> >>
+> >> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com> Acked=
+-by: Tony Lindgren=20
+> >> <tony@atomide.com> Signed-off-by: Merlijn Wajer <merlijn@wizzup.org> -=
+--
+> >=20
+> > Dmitry, can we get some kind of comment here, or better yet can we get =
+you to apply this?
 >=20
-> diff --git a/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c b/drivers=
-/staging/media/atomisp/i2c/atomisp-ov2680.c
-> index 90d125ba080f..c90730513438 100644
-> --- a/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c
-> +++ b/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c
-> @@ -495,11 +495,11 @@ static int ov2680_h_flip(struct v4l2_subdev *sd, s3=
-2 value)
->  	ret =3D ov2680_read_reg(client, 1, OV2680_MIRROR_REG, &val);
->  	if (ret)
->  		return ret;
-> -	if (value) {
-> +	if (value)
->  		val |=3D OV2680_FLIP_MIRROR_BIT_ENABLE;
-> -	} else {
-> +	else
->  		val &=3D ~OV2680_FLIP_MIRROR_BIT_ENABLE;
-> -	}
-> +
->  	ret =3D ov2680_write_reg(client, 1,
->  			       OV2680_MIRROR_REG, val);
->  	if (ret)
-> --
-> 2.20.1
+> This is part of a patch series to resolve problems with the Nokia N900
+> not booting when the cover is removed (making the cover be the card
+> detect was also just weird IMHO). Just removing the card-detect from the
+> DTS is fine, but it was suggested that we expose the data instead as
+> input event. And that's gotten no response for about four months.
+>=20
+> Should we just drop the feature and only remove the cd-gpios line from
+> the DTS, assuming upstream doesn't want this SW_MACHINE_COVER code?
 
+I believe series is good, lets keep it. Changing now will only delay
+it a bit more. Let me try to get Dmitry's attention...
 
+If that does not work, we can get Linus' attention :-).
 
---i3ho2sv5roir6t7m
+If that does not work, umm, there are some other options.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0F1p//8PRICkK4MW
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl75/hgACgkQ471Q5AHe
-Z2o9Zwv/W+4Q3b66dFYLTKnXoigYHIbecsuAc0LMW5V2VSXQJ8dq+DsCFvawZMh3
-UmbKaZsk033rYkKxbc1rubekPkm1eQ0kAY2iG6j+sIPnYtlUpkLRT6fU6vclZkAO
-gliHVAn1j0aB483pR6TJY0ek+ieMra9a7cetHsDHwzjdFQsheKDmEvtwjSYo5CCY
-0gImXtqo0md5TaiCmATWZ8GA6iOFcgOA+AHxhHN/s/SJ+CmZ2Ep4JGbPiaOCZcvq
-YjwBI15IiHVfJ8DDiYbemJvZRkZdKmgh8oIFDKS0jyFcGBn6fBkhWregLs9tqhyu
-PaSgKyS4nCIXL0mSDv87nPH8pq8DTfmFb6LEA09slsKzwMBUgESCywCLX0jiWTSn
-q0Y+CaE5mdKQBkOkizun3BuHbu43YDHKTy4qHNBDnTrLdltAKFjvxfvh6Sixfsvj
-1tEo886KYQETUjkIdmdCkjs5FT5uRDF+XGjCH2MxY/uxmq/LkxMOLY/IMGjMPf9U
-TkhSrXDs
-=Ikkk
+iEYEARECAAYFAl757mwACgkQMOfwapXb+vJWKwCeKCWtJeiWc/FxANNI2HrHGQQ7
+Fx4An1mjqwvcVp1xJprABVuC4z8nryZ1
+=Fk60
 -----END PGP SIGNATURE-----
 
---i3ho2sv5roir6t7m--
+--0F1p//8PRICkK4MW--
