@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF199C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5642620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92424206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460758;
-	bh=7FER3X3bF/BuUo4GLN1LKSdPZ7JlrMU5UDI7zCGaRC8=;
+	s=default; t=1593460766;
+	bh=mX4wMNn1g/7Ny6Rr+PpoHehJ4ZbRoJVgpWsTKJ0Vw7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dM9X0ufLYBwKn4ubldRLG/uPos2knIilJ5dERPy4xeK4GbGM819wRkeoKOua5VdvH
-	 ZOUoRHlHxG9Uf47brEu4OUznaT/uvlKuwmTa3sYeqUvqafFwgl9RFYT7qvToHfdHEh
-	 aemksKrioAPustKMyOQW+QdIumdHKLNg7T+DaR/A=
+	b=QxaCmWgCifHQKn7vqqLN0TNRDoSD07vw6G1o7lZhXs6kYVrdju+r6Nc7GTzZGlyzj
+	 YtMlRcF1X1KWqPaMbHMgKhq0bdAC/UhnImYdIJ9zIOFFbbYU3lxTnAn0wh7PwkfgZx
+	 lV9A1IvQu6vsnLNOD3GFHpL+qw2Gyz/guyX+5tQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbgF2T6w (ORCPT
+        id S2388504AbgF2T7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732365AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95CD32485C;
-        Mon, 29 Jun 2020 15:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C888248E3;
+        Mon, 29 Jun 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444359;
-        bh=7FER3X3bF/BuUo4GLN1LKSdPZ7JlrMU5UDI7zCGaRC8=;
+        s=default; t=1593444437;
+        bh=mX4wMNn1g/7Ny6Rr+PpoHehJ4ZbRoJVgpWsTKJ0Vw7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mEhBK65UMcGeKTZK+OoL2yKdr5bEDzJQzM+LHA4L1aW4mxY5FF/AlXv6/spzS0nyx
-         6nPqOjZEcFmGmYVvwaBZBumteSFzre6O+FWntA4d8ykO+nLoiobPKpacVJ4Vwp93lK
-         9cHmtf0f8eomVp4d48hlMDftitzJ/RrELxl4Lvdk=
+        b=kh4dyUVxQhu+IWwsCaoisTKggySvfuDKxMHGYIoKxfYYWGUdodg+bjrNzWZgPkpBM
+         78oSrZ8AZSBlpsDf7WUGFJRHK2uYqRHDN0beTQ6+c/oeDXRqOOTHrVpDcSV9+95olS
+         v03IK6D2wXwNGk+bPd75zMape+nIBLlD980Bi0ZI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        kbuild test robot <lkp@intel.com>,
-        Marek Vasut <marex@denx.de>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 035/178] usb: dwc2: Postponed gadget registration to the udc class driver
-Date:   Mon, 29 Jun 2020 11:23:00 -0400
-Message-Id: <20200629152523.2494198-36-sashal@kernel.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 115/178] sched/deadline: Initialize ->dl_boosted
+Date:   Mon, 29 Jun 2020 11:24:20 -0400
+Message-Id: <20200629152523.2494198-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,66 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-commit 207324a321a866401b098cadf19e4a2dd6584622 upstream.
+[ Upstream commit ce9bc3b27f2a21a7969b41ffb04df8cf61bd1592 ]
 
-During dwc2 driver probe, after gadget registration to the udc class
-driver, if exist any builtin function driver it immediately bound to
-dwc2 and after init host side (dwc2_hcd_init()) stucked in host mode.
-Patch postpone gadget registration after host side initialization done.
+syzbot reported the following warning triggered via SYSC_sched_setattr():
 
-Fixes: 117777b2c3bb9 ("usb: dwc2: Move gadget probe function into platform code")
-Reported-by: kbuild test robot <lkp@intel.com>
-Tested-by: Marek Vasut <marex@denx.de>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Link: https://lore.kernel.org/r/f21cb38fecc72a230b86155d94c7e60c9cb66f58.1591690938.git.hminas@synopsys.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 setup_new_dl_entity /kernel/sched/deadline.c:594 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_dl_entity /kernel/sched/deadline.c:1370 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_task_dl+0x1c17/0x2ba0 /kernel/sched/deadline.c:1441
+
+This happens because the ->dl_boosted flag is currently not initialized by
+__dl_clear_params() (unlike the other flags) and setup_new_dl_entity()
+rightfully complains about it.
+
+Initialize dl_boosted to 0.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20200617072919.818409-1-juri.lelli@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c   |  6 ------
- drivers/usb/dwc2/platform.c | 11 +++++++++++
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ kernel/sched/deadline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 7fd0900a9cb0c..f7528f732b2aa 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -4886,12 +4886,6 @@ int dwc2_gadget_init(struct dwc2_hsotg *hsotg)
- 					  epnum, 0);
- 	}
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 08bdee0480b3e..4cb00538a207b 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2693,6 +2693,7 @@ void __dl_clear_params(struct task_struct *p)
+ 	dl_se->dl_bw			= 0;
+ 	dl_se->dl_density		= 0;
  
--	ret = usb_add_gadget_udc(dev, &hsotg->gadget);
--	if (ret) {
--		dwc2_hsotg_ep_free_request(&hsotg->eps_out[0]->ep,
--					   hsotg->ctrl_req);
--		return ret;
--	}
- 	dwc2_hsotg_dump(hsotg);
- 
- 	return 0;
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 3c6ce09a6db56..15e55808cf4ea 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -507,6 +507,17 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	if (hsotg->dr_mode == USB_DR_MODE_PERIPHERAL)
- 		dwc2_lowlevel_hw_disable(hsotg);
- 
-+#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
-+	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
-+	/* Postponed adding a new gadget to the udc class driver list */
-+	if (hsotg->gadget_enabled) {
-+		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
-+		if (retval) {
-+			dwc2_hsotg_remove(hsotg);
-+			goto error;
-+		}
-+	}
-+#endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
- 	return 0;
- 
- error:
++	dl_se->dl_boosted		= 0;
+ 	dl_se->dl_throttled		= 0;
+ 	dl_se->dl_yielded		= 0;
+ 	dl_se->dl_non_contending	= 0;
 -- 
 2.25.1
 
