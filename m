@@ -2,179 +2,142 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4651CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2499622269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A020D222C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="yQLnvAyj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ct0mv2T0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgF2Sh7 (ORCPT
+        id S1727980AbgF2SiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
+        Mon, 29 Jun 2020 14:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgF2Shm (ORCPT
+        with ESMTP id S1727922AbgF2Sh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B116C033C02
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e8so8687813pgc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:57 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1247C0307BD
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:09:18 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q17so8090079pfu.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1oi0v4BTqqsBj+gW6Vk8gVF71VLAujXP7ErpOuZ8DBU=;
-        b=yQLnvAyjAr+LxeKzCBz+Cz38qqs13PpJx/G/GeiT7S+YT7j/jCgsNknnuMVghwTLwa
-         p+B7z41EM1Sg+VeQ9+I4Ii1bpu12EIl+9TIXwwW2s4A2UziC7U31raM4gmDloGG7KreY
-         3XQ+vjN2fr+VG+XPUuRYRaSThXnqdOLqD6pAv8vqTMeAuXGl/AXgyLtfNyU7t54zcDQn
-         xiCVg6AOhQlcTQWiOvjs8bRz9yU/gdGQXO+cB5MLKRY2MP642FevbdHkvjUOWZXTIN+M
-         WRVB8z0/ZnlvmcnGzsHaukTLfq1LnQ4/9GWydJFNGlrDTsCENJvlonF0h05dbumSvzwp
-         IHNg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Dpcg/V5/bVux0rs7VkxFu353liBeuYLlwoKIVZn1zEc=;
+        b=ct0mv2T0RjdmYV1r2g3shjdEpjoUYMExe0D7cbytkVt7URajCK7sMn2lgMvkPFTDtT
+         B6e0osia8R1xcxdsu1BBSWWdC90GP7XLPKUMpUNAbTFBPpu42nc6i9OZtXC71O1efA/P
+         4ylNra4o8Pd7dj8TEYxISYWxhCFSaMWvEPRaQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1oi0v4BTqqsBj+gW6Vk8gVF71VLAujXP7ErpOuZ8DBU=;
-        b=HZnULhA36y/lfrOsHcfzmGQ7BGS0CVwMivAdcNJO96lnkafASfZssoCv/HGSCALsmu
-         x1UwAUIpvX1VbnEVDJjFZl5iKTu4IKxZVcjytTOfa8SuVWzHMupGWkYI39UgJLsFlwxR
-         AubFdeKLljIf4/+YRn8iFmBThR9ZheH28Mo1X/VrAdPJA+oWRf9nJ93Ax2sKANlXzbJv
-         o/akqeNaeHnK18ODMy8K0q5OdUkPDXvgsulQmGJE0D7KW2Cy61aVSFdwu6jVfFYqX9jt
-         lKN8IFU8BjQqsKWZCDpvkn+PN9PvTTSEpRyMKrJpKOXbZ2gUTvE8ubVW6qwxsBmdWWh7
-         /Jmg==
-X-Gm-Message-State: AOAM530hrko2Ih5lSZCtgCxR8vnNWJlyV1SCuqW2pIUSWSeR24JUUSdO
-        VyMOX7bVvPQOen1s7W7X4JEFDA==
-X-Google-Smtp-Source: ABdhPJwxzpypgasS1TUWuGtTez4i3IrG6t1gNltC8YqyLfhomKv2+LqAnOB6FD7cpbGSwbn/8KX1YQ==
-X-Received: by 2002:a63:fc09:: with SMTP id j9mr11866988pgi.308.1593454766126;
-        Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
-Received: from miranda.anholt.net ([97.115.155.172])
-        by smtp.gmail.com with ESMTPSA id a9sm359463pfr.103.2020.06.29.11.19.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dpcg/V5/bVux0rs7VkxFu353liBeuYLlwoKIVZn1zEc=;
+        b=BiDhjUyoYieapzrHcMyFBHUN+PLZfRpFPe1GD+0DciHgFw6DFsaOSeKWGSehDPS9kY
+         1wYvvtXR5kkZRznlrjAbxqTBRj5wTSMAH6yfiSdGi64yQLiSdTc61dB0qdTO+80oKDjt
+         EhHaxCb2lZUTTtTJ+gw5Lc4PEnZQrbMgFe5tYRiktnZumZuHBj39gdcMnQI1BBV+Ja8O
+         6sks3LLkFST72rdTXLQ52nukX/hEXYSlEUoNs6Vd3WO3laR8kw3GqkVaqylxInUKudqv
+         7gjbIwiBlJ38Dx/VDnetwxQD6rbmaqtFZ6IsW/vPBw/P42uyZHyCxb5fkX+XVOdJ6V6q
+         kIHA==
+X-Gm-Message-State: AOAM530p5CX8FExQUjBTSNkLVWBgYFp4aokd2oZ6e5AVGwJq3Agao7OE
+        Xfx2JDJBz7ID1HB+Md1CoXt1oA==
+X-Google-Smtp-Source: ABdhPJwdMzhUEihbszttz1nTcxlrJL0pe9SFMhjHmbbNgUqzZFGh80VrfiWcOpG+4qWPncvSOSJsew==
+X-Received: by 2002:a63:a1f:: with SMTP id 31mr10760873pgk.228.1593446956199;
+        Mon, 29 Jun 2020 09:09:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s194sm237565pgs.24.2020.06.29.09.09.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 11:19:25 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>
-Subject: [PATCH 2/2] drm/msm: Quiet error during failure in optional resource mappings.
-Date:   Mon, 29 Jun 2020 11:19:21 -0700
-Message-Id: <20200629181921.3019271-2-eric@anholt.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629181921.3019271-1-eric@anholt.net>
-References: <20200629181921.3019271-1-eric@anholt.net>
+        Mon, 29 Jun 2020 09:09:15 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:09:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime
+ relocations
+Message-ID: <202006290907.E5EF18A@keescook>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200629140928.858507-8-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629140928.858507-8-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't expect to find vbif_nrt or regdma on cheza, but were clogging
-up dmesg with errors about it.
+On Mon, Jun 29, 2020 at 10:09:28AM -0400, Arvind Sankar wrote:
+> Add a linker script check that there are no runtime relocations, and
+> remove the old one that tries to check via looking for specially-named
+> sections in the object files.
+> 
+> Drop the tests for -fPIE compiler option and -pie linker option, as they
+> are available in all supported gcc and binutils versions (as well as
+> clang and lld).
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> ---
+>  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+>  arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
+>  2 files changed, 11 insertions(+), 25 deletions(-)
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  4 ++--
- drivers/gpu/drm/msm/msm_drv.c           | 22 ++++++++++++++++++----
- drivers/gpu/drm/msm/msm_drv.h           |  2 ++
- 3 files changed, 22 insertions(+), 6 deletions(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index a4ab802fee6d..d9aef2b5e930 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -838,13 +838,13 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 		dpu_kms->vbif[VBIF_RT] = NULL;
- 		goto error;
- 	}
--	dpu_kms->vbif[VBIF_NRT] = msm_ioremap(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
-+	dpu_kms->vbif[VBIF_NRT] = msm_ioremap_quiet(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
- 	if (IS_ERR(dpu_kms->vbif[VBIF_NRT])) {
- 		dpu_kms->vbif[VBIF_NRT] = NULL;
- 		DPU_DEBUG("VBIF NRT is not defined");
- 	}
- 
--	dpu_kms->reg_dma = msm_ioremap(dpu_kms->pdev, "regdma", "regdma");
-+	dpu_kms->reg_dma = msm_ioremap_quiet(dpu_kms->pdev, "regdma", "regdma");
- 	if (IS_ERR(dpu_kms->reg_dma)) {
- 		dpu_kms->reg_dma = NULL;
- 		DPU_DEBUG("REG_DMA is not defined");
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index f6ce40bf3699..df4a3c6a49cd 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -120,8 +120,8 @@ struct clk *msm_clk_get(struct platform_device *pdev, const char *name)
- 	return clk;
- }
- 
--void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
--		const char *dbgname)
-+void __iomem *_msm_ioremap(struct platform_device *pdev, const char *name,
-+			   const char *dbgname, bool quiet)
- {
- 	struct resource *res;
- 	unsigned long size;
-@@ -133,7 +133,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
- 	if (!res) {
--		DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
-+		if (!quiet)
-+			DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -141,7 +142,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
- 
- 	ptr = devm_ioremap(&pdev->dev, res->start, size);
- 	if (!ptr) {
--		DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
-+		if (!quiet)
-+			DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-@@ -151,6 +153,18 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
- 	return ptr;
- }
- 
-+void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
-+			  const char *dbgname)
-+{
-+	return _msm_ioremap(pdev, name, dbgname, false);
-+}
-+
-+void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
-+				const char *dbgname)
-+{
-+	return _msm_ioremap(pdev, name, dbgname, true);
-+}
-+
- void msm_writel(u32 data, void __iomem *addr)
- {
- 	if (reglog)
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index e2d6a6056418..2687f7a42c15 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -411,6 +411,8 @@ struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
- 	const char *name);
- void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
- 		const char *dbgname);
-+void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
-+		const char *dbgname);
- void msm_writel(u32 data, void __iomem *addr);
- u32 msm_readl(const void __iomem *addr);
- 
+question below ...
+
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index a4a4a59a2628..a78510046eec 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -42,6 +42,12 @@ SECTIONS
+>  		*(.rodata.*)
+>  		_erodata = . ;
+>  	}
+> +	.rel.dyn : {
+> +		*(.rel.*)
+> +	}
+> +	.rela.dyn : {
+> +		*(.rela.*)
+> +	}
+>  	.got : {
+>  		*(.got)
+>  	}
+
+Should these be marked (INFO) as well?
+
+> @@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+>  #else
+>  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+>  #endif
+> +
+> +ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected runtime relocations detected!")
+
+I think I should be doing this same ASSERT style for other explicit
+DISCARDS in my orphan series so we'll notice if they change, instead
+of being silently dropped if they grow.
+
 -- 
-2.26.2
-
+Kees Cook
