@@ -2,289 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93493C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 641AB20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E37E20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="w7tL9wUq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQd/jRl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgF2Xth (ORCPT
+        id S1726643AbgF2XwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbgF2Xtd (ORCPT
+        Mon, 29 Jun 2020 19:52:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32405 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726019AbgF2XwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:49:33 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891FDC03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:49:33 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so17010717qkg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=INJz41oEwqBdPwMkCDafi8GZqPrx57eQ34QaJVM3jDo=;
-        b=w7tL9wUqeQnRmuha+5h8O5Lc9RCWJhsX9fNA8rNyLQ5477ibCkAYGnvs/u2I3VxYLm
-         E3pA3v3oIBnP2mDhGOdP8iwZNf8IMh5HQFBOttbyjJgPXucZ+lxehas6Ok+0bMg9HsJn
-         oD3vsnl4J1OMc6PnYH4ii4o5gp0PYYQKvfBNOZjNvolX4xWWYqaJyVvpbQRsVPgSOsFb
-         Y/pM1JLXOcmrT2y8T1NgqYOEhaYjOvjUtJtW1+lAqv/quM2qBrCWTrac4LGKpbwPQ8mo
-         GQP+Kng+KM7o97iPjg2Jz3vTcr1ni4VpZ1b5HiEjieXQ+lgBswKpANIeRx+5zDcIDGRW
-         IRMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=INJz41oEwqBdPwMkCDafi8GZqPrx57eQ34QaJVM3jDo=;
-        b=Z17mMGv/IDRWiM506E+M3NTSbVWwxpbWMYIY+XBnB+xh5iIJ1JvEPCfczBCTGLtgQe
-         55aUfbJmCFs6Kkevh5TzNoY/E/6mrKNl4pEem3w/MJQvo6ybHK9agJRSLDReAWD9OQsJ
-         higKHQxlyXnr+L1/A7kjLgHtc09qQdgHJxS0oEGFbrQDfccpT3fnvq304rX4k3hO5+fV
-         gNUwutA2FbexTvptDR8UVY+Jc8acxYN8m6HvwQeOzwKiKFqbtJefT/dPZE9ZuFVcYrMP
-         k6hAMFW9D264YITXSQzXKI3tFnAeUUGTsswK6n1XOGcapTV1CaRom/8fQbUD14sfpOUN
-         odOQ==
-X-Gm-Message-State: AOAM530XvEqtpT0U00GbKvH73VeSLWi6Lb5S7v/Hfe2UFWqlZpAo4s54
-        mSAlvX3P5CthY0JIRjS+CC+O7A==
-X-Google-Smtp-Source: ABdhPJxLhoKQUyfQM40vTU8WnSpb3j82fayp1+2jOrKscAGyzh+6Wf6F5u+EfDT2NWIfLHzREyDX6Q==
-X-Received: by 2002:a37:a151:: with SMTP id k78mr16825814qke.24.1593474572666;
-        Mon, 29 Jun 2020 16:49:32 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id n64sm1541076qke.77.2020.06.29.16.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 16:49:32 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Eric Anholt <eric@anholt.net>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/msm/a6xx: add A640/A650 hwcg
-Date:   Mon, 29 Jun 2020 19:49:14 -0400
-Message-Id: <20200629234921.3511-3-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629234921.3511-1-jonathan@marek.ca>
-References: <20200629234921.3511-1-jonathan@marek.ca>
+        Mon, 29 Jun 2020 19:52:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593474740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yDZbQbffAZgKbfmHXdWfl91EskJ76dTDejso9RX8q6M=;
+        b=MQd/jRl4aTYMo0k9uuNjQFQtC8TdyMR7Abqx8jFe0NDA76Eky/wPi0wL5f3gS8szGCH2+W
+        hAjtIQFrDGcQfU/AEpqfT8kLI/iR1PD5qBZEAHqlymxbnSk7BZsXaNOxGnIKSW2bbBDY8H
+        TJ+Ug8QBMtCljvl6KLHKm4PQbIyS2jY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-11h7hjn8O3WvpaYjIxuK3A-1; Mon, 29 Jun 2020 19:52:12 -0400
+X-MC-Unique: 11h7hjn8O3WvpaYjIxuK3A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9CD8107ACCA;
+        Mon, 29 Jun 2020 23:52:10 +0000 (UTC)
+Received: from localhost (ovpn-116-13.gru2.redhat.com [10.97.116.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FFE05C1D4;
+        Mon, 29 Jun 2020 23:52:10 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 20:52:09 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com
+Subject: Re: [PATCH v3 1/2] arch/ima: extend secure boot check to include
+ trusted boot
+Message-ID: <20200629235209.GB2756@glitch>
+References: <20200623202640.4936-1-bmeneg@redhat.com>
+ <20200623202640.4936-2-bmeneg@redhat.com>
+ <1593202992.27152.463.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593202992.27152.463.camel@linux.ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initialize hardware clock-gating registers on A640 and A650 GPUs.
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-At least for A650, this solves some performance issues.
+On Fri, Jun 26, 2020 at 04:23:12PM -0400, Mimi Zohar wrote:
+> On Tue, 2020-06-23 at 17:26 -0300, Bruno Meneguele wrote:
+> <snip>
+>=20
+> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima=
+/ima_main.c
+> > index c1583d98c5e5..a760094e8f8d 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -694,7 +694,7 @@ int ima_load_data(enum kernel_load_data_id id)
+> >  =09switch (id) {
+> >  =09case LOADING_KEXEC_IMAGE:
+> >  =09=09if (IS_ENABLED(CONFIG_KEXEC_SIG)
+> > -=09=09    && arch_ima_get_secureboot()) {
+> > +=09=09    && arch_ima_secure_or_trusted_boot()) {
+> >  =09=09=09pr_err("impossible to appraise a kernel image without a file =
+descriptor; try using kexec_file_load syscall.\n");
+> >  =09=09=09return -EACCES;
+> >  =09=09}
+>=20
+> Only IMA-appraisal enforces file integrity based on policy.
+>=20
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/gpu/drm/msm/adreno/a6xx.xml.h      |   8 ++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |  11 ++-
- drivers/gpu/drm/msm/adreno/adreno_device.c | 108 +++++++++++++++++++++
- 3 files changed, 124 insertions(+), 3 deletions(-)
+Right, but I didn't get the relation to the code above: I basically
+renamed the function:=20
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx.xml.h b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-index 47840b73cdda..f0498faf7d0b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-@@ -1996,6 +1996,14 @@ static inline uint32_t A6XX_CP_PROTECT_REG_MASK_LEN(uint32_t val)
- 
- #define REG_A6XX_RBBM_CLOCK_DELAY_HLSQ				0x0000011c
- 
-+#define REG_A6XX_RBBM_CLOCK_HYST_HLSQ				0x0000011d
-+
-+#define REG_A6XX_RBBM_CLOCK_CNTL_TEX_FCHE			0x00000120
-+
-+#define REG_A6XX_RBBM_CLOCK_DELAY_TEX_FCHE			0x00000121
-+
-+#define REG_A6XX_RBBM_CLOCK_HYST_TEX_FCHE			0x00000122
-+
- #define REG_A6XX_DBGC_CFG_DBGBUS_SEL_A				0x00000600
- 
- #define REG_A6XX_DBGC_CFG_DBGBUS_SEL_B				0x00000601
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 6cd79166a94e..891a21c5225e 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -157,15 +157,20 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
- 	unsigned int i;
--	u32 val;
-+	u32 val, clock_cntl_on;
- 
- 	if (!adreno_gpu->info->hwcg)
- 		return;
- 
-+	if (adreno_is_a630(adreno_gpu))
-+		clock_cntl_on = 0x8aa8aa02;
-+	else
-+		clock_cntl_on = 0x8aa8aa82;
-+
- 	val = gpu_read(gpu, REG_A6XX_RBBM_CLOCK_CNTL);
- 
- 	/* Don't re-program the registers if they are already correct */
--	if ((!state && !val) || (state && (val == 0x8aa8aa02)))
-+	if ((!state && !val) || (state && (val == clock_cntl_on)))
- 		return;
- 
- 	/* Disable SP clock before programming HWCG registers */
-@@ -179,7 +184,7 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
- 	/* Enable SP clock */
- 	gmu_rmw(gmu, REG_A6XX_GPU_GMU_GX_SPTPRAC_CLOCK_CONTROL, 0, 1);
- 
--	gpu_write(gpu, REG_A6XX_RBBM_CLOCK_CNTL, state ? 0x8aa8aa02 : 0);
-+	gpu_write(gpu, REG_A6XX_RBBM_CLOCK_CNTL, state ? clock_cntl_on : 0);
- }
- 
- static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index f5f40bc3c113..b3149ff7fa9d 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -123,6 +123,110 @@ static const struct adreno_reglist a630_hwcg[] = {
- 	{REG_A6XX_RBBM_CLOCK_HYST_GMU_GX, 0x00000555}
- };
- 
-+static const struct adreno_reglist a640_hwcg[] = {
-+	{REG_A6XX_RBBM_CLOCK_CNTL_SP0, 0x02222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_SP0, 0x02222220},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_SP0, 0x00000080},
-+	{REG_A6XX_RBBM_CLOCK_HYST_SP0, 0x0000F3CF},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TP0, 0x02222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_TP0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL3_TP0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL4_TP0, 0x00022222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY2_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY3_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY4_TP0, 0x00011111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST2_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST3_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST4_TP0, 0x00077777},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_RB0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_RB0, 0x01002222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_CCU0, 0x00002220},
-+	{REG_A6XX_RBBM_CLOCK_HYST_RB_CCU0, 0x00040F00},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_RAC, 0x05222022},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_RAC, 0x00005555},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_RAC, 0x00000011},
-+	{REG_A6XX_RBBM_CLOCK_HYST_RAC, 0x00445044},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TSE_RAS_RBBM, 0x04222222},
-+	{REG_A6XX_RBBM_CLOCK_MODE_VFD, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_MODE_GPC, 0x00222222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_HLSQ_2, 0x00000002},
-+	{REG_A6XX_RBBM_CLOCK_MODE_HLSQ, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TSE_RAS_RBBM, 0x00004000},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_VFD, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_GPC, 0x00000200},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_HLSQ, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TSE_RAS_RBBM, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_VFD, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_GPC, 0x04104004},
-+	{REG_A6XX_RBBM_CLOCK_HYST_HLSQ, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TEX_FCHE, 0x00000222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TEX_FCHE, 0x00000111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TEX_FCHE, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_UCHE, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_HYST_UCHE, 0x00000004},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_UCHE, 0x00000002},
-+	{REG_A6XX_RBBM_ISDB_CNT, 0x00000182},
-+	{REG_A6XX_RBBM_RAC_THRESHOLD_CNT, 0x00000000},
-+	{REG_A6XX_RBBM_SP_HYST_CNT, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_GMU_GX, 0x00000222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_GMU_GX, 0x00000111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_GMU_GX, 0x00000555},
-+};
-+
-+static const struct adreno_reglist a650_hwcg[] = {
-+	{REG_A6XX_RBBM_CLOCK_CNTL_SP0, 0x02222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_SP0, 0x02222220},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_SP0, 0x00000080},
-+	{REG_A6XX_RBBM_CLOCK_HYST_SP0, 0x0000F3CF},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TP0, 0x02222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_TP0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL3_TP0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL4_TP0, 0x00022222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY2_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY3_TP0, 0x11111111},
-+	{REG_A6XX_RBBM_CLOCK_DELAY4_TP0, 0x00011111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST2_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST3_TP0, 0x77777777},
-+	{REG_A6XX_RBBM_CLOCK_HYST4_TP0, 0x00077777},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_RB0, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_RB0, 0x01002222},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_CCU0, 0x00002220},
-+	{REG_A6XX_RBBM_CLOCK_HYST_RB_CCU0, 0x00040F00},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_RAC, 0x25222022},
-+	{REG_A6XX_RBBM_CLOCK_CNTL2_RAC, 0x00005555},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_RAC, 0x00000011},
-+	{REG_A6XX_RBBM_CLOCK_HYST_RAC, 0x00445044},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TSE_RAS_RBBM, 0x04222222},
-+	{REG_A6XX_RBBM_CLOCK_MODE_VFD, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_MODE_GPC, 0x00222222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_HLSQ_2, 0x00000002},
-+	{REG_A6XX_RBBM_CLOCK_MODE_HLSQ, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TSE_RAS_RBBM, 0x00004000},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_VFD, 0x00002222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_GPC, 0x00000200},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_HLSQ, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TSE_RAS_RBBM, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_VFD, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_HYST_GPC, 0x04104004},
-+	{REG_A6XX_RBBM_CLOCK_HYST_HLSQ, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_TEX_FCHE, 0x00000222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_TEX_FCHE, 0x00000111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_TEX_FCHE, 0x00000777},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_UCHE, 0x22222222},
-+	{REG_A6XX_RBBM_CLOCK_HYST_UCHE, 0x00000004},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_UCHE, 0x00000002},
-+	{REG_A6XX_RBBM_ISDB_CNT, 0x00000182},
-+	{REG_A6XX_RBBM_RAC_THRESHOLD_CNT, 0x00000000},
-+	{REG_A6XX_RBBM_SP_HYST_CNT, 0x00000000},
-+	{REG_A6XX_RBBM_CLOCK_CNTL_GMU_GX, 0x00000222},
-+	{REG_A6XX_RBBM_CLOCK_DELAY_GMU_GX, 0x00000111},
-+	{REG_A6XX_RBBM_CLOCK_HYST_GMU_GX, 0x00000555},
-+};
-+
- static const struct adreno_info gpulist[] = {
- 	{
- 		.rev   = ADRENO_REV(2, 0, 0, 0),
-@@ -323,6 +427,8 @@ static const struct adreno_info gpulist[] = {
- 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init = a6xx_gpu_init,
- 		.zapfw = "a640_zap.mdt",
-+		.hwcg = a640_hwcg,
-+		.hwcg_count = ARRAY_SIZE(a640_hwcg),
- 	}, {
- 		.rev = ADRENO_REV(6, 5, 0, ANY_ID),
- 		.revn = 650,
-@@ -335,6 +441,8 @@ static const struct adreno_info gpulist[] = {
- 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init = a6xx_gpu_init,
- 		.zapfw = "a650_zap.mdt",
-+		.hwcg = a650_hwcg,
-+		.hwcg_count = ARRAY_SIZE(a650_hwcg),
- 	},
- };
- 
--- 
-2.26.1
+"arch_ima_get_secureboot" -> "arch_ima_secure_or_trusted_boot". =20
+
+Which doesn't change the ima_load_data logic.
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--61jdw2sOBCFtR2d/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl76fqkACgkQYdRkFR+R
+okMSCwf6ArclPVwGnMxzR1YUkXqbk98vyQn1q7ARf7mcpdWpVdzicAwiacFuaAMP
+3uHozsXFja1TneJZpKj8ZI+noUFiHxL4G3s560qNfaIyr7eqOUd7ptKfzP1RW/5+
+C049uTjHMTe38EhUtq3sG+YkBSo3NLz1e/O78eBW++44fOAqqrGyKKrJPyrmqMTx
+/ieLpcfGrY9rnNtGm+pvcGWQntT0J2kddg2oxYB1JBRdbPBOXFYzfpTqQZRo1DP6
+AscFZaSpcnlLgAMXr0J0TsLhaZZ4+FINhGYNRUc1R3nN1IwM0UdMWqXHi6qMW0aU
+sB8+pxFQlSYmWeZGwrWZj4AKQeulYA==
+=jCqQ
+-----END PGP SIGNATURE-----
+
+--61jdw2sOBCFtR2d/--
 
