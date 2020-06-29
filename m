@@ -2,137 +2,81 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C1AC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032E82065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dUyEO0+C"
+	by mail.kernel.org (Postfix) with ESMTP id 5F8D8204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbgF2SyN (ORCPT
+        id S1726135AbgF2SyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:13 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:26318 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729515AbgF2SyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:54:07 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05T5ngSE023857
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:55:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=88tuhr3f1pOLl7SRW3iPo3wFtlQPZ7DRy59Ann1oPKE=;
- b=dUyEO0+CmvVEyMvVr+xqTgpLvDgo6cZq05eDao4RAXKvodS44Z6BpnRH/fCy6aO+uDR6
- eiw2DYEiF1Rb3V9b7ImAcQdyZMowNU5rmNZspP4bkbZl3k22VymituVW68hUNX6aQ2gF
- LaiPaJjOW8cldyiqgIlXqjdhLCj/ca0qgpk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 31x1kynpt0-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:55:34 -0700
-Received: from intmgw003.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 28 Jun 2020 22:55:33 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 8F4CA62E505E; Sun, 28 Jun 2020 22:55:32 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v4 bpf-next 0/4] bpf: introduce bpf_get_task_stack()
-Date:   Sun, 28 Jun 2020 22:55:26 -0700
-Message-ID: <20200629055530.3244342-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_04:2020-06-26,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
- cotscore=-2147483648 spamscore=0 priorityscore=1501 clxscore=1015
- mlxscore=0 phishscore=0 suspectscore=0 adultscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290042
-X-FB-Internal: deliver
+        Mon, 29 Jun 2020 14:54:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41018 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729696AbgF2SyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:54:03 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 56D2D1A12E8;
+        Mon, 29 Jun 2020 17:17:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F8831A12EE;
+        Mon, 29 Jun 2020 17:17:19 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4005B402F7;
+        Mon, 29 Jun 2020 23:17:06 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        p.zabel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net, treding@nvidia.com,
+        gustavo.pimentel@synopsys.com, amurray@thegoodpenguin.co.uk,
+        vidyas@nvidia.com, xiaowei.bao@nxp.com, jonnyc@amazon.com,
+        hayashi.kunihiko@socionext.com, eswara.kota@linux.intel.com,
+        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 3/3] pci: imx: Select RESET_IMX7 by default
+Date:   Mon, 29 Jun 2020 23:05:29 +0800
+Message-Id: <1593443129-18766-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
+References: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set introduces a new helper bpf_get_task_stack(). The primary use ca=
-se
-is to dump all /proc/*/stack to seq_file via bpf_iter__task.
+i.MX7 reset driver now supports module build and it is no longer
+built in by default, so i.MX PCI driver needs to select it explicitly
+due to it is NOT supporting loadable module currently.
 
-A few different approaches have been explored and compared:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+New patch.
+---
+ drivers/pci/controller/dwc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-  1. A simple wrapper around stack_trace_save_tsk(), as v1 [1].
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a376..bcf63ce 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -90,6 +90,7 @@ config PCI_EXYNOS
+ 
+ config PCI_IMX6
+ 	bool "Freescale i.MX6/7/8 PCIe controller"
++	select RESET_IMX7
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+-- 
+2.7.4
 
-     This approach introduces new syntax, which is different to existing
-     helper bpf_get_stack(). Therefore, this is not ideal.
-
-  2. Extend get_perf_callchain() to support "task" as argument.
-
-     This approach reuses most of bpf_get_stack(). However, extending
-     get_perf_callchain() requires non-trivial changes to architecture
-     specific code. Which is error prone.
-
-  3. Current (v2) approach, leverages most of existing bpf_get_stack(), a=
-nd
-     uses stack_trace_save_tsk() to handle architecture specific logic.
-
-[1] https://lore.kernel.org/netdev/20200623070802.2310018-1-songliubravin=
-g@fb.com/
-
-Changes v3 =3D> v4:
-1. Simplify the selftests with bpf_iter.h. (Yonghong)
-2. Add example output to commit log of 4/4. (Yonghong)
-
-Changes v2 =3D> v3:
-1. Rebase on top of bpf-next. (Yonghong)
-2. Sanitize get_callchain_entry(). (Peter)
-3. Use has_callchain_buf for bpf_get_task_stack. (Andrii)
-4. Other small clean up. (Yonghong, Andrii).
-
-Changes v1 =3D> v2:
-1. Reuse most of bpf_get_stack() logic. (Andrii)
-2. Fix unsigned long vs. u64 mismatch for 32-bit systems. (Yonghong)
-3. Add %pB support in bpf_trace_printk(). (Daniel)
-4. Fix buffer size to bytes.
-
-Song Liu (4):
-  perf: expose get/put_callchain_entry()
-  bpf: introduce helper bpf_get_task_stack()
-  bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
-  selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-
- include/linux/bpf.h                           |  1 +
- include/linux/perf_event.h                    |  2 +
- include/uapi/linux/bpf.h                      | 36 ++++++++-
- kernel/bpf/stackmap.c                         | 75 ++++++++++++++++++-
- kernel/bpf/verifier.c                         |  4 +-
- kernel/events/callchain.c                     | 13 ++--
- kernel/trace/bpf_trace.c                      | 12 ++-
- scripts/bpf_helpers_doc.py                    |  2 +
- tools/include/uapi/linux/bpf.h                | 36 ++++++++-
- .../selftests/bpf/prog_tests/bpf_iter.c       | 17 +++++
- .../selftests/bpf/progs/bpf_iter_task_stack.c | 37 +++++++++
- 11 files changed, 220 insertions(+), 15 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
-.c
-
---
-2.24.1
