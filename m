@@ -2,119 +2,106 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E93C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D92208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mXRRbfVP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JiDM2YHP"
+	by mail.kernel.org (Postfix) with ESMTP id 4E2B9214F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbgF2VXI (ORCPT
+        id S2391005AbgF2VXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:23:08 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:52619 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729598AbgF2Sv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:26 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E3ECF5C00D3;
-        Mon, 29 Jun 2020 09:27:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 29 Jun 2020 09:27:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=JpiETwDZ/SAflAAJFgDp4FBg1pZ
-        pP5xS6lyjUSfpKCM=; b=mXRRbfVPgfG6UPXp/PSzKJMBzfyjzsl1E/7lyo5a3gM
-        9Cge2GRb9lDgs1kvu9QUnD5zMEAk50D+o3Dz/RYf823HuITyl2SD6M5mqGJgvWNc
-        o1DHLyzKoKgSZJTUqsMGT7GI/A6baxRB5Kh0TJgXydX2agP/hYV74Adp+0f8Bx9X
-        4OWOLbSK1Dkwef0W1j8RNCam018fu8QBRaea8CUFHF60Snqn740cn2LdKaRsUVnb
-        PeJU5B266/SwyxLZ8L1vrCoB165XsYMg4BGvlvXCsF6Urim6SXsBQDWghKck1U/6
-        eiTtWyReAbSY+f0ZJw6Ghgc7Wkt7q+kCS6UASuCNlDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=JpiETw
-        DZ/SAflAAJFgDp4FBg1pZpP5xS6lyjUSfpKCM=; b=JiDM2YHPZhJvZBxwhPP024
-        aKmfMURylJFOkccBcL+q9vj+SXy0Evq7N25IywsKCzIYUHcz8gpZOMl++jUWhpU6
-        zp0+gQjFNV8O4i4iAn/UZAYNcJN9oUGoKduYA479RqzWzLCCCje0orJiJOtaC8NM
-        k1rT+n0nuZyz5hujpZsPR04VTXwa+HyqAY01mhHSSocPRLJO25uJ4X34mdxgOUNV
-        hreUs4zsGH16nEuchYNsY5ScQnkqiKUjY7fxwbzlMgNs5DtdHdnvwx1fhyHFw5QC
-        WJPWI5KinuhCKrPH0eCVROihF8YBDz6fv6IU+z/zT39CiG/8Tk2KpRZTwXJhrVTg
-        ==
-X-ME-Sender: <xms:Juz5XuE4l6QSEmDlfJ9AvbfBgIk02Prg-ilcCIwJZhXYadez6pF8Ig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudelkedgieehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:Juz5XvV538Y4-dH1cRmxotMtkaQwuH05ywz1yFow3UEOXy4Vswm_fw>
-    <xmx:Juz5XoJj9U8sljPLdaVdWpfy9zRwxhL1HDr_B4wECbYa_REcNOORTA>
-    <xmx:Juz5XoGWnT9dNZWrIqynMyfRugD9fbrG5znCVlOdhnELAzJ-dY-LsA>
-    <xmx:Juz5Xteuhv-OXifqHbVUMdKUdfk-96lZMLTejeBsEnJiZVurIx-9wg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 12707328005D;
-        Mon, 29 Jun 2020 09:27:01 -0400 (EDT)
-Date:   Mon, 29 Jun 2020 15:27:00 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu: SUN50I_IOMMU should depend on HAS_DMA
-Message-ID: <20200629132700.qtchohqyb4vslfhz@gilmour.lan>
-References: <20200629121146.24011-1-geert@linux-m68k.org>
+        Mon, 29 Jun 2020 17:23:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44620 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729588AbgF2SvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:51:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A8E8FAD2C;
+        Mon, 29 Jun 2020 18:12:58 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 811B91E12E7; Mon, 29 Jun 2020 20:12:58 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 20:12:58 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "fs: Do not check if there is a fsnotify watcher
+ on pseudo inodes"
+Message-ID: <20200629181258.GI26507@quack2.suse.cz>
+References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
+ <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
+ <20200629130915.GF26507@quack2.suse.cz>
+ <CAOQ4uxhdOMbn9vL_PAGKLtriVzkjwBkuEgbdB5+uH2ZM6uA97w@mail.gmail.com>
+ <20200629144145.GA3183@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="srp6bnpiqzimzunw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629121146.24011-1-geert@linux-m68k.org>
+In-Reply-To: <20200629144145.GA3183@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 29-06-20 15:41:45, Mel Gorman wrote:
+> This reverts commit e9c15badbb7b ("fs: Do not check if there is a
+> fsnotify watcher on pseudo inodes"). The commit intended to eliminate
+> fsnotify-related overhead for pseudo inodes but it is broken in
+> concept. inotify can receive events of pipe files under /proc/X/fd and
+> chromium relies on close and open events for sandboxing. Maxim Levitsky
+> reported the following
+> 
+>   Chromium starts as a white rectangle, shows few white rectangles that
+>   resemble its notifications and then crashes.
+> 
+>   The stdout output from chromium:
+> 
+>   [mlevitsk@starship ~]$chromium-freeworld
+>   mesa: for the   --simplifycfg-sink-common option: may only occur zero or one times!
+>   mesa: for the   --global-isel-abort option: may only occur zero or one times!
+>   [3379:3379:0628/135151.440930:ERROR:browser_switcher_service.cc(238)] XXX Init()
+>   ../../sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc:**CRASHING**:seccomp-bpf failure in syscall 0072
+>   Received signal 11 SEGV_MAPERR 0000004a9048
+> 
+> Crashes are not universal but even if chromium does not crash, it certainly
+> does not work properly. While filtering just modify and access might be
+> safe, the benefit is not worth the risk hence the revert.
+> 
+> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Fixes: e9c15badbb7b ("fs: Do not check if there is a fsnotify watcher on pseudo inodes")
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 
---srp6bnpiqzimzunw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the revert Mel. I can see Linus already picked it up so we are
+done.
 
-On Mon, Jun 29, 2020 at 02:11:46PM +0200, Geert Uytterhoeven wrote:
-> If NO_DMA=3Dy (e.g. Sun-3 all{mod,yes}-config):
->=20
->     drivers/iommu/dma-iommu.o: In function `iommu_dma_mmap':
->     dma-iommu.c:(.text+0x92e): undefined reference to `dma_pgprot'
->=20
-> IOMMU_DMA must not be selected, unless HAS_DMA=3Dy.
->=20
-> Hence fix this by making SUN50I_IOMMU depend on HAS_DMA.
->=20
-> Fixes: 4100b8c229b32835 ("iommu: Add Allwinner H6 IOMMU driver")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+								Honza
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---srp6bnpiqzimzunw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvnsJAAKCRDj7w1vZxhR
-xT08AQD0Cz/X0wU0i8MZumEsV0zYZgHgFem+MQvh7UEfUWFx6QEAwPl3iEuK5fAo
-DgSiPvd7gsJK7PToEsd3T2mB9YYqzQE=
-=WyeQ
------END PGP SIGNATURE-----
-
---srp6bnpiqzimzunw--
+> ---
+>  fs/file_table.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index 65603502fed6..656647f9575a 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -230,7 +230,7 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
+>  		d_set_d_op(path.dentry, &anon_ops);
+>  	path.mnt = mntget(mnt);
+>  	d_instantiate(path.dentry, inode);
+> -	file = alloc_file(&path, flags | FMODE_NONOTIFY, fops);
+> +	file = alloc_file(&path, flags, fops);
+>  	if (IS_ERR(file)) {
+>  		ihold(inode);
+>  		path_put(&path);
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
