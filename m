@@ -2,163 +2,105 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A835AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9827CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84989208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E69208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466163;
+	bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0AwqautQWP71OOiLHDVpoluqKtgSV0ce7gYrbO5cf6oBs9vCXphMaurqrjy38jct6
+	 OJDFYgYvGJQH4X3MyXR1+yVtcCuoya3qR3TnHoqQTax2q0IEn9+DeovrZ7OuIE5Xkz
+	 NVZlVfCM3XMYqohCT8JbGN0AcnyDufibkPp0PEfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388144AbgF2V3O (ORCPT
+        id S2390904AbgF2V3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48542 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727976AbgF2Smj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:39 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TFajYC188023;
-        Mon, 29 Jun 2020 12:10:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydmqmpxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:10:49 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TGAm7D150990;
-        Mon, 29 Jun 2020 12:10:48 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydmqmpw9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:10:48 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TG6QpM016445;
-        Mon, 29 Jun 2020 16:10:46 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 31wyyase64-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 16:10:46 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TGAhQt46924020
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 16:10:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B4444C05A;
-        Mon, 29 Jun 2020 16:10:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C08124C046;
-        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.79.64])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
- <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
- <20200618002956.5f179de4.pasic@linux.ibm.com>
- <20200619112051.74babdb1.cohuck@redhat.com>
- <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
- <20200629154439.14cc5ae7.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <4777633f-728b-1a67-c870-0fafa313e468@linux.ibm.com>
-Date:   Mon, 29 Jun 2020 18:10:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 17:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728895AbgF2SlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E480A23EB2;
+        Mon, 29 Jun 2020 15:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593443902;
+        bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZuSFTRLisUPRIUXTDV5FC38GvWGJw+cB9ajPAXEMT9xX6fx6de25/hsqQPjFwpKOo
+         PTgfOl5otHJZdtqBQVr4rCcOFjJ61Y7J7XX1QUNrXn4hi/pskn45wQ13rwn8cz0DxU
+         6PnD3xFsJYhumxYCfWUZYWn0dugJ1z0joOhRhXEM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 002/265] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
+Date:   Mon, 29 Jun 2020 11:13:55 -0400
+Message-Id: <20200629151818.2493727-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200629154439.14cc5ae7.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 mlxscore=0 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290105
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: yu kuai <yukuai3@huawei.com>
 
+commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
 
-On 2020-06-29 15:44, Cornelia Huck wrote:
-> On Mon, 29 Jun 2020 15:14:04 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> On 2020-06-19 11:20, Cornelia Huck wrote:
->>> On Thu, 18 Jun 2020 00:29:56 +0200
->>> Halil Pasic <pasic@linux.ibm.com> wrote:
->>>    
->>>> On Wed, 17 Jun 2020 12:43:57 +0200
->>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->>>>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
->>>>>    	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->>>>>    		return 0;
->>>>>    
->>>>> +	if (arch_needs_virtio_iommu_platform(dev) &&
->>>>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->>>>> +		dev_warn(&dev->dev,
->>>>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-> 
-> [Side note: wasn't there a patch renaming this bit on the list? I think
-> this name is only kept for userspace compat.]
+commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
+a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
+the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+'bio->bi_integrity' were set previousy in bio_integrity_alloc().
 
-Sorry, I do not understand what you expect from me.
-On which mailing list you think there is a patch on?
+Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ block/bio-integrity.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> 
->>>>
->>>> I'm not sure, divulging the current Linux name of this feature bit is a
->>>> good idea, but if everybody else is fine with this, I don't care that
->>>
->>> Not sure if that feature name will ever change, as it is exported in
->>> headers. At most, we might want to add the new ACCESS_PLATFORM define
->>> and keep the old one, but that would still mean some churn.
->>>    
->>>> much. An alternative would be:
->>>> "virtio: device falsely claims to have full access to the memory,
->>>> aborting the device"
->>>
->>> "virtio: device does not work with limited memory access" ?
->>>
->>> But no issue with keeping the current message.
->>>    
->>
->> If it is OK, I would like to specify that the arch is responsible to
->> accept or not the device.
->> The reason why the device is not accepted without IOMMU_PLATFORM is arch
->> specific.
-> 
-> Hm, I'd think the reason is always the same (the device cannot access
-> the memory directly), just the way to figure out whether that is the
-> case or not is arch-specific, as with so many other things. No real
-> need to go into detail here, I think.
-> 
-
-As you like, so I rename the subject to:
-"virtio: device does not work with limited memory access"
-
-Regards,
-
-Pierre
-
-
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index bf62c25cde8f4..ae07dd78e9518 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -278,7 +278,6 @@ bool bio_integrity_prep(struct bio *bio)
+ 
+ 		if (ret == 0) {
+ 			printk(KERN_ERR "could not attach integrity payload\n");
+-			kfree(buf);
+ 			status = BLK_STS_RESOURCE;
+ 			goto err_end_io;
+ 		}
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+2.25.1
+
