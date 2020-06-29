@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39186C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE002065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A712065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468298;
-	bh=5l6+rKtmr1boCMKwk/zkfnGh7MPSWATG2k0KxQ0ouFU=;
+	s=default; t=1593468309;
+	bh=5NP+qZkv52s2t0p4d7RZmI/81Jk5wRFpyh28Zeo2Cdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iqPY1oFR2tlzfq6L2lqvVPneIcySFfHgLAJt99dtODyAA1ecoPTkZyPk/+JsoCjR+
-	 JKv9voArtkGsrOPvYQ2nf8dLzB9yaoVsudgzftdualtGuupxxWLi7VR3iEk9Ti/6vM
-	 g8sc01O1ffID7slbMxiG66F0ilsfvVbjd0uh+WFU=
+	b=wuVGlxwDrtBD8NxFbfJz84iCV67pK0nfBKgeAbw/3zargWj31+th+0Xs8z3pid3ED
+	 sm/z8LxzJWzCLZLqhY5T9i2yYzrG4SWpLVAS5huMyUlTu6aG4MCmTwzfXqPM/xDKyV
+	 XQpJsaRkNLLw31FBpilYVrPh1013xsEhIVX5KVh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391859AbgF2WE4 (ORCPT
+        id S2391868AbgF2WFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726174AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 143182474A;
-        Mon, 29 Jun 2020 15:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 129A024792;
+        Mon, 29 Jun 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444066;
-        bh=5l6+rKtmr1boCMKwk/zkfnGh7MPSWATG2k0KxQ0ouFU=;
+        s=default; t=1593444100;
+        bh=5NP+qZkv52s2t0p4d7RZmI/81Jk5wRFpyh28Zeo2Cdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjuMLq/J58cSOJHChXHuvDzbejnTaQ9eR2dOIDvEn1ayIPpccHROLmgYarlvU2FVw
-         zvI1ruz+yJ/amNxCd21kDg9SKD+EQ92h4H5vwGy0tvRCQOhlaVFpJfPLbly+3lrFct
-         S1SER8QPwRTyfLH1zGFk9Vx6nCLrOLFnQmKwAPBc=
+        b=Y0zvylTerbM+jVK/6zv6Jvj4zBFQhdYO0QAJhm7mzGw/YWTBbeYuOLzlXyycQzJV9
+         vlqsPjzPYSnxrfsgG4VUz07snZ22XKNj4EbxAPsUcRfNf57mvXDUPn//Ehyfpok4YA
+         6caRtzl/lTuGr4G0wIDvqlsGLaedG4cfW9asSBDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 175/265] wil6210: account for napi_gro_receive never returning GRO_DROP
-Date:   Mon, 29 Jun 2020 11:16:48 -0400
-Message-Id: <20200629151818.2493727-176-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 211/265] ALSA: hda/realtek: Add mute LED and micmute LED support for HP systems
+Date:   Mon, 29 Jun 2020 11:17:24 -0400
+Message-Id: <20200629151818.2493727-212-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,100 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 045790b7bc66a75070c112a61558c639cef2263e ]
+commit b2c22910fe5aae10b7e17b0721e63a3edf0c9553 upstream.
 
-The napi_gro_receive function no longer returns GRO_DROP ever, making
-handling GRO_DROP dead code. This commit removes that dead code.
-Further, it's not even clear that device drivers have any business in
-taking action after passing off received packets; that's arguably out of
-their hands. In this case, too, the non-gro path didn't bother checking
-the return value. Plus, this had some clunky debugging functions that
-duplicated code from elsewhere and was generally pretty messy. So, this
-commit cleans that all up too.
+There are two more HP systems control mute LED from HDA codec and need
+to expose micmute led class so SoF can control micmute LED.
 
-Fixes: 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add quirks to support them.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200617102906.16156-2-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx.c | 39 +++++++------------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+ sound/pci/hda/patch_realtek.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
-index bc8c15fb609dc..080e5aa60bea4 100644
---- a/drivers/net/wireless/ath/wil6210/txrx.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx.c
-@@ -897,7 +897,6 @@ static void wil_rx_handle_eapol(struct wil6210_vif *vif, struct sk_buff *skb)
- void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
- 		  struct wil_net_stats *stats, bool gro)
- {
--	gro_result_t rc = GRO_NORMAL;
- 	struct wil6210_vif *vif = ndev_to_vif(ndev);
- 	struct wil6210_priv *wil = ndev_to_wil(ndev);
- 	struct wireless_dev *wdev = vif_to_wdev(vif);
-@@ -908,22 +907,16 @@ void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
- 	 */
- 	int mcast = is_multicast_ether_addr(da);
- 	struct sk_buff *xmit_skb = NULL;
--	static const char * const gro_res_str[] = {
--		[GRO_MERGED]		= "GRO_MERGED",
--		[GRO_MERGED_FREE]	= "GRO_MERGED_FREE",
--		[GRO_HELD]		= "GRO_HELD",
--		[GRO_NORMAL]		= "GRO_NORMAL",
--		[GRO_DROP]		= "GRO_DROP",
--		[GRO_CONSUMED]		= "GRO_CONSUMED",
--	};
- 
- 	if (wdev->iftype == NL80211_IFTYPE_STATION) {
- 		sa = wil_skb_get_sa(skb);
- 		if (mcast && ether_addr_equal(sa, ndev->dev_addr)) {
- 			/* mcast packet looped back to us */
--			rc = GRO_DROP;
- 			dev_kfree_skb(skb);
--			goto stats;
-+			ndev->stats.rx_dropped++;
-+			stats->rx_dropped++;
-+			wil_dbg_txrx(wil, "Rx drop %d bytes\n", len);
-+			return;
- 		}
- 	} else if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
- 		if (mcast) {
-@@ -967,26 +960,16 @@ void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
- 			wil_rx_handle_eapol(vif, skb);
- 
- 		if (gro)
--			rc = napi_gro_receive(&wil->napi_rx, skb);
-+			napi_gro_receive(&wil->napi_rx, skb);
- 		else
- 			netif_rx_ni(skb);
--		wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
--			     len, gro_res_str[rc]);
--	}
--stats:
--	/* statistics. rc set to GRO_NORMAL for AP bridging */
--	if (unlikely(rc == GRO_DROP)) {
--		ndev->stats.rx_dropped++;
--		stats->rx_dropped++;
--		wil_dbg_txrx(wil, "Rx drop %d bytes\n", len);
--	} else {
--		ndev->stats.rx_packets++;
--		stats->rx_packets++;
--		ndev->stats.rx_bytes += len;
--		stats->rx_bytes += len;
--		if (mcast)
--			ndev->stats.multicast++;
- 	}
-+	ndev->stats.rx_packets++;
-+	stats->rx_packets++;
-+	ndev->stats.rx_bytes += len;
-+	stats->rx_bytes += len;
-+	if (mcast)
-+		ndev->stats.multicast++;
- }
- 
- void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index f58102925c705..cb689878ba205 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7436,6 +7436,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
++	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
++	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
 -- 
 2.25.1
 
