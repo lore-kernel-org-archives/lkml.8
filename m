@@ -2,138 +2,118 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28C2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9018BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE462053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6442B206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457346;
+	bh=v10dj1DiDBGz+mz87y2dvqwsZhvVsQICyz0IBem6ywo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LHAXkfq0ktrZ0owug7ofzJt4yXnu3zQHLfhavoTBgbb8os0W2wxkTCgId/69SdVU/
+	 ZbYfpkryIKTqZnDQrsxWsIwFuDQD0zFJ3onxPqj3aq+PM0JqXRJDCV742tuhdEBSm0
+	 25XSV2rfG5F3p5zk2dSB44kUNgCSEHoWLFd6tR28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgF2TCW (ORCPT
+        id S1726713AbgF2TCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:22 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:38783 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730499AbgF2TCT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:19 -0400
-Received: (qmail 406595 invoked by uid 1000); 29 Jun 2020 12:15:36 -0400
-Date:   Mon, 29 Jun 2020 12:15:36 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200629161536.GA405175@rowland.harvard.edu>
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
+        Mon, 29 Jun 2020 15:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730351AbgF2TAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB57254F7;
+        Mon, 29 Jun 2020 15:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446055;
+        bh=v10dj1DiDBGz+mz87y2dvqwsZhvVsQICyz0IBem6ywo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gHZXm9vIvsXOt2Ze5HvNHJyGJSAas3alThjvqBWXdQl2jBT8mBud36d3sZBrEFGOs
+         +VG28wzkBeSkq2Rkws0a/bX+43svSEgT2Ymc91q0UEyGlUHSo3pQf2Qroa2C/k91Z3
+         Y1d0/cqANdQ/vJ1A1v2wNC3mdzQbrtjHtuh2VilE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 056/135] usb/ehci-platform: Set PM runtime as active on resume
+Date:   Mon, 29 Jun 2020 11:51:50 -0400
+Message-Id: <20200629155309.2495516-57-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:42:59AM +0200, Martin Kepplinger wrote:
-> 
-> 
-> On 26.06.20 17:44, Alan Stern wrote:
-> > Martin's best approach would be to add some debugging code to find out why 
-> > blk_queue_enter() isn't calling bkl_pm_request_resume(), or why that call 
-> > doesn't lead to pm_request_resume().
-> > 
-> > Alan Stern
-> > 
-> 
-> Hi Alan,
-> 
-> blk_queue_enter() always - especially when sd is runtime suspended and I
-> try to mount as above - sets success to be true for me, so never
-> continues down to bkl_pm_request_resume(). All I see is "PM: Removing
-> info for No Bus:sda1".
+From: Qais Yousef <qais.yousef@arm.com>
 
-Aha.  Looking at this more closely, it's apparent that the code in 
-blk-core.c contains a logic bug: It assumes that if the BLK_MQ_REQ_PREEMPT 
-flag is set then the request can be issued regardless of the queue's 
-runtime status.  That is not correct when the queue is suspended.
+[ Upstream commit 16bdc04cc98ab0c74392ceef2475ecc5e73fcf49 ]
 
-Below is my attempt to fix this up.  I'm not sure that the patch is 
-entirely correct, but it should fix this logic bug.  I would appreciate a 
-critical review.
+Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
+resume.
 
-Martin, does this fix the problem?
+ohci-platform.c had a warning reported due to the missing
+pm_runtime_set_active() [1].
 
-Alan Stern
+[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
 
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-3-qais.yousef@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/ehci-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-
-Index: usb-devel/block/blk-core.c
-===================================================================
---- usb-devel.orig/block/blk-core.c
-+++ usb-devel/block/blk-core.c
-@@ -423,7 +423,8 @@ int blk_queue_enter(struct request_queue
- 			 * responsible for ensuring that that counter is
- 			 * globally visible before the queue is unfrozen.
- 			 */
--			if (pm || !blk_queue_pm_only(q)) {
-+			if ((pm && q->rpm_status != RPM_SUSPENDED) ||
-+			    !blk_queue_pm_only(q)) {
- 				success = true;
- 			} else {
- 				percpu_ref_put(&q->q_usage_counter);
-@@ -448,8 +449,7 @@ int blk_queue_enter(struct request_queue
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index bd7082f297bbe..56200650b46b4 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -375,6 +375,11 @@ static int ehci_platform_resume(struct device *dev)
+ 	}
  
- 		wait_event(q->mq_freeze_wq,
- 			   (!q->mq_freeze_depth &&
--			    (pm || (blk_pm_request_resume(q),
--				    !blk_queue_pm_only(q)))) ||
-+			    blk_pm_resume_queue(pm, q)) ||
- 			   blk_queue_dying(q));
- 		if (blk_queue_dying(q))
- 			return -ENODEV;
-Index: usb-devel/block/blk-pm.h
-===================================================================
---- usb-devel.orig/block/blk-pm.h
-+++ usb-devel/block/blk-pm.h
-@@ -6,11 +6,14 @@
- #include <linux/pm_runtime.h>
- 
- #ifdef CONFIG_PM
--static inline void blk_pm_request_resume(struct request_queue *q)
-+static inline int blk_pm_resume_queue(const bool pm, struct request_queue *q)
- {
--	if (q->dev && (q->rpm_status == RPM_SUSPENDED ||
--		       q->rpm_status == RPM_SUSPENDING))
--		pm_request_resume(q->dev);
-+	if (!q->dev || !blk_queue_pm_only(q))
-+		return 1;	/* Nothing to do */
-+	if (pm && q->rpm_status != RPM_SUSPENDED)
-+		return 1;	/* Request allowed */
-+	pm_request_resume(q->dev);
-+	return 0;
+ 	ehci_resume(hcd, priv->reset_on_resume);
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	return 0;
  }
- 
- static inline void blk_pm_mark_last_busy(struct request *rq)
-@@ -44,8 +47,9 @@ static inline void blk_pm_put_request(st
- 		--rq->q->nr_pending;
- }
- #else
--static inline void blk_pm_request_resume(struct request_queue *q)
-+static inline int blk_pm_resume_queue(const bool pm, struct request_queue *q)
- {
-+	return 1;
- }
- 
- static inline void blk_pm_mark_last_busy(struct request *rq)
+ #endif /* CONFIG_PM_SLEEP */
+-- 
+2.25.1
+
