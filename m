@@ -2,105 +2,97 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E50120760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461373;
-	bh=EhVqRIVL7XTnFLSU+chvQGfM9cMEKsaL5C1NCbVo8PY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0ki06qNKKcFBiHy90o4JXEPeXLNug6DffKnVB5l51Y5BUkU+jNaim3H4MXOiXdmh
-	 YWtuUKE6mszcBtJDegchU/ccjzmq2qAIp8uX6FrPriW5GXmbwfLBr2LMl67etY+m2D
-	 f8NebIJpHvEfCd2yNiRp712Sz7UJoNWNx5G9dNx0=
+	by mail.kernel.org (Postfix) with ESMTP id 9E62420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgF2UJ2 (ORCPT
+        id S1727059AbgF2UJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8203 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732916AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B24252CA;
-        Mon, 29 Jun 2020 15:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445093;
-        bh=EhVqRIVL7XTnFLSU+chvQGfM9cMEKsaL5C1NCbVo8PY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWZ5U5Y2vkU8ezJEB7hdqXPI7mx0r2bkEGAuWXk6D7UiHFn2Fo3MN76CoY7CUjNun
-         5Mu7eg65ndk29RA/VZMyHbSaLqwY7B1N5qiinWwFYteKEhpKuo2ZuLekvZeoaiW6tK
-         8XHmPZ7wiq+Y0LlGzeHuuf/gKjAv9kcSLen3hrEo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        Bob Liu <bob.liu@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 03/78] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
-Date:   Mon, 29 Jun 2020 11:36:51 -0400
-Message-Id: <20200629153806.2494953-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        id S1727938AbgF2UJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:09:26 -0400
+IronPort-SDR: aDaW0t+7lHLm/T6o1YN2QMqnDoZpQHaJs+kop2Xt5YZf6w2z/7uRVwvr2XarJ6uFS6A7S+h6rz
+ WEfRPwnnKpwg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145126351"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="145126351"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 13:09:26 -0700
+IronPort-SDR: PoVjz7Y+YLh6hCKpBiPEoY6bNJLo/ocBfnj+22m72VjMoPDZijXwyTfNOwYkLzxZUb6K2ThjD5
+ CNfUtTHR8anQ==
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="454315340"
+Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.206.102]) ([10.254.206.102])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 13:09:23 -0700
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v2 2/8] IB/hfi1: Convert PCIBIOS_* errors to generic -E*
+ errors
+To:     refactormyself@gmail.com, helgaas@kernel.org
+Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200615073225.24061-1-refactormyself@gmail.com>
+ <20200615073225.24061-3-refactormyself@gmail.com>
+Message-ID: <9e2b006e-9a0a-19fb-5dab-52df8c0e8674@intel.com>
+Date:   Mon, 29 Jun 2020 16:09:21 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200615073225.24061-3-refactormyself@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+On 6/15/2020 3:32 AM, refactormyself@gmail.com wrote:
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> 
+> pcie_speeds() returns PCIBIOS_ error codes from PCIe capability accessors.
+> 
+> PCIBIOS_ error codes have positive values. Passing on these values is
+> inconsistent with functions which return only a negative value on failure.
+> 
+> Before passing on the return value of PCIe capability accessors, call
+> pcibios_err_to_errno() to convert any positive PCIBIOS_ error codes to
+> negative generic error values.
+> 
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> ---
+>   drivers/infiniband/hw/hfi1/pcie.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
+> index 1a6268d61977..eb53781d0c6a 100644
+> --- a/drivers/infiniband/hw/hfi1/pcie.c
+> +++ b/drivers/infiniband/hw/hfi1/pcie.c
+> @@ -306,7 +306,7 @@ int pcie_speeds(struct hfi1_devdata *dd)
+>   	ret = pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &linkcap);
+>   	if (ret) {
+>   		dd_dev_err(dd, "Unable to read from PCI config\n");
+> -		return ret;
+> +		return pcibios_err_to_errno(ret);
+>   	}
+>   
+>   	if ((linkcap & PCI_EXP_LNKCAP_SLS) != PCI_EXP_LNKCAP_SLS_8_0GB) {
+> 
 
-commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
-
-commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
-a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
-the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
-'bio->bi_integrity' were set previousy in bio_integrity_alloc().
-
-Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- block/bio-integrity.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 7f80106624375..d3df44c3b43af 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -315,7 +315,6 @@ bool bio_integrity_prep(struct bio *bio)
- 
- 		if (ret == 0) {
- 			printk(KERN_ERR "could not attach integrity payload\n");
--			kfree(buf);
- 			status = BLK_STS_RESOURCE;
- 			goto err_end_io;
- 		}
--- 
-2.25.1
-
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
