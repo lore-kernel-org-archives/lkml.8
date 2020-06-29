@@ -2,98 +2,106 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D8D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFC020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467296;
-	bh=iUhWoPb1izTE7jr4E7m4MsTP3Hs8v+Lhp4FU1e8vsps=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lh0lUENiJcAE7kcakAZ3/OoPIN9pHUK+B0dnjYkKXawxMaO0ugRssX5AEna9D8uT5
-	 nu6HAPmqjz32h3DTHozZ3COam2xFLfx2fYO8H/U4hSXlofEBdFHTJT9PNenBKvhx+e
-	 F0A2Z55JDVMqE2CttVwoNR9Y63g5jnbQfJl6/cU8=
+	s=default; t=1593467302;
+	bh=pHWXkpDmMnzt9/atnFVWTOS9Q9wcOY5N5scI8iSGDa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ba0CLu3VrKWYDif8fedS/Kglle/FmAbvKPLbnycDW6ZWxZBAs+6ldnJ6OUMbiyy0j
+	 rObSUU5bqxw1QRZBvrasOBcvc7GdwaSjtV2Mnqjn/hJTcugIVC9KHoD2xkCrSy7XxM
+	 a1+OGppCOHqTgur1r2MtAga51AxjADieIQAdFxY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732540AbgF2VsP (ORCPT
+        id S2404284AbgF2VsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0D42465B;
-        Mon, 29 Jun 2020 15:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443971;
-        bh=iUhWoPb1izTE7jr4E7m4MsTP3Hs8v+Lhp4FU1e8vsps=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYZDDlyLuR1QMWclJbqEd5YrlXo132wzzhcpsxs/sGpjF57vs4r2UZViRZrtblsO6
-         C3yBTFrfnYjOhn4ZgDsPADrcjmfZQ+XkQz/bUQbo+xpAV619vRkYryLcsNGmO/gkQB
-         6FSpRoG06xWvrdmrn+9eZQV+Wh61pcJh4jeUEPMU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoffer Nielsen <cn@obviux.dk>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 075/265] ALSA: usb-audio: Add registration quirk for Kingston HyperX Cloud Flight S
-Date:   Mon, 29 Jun 2020 11:15:08 -0400
-Message-Id: <20200629151818.2493727-76-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:48:21 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38672 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404255AbgF2VsJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:48:09 -0400
+Received: by mail-io1-f68.google.com with SMTP id f6so3231010ioj.5;
+        Mon, 29 Jun 2020 14:48:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wGWmyGXfNATJETlByWIEZ13t4eNzYwD3JHETLNfxb54=;
+        b=LSTQHAqoIoV/qaZ7TayTtaGHtNbbU7i50/njuRYKApJYi5gEpkVGwdXkB8vXP2xdsk
+         ysyi5ajs/I2ER9KBGj8+FdLPeUk8NJJgtiU2kYrYe8LvmeJZVEegydgAFgSmUidGI5WE
+         XRSdYwZpFaVKH9pNYAuiBhl4LeC0cjIdybvKY0LCYUMqPuHFiCci7zW8rPSRUHfyHuvy
+         H/wxaPx+sjuP4DW/i4PbZTOq8/BgZvYCxkrQq9+BHaNs1n2gpQcaogkhoQvBW95ajTAK
+         lcIRPfmdOKKvOR8GTecazz47RjfNvCGq1WXPpHwSQ4GAS/yciphyChc6sEuD6dZ1XKTl
+         K5qQ==
+X-Gm-Message-State: AOAM531m6d+RoibLzHPJ5tXG+6acAXaykD8ExqP0U9wwrSS/kSIyu9wP
+        oLPMdakqjKQrvQRXi7jXsA==
+X-Google-Smtp-Source: ABdhPJwEfRn6dYm/O5ro6RnMRhK1qWiklysncseXKlDL5Wp1cyeVC6ap1ygyNz6c3jdV70Ag3tnIxg==
+X-Received: by 2002:a6b:1496:: with SMTP id 144mr18920446iou.6.1593467288379;
+        Mon, 29 Jun 2020 14:48:08 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id k3sm601299ils.8.2020.06.29.14.48.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:48:07 -0700 (PDT)
+Received: (nullmailer pid 2985144 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:48:05 -0000
+Date:   Mon, 29 Jun 2020 15:48:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, ulf.hansson@linaro.org, sboyd@kernel.org,
+        aisheng.dong@nxp.com, linux-clk@vger.kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        s.trumtrar@pengutronix.de, devicetree@vger.kernel.org,
+        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V4 1/3] dt-bindings: mmc: Convert imx esdhc to json-schema
+Message-ID: <20200629214805.GA2983242@bogus>
+References: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoffer Nielsen <cn@obviux.dk>
+On Thu, 18 Jun 2020 11:22:56 +0800, Anson Huang wrote:
+> Convert the i.MX ESDHC binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> 
 
-commit 73094608b8e214952444fb104651704c98a37aeb upstream.
 
-Similar to the Kingston HyperX AMP, the Kingston HyperX Cloud
-Alpha S (0951:0x16ea) uses two interfaces, but only the second
-interface contains the capture stream. This patch delays the
-registration until the second interface appears.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Christoffer Nielsen <cn@obviux.dk>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAOtG2YHOM3zy+ed9KS-J4HkZo_QGzcUG9MigSp4e4_-13r6B=Q@mail.gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx35-clock.example.dt.yaml: esdhc@53fb4000: $nodename:0: 'esdhc@53fb4000' does not match '^mmc(@.*)?$'
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index aa964847b39b2..b5e9fe0486189 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1844,6 +1844,7 @@ struct registration_quirk {
- static const struct registration_quirk registration_quirks[] = {
- 	REG_QUIRK_ENTRY(0x0951, 0x16d8, 2),	/* Kingston HyperX AMP */
- 	REG_QUIRK_ENTRY(0x0951, 0x16ed, 2),	/* Kingston HyperX Cloud Alpha S */
-+	REG_QUIRK_ENTRY(0x0951, 0x16ea, 2),	/* Kingston HyperX Cloud Flight S */
- 	{ 0 }					/* terminator */
- };
- 
--- 
-2.25.1
+
+See https://patchwork.ozlabs.org/patch/1311722
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
