@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F334B2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03302082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460143;
-	bh=i8LGEjWv1j3eqYksQ0dTIU86xRdeNjPFbRJnQtCKM1k=;
+	s=default; t=1593460146;
+	bh=Ko1ZhXCx4mPUi3PFsF4m7owQC8fH7OXNJhwIkoqVYA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnJDAWtC/XNGTQ6Tq4QRAUkq841hANqxy2tbIlEA6KUg6pVc3T89Rs9g5xMPebcab
-	 k+C/JmotFtGhszLHQqkXjjA/0VQlrbzWsrIQoFuUlEFgofd8ydNciA/FHdAvAI6xBI
-	 r3VvSSELBPCAcURlKLAQhfR0d1C6TqbwTDLR0fgk=
+	b=f1bH3G7RqesPDsbtflb0chM+IS3F64S37wXxT27BkxGN5nrUkUC18oc6lmjQvfb9+
+	 cjCmdAyswORNfuYzI2drCJK5eqBocJN14ddA+s4yh8oUHQQpteqV/02duB55tYTPtn
+	 5hiWLnb1B98xxeI5Fxxo5hAEtW+UzMKlVYeRN1pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgF2TtB (ORCPT
+        id S2387769AbgF2Ts6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387765AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:38 -0400
+        id S2387767AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B49AC249EA;
-        Mon, 29 Jun 2020 15:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9B6248F1;
+        Mon, 29 Jun 2020 15:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444487;
-        bh=i8LGEjWv1j3eqYksQ0dTIU86xRdeNjPFbRJnQtCKM1k=;
+        s=default; t=1593444444;
+        bh=Ko1ZhXCx4mPUi3PFsF4m7owQC8fH7OXNJhwIkoqVYA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riEKoDqPllOs4fNkb2qQ2OMHTHkoXx6RlRVYPnXV2YL4oggmzf7BLBVnApJiNp2ew
-         G9asNSPkM4QtOxjrXow/pNStRrD3MazPLHJbv4Y7c7og3foytIghjWW8St+bhrAxpz
-         G9lESRvMu/Nuors4xdwn5pSMF3G4/NNxU7lu4Hac=
+        b=JyVXANs6yDNJEHOXXfwfe7ptAQmU82yO+tKpxRBKqtTQEzHaSWbmamnd60Cfzm3Iw
+         LjiWNK+t6Vrb5xXjAN4BDYKgqWnAjtpBkIFNFdpMAq3/hXPny8Mh64mL2zhSDY9yVp
+         aRl6UeIOA9Q0aEzeNBcuX6tx0/uJ2VWDjeGYZnts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 164/178] ring-buffer: Zero out time extend if it is nested and not absolute
-Date:   Mon, 29 Jun 2020 11:25:09 -0400
-Message-Id: <20200629152523.2494198-165-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 123/178] ibmvnic: Harden device login requests
+Date:   Mon, 29 Jun 2020 11:24:28 -0400
+Message-Id: <20200629152523.2494198-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -68,73 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-commit 097350d1c6e1f5808cae142006f18a0bbc57018d upstream.
+[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
 
-Currently the ring buffer makes events that happen in interrupts that preempt
-another event have a delta of zero. (Hopefully we can change this soon). But
-this is to deal with the races of updating a global counter with lockless
-and nesting functions updating deltas.
+The VNIC driver's "login" command sequence is the final step
+in the driver's initialization process with device firmware,
+confirming the available device queue resources to be utilized
+by the driver. Under high system load, firmware may not respond
+to the request in a timely manner or may abort the request. In
+such cases, the driver should reattempt the login command
+sequence. In case of a device error, the number of retries
+is bounded.
 
-With the addition of absolute time stamps, the time extend didn't follow
-this rule. A time extend can happen if two events happen longer than 2^27
-nanoseconds appart, as the delta time field in each event is only 27 bits.
-If that happens, then a time extend is injected with 2^59 bits of
-nanoseconds to use (18 years). But if the 2^27 nanoseconds happen between
-two events, and as it is writing the event, an interrupt triggers, it will
-see the 2^27 difference as well and inject a time extend of its own. But a
-recent change made the time extend logic not take into account the nesting,
-and this can cause two time extend deltas to happen moving the time stamp
-much further ahead than the current time. This gets all reset when the ring
-buffer moves to the next page, but that can cause time to appear to go
-backwards.
-
-This was observed in a trace-cmd recording, and since the data is saved in a
-file, with trace-cmd report --debug, it was possible to see that this indeed
-did happen!
-
-  bash-52501   110d... 81778.908247: sched_switch:         bash:52501 [120] S ==> swapper/110:0 [120] [12770284:0x2e8:64]
-  <idle>-0     110d... 81778.908757: sched_switch:         swapper/110:0 [120] R ==> bash:52501 [120] [509947:0x32c:64]
- TIME EXTEND: delta:306454770 length:0
-  bash-52501   110.... 81779.215212: sched_swap_numa:      src_pid=52501 src_tgid=52388 src_ngid=52501 src_cpu=110 src_nid=2 dst_pid=52509 dst_tgid=52388 dst_ngid=52501 dst_cpu=49 dst_nid=1 [0:0x378:48]
- TIME EXTEND: delta:306458165 length:0
-  bash-52501   110dNh. 81779.521670: sched_wakeup:         migration/110:565 [0] success=1 CPU:110 [0:0x3b4:40]
-
-and at the next page, caused the time to go backwards:
-
-  bash-52504   110d... 81779.685411: sched_switch:         bash:52504 [120] S ==> swapper/110:0 [120] [8347057:0xfb4:64]
-CPU:110 [SUBBUFFER START] [81779379165886:0x1320000]
-  <idle>-0     110dN.. 81779.379166: sched_wakeup:         bash:52504 [120] success=1 CPU:110 [0:0x10:40]
-  <idle>-0     110d... 81779.379167: sched_switch:         swapper/110:0 [120] R ==> bash:52504 [120] [1168:0x3c:64]
-
-Link: https://lkml.kernel.org/r/20200622151815.345d1bf5@oasis.local.home
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: dc4e2801d400b ("ring-buffer: Redefine the unimplemented RINGBUF_TYPE_TIME_STAMP")
-Reported-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 4bf050fcfe3be..9a2581fe7ed5f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2358,7 +2358,7 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
- 	if (unlikely(info->add_timestamp)) {
- 		bool abs = ring_buffer_time_stamp_abs(cpu_buffer->buffer);
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 5a42ddeecfe50..4f503b9a674c4 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -779,12 +779,13 @@ static int ibmvnic_login(struct net_device *netdev)
+ 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
+ 	unsigned long timeout = msecs_to_jiffies(30000);
+ 	int retry_count = 0;
++	int retries = 10;
+ 	bool retry;
+ 	int rc;
  
--		event = rb_add_time_stamp(event, info->delta, abs);
-+		event = rb_add_time_stamp(event, abs ? info->delta : delta, abs);
- 		length -= RB_LEN_TIME_EXTEND;
- 		delta = 0;
- 	}
+ 	do {
+ 		retry = false;
+-		if (retry_count > IBMVNIC_MAX_QUEUES) {
++		if (retry_count > retries) {
+ 			netdev_warn(netdev, "Login attempts exceeded\n");
+ 			return -1;
+ 		}
+@@ -799,11 +800,23 @@ static int ibmvnic_login(struct net_device *netdev)
+ 
+ 		if (!wait_for_completion_timeout(&adapter->init_done,
+ 						 timeout)) {
+-			netdev_warn(netdev, "Login timed out\n");
+-			return -1;
++			netdev_warn(netdev, "Login timed out, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			continue;
+ 		}
+ 
+-		if (adapter->init_done_rc == PARTIALSUCCESS) {
++		if (adapter->init_done_rc == ABORTED) {
++			netdev_warn(netdev, "Login aborted, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			/* FW or device may be busy, so
++			 * wait a bit before retrying login
++			 */
++			msleep(500);
++		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
+ 			retry_count++;
+ 			release_sub_crqs(adapter, 1);
+ 
 -- 
 2.25.1
 
