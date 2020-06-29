@@ -2,108 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B812CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89856206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467413;
-	bh=i8qZhbIvdS30tcZvAuSwD6f39kDveI1mWIy+nCpRyL4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gG56hvjS7AeJZHJbz3JeOF61+2l/mYdwaJYh1Bswe5+w71oRP7Gzl44YDCk/sC9QQ
-	 vTgbbqrAsgRMUA0UCJFkoxaRMuWq20fiIVUwGyzTgy2sAPWcUuXVwRrtbj/GIF0VKn
-	 lejr4lsM9Hxcsaaa1OtguGpLb4fEIZZ6fDB1DdJM=
+	by mail.kernel.org (Postfix) with ESMTP id 57D8E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbgF2VuL (ORCPT
+        id S2404444AbgF2VuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:15 -0400
+Received: from mga12.intel.com ([192.55.52.136]:23956 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 834A121883;
-        Mon, 29 Jun 2020 15:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444016;
-        bh=i8qZhbIvdS30tcZvAuSwD6f39kDveI1mWIy+nCpRyL4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUNvxRsQ2UYr8TVvMKi1H4Jlcu7P01JAZN4sP8zu9bPMdJ8nNWs3ny9eQQUlZlmDs
-         rzeP/3vYUwP1mBUcXBvw+w8U+5BdE1h1lhpx8BvWJLs9xQrQBXzyo7vNmb6/aJ0DU8
-         3wMdO1HEv6WQ5LtVXZcSdpwqXAc+oFAdoNm7ONKk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 122/265] dma-direct: re-encrypt memory if dma_direct_alloc_pages() fails
-Date:   Mon, 29 Jun 2020 11:15:55 -0400
-Message-Id: <20200629151818.2493727-123-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        id S2404115AbgF2Vt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:49:56 -0400
+IronPort-SDR: V6lqV12aAH74JgUsFf4SpQB0zciaXKzj+WXZIa648OUc9LJ72UI9ocTuQPYJH/HmtQ6noFeMu6
+ UI+yoYe7A49Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="125718592"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="125718592"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 14:49:56 -0700
+IronPort-SDR: 78RHerYZoP3QP/al+zc+OsHhaZkObvuUJwM7sUcT8D9eygdH4F+OKnTEPJZ2uKtcbx3HMh+BZE
+ jkLEswkdwuNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="264946140"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2020 14:49:56 -0700
+Date:   Mon, 29 Jun 2020 14:49:56 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "David P. Reed" <dpreed@deepplum.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
+Message-ID: <20200629214956.GA12962@linux.intel.com>
+References: <1593464072.34968499@apps.rackspace.com>
+ <0AFABBBA-18B7-4E2F-BCE7-D69889CC0F79@amacapital.net>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0AFABBBA-18B7-4E2F-BCE7-D69889CC0F79@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+On Mon, Jun 29, 2020 at 02:22:45PM -0700, Andy Lutomirski wrote:
+> 
+> 
+> > On Jun 29, 2020, at 1:54 PM, David P. Reed <dpreed@deepplum.com> wrote:
+> > 
+> > ﻿Simple question for those on the To: and CC: list here. Should I
+> > abandon any hope of this patch being accepted? It's been a long time.
+> > 
+> > The non-response after I acknowledged that this was discovered by when
+> > working on a personal, non-commercial research project - which is
+> > "out-of-tree" (apparently dirty words on LKML) has me thinking my
+> > contribution is unwanted. That's fine, I suppose. I can maintain this patch
+> > out-of-tree as well.  I did incorporate all the helpful suggestions I
+> > received in this second patch, and given some encouragement, will happily
+> > submit a revised v3 if there is any likelihood of acceptance. I'm wary of
+> > doing more radical changes (like combining emergency and normal paths).
+> > 
+> 
+> Sorry about being slow and less actively encouraging than we should be. We
+> absolutely welcome personal contributions. The actual problem is that
+> everyone is worked and we’re all slow. Also, you may be hitting a corner case
+> in the process: is this a KVM patch or an x86 patch?
 
-[ Upstream commit 96a539fa3bb71f443ae08e57b9f63d6e5bb2207c ]
+It's an x86 patch as it's not KVM specific, e.g. this code also helps play
+nice with out of tree hypervisors.
 
-If arch_dma_set_uncached() fails after memory has been decrypted, it needs
-to be re-encrypted before freeing.
+The code change is mostly good, but it needs to be split up as there are
+three separate fixes:
 
-Fixes: fa7e2247c572 ("dma-direct: make uncached_kernel_address more general")
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/dma/direct.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+  1. Handle #UD on VMXON due to a race.
+  2. Mark memory and flags as clobbered by VMXON.
+  3. Change emergency_vmx_disable_all() to not manually check cpu_vmx_enabled().
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 8f4bbdaf965eb..4e789c46ff0bf 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -186,7 +186,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		arch_dma_prep_coherent(page, size);
- 		ret = arch_dma_set_uncached(ret, size);
- 		if (IS_ERR(ret))
--			goto out_free_pages;
-+			goto out_encrypt_pages;
- 	}
- done:
- 	if (force_dma_unencrypted(dev))
-@@ -194,6 +194,11 @@ done:
- 	else
- 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
- 	return ret;
-+
-+out_encrypt_pages:
-+	if (force_dma_unencrypted(dev))
-+		set_memory_encrypted((unsigned long)page_address(page),
-+				     1 << get_order(size));
- out_free_pages:
- 	dma_free_contiguous(dev, page, size);
- 	return NULL;
--- 
-2.25.1
-
+Yes, the changes are tiny, but if for example #3 introduces a bug then we
+don't have to revert #1 and #2.  Or perhaps older kernels are only subject
+to the #1 and #2 and thus dumping all three changes into a single patch makes
+it all harder to backport.  In other words, all the usual "one change per
+patch" reasons.
