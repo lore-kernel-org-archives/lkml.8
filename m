@@ -2,166 +2,178 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B004CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8321820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F0C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u88w+iCH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="yMmYS8Vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgF2Ulj (ORCPT
+        id S2389538AbgF2Ulv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
+        Mon, 29 Jun 2020 16:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731668AbgF2TOG (ORCPT
+        with ESMTP id S1731553AbgF2TOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:06 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA99C00874A;
-        Mon, 29 Jun 2020 01:30:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so248041plk.1;
-        Mon, 29 Jun 2020 01:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
-        b=u88w+iCHX068TQdQGlFddt3hLNx2yCGO6LVQWWywBYNrJPxfB6jM2kQ0XCokKCXWI7
-         S1cvKjjK9AGtLBQS1eeRpxrkvPJ0Btbze1eRbWhdVRjxMpbENC512swG6tlAU26t//UN
-         9G9uVHnZLZZnXJfFJfhmQyPbcg8w7GRijrB0W97/4wfSZVzov43X5BvVnBmnf6TJTOLM
-         UpdbzAp3t1s48We2fXEVPg7YoZteQfCvHF74x2W9vRAIgSOsm1G2psse5kshx5sLUhbi
-         xJ6SP0gdGhfnUx8mR9034EIf/ZSIARVpiu8yhDeJVrG+y42v4RxA42o8A5pKyYHKXQCw
-         o3VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
-        b=fyFIiwPSLZyv2i2isYh3zVsrWx12X/1ayKyIu58db9eehh+5cammbPWd6KzJRafV48
-         V4hHmzyG9zQaOw76AFpDh3dSSB8uNgh6SHayA50aRYzpp/Ck0EZ2kR92OIYGDIyJ28aZ
-         zsOyuThPMyI+856WB2d1U5GnldTClSFZtlJ6knDdMnNbCFPrgL4qauR/wl+xNWT4Kw4a
-         BGwGD6OMrM22PE+giUH6fastr3foZm3V/T6606lOqwnkrSlSgBebDrJyPK2UMebp52hf
-         Ij/ohwJx/3OOOUZcGpagSNQm+volobZkWcSA6A6kO7ahrtHGrElYwgGYbmHLCb+3VaSP
-         OIZQ==
-X-Gm-Message-State: AOAM530Cko1QYEYXtP55GBN3oL1Gm4VYr1WE2amzCfW6LIlIMsrsjCvu
-        AfWOZXR5RrnGHChC+7mAxo4=
-X-Google-Smtp-Source: ABdhPJx50yg55yRr8PC0U3W2gjfdg9NljC8EQz8jcleRFkBEGqMnsbxB67lXZSnw+Rkn/GpYwdbLHg==
-X-Received: by 2002:a17:902:8c89:: with SMTP id t9mr13070339plo.14.1593419416870;
-        Mon, 29 Jun 2020 01:30:16 -0700 (PDT)
-Received: from varodek.localdomain ([106.210.40.90])
-        by smtp.gmail.com with ESMTPSA id 202sm9133790pfw.84.2020.06.29.01.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:30:16 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 4/4] vt6655/device_main.c: use generic power management
-Date:   Mon, 29 Jun 2020 13:58:19 +0530
-Message-Id: <20200629082819.216405-5-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
-References: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
+X-Greylist: delayed 517 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 29 Jun 2020 04:07:43 PDT
+Received: from pmg01-out3.zxcs.nl (pmg01-out3.zxcs.nl [IPv6:2a06:2ec0:1:b::ffeb])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B503C00862C
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:07:43 -0700 (PDT)
+Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
+        by pmg01.zxcs.nl (Zxcs) with ESMTP id BE0761035FD;
+        Mon, 29 Jun 2020 12:59:04 +0200 (CEST)
+Received: from web0081.zxcs.nl (web0081.zxcs.nl [IPv6:2a06:2ec0:1::81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pmg01.zxcs.nl (Zxcs) with ESMTPS;
+        Mon, 29 Jun 2020 12:59:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
+        :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BeEd1bjgVqI+6WM8IxHn3yBv6gBN5vUlSzEvbSv2GPY=; b=yMmYS8VgDQ27kiSVRfsNHb29iE
+        LPmdLaagH+bhjYa54+X3DMcJw/nqLZV5COm0Da2zOkefygoaxdrpUEvEHZmBtFVSzEFG9x1NIuXin
+        I1E5JmsDND6n2nkV9HZuv+1p5MFjUc+FoJDbKytPhTvY0MRa2F7TDed2QfZrlyxmEPFezW39If8ZR
+        llTMADSiNPRmBiZ72ZBx/mxD1WsEvyqYe2WHWTx83dzz1qTw7J73QFk0CDdeDSqELEzDMvAGMy+OK
+        9/A/IOH366nZ3vtIYr10sHMVvuSCsLkY1HJ6TRYo0Gx2ZTuUb633j1zBZovb0Pz192M3r0YlsTIN3
+        zIejNerg==;
+Received: from spamrelay.zxcs.nl ([185.104.28.12]:48016 helo=mail-slave02.zxcs.nl)
+        by web0081.zxcs.nl with esmtp (Exim 4.93.0.4)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jprV9-004AMs-6x; Mon, 29 Jun 2020 12:59:03 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date:   Mon, 29 Jun 2020 12:59:02 +0200
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     laurent.pinchart@ideasonboard.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] Re: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
+In-Reply-To: <20200628072819.GB8391@pendragon.ideasonboard.com>
+References: <20200320112205.7100-1-dev@pascalroeleven.nl>
+ <20200320112205.7100-3-dev@pascalroeleven.nl>
+ <20200628072819.GB8391@pendragon.ideasonboard.com>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <d43b324fa26638c179650e3c52adbf32@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AuthUser: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(), etc.
+Hi Laurent,
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
+Good catch. It's actually the connector type which is wrong. The 
+connector_type should be DRM_MODE_CONNECTOR_DPI. If you would include 
+this in your patch series, you can have my acked-by.
 
-The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
-device_wakeup_disable() instead.
+Regards,
+Pascal
 
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/staging/vt6655/device_main.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
-index 41cbec4134b0..76de1fd568eb 100644
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1766,48 +1766,37 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
- 
- /*------------------------------------------------------------------*/
- 
--#ifdef CONFIG_PM
--static int vt6655_suspend(struct pci_dev *pcid, pm_message_t state)
-+static int __maybe_unused vt6655_suspend(struct device *dev_d)
- {
--	struct vnt_private *priv = pci_get_drvdata(pcid);
-+	struct vnt_private *priv = dev_get_drvdata(dev_d);
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&priv->lock, flags);
- 
--	pci_save_state(pcid);
--
- 	MACbShutdown(priv);
- 
--	pci_disable_device(pcid);
--
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
--	pci_set_power_state(pcid, pci_choose_state(pcid, state));
--
- 	return 0;
- }
- 
--static int vt6655_resume(struct pci_dev *pcid)
-+static int __maybe_unused vt6655_resume(struct device *dev_d)
- {
--	pci_set_power_state(pcid, PCI_D0);
--	pci_enable_wake(pcid, PCI_D0, 0);
--	pci_restore_state(pcid);
-+	device_wakeup_disable(dev_d);
- 
- 	return 0;
- }
--#endif
- 
- MODULE_DEVICE_TABLE(pci, vt6655_pci_id_table);
- 
-+static SIMPLE_DEV_PM_OPS(vt6655_pm_ops, vt6655_suspend, vt6655_resume);
-+
- static struct pci_driver device_driver = {
- 	.name = DEVICE_NAME,
- 	.id_table = vt6655_pci_id_table,
- 	.probe = vt6655_probe,
- 	.remove = vt6655_remove,
--#ifdef CONFIG_PM
--	.suspend = vt6655_suspend,
--	.resume = vt6655_resume,
--#endif
-+	.driver.pm = &vt6655_pm_ops,
- };
- 
- module_pci_driver(device_driver);
--- 
-2.27.0
+On 2020-06-28 09:28, Laurent Pinchart wrote:
+> Hi Pascal,
+> 
+> On Fri, Mar 20, 2020 at 12:21:33PM +0100, Pascal Roeleven wrote:
+>> The KR070PE2T is a 7" panel with a resolution of 800x480.
+>> 
+>> KR070PE2T is the marking present on the ribbon cable. As this panel is
+>> probably available under different brands, this marking will catch
+>> most devices.
+>> 
+>> As I can't find a datasheet for this panel, the bus_flags are instead
+>> from trial-and-error. The flags seem to be common for these kind of
+>> panels as well.
+>> 
+>> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+>> ---
+>>  drivers/gpu/drm/panel/panel-simple.c | 29 
+>> ++++++++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>> 
+>> diff --git a/drivers/gpu/drm/panel/panel-simple.c 
+>> b/drivers/gpu/drm/panel/panel-simple.c
+>> index e14c14ac6..b3d257257 100644
+>> --- a/drivers/gpu/drm/panel/panel-simple.c
+>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+>> @@ -2842,6 +2842,32 @@ static const struct panel_desc 
+>> shelly_sca07010_bfn_lnn = {
+>>  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+>>  };
+>> 
+>> +static const struct drm_display_mode starry_kr070pe2t_mode = {
+>> +	.clock = 33000,
+>> +	.hdisplay = 800,
+>> +	.hsync_start = 800 + 209,
+>> +	.hsync_end = 800 + 209 + 1,
+>> +	.htotal = 800 + 209 + 1 + 45,
+>> +	.vdisplay = 480,
+>> +	.vsync_start = 480 + 22,
+>> +	.vsync_end = 480 + 22 + 1,
+>> +	.vtotal = 480 + 22 + 1 + 22,
+>> +	.vrefresh = 60,
+>> +};
+>> +
+>> +static const struct panel_desc starry_kr070pe2t = {
+>> +	.modes = &starry_kr070pe2t_mode,
+>> +	.num_modes = 1,
+>> +	.bpc = 8,
+>> +	.size = {
+>> +		.width = 152,
+>> +		.height = 86,
+>> +	},
+>> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+>> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | 
+>> DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
+>> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+> 
+> I'm trying to fix inconsistencies in the panel-simple driver, and this
+> caught my eyes. MEDIA_BUS_FMT_RGB888_1X24 isn't a correct format for
+> LVDS panels. MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> MEDIA_BUS_FMT_RGB888_1X7X4_SPWG or MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+> should be used instead. As I couldn't find documentation for the panel,
+> I can't tell which format is correct. Could you please help ?
+> 
+>> +};
+>> +
+>>  static const struct drm_display_mode starry_kr122ea0sra_mode = {
+>>  	.clock = 147000,
+>>  	.hdisplay = 1920,
+>> @@ -3474,6 +3500,9 @@ static const struct of_device_id 
+>> platform_of_match[] = {
+>>  	}, {
+>>  		.compatible = "shelly,sca07010-bfn-lnn",
+>>  		.data = &shelly_sca07010_bfn_lnn,
+>> +	}, {
+>> +		.compatible = "starry,kr070pe2t",
+>> +		.data = &starry_kr070pe2t,
+>>  	}, {
+>>  		.compatible = "starry,kr122ea0sra",
+>>  		.data = &starry_kr122ea0sra,
+> 
+> --
+> Regards,
+> 
+> Laurent Pinchart
 
