@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E49920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7253620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462193;
-	bh=eetfxc+FV16p0Sl4Kbd0V2sJ/SHLyI43628QqqK436s=;
+	s=default; t=1593462198;
+	bh=NINkKK4I3VffHpoat9TDm1EvXMkhuApXJRXDL/obqqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYmTo/IeRB7hsXgBMHmApLPIb4OLFiIFrYdyYC/aHb8aNzAmdqlDyOZ6oqEDiEMtL
-	 lYbW4gge/knvhDKg4YqDqsGkiWqqODsvtmTZPPyShRJCHGAuhu6ngTYuLTCYrwaK+G
-	 muLIk+cYK5JQQVtPiM9/vAsDzbbjVN1v8LhJb+/c=
+	b=xWmuN9/9N/xXh/aI5YQmD5efucyMP4/bGhxcp92YExFSb5C91efV2KsXwMgBzW78x
+	 fX406P3RTa+H5kI1YPLKyl9qo8cgeaO6OTrk4oQT18xZZeyjQTAnnlgotN8K2vduTq
+	 3u00hsjdaRu9EkvR8psRIzf3jlrEvZNESzsca2Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbgF2UXM (ORCPT
+        id S2387652AbgF2UXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:23:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732574AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732575AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF1725438;
-        Mon, 29 Jun 2020 15:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F15125448;
+        Mon, 29 Jun 2020 15:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445387;
-        bh=eetfxc+FV16p0Sl4Kbd0V2sJ/SHLyI43628QqqK436s=;
+        s=default; t=1593445399;
+        bh=NINkKK4I3VffHpoat9TDm1EvXMkhuApXJRXDL/obqqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKO2XDlS1xQu2lMCv+PQpVRD+6Ur2tM07mHwIcswXW/pe12X2Y4AMsLmEgTp2M1rs
-         2y6qU9KjWSu043OPmg9ftTDKOv9kGBmJoXft92+ZalHnbPy6oCObpkTyT59DY8OoBW
-         186/RndfPJYzhEZE82+fSPFFOORCVlQ6jsC9duZk=
+        b=sLD7spZU8KxAyfRcDA2K5E5EmTYKGyIshzyqjsud0ZqR/45ELVipvoBAKMa6yZZRw
+         fYfTyy+O07XNL+4fcLiNbk2LIN4i+w8KgiEJrF/hBJV0YsEf7vZvx8aDPenfH5yk4n
+         ++UGDcAHlaccbBDcJ7j20350WKIloK/pTk9yKdpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 141/191] tcp: grow window for OOO packets only for SACK flows
-Date:   Mon, 29 Jun 2020 11:39:17 -0400
-Message-Id: <20200629154007.2495120-142-sashal@kernel.org>
+Subject: [PATCH 4.9 151/191] ALSA: usb-audio: add quirk for Denon DCD-1500RE
+Date:   Mon, 29 Jun 2020 11:39:27 -0400
+Message-Id: <20200629154007.2495120-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,97 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
 
-[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
+commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
 
-Back in 2013, we made a change that broke fast retransmit
-for non SACK flows.
+fix error "clock source 41 is not valid, cannot use"
 
-Indeed, for these flows, a sender needs to receive three duplicate
-ACK before starting fast retransmit. Sending ACK with different
-receive window do not count.
+[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
+[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[] Product: DCD-1500RE
+[] Manufacturer: D & M Holdings Inc.
+[]
+[] clock source 41 is not valid, cannot use
+[] usbcore: registered new interface driver snd-usb-audio
 
-Even if enabling SACK is strongly recommended these days,
-there still are some cases where it has to be disabled.
-
-Not increasing the window seems better than having to
-rely on RTO.
-
-After the fix, following packetdrill test gives :
-
-// Initialize connection
-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
-   +0 < . 1:1(0) ack 1 win 514
-
-   +0 accept(3, ..., ...) = 4
-
-   +0 < . 1:1001(1000) ack 1 win 514
-// Quick ack
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 2001:3001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 3001:4001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 4001:5001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-    +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 1001:2001(1000) ack 1 win 514
-// Hole is repaired.
-   +0 > . 1:1(0) ack 5001 win 272
-
-Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 52014c5312b92..b3953f789891f 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4537,7 +4537,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
- 				 skb, &fragstolen)) {
- coalesce_done:
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		kfree_skb_partial(skb, fragstolen);
- 		skb = NULL;
- 		goto add_sack;
-@@ -4621,7 +4625,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
- end:
- 	if (skb) {
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		skb_set_owner_r(skb, sk);
- 	}
- }
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 0484a8d8a5bbe..486d27129ac39 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1162,6 +1162,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
+ static bool is_itf_usb_dsd_2alts_dac(unsigned int id)
+ {
+ 	switch (id) {
++	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
+ 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
+ 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
+ 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
 -- 
 2.25.1
 
