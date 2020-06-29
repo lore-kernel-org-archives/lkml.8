@@ -2,101 +2,120 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B30C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCF9206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D9C206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466803;
-	bh=PPeWyYS4FCFQJSFCRFag4CcXyIoAO/wk/iRh2ObDfuA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czbiuvPy188YsULJxK6jzSZvfvg/79m81KRRgRkqVw7U4xwo9091nf2kpfzZRh1Mf
-	 /vTPzDw/un+uFDnqvM2xYf7cYHbKycZHsdmoN1i7THoS9y8zcdUomOFvtxdeYbjoXx
-	 2VkzZi01ZjGSO+yMrBKY4nr7gJyPhQI52W83UEcs=
+	s=default; t=1593466806;
+	bh=yOH9Px7xVSmNfzSVpvbBpqmuiCQSgKoq+a38kHqIvgs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BQwjKOyDZ0VBquLDRyw/FYRAVeU9f+xfblyO8vo94mXwpqSxsMO5EDgGJLaqf3A2S
+	 s2AttBbXC/QzpBsC0UEgdyNC0wTcZxw5JbHxVy3HvXmkN8rmEdey0JuT3DVr+pgX0u
+	 oGYpH7kCX/WQRBrlsTLHt39lAWXF0DImNHVlNdcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388475AbgF2VkB (ORCPT
+        id S1728282AbgF2Sk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgF2Sk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728167AbgF2SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:15 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA8E923EF2;
-        Mon, 29 Jun 2020 15:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E9323D6B;
+        Mon, 29 Jun 2020 13:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443906;
-        bh=PPeWyYS4FCFQJSFCRFag4CcXyIoAO/wk/iRh2ObDfuA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CtHRuCCP3jaIG/tWjp4XvAH9i7bhSO2/CtnEBcXYshvbrK26DiNdva4YOpbU8c98k
-         mSloObqj4X0A8I+M6PA/KH304lnHTs0EdX9vMxslDr/t7xmZiRUtEqww3kzImhKilV
-         XdvlBRfa0n05nLI2FapFEaCXqgXC35fBHFQ1kuuE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 006/265] ibmveth: Fix max MTU limit
-Date:   Mon, 29 Jun 2020 11:13:59 -0400
-Message-Id: <20200629151818.2493727-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593436951;
+        bh=yOH9Px7xVSmNfzSVpvbBpqmuiCQSgKoq+a38kHqIvgs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=znzomeGJ/GfbNcF+5ZnhUcAlMqeiqwSoc52iW5wJAeb7DKq+GOyZpg2qyev2E7u44
+         RdgDFJCSrbrHQ+WZCx+taVcl48kB+PlVjTZyDIYT8mKgWzGaNv0Uv90TABDpKqVo4c
+         6LUnn+d/BIvGXS65lWnk+uNTvsH/zH34K9oxR5GI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jptjx-007KON-RM; Mon, 29 Jun 2020 14:22:29 +0100
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 29 Jun 2020 14:22:29 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        =?UTF-8?Q?Heik?= =?UTF-8?Q?o_St=C3=BCbner?= <heiko@sntech.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when
+ rockchip,pmu is absent
+In-Reply-To: <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
+References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
+ <20200622152824.1054946-1-maz@kernel.org>
+ <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
+ <87tuyue142.wl-maz@kernel.org>
+ <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
+ <3de68490-d788-e416-dd5f-d4d6e7eca61a@collabora.com>
+ <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <636bcc73fa658747626e36d71bfcc4f9@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: cw00.choi@samsung.com, enric.balletbo@collabora.com, heiko@sntech.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, kernel-team@android.com, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+On 2020-06-29 12:29, Chanwoo Choi wrote:
+> Hi Enric and Mark,
+> 
+> On 6/29/20 8:05 PM, Enric Balletbo i Serra wrote:
+>> Hi Chanwoo and Marc,
+>> 
+>> On 29/6/20 13:09, Chanwoo Choi wrote:
+>>> Hi Enric,
+>>> 
+>>> Could you check this issue? Your patch[1] causes this issue.
+>>> As Marc mentioned, although rk3399-dmc.c handled 'rockchip,pmu'
+>>> as the mandatory property, your patch[1] didn't add the 
+>>> 'rockchip,pmu'
+>>> property to the documentation.
+>>> 
+>> 
+>> I think the problem is that the DT binding patch, for some reason, was 
+>> missed
+>> and didn't land. The patch seems to have all the required reviews and 
+>> acks.
+>> 
+>>   https://patchwork.kernel.org/patch/10901593/
+>> 
+>> Sorry because I didn't notice this issue when 9173c5ceb035 landed. And 
+>> thanks
+>> for fixing the issue.
+> 
+> If the 'rockchip,pmu' propery is mandatory, instead of Mark's patch,
+> we better to require the merge of patch[1] to DT maintainer.
 
-[ Upstream commit 5948378b26d89f8aa5eac37629dbd0616ce8d7a7 ]
+It is way too late. Firmware exists (mainline u-boot, for one) that
+do not expose the new property, and you can't demand that people
+upgrade. This is an ABI bug, and we now have to live with it.
 
-The max MTU limit defined for ibmveth is not accounting for
-virtual ethernet buffer overhead, which is twenty-two additional
-bytes set aside for the ethernet header and eight additional bytes
-of an opaque handle reserved for use by the hypervisor. Update the
-max MTU to reflect this overhead.
+So, yes to fixing the DT, and no to *only* fixing the DT.
 
-Fixes: d894be57ca92 ("ethernet: use net core MTU range checking in more drivers")
-Fixes: 110447f8269a ("ethernet: fix min/max MTU typos")
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/ibm/ibmveth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
-index 96d36ae5049e1..c5c732601e35e 100644
---- a/drivers/net/ethernet/ibm/ibmveth.c
-+++ b/drivers/net/ethernet/ibm/ibmveth.c
-@@ -1715,7 +1715,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 	}
- 
- 	netdev->min_mtu = IBMVETH_MIN_MTU;
--	netdev->max_mtu = ETH_MAX_MTU;
-+	netdev->max_mtu = ETH_MAX_MTU - IBMVETH_BUFF_OH;
- 
- 	memcpy(netdev->dev_addr, mac_addr_p, ETH_ALEN);
- 
+         M.
 -- 
-2.25.1
-
+Jazz is not dead. It just smells funny...
