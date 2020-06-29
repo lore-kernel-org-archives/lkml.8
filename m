@@ -2,202 +2,759 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E072C2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="OM0wVyfI"
+	by mail.kernel.org (Postfix) with ESMTP id 711F12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgF2SnM (ORCPT
+        id S1729177AbgF2SnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:43:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30075 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgF2Smx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729011AbgF2Smx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:53 -0400
-IronPort-SDR: 7KAd3cwHZZ8dHxj6b/Q1epblE+h/V4kHMyOnUs1aFAk/uMc4nYkFFFUqsZ20WMiC3467glQDrh
- 5qPvqcnN+KHA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="133440408"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="133440408"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 09:51:24 -0700
-IronPort-SDR: 32QtBc79sTfXvuUOzpY7B/3eTfM7h7JUZXbX7qFI3+TsYwuY1Cat1mi6S+3AlYWer4L5wVGsAh
- vA+KmOgcZwow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="280929348"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 09:51:23 -0700
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 09:51:23 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 09:51:23 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 29 Jun 2020 09:51:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bYQewe24W1bpC1dIQUPlKGU9h2RBJdXipTiDrMe11tmesuPo8qfcBpHIF5vxOyY5FX9A2YDQK3sOTs91qbT99PxJDRYoUZkF173KdzsnLz1DG5nO/Sa9O0S0+4HstLAPIpEPFetNuMR0+myLLQeaVd1LNfqMbLSCRem6cYVgAruSa7jvMlwYTpAp8ti5J2MWYqEEXaEKHcxWDvZFMZdkni0PJrxGqLpRmtewG5QinX340MzY9NZJgCMCHqrl07HjvphFjalFwzoPgs9l//LsKipa/+/EckjFcYznVqHCLT/LcFkPaQd04avl8mq5eVetbZXA35OGukWuYHe+8BG+Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qiPlLrVr1vToDHzjnmwPmL3lGNzFSXbk0vICoF52MSs=;
- b=KveTY9c+RQTmx2rtidtxycBYFptZKZWEJ9ehlrMrkg0BaGoMyd8l6BwESm0oa9OfxPVe4ikkzFhG8dKo48n2fGaYB7pWJtQ80Qrfnmyu/UBYaR91e1kJ+dTqjXPLtR/EyaaMoh/1l+WOXLU3LxKk72u6mEHVc6FBULt19wtCtphDfhTyhGBVMgqzuXVd0Poox7x4E4rZ9wKWCi2QY2g3NuwLLxJ72yLM05F/Cigjv95K3JpdCcjVVPAFZ7VCOBKu+A+MNP6U/aRRkkLY1BH+a5L3jOTcI51YIm7EA8VV8pXomQX9jWtaUGR7wmLEF5iFmEX/37PNUqIBAVs3PDh9SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qiPlLrVr1vToDHzjnmwPmL3lGNzFSXbk0vICoF52MSs=;
- b=OM0wVyfIr2B/IUG0YKL7kUNCenxcCC76TYOraU06z95gm7VGW1Ot6IcpmusjS9E0bhPIUE85TlVPneyCJ9er/FjV7f1jIyxXrCeMXgUr25Xfak4hHghE1R5CErEAgFGpSU3cYEFH61xY8PcfiDkMOqJkT73EtOkN7OTYNXxvEeM=
-Received: from BY5PR11MB4307.namprd11.prod.outlook.com (2603:10b6:a03:1bd::27)
- by BYAPR11MB3816.namprd11.prod.outlook.com (2603:10b6:a03:f8::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Mon, 29 Jun
- 2020 16:51:20 +0000
-Received: from BY5PR11MB4307.namprd11.prod.outlook.com
- ([fe80::81b2:faf6:4cc3:261a]) by BY5PR11MB4307.namprd11.prod.outlook.com
- ([fe80::81b2:faf6:4cc3:261a%4]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 16:51:20 +0000
-From:   "N, Harshapriya" <harshapriya.n@intel.com>
-To:     =?utf-8?B?xYF1a2FzeiBNYWpjemFr?= <lma@semihalf.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        "Ross Zwisler" <zwisler@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Bob Brandt <brndt@google.com>,
-        "Marcin Wojtas" <mw@semihalf.com>,
-        Alex Levin <levinale@chromium.org>,
-        "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>
-Subject: RE: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-Thread-Topic: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-Thread-Index: AQHWTgYTwQHbv3cvDU6zdR5ijzs9kqjvzAZQ
-Date:   Mon, 29 Jun 2020 16:51:20 +0000
-Message-ID: <BY5PR11MB4307284BAE6DA415CFC0865CFD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
-References: <20200521162518.1809995-1-lma@semihalf.com>
- <3c89e614-81f5-ba87-19a9-fbe9f5c73925@linux.intel.com>
- <CAFJ_xbr8TN3ynfELJ3NQnkuRg0VRbkjB7=Cyb8yu2L==JGXJiw@mail.gmail.com>
- <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com>
- <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
- <268b11b6-9f4c-d769-a7f9-536d77198705@linux.intel.com>
- <CAFJ_xboUTDtnpvskb2dY4fGhGLNkEgT0sH3dU0NYJV_Cb_gqPw@mail.gmail.com>
-In-Reply-To: <CAFJ_xboUTDtnpvskb2dY4fGhGLNkEgT0sH3dU0NYJV_Cb_gqPw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: semihalf.com; dkim=none (message not signed)
- header.d=none;semihalf.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [24.23.139.164]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e53c365-e098-430c-f0a5-08d81c4ca631
-x-ms-traffictypediagnostic: BYAPR11MB3816:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB38162AB9AD201DD666C98C5EFD6E0@BYAPR11MB3816.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6xGl5nPObWBtbK95PaFxov7bQTqLKVBza24jL2HCXss8rfa2cirUPGOBJi0J6l0nIiWFTF2tfSkbQNmYKlO72o9qxAUUZfdwXNQqWmyMMIUhAtbfPAg3genhLTIRj7F5yD/x/DzE+ywws+N/4FSPXMixetMOiTaWECfqSz4IA3/5q34G4DM79y9fnYDXiAbi8uqWyJWgtmOwbIasM5aia772V2zltz/twtoylU8sqHUWC/zmw8FW+0mQ8/P2FZ9m6+/d722H5UBRSDLoQDn1MUWzg8BCl9VISGb8LBDSfuy+LCEyXBUlE13RChUWL7St45Cks2iQW8Rg20pL9H4QFA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(8936002)(7416002)(7696005)(2906002)(26005)(8676002)(66946007)(76116006)(5660300002)(71200400001)(66446008)(6916009)(52536014)(66476007)(53546011)(33656002)(6506007)(64756008)(66556008)(186003)(9686003)(83380400001)(86362001)(54906003)(478600001)(316002)(4326008)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Z2cJYYVcSgFNas8BXapxVKrfRPU3WwRMi5x1kV4yfyfLEgVSDW6bqnWR4u0FfRj53+n5uORp34e5Ll8O/zKPU1Rbpn5a69rD834raAsNzHvVNB25vBkKYiCdEksLpXzPPt2sx2kWPQpGJRMYoQTtrjidzrrzHPgVgEKRzIwcBfVdxUZSB/nT0c2BvH9o0hAktlnVnWAlu5kwlWq9iCU4Oz9avBlD9DMXTZ+I/HN6E0yqxZdF80G1s5x6iuonanM9BNCnWNbYOQ/HpI0Sq+J7iYKdhnVMr8Y+JBC41tN3r9qy5u5GOxFng+uxt1sHZ66yK9x5OrLZf6yYHf7BHXvh/bfB8AhCBE6FaJQKQeHVIK+aIh5dW46gtZin5i7DxoG5OOgOEtrlJOT9W0tvjfLbPZrMUAUeqWFbZsbo7r17CiBlUGf9HTwYpzmEanCtE0R1VeEoBl1nyRfRYCCdFPXYYOagJEUprvpAaQvVFAs0mos=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E63C033C1E;
+        Mon, 29 Jun 2020 11:26:33 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyUA-002Dv4-Sd; Mon, 29 Jun 2020 18:26:30 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 22/41] sparc: switch to ->get2()
+Date:   Mon, 29 Jun 2020 19:26:09 +0100
+Message-Id: <20200629182628.529995-22-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4307.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e53c365-e098-430c-f0a5-08d81c4ca631
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 16:51:20.2399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n39pIa4auOrt/iNS1TPH0eGyhpvF1jwGZLHeZYDh+k6oQScfi08YUUUID2tRTfeM5w4xjRjPFW/vxtf/9ku3Pg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3816
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiDFgXVrYXN6IE1hamN6YWsgPGxt
-YUBzZW1paGFsZi5jb20+DQo+IFNlbnQ6IE1vbmRheSwgSnVuZSAyOSwgMjAyMCA0OjExIEFNDQo+
-IFRvOiBOLCBIYXJzaGFwcml5YSA8aGFyc2hhcHJpeWEubkBpbnRlbC5jb20+DQo+IENjOiBhbHNh
-LWRldmVsQGFsc2EtcHJvamVjdC5vcmc7IFBpZXJyZS1Mb3VpcyBCb3NzYXJ0IDxwaWVycmUtDQo+
-IGxvdWlzLmJvc3NhcnRAbGludXguaW50ZWwuY29tPjsgSmllIFlhbmcgPHlhbmcuamllQGxpbnV4
-LmludGVsLmNvbT47IFJhZG9zbGF3DQo+IEJpZXJuYWNraSA8cmFkQHNlbWloYWxmLmNvbT47IFJv
-c3MgWndpc2xlciA8endpc2xlckBnb29nbGUuY29tPjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IExpYW0gR2lyZHdvb2QgPGxpYW0uci5naXJkd29vZEBsaW51eC5pbnRlbC5jb20+
-Ow0KPiBCb2IgQnJhbmR0IDxicm5kdEBnb29nbGUuY29tPjsgTWFyY2luIFdvanRhcyA8bXdAc2Vt
-aWhhbGYuY29tPjsgQWxleA0KPiBMZXZpbiA8bGV2aW5hbGVAY2hyb21pdW0ub3JnPg0KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHYzXSBBU29DOiBJbnRlbDoga2JsX3J0NTY2M19ydDU1MTRfbWF4OTg5
-Mjc6IFNwbGl0DQo+IGJlX2h3X3BhcmFtc19maXh1cCBmdW5jdGlvbg0KPiANCj4gSGkgSGFyc2hh
-LA0KPiANCj4gV2Ugd291bGQgbGlrZSB0byBjb250aW51ZSB0aGUgd29yayBvbiB0aGlzLCBjb3Vs
-ZCB5b3UgcGxlYXNlIHN1Z2dlc3QgdGhlDQo+IGNvcnJlY3QgYXBwcm9hY2guDQo+IA0KPiBCZXN0
-IHJlZ2FyZHMsDQo+IEx1a2Fzeg0KPiANCj4gY3p3LiwgMjEgbWFqIDIwMjAgbyAyMDoxMCBQaWVy
-cmUtTG91aXMgQm9zc2FydCA8cGllcnJlLQ0KPiBsb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNv
-bT4gbmFwaXNhxYIoYSk6DQo+ID4NCj4gPg0KPiA+DQo+ID4gT24gNS8yMS8yMCAxMjozMCBQTSwg
-xYF1a2FzeiBNYWpjemFrIHdyb3RlOg0KPiA+ID4gSGkgUGllcnJlDQo+ID4gPg0KPiA+ID4gSWYg
-eW91IHdpbGwgdGFrZSBhIGxvb2sgYXQgdGhlIG9yaWdpbmFsIGthYnlsYWtlX3NzcF9maXh1cCgp
-IHlvdQ0KPiA+ID4gd2lsbCBzZWUgdGhhdCBpdCBpcyBjaGVja2luZyB3aGV0aGVyIHRoZSByZWxh
-dGVkIEZFIGlzICJLYmwgQXVkaW8NCj4gPiA+IFBvcnQiLCAiS2JsIEF1ZGlvIEhlYWRzZXQgUGxh
-eWJhY2siLCAiS2JsIEF1ZGlvIENhcHR1cmUgUG9ydCIgb3INCj4gPiA+ICJLYmwgQXVkaW8gRE1J
-QyBjYXAiIC0gdGhlbiBmb3IgdGhlIGZpcnN0IDMgY2FzZXMgaXQgc2V0cyBtaW4vbWF4DQo+ID4g
-PiBjaGFubmVscyB0byAyIHdoaWxlIGZvciB0aGUgIktibCBETUlDIGNhcCIgaXQgY2FuIGJlIDIg
-b3IgNCwgdGhhdCdzDQo+ID4gPiBpcyB3aHkgSSdtIHRyeWluZyB0byBzcGxpdCB0aGlzLCBidXQg
-bWF5YmUgSSdtIG1pc3NpbmcgaGVyZSBzb21ldGhpbmcuDQo+ID4NCj4gPiBJIGRvbid0IHVuZGVy
-c3RhbmQgdGhpcyBjb2RlIGVpdGhlci4NCj4gPg0KPiA+IEkgYmVsaWV2ZSB0aGUgaW50ZW50IGlz
-IHRoYXQgZm9yIGFsbCBTU1AxLVJUNTY2MyB1c2FnZXMsIHdlIHNob3VsZCB1c2UNCj4gPg0KPiA+
-ICAgICAgICAgICAgICAgICByYXRlLT5taW4gPSByYXRlLT5tYXggPSA0ODAwMDsNCj4gPiAgICAg
-ICAgICAgICAgICAgY2hhbi0+bWluID0gY2hhbi0+bWF4ID0gMjsNCj4gPiAgICAgICAgICAgICAg
-ICAgc25kX21hc2tfbm9uZShmbXQpOw0KPiA+ICAgICAgICAgICAgICAgICBzbmRfbWFza19zZXRf
-Zm9ybWF0KGZtdCwgU05EUlZfUENNX0ZPUk1BVF9TMjRfTEUpOw0KPiA+DQo+ID4gVGhhdCBpcyBw
-cmV0dHkgZWFzeSB0byBtb3ZlIHRvIGEgZGVkaWNhdGVkIHNzcDEgZml4dXAuDQo+ID4NCj4gPiBm
-b3IgU1NQMCwgd2UgaGF2ZSBSVDU1MTQgZm9yIGNhcHR1cmUgYW5kIG1heDk4OTI3IGZvciBwbGF5
-YmFjaywgYnV0DQo+ID4gdGhlIGV4aXN0aW5nIGNvZGUgZG9lcyBub3QgZXhwbGljaXRseSBkZWFs
-IHdpdGggcmF0ZS9jaGFubmVscy9mb3JtYXQNCj4gPiBmb3IgYWxsIGNhc2VzLCBzbyBpdCdzIG5v
-dCBjbGVhciB3aGF0IHNob3VsZCBoYXBwZW4uDQo+ID4NCj4gPiBIYXJzaGEsIGNhbiB5b3UgaGVs
-cCBoZXJlPw0KQXBvbG9naWVzIGZvciBtaXNzaW5nIHRoZSBlbWFpbCBJIGhhZCB0byByZXNwb25k
-IHRvLg0KDQpTU1AwIC0gaGFzIHRoZSBzcGVha2Vycw0KU1NQMSAtIGhhcyBoZWFkc2V0IGFuZCBk
-bWljDQpGb3Igc3BlYWtlcnMgYW5kIGhlYWRzZXRzIGl0cyA0OEtoeiwgMiBjaCBhbmQgMjQgYml0
-IGFuZCB0aGlzIHNldHRpbmcgaXMgZG9uZSBiYXNlZCBvbiB0aGUgZnJvbnQtZW5kIGRhaQ0KRm9y
-IHNwZWFrZXJzLCBob3dldmVyIHN1cHBvcnQgb25seSAxNiBiaXQsIHNvIHdlIHNldCBpdCBiYWNr
-IHRvIDE2IGJpdA0KSWYgdGhlIGZyb250IGVuZCBkYWkgaXMgZG1pYywgdGhlbiB0aGUgY2hhbm5l
-bCBpcyBzZXQgdG8gZWl0aGVyIDIgb3IgNCBkbWljX2NvbnN0cmFpbnRzLiBObyBvdGhlciBmb3Jt
-YXRzIG5lZWQgdG8gYmUgc2V0Lg0KDQpBbGwgdGhlIFNTUDEgdXNhZ2VzIGRvIG5vdCBoYXZlIHRo
-ZSBzYW1lIHBhcmFtZXRlcnMgKGFzIGRtaWMgaXMgb24gU1NQMSBhbmQgaXRzIGRpZmZlcmVudCBh
-cyBnaXZlbiBhYm92ZSkNCk1vc3QgcGFyYW1ldGVycyBhcmUgc2FtZSBmb3Igc3BlYWtlcnMgYW5k
-IGhlYWRzZXQgd2hpY2ggYXJlIG9uIGRpZmZlcmVudCBTU1AuIFRoaXMgaXMgdGhlIHJlYXNvbiB3
-ZSBoYWQgYSBzaW5nbGUgZml4dXAgZnVuY3Rpb24uDQoNCklzIHRoZXJlIGEgcmVhc29uIHdoeSB0
-aGUgZml4dXAgZnVuY3Rpb24gbmVlZHMgdG8gYmUgc3BsaXQ/DQoNCj4gPg0KPiA+ID4NCj4gPiA+
-IEJlc3QgcmVnYXJkcywNCj4gPiA+IEx1a2Fzeg0KPiA+ID4NCj4gPiA+IGN6dy4sIDIxIG1haiAy
-MDIwIG8gMTk6MTcgUGllcnJlLUxvdWlzIEJvc3NhcnQNCj4gPiA+IDxwaWVycmUtbG91aXMuYm9z
-c2FydEBsaW51eC5pbnRlbC5jb20+IG5hcGlzYcWCKGEpOg0KPiA+ID4+DQo+ID4gPj4NCj4gPiA+
-Pg0KPiA+ID4+IE9uIDUvMjEvMjAgMTI6MDggUE0sIMWBdWthc3ogTWFqY3phayB3cm90ZToNCj4g
-PiA+Pj4+DQo+ID4gPj4+PiBkb24ndCBhZGQgYSBuZXcgZGFpbGluaywgdGhpcyBpcyBub3Qgcmln
-aHQuDQo+ID4gPj4+Pg0KPiA+ID4+PiBDYW4geW91IGFkdmlzZSBhIGJldHRlciBzb2x1dGlvbiBo
-b3cgdG8gYXNzaWduIGRpZmZlcmVudCBmaXh1cA0KPiA+ID4+PiBmdW5jdGlvbnMgdG8gbWljIGFu
-ZCB0byBzcGVha2Vycz8gSSB3YXMgbG9va2luZyBhdCAiZG1pYzAxIg0KPiA+ID4+PiBkYWlsaW5r
-IGluIHNrbF9uYXU4OGwyNV9tYXg5ODM1N2EuYyBhcyBhbiBleGFtcGxlLg0KPiA+ID4+DQo+ID4g
-Pj4gSSBhbSBub3Qgc3VyZSBJIGZvbGxvdy4gdGhlIERNSUNzIGFyZSBoYW5kbGVkIG9uIGEgc2hh
-cmVkIFNTUCwgc28NCj4gPiA+PiBob3cgd291bGQgb25lIHNldCBhIGRpZmZlcmVudCBmaXh1cD8g
-VGhlIHdvcmQgbGVuZ3RoIGhhdmUgdG8gYmUgdGhlIHNhbWUuDQo=
+From: Al Viro <viro@zeniv.linux.org.uk>
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/sparc/kernel/ptrace_32.c | 127 ++++-----------
+ arch/sparc/kernel/ptrace_64.c | 352 ++++++++++--------------------------------
+ 2 files changed, 110 insertions(+), 369 deletions(-)
+
+diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
+index 0856e0104539..948a1dcd8e98 100644
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -83,39 +83,25 @@ static int regwindow32_set(struct task_struct *target,
+ 
+ static int genregs32_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = target->thread.kregs;
+ 	u32 uregs[16];
+-	int ret;
+ 
+ 	if (target == current)
+ 		flush_user_windows();
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  regs->u_regs,
+-				  0, 16 * sizeof(u32));
+-	if (ret || !count)
+-		return ret;
+-
++	membuf_write(&to, regs->u_regs, 16 * sizeof(u32));
++	if (!to.left)
++		return 0;
+ 	if (regwindow32_get(target, regs, uregs))
+ 		return -EFAULT;
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  uregs,
+-				  16 * sizeof(u32), 32 * sizeof(u32));
+-	if (ret)
+-		return ret;
+-
+-	uregs[0] = regs->psr;
+-	uregs[1] = regs->pc;
+-	uregs[2] = regs->npc;
+-	uregs[3] = regs->y;
+-	uregs[4] = 0;	/* WIM */
+-	uregs[5] = 0;	/* TBR */
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  uregs,
+-				  32 * sizeof(u32), 38 * sizeof(u32));
++	membuf_write(&to, uregs, 16 * sizeof(u32));
++	membuf_store(&to, regs->psr);
++	membuf_store(&to, regs->pc);
++	membuf_store(&to, regs->npc);
++	membuf_store(&to, regs->y);
++	return membuf_zero(&to, 2 * sizeof(u32));
+ }
+ 
+ static int genregs32_set(struct task_struct *target,
+@@ -179,46 +165,18 @@ static int genregs32_set(struct task_struct *target,
+ 
+ static int fpregs32_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+-			unsigned int pos, unsigned int count,
+-			void *kbuf, void __user *ubuf)
++			struct membuf to)
+ {
+-	const unsigned long *fpregs = target->thread.float_regs;
+-	int ret = 0;
+-
+ #if 0
+ 	if (target == current)
+ 		save_and_clear_fpu();
+ #endif
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  fpregs,
+-				  0, 32 * sizeof(u32));
+-
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       32 * sizeof(u32),
+-					       33 * sizeof(u32));
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &target->thread.fsr,
+-					  33 * sizeof(u32),
+-					  34 * sizeof(u32));
+-
+-	if (!ret) {
+-		unsigned long val;
+-
+-		val = (1 << 8) | (8 << 16);
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &val,
+-					  34 * sizeof(u32),
+-					  35 * sizeof(u32));
+-	}
+-
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       35 * sizeof(u32), -1);
+-
+-	return ret;
++	membuf_write(&to, target->thread.float_regs, 32 * sizeof(u32));
++	membuf_zero(&to, sizeof(u32));
++	membuf_write(&to, &target->thread.fsr, sizeof(u32));
++	membuf_store(&to, (u32)((1 << 8) | (8 << 16)));
++	return membuf_zero(&to, 64 * sizeof(u32));
+ }
+ 
+ static int fpregs32_set(struct task_struct *target,
+@@ -263,7 +221,7 @@ static const struct user_regset sparc32_regsets[] = {
+ 		.core_note_type = NT_PRSTATUS,
+ 		.n = 38,
+ 		.size = sizeof(u32), .align = sizeof(u32),
+-		.get = genregs32_get, .set = genregs32_set
++		.get2 = genregs32_get, .set = genregs32_set
+ 	},
+ 	/* Format is:
+ 	 *	F0 --> F31
+@@ -279,35 +237,24 @@ static const struct user_regset sparc32_regsets[] = {
+ 		.core_note_type = NT_PRFPREG,
+ 		.n = 99,
+ 		.size = sizeof(u32), .align = sizeof(u32),
+-		.get = fpregs32_get, .set = fpregs32_set
++		.get2 = fpregs32_get, .set = fpregs32_set
+ 	},
+ };
+ 
+ static int getregs_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = target->thread.kregs;
+-	u32 v[4];
+-	int ret;
+ 
+ 	if (target == current)
+ 		flush_user_windows();
+ 
+-	v[0] = regs->psr;
+-	v[1] = regs->pc;
+-	v[2] = regs->npc;
+-	v[3] = regs->y;
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  v,
+-				  0 * sizeof(u32), 4 * sizeof(u32));
+-	if (ret)
+-		return ret;
+-
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  regs->u_regs + 1,
+-				  4 * sizeof(u32), 19 * sizeof(u32));
++	membuf_store(&to, regs->psr);
++	membuf_store(&to, regs->pc);
++	membuf_store(&to, regs->npc);
++	membuf_store(&to, regs->y);
++	return membuf_write(&to, regs->u_regs + 1, 15 * sizeof(u32));
+ }
+ 
+ static int setregs_set(struct task_struct *target,
+@@ -337,29 +284,15 @@ static int setregs_set(struct task_struct *target,
+ 
+ static int getfpregs_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+-			unsigned int pos, unsigned int count,
+-			void *kbuf, void __user *ubuf)
++			struct membuf to)
+ {
+-	const unsigned long *fpregs = target->thread.float_regs;
+-	int ret = 0;
+-
+ #if 0
+ 	if (target == current)
+ 		save_and_clear_fpu();
+ #endif
+-
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  fpregs,
+-				  0, 32 * sizeof(u32));
+-	if (ret)
+-		return ret;
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  &target->thread.fsr,
+-				  32 * sizeof(u32), 33 * sizeof(u32));
+-	if (ret)
+-		return ret;
+-	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-				  33 * sizeof(u32), 68 * sizeof(u32));
++	membuf_write(&to, &target->thread.float_regs, 32 * sizeof(u32));
++	membuf_write(&to, &target->thread.fsr, sizeof(u32));
++	return membuf_zero(&to, 35 * sizeof(u32));
+ }
+ 
+ static int setfpregs_set(struct task_struct *target,
+@@ -388,11 +321,11 @@ static int setfpregs_set(struct task_struct *target,
+ static const struct user_regset ptrace32_regsets[] = {
+ 	[REGSET_GENERAL] = {
+ 		.n = 19, .size = sizeof(u32),
+-		.get = getregs_get, .set = setregs_set,
++		.get2 = getregs_get, .set = setregs_set,
+ 	},
+ 	[REGSET_FP] = {
+ 		.n = 68, .size = sizeof(u32),
+-		.get = getfpregs_get, .set = setfpregs_set,
++		.get2 = getfpregs_get, .set = setfpregs_set,
+ 	},
+ };
+ 
+diff --git a/arch/sparc/kernel/ptrace_64.c b/arch/sparc/kernel/ptrace_64.c
+index 3c9eee12102a..8ac5a3e5b46c 100644
+--- a/arch/sparc/kernel/ptrace_64.c
++++ b/arch/sparc/kernel/ptrace_64.c
+@@ -246,52 +246,23 @@ enum sparc_regset {
+ 
+ static int genregs64_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = task_pt_regs(target);
+-	int ret;
++	struct reg_window window;
+ 
+ 	if (target == current)
+ 		flushw_user();
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  regs->u_regs,
+-				  0, 16 * sizeof(u64));
+-	if (!ret && count) {
+-		struct reg_window window;
+-
+-		if (regwindow64_get(target, regs, &window))
+-			return -EFAULT;
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &window,
+-					  16 * sizeof(u64),
+-					  32 * sizeof(u64));
+-	}
+-
+-	if (!ret) {
+-		/* TSTATE, TPC, TNPC */
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &regs->tstate,
+-					  32 * sizeof(u64),
+-					  35 * sizeof(u64));
+-	}
+-
+-	if (!ret) {
+-		unsigned long y = regs->y;
+-
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &y,
+-					  35 * sizeof(u64),
+-					  36 * sizeof(u64));
+-	}
+-
+-	if (!ret) {
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       36 * sizeof(u64), -1);
+-
+-	}
+-	return ret;
++	membuf_write(&to, regs->u_regs, 16 * sizeof(u64));
++	if (!to.left)
++		return 0;
++	if (regwindow64_get(target, regs, &window))
++		return -EFAULT;
++	membuf_write(&to, &window, 16 * sizeof(u64));
++	/* TSTATE, TPC, TNPC */
++	membuf_write(&to, &regs->tstate, 3 * sizeof(u64));
++	return membuf_store(&to, (u64)regs->y);
+ }
+ 
+ static int genregs64_set(struct task_struct *target,
+@@ -370,69 +341,32 @@ static int genregs64_set(struct task_struct *target,
+ 
+ static int fpregs64_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+-			unsigned int pos, unsigned int count,
+-			void *kbuf, void __user *ubuf)
++			struct membuf to)
+ {
+-	const unsigned long *fpregs = task_thread_info(target)->fpregs;
+-	unsigned long fprs, fsr, gsr;
+-	int ret;
++	struct thread_info *t = task_thread_info(target);
++	unsigned long fprs;
+ 
+ 	if (target == current)
+ 		save_and_clear_fpu();
+ 
+-	fprs = task_thread_info(target)->fpsaved[0];
++	fprs = t->fpsaved[0];
+ 
+ 	if (fprs & FPRS_DL)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  fpregs,
+-					  0, 16 * sizeof(u64));
++		membuf_write(&to, t->fpregs, 16 * sizeof(u64));
+ 	else
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       0,
+-					       16 * sizeof(u64));
+-
+-	if (!ret) {
+-		if (fprs & FPRS_DU)
+-			ret = user_regset_copyout(&pos, &count,
+-						  &kbuf, &ubuf,
+-						  fpregs + 16,
+-						  16 * sizeof(u64),
+-						  32 * sizeof(u64));
+-		else
+-			ret = user_regset_copyout_zero(&pos, &count,
+-						       &kbuf, &ubuf,
+-						       16 * sizeof(u64),
+-						       32 * sizeof(u64));
+-	}
++		membuf_zero(&to, 16 * sizeof(u64));
+ 
++	if (fprs & FPRS_DU)
++		membuf_write(&to, t->fpregs + 16, 16 * sizeof(u64));
++	else
++		membuf_zero(&to, 16 * sizeof(u64));
+ 	if (fprs & FPRS_FEF) {
+-		fsr = task_thread_info(target)->xfsr[0];
+-		gsr = task_thread_info(target)->gsr[0];
++		membuf_store(&to, t->xfsr[0]);
++		membuf_store(&to, t->gsr[0]);
+ 	} else {
+-		fsr = gsr = 0;
++		membuf_zero(&to, 2 * sizeof(u64));
+ 	}
+-
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &fsr,
+-					  32 * sizeof(u64),
+-					  33 * sizeof(u64));
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &gsr,
+-					  33 * sizeof(u64),
+-					  34 * sizeof(u64));
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &fprs,
+-					  34 * sizeof(u64),
+-					  35 * sizeof(u64));
+-
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       35 * sizeof(u64), -1);
+-
+-	return ret;
++	return membuf_store(&to, fprs);
+ }
+ 
+ static int fpregs64_set(struct task_struct *target,
+@@ -490,7 +424,7 @@ static const struct user_regset sparc64_regsets[] = {
+ 		.core_note_type = NT_PRSTATUS,
+ 		.n = 36,
+ 		.size = sizeof(u64), .align = sizeof(u64),
+-		.get = genregs64_get, .set = genregs64_set
++		.get2 = genregs64_get, .set = genregs64_set
+ 	},
+ 	/* Format is:
+ 	 *	F0 --> F63
+@@ -502,43 +436,23 @@ static const struct user_regset sparc64_regsets[] = {
+ 		.core_note_type = NT_PRFPREG,
+ 		.n = 35,
+ 		.size = sizeof(u64), .align = sizeof(u64),
+-		.get = fpregs64_get, .set = fpregs64_set
++		.get2 = fpregs64_get, .set = fpregs64_set
+ 	},
+ };
+ 
+ static int getregs64_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = task_pt_regs(target);
+-	int ret;
+ 
+ 	if (target == current)
+ 		flushw_user();
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  regs->u_regs + 1,
+-				  0, 15 * sizeof(u64));
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-				  15 * sizeof(u64), 16 * sizeof(u64));
+-	if (!ret) {
+-		/* TSTATE, TPC, TNPC */
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &regs->tstate,
+-					  16 * sizeof(u64),
+-					  19 * sizeof(u64));
+-	}
+-	if (!ret) {
+-		unsigned long y = regs->y;
+-
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &y,
+-					  19 * sizeof(u64),
+-					  20 * sizeof(u64));
+-	}
+-	return ret;
++	membuf_write(&to, regs->u_regs + 1, 15 * sizeof(u64));
++	return membuf_store(&to, (u64)0);
++	membuf_write(&to, &regs->tstate, 3 * sizeof(u64));
++	return membuf_store(&to, (u64)regs->y);
+ }
+ 
+ static int setregs64_set(struct task_struct *target,
+@@ -604,7 +518,7 @@ static const struct user_regset ptrace64_regsets[] = {
+ 	 */
+ 	[REGSET_GENERAL] = {
+ 		.n = 20, .size = sizeof(u64),
+-		.get = getregs64_get, .set = setregs64_set,
++		.get2 = getregs64_get, .set = setregs64_set,
+ 	},
+ };
+ 
+@@ -620,81 +534,28 @@ static const struct user_regset_view user_sparc64_view = {
+ #ifdef CONFIG_COMPAT
+ static int genregs32_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = task_pt_regs(target);
+-	compat_ulong_t *k = kbuf;
+-	compat_ulong_t __user *u = ubuf;
+ 	u32 uregs[16];
+-	u32 reg;
++	int i;
+ 
+ 	if (target == current)
+ 		flushw_user();
+ 
+-	pos /= sizeof(reg);
+-	count /= sizeof(reg);
+-
+-	if (kbuf) {
+-		for (; count > 0 && pos < 16; count--)
+-			*k++ = regs->u_regs[pos++];
+-
+-		if (count) {
+-			if (get_from_target(target, regs->u_regs[UREG_I6],
+-					uregs, sizeof(uregs)))
+-				return -EFAULT;
+-			for (; count > 0 && pos < 32; count--)
+-				*k++ = uregs[pos++ - 16];
+-
+-		}
+-	} else {
+-		for (; count > 0 && pos < 16; count--)
+-			if (put_user((compat_ulong_t) regs->u_regs[pos++], u++))
+-				return -EFAULT;
+-		if (count) {
+-			if (get_from_target(target, regs->u_regs[UREG_I6],
+-					uregs, sizeof(uregs)))
+-				return -EFAULT;
+-			for (; count > 0 && pos < 32; count--)
+-				if (put_user(uregs[pos++ - 16], u++))
+-					return -EFAULT;
+-		}
+-	}
+-	while (count > 0) {
+-		switch (pos) {
+-		case 32: /* PSR */
+-			reg = tstate_to_psr(regs->tstate);
+-			break;
+-		case 33: /* PC */
+-			reg = regs->tpc;
+-			break;
+-		case 34: /* NPC */
+-			reg = regs->tnpc;
+-			break;
+-		case 35: /* Y */
+-			reg = regs->y;
+-			break;
+-		case 36: /* WIM */
+-		case 37: /* TBR */
+-			reg = 0;
+-			break;
+-		default:
+-			goto finish;
+-		}
+-
+-		if (kbuf)
+-			*k++ = reg;
+-		else if (put_user(reg, u++))
+-			return -EFAULT;
+-		pos++;
+-		count--;
+-	}
+-finish:
+-	pos *= sizeof(reg);
+-	count *= sizeof(reg);
+-
+-	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					38 * sizeof(reg), -1);
++	for (i = 0; i < 16; i++)
++		membuf_store(&to, (u32)regs->u_regs[i]);
++	if (!to.left)
++		return 0;
++	if (get_from_target(target, regs->u_regs[UREG_I6],
++			    uregs, sizeof(uregs)))
++		return -EFAULT;
++	membuf_write(&to, uregs, 16 * sizeof(u32));
++	membuf_store(&to, (u32)tstate_to_psr(regs->tstate));
++	membuf_store(&to, (u32)(regs->tpc));
++	membuf_store(&to, (u32)(regs->tnpc));
++	membuf_store(&to, (u32)(regs->y));
++	return membuf_zero(&to, 2 * sizeof(u32));
+ }
+ 
+ static int genregs32_set(struct task_struct *target,
+@@ -816,56 +677,24 @@ static int genregs32_set(struct task_struct *target,
+ 
+ static int fpregs32_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+-			unsigned int pos, unsigned int count,
+-			void *kbuf, void __user *ubuf)
++			struct membuf to)
+ {
+-	const unsigned long *fpregs = task_thread_info(target)->fpregs;
+-	compat_ulong_t enabled;
+-	unsigned long fprs;
+-	compat_ulong_t fsr;
+-	int ret = 0;
++	struct thread_info *t = task_thread_info(target);
++	bool enabled;
+ 
+ 	if (target == current)
+ 		save_and_clear_fpu();
+ 
+-	fprs = task_thread_info(target)->fpsaved[0];
+-	if (fprs & FPRS_FEF) {
+-		fsr = task_thread_info(target)->xfsr[0];
+-		enabled = 1;
+-	} else {
+-		fsr = 0;
+-		enabled = 0;
+-	}
+-
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  fpregs,
+-				  0, 32 * sizeof(u32));
+-
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       32 * sizeof(u32),
+-					       33 * sizeof(u32));
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &fsr,
+-					  33 * sizeof(u32),
+-					  34 * sizeof(u32));
++	enabled = t->fpsaved[0] & FPRS_FEF;
+ 
+-	if (!ret) {
+-		compat_ulong_t val;
+-
+-		val = (enabled << 8) | (8 << 16);
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &val,
+-					  34 * sizeof(u32),
+-					  35 * sizeof(u32));
+-	}
+-
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       35 * sizeof(u32), -1);
+-
+-	return ret;
++	membuf_write(&to, t->fpregs, 32 * sizeof(u32));
++	membuf_zero(&to, sizeof(u32));
++	if (enabled)
++		membuf_store(&to, (u32)t->xfsr[0]);
++	else
++		membuf_zero(&to, sizeof(u32));
++	membuf_store(&to, (u32)((enabled << 8) | (8 << 16)));
++	return membuf_zero(&to, 64 * sizeof(u32));
+ }
+ 
+ static int fpregs32_set(struct task_struct *target,
+@@ -926,7 +755,7 @@ static const struct user_regset sparc32_regsets[] = {
+ 		.core_note_type = NT_PRSTATUS,
+ 		.n = 38,
+ 		.size = sizeof(u32), .align = sizeof(u32),
+-		.get = genregs32_get, .set = genregs32_set
++		.get2 = genregs32_get, .set = genregs32_set
+ 	},
+ 	/* Format is:
+ 	 *	F0 --> F31
+@@ -942,31 +771,27 @@ static const struct user_regset sparc32_regsets[] = {
+ 		.core_note_type = NT_PRFPREG,
+ 		.n = 99,
+ 		.size = sizeof(u32), .align = sizeof(u32),
+-		.get = fpregs32_get, .set = fpregs32_set
++		.get2 = fpregs32_get, .set = fpregs32_set
+ 	},
+ };
+ 
+ static int getregs_get(struct task_struct *target,
+-		       const struct user_regset *regset,
+-		       unsigned int pos, unsigned int count,
+-		       void *kbuf, void __user *ubuf)
++			 const struct user_regset *regset,
++			 struct membuf to)
+ {
+ 	const struct pt_regs *regs = task_pt_regs(target);
+-	u32 uregs[19];
+ 	int i;
+ 
+ 	if (target == current)
+ 		flushw_user();
+ 
+-	uregs[0] = tstate_to_psr(regs->tstate);
+-	uregs[1] = regs->tpc;
+-	uregs[2] = regs->tnpc;
+-	uregs[3] = regs->y;
++	membuf_store(&to, (u32)tstate_to_psr(regs->tstate));
++	membuf_store(&to, (u32)(regs->tpc));
++	membuf_store(&to, (u32)(regs->tnpc));
++	membuf_store(&to, (u32)(regs->y));
+ 	for (i = 1; i < 16; i++)
+-		uregs[3 + i] = regs->u_regs[i];
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				   uregs,
+-				   0, 19 * sizeof(u32));
++		membuf_store(&to, (u32)regs->u_regs[i]);
++	return to.left;
+ }
+ 
+ static int setregs_set(struct task_struct *target,
+@@ -1005,36 +830,19 @@ static int setregs_set(struct task_struct *target,
+ 
+ static int getfpregs_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+-			unsigned int pos, unsigned int count,
+-			void *kbuf, void __user *ubuf)
++			struct membuf to)
+ {
+-	const unsigned long *fpregs = task_thread_info(target)->fpregs;
+-	unsigned long fprs;
+-	compat_ulong_t fsr;
+-	int ret = 0;
++	struct thread_info *t = task_thread_info(target);
+ 
+ 	if (target == current)
+ 		save_and_clear_fpu();
+ 
+-	fprs = task_thread_info(target)->fpsaved[0];
+-	if (fprs & FPRS_FEF) {
+-		fsr = task_thread_info(target)->xfsr[0];
+-	} else {
+-		fsr = 0;
+-	}
+-
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  fpregs,
+-				  0, 32 * sizeof(u32));
+-	if (!ret)
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &fsr,
+-					  32 * sizeof(u32),
+-					  33 * sizeof(u32));
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					  33 * sizeof(u32), 68 * sizeof(u32));
+-	return ret;
++	membuf_write(&to, t->fpregs, 32 * sizeof(u32));
++	if (t->fpsaved[0] & FPRS_FEF)
++		membuf_store(&to, (u32)t->xfsr[0]);
++	else
++		membuf_zero(&to, sizeof(u32));
++	return membuf_zero(&to, 35 * sizeof(u32));
+ }
+ 
+ static int setfpregs_set(struct task_struct *target,
+@@ -1078,11 +886,11 @@ static int setfpregs_set(struct task_struct *target,
+ static const struct user_regset ptrace32_regsets[] = {
+ 	[REGSET_GENERAL] = {
+ 		.n = 19, .size = sizeof(u32),
+-		.get = getregs_get, .set = setregs_set,
++		.get2 = getregs_get, .set = setregs_set,
+ 	},
+ 	[REGSET_FP] = {
+ 		.n = 68, .size = sizeof(u32),
+-		.get = getfpregs_get, .set = setfpregs_set,
++		.get2 = getfpregs_get, .set = setfpregs_set,
+ 	},
+ };
+ 
+-- 
+2.11.0
+
