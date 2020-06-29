@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E291FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC70C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C33802065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEC12065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458986;
-	bh=xla0wtMSjnMhxORYMrMe5StIcLOTwWq49SnoT0hOzYM=;
+	s=default; t=1593458995;
+	bh=M6ZaHtfMbTpj9D5canL426J6A9WFvGSijT5BxaGkz0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8f0YRSAOSLApLpPvxPBy+WSTbDMlsiNoWIc0fI4DWDDLkfsJtiTOGpVRyP5xjb6X
-	 xXFng0y3T/qNGw98QfOVNfS46BhaJGwCKp4OL4jKq1567nI4j2BZr8n4Ri9TrNvAi1
-	 cepXZ8N9vtMr2SPxxaBfidT2oMglTzZX826ziygE=
+	b=Ai1wUfON+bZAwwZIuFFKwfi8amyTlb4a5TjWUFXbPN2L2xB1pFwNDSB0dK/kn4uo3
+	 EvhZM/l/XHn+Y1Wrb5sM4JY3JHg0OnVLiaycyK2ADw0gwKOJILW5ZgqssTicy8Ya17
+	 CESabH4bfhxy7i05USTcmZUlfVoasPs2YvoyHQTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732795AbgF2T3p (ORCPT
+        id S1730105AbgF2T3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732653AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732655AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D10C2546E;
-        Mon, 29 Jun 2020 15:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4521425373;
+        Mon, 29 Jun 2020 15:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445425;
-        bh=xla0wtMSjnMhxORYMrMe5StIcLOTwWq49SnoT0hOzYM=;
+        s=default; t=1593445238;
+        bh=M6ZaHtfMbTpj9D5canL426J6A9WFvGSijT5BxaGkz0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09QYBIJNXPYIyAaiUZ7r6pcTbI9vGQ+1GFqSfScoibh7q/4KSARrjNF/GN5XxBDp8
-         aQwrLiK+jje0iVqJCj2XlZXT5elakIfdYoi/4+VQ6S+kDmZ31fsY1pcxNyTewmzsMN
-         L/u1h7vcmy/4uGu8Ouuq+q+hapQaIEJxuLS/a7fY=
+        b=H2Zd79TB3K6r72/zNnN5ZB2Uifjgp1cFmVVOHbkiGrQtv+yfB3VUfNfL+al+m4by5
+         aAtEqnimbYUmLHrksBxFd49b2xA5LWTHsoMsilL8BRWT2gKW58ThqXzwovh0epKm67
+         1MmLGj3ldD/8l+WjlUMHfuBP+crZnAd07bctRkMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 173/191] kbuild: improve cc-option to clean up all temporary files
-Date:   Mon, 29 Jun 2020 11:39:49 -0400
-Message-Id: <20200629154007.2495120-174-sashal@kernel.org>
+Subject: [PATCH 4.9 022/191] yam: fix possible memory leak in yam_init_driver
+Date:   Mon, 29 Jun 2020 11:37:18 -0400
+Message-Id: <20200629154007.2495120-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,70 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+If register_netdev(dev) fails, free_netdev(dev) needs
+to be called, otherwise a memory leak will occur.
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
-
-For example, -gsplit-dwarf creates a .dwo file.
-
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/hamradio/yam.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index 558dea61db114..1920b9e2d2514 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -82,20 +82,21 @@ cc-cross-prefix =  \
- 		fi)))
- 
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
- 
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" is can be used as temporary file and
- # is automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
- 
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
+diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
+index aaff07c100585..a453b82d10777 100644
+--- a/drivers/net/hamradio/yam.c
++++ b/drivers/net/hamradio/yam.c
+@@ -1160,6 +1160,7 @@ static int __init yam_init_driver(void)
+ 		err = register_netdev(dev);
+ 		if (err) {
+ 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
++			free_netdev(dev);
+ 			goto error;
+ 		}
+ 		yam_devs[i] = dev;
 -- 
 2.25.1
 
