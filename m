@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2696C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62EBC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B30F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456955;
-	bh=M1QucpjvT5eQKOYWZVjXYjHcyud6sajkmXPvml24HBE=;
+	s=default; t=1593456962;
+	bh=C6FW2g4U3g9zleI+T6QiaWuTQjwS7KiK2AgAFaLs56w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UI0ckZIQo4ybEIkmfI/9VGUvf1ewiDx9l/WTuhDPLDAqfXLvKPbAH3H9abxhHod2j
-	 LIuJYjt+dTZZO9Vcm81vNKG70w2Jv28ds54nthX+7bvXoMBOo+X15vkZ03Y2gSJc38
-	 cezs358OKTPg9LwnY9/DZIOWuuRWVE33s27AKRoM=
+	b=qMCxWDkqMUaywWhGTVFOp3mWKyNmq1ZjH1prHs3o2dDbrxoUgotrJVyvsR1h6uPsL
+	 r1OOsmZ3cOwmlI2tDn4+JC64VmWUnBnLi31uPPc6ezEq71WXMWXEZ2hk8xkUy7aOnz
+	 TP7d6gQtbkKUmGGseBBZKbppN909m3/8OvxTIIgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgF2Szx (ORCPT
+        id S1728559AbgF2S4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:56:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729974AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729975AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85DD823F28;
-        Mon, 29 Jun 2020 15:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE93C25579;
+        Mon, 29 Jun 2020 15:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446117;
-        bh=M1QucpjvT5eQKOYWZVjXYjHcyud6sajkmXPvml24HBE=;
+        s=default; t=1593446142;
+        bh=C6FW2g4U3g9zleI+T6QiaWuTQjwS7KiK2AgAFaLs56w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmOs17oacklVED4lxuYBoRdHaKPIWTVI1240q9dbQLdrRLyLEaegavEWpqqW1gGe0
-         ZoaHn5bEjA8W0i24fidb2TM7Osgew5ps034y9cG+JwcJ1zesw4yranjBwzXi9xpIiz
-         Mi70/CVNDGXRvkXh8i6Pdk7itULlfnTU8NvJjgTY=
+        b=ng6HIQjcOEABxj12/uEgXMyLzxV8uqN0gez9wffQ1T3D0VOf3A8suWCkbGfgdV5Xs
+         Ie5eIlxNPTY8lvxLjqyfLdJG6Ci7ZlnUei8AK18oC4NIhDckjl04UTSHHcJSDCKlOA
+         7+Yl+01rQvgc1wOMo4Re4e9B2zjHAuKSB/RolAvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 108/135] xhci: Poll for U0 after disabling USB2 LPM
-Date:   Mon, 29 Jun 2020 11:52:42 -0400
-Message-Id: <20200629155309.2495516-109-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 130/135] SUNRPC: Properly set the @subbuf parameter of xdr_buf_subsegment()
+Date:   Mon, 29 Jun 2020 11:53:04 -0400
+Message-Id: <20200629155309.2495516-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,62 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit b3d71abd135e6919ca0b6cab463738472653ddfb ]
+commit 89a3c9f5b9f0bcaa9aea3e8b2a616fcaea9aad78 upstream.
 
-USB2 devices with LPM enabled may interrupt the system suspend:
-[  932.510475] usb 1-7: usb suspend, wakeup 0
-[  932.510549] hub 1-0:1.0: hub_suspend
-[  932.510581] usb usb1: bus suspend, wakeup 0
-[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
-[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
-..
-[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
-..
-[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
-[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
-[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
+@subbuf is an output parameter of xdr_buf_subsegment(). A survey of
+call sites shows that @subbuf is always uninitialized before
+xdr_buf_segment() is invoked by callers.
 
-During system suspend, USB core will let HC suspends the device if it
-doesn't have remote wakeup enabled and doesn't have any children.
-However, from the log above we can see that the usb 1-7 doesn't get bus
-suspended due to not in U0. After a while the port finished U2 -> U0
-transition, interrupts the suspend process.
+There are some execution paths through xdr_buf_subsegment() that do
+not set all of the fields in @subbuf, leaving some pointer fields
+containing garbage addresses. Subsequent processing of that buffer
+then results in a page fault.
 
-The observation is that after disabling LPM, port doesn't transit to U0
-immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
-maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
-the affected device is advertised as 400us, which is still not enough
-based on my testing result.
-
-So let's use the maximum permitted latency, 10000, to poll for U0
-status to solve the issue.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/sunrpc/xdr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 7272c98becb8b..51d84332eb786 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4264,6 +4264,9 @@ int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 			mutex_lock(hcd->bandwidth_mutex);
- 			xhci_change_max_exit_latency(xhci, udev, 0);
- 			mutex_unlock(hcd->bandwidth_mutex);
-+			readl_poll_timeout(port_array[port_num], pm_val,
-+					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
-+					   100, 10000);
- 			return 0;
- 		}
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index ed9bbd383f7d3..df7ecf9584f68 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1031,6 +1031,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->head[0].iov_len;
++		subbuf->head[0].iov_base = buf->head[0].iov_base;
+ 		subbuf->head[0].iov_len = 0;
  	}
+ 
+@@ -1043,6 +1044,8 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->page_len;
++		subbuf->pages = buf->pages;
++		subbuf->page_base = 0;
+ 		subbuf->page_len = 0;
+ 	}
+ 
+@@ -1054,6 +1057,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		base = 0;
+ 	} else {
+ 		base -= buf->tail[0].iov_len;
++		subbuf->tail[0].iov_base = buf->tail[0].iov_base;
+ 		subbuf->tail[0].iov_len = 0;
+ 	}
+ 
 -- 
 2.25.1
 
