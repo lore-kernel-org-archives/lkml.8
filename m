@@ -2,162 +2,186 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88272C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69DCA21D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455830;
-	bh=tVsnTm9/h7OmU9e02FNXpZ30dLcpvq334sbkhXiJcuk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgmDTdZEOPCP6NmIgZvQdgA0k6fr3Undc2P4FE4BQDuaiHiAftEeKdjBa3xEaHYSu
-	 8xe0NdOjpy1bn6JJvngWWYEJK7aNEYAt8yNkV3KhPDI82ZV0oLl0peCdLfoUohNExw
-	 y4JUAhQHhw9Zehmcm28Q4wTnzC6dzQGasf9Icuvg=
+	by mail.kernel.org (Postfix) with ESMTP id A0A392225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgF2Sf5 (ORCPT
+        id S1727075AbgF2ShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgF2Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755CB24729;
-        Mon, 29 Jun 2020 15:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444049;
-        bh=tVsnTm9/h7OmU9e02FNXpZ30dLcpvq334sbkhXiJcuk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jO+0ubFfMv5CUYWGJ93BzYQWoYevsyN19d+yqqRVZhj0VfxY0fxyBthgvZUH/10U0
-         t/j0e4/8eM3KX2lMNlKs32nibqi7ueKySq8yl00Zz7JnIScL0Vrn4y2Sa8Z0ZIKJ0X
-         Fa6EzPFpnzbPtvTTuieIQFav/vybYsyOwt+ZoBnQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 156/265] cxgb4: move PTP lock and unlock to caller in Tx path
-Date:   Mon, 29 Jun 2020 11:16:29 -0400
-Message-Id: <20200629151818.2493727-157-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 14:37:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48392 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726831AbgF2Sf4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:56 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TG488h169400;
+        Mon, 29 Jun 2020 12:10:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcynfv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 12:10:49 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TG5V45177075;
+        Mon, 29 Jun 2020 12:10:48 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcynes-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 12:10:48 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TG5oE8026201;
+        Mon, 29 Jun 2020 16:10:46 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 31wwr896r7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 16:10:46 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TGAhBU65470542
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 16:10:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 356ED4C066;
+        Mon, 29 Jun 2020 16:10:43 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C086B4C04A;
+        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.79.64])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+ <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+ <20200629115651-mutt-send-email-mst@kernel.org>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <a94443a3-1aff-8cf5-bc1c-9271f260e930@linux.ibm.com>
+Date:   Mon, 29 Jun 2020 18:09:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629115651-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006290105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 030c98824deaba205787af501a074b3d7f46e32e ]
 
-Check for whether PTP is enabled or not at the caller and perform
-locking/unlocking at the caller.
+On 2020-06-29 17:57, Michael S. Tsirkin wrote:
+> On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
+>> An architecture protecting the guest memory against unauthorized host
+>> access may want to enforce VIRTIO I/O device protection through the
+>> use of VIRTIO_F_IOMMU_PLATFORM.
+>>
+>> Let's give a chance to the architecture to accept or not devices
+>> without VIRTIO_F_IOMMU_PLATFORM.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Acked-by: Jason Wang <jasowang@redhat.com>
+>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+>>   arch/s390/mm/init.c     |  6 ++++++
+>>   drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
+>>   include/linux/virtio.h  |  2 ++
+>>   3 files changed, 30 insertions(+)
+>>
+>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>> index 6dc7c3b60ef6..215070c03226 100644
+>> --- a/arch/s390/mm/init.c
+>> +++ b/arch/s390/mm/init.c
+>> @@ -45,6 +45,7 @@
+>>   #include <asm/kasan.h>
+>>   #include <asm/dma-mapping.h>
+>>   #include <asm/uv.h>
+>> +#include <linux/virtio.h>
+>>   
+>>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>>   
+>> @@ -161,6 +162,11 @@ bool force_dma_unencrypted(struct device *dev)
+>>   	return is_prot_virt_guest();
+>>   }
+>>   
+>> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev)
+>> +{
+>> +	return is_prot_virt_guest();
+>> +}
+>> +
+>>   /* protected virtualization */
+>>   static void pv_init(void)
+>>   {
+>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+>> index a977e32a88f2..aa8e01104f86 100644
+>> --- a/drivers/virtio/virtio.c
+>> +++ b/drivers/virtio/virtio.c
+>> @@ -167,6 +167,21 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
+>>   }
+>>   EXPORT_SYMBOL_GPL(virtio_add_status);
+>>   
+>> +/*
+>> + * arch_needs_virtio_iommu_platform - provide arch specific hook when finalizing
+>> + *				      features for VIRTIO device dev
+>> + * @dev: the VIRTIO device being added
+>> + *
+>> + * Permits the platform to provide architecture specific functionality when
+>> + * devices features are finalized. This is the default implementation.
+>> + * Architecture implementations can override this.
+>> + */
+>> +
+>> +int __weak arch_needs_virtio_iommu_platform(struct virtio_device *dev)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>   int virtio_finalize_features(struct virtio_device *dev)
+>>   {
+>>   	int ret = dev->config->finalize_features(dev);
+>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
+>>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>>   		return 0;
+>>   
+>> +	if (arch_needs_virtio_iommu_platform(dev) &&
+>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+>> +		dev_warn(&dev->dev,
+>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>>   	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>>   	status = dev->config->get_status(dev);
+>>   	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> 
+> Well don't you need to check it *before* VIRTIO_F_VERSION_1, not after?
 
-Fixes following sparse warning:
-sge.c:1641:26: warning: context imbalance in 'cxgb4_eth_xmit' -
-different lock contexts for basic block
+Yes, you are right,
 
-Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 6516c45864b35..db8106d9d6edf 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -1425,12 +1425,10 @@ static netdev_tx_t cxgb4_eth_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	qidx = skb_get_queue_mapping(skb);
- 	if (ptp_enabled) {
--		spin_lock(&adap->ptp_lock);
- 		if (!(adap->ptp_tx_skb)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			adap->ptp_tx_skb = skb_get(skb);
- 		} else {
--			spin_unlock(&adap->ptp_lock);
- 			goto out_free;
- 		}
- 		q = &adap->sge.ptptxq;
-@@ -1444,11 +1442,8 @@ static netdev_tx_t cxgb4_eth_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- #ifdef CONFIG_CHELSIO_T4_FCOE
- 	ret = cxgb_fcoe_offload(skb, adap, pi, &cntrl);
--	if (unlikely(ret == -ENOTSUPP)) {
--		if (ptp_enabled)
--			spin_unlock(&adap->ptp_lock);
-+	if (unlikely(ret == -EOPNOTSUPP))
- 		goto out_free;
--	}
- #endif /* CONFIG_CHELSIO_T4_FCOE */
- 
- 	chip_ver = CHELSIO_CHIP_VERSION(adap->params.chip);
-@@ -1461,8 +1456,6 @@ static netdev_tx_t cxgb4_eth_xmit(struct sk_buff *skb, struct net_device *dev)
- 		dev_err(adap->pdev_dev,
- 			"%s: Tx ring %u full while queue awake!\n",
- 			dev->name, qidx);
--		if (ptp_enabled)
--			spin_unlock(&adap->ptp_lock);
- 		return NETDEV_TX_BUSY;
- 	}
- 
-@@ -1481,8 +1474,6 @@ static netdev_tx_t cxgb4_eth_xmit(struct sk_buff *skb, struct net_device *dev)
- 	    unlikely(cxgb4_map_skb(adap->pdev_dev, skb, sgl_sdesc->addr) < 0)) {
- 		memset(sgl_sdesc->addr, 0, sizeof(sgl_sdesc->addr));
- 		q->mapping_err++;
--		if (ptp_enabled)
--			spin_unlock(&adap->ptp_lock);
- 		goto out_free;
- 	}
- 
-@@ -1630,8 +1621,6 @@ static netdev_tx_t cxgb4_eth_xmit(struct sk_buff *skb, struct net_device *dev)
- 	txq_advance(&q->q, ndesc);
- 
- 	cxgb4_ring_tx_db(adap, &q->q, ndesc);
--	if (ptp_enabled)
--		spin_unlock(&adap->ptp_lock);
- 	return NETDEV_TX_OK;
- 
- out_free:
-@@ -2365,6 +2354,16 @@ netdev_tx_t t4_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	if (unlikely(qid >= pi->nqsets))
- 		return cxgb4_ethofld_xmit(skb, dev);
- 
-+	if (is_ptp_enabled(skb, dev)) {
-+		struct adapter *adap = netdev2adap(dev);
-+		netdev_tx_t ret;
-+
-+		spin_lock(&adap->ptp_lock);
-+		ret = cxgb4_eth_xmit(skb, dev);
-+		spin_unlock(&adap->ptp_lock);
-+		return ret;
-+	}
-+
- 	return cxgb4_eth_xmit(skb, dev);
- }
- 
+Pierre
+
 -- 
-2.25.1
-
+Pierre Morel
+IBM Lab Boeblingen
