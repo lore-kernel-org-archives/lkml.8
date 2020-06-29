@@ -2,98 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B04DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478C620702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pBRjibbJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3A38720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbgF2Tuq (ORCPT
+        id S1732770AbgF2Tuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:50:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50840 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387812AbgF2Tuk (ORCPT
+        Mon, 29 Jun 2020 15:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbgF2Tut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:50:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCrDMG096114;
-        Mon, 29 Jun 2020 07:53:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593435193;
-        bh=ttFOPNsI8C7Qj6EFkUy2MjTPikihl8NG7soqqS4fgw8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pBRjibbJLkrIoCy4o33JgQ9f2ePI58oLNmoKiuNMb50EdVyYrM7OtDkG4xHuW3WMx
-         hcYocsAYAUt7SCQj6bVU2oGAEV3GiUyKOqp0sPNtWI3JWUczE4fO4bCtQYmnNtIrTe
-         lWnlhcjZ2nWayTTT9Gnm2wzzcfdaW9kAa27W5/3Y=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCrDwk066355;
-        Mon, 29 Jun 2020 07:53:13 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 07:53:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 07:53:12 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCquh3015456;
-        Mon, 29 Jun 2020 07:53:10 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v4 6/6] arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR line
-Date:   Mon, 29 Jun 2020 15:52:54 +0300
-Message-ID: <20200629125254.28754-7-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629125254.28754-1-rogerq@ti.com>
-References: <20200629125254.28754-1-rogerq@ti.com>
+        Mon, 29 Jun 2020 15:50:49 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1362C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:50:49 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpznh-0000h3-F5; Mon, 29 Jun 2020 21:50:45 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzng-0005aB-Te; Mon, 29 Jun 2020 21:50:44 +0200
+Date:   Mon, 29 Jun 2020 21:50:44 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mft2vsrhiooh6kvs"
+Content-Disposition: inline
+In-Reply-To: <20200629160844.6ecf79c1@xps13>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Type-C compainon chip on the board needs ~133ms (tCCB_DEFAULT)
-to debounce the CC lines in order to detect attach and plug orientation
-and reflect the correct DIR status. [1]
 
-On the EVM however we need to wait upto 700ms before sampling the
-Type-C DIR line else we can get incorrect direction state.
+--mft2vsrhiooh6kvs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] http://www.ti.com/lit/ds/symlink/tusb321.pdf
+On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> Hello Uwe, Thierry,
+>=20
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> 12:54:53 +0200:
+>=20
+> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > functions but can also manage the intensity on each of its ports with
+> > PWM. Each output is independent and may be tuned with 16 values (4
+> > bits per output). The period is always 32kHz, only the duty-cycle may
+> > be changed. One can use any output as GPIO or PWM.
+> >=20
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+>=20
+> Can I have a status on this patch please?
+>=20
+> If it was forgotten, I would be good to have it queued now, otherwise,
+> may I know the reason?
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
- 1 file changed, 1 insertion(+)
+You could reply to my feedback ... If you could say there: "What you
+want isn't possible" I'd count this as a strong indication to not ask to
+implement Andy's suggestion. (Even if this would be possible, I'm not
+sure this is a good idea, but still ...)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 3294b96ebba8..6307fe5ccb06 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -350,6 +350,7 @@
- 
- &serdes_wiz3 {
- 	typec-dir-gpios = <&main_gpio1 3 GPIO_ACTIVE_HIGH>;
-+	typec-dir-debounce-ms = <700>;	/* TUSB321, tCCB_DEFAULT 133 ms */
- };
- 
- &serdes3 {
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mft2vsrhiooh6kvs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76RhEACgkQwfwUeK3K
+7AnNygf/ajou6A2cnBZDepvApB9y0hCf2RUYvXMGZEw5WqGZbmWr5Edmtsym/bZL
+9x4/ugEvXcDFZrYfnYxCaEX6Y4HpKvwKX+gu2Ovbfx4LE3nEqZHh0qXrQgK2vTUD
+By5NJRRup31nL9iIjmLPrG4I1ddDdN2/oQU9sHtycbwhEunnV0GuzlwBdKA6LISX
+N+MBcqPfpoUlS0xCYRVacwtVNnS8/5yjA30pnUHLrHyfcErNjSKL647CmSv1B+Zx
+BENNroAw8tgHnrOASQ4RAmRMQ7zIPhv+/cfv2ICG4q4E8C+MPgDc7JnW1GOhBeDV
+d+D8SLIBaU7HDi4BTUcZSg8br9TmtA==
+=YjLE
+-----END PGP SIGNATURE-----
+
+--mft2vsrhiooh6kvs--
