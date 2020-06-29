@@ -2,111 +2,156 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09137C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97011C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E11C9206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7757820771
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUD5GVMv"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NB0L9Jf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732322AbgF2TXC (ORCPT
+        id S1732080AbgF2TXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
+        Mon, 29 Jun 2020 15:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732295AbgF2TWp (ORCPT
+        with ESMTP id S1732318AbgF2TW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:22:45 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B686BC02E2FB
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:37:36 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k15so15671735otp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:37:36 -0700 (PDT)
+        Mon, 29 Jun 2020 15:22:57 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365B9C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:22:57 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id s21so368042ilk.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cveXjL+4X4gh1TmXdX8oqUnZgc2Vd1IaF1EU/HiH/po=;
-        b=pUD5GVMvZNlTyNPmyJi9IXsTZfrSpSaM0QY7ebsyC1zCo0OHvFNpbLVF1pJscNAUqe
-         IFyUSK2FgPrznhkiChklKg/G7qoGD7VR+JxDCQ+2fGlXHzsXTAeebGDSbDi+xKb4oeiQ
-         r7TCH5o2rRa9F7dzql1Y0Y4WBuhpBWi1/YxuFjhqYkw3Gk8eneRiedH9eIkkpmhuMVqw
-         oLoc7SDNFwvw9CyUztYOctHv3EI/iIZ6WPxRIm3c+LnISDzu8GPBBQTtWbyUAoIKTPkK
-         TcQTR90pveM86/MHrDr6nAEk9rl3U5f0rwT6CQHlwFY7wh5l0XX7yi+KGFgnVqS4+XCo
-         sevw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZC/wx6BYtpV6+oS6GfTqmrGOk4Agnx/4t/kFHxFuX1c=;
+        b=NB0L9Jf44nLOQXjdxaFB7OESdzE0E3n+5gfJPDxlxaGUKeqHJIw4JnHtoPxOkZUNeE
+         gWEztc08nsdEdKiaqewWM4/2PufgbC1umy6eeakNmmavgPmTLiCKf4X+tM/lX1XbtRId
+         2kCdgJB9MJNxc2cSUUomhH4Im6NEiCvfnMWKHjtb/uiQa/8KOJDdgFiEInN49oAMo6MU
+         YWySRaiPNFREDtLEXC3llONWun8g2Ogf011o5WvX0apbDRX9NDLL3Z+1Xoo00loxQoIl
+         nvsuoiEipUgt+X1o1iwJQpgUSsj6912/YjdLCEfWQcqeQtLTQ2NNST3fn9rtbF+/onjG
+         81tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cveXjL+4X4gh1TmXdX8oqUnZgc2Vd1IaF1EU/HiH/po=;
-        b=ifeew4E+VXO5QXSsvQiln15uO6ojzZmj3urM5kYIuXSAARhzLuREF6RbfbbQuikSJS
-         53rVdeubR5Nfoho1pH6tJxUaICsJC0oT/pjxg4NGqUP7aZom99fUxJWjQomfJXFBJCJX
-         AUDZ25osnNuatFWABx5Hb/0KzTHMYF2Z85S/eCSdi9Lh+OzNUBx+lhBpyZlT6ly3eWZp
-         BmtyIrmmlcoZ79A1OfV6a5/+hf29BPPfBmV0aa5DsRsRRcvWFKPDXY0frUa0Uj14wzie
-         vAXlHh8hqks6sFQHjjWUlbOXAPsDCdCVxqgSaJEN6f5qiOtd2vmG/YahohDrrvbACpnS
-         dF4A==
-X-Gm-Message-State: AOAM530QcdMcb+hITD1l+Ul9Z783NLj5cTBD9vQMr8nv4nrY+CbBuUZf
-        TeEUeTYcr8aXJhJXbWWv/9iSOiK9QkZ3oHl0cxM=
-X-Google-Smtp-Source: ABdhPJxR9g/vuVB4KPn3jdGd9TFAWyi4TL/l19BuOkeMaOra6mdLr30ClOYBUAd6kOsB5YS6iY65MEoC5vi4wUTht3Y=
-X-Received: by 2002:a9d:2c26:: with SMTP id f35mr14207086otb.232.1593441455928;
- Mon, 29 Jun 2020 07:37:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZC/wx6BYtpV6+oS6GfTqmrGOk4Agnx/4t/kFHxFuX1c=;
+        b=Thy2B3jhQR65KimIqHB8A+hArJsszDOaIGT+aXF3cZONkBwQq+UVPZTAOmIG/GY8jW
+         pn2OR3ybYTd/72wK6VKtvAXteOXTge+YNFEGngCVUy3Jgpn11Nuorjo5gAP6Y/nNcnmv
+         WuKKOzWEemo+5l9sU5Eh9XzNKflxiDIdROJT33BI14clXXxuJwUc0HA0RtfJzBwTccTG
+         r++cm3zbdyMGQ4cWa5qzKTSv7lL22R6IVuFHKffB3kurphM6WmiotOt4BecQ3qEpUD7P
+         R7Nkx072sQufSCpqOfNdX0t3aupd3mVBfv9paGZzroXERMt6dM7IStb5wJbHPfuBROUu
+         gxSg==
+X-Gm-Message-State: AOAM531YiAiZD4GC6Sla59RLrdq1JijAz2lH89kPjusNhaKF2O0fHyZR
+        0/S6rAHqV/qxp4Uw3fNwWnJU0IJbDbbijw==
+X-Google-Smtp-Source: ABdhPJxuDCpQ8zVvVIsoUoXrz64TVB2DcaTHauicCj1HoXP6cKM17Jkd9+9Z4z8u9DYEJQnsfGzlZQ==
+X-Received: by 2002:a92:9f0e:: with SMTP id u14mr16629538ili.277.1593458576600;
+        Mon, 29 Jun 2020 12:22:56 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id v5sm345230ios.54.2020.06.29.12.22.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:22:55 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jpzMl-001Bxd-0w; Mon, 29 Jun 2020 16:22:55 -0300
+Date:   Mon, 29 Jun 2020 16:22:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in addr_handler (2)
+Message-ID: <20200629192255.GE25301@ziepe.ca>
+References: <000000000000107b4605a7bdce7d@google.com>
+ <20200614085321.8740-1-hdanton@sina.com>
+ <20200627130205.16900-1-hdanton@sina.com>
+ <20200627222527.GC25301@ziepe.ca>
+ <CACT4Y+ab1q7fON3rkj+FHODPQXDGyP5c0tJt7gbrpmsAAYRb1g@mail.gmail.com>
+ <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
- <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
- <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com> <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
-In-Reply-To: <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 29 Jun 2020 10:37:25 -0400
-Message-ID: <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing of
- clk_enet_ref where possible
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
+On Mon, Jun 29, 2020 at 07:27:40PM +0200, Dmitry Vyukov wrote:
+> On Mon, Jun 29, 2020 at 4:42 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Sun, Jun 28, 2020 at 12:25 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > >
+> > > On Sat, Jun 27, 2020 at 09:02:05PM +0800, Hillf Danton wrote:
+> > > > > So, to hit this syzkaller one of these must have happened:
+> > > > >  1) rdma_addr_cancel() didn't work and the process_one_work() is still
+> > > > >     runnable/running
+> > > >
+> > > > What syzbot reported indicates that the kworker did survive not only
+> > > > canceling work but the handler_mutex, despite it's a sync cancel that
+> > > > waits for the work to complete.
+> > >
+> > > The syzbot report doesn't confirm that the cancel work was actaully
+> > > called.
+> > >
+> > > The most likely situation is that it was skipped because of the state
+> > > mangling the patch fixes..
+> > >
+> > > > >  2) The state changed away from RDMA_CM_ADDR_QUERY without doing
+> > > > >     rdma_addr_cancel()
+> > > >
+> > > > The cancel does cover the query state in the reported case, and have
+> > > > difficult time working out what's in the patch below preventing the
+> > > > work from going across the line the sync cancel draws. That's the
+> > > > question we can revisit once there is a reproducer available.
+> > >
+> > > rdma-cm never seems to get reproducers from syzkaller
+> >
+> > +syzkaller mailing list
+> >
+> > Hi Jason,
+> >
+> > Wonder if there is some systematic issue. Let me double check.
+> 
+> By scanning bugs at:
+> https://syzkaller.appspot.com/upstream
+> https://syzkaller.appspot.com/upstream/fixed
+> 
+> I found a significant number of bugs that I would qualify as "rdma-cm"
+> and that have reproducers. Here is an incomplete list (I did not get
+> to the end):
+> 
+> https://syzkaller.appspot.com/bug?id=b8febdb3c7c8c1f1b606fb903cee66b21b2fd02f
+> https://syzkaller.appspot.com/bug?id=d5222b3e1659e0aea19df562c79f216515740daa
+> https://syzkaller.appspot.com/bug?id=c600e111223ce0a20e5f2fb4e9a4ebdff54d7fa6
+> https://syzkaller.appspot.com/bug?id=a9796acbdecc1b2ba927578917755899c63c48af
+> https://syzkaller.appspot.com/bug?id=95f89b8fb9fdc42e28ad586e657fea074e4e719b
+> https://syzkaller.appspot.com/bug?id=8dc0bcd9dd6ec915ba10b3354740eb420884acaa
+> https://syzkaller.appspot.com/bug?id=805ad726feb6910e35088ae7bbe61f4125e573b7
+> https://syzkaller.appspot.com/bug?id=56b60fb3340c5995373fe5b8eae9e8722a012fc4
+> https://syzkaller.appspot.com/bug?id=38d36d1b26b4299bf964d50af4d79688d39ab960
+> https://syzkaller.appspot.com/bug?id=25e00dd59f31783f233185cb60064b0ab645310f
+> https://syzkaller.appspot.com/bug?id=2f38d7e5312fdd0acc979c5e26ef2ef8f3370996
+> 
+> Do you mean some specific subset of bugs by "rdma-cm"? If yes, what is
+> that subset?
 
-On Mon, Jun 29, 2020 at 10:26 AM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Just tested 5.4.24_2.1.0 on an imx6qp sabresd and DHCP also fails there.
+The race condition bugs never seem to get reproducers, I checked a few
+of the above and these are much more deterministic things.
 
-I think I discovered the problem !
+I think the recurrance rate for the races is probably too low?
 
-When I compare the sabresd devicetree on mainline with the actual sabresd
-schematics, the devicetree is incorrect ! Things still work, but only
-by accident.
-
-The sabresd has an AR8131 PHY, which generates the enet ref clock, not the
-imx6. So on the schematic we see that the clock output of the PHY is wired
-to imx6 ENET_REF_CLK, so it can be used as a clock source. And GPIO_16
-is disconnected, as it should, because the imx6 is not generating the ref clk.
-
-But the devicetree is written as if the imx6 is providing the clock ! See
-here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm/boot/dts/imx6qdl-sabresd.dtsi?h=v5.7.6#n513
-
-Also there is no override of the fec PTP clock:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm/boot/dts/imx6qdl-sabresd.dtsi?h=v5.7.6#n202
-
-Although Shawn's mainline patch mandates this?
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.7.6&id=810c0ca879098a993e2ce0a190d24d11c17df748
-
-This will work, but only by accident. So on a plus, when we
-(incorrectly) switch the
-bypass bit on, things stop working.
+Jason
