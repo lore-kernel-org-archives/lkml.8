@@ -2,157 +2,173 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA850C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA87C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D160D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F378420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBCbSVbx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZXaKassr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgF2Sxe (ORCPT
+        id S1729014AbgF2Sxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        Mon, 29 Jun 2020 14:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgF2Sww (ORCPT
+        with ESMTP id S1729806AbgF2Sww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:52 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186D9C02E2CC
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:52 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so15508942wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:52 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172A6C031C59
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:37:39 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so1074686pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=snRavlMzvk6o89999ihW2SJGcP4kgkkLuKbzazJuz7M=;
-        b=EBCbSVbxb5YiApQEcA5o+TIGFgyXHcDAl7i662DfxDYdnp862l0GPoQfWOcNUtjcSe
-         jnezcozxuPVkZo5f4KjMKLccsMOZTvdDTyEbUlK4123+wVNAkXCXWv8ZfYrJxAS3qZ93
-         8vrs/CdF0z7YODI7HgsfSKNJdxYv1vhR4+IGMmCaoAOzFgJycGJVJ0ZGcNbsup+I/eZE
-         XqHkVB4Rbu4LtbCpo307g++fMpBLSJJGlXhTLve6b5TV0o4HitW+xa8FO/mP/sCAT6Pa
-         3VnkcXGnjMH8qE1jsEUyE7sTCYERb3R3EtTgvwOpZAcOq6zxn7z3UFHnAkImidK5q/fj
-         I+6g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4MOdfZ/7G/g8IQUDnDAduTn6na/PIZsHRNxYZf5SkEI=;
+        b=ZXaKassrth3M0uat5Wpfn6AExUzN2NBI30huoWxTSzmhIcmxqnCHNxjxmSqISmrTL9
+         kSyTb3XvRgSlZa2oq8gqXfhkvkms8DqCxi0zics7ibN9LSfPdWuoCAmcbzfTVgVXpzcq
+         gWhEp0s6e+n5b846nBIMi/GZ7nj/2Z/pH/srqzey4f+uuA4NXxlvHG5cvZxQ+PdeH4ER
+         2XiXHEkb6hlXQ4rUhf6OS//M40Y8CmX4Q8nrFSwmtYi7VzqIxOVKEF0yWfNkL474NXkp
+         fwFdF28fltgDbZWBqK0PrECMLc6NC9+K+P+n18cDm6HngOhsvcIZ5oxP1RUzaWuHREi/
+         Hhdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=snRavlMzvk6o89999ihW2SJGcP4kgkkLuKbzazJuz7M=;
-        b=E1B9uHYV11G8VOzJ/dZm6QESMXWulDYDc7+zYLfF803zBzV06sGnVyxLJP8r4VwAxw
-         n00bJ6VjrbYyHb4gNUeQhE/nSa3yLx8mm0hxNXZLx1raMcUYBH97CdMT50Wa148bZrBr
-         t+gFpfeWr0JjAs0evFy8QBlqkDJT6Wb2da+5OiEaYSXuR9oMmtL5Tr4wg3RBW4216+n5
-         y2NrVi0HZFTHGIkVZaibza+mDaPVkyjrLnaItvKGwThwuaadJpKNdfIFPvOmt47uKYN6
-         K60ZeXOeLCstHjEBvbky4CRTN9IZkf71ufKVoRw+dHZyZAgO2ZaMmNK7tlWlW4diQt/A
-         Ls6g==
-X-Gm-Message-State: AOAM533u5dFSkKtSN18wIJ+qKxI9KJYGWFXiYlEswqIrXofIj8x4RLTq
-        90mEBB0S7+Drg7RrV6TOaargyQ==
-X-Google-Smtp-Source: ABdhPJwtIrvDrDIcBEd1RS2NhZDsLvIxIfEKOQpWVF86D0jsOeJclt4mGbamK7+WRgzx6R43bbW3/Q==
-X-Received: by 2002:a1c:2cd7:: with SMTP id s206mr16182224wms.109.1593439490833;
-        Mon, 29 Jun 2020 07:04:50 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4MOdfZ/7G/g8IQUDnDAduTn6na/PIZsHRNxYZf5SkEI=;
+        b=ZS4CrpuMPhVQvasicMaC4MyleJ8tK189j9NXWzKmAUKjDkKyQ+HdVKLqGOL3XTRh4w
+         2pXQNi0YMxj5SB/aJctq/8OyE9fL92XnEyvbb6xSwIMgy6NahqA3wQpgD5aw1MwueEha
+         PQMykrYCk7qYS6qmLQ3v/Br4qVx4xddSfvJ+EWjYwOSPyw0xGhQ8/wfEf3zsm1etoAgs
+         2Now3x/uaLxxT8pq3QGKbsasmWrXVBEn+LG16Gwb1JqG5zcwn5gE3pmdrSzW529OcZCX
+         SmrVQBCB973cFVGQKNRrLHD7zYOpcj8ULkzLcEqK9UG6Orq+H0Skw3H5hjIOYB6Pxjvk
+         2ekQ==
+X-Gm-Message-State: AOAM532jZnP9lNDe8JXOZ6kYwD+hxkjfa0xJ/S4wTi9ZqiTG8WdvTrvD
+        LC9dInxFo0jjoyhkg970lUObRw==
+X-Google-Smtp-Source: ABdhPJwzPvAJ8eEZ+SFTsEUT1PtQlthFxztToELgKT+XnOEQ+J3ccuXm8RkwVvzs8zVaSfZ3QJMMEQ==
+X-Received: by 2002:a17:90b:1b07:: with SMTP id nu7mr1651323pjb.4.1593452258401;
+        Mon, 29 Jun 2020 10:37:38 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id u20sm301960pfk.91.2020.06.29.10.37.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:04:50 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 04/20] misc: habanalabs: pci: Fix a variety of kerneldoc issues
-Date:   Mon, 29 Jun 2020 15:04:26 +0100
-Message-Id: <20200629140442.1043957-5-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 10:37:37 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:37:35 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime
+ relocations
+Message-ID: <20200629173735.l3ssrj7m3q5swfup@google.com>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200629140928.858507-8-nivedita@alum.mit.edu>
+ <202006290907.E5EF18A@keescook>
+ <CAMj1kXFge5aWL2BY8Y1=m1TonB+SrDq6p7TQWuO5JkzcR2dhjQ@mail.gmail.com>
+ <202006290919.93C759C62@keescook>
+ <20200629165603.GD900899@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200629165603.GD900899@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hl_pci_bars_map() has a miss-typed argument name in the function
-description.  hl_pci_elbi_write() was missing documented arguments.
-The headers for functions hl_pci_bars_unmap(), hl_pci_elbi_write()
-and hl_pci_reset_link_through_bridge() were written in kerneldoc
-format, but lack the kerneldoc identifier '/**'.  Let's promote
-them so they can gain access to the checker.
+On 2020-06-29, Arvind Sankar wrote:
+>On Mon, Jun 29, 2020 at 09:20:31AM -0700, Kees Cook wrote:
+>> On Mon, Jun 29, 2020 at 06:11:59PM +0200, Ard Biesheuvel wrote:
+>> > On Mon, 29 Jun 2020 at 18:09, Kees Cook <keescook@chromium.org> wrote:
+>> > >
+>> > > On Mon, Jun 29, 2020 at 10:09:28AM -0400, Arvind Sankar wrote:
+>> > > > Add a linker script check that there are no runtime relocations, and
+>> > > > remove the old one that tries to check via looking for specially-named
+>> > > > sections in the object files.
+>> > > >
+>> > > > Drop the tests for -fPIE compiler option and -pie linker option, as they
+>> > > > are available in all supported gcc and binutils versions (as well as
+>> > > > clang and lld).
+>> > > >
+>> > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>> > > > Reviewed-by: Fangrui Song <maskray@google.com>
+>> > > > ---
+>> > > >  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+>> > > >  arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
+>> > > >  2 files changed, 11 insertions(+), 25 deletions(-)
+>> > >
+>> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+>> > >
+>> > > question below ...
+>> > >
+>> > > > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>> > > > index a4a4a59a2628..a78510046eec 100644
+>> > > > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+>> > > > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>> > > > @@ -42,6 +42,12 @@ SECTIONS
+>> > > >               *(.rodata.*)
+>> > > >               _erodata = . ;
+>> > > >       }
+>> > > > +     .rel.dyn : {
+>> > > > +             *(.rel.*)
+>> > > > +     }
+>> > > > +     .rela.dyn : {
+>> > > > +             *(.rela.*)
+>> > > > +     }
+>> > > >       .got : {
+>> > > >               *(.got)
+>> > > >       }
+>> > >
+>> > > Should these be marked (INFO) as well?
+>> > >
+>> >
+>> > Given that sections marked as (INFO) will still be emitted into the
+>> > ELF image, it does not really make a difference to do this for zero
+>> > sized sections.
+>>
+>> Oh, I misunderstood -- I though they were _not_ emitted; I see now what
+>> you said was not allocated. So, disk space used for the .got.plt case,
+>> but not memory space used. Sorry for the confusion!
+>>
+>> -Kees
 
-These changes fix the following W=1 kernel build warnings:
+About output section type (INFO):
+https://sourceware.org/binutils/docs/ld/Output-Section-Type.html#Output-Section-Type
+says "These type names are supported for backward compatibility, and are
+rarely used."
 
- drivers/misc/habanalabs/pci.c:27: warning: Function parameter or member 'name' not described in 'hl_pci_bars_map'
- drivers/misc/habanalabs/pci.c:27: warning: Excess function parameter 'bar_name' description in 'hl_pci_bars_map'
- drivers/misc/habanalabs/pci.c:147: warning: Function parameter or member 'addr' not described in 'hl_pci_iatu_write'
- drivers/misc/habanalabs/pci.c:147: warning: Function parameter or member 'data' not described in 'hl_pci_iatu_write'
- drivers/misc/habanalabs/pci.c:324: warning: Excess function parameter 'dma_mask' description in 'hl_pci_set_dma_mask'
+If all input section don't have the SHF_ALLOC flag, the output section
+will not have this flag as well. This type is not useful...
 
-Cc: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/habanalabs/pci.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+If .got and .got.plt were used, they should be considered dynamic
+relocations which should be part of the loadable image. So they should
+have the SHF_ALLOC flag. (INFO) will not be applicable anyway.
 
-diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
-index 9f634ef6f5b37..24073e8eb8df9 100644
---- a/drivers/misc/habanalabs/pci.c
-+++ b/drivers/misc/habanalabs/pci.c
-@@ -15,7 +15,7 @@
- /**
-  * hl_pci_bars_map() - Map PCI BARs.
-  * @hdev: Pointer to hl_device structure.
-- * @bar_name: Array of BAR names.
-+ * @name: Array of BAR names.
-  * @is_wc: Array with flag per BAR whether a write-combined mapping is needed.
-  *
-  * Request PCI regions and map them to kernel virtual addresses.
-@@ -61,7 +61,7 @@ int hl_pci_bars_map(struct hl_device *hdev, const char * const name[3],
- 	return rc;
- }
- 
--/*
-+/**
-  * hl_pci_bars_unmap() - Unmap PCI BARS.
-  * @hdev: Pointer to hl_device structure.
-  *
-@@ -80,9 +80,11 @@ static void hl_pci_bars_unmap(struct hl_device *hdev)
- 	pci_release_regions(pdev);
- }
- 
--/*
-+/**
-  * hl_pci_elbi_write() - Write through the ELBI interface.
-  * @hdev: Pointer to hl_device structure.
-+ * @addr: Address to write to
-+ * @data: Data to write
-  *
-  * Return: 0 on success, negative value for failure.
-  */
-@@ -140,6 +142,8 @@ static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
- /**
-  * hl_pci_iatu_write() - iatu write routine.
-  * @hdev: Pointer to hl_device structure.
-+ * @addr: Address to write to
-+ * @data: Data to write
-  *
-  * Return: 0 on success, negative value for failure.
-  */
-@@ -161,7 +165,7 @@ int hl_pci_iatu_write(struct hl_device *hdev, u32 addr, u32 data)
- 	return 0;
- }
- 
--/*
-+/**
-  * hl_pci_reset_link_through_bridge() - Reset PCI link.
-  * @hdev: Pointer to hl_device structure.
-  */
--- 
-2.25.1
+SHT_REL[A] may be allocable or not. Usually .rel[a].dyn and .rel[a].plt
+are linker created allocable sections. (INFO) does not make sense for them.
 
+>In the case of the REL[A] and .got sections, they are actually already
+>not emitted at all into the ELF file now that they are zero size.
+>
+>For .got.plt, it is only emitted for 32-bit (with the 3 reserved
+>entries), the 64-bit linker seems to get rid of it.
