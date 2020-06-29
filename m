@@ -2,51 +2,113 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12001C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D864520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E196C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="MlX1BXGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgF2Sln (ORCPT
+        id S1729054AbgF2Sly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:41:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:58787 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbgF2Slf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:35 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C35C168AFE; Mon, 29 Jun 2020 10:05:56 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 10:05:56 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [patch] dma-pool: warn when coherent pool is depleted
-Message-ID: <20200629080556.GA32027@lst.de>
-References: <20200621211200.GA158319@roeck-us.net> <alpine.DEB.2.22.394.2006272124470.591864@chino.kir.corp.google.com>
+        Mon, 29 Jun 2020 14:41:54 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37612 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726990AbgF2Sls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:48 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5rnp011065;
+        Mon, 29 Jun 2020 04:06:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=E5tA5Jj509A0j/xJfq0Z42Wn1QKuKSifS2wgZV6zkvg=;
+ b=MlX1BXGehq3B/Cq6ifarvN6+FSrT7+FFSjLXRi9VVannJ2UA5GGTFZodLwKIRwHBL8wi
+ YtLoz2tj6x8Kdc/PqPxKtilGeRP3MnNNuveXbUAz1/o+LAkBCXuqyzqhl2DJtD56SnpQ
+ 2yGNFE2xOlJTsAiHTKjhEyLPx5Ar7/+FXFI1+0PU7zH1Cf/x87EdFqGzc7n5x443qSVP
+ JMdZrL/eW93e3O6GIaHK/SxlU1mdXs7qWYqLKH4FFh0tamg3A1U8j/LiE1l/hBmHJTrf
+ LKN4E5IMekT+VnHpCR/wNbQ9YwcGXCRUPLiBnkqIN2zwLMWJUQS4eIqBlHcO+lpEmxAM yA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31x5mnek8r-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 04:06:14 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 04:06:12 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 04:06:12 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 29 Jun 2020 04:06:12 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 39FEB3F7040;
+        Mon, 29 Jun 2020 04:06:08 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "Alexander Lobakin" <alobakin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 4/6] net: qede: correct existing SPDX tags
+Date:   Mon, 29 Jun 2020 14:05:10 +0300
+Message-ID: <20200629110512.1812-5-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
+References: <20200629110512.1812-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2006272124470.591864@chino.kir.corp.google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:25:21PM -0700, David Rientjes wrote:
-> Thanks Guenter.  Christoph, does it make sense to apply this patch since 
-> there may not be an artifact left behind in the kernel log on allocation 
-> failure by the caller?
+QLogic QED drivers source code is dual licensed under
+GPL-2.0/BSD-3-Clause.
+Correct already existing but wrong SPDX tags to match the actual
+license.
 
-Sorry, this fell through the cracks.  I've added it to the dma-mapping
-tree now.
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qede/Makefile     | 3 ++-
+ drivers/net/ethernet/qlogic/qede/qede_dcbnl.c | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qede/Makefile b/drivers/net/ethernet/qlogic/qede/Makefile
+index 3fc91d12413f..1d26ffc82290 100644
+--- a/drivers/net/ethernet/qlogic/qede/Makefile
++++ b/drivers/net/ethernet/qlogic/qede/Makefile
+@@ -1,4 +1,5 @@
+-# SPDX-License-Identifier: GPL-2.0-only
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
++
+ obj-$(CONFIG_QEDE) := qede.o
+ 
+ qede-y := qede_main.o qede_fp.o qede_filter.o qede_ethtool.o qede_ptp.o
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c b/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
+index e6e844a8cbc7..f6b7ee51e056 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_dcbnl.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0-only
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+ * Copyright (c) 2015 QLogic Corporation
+ */
+-- 
+2.25.1
+
