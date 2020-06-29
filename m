@@ -2,112 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8789C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0910EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BF320672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460817;
-	bh=5aIdGuiyRIVIp9d7zXYNR3bTDcjef6wju2XYeMUC3TU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ey0ZwceK66LYMm7ihVBloNqtUUGzQKRznYLNeGPDrsmFGol3sJ8mJJ0X7XLgUhQqD
-	 695jlidg+CMIs2ZGALaqOy+iLBPbvZ02BXLc4Nw4ejt0WARkRTy+T3lijWYQvIIH6k
-	 P+LdfjLQN6VrY2IoA0GwjS7SXEi9OsIKkhU98uZ0=
+	by mail.kernel.org (Postfix) with ESMTP id E1D0C20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O9wCb3jp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388589AbgF2UAQ (ORCPT
+        id S1731850AbgF2UAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387571AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387578AbgF2TkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6E8248D0;
-        Mon, 29 Jun 2020 15:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444426;
-        bh=5aIdGuiyRIVIp9d7zXYNR3bTDcjef6wju2XYeMUC3TU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nix9Ey7Tk5xaBIGVS03H59I2FrLxvRFEIoHURRRqFeuLjnCD2l6MiOTFNv1LeeaDV
-         vXCJrgoOr4sSvEnoMJ/FwakQJVA0ICNir5Odwamg1/1C7ATMtQWOlUrgJccVDcdww+
-         n7vsBOdVcMSOBaD897tXnH0yJZbEWDaWt+gBVbRE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 104/178] nvme-multipath: set bdi capabilities once
-Date:   Mon, 29 Jun 2020 11:24:09 -0400
-Message-Id: <20200629152523.2494198-105-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AD5C03E97B;
+        Mon, 29 Jun 2020 12:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=x/Lapiju/RCIeWIuz3o8sd6pkgFSKFSdWu2H7EUGYIE=; b=O9wCb3jp0iCF1CzuvdGMrrLzoB
+        hUmM9g2VqtcNKR8cGfEwWvKwAuWyep1dCkN1TGIV6QFphRYIt2ecSV1/ZQtbW+fS7r3iCmyAbN5me
+        x371kR78nTdJ8F38UoZxUFoO+t2KRh7aPoJEcdv3emVhv+ywJ1JWZOU4zoGpuqprHCnoiyUOgRPKp
+        4frQBv8ziD+bikS/0M0ZAvAvo4amoKm9b9JV2ml9PXsCnOZjCsh8saZP7ylX/hR6jVbLLYLpMldWs
+        Kx8wmm37ZbimiGJQEhj6VYGKYeoaROtCQL/LkVXhbVLbE7JrAyT+OD1jFrH6yRio4V89SD6rsVIUg
+        qU3nOTnQ==;
+Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpzdG-0004Fv-Mp; Mon, 29 Jun 2020 19:39:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 05/20] ps3vram: stop using ->queuedata
+Date:   Mon, 29 Jun 2020 21:39:32 +0200
+Message-Id: <20200629193947.2705954-6-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+Instead of setting up the queuedata as well just use one private data
+field.
 
-[ Upstream commit b2ce4d90690bd29ce5b554e203cd03682dd59697 ]
-
-The queues' backing device info capabilities don't change with each
-namespace revalidation. Set it only when each path's request_queue
-is initially added to a multipath queue.
-
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/block/ps3vram.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 56caddeabb5e5..c17cf8f00f536 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2017-2018 Christoph Hellwig.
-  */
+diff --git a/drivers/block/ps3vram.c b/drivers/block/ps3vram.c
+index 821d4d8b1d763e..5a1d1d137c7248 100644
+--- a/drivers/block/ps3vram.c
++++ b/drivers/block/ps3vram.c
+@@ -587,7 +587,7 @@ static struct bio *ps3vram_do_bio(struct ps3_system_bus_device *dev,
  
-+#include <linux/backing-dev.h>
- #include <linux/moduleparam.h>
- #include <trace/events/block.h>
- #include "nvme.h"
-@@ -666,6 +667,13 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 		nvme_mpath_set_live(ns);
- 		mutex_unlock(&ns->head->lock);
+ static blk_qc_t ps3vram_make_request(struct request_queue *q, struct bio *bio)
+ {
+-	struct ps3_system_bus_device *dev = q->queuedata;
++	struct ps3_system_bus_device *dev = bio->bi_disk->private_data;
+ 	struct ps3vram_priv *priv = ps3_system_bus_get_drvdata(dev);
+ 	int busy;
+ 
+@@ -745,7 +745,6 @@ static int ps3vram_probe(struct ps3_system_bus_device *dev)
  	}
-+
-+	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
-+		struct backing_dev_info *info =
-+					ns->head->disk->queue->backing_dev_info;
-+
-+		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+	}
- }
  
- void nvme_mpath_remove_disk(struct nvme_ns_head *head)
+ 	priv->queue = queue;
+-	queue->queuedata = dev;
+ 	blk_queue_max_segments(queue, BLK_MAX_SEGMENTS);
+ 	blk_queue_max_segment_size(queue, BLK_MAX_SEGMENT_SIZE);
+ 	blk_queue_max_hw_sectors(queue, BLK_SAFE_MAX_SECTORS);
 -- 
-2.25.1
+2.26.2
 
