@@ -2,111 +2,141 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D24C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA81C2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456626;
-	bh=N8FS3I1DD7kZ22Utb3chzLeKwWO4IHGYJ7omN9lhIsE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Va1rsbUDcPYgLnkdVej2qwEjCV4W8LyCSxgU9oJNZ7PWev2CjutENDdPlq4wF+g6X
-	 5hZM9vO2BRZO563+/1FebVsg8Sv+jhqHJVI4jrra6W6gAKik0MfkIwpfQ8Sc97ZZSu
-	 GZvgqmi85j9Co+FmP1XN6pb36TnYN7n0V+7qjDW0=
+	by mail.kernel.org (Postfix) with ESMTP id 5A0A52065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgF2SuZ (ORCPT
+        id S1729541AbgF2Sub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:50:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38880 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:50:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65036 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbgF2SuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:50:15 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC30F22597;
-        Mon, 29 Jun 2020 17:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593451879;
-        bh=N8FS3I1DD7kZ22Utb3chzLeKwWO4IHGYJ7omN9lhIsE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DcnQQqo8b+8nu/y7YH0imbvpmTVd9dPflJEnYnjwFeRcxlgGsWmm12bLrmtaEnjvE
-         1g1P1hcEh8/GCflHfAC4XA2phac2yx3NaQneK1pMmXOzZuFSGSrxMFcUA/Q+gNkOXL
-         qhrH58jB2kcQNswJ78qHtrkKjzghWnE9Rm0WABww=
-Date:   Mon, 29 Jun 2020 12:31:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kbuild-all@lists.01.org, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH v1 1/4] qlge/qlge_main.c: use genric power management
-Message-ID: <20200629173116.GA3269550@bjorn-Precision-5520>
+        id S1728989AbgF2Su3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:50:29 -0400
+IronPort-SDR: 3HsAtCcAK206/0dLM5Y5p9QJWiqL9Mqqy0uFotOEhnjUVyWY1GwetYl/z8ZXmdZhUgkRBjhvdA
+ QwlWfvvtM6KA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207497668"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="207497668"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 08:35:25 -0700
+IronPort-SDR: pUypuiC+OyJPqwDrCxOgRJO5xsFjlcTMhcZ2ZIIjmeac+XqYlbQiMUEWHK8+4HTA8kW4ZtW2eT
+ Jtxl6HzIG9EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="264863710"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2020 08:35:25 -0700
+Date:   Mon, 29 Jun 2020 08:35:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        syzbot <syzbot+e0240f9c36530bda7130@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>, joro@8bytes.org,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, vkuznets@redhat.com,
+        wanpengli@tencent.com, the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: KASAN: out-of-bounds Read in kvm_arch_hardware_setup
+Message-ID: <20200629153524.GB12312@linux.intel.com>
+References: <000000000000a0784a05a916495e@google.com>
+ <04786ba2-4934-c544-63d1-4d5d36dc5822@redhat.com>
+ <CAAeHK+yPbp_e9_DfRP4ikvfyMcfaveTwoVUyA+2=K3g+MvW-fA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202006300026.hCr1U7Sc%lkp@intel.com>
+In-Reply-To: <CAAeHK+yPbp_e9_DfRP4ikvfyMcfaveTwoVUyA+2=K3g+MvW-fA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vaibhav: s/genric/generic/ in the subject
-
-On Tue, Jun 30, 2020 at 12:09:36AM +0800, kernel test robot wrote:
-> Hi Vaibhav,
+On Mon, Jun 29, 2020 at 05:29:56PM +0200, Andrey Konovalov wrote:
+> On Mon, Jun 29, 2020 at 5:25 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > The reproducer has nothing to do with KVM:
+> >
+> >         # https://syzkaller.appspot.com/bug?id=c356395d480ca736b00443ad89cd76fd7d209013
+> >         # See https://goo.gl/kgGztJ for information about syzkaller reproducers.
+> >         #{"repeat":true,"procs":1,"sandbox":"","fault_call":-1,"close_fds":false,"segv":true}
+> >         r0 = openat$fb0(0xffffffffffffff9c, &(0x7f0000000180)='/dev/fb0\x00', 0x0, 0x0)
+> >         ioctl$FBIOPUT_VSCREENINFO(r0, 0x4601, &(0x7f0000000000)={0x0, 0x80, 0xc80, 0x0, 0x2, 0x1, 0x4, 0x0, {0x0, 0x0, 0x1}, {0x0, 0x0, 0xfffffffc}, {}, {}, 0x0, 0x40})
+> >
+> > but the stack trace does.  On the other hand, the address seems okay:
+> >
+> >         kvm_cpu_caps+0x24/0x50
+> >
+> > and there are tons of other kvm_cpu_cap_get calls that aren't causing
+> > KASAN to complain.  The variable is initialized from
+> >
+> >         kvm_arch_hardware_setup
+> >           hardware_setup (in arch/x86/kvm/vmx/vmx.c)
+> >             vmx_set_cpu_caps
+> >               kvm_set_cpu_caps
+> >
+> > with a simple memcpy that writes the entire array.  Does anyone understand
+> > what is going on here?
 > 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on staging/staging-testing]
-> [also build test ERROR on v5.8-rc3 next-20200629]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/drivers-staging-use-generic-power-management/20200629-163141
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git 347fa58ff5558075eec98725029c443c80ffbf4a
-> config: x86_64-rhel-7.6 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> reproduce (this is a W=1 build):
->         # save the attached .config to linux build tree
->         make W=1 ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> Most likely a bug in /dev/fb handlers caused a memory corruption in
+> kvm related memory.
 
-If the patch has already been merged and we need an incremental patch
-that fixes *only* the build issue, I think it's fine to add a
-"Reported-by" tag.
+That's my assumption as well.  There's another syzbot failure[*] that points
+at KVM but whose reproducer is a single FBIOPUT_VSCREENINFO.  In that case,
+the pointer from "&cpu_data(smp_processor_id())" is NULL, i.e. highly unlikely
+to be a KVM bug.
 
-But if this patch hasn't been merged anywhere, I think adding the
-"Reported-by" tag would be pointless and distracting.  This report
-should result in a v2 posting of the patch with the build issue fixed.
+[*] https://lkml.kernel.org/r/000000000000077a6505a8bf57b2@google.com
 
-There will be no evidence of the problem in the v2 patch.  The patch
-itself contains other changes unrelated to the build issue, so
-"Reported-by" makes so sense for them.  I would treat this as just
-another review comment, and we don't usually credit those in the
-commit log (though it's nice if they're mentioned in the v2 cover
-letter so reviewers know what changed and why).
-
-Is there any chance kbuild could be made smart enough to suggest the
-tag only when it finds an issue in some list of published trees?
-
-> All errors (new ones prefixed by >>):
-> 
->    drivers/staging/qlge/qlge_main.c: In function 'qlge_resume':
-> >> drivers/staging/qlge/qlge_main.c:4793:17: error: 'pdev' undeclared (first use in this function); did you mean 'qdev'?
->     4793 |  pci_set_master(pdev);
->          |                 ^~~~
->          |                 qdev
-> ...
+> > Paolo
+> >
+> > On 27/06/20 22:01, syzbot wrote:
+> > > BUG: KASAN: out-of-bounds in kvm_cpu_cap_get arch/x86/kvm/cpuid.h:292 [inline]
+> > > BUG: KASAN: out-of-bounds in kvm_cpu_cap_has arch/x86/kvm/cpuid.h:297 [inline]
+> > > BUG: KASAN: out-of-bounds in kvm_init_msr_list arch/x86/kvm/x86.c:5362 [inline]
+> > > BUG: KASAN: out-of-bounds in kvm_arch_hardware_setup+0xb05/0xf40 arch/x86/kvm/x86.c:9802
+> > > Read of size 4 at addr ffffffff896c3134 by task syz-executor614/6786
+> > >
+> > > CPU: 1 PID: 6786 Comm: syz-executor614 Not tainted 5.7.0-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > Call Trace:
+> > >  <IRQ>
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+> > >  print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+> > >  __kasan_report mm/kasan/report.c:513 [inline]
+> > >  kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+> > >  kvm_cpu_cap_get arch/x86/kvm/cpuid.h:292 [inline]
+> > >  kvm_cpu_cap_has arch/x86/kvm/cpuid.h:297 [inline]
+> > >  kvm_init_msr_list arch/x86/kvm/x86.c:5362 [inline]
+> > >  kvm_arch_hardware_setup+0xb05/0xf40 arch/x86/kvm/x86.c:9802
+> > >  </IRQ>
+> > >
+> > > The buggy address belongs to the variable:
+> > >  kvm_cpu_caps+0x24/0x50
+> > >
+> > > Memory state around the buggy address:
+> > >  ffffffff896c3000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >  ffffffff896c3080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >> ffffffff896c3100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >                                         ^
+> > >  ffffffff896c3180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >  ffffffff896c3200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > ==================================================================
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/04786ba2-4934-c544-63d1-4d5d36dc5822%40redhat.com.
