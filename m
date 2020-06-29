@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8639EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C138C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6756A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67916206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460625;
-	bh=7Bk9ZxxCMy936t5uvireMWAe3g6G4GcYr2AKjQrRcZU=;
+	s=default; t=1593460628;
+	bh=APLxcwDGeZ9hfuIkU4SGCga+WTEhWX0SpFSyYDeFI1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cAXC8VhoIzGqeeaa4zwb1bGJfnzqAtJCj+6Xn4QDTa3X4cKxrDMk+XafWDo23FM0T
-	 n0wKk3JhkCmm9HggpPh1b4Wwuwyq/wdA9CbaXnlSqOoK1UmynoVAZTdRux1XY3wd8B
-	 Pqp/sYDC792+UOouAyW0S2+NEXwIRS+DCEP6E1k0=
+	b=dEEbswENy9zFo9ndO7gy+06IeFWpf+kUpwPpcVFooav/YTQjKqbBhfao6ElG8KXok
+	 L/HYt6Sw4AUgmzkitEb+J8nNvNICZFb/siAMUHB8QDCOMyrQ8UKQFKk/OFLHDfdyxK
+	 fzCUmO6KgmznPsq9KuYwn+o9uegr1MjY/MwksG5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbgF2T5D (ORCPT
+        id S2387634AbgF2T5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387646AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387636AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A7E2487B;
-        Mon, 29 Jun 2020 15:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C106E248CD;
+        Mon, 29 Jun 2020 15:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444377;
-        bh=7Bk9ZxxCMy936t5uvireMWAe3g6G4GcYr2AKjQrRcZU=;
+        s=default; t=1593444424;
+        bh=APLxcwDGeZ9hfuIkU4SGCga+WTEhWX0SpFSyYDeFI1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SJ7i3k3z8AL5eYkXnb18n154xa3MEzhT1kLTq50sZogCcursFN1uqjtEnqeFp+pjI
-         b0cOUh31xUa6yjU9Z89awHI6sL+1jSnRPLtAwZxHJvgk8P8H8HSfochfOREbHsQPqR
-         Bcr77zeeUMrClCn3Ept4KWzRy4DjvQ1wXCKbgI3Y=
+        b=LxRc0/J7hWHrAf/Z1kOJFnNujOc2xCEbzGxrKwhCvmUnBsxqCHyNZTfQgnTmnwVuv
+         0uF07zhyeOpYWXWWF97A8QVtHzNPrw/lEQi41ZLP4D1+e1S54MCWPWJHYJAapfCQMP
+         ghB+oljO4u7vttQ10AYpVIBLOq5xbW7LWnepiz3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 054/178] xhci: Fix incorrect EP_STATE_MASK
-Date:   Mon, 29 Jun 2020 11:23:19 -0400
-Message-Id: <20200629152523.2494198-55-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 102/178] usb: gadget: udc: Potential Oops in error handling code
+Date:   Mon, 29 Jun 2020 11:24:07 -0400
+Message-Id: <20200629152523.2494198-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -64,39 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
+[ Upstream commit e55f3c37cb8d31c7e301f46396b2ac6a19eb3a7c ]
 
-EP_STATE_MASK should be 0x7 instead of 0xf
+If this is in "transceiver" mode the the ->qwork isn't required and is
+a NULL pointer.  This can lead to a NULL dereference when we call
+destroy_workqueue(udc->qwork).
 
-xhci spec 6.2.3 shows that the EP state field in the endpoint context data
-structure consist of bits [2:0].
-The old value included a bit from the next field which fortunately is a
- RsvdZ region. So hopefully this hasn't caused too much harm
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 3517c31a8ece ("usb: gadget: mv_udc: use devm_xxx for probe")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/mv_udc_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 23a1abdc2b43c..c656b41b57b5a 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -716,7 +716,7 @@ struct xhci_ep_ctx {
-  * 4 - TRB error
-  * 5-7 - reserved
-  */
--#define EP_STATE_MASK		(0xf)
-+#define EP_STATE_MASK		(0x7)
- #define EP_STATE_DISABLED	0
- #define EP_STATE_RUNNING	1
- #define EP_STATE_HALTED		2
+diff --git a/drivers/usb/gadget/udc/mv_udc_core.c b/drivers/usb/gadget/udc/mv_udc_core.c
+index cafde053788bb..80a1b52c656e0 100644
+--- a/drivers/usb/gadget/udc/mv_udc_core.c
++++ b/drivers/usb/gadget/udc/mv_udc_core.c
+@@ -2313,7 +2313,8 @@ static int mv_udc_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_create_workqueue:
+-	destroy_workqueue(udc->qwork);
++	if (udc->qwork)
++		destroy_workqueue(udc->qwork);
+ err_destroy_dma:
+ 	dma_pool_destroy(udc->dtd_pool);
+ err_free_dma:
 -- 
 2.25.1
 
