@@ -2,181 +2,199 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1959BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2913C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5627206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE14F206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466534;
-	bh=8O0wL4n2D+Y4u9xbE0rqfjH5mKu6GoZguKHfIxykiac=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yzezsamLbdIOuNG6TjummbpxNHN6SDJA7wgyMtNyu3m+oE+kTpiMCFMQWhmzVDllG
-	 mR9jiTWBzOn9/7l3jdc+ncEmDI0pVkXqiyOWRWcuZtk7JIfRKO7EWLHkoLXOW5y3fC
-	 SrqHCrlQu0KbpYNHF7elqAAMEAoTVnKPnL78ctu0=
+	s=default; t=1593466543;
+	bh=qBdL3tlBX+scLgBAFOGB5TLlWji+GPtg13a4shdBzo0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qe+xWxlJFNyuIGF4OEuiRS+cFeU6QzlGB/7JAlMgkeq5r9udPFGjM7JHfUyodFf15
+	 ez3fPtDj2i2ux6m3YO/L8rOV5YRaQ4g8vka4VHbj9iTWUWjucHglArg3gH6b45J2KW
+	 qw/jgKrdJUwvgkDfnvf8RIH9GRr+5hVrRVngQFto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391165AbgF2Vfa (ORCPT
+        id S2391123AbgF2Vfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbgF2Skv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1728509AbgF2Skr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:47 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37E724053;
-        Mon, 29 Jun 2020 15:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764FD23EB4;
+        Mon, 29 Jun 2020 15:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443924;
-        bh=8O0wL4n2D+Y4u9xbE0rqfjH5mKu6GoZguKHfIxykiac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuWMDvbPWNLoHFDMKy0QBI3IGsBFX0LQA5LuKTMpKR+KIopYHwnRaJ676Bo0rg3rI
-         9hqdmc9HFgMtNuTGQC/bxLbkHl4pYqkFKfEykB8YjzUeMAbPYpZIXf0SW+EVJDzy2u
-         y76SJzUJGLUM20qfMyTnrCPCS7Ot0v27iIfnrDMQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 025/265] ip6_gre: fix use-after-free in ip6gre_tunnel_lookup()
-Date:   Mon, 29 Jun 2020 11:14:18 -0400
-Message-Id: <20200629151818.2493727-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593443295;
+        bh=qBdL3tlBX+scLgBAFOGB5TLlWji+GPtg13a4shdBzo0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CqbNccPLqUPqB9hiyKYsfFMqH3nDDzIujQlexZjYfgmKPuDRzFqITwjtLc4SEaPIT
+         NX7+dkrumDzJth6HVgXUB7tIDxo+mOubkRrfP1ERFvFBgCZFiSuWvu5Ekl28nVWyl3
+         BT+iYJ8vFGrLyBjgUdifq4hbovppZjc7Z52B/uGQ=
+Received: by mail-oi1-f176.google.com with SMTP id e4so6522842oib.1;
+        Mon, 29 Jun 2020 08:08:15 -0700 (PDT)
+X-Gm-Message-State: AOAM5300557Le6CeZWQf0nLdoir8lOGrRYPQOS2xzVsy9qYXMKVLFCeD
+        W52XoAHDZ4guK0byG5tbY6Ka9j0v6UaCx2W0CPE=
+X-Google-Smtp-Source: ABdhPJwTia/C2SAyWRf7uRxGpRTQZVHRS1vjtLhx+E/b1Dt+tcSaaYv2NWdpuTJRHdljFla/pOrxnXThmPE1qfnRksI=
+X-Received: by 2002:aca:b241:: with SMTP id b62mr11815740oif.47.1593443294721;
+ Mon, 29 Jun 2020 08:08:14 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-6-keescook@chromium.org> <CAMj1kXE+toCd=Bx-zw7D9bvDRNB2aPn5-_7CY7MOKcVGA-azVg@mail.gmail.com>
+ <202006290806.3BDE2A8@keescook>
+In-Reply-To: <202006290806.3BDE2A8@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 29 Jun 2020 17:08:03 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHij8M5_kvh6EDaFa8ksbDBxqdaWGtR=-QnXhF7YosK6g@mail.gmail.com>
+Message-ID: <CAMj1kXHij8M5_kvh6EDaFa8ksbDBxqdaWGtR=-QnXhF7YosK6g@mail.gmail.com>
+Subject: Re: [PATCH v4 05/17] ctype: Work around Clang -mbranch-protection=none
+ bug
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+On Mon, 29 Jun 2020 at 17:06, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 10:15:47AM +0200, Ard Biesheuvel wrote:
+> > On Mon, 29 Jun 2020 at 08:18, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > In preparation for building efi/libstub with -mbranch-protection=none
+> > > (EFI does not support branch protection features[1]), add no-op code
+> > > to work around a Clang bug that emits an unwanted .note.gnu.property
+> > > section for object files without code[2].
+> > >
+> > > [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
+> > > [2] https://bugs.llvm.org/show_bug.cgi?id=46480
+> > >
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > Cc: clang-built-linux@googlegroups.com
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  lib/ctype.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/lib/ctype.c b/lib/ctype.c
+> > > index c819fe269eb2..21245ed57d90 100644
+> > > --- a/lib/ctype.c
+> > > +++ b/lib/ctype.c
+> > > @@ -36,3 +36,13 @@ _L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,     /* 224-239 */
+> > >  _L,_L,_L,_L,_L,_L,_L,_P,_L,_L,_L,_L,_L,_L,_L,_L};      /* 240-255 */
+> > >
+> > >  EXPORT_SYMBOL(_ctype);
+> > > +
+> > > +/*
+> > > + * Clang will generate .note.gnu.property sections for object files
+> > > + * without code, even in the presence of -mbranch-protection=none.
+> > > + * To work around this, define an unused static function.
+> > > + * https://bugs.llvm.org/show_bug.cgi?id=46480
+> > > + */
+> > > +#ifdef CONFIG_CC_IS_CLANG
+> > > +void __maybe_unused __clang_needs_code_here(void) { }
+> > > +#endif
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > I take it we don't need this horrible hack if we build the EFI stub
+> > with branch protections and filter out the .note.gnu.property section
+> > explicitly?
+> >
+> > Sorry to backpedal, but that is probably a better approach after all,
+> > given that the instructions don't hurt, and we will hopefully be able
+> > to arm them once UEFI (as well as PE/COFF) gets around to describing
+> > this in a way that both the firmware and the OS can consume.
+>
+> How does this look?
+>
+>
+> commit 051ef0b75a386c3fe2f216d16246468147a48c5b
+> Author: Kees Cook <keescook@chromium.org>
+> Date:   Tue Jun 23 18:02:56 2020 -0700
+>
+>     efi/libstub: Disable -mbranch-protection
+>
+>     In preparation for adding --orphan-handling=warn to more architectures,
+>     disable -mbranch-protection, as EFI does not yet support it[1].  This was
+>     noticed due to it producing unwanted .note.gnu.property sections (prefixed
+>     with .init due to the objcopy build step).
+>
+>     However, we must also work around a bug in Clang where the section is
+>     still emitted for code-less object files[2], so also remove the section
+>     during the objcopy.
+>
+>     [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
+>     [2] https://bugs.llvm.org/show_bug.cgi?id=46480
+>
+>     Cc: Ard Biesheuvel <ardb@kernel.org>
+>     Cc: Arvind Sankar <nivedita@alum.mit.edu>
+>     Cc: Atish Patra <atish.patra@wdc.com>
+>     Cc: linux-efi@vger.kernel.org
+>     Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 75daaf20374e..f9f1922f8f28 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -18,7 +18,8 @@ cflags-$(CONFIG_X86)          += -m$(BITS) -D__KERNEL__ \
+>  # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
+>  # disable the stackleak plugin
+>  cflags-$(CONFIG_ARM64)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> -                                  -fpie $(DISABLE_STACKLEAK_PLUGIN)
+> +                                  -fpie $(DISABLE_STACKLEAK_PLUGIN) \
+> +                                  $(call cc-option,-mbranch-protection=none)
+>  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+>                                    -fno-builtin -fpic \
+>                                    $(call cc-option,-mno-single-pic-base)
+> @@ -66,6 +67,12 @@ lib-$(CONFIG_X86)            += x86-stub.o
+>  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>
+> +# Even when -mbranch-protection=none is set, Clang will generate a
+> +# .note.gnu.property for code-less object files (like lib/ctype.c),
+> +# so work around this by explicitly removing the unwanted section.
+> +# https://bugs.llvm.org/show_bug.cgi?id=46480
+> +STUBCOPY_FLAGS-y               += --remove-section=.note.gnu.property
+> +
+>  #
+>  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+>  # .bss section, so the .bss section of the EFI stub needs to be included in the
+>
 
-[ Upstream commit dafabb6590cb15f300b77c095d50312e2c7c8e0f ]
 
-In the datapath, the ip6gre_tunnel_lookup() is used and it internally uses
-fallback tunnel device pointer, which is fb_tunnel_dev.
-This pointer variable should be set to NULL when a fb interface is deleted.
-But there is no routine to set fb_tunnel_dev pointer to NULL.
-So, this pointer will be still used after interface is deleted and
-it eventually results in the use-after-free problem.
+Looks fine
 
-Test commands:
-    ip netns add A
-    ip netns add B
-    ip link add eth0 type veth peer name eth1
-    ip link set eth0 netns A
-    ip link set eth1 netns B
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-    ip netns exec A ip link set lo up
-    ip netns exec A ip link set eth0 up
-    ip netns exec A ip link add ip6gre1 type ip6gre local fc:0::1 \
-	    remote fc:0::2
-    ip netns exec A ip -6 a a fc:100::1/64 dev ip6gre1
-    ip netns exec A ip link set ip6gre1 up
-    ip netns exec A ip -6 a a fc:0::1/64 dev eth0
-    ip netns exec A ip link set ip6gre0 up
-
-    ip netns exec B ip link set lo up
-    ip netns exec B ip link set eth1 up
-    ip netns exec B ip link add ip6gre1 type ip6gre local fc:0::2 \
-	    remote fc:0::1
-    ip netns exec B ip -6 a a fc:100::2/64 dev ip6gre1
-    ip netns exec B ip link set ip6gre1 up
-    ip netns exec B ip -6 a a fc:0::2/64 dev eth1
-    ip netns exec B ip link set ip6gre0 up
-    ip netns exec A ping fc:100::2 -s 60000 &
-    ip netns del B
-
-Splat looks like:
-[   73.087285][    C1] BUG: KASAN: use-after-free in ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.088361][    C1] Read of size 4 at addr ffff888040559218 by task ping/1429
-[   73.089317][    C1]
-[   73.089638][    C1] CPU: 1 PID: 1429 Comm: ping Not tainted 5.7.0+ #602
-[   73.090531][    C1] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   73.091725][    C1] Call Trace:
-[   73.092160][    C1]  <IRQ>
-[   73.092556][    C1]  dump_stack+0x96/0xdb
-[   73.093122][    C1]  print_address_description.constprop.6+0x2cc/0x450
-[   73.094016][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.094894][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.095767][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.096619][    C1]  kasan_report+0x154/0x190
-[   73.097209][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.097989][    C1]  ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
-[   73.098750][    C1]  ? gre_del_protocol+0x60/0x60 [gre]
-[   73.099500][    C1]  gre_rcv+0x1c5/0x1450 [ip6_gre]
-[   73.100199][    C1]  ? ip6gre_header+0xf00/0xf00 [ip6_gre]
-[   73.100985][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   73.101830][    C1]  ? ip6_input_finish+0x5/0xf0
-[   73.102483][    C1]  ip6_protocol_deliver_rcu+0xcbb/0x1510
-[   73.103296][    C1]  ip6_input_finish+0x5b/0xf0
-[   73.103920][    C1]  ip6_input+0xcd/0x2c0
-[   73.104473][    C1]  ? ip6_input_finish+0xf0/0xf0
-[   73.105115][    C1]  ? rcu_read_lock_held+0x90/0xa0
-[   73.105783][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   73.106548][    C1]  ipv6_rcv+0x1f1/0x300
-[ ... ]
-
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c12b395a4664 ("gre: Support GRE over IPv6")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_gre.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index 781ca8c07a0da..6532bde82b40a 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -127,6 +127,7 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
- 			gre_proto == htons(ETH_P_ERSPAN2)) ?
- 		       ARPHRD_ETHER : ARPHRD_IP6GRE;
- 	int score, cand_score = 4;
-+	struct net_device *ndev;
- 
- 	for_each_ip_tunnel_rcu(t, ign->tunnels_r_l[h0 ^ h1]) {
- 		if (!ipv6_addr_equal(local, &t->parms.laddr) ||
-@@ -238,9 +239,9 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
- 	if (t && t->dev->flags & IFF_UP)
- 		return t;
- 
--	dev = ign->fb_tunnel_dev;
--	if (dev && dev->flags & IFF_UP)
--		return netdev_priv(dev);
-+	ndev = READ_ONCE(ign->fb_tunnel_dev);
-+	if (ndev && ndev->flags & IFF_UP)
-+		return netdev_priv(ndev);
- 
- 	return NULL;
- }
-@@ -413,6 +414,8 @@ static void ip6gre_tunnel_uninit(struct net_device *dev)
- 
- 	ip6gre_tunnel_unlink_md(ign, t);
- 	ip6gre_tunnel_unlink(ign, t);
-+	if (ign->fb_tunnel_dev == dev)
-+		WRITE_ONCE(ign->fb_tunnel_dev, NULL);
- 	dst_cache_reset(&t->dst_cache);
- 	dev_put(dev);
- }
--- 
-2.25.1
-
+if you want to keep it with the set, or I can take it as a EFI fix.
