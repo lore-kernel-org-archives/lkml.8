@@ -2,114 +2,257 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B275C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE01C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27AB920890
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459750;
-	bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qMDguGKwh/382fwgIeatiYg+5FYC0mowP/rdzBt2EETxe7LO5HMuIhZ84JDhxEVam
-	 hrI8LDKhqBIDRaUnwdEWjZTD3Kl0DvsYnQT40HUyiIZj6NA7CM2UH0LxWqiy87qimB
-	 MjhabvlmXM253YA1ZY3dAgUxi3W5DKTqegMo2weY=
+	by mail.kernel.org (Postfix) with ESMTP id CCDB92082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="IWRI9ZZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgF2Tm2 (ORCPT
+        id S1731707AbgF2Tmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387845AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACA8248C9;
-        Mon, 29 Jun 2020 15:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444422;
-        bh=HqEiHU2rj80Shi+LPfuxmCzWI+NAFjs/6RR6u3kGg4c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyUnBhYRFyMERUIxOny6Nqx8QJhvZd14Wfk82dZtSZQxKBv/0DTgJT3EW7aBRn2mP
-         7PN7deRyBb1NijHh/5YQbTBUs3r+ALrhuZvQI+OxVadV2Buo6/E6/MWTJFpHXKB9zF
-         HBCFirAMpSSB9hDXByWijfnyC4SeRKEfLa9cxfKM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/178] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
-Date:   Mon, 29 Jun 2020 11:24:05 -0400
-Message-Id: <20200629152523.2494198-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733127AbgF2TmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:42:19 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAC7C03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:42:19 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id d18so8331452edv.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qPRWIOr57ZYTUxHr8TbMRvU0I6oEVGESocMJLPUw7ak=;
+        b=IWRI9ZZWLmSqGaFLlS/Q6+qqYEFfzGMcZO3qmaAQ222cW5zAaZhN5PnKbKVGkZFa9P
+         1aJerDy40vcxH8EXTXo/GOJj58Rru+hjCZrXQVluj99YOX1GJPZkpk9DjI6INTAuhVsb
+         D6AWuWbM4FmHFpre6LyWjdPXgbAI12W25S66rAFqRfrJEiv0IwdqrG1ar8NQVW3XUKqs
+         oEV36lnW27cU1eFXGVDPYNS1uEOX+5khJ6iktErth6Ud4c3dYDclRZS9upgG4nYCde2E
+         kwP+AA0xNE2iAO3zu/Ah5/tr6V7SEIB3G+SOw4DaRZIwUEsGb+7O7daxFKwPsZ2PBrDN
+         cYRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qPRWIOr57ZYTUxHr8TbMRvU0I6oEVGESocMJLPUw7ak=;
+        b=dra8KULxmbBQaewc3nZIKJvNzGHx6lQW35VdqJZKGpAwD7q/fT1Te69uZj5Q3P9GD4
+         RHwPylQEDB4J2pol/98Y1x5XKiZxJ+mnqfpK2jw61Z2LhEf/nHbKUWRtR/O2n4RvhGm1
+         ZkHwQvCSACelLRgkuTdVWE+KXlr/KaiNeMyhpVdHKtfQPYRz6/tVWK6p9a6gBfIIFsm4
+         nqBjqreAXuZCmnUcNkWRXbZmWZNHeXkne13ZJ7VkHdcV2IyO1r67wMTmhHnPBsrYh/9C
+         +Z1DZwhNyglh+iQD2Q4SFhMGH584C4rTiEeCSJhyjIf6E5ZJbvhuZSryxR5VcCJVyYkx
+         QPQA==
+X-Gm-Message-State: AOAM530ASayp4nEfux+BwcM/YSWVu8I05M7n6tV3szUn7pPV6+dBIgOq
+        uz/W+I1Jd86t6G2b2c05zuPc+g==
+X-Google-Smtp-Source: ABdhPJyGAI3oTGH5RV/GlMVT+ru8LjoquevNNsqLlOGBediZBG3+4tQ6abxqVDJntY6y9wJG9eSZ2Q==
+X-Received: by 2002:aa7:da8d:: with SMTP id q13mr15080761eds.339.1593459738252;
+        Mon, 29 Jun 2020 12:42:18 -0700 (PDT)
+Received: from localhost (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
+        by smtp.gmail.com with ESMTPSA id c4sm371603ejb.17.2020.06.29.12.42.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:42:17 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 21:42:16 +0200
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Niklas Cassel <niklas.cassel@wdc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/2] block: add max_active_zones to blk-sysfs
+Message-ID: <20200629194216.iykvd74rw6d7vqpl@MacBook-Pro.localdomain>
+References: <20200616102546.491961-1-niklas.cassel@wdc.com>
+ <20200616102546.491961-3-niklas.cassel@wdc.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616102546.491961-3-niklas.cassel@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+On 16.06.2020 12:25, Niklas Cassel wrote:
+>Add a new max_active zones definition in the sysfs documentation.
+>This definition will be common for all devices utilizing the zoned block
+>device support in the kernel.
+>
+>Export max_active_zones according to this new definition for NVMe Zoned
+>Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
+>the kernel), and ZBC SCSI devices.
+>
+>Add the new max_active_zones struct member to the request_queue, rather
+>than as a queue limit, since this property cannot be split across stacking
+>drivers.
+>
+>For SCSI devices, even though max active zones is not part of the ZBC/ZAC
+>spec, export max_active_zones as 0, signifying "no limit".
+>
+>Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>---
+> Documentation/block/queue-sysfs.rst |  7 +++++++
+> block/blk-sysfs.c                   | 14 +++++++++++++-
+> drivers/nvme/host/zns.c             |  1 +
+> drivers/scsi/sd_zbc.c               |  1 +
+> include/linux/blkdev.h              | 20 ++++++++++++++++++++
+> 5 files changed, 42 insertions(+), 1 deletion(-)
+>
+>diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
+>index f01cf8530ae4..f261a5c84170 100644
+>--- a/Documentation/block/queue-sysfs.rst
+>+++ b/Documentation/block/queue-sysfs.rst
+>@@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
+> data that will be submitted by the block layer core to the associated
+> block driver.
+>
+>+max_active_zones (RO)
+>+---------------------
+>+For zoned block devices (zoned attribute indicating "host-managed" or
+>+"host-aware"), the sum of zones belonging to any of the zone states:
+>+EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.
+>+If this value is 0, there is no limit.
+>+
+> max_open_zones (RO)
+> -------------------
+> For zoned block devices (zoned attribute indicating "host-managed" or
+>diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+>index fa42961e9678..624bb4d85fc7 100644
+>--- a/block/blk-sysfs.c
+>+++ b/block/blk-sysfs.c
+>@@ -310,6 +310,11 @@ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
+> 	return queue_var_show(queue_max_open_zones(q), page);
+> }
+>
+>+static ssize_t queue_max_active_zones_show(struct request_queue *q, char *page)
+>+{
+>+	return queue_var_show(queue_max_active_zones(q), page);
+>+}
+>+
+> static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
+> {
+> 	return queue_var_show((blk_queue_nomerges(q) << 1) |
+>@@ -677,6 +682,11 @@ static struct queue_sysfs_entry queue_max_open_zones_entry = {
+> 	.show = queue_max_open_zones_show,
+> };
+>
+>+static struct queue_sysfs_entry queue_max_active_zones_entry = {
+>+	.attr = {.name = "max_active_zones", .mode = 0444 },
+>+	.show = queue_max_active_zones_show,
+>+};
+>+
+> static struct queue_sysfs_entry queue_nomerges_entry = {
+> 	.attr = {.name = "nomerges", .mode = 0644 },
+> 	.show = queue_nomerges_show,
+>@@ -776,6 +786,7 @@ static struct attribute *queue_attrs[] = {
+> 	&queue_zoned_entry.attr,
+> 	&queue_nr_zones_entry.attr,
+> 	&queue_max_open_zones_entry.attr,
+>+	&queue_max_active_zones_entry.attr,
+> 	&queue_nomerges_entry.attr,
+> 	&queue_rq_affinity_entry.attr,
+> 	&queue_iostats_entry.attr,
+>@@ -803,7 +814,8 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
+> 		(!q->mq_ops || !q->mq_ops->timeout))
+> 			return 0;
+>
+>-	if (attr == &queue_max_open_zones_entry.attr &&
+>+	if ((attr == &queue_max_open_zones_entry.attr ||
+>+	     attr == &queue_max_active_zones_entry.attr) &&
+> 	    !blk_queue_is_zoned(q))
+> 		return 0;
+>
+>diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
+>index af156529f3b6..502070763266 100644
+>--- a/drivers/nvme/host/zns.c
+>+++ b/drivers/nvme/host/zns.c
+>@@ -83,6 +83,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
+> 	q->limits.zoned = BLK_ZONED_HM;
+> 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
+> 	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);
+>+	blk_queue_max_active_zones(q, le32_to_cpu(id->mar) + 1);
+> free_data:
+> 	kfree(id);
+> 	return status;
+>diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
+>index aa3564139b40..d8b2c49d645b 100644
+>--- a/drivers/scsi/sd_zbc.c
+>+++ b/drivers/scsi/sd_zbc.c
+>@@ -721,6 +721,7 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
+> 		blk_queue_max_open_zones(q, 0);
+> 	else
+> 		blk_queue_max_open_zones(q, sdkp->zones_max_open);
+>+	blk_queue_max_active_zones(q, 0);
+> 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
+>
+> 	/* READ16/WRITE16 is mandatory for ZBC disks */
+>diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>index 2f332f00501d..3776140f8f20 100644
+>--- a/include/linux/blkdev.h
+>+++ b/include/linux/blkdev.h
+>@@ -521,6 +521,7 @@ struct request_queue {
+> 	unsigned long		*conv_zones_bitmap;
+> 	unsigned long		*seq_zones_wlock;
+> 	unsigned int		max_open_zones;
+>+	unsigned int		max_active_zones;
+> #endif /* CONFIG_BLK_DEV_ZONED */
+>
+> 	/*
+>@@ -741,6 +742,17 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
+> {
+> 	return q->max_open_zones;
+> }
+>+
+>+static inline void blk_queue_max_active_zones(struct request_queue *q,
+>+		unsigned int max_active_zones)
+>+{
+>+	q->max_active_zones = max_active_zones;
+>+}
+>+
+>+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
+>+{
+>+	return q->max_active_zones;
+>+}
+> #else /* CONFIG_BLK_DEV_ZONED */
+> static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
+> {
+>@@ -764,6 +776,14 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
+> {
+> 	return 0;
+> }
+>+static inline void blk_queue_max_active_zones(struct request_queue *q,
+>+		unsigned int max_active_zones)
+>+{
+>+}
+>+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
+>+{
+>+	return 0;
+>+}
+> #endif /* CONFIG_BLK_DEV_ZONED */
+>
+> static inline bool rq_is_sync(struct request *rq)
+>-- 
+>2.26.2
+>
+>
+>_______________________________________________
+>linux-nvme mailing list
+>linux-nvme@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-nvme
 
-[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
+Looks good to me
 
-if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
-have a corresponding put_device(). Thus add a jump target to fix the
-exception handling for this function implementation.
-
-Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-imx/pm-imx5.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
-index f057df813f83a..e9962b48e30cb 100644
---- a/arch/arm/mach-imx/pm-imx5.c
-+++ b/arch/arm/mach-imx/pm-imx5.c
-@@ -295,14 +295,14 @@ static int __init imx_suspend_alloc_ocram(
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_base = gen_pool_alloc(ocram_pool, size);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -312,6 +312,8 @@ static int __init imx_suspend_alloc_ocram(
- 	if (virt_out)
- 		*virt_out = virt;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
--- 
-2.25.1
-
+Reviewed-by: Javier González <javier@javigon.com>
