@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E24C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C45BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306752076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2A72076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468357;
-	bh=whibX4Vflp6erw83MqLTzhDyklQNqGev6/SpT2TzU44=;
+	s=default; t=1593468360;
+	bh=ez/Xza8UAdQdL+cOs3YfVkwIynKjFgX2omR/0GaZb1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQ8rvnap/x40JjK9eABg0UoJ58XqA+yt78bKaauEQ3sb9KVfERk9yjt8AMcyuwvDv
-	 0+k9dhLRPz6tt5DO3vbDAT1B5dLDa8q/LVtI44F4/1MZ4B8R0Wlb/QmA4bLCAYqv2O
-	 iOD9y7cZv7Fsk5spub+UvtEkWbzO5vkeJ8rgQUQc=
+	b=Qzhy8QqdjnJfXuPXmR6gBfMN3y0EBt2XZ8CZewAIV1eqd22eTD+vWLcAayR0M0UWg
+	 HqNp5XK/OHrn6NqsqEkJYOdUGN82GVeobLiUxJJx7RoUd4pwD0KaQM63ah085UYmba
+	 A0jwFaUZEzgT5mhAT8iXXSnFthKrdG6AddYupqFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbgF2WFz (ORCPT
+        id S2404767AbgF2WF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:05:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726148AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164FE24183;
-        Mon, 29 Jun 2020 15:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5AF24757;
+        Mon, 29 Jun 2020 15:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443951;
-        bh=whibX4Vflp6erw83MqLTzhDyklQNqGev6/SpT2TzU44=;
+        s=default; t=1593444072;
+        bh=ez/Xza8UAdQdL+cOs3YfVkwIynKjFgX2omR/0GaZb1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScN9nS2gpbRLfAEB3eeRDGZ/Xr8rkuzmDVRphy37gB7K+QShYrjDDaOXpm+c/HiZw
-         d9ikYFS1Qx7VEfvLxgp6+W877F6I7oCroqrcwJDZ3A0M2cEuRh7XfrBMmRYl/dXKBv
-         Lx3Gu4OSDaoimUwLY/FexuMkwmni07t7NA0+UD5U=
+        b=AUWMbIW/UDbfVVPtABk1o0h2ntRkuehxdxEs+2ao8/uOlGI8BC2vEt8Tr8WTCTdk1
+         lw+/llLhLVRWKc7gVGZZWj6heq0Wy9Q8NMH+JhOO3ts7ZgIamvZMNMGL0kg8WDXbye
+         JaXZv32ZEoYfkHKyb9xvaL5cxqe+6rjJMHZ/zOXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Milburn <dmilburn@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Yi Zhang <yi.zhang@redhat.com>, Christoph Hellwig <hch@lst.de>,
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 053/265] nvmet: cleanups the loop in nvmet_async_events_process
-Date:   Mon, 29 Jun 2020 11:14:46 -0400
-Message-Id: <20200629151818.2493727-54-sashal@kernel.org>
+Subject: [PATCH 5.7 181/265] sched/cfs: change initial value of runnable_avg
+Date:   Mon, 29 Jun 2020 11:16:54 -0400
+Message-Id: <20200629151818.2493727-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,53 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Milburn <dmilburn@redhat.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 1cdf9f7670a7d74e27177d5c390c2f8b3b9ba338 ]
+[ Upstream commit e21cf43406a190adfcc4bfe592768066fb3aaa9b ]
 
-Based-on-a-patch-by: Christoph Hellwig <hch@infradead.org>
-Tested-by: Yi Zhang <yi.zhang@redhat.com>
-Signed-off-by: David Milburn <dmilburn@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Some performance regression on reaim benchmark have been raised with
+  commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+
+The problem comes from the init value of runnable_avg which is initialized
+with max value. This can be a problem if the newly forked task is finally
+a short task because the group of CPUs is wrongly set to overloaded and
+tasks are pulled less agressively.
+
+Set initial value of runnable_avg equals to util_avg to reflect that there
+is no waiting time so far.
+
+Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200624154422.29166-1-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/core.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index aa5ca222c6f59..ac7ae031ce78d 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -134,15 +134,10 @@ static void nvmet_async_events_process(struct nvmet_ctrl *ctrl, u16 status)
- 	struct nvmet_async_event *aen;
- 	struct nvmet_req *req;
- 
--	while (1) {
--		mutex_lock(&ctrl->lock);
--		aen = list_first_entry_or_null(&ctrl->async_events,
--				struct nvmet_async_event, entry);
--		if (!aen || !ctrl->nr_async_event_cmds) {
--			mutex_unlock(&ctrl->lock);
--			break;
--		}
--
-+	mutex_lock(&ctrl->lock);
-+	while (ctrl->nr_async_event_cmds && !list_empty(&ctrl->async_events)) {
-+		aen = list_first_entry(&ctrl->async_events,
-+				       struct nvmet_async_event, entry);
- 		req = ctrl->async_event_cmds[--ctrl->nr_async_event_cmds];
- 		if (status == 0)
- 			nvmet_set_result(req, nvmet_async_event_result(aen));
-@@ -152,7 +147,9 @@ static void nvmet_async_events_process(struct nvmet_ctrl *ctrl, u16 status)
- 
- 		mutex_unlock(&ctrl->lock);
- 		nvmet_req_complete(req, status);
-+		mutex_lock(&ctrl->lock);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2ae7e30ccb33c..5725199b32dcf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -807,7 +807,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+ 		}
  	}
-+	mutex_unlock(&ctrl->lock);
- }
  
- static void nvmet_async_events_free(struct nvmet_ctrl *ctrl)
+-	sa->runnable_avg = cpu_scale;
++	sa->runnable_avg = sa->util_avg;
+ 
+ 	if (p->sched_class != &fair_sched_class) {
+ 		/*
 -- 
 2.25.1
 
