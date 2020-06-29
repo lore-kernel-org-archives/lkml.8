@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43039C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4111C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2061120760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A420E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467573;
-	bh=Yn0VfqWS4xDvXpPauWQ/AwR0jBqLHAG+sbhriLI01aE=;
+	s=default; t=1593467582;
+	bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYyAPIypExe685EygPCG4w823FyW9XDuNNVDrOU1Dk9Kob8z7Tirx6l1MED3IvuKz
-	 m+uuLBm0enOeYSk6M9PNqCnTfgCVCE2dpJMwJ3XBB8c2g8BYd68olZ1wUbhQJHNvz3
-	 BvOt/tgzmlmdoJbxuUyM6PCRjDKmtHQPqVEmK0yU=
+	b=LzAt6nmtAIk+kxe9oGu20UvrcMl+4lVD+Hcjcuwp5NCxy6dzS6cy4wCIKWC3sFY/B
+	 QtNJ8lxzpEUq1fVGO+EONpqO0EpYJ3dNaK/7JXQqLYAamUAmxcKdJ/A14b9GP3g2FX
+	 8Wmq4zvFnR4aJPtTZjS+sxbnuRanjSWRFphCJyRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391534AbgF2Vwn (ORCPT
+        id S2404603AbgF2VxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726641AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D928247B1;
-        Mon, 29 Jun 2020 15:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B17B246F8;
+        Mon, 29 Jun 2020 15:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444114;
-        bh=Yn0VfqWS4xDvXpPauWQ/AwR0jBqLHAG+sbhriLI01aE=;
+        s=default; t=1593444040;
+        bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsDVryGM5wt0lfyjuKnrDTZ8kiHIjxe+nT2D5ZV4nF5yXjQ22GFIzBxKH+vaepsse
-         3KcMThkvxXtiVHKpqOD0N6oxVFzY7aHFGdeR5ovw6G7TY67QppsyUGL9ogwRss7XvE
-         pMj6yhDpkw7OGakCzL74bZanLka894NnUuKiZY4c=
+        b=BmIOEF9Nbj+iWj0nCmZBq70LFii2azKhG8j1j1h7Io/t+eJfC8nf7CHe8qEwKVk8a
+         vbTXctfRj7TfLAHyymA5zhyNoMwzaXh7yItBs2JLK79lW/6ILz5x9AN9RNQNDLlcr8
+         Ic0pn4oi1gAJSjkO7itEPJsgI506meVfPeM0d+FU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 226/265] btrfs: fix failure of RWF_NOWAIT write into prealloc extent beyond eof
-Date:   Mon, 29 Jun 2020 11:17:39 -0400
-Message-Id: <20200629151818.2493727-227-sashal@kernel.org>
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 147/265] net: qed: fix left elements count calculation
+Date:   Mon, 29 Jun 2020 11:16:20 -0400
+Message-Id: <20200629151818.2493727-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,63 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-commit 4b1946284dd6641afdb9457101056d9e6ee6204c upstream.
+[ Upstream commit 97dd1abd026ae4e6a82fa68645928404ad483409 ]
 
-If we attempt to write to prealloc extent located after eof using a
-RWF_NOWAIT write, we always fail with -EAGAIN.
+qed_chain_get_element_left{,_u32} returned 0 when the difference
+between producer and consumer page count was equal to the total
+page count.
+Fix this by conditional expanding of producer value (vs
+unconditional). This allowed to eliminate normalizaton against
+total page count, which was the cause of this bug.
 
-We do actually check if we have an allocated extent for the write at
-the start of btrfs_file_write_iter() through a call to check_can_nocow(),
-but later when we go into the actual direct IO write path we simply
-return -EAGAIN if the write starts at or beyond EOF.
+Misc: replace open-coded constants with common defines.
 
-Trivial to reproduce:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ touch /mnt/foo
-  $ chattr +C /mnt/foo
-
-  $ xfs_io -d -c "pwrite -S 0xab 0 64K" /mnt/foo
-  wrote 65536/65536 bytes at offset 0
-  64 KiB, 16 ops; 0.0004 sec (135.575 MiB/sec and 34707.1584 ops/sec)
-
-  $ xfs_io -c "falloc -k 64K 1M" /mnt/foo
-
-  $ xfs_io -d -c "pwrite -N -V 1 -S 0xfe -b 64K 64K 64K" /mnt/foo
-  pwrite: Resource temporarily unavailable
-
-On xfs and ext4 the write succeeds, as expected.
-
-Fix this by removing the wrong check at btrfs_direct_IO().
-
-Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: a91eb52abb50 ("qed: Revisit chain implementation")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 3 ---
- 1 file changed, 3 deletions(-)
+ include/linux/qed/qed_chain.h | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 18111b0263d71..6aa200e373c8f 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8262,9 +8262,6 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 			dio_data.overwrite = 1;
- 			inode_unlock(inode);
- 			relock = true;
--		} else if (iocb->ki_flags & IOCB_NOWAIT) {
--			ret = -EAGAIN;
--			goto out;
- 		}
- 		ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
- 						   offset, count);
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index 733fad7dfbed9..6d15040c642cb 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
+ 
+ static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u32 prod = p_chain->u.chain16.prod_idx;
++	u32 cons = p_chain->u.chain16.cons_idx;
+ 	u16 used;
+ 
+-	used = (u16) (((u32)0x10000 +
+-		       (u32)p_chain->u.chain16.prod_idx) -
+-		      (u32)p_chain->u.chain16.cons_idx);
++	if (prod < cons)
++		prod += (u32)U16_MAX + 1;
++
++	used = (u16)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain16.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain16.cons_idx / p_chain->elem_per_page;
++		used -= prod / elem_per_page - cons / elem_per_page;
+ 
+ 	return (u16)(p_chain->capacity - used);
+ }
+ 
+ static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u64 prod = p_chain->u.chain32.prod_idx;
++	u64 cons = p_chain->u.chain32.cons_idx;
+ 	u32 used;
+ 
+-	used = (u32) (((u64)0x100000000ULL +
+-		       (u64)p_chain->u.chain32.prod_idx) -
+-		      (u64)p_chain->u.chain32.cons_idx);
++	if (prod < cons)
++		prod += (u64)U32_MAX + 1;
++
++	used = (u32)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain32.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain32.cons_idx / p_chain->elem_per_page;
++		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
+ 
+ 	return p_chain->capacity - used;
+ }
 -- 
 2.25.1
 
