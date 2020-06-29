@@ -2,144 +2,194 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F772C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521642225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406172225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z/HZ+NNa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJsS8hBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgF2SiK (ORCPT
+        id S1726093AbgF2SiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:10 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44394 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbgF2SiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgF2SiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:38:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593455881; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Rn9VPsCeNhlTXsEtCkLtA7SovaaodoBU4vKbWke+iHI=; b=Z/HZ+NNai+i0hUoKAQVECVY4VlSrb+zp2/M/ZkJs9FQq6s0qQ/mItra74cQHwY99OBZoWFTm
- p8D+RR8H0Cue+4Rotwgf3YTV2gdfnEwsrtSum2gb5I7BvaVecPqIkRejY7K+OY+hGbECptPe
- gKMVy46HXv9W3SH/SUi33WZTQx0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5efa195cf3deea03f3cdf0e7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C1AAC433C8; Mon, 29 Jun 2020 16:39:56 +0000 (UTC)
-Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 475B7C433CB;
-        Mon, 29 Jun 2020 16:39:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 475B7C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 8/9] bus: mhi: core: Read and save device hardware information from BHI
-Date:   Mon, 29 Jun 2020 09:39:41 -0700
-Message-Id: <1593448782-8385-9-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA47C02F032
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 5so13780100oty.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=64cs0TbTbP8oXkjqFwlVyOK6sTxRyWaYSp+tM0bVADY=;
+        b=iJsS8hBM9QxkxafcTMtycbQCdy9iovLnZQNdm8sCMuUW7wM0vJYf5QfWXoLeJioLI9
+         zuvRpVpeKmZt7ZodsyhJFd7sMFqdMhqfJaDmmNRU088OIknBDX2Qfw3w74wbyBichTco
+         0AoN+RjPb0ODn5sXj655D7NhIWazi7BLmbQ5QZkVjOjHcgRp8JDNfrBkm/Z/pmvtz5lW
+         sqfT4dwvk9uyfa+TPJc7Rb1sANktKemkQv0y3XrC/ZHh+CvhL6rHiv5IcqUlLuRyNU9o
+         ZN6zW0cF4acVTqClrpTBc3bdnzXC3B6KxGjzrkaZ7ViJ+uGfpZ8ARYYSTDPcvO0sKb5n
+         5RfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=64cs0TbTbP8oXkjqFwlVyOK6sTxRyWaYSp+tM0bVADY=;
+        b=NuIo1VlcZv49m6B1n4c/lzUFZiUpCZG11pyYTVCnviiD1ppRJ/TXyVgpMqv0D4zrkp
+         dDKbFLhUc7fhj/qNWM49I+KdDddFcvUOaHAyQfLrjIn5LeG1t4Xpo13yxo70F8m8PXZ4
+         LtYu59wWjWLUH1614ELGr05qUbCivAh9jK4RDAMvJKCC19Bcjr8JJw/M8lS7nB/020wv
+         OVLKMBXwGm29xGJ0VrUJS4lII+6QuMasudTvWIw0GwvpAYMKMDRYp2JR+Q6qKiD6E2pf
+         cRH+RVj/HSmUX+zMWVVu3sSrFl2zcXK6ViXcq1cx55bHxZFezJwhIelkLXt/Tb+XO/ei
+         Jwgg==
+X-Gm-Message-State: AOAM532doZIboY7Xgwhr4+YsKfOpUWMS4PTKsM5WET7COFhGAevWSaSN
+        cJxfJMkXO+MqmmYHd8C/joXBHrA3QB9X2ow9FRs=
+X-Google-Smtp-Source: ABdhPJzhdHJhL6wz1HDjdvznHpIGmS/1e0gDDMgS5NOP2fYaMZB7eIyrlZjLdTrGaY2+0NhG+ZKaNsBIJm4MAxyRH3Y=
+X-Received: by 2002:a9d:904:: with SMTP id 4mr14130648otp.339.1593442851032;
+ Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200629140442.1043957-1-lee.jones@linaro.org> <20200629140442.1043957-7-lee.jones@linaro.org>
+In-Reply-To: <20200629140442.1043957-7-lee.jones@linaro.org>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 29 Jun 2020 18:00:21 +0300
+Message-ID: <CAFCwf12UOrL3R4TKuE6Zwrgyfz0NHRRqyqdSwJQZ78yYvRVrDg@mail.gmail.com>
+Subject: Re: [PATCH 06/20] misc: habanalabs: goya: Omit pointless check
+ ensuring addr is >=0
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Tomer Tayar <ttayar@habana.ai>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device hardware specific information such as serial number and the OEM
-PK hash can be read using BHI and saved on host to identify the
-endpoint.
+On Mon, Jun 29, 2020 at 5:04 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> Seeing as 'addr' is unsigned, it would be impossible for the assigned
+> value to be anything other than zero or positive.
+>
+> Squashes the following W=3D1 warnings:
+>
+>  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_r=
+ead32=E2=80=99:
+>  drivers/misc/habanalabs/goya/goya.c:3945:19: warning: comparison of unsi=
+gned expression >=3D 0 is always true [-Wtype-limits]
+>  3945 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
+>  | ^~
+>  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_w=
+rite32=E2=80=99:
+>  drivers/misc/habanalabs/goya/goya.c:4002:19: warning: comparison of unsi=
+gned expression >=3D 0 is always true [-Wtype-limits]
+>  4002 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
+>  | ^~
+>  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_r=
+ead64=E2=80=99:
+>  drivers/misc/habanalabs/goya/goya.c:4047:19: warning: comparison of unsi=
+gned expression >=3D 0 is always true [-Wtype-limits]
+>  4047 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
+>  | ^~
+>  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_w=
+rite64=E2=80=99:
+>  drivers/misc/habanalabs/goya/goya.c:4091:19: warning: comparison of unsi=
+gned expression >=3D 0 is always true [-Wtype-limits]
+>  4091 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
+>  | ^~
+>  drivers/misc/habanalabs/pci.c:328: warning: Excess function parameter 'd=
+ma_mask' description in 'hl_pci_set_dma_mask'
+>  drivers/misc/habanalabs/goya/goya_coresight.c: In function =E2=80=98goya=
+_debug_coresight=E2=80=99:
+>  drivers/misc/habanalabs/goya/goya_coresight.c:643:6: warning: variable =
+=E2=80=98val=E2=80=99 set but not used [-Wunused-but-set-variable]
+>  643 | u32 val;
+>  | ^~~
+>
+> Cc: Oded Gabbay <oded.gabbay@gmail.com>
+> Cc: Tomer Tayar <ttayar@habana.ai>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/misc/habanalabs/goya/goya.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalab=
+s/goya/goya.c
+> index 0d2952bb58dfb..a4a20e27ed3b4 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -3942,8 +3942,7 @@ static int goya_debugfs_read32(struct hl_device *hd=
+ev, u64 addr, u32 *val)
+>                 *val =3D readl(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
+>                                 (addr - SRAM_BASE_ADDR));
+>
+> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
+> -                       (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_siz=
+e)) {
+> +       } else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
+>
+>                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
+>                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
+l));
+> @@ -3999,8 +3998,7 @@ static int goya_debugfs_write32(struct hl_device *h=
+dev, u64 addr, u32 val)
+>                 writel(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
+>                                         (addr - SRAM_BASE_ADDR));
+>
+> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
+> -                       (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_siz=
+e)) {
+> +       } else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
+>
+>                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
+>                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
+l));
+> @@ -4044,9 +4042,8 @@ static int goya_debugfs_read64(struct hl_device *hd=
+ev, u64 addr, u64 *val)
+>                 *val =3D readq(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
+>                                 (addr - SRAM_BASE_ADDR));
+>
+> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
+> -                  (addr <=3D
+> -                   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u=
+64))) {
+> +       } else if (addr <=3D
+> +                  DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u6=
+4)) {
+>
+>                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
+>                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
+l));
+> @@ -4088,9 +4085,8 @@ static int goya_debugfs_write64(struct hl_device *h=
+dev, u64 addr, u64 val)
+>                 writeq(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
+>                                         (addr - SRAM_BASE_ADDR));
+>
+> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
+> -                  (addr <=3D
+> -                   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u=
+64))) {
+> +       } else if (addr <=3D
+> +                  DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u6=
+4)) {
+>
+>                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
+>                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
+l));
+> --
+> 2.25.1
+>
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- drivers/bus/mhi/core/boot.c | 17 ++++++++++++++++-
- include/linux/mhi.h         |  6 ++++++
- 2 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 0b38014..24422f5 100644
---- a/drivers/bus/mhi/core/boot.c
-+++ b/drivers/bus/mhi/core/boot.c
-@@ -392,13 +392,28 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	void *buf;
- 	dma_addr_t dma_addr;
- 	size_t size;
--	int ret;
-+	int i, ret;
- 
- 	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
- 		dev_err(dev, "Device MHI is not in valid state\n");
- 		return;
- 	}
- 
-+	/* save hardware info from BHI */
-+	ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_SERIALNU,
-+			   &mhi_cntrl->serial_number);
-+	if (ret)
-+		dev_err(dev, "Could not capture serial number via BHI\n");
-+
-+	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++) {
-+		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_OEMPKHASH(i),
-+				   &mhi_cntrl->oem_pk_hash[i]);
-+		if (ret) {
-+			dev_err(dev, "Could not capture OEM PK HASH via BHI\n");
-+			break;
-+		}
-+	}
-+
- 	/* If device is in pass through, do reset to ready state transition */
- 	if (mhi_cntrl->ee == MHI_EE_PTHRU)
- 		goto fw_load_ee_pthru;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index b1e8b4f..dad6246 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -16,6 +16,8 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- 
-+#define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
-+
- struct mhi_chan;
- struct mhi_event;
- struct mhi_ctxt;
-@@ -315,6 +317,8 @@ struct mhi_controller_config {
-  * @device_number: MHI controller device number
-  * @major_version: MHI controller major revision number
-  * @minor_version: MHI controller minor revision number
-+ * @serial_number: MHI controller serial number obtained from BHI
-+ * @oem_pk_hash: MHI controller OEM PK Hash obtained from BHI
-  * @mhi_event: MHI event ring configurations table
-  * @mhi_cmd: MHI command ring configurations table
-  * @mhi_ctxt: MHI device context, shared memory between host and device
-@@ -394,6 +398,8 @@ struct mhi_controller {
- 	u32 device_number;
- 	u32 major_version;
- 	u32 minor_version;
-+	u32 serial_number;
-+	u32 oem_pk_hash[MHI_MAX_OEM_PK_HASH_SEGMENTS];
- 
- 	struct mhi_event *mhi_event;
- 	struct mhi_cmd *mhi_cmd;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
