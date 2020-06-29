@@ -2,62 +2,55 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E28FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5338C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1112076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23CC20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464939;
-	bh=vEjf/A/Kuk4YUAnfqpXqh4UJDM3Zzu27UFabstohaUI=;
+	s=default; t=1593464941;
+	bh=WtHvaAkbfjrMfJ5jfP+E55n4gaI0gk2nzaQF1Y7dwEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k/VY8W/Hu6vaH5NZNm9TiYRjm/6kgQyJiOeNKA/vkZL93+QMMPSOBY2kqHvkKtmRx
-	 87P5+ChM1Fx5usMp4ZQEJIeJpaUpUQZKqZJQeIyBwfntbrxCOIV9Ty/ell/dW5Y0LD
-	 Zhe1k8q2rgUWmNPcqeoZ5xjDxFJt71digCTU0y0A=
+	b=pO5ZmzGfUmYA6WB6P2x+i2IF+7AFGDmhLDoIccOJ/7J3DeyZYqWiY+JO/BleF2bMZ
+	 pcK1VWTd3Syf70OIh3A+lSN7OTtodzuqmGokolHW+bV/f5BGsmWXdV1kvdPmmY0TNB
+	 VeZHBr9YonvEHzypNxe4e7UUKjql/9CqrLMPX3lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390442AbgF2VIp (ORCPT
+        id S2390434AbgF2VIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730324AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730334AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5333C254F3;
-        Mon, 29 Jun 2020 15:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 083F12551E;
+        Mon, 29 Jun 2020 15:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446049;
-        bh=vEjf/A/Kuk4YUAnfqpXqh4UJDM3Zzu27UFabstohaUI=;
+        s=default; t=1593446081;
+        bh=WtHvaAkbfjrMfJ5jfP+E55n4gaI0gk2nzaQF1Y7dwEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFrAFx3FByWmQZmM9OIcoVfMsfN04qTeAze0mPT8VKH/Qz3rFSHdGX24He1pQh+aU
-         DYX2BTj+JajscGIp7R41cNx/FKXpFaHfpbLO9pHHt2GoiJsqGK7SwbwkrgeG5lEJci
-         vGgQEQBRVw2uEyfuIa/n30c8tIEeQbfNon5eddlA=
+        b=odGTnDB9cII5l51UCUHyLyoB7akwQMJy7TAMQ/S5OxiBzYhPvminQafVwONScEjgM
+         nxg275a0jiHIxw6O5cLEtcwqAV18YGGPGhHuBtHoAZwnxRiiV+PW2m/U2iMAezK6pB
+         0uU8DVCXUC3QXOzKQ5u/Hum/+8DauGniPL6OXA3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 052/135] elfnote: mark all .note sections SHF_ALLOC
-Date:   Mon, 29 Jun 2020 11:51:46 -0400
-Message-Id: <20200629155309.2495516-53-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 077/135] net: Revert "pkt_sched: fq: use proper locking in fq_dump_stats()"
+Date:   Mon, 29 Jun 2020 11:52:11 -0400
+Message-Id: <20200629155309.2495516-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -72,59 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b ]
+This reverts commit 191cf872190de28a92e1bd2b56d8860e37e07443 which is
+commit 695b4ec0f0a9cf29deabd3ac075911d58b31f42b upstream.
 
-ELFNOTE_START allows callers to specify flags for .pushsection assembler
-directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
-that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
-specified twice after preprocessing, once with "a" flag, once without.
-Example:
+That commit should never have been backported since it relies on a change in
+locking semantics that was introduced in v4.8 and not backported. Because of
+this, the backported commit to sch_fq leads to lockups because of the double
+locking.
 
-.pushsection .note.Linux, "a", @note ;
-.pushsection .note.Linux, "", @note ;
-
-While GNU as allows this ordering, it warns for the opposite ordering,
-making these directives position dependent.  We'd prefer not to precisely
-match this behavior in Clang's integrated assembler.  Instead, the non
-__ASSEMBLY__ definition of ELF_NOTE uses
-__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
-so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
-and just always use "a" flag.
-
-This allows Clang to assemble a working mainline (5.6) kernel via:
-$ make CC=clang AS=clang
-
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/913
-Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
-Debugged-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/elfnote.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_fq.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
-index 278e3ef053369..56c6d9031663d 100644
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -53,7 +53,7 @@
- .popsection				;
+diff --git a/net/sched/sch_fq.c b/net/sched/sch_fq.c
+index f4aa2ab4713a2..eb814ffc09023 100644
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -830,24 +830,20 @@ static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
+ static int fq_dump_stats(struct Qdisc *sch, struct gnet_dump *d)
+ {
+ 	struct fq_sched_data *q = qdisc_priv(sch);
+-	struct tc_fq_qd_stats st;
+-
+-	sch_tree_lock(sch);
+-
+-	st.gc_flows		  = q->stat_gc_flows;
+-	st.highprio_packets	  = q->stat_internal_packets;
+-	st.tcp_retrans		  = q->stat_tcp_retrans;
+-	st.throttled		  = q->stat_throttled;
+-	st.flows_plimit		  = q->stat_flows_plimit;
+-	st.pkts_too_long	  = q->stat_pkts_too_long;
+-	st.allocation_errors	  = q->stat_allocation_errors;
+-	st.time_next_delayed_flow = q->time_next_delayed_flow - ktime_get_ns();
+-	st.flows		  = q->flows;
+-	st.inactive_flows	  = q->inactive_flows;
+-	st.throttled_flows	  = q->throttled_flows;
+-	st.pad			  = 0;
+-
+-	sch_tree_unlock(sch);
++	u64 now = ktime_get_ns();
++	struct tc_fq_qd_stats st = {
++		.gc_flows		= q->stat_gc_flows,
++		.highprio_packets	= q->stat_internal_packets,
++		.tcp_retrans		= q->stat_tcp_retrans,
++		.throttled		= q->stat_throttled,
++		.flows_plimit		= q->stat_flows_plimit,
++		.pkts_too_long		= q->stat_pkts_too_long,
++		.allocation_errors	= q->stat_allocation_errors,
++		.flows			= q->flows,
++		.inactive_flows		= q->inactive_flows,
++		.throttled_flows	= q->throttled_flows,
++		.time_next_delayed_flow	= q->time_next_delayed_flow - now,
++	};
  
- #define ELFNOTE(name, type, desc)		\
--	ELFNOTE_START(name, type, "")		\
-+	ELFNOTE_START(name, type, "a")		\
- 		desc			;	\
- 	ELFNOTE_END
- 
+ 	return gnet_stats_copy_app(d, &st, sizeof(st));
+ }
 -- 
 2.25.1
 
