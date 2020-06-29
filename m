@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95592C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34D020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D2E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461454;
-	bh=lxhKP8mUk7NWPWZ5S591OwGbHEUQgWTP8rlI4jSLJjM=;
+	s=default; t=1593461462;
+	bh=RTv26lsfenbpmBVyNjb/a7VDKyUyeaFSXqG7qg36/Z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biITVhoJOQD7WHcGnMgxpNfeBH2EvQfNqkgTJfVSjttYXnavqThRsP9G4Edlvf87A
-	 JiG5517d6TpgoXaFS+mInxL75tMC/+7IQr+l6+Jleg0PtIVxli7DMa2IWm6f+XqIYH
-	 VNAj90HLGoix4A05Lf1TbiVq1x2nd5/IM5IdPqA0=
+	b=0/RJSAkjSiqIvhiSVMybNtyeHFhu5MDhNrfEifIH9+iKxm7NrTqLPvnS3f9uCd2cV
+	 b1ZIddpg+QPnTqerG+rJJPeqk8joXKfSDgKZVCcCxx5Y3c+bYljW14DBkAPrbsi1Ho
+	 sHN5EMpHmliE363aUH2BZ/1XCUUGk2xTjMPgxhsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgF2UKs (ORCPT
+        id S1729479AbgF2ULA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732907AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:22 -0400
+        id S1732900AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A6625294;
-        Mon, 29 Jun 2020 15:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F252F252AF;
+        Mon, 29 Jun 2020 15:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445003;
-        bh=lxhKP8mUk7NWPWZ5S591OwGbHEUQgWTP8rlI4jSLJjM=;
+        s=default; t=1593445021;
+        bh=RTv26lsfenbpmBVyNjb/a7VDKyUyeaFSXqG7qg36/Z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1EgqCQVtceaIXlgoCZqKpXCb+tyYdMtu1iWa1BW76C7IauegyFC7JTzThVGk1fXmC
-         T+fxSRNpLyBJtMbntxlGJryN3wSKUeFkxe7BiCqLn7ae+AeUirhoNStF07jD+ben/j
-         hCYhu0r2tXO2a9RY12pKupILOi8g8+82qeBfFXnU=
+        b=W5E5OE7Rcad7uL1h3VfBZaGr2yk2i7cAlSRnZcJZ7FpZ0VCdyUXDHEML3hQgll4+v
+         eXnL2bfBNV9RBMJ+TUPayTTrYNtLQhYWbY1X9a4yhweZQBLAwxTBbO1M21U3BtAo/L
+         sC5VOZL4LbTgI6iHkYr46HvzgoD9oNevhXkPagaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/131] RISC-V: Don't allow write+exec only page mapping request in mmap
-Date:   Mon, 29 Jun 2020 11:34:34 -0400
-Message-Id: <20200629153502.2494656-104-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 119/131] tracing: Fix event trigger to accept redundant spaces
+Date:   Mon, 29 Jun 2020 11:34:50 -0400
+Message-Id: <20200629153502.2494656-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,61 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yash Shah <yash.shah@sifive.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit e0d17c842c0f824fd4df9f4688709fc6907201e1 ]
+commit 6784beada631800f2c5afd567e5628c843362cee upstream.
 
-As per the table 4.4 of version "20190608-Priv-MSU-Ratified" of the
-RISC-V instruction set manual[0], the PTE permission bit combination of
-"write+exec only" is reserved for future use. Hence, don't allow such
-mapping request in mmap call.
+Fix the event trigger to accept redundant spaces in
+the trigger input.
 
-An issue is been reported by David Abdurachmanov, that while running
-stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
-specific kernel.
+For example, these return -EINVAL
 
-This issue arises when the stress-sysbadaddr request for pages with
-"write+exec only" permission bits and then passes the address obtain
-from this mmap call to various system call. For the riscv kernel, the
-mmap call should fail for this particular combination of permission bits
-since it's not valid.
+echo " traceon" > events/ftrace/print/trigger
+echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
+echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
 
-[0]: http://dabbelt.com/~palmer/keep/riscv-isa-manual/riscv-privileged-20190608-1.pdf
+But these are hard to find what is wrong.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-[Palmer: Refer to the latest ISA specification at the only link I could
-find, and update the terminology.]
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To fix this issue, use skip_spaces() to remove spaces
+in front of actual tokens, and set NULL if there is no
+token.
+
+Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
+
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/riscv/kernel/sys_riscv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
-index fb03a4482ad60..db44da32701f2 100644
---- a/arch/riscv/kernel/sys_riscv.c
-+++ b/arch/riscv/kernel/sys_riscv.c
-@@ -16,6 +16,7 @@
- #include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <asm/cacheflush.h>
-+#include <asm-generic/mman-common.h>
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 38a2a558e546b..0c3b1551cfca2 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -211,11 +211,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
  
- static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- 			   unsigned long prot, unsigned long flags,
-@@ -24,6 +25,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ static int trigger_process_regex(struct trace_event_file *file, char *buff)
  {
- 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
+-	char *command, *next = buff;
++	char *command, *next;
+ 	struct event_command *p;
+ 	int ret = -EINVAL;
+ 
++	next = buff = skip_spaces(buff);
+ 	command = strsep(&next, ": \t");
++	if (next) {
++		next = skip_spaces(next);
++		if (!*next)
++			next = NULL;
++	}
+ 	command = (command[0] != '!') ? command : command + 1;
+ 
+ 	mutex_lock(&trigger_cmd_mutex);
+@@ -624,8 +630,14 @@ event_trigger_callback(struct event_command *cmd_ops,
+ 	int ret;
+ 
+ 	/* separate the trigger from the filter (t:n [if filter]) */
+-	if (param && isdigit(param[0]))
++	if (param && isdigit(param[0])) {
+ 		trigger = strsep(&param, " \t");
++		if (param) {
++			param = skip_spaces(param);
++			if (!*param)
++				param = NULL;
++		}
++	}
+ 
+ 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
+ 
+@@ -1361,6 +1373,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
+ 	trigger = strsep(&param, " \t");
+ 	if (!trigger)
  		return -EINVAL;
-+
-+	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
-+		if (unlikely(!(prot & PROT_READ)))
-+			return -EINVAL;
-+
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
- 			       offset >> (PAGE_SHIFT - page_shift_offset));
- }
++	if (param) {
++		param = skip_spaces(param);
++		if (!*param)
++			param = NULL;
++	}
+ 
+ 	system = strsep(&trigger, ":");
+ 	if (!trigger)
 -- 
 2.25.1
 
