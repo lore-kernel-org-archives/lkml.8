@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B092E20723
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12E6206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457873;
-	bh=QpvwHBJOh/g++ypUVCQNAMKgvB8pEASrQgk44lV4wTo=;
+	s=default; t=1593457876;
+	bh=roBeJzdPDztMiw2+5KYWfWWVCKJXTBepawuz9UREOb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WulNPWLaLCC0sbvze1EhGvtljRCz50jP61DPm/QNtxAKW3409XFos+hqm1/jR/wL5
-	 lLt4j5D6qFjDImkZzH9TaBgHqMQTb5KQECHKjvLcg0vgOmzXMP1QV0Z0Hhch1nNVk5
-	 NbPECb7ZxzYA2ynRq8aHWfGvJH7Chmuw33WCNBEE=
+	b=RzQyqKCCLcBxOAT0lgFYZMR0JJaSTIrPii1epal+7oYdR1TyTWZb943mqvPDb8qlO
+	 LXEIGPKbTRne4/VG0i6KSzbxQWLif3zu/9plMwmtm0CyitNkwgx9/vln992S4Jf9Uw
+	 P1AeMpCU1I4FF/esZfoAb1HWMZrY8wOmw1LJyz3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgF2TLL (ORCPT
+        id S1730285AbgF2TLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730973AbgF2TKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730972AbgF2TKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6112254C4;
-        Mon, 29 Jun 2020 15:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9FD9254B9;
+        Mon, 29 Jun 2020 15:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446019;
-        bh=QpvwHBJOh/g++ypUVCQNAMKgvB8pEASrQgk44lV4wTo=;
+        s=default; t=1593446012;
+        bh=roBeJzdPDztMiw2+5KYWfWWVCKJXTBepawuz9UREOb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1o/qfgFcUg6/l8wj0F3F9306YVzPxMzweR9lYFeGCB7LUXfeADnzCe63UlcbmrA7x
-         o4k2hePAPRQL/GrWcGjrV7wZZlaGplMO2u2dmvqBWWGxeqq1CDrBw0T04p06vNrcRs
-         DbwEDkeGLAUCxjde5s5ipw3fT1oOg8BSykDKBnuw=
+        b=xfpWiWuecqf7050qe5gF/C+Zk5t/B81XmLGQpy8gaV7kpOY8w5Eej17uhfUDkStNm
+         /tyT8eDEWcgSIGUflBYKy6LjI2QyzL5lemRNPOs1DooGL/1hxACKQok8iLMndGo+Wb
+         xkir7FWnbywBZ2nNT0t/QKNP5T1OoNBAp1sijHZA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc:     Alexander Tsoy <alexander@tsoy.me>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 026/135] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Mon, 29 Jun 2020 11:51:20 -0400
-Message-Id: <20200629155309.2495516-27-sashal@kernel.org>
+Subject: [PATCH 4.4 019/135] ALSA: usb-audio: Improve frames size computation
+Date:   Mon, 29 Jun 2020 11:51:13 -0400
+Message-Id: <20200629155309.2495516-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,53 +64,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+For computation of the the next frame size current value of fs/fps and
+accumulated fractional parts of fs/fps are used, where values are stored
+in Q16.16 format. This is quite natural for computing frame size for
+asynchronous endpoints driven by explicit feedback, since in this case
+fs/fps is a value provided by the feedback endpoint and it's already in
+the Q format. If an error is accumulated over time, the device can
+adjust fs/fps value to prevent buffer overruns/underruns.
 
-Remove this exclusion so we can enable ASPM on these links.
+But for synchronous endpoints the accuracy provided by these computations
+is not enough. Due to accumulated error the driver periodically produces
+frames with incorrect size (+/- 1 audio sample).
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+This patch fixes this issue by implementing a different algorithm for
+frame size computation. It is based on accumulating of the remainders
+from division fs/fps and it doesn't accumulate errors over time. This
+new method is enabled for synchronous and adaptive playback endpoints.
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Link: https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ sound/usb/card.h     |  4 ++++
+ sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++-----
+ sound/usb/endpoint.h |  1 +
+ sound/usb/pcm.c      |  2 ++
+ 4 files changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index c6a012b5ba390..966b6947e5656 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -388,16 +388,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+diff --git a/sound/usb/card.h b/sound/usb/card.h
+index 71778ca4b26aa..844c688638105 100644
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -80,6 +80,10 @@ struct snd_usb_endpoint {
+ 	dma_addr_t sync_dma;		/* DMA address of syncbuf */
  
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
+ 	unsigned int pipe;		/* the data i/o pipe */
++	unsigned int framesize[2];	/* small/large frame sizes in samples */
++	unsigned int sample_rem;	/* remainder from division fs/fps */
++	unsigned int sample_accum;	/* sample accumulator */
++	unsigned int fps;		/* frames per second */
+ 	unsigned int freqn;		/* nominal sampling rate in fs/fps in Q16.16 format */
+ 	unsigned int freqm;		/* momentary sampling rate in fs/fps in Q16.16 format */
+ 	int	   freqshift;		/* how much to shift the feedback value to get Q16.16 */
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index 66648b4bdd289..666731317b332 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -137,12 +137,12 @@ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep)
  
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+ /*
+  * For streaming based on information derived from sync endpoints,
+- * prepare_outbound_urb_sizes() will call next_packet_size() to
++ * prepare_outbound_urb_sizes() will call slave_next_packet_size() to
+  * determine the number of samples to be sent in the next packet.
+  *
+- * For implicit feedback, next_packet_size() is unused.
++ * For implicit feedback, slave_next_packet_size() is unused.
+  */
+-int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
++int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep)
+ {
+ 	unsigned long flags;
+ 	int ret;
+@@ -159,6 +159,29 @@ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+ 	return ret;
+ }
+ 
++/*
++ * For adaptive and synchronous endpoints, prepare_outbound_urb_sizes()
++ * will call next_packet_size() to determine the number of samples to be
++ * sent in the next packet.
++ */
++int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
++{
++	int ret;
++
++	if (ep->fill_max)
++		return ep->maxframesize;
++
++	ep->sample_accum += ep->sample_rem;
++	if (ep->sample_accum >= ep->fps) {
++		ep->sample_accum -= ep->fps;
++		ret = ep->framesize[1];
++	} else {
++		ret = ep->framesize[0];
++	}
++
++	return ret;
++}
++
+ static void retire_outbound_urb(struct snd_usb_endpoint *ep,
+ 				struct snd_urb_ctx *urb_ctx)
+ {
+@@ -203,6 +226,8 @@ static void prepare_silent_urb(struct snd_usb_endpoint *ep,
+ 
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
++		else if (ep->sync_master)
++			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
+@@ -879,10 +904,17 @@ int snd_usb_endpoint_set_params(struct snd_usb_endpoint *ep,
+ 	ep->maxpacksize = fmt->maxpacksize;
+ 	ep->fill_max = !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX);
+ 
+-	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL)
++	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL) {
+ 		ep->freqn = get_usb_full_speed_rate(rate);
+-	else
++		ep->fps = 1000;
++	} else {
+ 		ep->freqn = get_usb_high_speed_rate(rate);
++		ep->fps = 8000;
++	}
++
++	ep->sample_rem = rate % ep->fps;
++	ep->framesize[0] = rate / ep->fps;
++	ep->framesize[1] = (rate + (ep->fps - 1)) / ep->fps;
+ 
+ 	/* calculate the frequency in 16.16 format */
+ 	ep->freqm = ep->freqn;
+@@ -941,6 +973,7 @@ int snd_usb_endpoint_start(struct snd_usb_endpoint *ep)
+ 	ep->active_mask = 0;
+ 	ep->unlink_mask = 0;
+ 	ep->phase = 0;
++	ep->sample_accum = 0;
+ 
+ 	snd_usb_endpoint_start_quirk(ep);
+ 
+diff --git a/sound/usb/endpoint.h b/sound/usb/endpoint.h
+index 584f295d7c773..4aad49cbeb5f1 100644
+--- a/sound/usb/endpoint.h
++++ b/sound/usb/endpoint.h
+@@ -27,6 +27,7 @@ void snd_usb_endpoint_release(struct snd_usb_endpoint *ep);
+ void snd_usb_endpoint_free(struct snd_usb_endpoint *ep);
+ 
+ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
++int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep);
+ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep);
+ 
+ void snd_usb_handle_sync_urb(struct snd_usb_endpoint *ep,
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index f84c55ecd0fb4..53d91cae86f96 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1473,6 +1473,8 @@ static void prepare_playback_urb(struct snd_usb_substream *subs,
+ 	for (i = 0; i < ctx->packets; i++) {
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
++		else if (ep->sync_master)
++			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
 -- 
 2.25.1
 
