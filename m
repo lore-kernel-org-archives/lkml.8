@@ -2,98 +2,242 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2322C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA90C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABAA320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456928;
-	bh=0bQKSbV06uF3Fy86wdZrTACqP+ZgxQPNSlkVIp9y6To=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqwM0KhDb9HfsYmY9FaUyVDxEHKxa5+UKE5sqa2W4kkHR2Kl8whd9e0o63yUMYvr6
-	 8A6VrP/GrgOR4lSWaWD8nbjUREwnbzl2UKHeFLNpUaOuM/6khwerdIOZmYBkinwpmg
-	 fBd1ucIKGdmtn8eKyDwjXZBMNAk83WRHLNKNp+pg=
+	by mail.kernel.org (Postfix) with ESMTP id 8B9C020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PyYdn9Db"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgF2Sz0 (ORCPT
+        id S1730006AbgF2Sz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:55:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729915AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729183AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456915; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=tNiuQ+4uhjgZPnPAVe1RZE3rFmZ//xK6MB4wZLBlQDU=; b=PyYdn9DbMAY2/fSUU6Fl5Yh91mJKcu3wP7y0/oIOwHRxglLwVyA1JVPJFPpKCMgyaYnVmrsL
+ fN2WMioV8gSZmr87i7pV0ZY8rP62OMe7FjxRk6c30//THUw1KjEIoF/Zw/H82bBLBXV/kvZ5
+ kLJ5BHxSPvaTIM1SVIsgvw/hzfo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5efa01398fe116ddd906311b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 14:56:57
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1124BC43395; Mon, 29 Jun 2020 14:56:56 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0EB25576;
-        Mon, 29 Jun 2020 15:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446141;
-        bh=0bQKSbV06uF3Fy86wdZrTACqP+ZgxQPNSlkVIp9y6To=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdScB9VmfKJRGP+k1OBK8m2REXCCVxNVEWbAaoVErQXxoJXewRVZeBfvlu5fF0lue
-         CgVbd/Gc4BaDIXlSiXRlfUpqcrfzaBNVecp5L3yO+CEyTgD8tp5U83Eamq0ONuO4+H
-         lx72MjtHziRvzvVo7c1BLvuideeI3n9s5wzd9j+g=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 129/135] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
-Date:   Mon, 29 Jun 2020 11:53:03 -0400
-Message-Id: <20200629155309.2495516-130-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D5F8C433C8;
+        Mon, 29 Jun 2020 14:56:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D5F8C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 29 Jun 2020 08:56:50 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: Re: [Freedreno] [PATCH v2 6/6] drm/msm/a6xx: Add support for
+ per-instance pagetables
+Message-ID: <20200629145650.GC25740@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+References: <20200626200414.14382-1-jcrouse@codeaurora.org>
+ <20200626200414.14382-7-jcrouse@codeaurora.org>
+ <CAF6AEGvFPtiFcBg5j3An5piPWy3Sg3=-o2k8Xzzf6anzVi9_ZA@mail.gmail.com>
+ <CAF6AEGtOcA1V33KgaYKjn=FBk9_q4u8fF5Tgoyq7Y3vUp2pKjg@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGtOcA1V33KgaYKjn=FBk9_q4u8fF5Tgoyq7Y3vUp2pKjg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+On Sat, Jun 27, 2020 at 01:11:14PM -0700, Rob Clark wrote:
+> On Sat, Jun 27, 2020 at 12:56 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Fri, Jun 26, 2020 at 1:04 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> > >
+> > > Add support for using per-instance pagetables if all the dependencies are
+> > > available.
+> > >
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> > >
+> > >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 +++++++++++++++++++++++++++
+> > >  drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
+> > >  2 files changed, 44 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> > > index aa53f47b7e8b..95ed2ceac121 100644
+> > > --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> > > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> > > @@ -79,6 +79,34 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+> > >         OUT_RING(ring, upper_32_bits(iova));
+> > >  }
+> > >
+> > > +static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
+> > > +               struct msm_file_private *ctx)
+> > > +{
+> > > +       phys_addr_t ttbr;
+> > > +       u32 asid;
+> > > +
+> > > +       if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
+> > > +               return;
+> > > +
+> > > +       /* Execute the table update */
+> > > +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
+> > > +       OUT_RING(ring, lower_32_bits(ttbr));
+> > > +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
+> > > +       /* CONTEXTIDR is currently unused */
+> > > +       OUT_RING(ring, 0);
+> > > +       /* CONTEXTBANK is currently unused */
+> > > +       OUT_RING(ring, 0);
+> > > +
+> > > +       /*
+> > > +        * Write the new TTBR0 to the memstore. This is good for debugging.
+> > > +        */
+> > > +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
+> > > +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
+> > > +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
+> > > +       OUT_RING(ring, lower_32_bits(ttbr));
+> > > +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
+> > > +}
+> > > +
+> > >  static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+> > >         struct msm_file_private *ctx)
+> > >  {
+> > > @@ -89,6 +117,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+> > >         struct msm_ringbuffer *ring = submit->ring;
+> > >         unsigned int i;
+> > >
+> > > +       a6xx_set_pagetable(gpu, ring, ctx);
+> > > +
+> > >         get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
+> > >                 rbmemptr_stats(ring, index, cpcycles_start));
+> > >
+> > > @@ -872,6 +902,18 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
+> > >         return (unsigned long)busy_time;
+> > >  }
+> > >
+> > > +struct msm_gem_address_space *a6xx_address_space_instance(struct msm_gpu *gpu)
+> > > +{
+> > > +       struct msm_mmu *mmu;
+> > > +
+> > > +       mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
+> > > +       if (IS_ERR(mmu))
+> > > +               return msm_gem_address_space_get(gpu->aspace);
+> > > +
+> > > +       return msm_gem_address_space_create(mmu,
+> > > +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
+> > > +}
+> > > +
+> > >  static const struct adreno_gpu_funcs funcs = {
+> > >         .base = {
+> > >                 .get_param = adreno_get_param,
+> > > @@ -895,6 +937,7 @@ static const struct adreno_gpu_funcs funcs = {
+> > >                 .gpu_state_put = a6xx_gpu_state_put,
+> > >  #endif
+> > >                 .create_address_space = adreno_iommu_create_address_space,
+> > > +               .address_space_instance = a6xx_address_space_instance,
+> >
+> > Hmm, maybe instead of .address_space_instance, something like
+> > .create_context_address_space?
+> >
+> > Since like .create_address_space, it is creating an address space..
+> > the difference is that it is a per context/process aspace..
+> >
 
-commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
+This is a good suggestion. I'm always open to changing function names.
 
-__rpc_depopulate(gssd_dentry) was lost on error path
+> 
+> 
+> or maybe just .create_pgtable and return the 'struct msm_mmu' (which
+> is itself starting to become less of a great name)..
+> 
+> The only other thing a6xx_address_space_instance() adds is knowing
+> where the split is between the kernel and user pgtables, and I suppose
+> that isn't a thing that would really be changing between gens?
 
-cc: stable@vger.kernel.org
-Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sunrpc/rpc_pipe.c | 1 +
- 1 file changed, 1 insertion(+)
+In theory the split is determined by the hardware but its been the same for all
+a5xx/a6xx targets.
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 9103dd15511cc..12dd5cc499c1e 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -1347,6 +1347,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
- 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
- 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
- 	if (!clnt_dentry) {
-+		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
- 		pipe_dentry = ERR_PTR(-ENOENT);
- 		goto out;
- 	}
+Jordan
+
+> BR,
+> -R
+> 
+> > BR,
+> > -R
+> >
+> > >         },
+> > >         .get_timestamp = a6xx_get_timestamp,
+> > >  };
+> > > diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> > > index 7764373d0ed2..0987d6bf848c 100644
+> > > --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
+> > > +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> > > @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
+> > >         volatile uint32_t fence;
+> > >
+> > >         volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
+> > > +       volatile u64 ttbr0;
+> > >  };
+> > >
+> > >  struct msm_ringbuffer {
+> > > --
+> > > 2.17.1
+> > >
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
 -- 
-2.25.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
