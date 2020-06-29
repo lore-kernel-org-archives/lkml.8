@@ -2,296 +2,166 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5793C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B004CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD4D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8321820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="jzBEmPbg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u88w+iCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgF2Ula (ORCPT
+        id S1731672AbgF2Ulj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        Mon, 29 Jun 2020 16:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731672AbgF2TOH (ORCPT
+        with ESMTP id S1731668AbgF2TOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:07 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56763C0076FB
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:25:45 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wQCW3yNVz9sQt;
-        Mon, 29 Jun 2020 21:25:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1593429943;
-        bh=pSTHi4uumjVhxL7qDBBa05Rp89rWlxnW6GHpxYpiXr0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=jzBEmPbgoMv1WRUMc1FsFxPn/gU6MvXKvrNIJbtGGT5InxJUAOLu6ZDO2+BTMaqIn
-         JC8HU/A36uUdR7Ymd5NDURBejUGCYllRJ310rma5lh+slaGo1SWt5AlrdIEGpAwi9S
-         HFz8gxdtwL9DN3RuV7DbPulniA/WauUQYvvhSkNMoO8zoPs1Iq2MKP+7XpcruiB4KV
-         86C20NUDBXvNDTUm45k2+vDeQ1xsmpgs4dSumXim/uXvf3uPQ+oFsBjlJfWW+0tM0C
-         jK9U9Pp4ZjGY8MP/ne8NELBkc77XU4CU+0YImw/qHdpEAyc6Q1lW2KggFXj7VLiKX7
-         OVrhUDO4aHLHQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with __put_user()/__get_user()
-In-Reply-To: <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr> <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
-Date:   Mon, 29 Jun 2020 21:27:56 +1000
-Message-ID: <878sg6862r.fsf@mpe.ellerman.id.au>
+        Mon, 29 Jun 2020 15:14:06 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA99C00874A;
+        Mon, 29 Jun 2020 01:30:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id o1so248041plk.1;
+        Mon, 29 Jun 2020 01:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
+        b=u88w+iCHX068TQdQGlFddt3hLNx2yCGO6LVQWWywBYNrJPxfB6jM2kQ0XCokKCXWI7
+         S1cvKjjK9AGtLBQS1eeRpxrkvPJ0Btbze1eRbWhdVRjxMpbENC512swG6tlAU26t//UN
+         9G9uVHnZLZZnXJfFJfhmQyPbcg8w7GRijrB0W97/4wfSZVzov43X5BvVnBmnf6TJTOLM
+         UpdbzAp3t1s48We2fXEVPg7YoZteQfCvHF74x2W9vRAIgSOsm1G2psse5kshx5sLUhbi
+         xJ6SP0gdGhfnUx8mR9034EIf/ZSIARVpiu8yhDeJVrG+y42v4RxA42o8A5pKyYHKXQCw
+         o3VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
+        b=fyFIiwPSLZyv2i2isYh3zVsrWx12X/1ayKyIu58db9eehh+5cammbPWd6KzJRafV48
+         V4hHmzyG9zQaOw76AFpDh3dSSB8uNgh6SHayA50aRYzpp/Ck0EZ2kR92OIYGDIyJ28aZ
+         zsOyuThPMyI+856WB2d1U5GnldTClSFZtlJ6knDdMnNbCFPrgL4qauR/wl+xNWT4Kw4a
+         BGwGD6OMrM22PE+giUH6fastr3foZm3V/T6606lOqwnkrSlSgBebDrJyPK2UMebp52hf
+         Ij/ohwJx/3OOOUZcGpagSNQm+volobZkWcSA6A6kO7ahrtHGrElYwgGYbmHLCb+3VaSP
+         OIZQ==
+X-Gm-Message-State: AOAM530Cko1QYEYXtP55GBN3oL1Gm4VYr1WE2amzCfW6LIlIMsrsjCvu
+        AfWOZXR5RrnGHChC+7mAxo4=
+X-Google-Smtp-Source: ABdhPJx50yg55yRr8PC0U3W2gjfdg9NljC8EQz8jcleRFkBEGqMnsbxB67lXZSnw+Rkn/GpYwdbLHg==
+X-Received: by 2002:a17:902:8c89:: with SMTP id t9mr13070339plo.14.1593419416870;
+        Mon, 29 Jun 2020 01:30:16 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id 202sm9133790pfw.84.2020.06.29.01.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 01:30:16 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 4/4] vt6655/device_main.c: use generic power management
+Date:   Mon, 29 Jun 2020 13:58:19 +0530
+Message-Id: <20200629082819.216405-5-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
+References: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> Hi Michael,
->
-> I see this patch is marked as "defered" in patchwork, but I can't see=20
-> any related discussion. Is it normal ?
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
 
-https://github.com/linuxppc/issues/issues/297
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead.
 
-So we should be able to pick it up for v5.9 hopefully.
+Compile-tested only.
 
-cheers
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/staging/vt6655/device_main.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
+index 41cbec4134b0..76de1fd568eb 100644
+--- a/drivers/staging/vt6655/device_main.c
++++ b/drivers/staging/vt6655/device_main.c
+@@ -1766,48 +1766,37 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
+ 
+ /*------------------------------------------------------------------*/
+ 
+-#ifdef CONFIG_PM
+-static int vt6655_suspend(struct pci_dev *pcid, pm_message_t state)
++static int __maybe_unused vt6655_suspend(struct device *dev_d)
+ {
+-	struct vnt_private *priv = pci_get_drvdata(pcid);
++	struct vnt_private *priv = dev_get_drvdata(dev_d);
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 
+-	pci_save_state(pcid);
+-
+ 	MACbShutdown(priv);
+ 
+-	pci_disable_device(pcid);
+-
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+-	pci_set_power_state(pcid, pci_choose_state(pcid, state));
+-
+ 	return 0;
+ }
+ 
+-static int vt6655_resume(struct pci_dev *pcid)
++static int __maybe_unused vt6655_resume(struct device *dev_d)
+ {
+-	pci_set_power_state(pcid, PCI_D0);
+-	pci_enable_wake(pcid, PCI_D0, 0);
+-	pci_restore_state(pcid);
++	device_wakeup_disable(dev_d);
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ MODULE_DEVICE_TABLE(pci, vt6655_pci_id_table);
+ 
++static SIMPLE_DEV_PM_OPS(vt6655_pm_ops, vt6655_suspend, vt6655_resume);
++
+ static struct pci_driver device_driver = {
+ 	.name = DEVICE_NAME,
+ 	.id_table = vt6655_pci_id_table,
+ 	.probe = vt6655_probe,
+ 	.remove = vt6655_remove,
+-#ifdef CONFIG_PM
+-	.suspend = vt6655_suspend,
+-	.resume = vt6655_resume,
+-#endif
++	.driver.pm = &vt6655_pm_ops,
+ };
+ 
+ module_pci_driver(device_driver);
+-- 
+2.27.0
 
-> Le 16/04/2020 =C3=A0 14:39, Christophe Leroy a =C3=A9crit=C2=A0:
->> At the time being, __put_user()/__get_user() and friends only use
->> D-form addressing, with 0 offset. Ex:
->>=20
->> 	lwz	reg1, 0(reg2)
->>=20
->> Give the compiler the opportunity to use other adressing modes
->> whenever possible, to get more optimised code.
->>=20
->> Hereunder is a small exemple:
->>=20
->> struct test {
->> 	u32 item1;
->> 	u16 item2;
->> 	u8 item3;
->> 	u64 item4;
->> };
->>=20
->> int set_test_user(struct test __user *from, struct test __user *to)
->> {
->> 	int err;
->> 	u32 item1;
->> 	u16 item2;
->> 	u8 item3;
->> 	u64 item4;
->>=20
->> 	err =3D __get_user(item1, &from->item1);
->> 	err |=3D __get_user(item2, &from->item2);
->> 	err |=3D __get_user(item3, &from->item3);
->> 	err |=3D __get_user(item4, &from->item4);
->>=20
->> 	err |=3D __put_user(item1, &to->item1);
->> 	err |=3D __put_user(item2, &to->item2);
->> 	err |=3D __put_user(item3, &to->item3);
->> 	err |=3D __put_user(item4, &to->item4);
->>=20
->> 	return err;
->> }
->>=20
->> Before the patch:
->>=20
->> 00000df0 <set_test_user>:
->>   df0:	94 21 ff f0 	stwu    r1,-16(r1)
->>   df4:	39 40 00 00 	li      r10,0
->>   df8:	93 c1 00 08 	stw     r30,8(r1)
->>   dfc:	93 e1 00 0c 	stw     r31,12(r1)
->>   e00:	7d 49 53 78 	mr      r9,r10
->>   e04:	80 a3 00 00 	lwz     r5,0(r3)
->>   e08:	38 e3 00 04 	addi    r7,r3,4
->>   e0c:	7d 46 53 78 	mr      r6,r10
->>   e10:	a0 e7 00 00 	lhz     r7,0(r7)
->>   e14:	7d 29 33 78 	or      r9,r9,r6
->>   e18:	39 03 00 06 	addi    r8,r3,6
->>   e1c:	7d 46 53 78 	mr      r6,r10
->>   e20:	89 08 00 00 	lbz     r8,0(r8)
->>   e24:	7d 29 33 78 	or      r9,r9,r6
->>   e28:	38 63 00 08 	addi    r3,r3,8
->>   e2c:	7d 46 53 78 	mr      r6,r10
->>   e30:	83 c3 00 00 	lwz     r30,0(r3)
->>   e34:	83 e3 00 04 	lwz     r31,4(r3)
->>   e38:	7d 29 33 78 	or      r9,r9,r6
->>   e3c:	7d 43 53 78 	mr      r3,r10
->>   e40:	90 a4 00 00 	stw     r5,0(r4)
->>   e44:	7d 29 1b 78 	or      r9,r9,r3
->>   e48:	38 c4 00 04 	addi    r6,r4,4
->>   e4c:	7d 43 53 78 	mr      r3,r10
->>   e50:	b0 e6 00 00 	sth     r7,0(r6)
->>   e54:	7d 29 1b 78 	or      r9,r9,r3
->>   e58:	38 e4 00 06 	addi    r7,r4,6
->>   e5c:	7d 43 53 78 	mr      r3,r10
->>   e60:	99 07 00 00 	stb     r8,0(r7)
->>   e64:	7d 23 1b 78 	or      r3,r9,r3
->>   e68:	38 84 00 08 	addi    r4,r4,8
->>   e6c:	93 c4 00 00 	stw     r30,0(r4)
->>   e70:	93 e4 00 04 	stw     r31,4(r4)
->>   e74:	7c 63 53 78 	or      r3,r3,r10
->>   e78:	83 c1 00 08 	lwz     r30,8(r1)
->>   e7c:	83 e1 00 0c 	lwz     r31,12(r1)
->>   e80:	38 21 00 10 	addi    r1,r1,16
->>   e84:	4e 80 00 20 	blr
->>=20
->> After the patch:
->>=20
->> 00000dbc <set_test_user>:
->>   dbc:	39 40 00 00 	li      r10,0
->>   dc0:	7d 49 53 78 	mr      r9,r10
->>   dc4:	80 03 00 00 	lwz     r0,0(r3)
->>   dc8:	7d 48 53 78 	mr      r8,r10
->>   dcc:	a1 63 00 04 	lhz     r11,4(r3)
->>   dd0:	7d 29 43 78 	or      r9,r9,r8
->>   dd4:	7d 48 53 78 	mr      r8,r10
->>   dd8:	88 a3 00 06 	lbz     r5,6(r3)
->>   ddc:	7d 29 43 78 	or      r9,r9,r8
->>   de0:	7d 48 53 78 	mr      r8,r10
->>   de4:	80 c3 00 08 	lwz     r6,8(r3)
->>   de8:	80 e3 00 0c 	lwz     r7,12(r3)
->>   dec:	7d 29 43 78 	or      r9,r9,r8
->>   df0:	7d 43 53 78 	mr      r3,r10
->>   df4:	90 04 00 00 	stw     r0,0(r4)
->>   df8:	7d 29 1b 78 	or      r9,r9,r3
->>   dfc:	7d 43 53 78 	mr      r3,r10
->>   e00:	b1 64 00 04 	sth     r11,4(r4)
->>   e04:	7d 29 1b 78 	or      r9,r9,r3
->>   e08:	7d 43 53 78 	mr      r3,r10
->>   e0c:	98 a4 00 06 	stb     r5,6(r4)
->>   e10:	7d 23 1b 78 	or      r3,r9,r3
->>   e14:	90 c4 00 08 	stw     r6,8(r4)
->>   e18:	90 e4 00 0c 	stw     r7,12(r4)
->>   e1c:	7c 63 53 78 	or      r3,r3,r10
->>   e20:	4e 80 00 20 	blr
->>=20
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
->> ---
->> v2:
->> - Added <> modifier in __put_user_asm() and __get_user_asm()
->> - Removed %U2 in __put_user_asm2() and __get_user_asm2()
->> - Reworded the commit log
->> ---
->>   arch/powerpc/include/asm/uaccess.h | 28 ++++++++++++++--------------
->>   1 file changed, 14 insertions(+), 14 deletions(-)
->>=20
->> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/a=
-sm/uaccess.h
->> index 7c811442b607..9365b59495a2 100644
->> --- a/arch/powerpc/include/asm/uaccess.h
->> +++ b/arch/powerpc/include/asm/uaccess.h
->> @@ -114,7 +114,7 @@ extern long __put_user_bad(void);
->>    */
->>   #define __put_user_asm(x, addr, err, op)			\
->>   	__asm__ __volatile__(					\
->> -		"1:	" op " %1,0(%2)	# put_user\n"		\
->> +		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
->>   		"2:\n"						\
->>   		".section .fixup,\"ax\"\n"			\
->>   		"3:	li %0,%3\n"				\
->> @@ -122,7 +122,7 @@ extern long __put_user_bad(void);
->>   		".previous\n"					\
->>   		EX_TABLE(1b, 3b)				\
->>   		: "=3Dr" (err)					\
->> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
->> +		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
->>=20=20=20
->>   #ifdef __powerpc64__
->>   #define __put_user_asm2(x, ptr, retval)				\
->> @@ -130,8 +130,8 @@ extern long __put_user_bad(void);
->>   #else /* __powerpc64__ */
->>   #define __put_user_asm2(x, addr, err)				\
->>   	__asm__ __volatile__(					\
->> -		"1:	stw %1,0(%2)\n"				\
->> -		"2:	stw %1+1,4(%2)\n"			\
->> +		"1:	stw%X2 %1,%2\n"			\
->> +		"2:	stw%X2 %L1,%L2\n"			\
->>   		"3:\n"						\
->>   		".section .fixup,\"ax\"\n"			\
->>   		"4:	li %0,%3\n"				\
->> @@ -140,7 +140,7 @@ extern long __put_user_bad(void);
->>   		EX_TABLE(1b, 4b)				\
->>   		EX_TABLE(2b, 4b)				\
->>   		: "=3Dr" (err)					\
->> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
->> +		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
->>   #endif /* __powerpc64__ */
->>=20=20=20
->>   #define __put_user_size_allowed(x, ptr, size, retval)		\
->> @@ -260,7 +260,7 @@ extern long __get_user_bad(void);
->>=20=20=20
->>   #define __get_user_asm(x, addr, err, op)		\
->>   	__asm__ __volatile__(				\
->> -		"1:	"op" %1,0(%2)	# get_user\n"	\
->> +		"1:	"op"%U2%X2 %1, %2	# get_user\n"	\
->>   		"2:\n"					\
->>   		".section .fixup,\"ax\"\n"		\
->>   		"3:	li %0,%3\n"			\
->> @@ -269,7 +269,7 @@ extern long __get_user_bad(void);
->>   		".previous\n"				\
->>   		EX_TABLE(1b, 3b)			\
->>   		: "=3Dr" (err), "=3Dr" (x)			\
->> -		: "b" (addr), "i" (-EFAULT), "0" (err))
->> +		: "m<>" (*addr), "i" (-EFAULT), "0" (err))
->>=20=20=20
->>   #ifdef __powerpc64__
->>   #define __get_user_asm2(x, addr, err)			\
->> @@ -277,8 +277,8 @@ extern long __get_user_bad(void);
->>   #else /* __powerpc64__ */
->>   #define __get_user_asm2(x, addr, err)			\
->>   	__asm__ __volatile__(				\
->> -		"1:	lwz %1,0(%2)\n"			\
->> -		"2:	lwz %1+1,4(%2)\n"		\
->> +		"1:	lwz%X2 %1, %2\n"			\
->> +		"2:	lwz%X2 %L1, %L2\n"		\
->>   		"3:\n"					\
->>   		".section .fixup,\"ax\"\n"		\
->>   		"4:	li %0,%3\n"			\
->> @@ -289,7 +289,7 @@ extern long __get_user_bad(void);
->>   		EX_TABLE(1b, 4b)			\
->>   		EX_TABLE(2b, 4b)			\
->>   		: "=3Dr" (err), "=3D&r" (x)			\
->> -		: "b" (addr), "i" (-EFAULT), "0" (err))
->> +		: "m" (*addr), "i" (-EFAULT), "0" (err))
->>   #endif /* __powerpc64__ */
->>=20=20=20
->>   #define __get_user_size_allowed(x, ptr, size, retval)		\
->> @@ -299,10 +299,10 @@ do {								\
->>   	if (size > sizeof(x))					\
->>   		(x) =3D __get_user_bad();				\
->>   	switch (size) {						\
->> -	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
->> -	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
->> -	case 4: __get_user_asm(x, ptr, retval, "lwz"); break;	\
->> -	case 8: __get_user_asm2(x, ptr, retval);  break;	\
->> +	case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break;	\
->> +	case 2: __get_user_asm(x, (u16 __user *)ptr, retval, "lhz"); break;	\
->> +	case 4: __get_user_asm(x, (u32 __user *)ptr, retval, "lwz"); break;	\
->> +	case 8: __get_user_asm2(x, (u64 __user *)ptr, retval);  break;	\
->>   	default: (x) =3D __get_user_bad();			\
->>   	}							\
->>   } while (0)
->>=20
