@@ -2,119 +2,210 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF523C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC81FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF194204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yh0Ac6h3"
+	by mail.kernel.org (Postfix) with ESMTP id C4921204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgF2S7Q (ORCPT
+        id S1730270AbgF2S7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:59:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32667 "EHLO m43-7.mailgun.net"
+        Mon, 29 Jun 2020 14:59:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:65096 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728041AbgF2S67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:58:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593457139; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=LiEshpG6n+ZWXWHltSTHJXa6fUUMpuwtQ5+FAEi+WoU=; b=Yh0Ac6h3g0GgmRW6nIU2tRu7Qi6cz/WSw5F3e9LtMBy5xS6F2obBQmExnqxgeKbWoajQ9S3o
- AQgkd3Yvx7ym+j+bZpCV8WjGRDp1b0ynMaxWgcf7TjZPHCfXMpX5DkaE6Ej3mX2Lqj27vtjf
- dYV5scjhPtRvfalhYuGc6sEfpHs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5efa0e96356bcc26abe0da72 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D2F4C433AD; Mon, 29 Jun 2020 15:53:57 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DAF8C433B2;
-        Mon, 29 Jun 2020 15:53:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DAF8C433B2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 5/7] iommu: arm-smmu-impl: Convert to use of_match_node() for qcom impl
-Date:   Mon, 29 Jun 2020 21:22:48 +0530
-Message-Id: <eac57bb8a99f811a47242a216343b8aadb4b1677.1593344119.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+        id S1730167AbgF2S6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:58:54 -0400
+IronPort-SDR: RWeeJ/8RlA8iam6h8rbkXQySlJPKg8Z8etXIA2PTHkj4OQbn5OXZrrwy1WPNeaYMZIpLnY12r3
+ SoN2lGVZg+wg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147540174"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="147540174"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 08:27:19 -0700
+IronPort-SDR: rGBMpfACiG1z4qkmaDQmtluftmaItl/SFgyVE8IlcTxjEYsTQkMzUpPHkLlLoyg+bUyRjEZRro
+ RXKZLVmhfq9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="318245592"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga007.jf.intel.com with ESMTP; 29 Jun 2020 08:27:19 -0700
+Date:   Mon, 29 Jun 2020 08:27:19 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+Message-ID: <20200629152718.GA12312@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200627174335.GC15585@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627174335.GC15585@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of_match_node() to match qcom implementation instead
-of multiple of_device_compatible() calls for each qcom
-implementation.
+On Sat, Jun 27, 2020 at 07:43:35PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
+> > +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
+> > +			 void *token)
+> > +{
+> > +	u64 mrsigner[4];
+> > +	int ret;
+> > +	int i;
+> > +	int j;
+> > +
+> > +	/* Check that the required attributes have been authorized. */
+> > +	if (encl->secs_attributes & ~encl->allowed_attributes)
+> > +		return -EACCES;
+> > +
+> > +	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_lock(&encl->lock);
+> > +
+> > +	if (atomic_read(&encl->flags) & SGX_ENCL_INITIALIZED) {
+> > +		ret = -EFAULT;
+> > +		goto err_out;
+> > +	}
+> 
+> That test should be the first thing this function or its caller does.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/iommu/arm-smmu-impl.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Hmm, I was going to say that SGX_ENCL_INITIALIZED can't be checked until
+encl->lock is held, but that's not true for this path as mutual exclusion
+is provided by the SGX_ENCL_IOCTL flag.  So yeah, this can be checked at
+the same time as SGX_ENCL_CREATED in sgx_ioc_enclave_init().
 
-diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-index 8fbab9c38b61..42020d50ce12 100644
---- a/drivers/iommu/arm-smmu-impl.c
-+++ b/drivers/iommu/arm-smmu-impl.c
-@@ -9,6 +9,12 @@
- 
- #include "arm-smmu.h"
- 
-+static const struct of_device_id __maybe_unused qcom_smmu_impl_of_match[] = {
-+	{ .compatible = "qcom,sc7180-smmu-500" },
-+	{ .compatible = "qcom,sdm845-smmu-500" },
-+	{ }
-+};
-+
- static int arm_smmu_gr0_ns(int offset)
- {
- 	switch (offset) {
-@@ -168,8 +174,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
- 	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
- 		smmu->impl = &calxeda_impl;
- 
--	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
--	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
-+	if (of_match_node(qcom_smmu_impl_of_match, np))
- 		return qcom_smmu_impl_init(smmu);
- 
- 	if (of_device_is_compatible(smmu->dev->of_node, "qcom,adreno-smmu"))
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> > +	for (i = 0; i < SGX_EINIT_SLEEP_COUNT; i++) {
+> > +		for (j = 0; j < SGX_EINIT_SPIN_COUNT; j++) {
+> 
+> Ew, what's that double-loop for?
+> 
+> It tries to init an enclave a bunch of times. Why does it need to init
+> more than once?
 
+ENCLS[EINIT] is interruptible because it has such a high latency, e.g. 50k+
+cycles on success.  If an IRQ/NMI/SMI becomes pending, EINIT may fail with
+SGX_UNMASKED_EVENT so that the event can be serviced.
+
+The idea behind the double loop is to try EINIT in a tight loop, then back
+off and sleep for a while before retrying that tight inner loop.
+
+> > +			ret = sgx_einit(sigstruct, token, encl->secs.epc_page,
+> > +					mrsigner);
+> > +			if (ret == SGX_UNMASKED_EVENT)
+> > +				continue;
+> > +			else
+> > +				break;
+> > +		}
+> > +
+> > +		if (ret != SGX_UNMASKED_EVENT)
+> > +			break;
+> > +
+> > +		msleep_interruptible(SGX_EINIT_SLEEP_TIME);
+> > +
+> > +		if (signal_pending(current)) {
+> > +			ret = -ERESTARTSYS;
+> > +			goto err_out;
+> > +		}
+> > +	}
+> > +
+> > +	if (ret & ENCLS_FAULT_FLAG) {
+> > +		if (encls_failed(ret))
+> > +			ENCLS_WARN(ret, "EINIT");
+> > +
+> > +		sgx_encl_destroy(encl);
+> > +		ret = -EFAULT;
+> > +	} else if (ret) {
+> > +		pr_debug("EINIT returned %d\n", ret);
+> > +		ret = -EPERM;
+> > +	} else {
+> > +		atomic_or(SGX_ENCL_INITIALIZED, &encl->flags);
+> > +	}
+> > +
+> > +err_out:
+> > +	mutex_unlock(&encl->lock);
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
+> > + *
+> > + * @filep:	open file to /dev/sgx
+> 
+> @encl:       pointer to an enclave instance (via ioctl() file pointer)
+> 
+> > + * @arg:	userspace pointer to a struct sgx_enclave_init instance
+> > + *
+> > + * Flush any outstanding enqueued EADD operations and perform EINIT.  The
+> > + * Launch Enclave Public Key Hash MSRs are rewritten as necessary to match
+> > + * the enclave's MRSIGNER, which is caculated from the provided sigstruct.
+> > + *
+> > + * Return:
+> > + *   0 on success,
+> > + *   SGX error code on EINIT failure,
+> > + *   -errno otherwise
+> > + */
+> > +static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
+> > +{
+> > +	struct sgx_sigstruct *sigstruct;
+> > +	struct sgx_enclave_init einit;
+> > +	struct page *initp_page;
+> > +	void *token;
+> > +	int ret;
+> > +
+> > +	if (!(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
+> 
+> Might just as well check the other flags: doing EINIT on an already
+> initialized enclave - SGX_ENCL_INITIALIZED - is perhaps a nono or
+> similarly on a SGX_ENCL_DEAD enclave.
+> 
+> And you could do similar sanity checks in the other ioctl functions.
+
+Ya, as above, SGX_ENCL_INITIALIZED can be checked here.
+
+SGX_ENCL_DEAD is actually already checked in in the top level sgx_ioctl(),
+i.e. the check in sgx_encl_add_page() can technically be flat out dropped.
+
+I say "technically" because I'm a bit torn over SGX_ENCL_DEAD; encl->lock
+must be held to SGX_ENCL_DEAD (the page fault and reclaim flows rely on
+this), but as it stands today only ioctl() paths (guarded by SGX_ENCL_IOCTL)
+and sgx_release() (makes the ioctls() unreachable) set SGX_ENCL_DEAD.
+
+So it's safe to check SGX_ENCL_DEAD from ioctl() context without holding
+encl->lock, at least in the current code base, but it feels weird/sketchy.
+
+In the end I don't think I have a strong opinion.  Removing the technically
+unnecessary DEAD check in sgx_encl_add_page() is the simplest change, so it
+may make sense to do that and nothing more for initial upstreaming.  Long
+term, I fully expect we'll add paths that set SGX_ENCL_DEAD outside of
+ioctl() context, e.g. to handle EPC OOM, but it wouldn't be a bad thing to
+have a standalone commit in a future series to add DEAD checks (under
+encl->lock) in the ADD and INIT flows.
