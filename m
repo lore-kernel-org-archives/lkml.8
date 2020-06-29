@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94491C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4670320842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B9C20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459744;
-	bh=yWjydtHHG+r6V6UOLuq9t6zwh/FKdtVOlOZZv90+lzc=;
+	s=default; t=1593459747;
+	bh=eeqBxFNzqz9GKNAdsaG+9pW4Xgjp7docAW6M9uGrd9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FH0aLbfxbeKrCa9o+wLZUW0kGHZCsj8Kvl7PutHO5GcAbeAGL44wPm83PrJe+AQuq
-	 KaKykX6voCI3svZNrAD/WC30/QUfQR7PsJ69kUNOsSUbRHhcJ1OznjvZRTAy10t/PJ
-	 Q4aUkdEFbRlF6VG/QrMduwQppUa5fBCJlwEviW3I=
+	b=qNrpo9B5Z6EmyjuTY7YPyDR+CeKU/79ZVJpoh1wUMiMHKCkiO17F5Jle16P5nB62s
+	 ktdqc8V339ncP9lsRBJajhDXODBlanasRNiqiU0QgiPjxom+XOraJ48bsO0wxfkc1A
+	 qS5U3uWFh/Sn2w5NUuRoTpe3KyxyOt2+vGiVwlLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgF2TmW (ORCPT
+        id S2387926AbgF2TmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387850AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387843AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8965248ED;
-        Mon, 29 Jun 2020 15:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9D382487E;
+        Mon, 29 Jun 2020 15:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444442;
-        bh=yWjydtHHG+r6V6UOLuq9t6zwh/FKdtVOlOZZv90+lzc=;
+        s=default; t=1593444378;
+        bh=eeqBxFNzqz9GKNAdsaG+9pW4Xgjp7docAW6M9uGrd9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imOpoaJhggWOim8NFQZoDj57wPRLLttWYLejpcFs5yFtnN1I3fDEoz3hWMo89wkJg
-         ktWB+qjofGIvt5NusH3e+GnziZGZY528uXRHHBH09sCh7qm4KIFKVgnq58MX5nzzG+
-         Y+ppudz7d9Q+LFI2fJEx63ZCmZRMr66PN6Ae8jlM=
+        b=Hvr4BXDrpmQwD2n1Iv8KNS1xtDAOwIxfDy5R0m5BABl2gD+rzHzc42987ptOEbAke
+         R6kT9y7qm8I643LDPL+Cxy27n7XqqzRRxmNXhL2UfrV6wOMIZJVKrCkLmJXclI0WJ0
+         /Yis1dSZ839L8eEJf7KTCdNXj0sbudXcFBH0z2kQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 121/178] hwrng: ks-sa - Fix runtime PM imbalance on error
-Date:   Mon, 29 Jun 2020 11:24:26 -0400
-Message-Id: <20200629152523.2494198-122-sashal@kernel.org>
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 055/178] xhci: Fix enumeration issue when setting max packet size for FS devices.
+Date:   Mon, 29 Jun 2020 11:23:20 -0400
+Message-Id: <20200629152523.2494198-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,34 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Al Cooper <alcooperx@gmail.com>
 
-[ Upstream commit 95459261c99f1621d90bc628c2a48e60b7cf9a88 ]
+commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+Unable to complete the enumeration of a USB TV Tuner device.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Per XHCI spec (4.6.5), the EP state field of the input context shall
+be cleared for a set address command. In the special case of an FS
+device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
+not do this before evaluating the context. With an XHCI controller
+that checks the EP state field for parameter context error this
+causes a problem in cases such as the device getting reset again
+after enumeration.
+
+When that field is cleared, the problem does not occur.
+
+This was found and fixed by Sasi Kumar.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/hw_random/ks-sa-rng.c | 1 +
+ drivers/usb/host/xhci.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
-index a67430010aa68..5c7d3dfcfdd04 100644
---- a/drivers/char/hw_random/ks-sa-rng.c
-+++ b/drivers/char/hw_random/ks-sa-rng.c
-@@ -208,6 +208,7 @@ static int ks_sa_rng_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to enable SA power-domain\n");
-+		pm_runtime_put_noidle(dev);
- 		pm_runtime_disable(dev);
- 		return ret;
- 	}
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index f913bc9344d2b..13d2971c35445 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1430,6 +1430,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
+ 				xhci->devs[slot_id]->out_ctx, ep_index);
+ 
+ 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
++		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
+ 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
+ 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+ 
 -- 
 2.25.1
 
