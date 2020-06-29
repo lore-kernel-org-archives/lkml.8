@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F615C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A26D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4FE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458737;
-	bh=ChTL6Zpp6VFyxhQl5HlLme+O9W/F52bSbqdY44CyKVo=;
+	s=default; t=1593458748;
+	bh=igXIQ9KhOPwaPpl0b/JdivR6aj4//a+EAr8lZskRhz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmzidVAC3QZByMRtj8S3XsBLlSeflJzM1CRMsM0dX93jn0lq2AXeLx4T2700UEAvx
-	 V9wjBq/TTDOpKqHkhcVLA/tRm5tjM9Tq7BNV0IufFmbguwvaC7C8XOzu2YaZiyJJim
-	 Q0j96E5hW3ZWKF7gVFiPeGlxV4pwtefzqQPBs+CA=
+	b=BBpIGT5ZH0uuALsMdzNjh6KUltTjTQRZiWbmUBqXX43up9epDFXfk6UaodVJHhCf5
+	 INgeXpsB3Gy0UEcdRWIhgukQb86aVlz53ZV1Q/rKsKSHxBXArqwgzemxE5bY1XWi3s
+	 UyU0+nQvVPyiY4MAY94snIlxHd2p9Xqum63UYqQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbgF2TZf (ORCPT
+        id S1732690AbgF2TZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732474AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:19 -0400
+        id S1731759AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1024E253F4;
-        Mon, 29 Jun 2020 15:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0C42543C;
+        Mon, 29 Jun 2020 15:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445335;
-        bh=ChTL6Zpp6VFyxhQl5HlLme+O9W/F52bSbqdY44CyKVo=;
+        s=default; t=1593445389;
+        bh=igXIQ9KhOPwaPpl0b/JdivR6aj4//a+EAr8lZskRhz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyFgbiRZM8Ywh9235B44ra+4MrEZSDTts51d3svzbjAHDfKHkrZz6jfWXJrj+RKu8
-         /Zf/O4ux87bLz5Nf4wrrqvevE/swDjCEVzLgF1MXpkSWT2DHEzj5BYJh1aOm1qUlkm
-         rJZrgYDwGXkDIYVFIjv/eTNw8QxAaJQyosA1rLzw=
+        b=sWHVvkh9j89ol+aCa/e1cJ1b8tsWdelSfe8Ph0xOuQZdpSsBIeOlbnJnincHLN5rk
+         EjSfLAciiokUgADnPQqOtHL+S6+w1gvpD/3ZjlsgDyII1Hu67TiSd6zwveWWJ1ojol
+         WkbXcu1ElyiBmBH54Om5wKQEesEzrH+8cXwaGHOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stable@vger.kernel.org, Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 096/191] e1000e: Do not wake up the system via WOL if device wakeup is disabled
-Date:   Mon, 29 Jun 2020 11:38:32 -0400
-Message-Id: <20200629154007.2495120-97-sashal@kernel.org>
+Cc:     guodeqing <geffrey.guo@huawei.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 143/191] net: Fix the arp error in some cases
+Date:   Mon, 29 Jun 2020 11:39:19 -0400
+Message-Id: <20200629154007.2495120-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -68,67 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: guodeqing <geffrey.guo@huawei.com>
 
-[ Upstream commit 6bf6be1127f7e6d4bf39f84d56854e944d045d74 ]
+[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
 
-Currently the system will be woken up via WOL(Wake On LAN) even if the
-device wakeup ability has been disabled via sysfs:
- cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
- disabled
+ie.,
+$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
 
-The system should not be woken up if the user has explicitly
-disabled the wake up ability for this device.
+$ ip rule add from 6.6.6.6 table 6666
 
-This patch clears the WOL ability of this network device if the
-user has disabled the wake up ability in sysfs.
+$ ip route add 9.9.9.9 via 6.6.6.6
 
-Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
-Reported-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+$ ping -I 6.6.6.6 9.9.9.9
+PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
+
+3 packets transmitted, 0 received, 100% packet loss, time 2079ms
+
+$ arp
+Address     HWtype  HWaddress           Flags Mask            Iface
+6.6.6.6             (incomplete)                              eth0
+
+The arp request address is error, this is because fib_table_lookup in
+fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
+the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
+Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
+
+Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
+Signed-off-by: guodeqing <geffrey.guo@huawei.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ net/ipv4/fib_semantics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index be324b4761eb6..3c01bc43889a2 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -6315,11 +6315,17 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 	struct e1000_hw *hw = &adapter->hw;
--	u32 ctrl, ctrl_ext, rctl, status;
--	/* Runtime suspend should only enable wakeup for link changes */
--	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
-+	u32 ctrl, ctrl_ext, rctl, status, wufc;
- 	int retval = 0;
+diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+index 6aec95e1fc134..305104d116d62 100644
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -776,7 +776,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_info *fi,
+ 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
+ 				fl4.flowi4_scope = RT_SCOPE_LINK;
  
-+	/* Runtime suspend should only enable wakeup for link changes */
-+	if (runtime)
-+		wufc = E1000_WUFC_LNKC;
-+	else if (device_may_wakeup(&pdev->dev))
-+		wufc = adapter->wol;
-+	else
-+		wufc = 0;
-+
- 	status = er32(STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -6377,7 +6383,7 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
- 	} else if ((hw->mac.type == e1000_pch_lpt) ||
- 		   (hw->mac.type == e1000_pch_spt)) {
--		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
-+		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
- 			/* ULP does not support wake from unicast, multicast
- 			 * or broadcast.
- 			 */
+-			if (cfg->fc_table)
++			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
+ 				tbl = fib_get_table(net, cfg->fc_table);
+ 
+ 			if (tbl)
 -- 
 2.25.1
 
