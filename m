@@ -2,52 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB99FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FAA206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8263820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460268;
-	bh=sc57KxTG1+aCoDv41LVl5ehw3kZUuTNZaOK2LBSb4Tc=;
+	s=default; t=1593460273;
+	bh=nr8fbONF3tDpmAoLcrs3fhK3KkecQR6+CE/6sRuNh9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5YbxeB/fJWIvXYXRccT9kqVYi/r/NSAVz6kqwTNjXDLkP+m4qkgevteSXJZiF5t7
-	 iWnipMny8WTAG7YRofzjJANpZfYg1XVQbkxaWFx8AocAPjHTp4J/Zb72Zde1cE0KuZ
-	 TT3DywTbryY4Zl8BHJCJ3vrqPWzuHR/srHdAv0xQ=
+	b=2vIXDeIsuVoLfP2lQXUrZonqdqKku36vRgUsVxtbVA9a41wnKo68iy9sZg8iLjWLI
+	 Vi8nq0WYp9vfLPqXttnaSyFXHFBANT7dZlAlvk0lUGRgHnsymLRxGKydCOx73Nt0VX
+	 JA/PqQvqgJ7MkF4/7JImEdzYFntI71RJVG3J1s18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgF2TvC (ORCPT
+        id S2387765AbgF2TvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387723AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387731AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B5ED2489F;
-        Mon, 29 Jun 2020 15:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5586624912;
+        Mon, 29 Jun 2020 15:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444398;
-        bh=sc57KxTG1+aCoDv41LVl5ehw3kZUuTNZaOK2LBSb4Tc=;
+        s=default; t=1593444467;
+        bh=nr8fbONF3tDpmAoLcrs3fhK3KkecQR6+CE/6sRuNh9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2InHoC7h2W2JIrJTHG3j/LWVxj0ng164U/r5CAemZ+tulhg7TFGg4u2WawDWh4b+I
-         fhMNDZiYdwl47SRfIHxRWW/l29CZNFqOLb5zGgC2fwvSr2rD2aCP3Lp3OiRTDUiM0T
-         JXEOgusBXe1zcijg7qEe/PoExLVzQ03+euEMdGsg=
+        b=qqY0pUGWsVBpx5Fk3jkajDgcQBc09OJfJm6m8cXWj6nOE+1JzhPh+SXJInmEMj+Ob
+         EiGVMHulYiJnn+ehI317ldTzQRu9P9C1pMAL/K84gTqZalQ3L2wEOPcMtebr9PqSmQ
+         oKURhF6Bw+4Yz+hHcXl6U+m102/VVOb170hlFOy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/178] ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
-Date:   Mon, 29 Jun 2020 11:23:40 -0400
-Message-Id: <20200629152523.2494198-76-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jingqi Liu <jingqi.liu@intel.com>, Tao Xu <tao3.xu@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 147/178] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
+Date:   Mon, 29 Jun 2020 11:24:52 -0400
+Message-Id: <20200629152523.2494198-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,39 +66,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Drew Fustini <drew@beagleboard.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit d7af722344e6dc52d87649100516515263e15c75 ]
+commit bf09fb6cba4f7099620cc9ed32d94c27c4af992e upstream.
 
-AM3358 pin mcasp0_aclkr (ZCZ ball B13) [0] is routed to P1.31 header [1]
-Mode 4 of this pin is mmc0_sdwp (SD Write Protect).  A signal connected
-to P1.31 may accidentally trigger mmc0 write protection.  To avoid this
-situation, do not put mcasp0_aclkr in mode 4 (mmc0_sdwp) by default.
+Remove support for context switching between the guest's and host's
+desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
+required for correct functionality, e.g. KVM intercepts reads and writes
+to the MSR, and the latency effects of the settings controlled by the
+MSR are not architecturally visible.
 
-[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
-[1] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
+As a general rule, KVM should not allow the guest to control power
+management settings unless explicitly enabled by userspace, e.g. see
+KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
+can improve the performance of SMT siblings.  A devious guest could
+disable C0.2 so as to improve the performance of their workloads at the
+detriment to workloads running in the host or on other VMs.
 
-Fixes: 047905376a16 (ARM: dts: Add am335x-pocketbeagle)
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
+condition where updates from the host may cause KVM to enter the guest
+with the incorrect value.  Because updates are are propagated to all
+CPUs via IPI (SMP function callback), the value in hardware may be
+stale with respect to the cached value and KVM could enter the guest
+with the wrong value in hardware.  As above, the guest can't observe the
+bad value, but it's a weird and confusing wart in the implementation.
+
+Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
+lists.  Using the lists is only necessary for MSRs that are required for
+correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
+old hardware, or for MSRs that need to-the-uop precision, e.g. perf
+related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
+kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
+vcpu_vmx_run().  Using the atomic lists is undesirable as they are more
+expensive than direct RDMSR/WRMSR.
+
+Furthermore, even if giving the guest control of the MSR is legitimate,
+e.g. in pass-through scenarios, it's not clear that the benefits would
+outweigh the overhead.  E.g. saving and restoring an MSR across a VMX
+roundtrip costs ~250 cycles, and if the guest diverged from the host
+that cost would be paid on every run of the guest.  In other words, if
+there is a legitimate use case then it should be enabled by a new
+per-VM capability.
+
+Note, KVM still needs to emulate MSR_IA32_UMWAIT_CONTROL so that it can
+correctly expose other WAITPKG features to the guest, e.g. TPAUSE,
+UMWAIT and UMONITOR.
+
+Fixes: 6e3ba4abcea56 ("KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL")
+Cc: stable@vger.kernel.org
+Cc: Jingqi Liu <jingqi.liu@intel.com>
+Cc: Tao Xu <tao3.xu@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200623005135.10414-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/kernel/cpu/umwait.c |  6 ------
+ arch/x86/kvm/vmx/vmx.c       | 18 ------------------
+ arch/x86/kvm/vmx/vmx.h       |  2 --
+ 3 files changed, 26 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index ff4f919d22f62..abf2badce53d9 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -88,7 +88,6 @@
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, PIN_INPUT_PULLUP, MUX_MODE0)
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, PIN_INPUT_PULLUP, MUX_MODE0)
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
--			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, PIN_INPUT, MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
- 		>;
- 	};
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index c222f283b4560..32b4dc9030aa9 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -17,12 +17,6 @@
+  */
+ static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
  
+-u32 get_umwait_control_msr(void)
+-{
+-	return umwait_control_cached;
+-}
+-EXPORT_SYMBOL_GPL(get_umwait_control_msr);
+-
+ /*
+  * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
+  * hardware or BIOS before kernel boot.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 2e6d400ce0a01..10e6471896cdb 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6427,23 +6427,6 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ 					msrs[i].host, false);
+ }
+ 
+-static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
+-{
+-	u32 host_umwait_control;
+-
+-	if (!vmx_has_waitpkg(vmx))
+-		return;
+-
+-	host_umwait_control = get_umwait_control_msr();
+-
+-	if (vmx->msr_ia32_umwait_control != host_umwait_control)
+-		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
+-			vmx->msr_ia32_umwait_control,
+-			host_umwait_control, false);
+-	else
+-		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
+-}
+-
+ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -6533,7 +6516,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	pt_guest_enter(vmx);
+ 
+ 	atomic_switch_perf_msrs(vmx);
+-	atomic_switch_umwait_control_msr(vmx);
+ 
+ 	if (enable_preemption_timer)
+ 		vmx_update_hv_timer(vcpu);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 295c5f83842e5..a1919ec7fd108 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -14,8 +14,6 @@
+ extern const u32 vmx_msr_index[];
+ extern u64 host_efer;
+ 
+-extern u32 get_umwait_control_msr(void);
+-
+ #define MSR_TYPE_R	1
+ #define MSR_TYPE_W	2
+ #define MSR_TYPE_RW	3
 -- 
 2.25.1
 
