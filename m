@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0873FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85337C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4A4B20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A10920760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460112;
-	bh=jNkYSjwbnE1szYQtsX4wcYlRGkclymmGDzn1KMTTJA8=;
+	s=default; t=1593460115;
+	bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roRwQUKlWVg2gpEZwGoRVmmeSRJXLugt7xhwzrd9wSNkDeXT6FtVWEumPEqtCU2ty
-	 AAoT6FZwxCtBDjqvIUCoUOGqytIngFdLE1pAO9X7BJiMkc15ltNsu9FIOreiGJFi61
-	 skAkjKrSgfuRfwxQFZuerBGr+Wgzh7waQexHQO2s=
+	b=kLAN+qaUhLseQbVZQ/jLrP5xhjq3AWWM+VnBqZpEYP8/gMZpenNXl7pavNPIvvsq/
+	 KLp9xMRj8dHzwDkCfN+2ZVvUQtE/27u9Q0Na4NGl6oTA9nr4DNIq/st4MO8Quh7HlC
+	 ECAlrsz72OHB+PzJ7LMar0kaQ4FQL7qGKYOPm7eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388163AbgF2Tsa (ORCPT
+        id S2388167AbgF2Tsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387784AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387783AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C9552483D;
-        Mon, 29 Jun 2020 15:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B5B248F0;
+        Mon, 29 Jun 2020 15:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444351;
-        bh=jNkYSjwbnE1szYQtsX4wcYlRGkclymmGDzn1KMTTJA8=;
+        s=default; t=1593444446;
+        bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6EBLhM6IKG3lzPbYTkQz2cnuWixIbSQpRjtVgpd6HkfYPvO5ofIK1m3OIqXV7+yO
-         x+PGSAmyqasVUJBT+yfgRiEPsZp3EeZA8hX4A+unOzEbxQ45hjzD0pQkzMc80TVEcy
-         arJ8/bCkJgZS8xJs4GBaTDBY1TORLPxua2X3OmGE=
+        b=jrx5XoAmaBpirnA3kfGVDWs4BOgVCRXlW8Yr/edT00eC/Q8jbgdhUDOa0V5U2JId6
+         LzH2IMje+ryDtHiCTw5ufhS9TRtX7+RG1xPO7ysMyX2wjsLdrSCt5ygCWaH/viTMLE
+         5ysgdbVy4ftD+63hdA9qNqpBZTLOMyyMtPCc8xjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
         "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 026/178] sch_cake: fix a few style nits
-Date:   Mon, 29 Jun 2020 11:22:51 -0400
-Message-Id: <20200629152523.2494198-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 125/178] test_objagg: Fix potential memory leak in error handling
+Date:   Mon, 29 Jun 2020 11:24:30 -0400
+Message-Id: <20200629152523.2494198-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -66,44 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 3f608f0c41360b11b04c763f348b712f651c8bac ]
+[ Upstream commit a6379f0ad6375a707e915518ecd5c2270afcd395 ]
 
-I spotted a few nits when comparing the in-tree version of sch_cake with
-the out-of-tree one: A redundant error variable declaration shadowing an
-outer declaration, and an indentation alignment issue. Fix both of these.
+In case of failure of check_expect_hints_stats(), the resources
+allocated by objagg_hints_get should be freed. The patch fixes
+this issue.
 
-Fixes: 046f6fd5daef ("sched: Add Common Applications Kept Enhanced (cake) qdisc")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cake.c | 4 ++--
+ lib/test_objagg.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index e1b93ff79ab53..5d605bab9afcb 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -2703,7 +2703,7 @@ static int cake_init(struct Qdisc *sch, struct nlattr *opt,
- 	qdisc_watchdog_init(&q->watchdog, sch);
- 
- 	if (opt) {
--		int err = cake_change(sch, opt, extack);
-+		err = cake_change(sch, opt, extack);
- 
- 		if (err)
- 			return err;
-@@ -3020,7 +3020,7 @@ static int cake_dump_class_stats(struct Qdisc *sch, unsigned long cl,
- 			PUT_STAT_S32(BLUE_TIMER_US,
- 				     ktime_to_us(
- 					     ktime_sub(now,
--						     flow->cvars.blue_timer)));
-+						       flow->cvars.blue_timer)));
- 		}
- 		if (flow->cvars.dropping) {
- 			PUT_STAT_S32(DROP_NEXT_US,
+diff --git a/lib/test_objagg.c b/lib/test_objagg.c
+index 72c1abfa154dc..da137939a4100 100644
+--- a/lib/test_objagg.c
++++ b/lib/test_objagg.c
+@@ -979,10 +979,10 @@ static int test_hints_case(const struct hints_case *hints_case)
+ err_world2_obj_get:
+ 	for (i--; i >= 0; i--)
+ 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
+-	objagg_hints_put(hints);
+-	objagg_destroy(objagg2);
+ 	i = hints_case->key_ids_count;
++	objagg_destroy(objagg2);
+ err_check_expect_hints_stats:
++	objagg_hints_put(hints);
+ err_hints_get:
+ err_check_expect_stats:
+ err_world_obj_get:
 -- 
 2.25.1
 
