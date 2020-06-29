@@ -2,434 +2,206 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F80C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E768E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB5B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QSvMmPHi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DEAbwrVc"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="auSAoO5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732030AbgF2TSu (ORCPT
+        id S1730395AbgF2TTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:18:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        Mon, 29 Jun 2020 15:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731768AbgF2TOV (ORCPT
+        with ESMTP id S1731765AbgF2TOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:21 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE663C00874F;
-        Mon, 29 Jun 2020 01:34:11 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 08:34:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593419647;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nzXZoUurP62VW/lU2/DKfmFqIPIGfbkEGZXzfa759tE=;
-        b=QSvMmPHiOuPJvbK75qR+UM8iAPXjeTEqlpLBLZGjQNNV7gtkHxGDHsnP3JN9sLWtnLZkeL
-        uX8iRmGR+st92NxfDKTMv7Yg5xSjXSIrrScFB3jxIb5vyfsNTf1r51+6uxoEITQb1DBDr+
-        NOXRi6mDRom4LFW2LwFt74B1yQOzz4dgemfyrbG8BKDTHxS8cL9YNCYoKeblrn7paolv+Q
-        a37cVHtXZ0A+RgjXXCWE3E6EktQO9oyQjyrTv5tUA9FGlKoAMRdnW2j2O7N+z15uA2mlWf
-        XL/JiLfzd+3xSPIrQEF/rYqqERs7HOPwa3rfearSeM+/MsC93VcEembkMZ3Cqg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593419647;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nzXZoUurP62VW/lU2/DKfmFqIPIGfbkEGZXzfa759tE=;
-        b=DEAbwrVcBGrebb19mLR98wRyneqtuwkxkVqPENTDut/mwTU5e9jhhfFccjcSadcfW/d/wn
-        onq/XGVotfJ1BrAw==
-From:   "tip-bot2 for Petteri Aimonen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] selftests/fpu: Add an FPU selftest
-Cc:     kernel test robot <lkp@intel.com>,
-        Petteri Aimonen <jpa@git.mail.kapsi.fi>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200624114646.28953-3-bp@alien8.de>
-References: <20200624114646.28953-3-bp@alien8.de>
-MIME-Version: 1.0
-Message-ID: <159341964619.4006.7398872185106451664.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+        Mon, 29 Jun 2020 15:14:20 -0400
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03on070a.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe08::70a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6528C008649;
+        Mon, 29 Jun 2020 03:04:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lShKbRmB0J5eEkEW4N5PhK5fGGteVPmStCbBiVn9AXUhnPgFLF+eQGo/WuOVDxtCdYdnn5aNTWSS4MTpWnR5A0Crlsx8Qe047VyRUUTD7wMby0wD+bMFxnTjPuaxNn927fImDLhE4NNO7Kca4jy3s5B6GDox50rK3JvEppLXtaqC4UycWLDljK9CxJXpwWY5Tw3R9RIb2zgjefTbdy+JZWGkzha0Fh5umVj//XqY2h9qpmDmcZqShKkOfm8GSABed3Ge9XPxAVp1MksdhhjeZEWuCefCh0pcG+GmIs6slIJzk5/8r5rOBqs1KHBzHqaaBPXh3SdKz48gE/pDO/Dw+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=in2MCgJq3Xc/5ZXebcY0aOhH359BoUq2fD4d3C5vmTQ=;
+ b=JDxOVPnYQA9FalLLc3STPw7c0q6wi9/HH96PzgiqIZ1OtOXK2om3U34JJED/0ov9+3UZZI06R66t0xoHOace+Ou0myZkf79ejwXZqf+Jg1nPFhXKd5GcagGihoxBM/6EzNWnamE6gak53f2qMVztL/9uaSth6a108dFvnrzXCMJEOn8wYq0AZ3rD7kSf1uoyD/DqVMTvkSwJkwffmPrBp6OqohLBMIPnmT1P2864YWoXo9UIKAijCUuySUolwvcYlL6inJWusPstBZxyO3TFUSYviElN7/bTaIY+3NaxzIWoAp5/8j0UXvRqJeJVFZ8B6CWcSQD6Vp+i1McHbViUVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=in2MCgJq3Xc/5ZXebcY0aOhH359BoUq2fD4d3C5vmTQ=;
+ b=auSAoO5Phsbi0Wt4eTILKyH4TR2qbBWflfmbeRMeBHJ41s1LwAymmqevVgi983txILmLMBT/Zwd+DrHyEkQE7aapCd5Ht12cc0Ox/RLWJ6KorHSUSMUmCYYr2YpZB05t5gMJP6BdhviGkbjoQ6D7CruwaEMX151fHZDeIMQ2WMc=
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
+ by AM6PR05MB5733.eurprd05.prod.outlook.com (2603:10a6:20b:29::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 10:04:13 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
+ 10:04:13 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "peter.chen@nxp.com" <peter.chen@nxp.com>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
+Thread-Topic: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
+Thread-Index: AQHWS6lpDotuJDHYTE6xfL+NZ7/3sKjvNfGAgAAsA4A=
+Date:   Mon, 29 Jun 2020 10:04:13 +0000
+Message-ID: <88f0a5bf564eded8b210457204facdf2c7a9c5dc.camel@toradex.com>
+References: <20200626110311.221596-1-philippe.schenker@toradex.com>
+         <20200629072703.GC30684@b29397-desktop>
+In-Reply-To: <20200629072703.GC30684@b29397-desktop>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.3 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=toradex.com;
+x-originating-ip: [31.10.206.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: edd9b0e6-d15c-4993-8ab1-08d81c13c6d2
+x-ms-traffictypediagnostic: AM6PR05MB5733:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB57338B6CD114BB30320B4BCAF46E0@AM6PR05MB5733.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DG4SW2paJ82qPJ+7yUvu25xZnBVAERjxBURLqh7HlTdDwWtq15CRFo4TX3Jss7gtJ9GtFNV6qaZiBnsAhAuYQbG6kBnSVFrigCPQRguxJL/C6LoKc3ZjuQGLjnfa8YeDfmcerPXTIqA/VsUI/+OXLrMMFFEueyT5FNn+W2J2l+GqriPBlq8CQfUeBQbU/NF/30UMhnNOaGOJ2ThDziJnfsZ8jVz9yJxv0P6uxkNjsBLDumgMp/WsUysZ30oFOV8XB7m1tg14R5gvbWWhjzDX6EoVDZTgOmvhSqn/jOtB/A1nMvJCFVWnCRP8xogXAHjXja3Gi1P0vjr9eLgpm3Bj/Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(39850400004)(366004)(478600001)(6916009)(71200400001)(8676002)(64756008)(66556008)(8936002)(2906002)(2616005)(66946007)(66476007)(66446008)(186003)(6506007)(76116006)(83380400001)(91956017)(86362001)(4326008)(316002)(6512007)(6486002)(36756003)(5660300002)(53546011)(44832011)(54906003)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HjqHgVTh/aEP3kFJT5ZFIax/kB587xfbdUDOpD1RKQOF4s44Rel3hOJLau3do29mlClcHhu7YqWNCL/LOrSwTlc6ESPNTb0i5NYrakGTxkCNJc670Tl5ZHKuXX23M1aJuXOLeIF+BBWMAMxQHOyKNB9WRkVSDdaas7ZsfF4/Twgkbk3uH+DVGIVc/QqIHNLelNgpb4WnaFGs/Z+zpwXMEkW1AGnEh5mRccEJiVYAIPYklvYQzj2PzuX95llYGywbnRpZ+xxfEOpCE1c20yju/vUfSiWPbqKlljNLGa2noY435dEIw7MfgPZODt5pYCaNErg1sDgy8PQL1Nei+KkhMZEVbqXSCMmqjx20999k1Ssl8bZXzpQmmWYjH1sNGXGbFYWcSB4UpNF7xlcf6mShkh7Gsd5gn/wZ3wZhIeEGxXRUb+1xJmZLoyF6aFlEA1qbZHskFLgppxV0g9jDYwl2w9806/ujYmmNqG9Su5Rm+oA=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-ID: <7F8B996D3B72A54792DA5F6A7A962314@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edd9b0e6-d15c-4993-8ab1-08d81c13c6d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 10:04:13.7678
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y5y4jLqaa/DRqd5YqBrRlxEOJmSmViajvbF+vEQ9XWScmZFBmHh4Nug3vZVpVIzbPxXBy4ezzqSQmctuzFsuftH3DW/uN8dzsgW0S1KTPWc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/fpu branch of tip:
-
-Commit-ID:     4185b3b92792eaec5869266e594338343421ffb0
-Gitweb:        https://git.kernel.org/tip/4185b3b92792eaec5869266e594338343421ffb0
-Author:        Petteri Aimonen <jpa@git.mail.kapsi.fi>
-AuthorDate:    Thu, 18 Jun 2020 16:37:37 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 29 Jun 2020 10:02:23 +02:00
-
-selftests/fpu: Add an FPU selftest
-
-Add a selftest for the usage of FPU code in kernel mode.
-
-Currently only implemented for x86. In the future, kernel FPU testing
-could be unified between the different architectures supporting it.
-
- [ bp:
-
-  - Split out from a conglomerate patch, put comments over statements.
-  - run the test only on debugfs write.
-  - Add bare-minimum run_test_fpu.sh, run 1000 iterations on all CPUs
-    by default.
-  - Add conditionally -msse2 so that clang doesn't generate library
-    calls.
-  - Use cc-option to detect gcc 7.1 not supporting -mpreferred-stack-boundary=3 (amluto).
-  - Document stuff so that we don't forget.
-  - Fix:
-     ld: lib/test_fpu.o: in function `test_fpu_get':
-     >> test_fpu.c:(.text+0x16e): undefined reference to `__sanitizer_cov_trace_cmpd'
-     >> ld: test_fpu.c:(.text+0x1a7): undefined reference to `__sanitizer_cov_trace_cmpd'
-     ld: test_fpu.c:(.text+0x1e0): undefined reference to `__sanitizer_cov_trace_cmpd'
-  ]
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200624114646.28953-3-bp@alien8.de
----
- lib/Kconfig.debug                           | 11 ++-
- lib/Makefile                                | 24 +++++-
- lib/test_fpu.c                              | 89 ++++++++++++++++++++-
- tools/testing/selftests/Makefile            |  1 +-
- tools/testing/selftests/fpu/.gitignore      |  2 +-
- tools/testing/selftests/fpu/Makefile        |  9 ++-
- tools/testing/selftests/fpu/run_test_fpu.sh | 46 ++++++++++-
- tools/testing/selftests/fpu/test_fpu.c      | 61 ++++++++++++++-
- 8 files changed, 243 insertions(+)
- create mode 100644 lib/test_fpu.c
- create mode 100644 tools/testing/selftests/fpu/.gitignore
- create mode 100644 tools/testing/selftests/fpu/Makefile
- create mode 100755 tools/testing/selftests/fpu/run_test_fpu.sh
- create mode 100644 tools/testing/selftests/fpu/test_fpu.c
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210..5842885 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2307,6 +2307,17 @@ config TEST_HMM
- 
- 	  If unsure, say N.
- 
-+config TEST_FPU
-+	tristate "Test floating point operations in kernel space"
-+	depends on X86 && !KCOV_INSTRUMENT_ALL
-+	help
-+	  Enable this option to add /sys/kernel/debug/selftest_helpers/test_fpu
-+	  which will trigger a sequence of floating point operations. This is used
-+	  for self-testing floating point control register setting in
-+	  kernel_fpu_begin().
-+
-+	  If unsure, say N.
-+
- endif # RUNTIME_TESTING_MENU
- 
- config MEMTEST
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c1..d0f17a7 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -99,6 +99,30 @@ obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
- obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
- obj-$(CONFIG_TEST_HMM) += test_hmm.o
- 
-+#
-+# CFLAGS for compiling floating point code inside the kernel. x86/Makefile turns
-+# off the generation of FPU/SSE* instructions for kernel proper but FPU_FLAGS
-+# get appended last to CFLAGS and thus override those previous compiler options.
-+#
-+FPU_CFLAGS := -mhard-float -msse -msse2
-+ifdef CONFIG_CC_IS_GCC
-+# Stack alignment mismatch, proceed with caution.
-+# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
-+# (8B stack alignment).
-+# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
-+#
-+# The "-msse" in the first argument is there so that the
-+# -mpreferred-stack-boundary=3 build error:
-+#
-+#  -mpreferred-stack-boundary=3 is not between 4 and 12
-+#
-+# can be triggered. Otherwise gcc doesn't complain.
-+FPU_CFLAGS += $(call cc-option,-msse -mpreferred-stack-boundary=3,-mpreferred-stack-boundary=4)
-+endif
-+
-+obj-$(CONFIG_TEST_FPU) += test_fpu.o
-+CFLAGS_test_fpu.o += $(FPU_CFLAGS)
-+
- obj-$(CONFIG_TEST_LIVEPATCH) += livepatch/
- 
- obj-$(CONFIG_KUNIT) += kunit/
-diff --git a/lib/test_fpu.c b/lib/test_fpu.c
-new file mode 100644
-index 0000000..c33764a
---- /dev/null
-+++ b/lib/test_fpu.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Test cases for using floating point operations inside a kernel module.
-+ *
-+ * This tests kernel_fpu_begin() and kernel_fpu_end() functions, especially
-+ * when userland has modified the floating point control registers. The kernel
-+ * state might depend on the state set by the userland thread that was active
-+ * before a syscall.
-+ *
-+ * To facilitate the test, this module registers file
-+ * /sys/kernel/debug/selftest_helpers/test_fpu, which when read causes a
-+ * sequence of floating point operations. If the operations fail, either the
-+ * read returns error status or the kernel crashes.
-+ * If the operations succeed, the read returns "1\n".
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/debugfs.h>
-+#include <asm/fpu/api.h>
-+
-+static int test_fpu(void)
-+{
-+	/*
-+	 * This sequence of operations tests that rounding mode is
-+	 * to nearest and that denormal numbers are supported.
-+	 * Volatile variables are used to avoid compiler optimizing
-+	 * the calculations away.
-+	 */
-+	volatile double a, b, c, d, e, f, g;
-+
-+	a = 4.0;
-+	b = 1e-15;
-+	c = 1e-310;
-+
-+	/* Sets precision flag */
-+	d = a + b;
-+
-+	/* Result depends on rounding mode */
-+	e = a + b / 2;
-+
-+	/* Denormal and very large values */
-+	f = b / c;
-+
-+	/* Depends on denormal support */
-+	g = a + c * f;
-+
-+	if (d > a && e > a && g > a)
-+		return 0;
-+	else
-+		return -EINVAL;
-+}
-+
-+static int test_fpu_get(void *data, u64 *val)
-+{
-+	int status = -EINVAL;
-+
-+	kernel_fpu_begin();
-+	status = test_fpu();
-+	kernel_fpu_end();
-+
-+	*val = 1;
-+	return status;
-+}
-+
-+DEFINE_SIMPLE_ATTRIBUTE(test_fpu_fops, test_fpu_get, NULL, "%lld\n");
-+static struct dentry *selftest_dir;
-+
-+static int __init test_fpu_init(void)
-+{
-+	selftest_dir = debugfs_create_dir("selftest_helpers", NULL);
-+	if (!selftest_dir)
-+		return -ENOMEM;
-+
-+	debugfs_create_file("test_fpu", 0444, selftest_dir, NULL,
-+			    &test_fpu_fops);
-+
-+	return 0;
-+}
-+
-+static void __exit test_fpu_exit(void)
-+{
-+	debugfs_remove(selftest_dir);
-+}
-+
-+module_init(test_fpu_init);
-+module_exit(test_fpu_exit);
-+
-+MODULE_LICENSE("GPL");
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 1195bd8..227ca78 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -15,6 +15,7 @@ TARGETS += filesystems
- TARGETS += filesystems/binderfs
- TARGETS += filesystems/epoll
- TARGETS += firmware
-+TARGETS += fpu
- TARGETS += ftrace
- TARGETS += futex
- TARGETS += gpio
-diff --git a/tools/testing/selftests/fpu/.gitignore b/tools/testing/selftests/fpu/.gitignore
-new file mode 100644
-index 0000000..d6d12ac
---- /dev/null
-+++ b/tools/testing/selftests/fpu/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+test_fpu
-diff --git a/tools/testing/selftests/fpu/Makefile b/tools/testing/selftests/fpu/Makefile
-new file mode 100644
-index 0000000..ea62c17
---- /dev/null
-+++ b/tools/testing/selftests/fpu/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+LDLIBS := -lm
-+
-+TEST_GEN_PROGS := test_fpu
-+
-+TEST_PROGS := run_test_fpu.sh
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/fpu/run_test_fpu.sh b/tools/testing/selftests/fpu/run_test_fpu.sh
-new file mode 100755
-index 0000000..d77be93
---- /dev/null
-+++ b/tools/testing/selftests/fpu/run_test_fpu.sh
-@@ -0,0 +1,46 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Load kernel module for FPU tests
-+
-+uid=$(id -u)
-+if [ $uid -ne 0 ]; then
-+	echo "$0: Must be run as root"
-+	exit 1
-+fi
-+
-+if ! which modprobe > /dev/null 2>&1; then
-+	echo "$0: You need modprobe installed"
-+        exit 4
-+fi
-+
-+if ! modinfo test_fpu > /dev/null 2>&1; then
-+	echo "$0: You must have the following enabled in your kernel:"
-+	echo "CONFIG_TEST_FPU=m"
-+	exit 4
-+fi
-+
-+NR_CPUS=$(getconf _NPROCESSORS_ONLN)
-+if [ ! $NR_CPUS ]; then
-+	NR_CPUS=1
-+fi
-+
-+modprobe test_fpu
-+
-+if [ ! -e /sys/kernel/debug/selftest_helpers/test_fpu ]; then
-+	mount -t debugfs none /sys/kernel/debug
-+
-+	if [ ! -e /sys/kernel/debug/selftest_helpers/test_fpu ]; then
-+		echo "$0: Error mounting debugfs"
-+		exit 4
-+	fi
-+fi
-+
-+echo "Running 1000 iterations on all CPUs... "
-+for i in $(seq 1 1000); do
-+	for c in $(seq 1 $NR_CPUS); do
-+		./test_fpu &
-+	done
-+done
-+
-+rmmod test_fpu
-diff --git a/tools/testing/selftests/fpu/test_fpu.c b/tools/testing/selftests/fpu/test_fpu.c
-new file mode 100644
-index 0000000..2002385
---- /dev/null
-+++ b/tools/testing/selftests/fpu/test_fpu.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* This testcase operates with the test_fpu kernel driver.
-+ * It modifies the FPU control register in user mode and calls the kernel
-+ * module to perform floating point operations in the kernel. The control
-+ * register value should be independent between kernel and user mode.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <fenv.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+
-+const char *test_fpu_path = "/sys/kernel/debug/selftest_helpers/test_fpu";
-+
-+int main(void)
-+{
-+	char dummy[1];
-+	int fd = open(test_fpu_path, O_RDONLY);
-+
-+	if (fd < 0) {
-+		printf("[SKIP]\tcan't access %s: %s\n",
-+		       test_fpu_path, strerror(errno));
-+		return 0;
-+	}
-+
-+	if (read(fd, dummy, 1) < 0) {
-+		printf("[FAIL]\taccess with default rounding mode failed\n");
-+		return 1;
-+	}
-+
-+	fesetround(FE_DOWNWARD);
-+	if (read(fd, dummy, 1) < 0) {
-+		printf("[FAIL]\taccess with downward rounding mode failed\n");
-+		return 2;
-+	}
-+	if (fegetround() != FE_DOWNWARD) {
-+		printf("[FAIL]\tusermode rounding mode clobbered\n");
-+		return 3;
-+	}
-+
-+	/* Note: the tests up to this point are quite safe and will only return
-+	 * an error. But the exception mask setting can cause misbehaving kernel
-+	 * to crash.
-+	 */
-+	feclearexcept(FE_ALL_EXCEPT);
-+	feenableexcept(FE_ALL_EXCEPT);
-+	if (read(fd, dummy, 1) < 0) {
-+		printf("[FAIL]\taccess with fpu exceptions unmasked failed\n");
-+		return 4;
-+	}
-+	if (fegetexcept() != FE_ALL_EXCEPT) {
-+		printf("[FAIL]\tusermode fpu exception mask clobbered\n");
-+		return 5;
-+	}
-+
-+	printf("[OK]\ttest_fpu\n");
-+	return 0;
-+}
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDA3OjI2ICswMDAwLCBQZXRlciBDaGVuIHdyb3RlOg0KPiBP
+biAyMC0wNi0yNiAxMzowMzoxMSwgUGhpbGlwcGUgU2NoZW5rZXIgd3JvdGU6DQo+ID4gSWYgdGhl
+IGhhcmR3YXJlIGlzIGluIGxvdy1wb3dlci1tb2RlIGFuZCBvbmUgcGx1Z3MgaW4gZGV2aWNlIG9y
+IGhvc3QNCj4gPiBpdCBkaWQgbm90IHN3aXRjaCB0aGUgbW9kZSBkdWUgdG8gdGhlIGVhcmx5IGV4
+aXQgb3V0IG9mIHRoZQ0KPiA+IGludGVycnVwdC4NCj4gDQo+IERvIHlvdSBtZWFuIHRoZXJlIGlz
+IG5vIGNvbWluZyBjYWxsIGZvciByb2xlLXN3aXRjaD8gQ291bGQgeW91IHBsZWFzZQ0KPiBzaGFy
+ZQ0KPiB5b3VyIGR0cyBjaGFuZ2VzPyBUcnkgYmVsb3cgcGF0Y2g6DQoNCkhlcmUgYXJlIG15IERU
+UyBjaGFuZ2VzOg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJp
+LWV2YWwtdjMuZHRzaQ0KYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5k
+dHNpDQppbmRleCA5NzYwMTM3NWYyNjQwLi5jNDI0ZjcwN2ExYWZhIDEwMDY0NA0KLS0tIGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KQEAgLTEzLDYgKzEzLDEzIEBADQog
+ICAgICAgICAgICAgICAgc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7DQogICAgICAg
+IH07DQogDQorICAgICAgIGV4dGNvbl91c2JjX2RldDogdXNiY19kZXQgew0KKyAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAibGludXgsZXh0Y29uLXVzYi1ncGlvIjsNCisgICAgICAgICAgICAg
+ICBpZC1ncGlvID0gPCZncGlvNyAxNCBHUElPX0FDVElWRV9ISUdIPjsNCisgICAgICAgICAgICAg
+ICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KKyAgICAgICAgICAgICAgIHBpbmN0cmwtMCA9
+IDwmcGluY3RybF91c2JjX2RldD47DQorICAgICAgIH07DQorDQogICAgICAgIC8qIGZpeGVkIGNy
+eXN0YWwgZGVkaWNhdGVkIHRvIG1wYzI1OHggKi8NCiAgICAgICAgY2xrMTZtOiBjbGsxNm0gew0K
+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KQEAgLTE3NCw2ICsx
+ODEsNyBAQA0KIH07DQogDQogJnVzYm90ZzEgew0KKyAgICAgICBleHRjb24gPSA8JmV4dGNvbl91
+c2JjX2RldD4sIDwmZXh0Y29uX3VzYmNfZGV0PjsNCiAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0K
+IH07DQogDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kN
+CmIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCmluZGV4IGUxOGU4OWRlYzg3
+OTIuLmNhZWE5MGQyNDIxZmQgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNv
+bGlicmkuZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCkBA
+IC00NTcsNyArNDU3LDcgQEANCiB9Ow0KIA0KICZ1c2JvdGcxIHsNCi0gICAgICAgZHJfbW9kZSA9
+ICJob3N0IjsNCisgICAgICAgZHJfbW9kZSA9ICJvdGciOw0KIH07DQogDQogJnVzZGhjMSB7DQpA
+QCAtNDg2LDcgKzQ4Niw3IEBADQogJmlvbXV4YyB7DQogICAgICAgIHBpbmN0cmwtbmFtZXMgPSAi
+ZGVmYXVsdCI7DQogICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvMSAmcGluY3RybF9n
+cGlvMiAmcGluY3RybF9ncGlvMw0KJnBpbmN0cmxfZ3BpbzQNCi0gICAgICAgICAgICAgICAgICAg
+ICZwaW5jdHJsX2dwaW83ICZwaW5jdHJsX3VzYmNfZGV0PjsNCisgICAgICAgICAgICAgICAgICAg
+ICZwaW5jdHJsX2dwaW83PjsNCiANCiAgICAgICAgcGluY3RybF9ncGlvMTogZ3BpbzEtZ3JwIHsN
+CiAgICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCg0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3VzYi9jaGlwaWRlYS9jb3JlLmMgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9jb3JlLmMN
+Cj4gaW5kZXggZThjZTMwMGFkNDkwLi45ZTEwZGNmZWI5OGYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvdXNiL2NoaXBpZGVhL2NvcmUuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9jb3Jl
+LmMNCj4gQEAgLTEzMTMsNiArMTMxMywyOSBAQCBzdGF0aWMgdm9pZCBjaV9jb250cm9sbGVyX3N1
+c3BlbmQoc3RydWN0DQo+IGNpX2hkcmMgKmNpKQ0KPiAgCWVuYWJsZV9pcnEoY2ktPmlycSk7DQo+
+ICB9DQo+ICANCj4gKy8qDQo+ICsgKiBIYW5kbGUgdGhlIHdha2V1cCBpbnRlcnJ1cHQgdHJpZ2dl
+cmVkIGJ5IGV4dGNvbiBjb25uZWN0b3INCj4gKyAqIFdlIG5lZWQgdG8gY2FsbCBjaV9pcnEgYWdh
+aW4gZm9yIGV4dGNvbiBzaW5jZSB0aGUgZmlyc3QNCj4gKyAqIGludGVycnVwdCAod2FrZXVwIGlu
+dCkgb25seSBsZXQgdGhlIGNvbnRyb2xsZXIgYmUgb3V0IG9mDQo+ICsgKiBsb3cgcG93ZXIgbW9k
+ZSwgYnV0IG5vdCBoYW5kbGUgYW55IGludGVycnVwdHMuDQo+ICsgKi8NCj4gK3N0YXRpYyB2b2lk
+IGNpX2V4dGNvbl93YWtldXBfaW50KHN0cnVjdCBjaV9oZHJjICpjaSkNCj4gK3sNCj4gKwlzdHJ1
+Y3QgY2lfaGRyY19jYWJsZSAqY2FibGVfaWQsICpjYWJsZV92YnVzOw0KPiArCXUzMiBvdGdzYyA9
+IGh3X3JlYWRfb3Rnc2MoY2ksIH4wKTsNCj4gKw0KPiArCWNhYmxlX2lkID0gJmNpLT5wbGF0ZGF0
+YS0+aWRfZXh0Y29uOw0KPiArCWNhYmxlX3ZidXMgPSAmY2ktPnBsYXRkYXRhLT52YnVzX2V4dGNv
+bjsNCj4gKw0KPiArCWlmICghSVNfRVJSKGNhYmxlX2lkLT5lZGV2KSAmJiBjaS0+aXNfb3RnICYm
+DQo+ICsJCShvdGdzYyAmIE9UR1NDX0lESUUpICYmIChvdGdzYyAmIE9UR1NDX0lESVMpKQ0KPiAr
+CQljaV9pcnEoY2ktPmlycSwgY2kpOw0KPiArDQo+ICsJaWYgKCFJU19FUlIoY2FibGVfdmJ1cy0+
+ZWRldikgJiYgY2ktPmlzX290ZyAmJg0KPiArCQkob3Rnc2MgJiBPVEdTQ19CU1ZJRSkgJiYgKG90
+Z3NjICYgT1RHU0NfQlNWSVMpKQ0KPiArCQljaV9pcnEoY2ktPmlycSwgY2kpOw0KPiArfQ0KPiAr
+DQo+ICBzdGF0aWMgaW50IGNpX2NvbnRyb2xsZXJfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikN
+Cj4gIHsNCj4gIAlzdHJ1Y3QgY2lfaGRyYyAqY2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4g
+QEAgLTEzNDMsNiArMTM2Niw3IEBAIHN0YXRpYyBpbnQgY2lfY29udHJvbGxlcl9yZXN1bWUoc3Ry
+dWN0IGRldmljZQ0KPiAqZGV2KQ0KPiAgCQllbmFibGVfaXJxKGNpLT5pcnEpOw0KPiAgCQlpZiAo
+Y2lfb3RnX2lzX2ZzbV9tb2RlKGNpKSkNCj4gIAkJCWNpX290Z19mc21fd2FrZXVwX2J5X3NycChj
+aSk7DQo+ICsJCWNpX2V4dGNvbl93YWtldXBfaW50KGNpKTsNCj4gIAl9DQo+ICANCj4gIAlyZXR1
+cm4gMDsNCg0KVGhhbmtzIGZvciBjcmVhdGluZyB0aGlzIHBhdGNoISBJIHdhbnRlZCBhbHNvIHNv
+bWV0aGluZyBsaWtlIHRoYXQsIGJ1dA0KY291bGRuJ3QgZmluZCBvdXQgd2hlcmUgdG8gcHV0IGl0
+LiANCg0KSSB0cmllZCB0aGlzIHBhdGNoIGFuZCB3aXRoIHRoZSBhYm92ZSBkZXZpY2V0cmVlIGNo
+YW5nZXMgdGhpcyB3b3Jrcw0KcGVyZmVjdGx5ISBUaGFua3MgUGV0ZXIhDQoNClNob3VsZCBJIHNl
+bmQgdGhlIHBhdGNoIHdpdGggeW91IGFzIHRoZSAiU3VnZ2VzdGVkLWJ5IiBvciBkbyB5b3Ugd2Fu
+dCB0bw0Kc2VuZCB0aGUgcGF0Y2ggc28geW91IGFyZSB0aGUgQXV0aG9yPyBJIHdvdWxkIGhhdmUg
+aXQgcmVhZHkgaW4gbXkgZ2l0DQpyZXBvLg0KDQo+IA0KPiA+IFRoaXMgcGF0Y2ggZml4ZXMgdGhh
+dCBiZWhhdmlvdXIgYW5kIGxldHMgdGhlIHJlc3Qgb2YgdGhlIGNvZGUgY2hlY2sNCj4gPiBpZg0K
+PiA+IHNvbWV0aGluZyBoYXMgdG8gYmUgZG9uZS4gSWYgbm90aGluZyBoYXMgdG8gYmUgZG9uZSB0
+aGUgc2FtZSByZXR1cm4NCj4gPiB2YWx1ZSBnZXRzIHJldHVybmVkIGFzIGJlZm9yZS4NCj4gDQo+
+IEJlZm9yZSB0aGUgY29udHJvbGxlciBsZWF2aW5nIGxvdyBwb3dlciBtb2RlLCBvdGdzYyB2YWx1
+ZSBtYXkgbm90DQo+IGNvcnJlY3Qgc2luY2UgdGhlIGNvbnRyb2xsZXIvUEhZIGlzIHN0aWxsIGlu
+IGxvdyBwb3dlciBtb2RlLg0KPiANCj4gPiBGaXhlczogMWY4NzRlZGNiNzMxICgidXNiOiBjaGlw
+aWRlYTogYWRkIHJ1bnRpbWUgcG93ZXIgbWFuYWdlbWVudA0KPiA+IHN1cHBvcnQiKQ0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4
+LmNvbT4NCj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiBIaSBQZXRlcg0KPiA+IA0KPiA+IER1cmlu
+ZyBteSBpbnZlc3RpZ2F0aW9uIEkgZm91bmQgYSBidWcgaW4gY2lfaXJxLiBJIHdvdWxkIGFwcHJl
+Y2lhdGUNCj4gPiBpZiB5b3UgY291bGQgcmV2aWV3IHRoaXMuIEZyb20gd2hhdCBJIHNlZSB0aGlz
+IHBhdGNoIHNob3VsZCBiZSBzYXZlDQo+ID4gdG8gYXBwbHkuDQo+ID4gDQo+ID4gVGhpcyBwYXRj
+aCBkb2VzIG5vdCBzb2x2ZSBhbGwgb2Ygb3VyIGlzc3Vlcy4gV2hlbiBJIGhhdmUgUlVOVElNRV9Q
+TQ0KPiA+IGVuYWJsZWQgb24gaW14NnVsbCBvciBpbXg3LiBSTkRJUyBzdGlsbCBkb2VzIG5vdCBj
+b21lIHVwLiBTbyB0aGVyZQ0KPiA+IGhhcyB0byBiZSBhbm90aGVyIGJ1ZyBoaWRpbmcgc29tZXdo
+ZXJlIGluIHRoZSBSdW50aW1lIFBNIGNvZGUgdG8NCj4gPiBwcmV2ZW50DQo+ID4gUk5ESVMgZnJv
+bSB3b3JraW5nIHByb3Blcmx5LiBJIHF1aWNrbHkgbG9va2VkIHRocm91Z2ggeW91ciBwYXRjaGVz
+DQo+ID4gdGhhdCBhZGRlZCB0aGlzIHN0dWZmIGJhY2sgaW4gMjAxNSBidXQgY291bGRuJ3Qgc3Bv
+dCBhbnl0aGluZw0KPiA+IHJlbGF0ZWQgdG8NCj4gPiB1c2IgZ2FkZ2V0LW1vZGUuDQo+ID4gDQo+
+ID4gSWYgeW91IHJpZ2h0IGF3YXkga25vdyB3aGVyZSB0aGUgcHJvYmxlbSBjb3VsZCBiZSBoaWRp
+bmcgaXRzZWxmLA0KPiA+IEkgd291bGQgYXBwcmVjaWF0ZSBhIGhpbnQuDQo+ID4gDQo+IA0KPiBJ
+IG5lZWQgaW5mb3JtYXRpb24gZm9yIGNhbGwgdHJhY2UgZm9yIGZ1cnRoZXIgc3VnZ2VzdGlvbi4N
+Cj4gDQo+IFBldGVyDQo+IA0KPiA+IC0tLQ0KPiA+IA0KPiA+ICBkcml2ZXJzL3VzYi9jaGlwaWRl
+YS9jb3JlLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBk
+ZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9j
+b3JlLmMNCj4gPiBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2NvcmUuYw0KPiA+IGluZGV4IDlhN2M1
+M2QwOWFiNC4uNTE1OTQyMGEyM2E0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvdXNiL2NoaXBp
+ZGVhL2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2NvcmUuYw0KPiA+IEBA
+IC01MTgsNyArNTE4LDcgQEAgc3RhdGljIGlycXJldHVybl90IGNpX2lycShpbnQgaXJxLCB2b2lk
+ICpkYXRhKQ0KPiA+ICAJCWRpc2FibGVfaXJxX25vc3luYyhpcnEpOw0KPiA+ICAJCWNpLT53YWtl
+dXBfaW50ID0gdHJ1ZTsNCj4gPiAgCQlwbV9ydW50aW1lX2dldChjaS0+ZGV2KTsNCj4gPiAtCQly
+ZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gKwkJcmV0ID0gSVJRX0hBTkRMRUQ7DQo+ID4gIAl9DQo+
+ID4gIA0KPiA+ICAJaWYgKGNpLT5pc19vdGcpIHsNCj4gPiAtLSANCj4gPiAyLjI3LjANCj4gPiAN
+Cg==
