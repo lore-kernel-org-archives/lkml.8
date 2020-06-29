@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30130C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C38AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11DD4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E70206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467430;
-	bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
+	s=default; t=1593467436;
+	bh=A3K3ErW6wak4Wb7RQTGMwgbd+KYm4MBulm8X6qBHnzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4A1M1b2ramby9GMZItUKhnZmBZdObzFrM0zB0lSBFQC1iuIswY7zZagL5HaxKgKK
-	 QnF5ANok+dyQaWec4MpJkuFCBQtV2jHKC58iI8zCrB1gjw+Axs2gRsgHt+Dvgg9F5f
-	 dtjcV76XGpho2gHEyhoUITearsfnwO+2QPltz+S8=
+	b=ttPRXbuZ1kyGlomw9oNR8YYglBgyhp3B5mlPUpeDxUO+VSLV0eW4vljAI3NTc5fl2
+	 6GEHaTmWHsxIbLyH7UiRS+i2Fz7lzWA2xuvOjgo7NA4nkkMEzh7FIJ3S6FGALCiO/r
+	 A6x+cLn9eg4qfa2cKHrLKg0clsPdx1Pe4wBn5HGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404463AbgF2Vu2 (ORCPT
+        id S2404468AbgF2Vuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:41 -0400
+        id S1726675AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 853392478D;
-        Mon, 29 Jun 2020 15:21:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8047C247F8;
+        Mon, 29 Jun 2020 15:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444097;
-        bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
+        s=default; t=1593444156;
+        bh=A3K3ErW6wak4Wb7RQTGMwgbd+KYm4MBulm8X6qBHnzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ylvJ/sq5T0QxF72mI88ldVRIv1aOHYEryufRvqYgWujXZ+jNpIHo7klmi8mcYIq6c
-         LjP66kzxSYIF7hXWd41ekWF8wPRGjXC2ysBMR2pOS4IqUjKLvuHyd5Wdd9NqI007SX
-         nYAMiCmm8JbZ4jQHXtzNLQvjAtkU79eQh+i7aqdY=
+        b=mRaQdkM1Ba25bC0blWAslH5+TZlXXVC2XUFMFnsBZ2PgE1ulesxpLgS0QxqATFDyX
+         8HhJlcnXUDOAg+g8RIx0A3PB0HXTrHg2Xx5JXpMR/2FQeT2QqRKWleoKHJDiJ4K6dz
+         sgf0lxIURUSwn3HCKdYvG41oclE9MoFsOipC3UXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 207/265] RISC-V: Don't allow write+exec only page mapping request in mmap
-Date:   Mon, 29 Jun 2020 11:17:20 -0400
-Message-Id: <20200629151818.2493727-208-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, stable@kernel.vger.org,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 262/265] xprtrdma: Fix handling of RDMA_ERROR replies
+Date:   Mon, 29 Jun 2020 11:18:15 -0400
+Message-Id: <20200629151818.2493727-263-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,61 +65,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yash Shah <yash.shah@sifive.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit e0d17c842c0f824fd4df9f4688709fc6907201e1 ]
+commit 7b2182ec381f8ea15c7eb1266d6b5d7da620ad93 upstream.
 
-As per the table 4.4 of version "20190608-Priv-MSU-Ratified" of the
-RISC-V instruction set manual[0], the PTE permission bit combination of
-"write+exec only" is reserved for future use. Hence, don't allow such
-mapping request in mmap call.
+The RPC client currently doesn't handle ERR_CHUNK replies correctly.
+rpcrdma_complete_rqst() incorrectly passes a negative number to
+xprt_complete_rqst() as the number of bytes copied. Instead, set
+task->tk_status to the error value, and return zero bytes copied.
 
-An issue is been reported by David Abdurachmanov, that while running
-stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
-specific kernel.
+In these cases, return -EIO rather than -EREMOTEIO. The RPC client's
+finite state machine doesn't know what to do with -EREMOTEIO.
 
-This issue arises when the stress-sysbadaddr request for pages with
-"write+exec only" permission bits and then passes the address obtain
-from this mmap call to various system call. For the riscv kernel, the
-mmap call should fail for this particular combination of permission bits
-since it's not valid.
+Additional clean ups:
+- Don't double-count RDMA_ERROR replies
+- Remove a stale comment
 
-[0]: http://dabbelt.com/~palmer/keep/riscv-isa-manual/riscv-privileged-20190608-1.pdf
-
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-[Palmer: Refer to the latest ISA specification at the only link I could
-find, and update the terminology.]
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: <stable@kernel.vger.org>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/riscv/kernel/sys_riscv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/sunrpc/xprtrdma/rpc_rdma.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
-index f3619f59d85cc..12f8a7fce78b1 100644
---- a/arch/riscv/kernel/sys_riscv.c
-+++ b/arch/riscv/kernel/sys_riscv.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <asm/cacheflush.h>
-+#include <asm-generic/mman-common.h>
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index 3c627dc685cc8..57118e342c8eb 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -1349,8 +1349,7 @@ rpcrdma_decode_error(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
+ 			be32_to_cpup(p), be32_to_cpu(rep->rr_xid));
+ 	}
  
- static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- 			   unsigned long prot, unsigned long flags,
-@@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- {
- 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
- 		return -EINVAL;
-+
-+	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
-+		if (unlikely(!(prot & PROT_READ)))
-+			return -EINVAL;
-+
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
- 			       offset >> (PAGE_SHIFT - page_shift_offset));
+-	r_xprt->rx_stats.bad_reply_count++;
+-	return -EREMOTEIO;
++	return -EIO;
  }
+ 
+ /* Perform XID lookup, reconstruction of the RPC reply, and
+@@ -1387,13 +1386,11 @@ out:
+ 	spin_unlock(&xprt->queue_lock);
+ 	return;
+ 
+-/* If the incoming reply terminated a pending RPC, the next
+- * RPC call will post a replacement receive buffer as it is
+- * being marshaled.
+- */
+ out_badheader:
+ 	trace_xprtrdma_reply_hdr(rep);
+ 	r_xprt->rx_stats.bad_reply_count++;
++	rqst->rq_task->tk_status = status;
++	status = 0;
+ 	goto out;
+ }
+ 
 -- 
 2.25.1
 
