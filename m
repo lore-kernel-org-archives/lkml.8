@@ -2,85 +2,194 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8217CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86533C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C08208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5879A20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466216;
+	bh=w3FZD4im0Akh+fIGBw1c9ClNYUbIQLJYgTYhb1xdu1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yjL8YWLODjguT+oEibph7QRHN6RddcghEjXtdau/vp9K9fAlRSJK8Jm8CH3m62CPE
+	 gAs4Dmxyi2vIuqigB83SCBQfWJM8IH27bRA914F3J/qrn9f02o2Omhnd6PBsccEXF/
+	 1vMKwJ7SoF5jZZhnyaaSHx/1qnLWOdj2A09jBMpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgF2VaE (ORCPT
+        id S1732339AbgF2VaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40466 "EHLO mx2.suse.de"
+        Mon, 29 Jun 2020 17:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbgF2SlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 01C21AF87;
-        Mon, 29 Jun 2020 10:25:16 +0000 (UTC)
-Subject: Re: [PATCH for v5.8 2/3] mm/swap: fix for "mm: workingset: age
- nonresident information alongside anonymous pages"
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592288204-27734-3-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <cc10f1e9-e75a-87aa-9556-e4d9eab6648f@suse.cz>
-Date:   Mon, 29 Jun 2020 12:25:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728875AbgF2SlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:22 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4921E2342C;
+        Mon, 29 Jun 2020 09:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593423865;
+        bh=w3FZD4im0Akh+fIGBw1c9ClNYUbIQLJYgTYhb1xdu1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0/POGlUp0WbbmUZGA9MOwno2mdejSPgSen/jAC7icBvo5DI527qhcOcbn2WQZlUoB
+         1ZPOQcIHcyWvvRpYgt697/mxrSX1vy7+haXmoN0v0tDuAWtTBUAnmYDhs/Ruob6KKn
+         rHBOLMDiCJ8+xR6ChC3vFoO8Soqn9qQ7ZGKmtGgk=
+Date:   Mon, 29 Jun 2020 15:14:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     kishon@ti.com, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org
+Subject: Re: [PATCH v3 1/2] phy: qcom-snps: Add runtime suspend and resume
+ handlers
+Message-ID: <20200629094421.GD2599@vkoul-mobl>
+References: <20200625195444.15130-1-wcheng@codeaurora.org>
+ <20200625195444.15130-2-wcheng@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1592288204-27734-3-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625195444.15130-2-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/16/20 8:16 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Hi Wesley,
+
+On 25-06-20, 12:54, Wesley Cheng wrote:
+> Allow for the PHY to be put into a powered down state when possible.
+> Add the required suspend and resume callbacks, which will determine
+> what resources can be turned off depending on the cable status.
 > 
-> Non-file-lru page could also be activated in mark_page_accessed()
-> and we need to count this activation for nonresident_age.
-> 
-> Note that it's better for this patch to be squashed into the patch
-> "mm: workingset: age nonresident information alongside anonymous pages".
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Agreed.
-
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Please do not add this tag unless someone send it explictly over the
+email.. I do not recall sending a review tag
 
 > ---
->  mm/swap.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
 > 
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 667133d..c5d5114 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -443,8 +443,7 @@ void mark_page_accessed(struct page *page)
->  		else
->  			__lru_cache_activate_page(page);
->  		ClearPageReferenced(page);
-> -		if (page_is_file_lru(page))
-> -			workingset_activation(page);
-> +		workingset_activation(page);
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> index 4d74045271eb..152d8633f4ea 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> @@ -104,6 +104,63 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+>  	readl_relaxed(base + offset);
+>  }
+>  
+> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY\n");
+> +
+> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
+> +		/* Enable auto-resume to meet remote wakeup timing */
+> +		qcom_snps_hsphy_write_mask(hsphy->base,
+> +					   USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +					   USB2_AUTO_RESUME,
+> +					   USB2_AUTO_RESUME);
+> +		usleep_range(500, 1000);
+> +		qcom_snps_hsphy_write_mask(hsphy->base,
+> +					   USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +					   0, USB2_AUTO_RESUME);
+> +	}
+> +
+> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	int ret;
+> +
+> +	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode\n");
+> +
+> +	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
+> +	if (ret) {
+> +		dev_err(&hsphy->phy->dev, "failed to enable cfg ahb clock\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
+> +
+> +	if (!hsphy->phy_initialized)
+> +		return 0;
+> +
+> +	qcom_snps_hsphy_suspend(hsphy);
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
+> +
+> +	if (!hsphy->phy_initialized)
+> +		return 0;
+> +
+> +	qcom_snps_hsphy_resume(hsphy);
+> +	return 0;
+> +}
+> +
+>  static int qcom_snps_hsphy_init(struct phy *phy)
+>  {
+>  	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+> @@ -212,6 +269,11 @@ static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+>  
+> +static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
+> +			   qcom_snps_hsphy_runtime_resume, NULL)
+> +};
+> +
+>  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -255,6 +317,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  		return ret;
 >  	}
->  	if (page_is_idle(page))
->  		clear_page_idle(page);
-> 
+>  
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	/*
+> +	 * Prevent runtime pm from being ON by default. Users can enable
+> +	 * it using power/control in sysfs.
+> +	 */
+> +	pm_runtime_forbid(dev);
+> +
+>  	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
+>  	if (IS_ERR(generic_phy)) {
+>  		ret = PTR_ERR(generic_phy);
+> @@ -269,6 +339,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>  	if (!IS_ERR(phy_provider))
+>  		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
+> +	else
+> +		pm_runtime_disable(dev);
+>  
+>  	return PTR_ERR_OR_ZERO(phy_provider);
+>  }
+> @@ -277,6 +349,7 @@ static struct platform_driver qcom_snps_hsphy_driver = {
+>  	.probe		= qcom_snps_hsphy_probe,
+>  	.driver = {
+>  		.name	= "qcom-snps-hs-femto-v2-phy",
+> +		.pm = &qcom_snps_hsphy_pm_ops,
+>  		.of_match_table = qcom_snps_hsphy_of_match_table,
+>  	},
+>  };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 
+-- 
+~Vinod
