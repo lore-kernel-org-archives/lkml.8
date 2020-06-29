@@ -2,207 +2,133 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB25C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B8B2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466825;
-	bh=00blYSw4H3we8f6YNcADktzYDOCPmayZbfhVhGUiz6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2DCkeGNRHqCC1BAh87kg8SZbPUGmcQmrY/awtedbNERmdz/u07WugnCqsertEEKV5
-	 zNbUDZw/O8uV6qsdjpz8csnodRd2wijTcyFIa6dDLnkoVUE2KjXk/UnNg0PWGjCgxt
-	 84E+4kG9rOB/IWGa3Qp/4Heii1sanYuztCfP2lYg=
+	by mail.kernel.org (Postfix) with ESMTP id 74C8A2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aLbUUdvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389967AbgF2VkY (ORCPT
+        id S2390768AbgF2Vkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:40:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33481 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbgF2Sk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:28 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726228AbgF2Sk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456026; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=3y5SAJ1ea6Nee5AeGdTjHyw0ywc1ZU3bRXWZUomu8RA=; b=aLbUUdvyr5LwdN3uBESv254w+lN7ER1WASsIAn/pvPB7EOFvnDjbr6L/lEPPB5lm/SSTX/vd
+ fCBGib27OZl0lLUj2qpwmmixBGRni5hjBrdZG1r0ewpNj8v7QDGmtEdyKNs9T06u+cBqFizK
+ Klk1rP5PswyWSwdOuQ/d+ogjwzc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5efa0e91c4bb4f886db61620 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 631BAC43391; Mon, 29 Jun 2020 15:53:52 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF13820857;
-        Mon, 29 Jun 2020 09:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423274;
-        bh=00blYSw4H3we8f6YNcADktzYDOCPmayZbfhVhGUiz6o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=profOf+OjR7WE03HKWGRwyP+LXIRgPlX8syXRo/3NQJ8Cr9hQPWee9UDxZACi3WCF
-         ONI2Zny5nkvY3b1m12zOrx6cBSzw69Dv+tVQDZ/PKSubTsWPxVS6ATnMHH7swTNwlL
-         vSa10APt2UUDEq5Qh4vgF2mM7T2ZQMh2/ocuIec4=
-Date:   Mon, 29 Jun 2020 15:04:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
-        alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 1/3] ALSA: compress: document the compress audio state
- machine
-Message-ID: <20200629093429.GA2599@vkoul-mobl>
-References: <20200629075002.11436-1-vkoul@kernel.org>
- <20200629075002.11436-2-vkoul@kernel.org>
- <c29b3199-cebd-2153-5530-e75f76aa8b4b@linux.intel.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2BEECC433C6;
+        Mon, 29 Jun 2020 15:53:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2BEECC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 4/7] iommu: arm-smmu-impl: Remove unwanted extra blank lines
+Date:   Mon, 29 Jun 2020 21:22:47 +0530
+Message-Id: <eac492008010eec45c992cafeb5d191cf8b2fbd4.1593344119.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c29b3199-cebd-2153-5530-e75f76aa8b4b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amadeusz,
+There are few places in arm-smmu-impl where there are
+extra blank lines, remove them and while at it fix the
+checkpatch warning for space required before the open
+parenthesis.
 
-On 29-06-20, 11:05, Amadeusz Sławiński wrote:
-> 
-> 
-> On 6/29/2020 9:50 AM, Vinod Koul wrote:
-> > So we had some discussions of the stream states, so I thought it is a
-> > good idea to document the state transitions, so add it documentation
-> > 
-> > Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >   .../sound/designs/compress-offload.rst        | 51 +++++++++++++++++++
-> >   1 file changed, 51 insertions(+)
-> > 
-> > diff --git a/Documentation/sound/designs/compress-offload.rst b/Documentation/sound/designs/compress-offload.rst
-> > index ad4bfbdacc83..b6e9025ae105 100644
-> > --- a/Documentation/sound/designs/compress-offload.rst
-> > +++ b/Documentation/sound/designs/compress-offload.rst
-> > @@ -151,6 +151,57 @@ Modifications include:
-> >   - Addition of encoding options when required (derived from OpenMAX IL)
-> >   - Addition of rateControlSupported (missing in OpenMAX AL)
-> > +State Machine
-> > +=============
-> > +
-> > +The compressed audio stream state machine is described below ::
-> > +
-> > +                                        +----------+
-> > +                                        |          |
-> > +                                        |   OPEN   |
-> > +                                        |          |
-> > +                                        +----------+
-> > +                                             |
-> > +                                             |
-> > +                                             | compr_set_params()
-> > +                                             |
-> > +                                             v
-> > +         compr_free()                   +----------+
-> > +  +------------------------------------|          |
-> > +  |                                    |   SETUP  |
-> > +  |          +------------------------>|          |<-------------------------+
-> > +  |          | compr_drain_notify()    +----------+                          |
-> > +  |          |         or                   ^                                |
-> > +  |          |      compr_stop()            |                                |
-> > +  |          |                              | compr_write()                  |
-> > +  |          |                              |                                |
-> > +  |          |                              |                                |
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/iommu/arm-smmu-impl.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Not sure, this is not in the version I posted, arrow is from setup ->
-prepare. See https://lore.kernel.org/alsa-devel/20200629075002.11436-2-vkoul@kernel.org/
-
-I don't know how it got reversed in your version, maybe the MUA messed
-up??
-
-> > +  |          |                         +----------+                          |
-> > +  |          |                         |          |   compr_free()           |
-> > +  |          |                         |  PREPARE |---------------> A        |
-> > +  |          |                         |          |                          |
-> > +  |          |                         +----------+                          |
-> > +  |          |                              |                                |
-> > +  |          |                              |                                |
-> > +  |          |                              | compr_start()                  |
-> > +  |          |                              |                                |
-> > +  |          |                              v                                |
-> > +  |    +----------+                    +----------+                          |
-> > +  |    |          |    compr_drain()   |          |        compr_stop()      |
-> > +  |    |  DRAIN   |<-------------------|  RUNNING |--------------------------+
-> > +  |    |          |                    |          |                          |
-> > +  |    +----------+                    +----------+                          |
-> > +  |                                       |    ^                             |
-> > +  |          A                            |    |                             |
-> > +  |          |              compr_pause() |    | compr_resume()              |
-> > +  |          |                            |    |                             |
-> > +  |          v                            v    |                             |
-> > +  |    +----------+                   +----------+                           |
-> > +  |    |          |                   |          |         compr_stop()      |
-> > +  +--->|   FREE   |                   |  PAUSE   |---------------------------+
-> > +       |          |                   |          |
-> > +       +----------+                   +----------+
-> > +
-> >   Gapless Playback
-> >   ================
-> > 
-> 
-> Line containing compr_free (between SETUP and FREE) seems to be misaligned?
-
-not in the version I posted and see on lore
-
-> If you move prepare to the left and drain in place of drain, it feels like
-> you won't need this weird indirection with A
-
-yeah that was a compromise to make it bit neater to me than adding
-overlapping arrows...
-
-> Something like:
-> 
-> >> +                                             v
-> > > +         compr_free()                   +----------+
-> > > +  +------------------------------------|          |
-> > > +  |                                    |   SETUP  |
-> > > +  |          +------------------------>|          |<-------------------------+
-> > > +  |          | compr_write()           +----------+                          |
-> > > +  |          |                              ^                                |
-> > > +  |          |                              | compr_drain_notify() or        |
-> > > +  |          |                              | compr_stop()                   |
-> > > +  |          |                              |                                |
-> > > +  |          |                              |                                |
-> > > +  |          |                         +----------+                          |
-> > > +  |          |                         |          |                          |
-> > > +  |          |                         |  DRAIN   |                          |
-> > > +  |          |                         |          |                          |
-> > > +  |          |                         +----------+                          |
-> > > +  |          |                              ^                                |
-> > > +  |          |                              |                                |
-> > > +  |          |                              | compr_drain()                  |
-> > > +  |          |                              |                                |
-> > > +  |          |                              |                                |
-> > > +  |    +----------+                    +----------+                          |
-> > > +  |    |          |    compr_start()   |          |        compr_stop()      |
-> > > +  |    |  PREPARE |------------------->|  RUNNING |--------------------------+
-> > > +  |    |          |                    |          |                          |
-> > > +  |    +----------+                    +----------+                          |
-> > > +  |          |                            |    ^                             |
-> > > +  |          | compr_free()               |    |                             |
-> > > +  |          |              compr_pause() |    | compr_resume()              |
-> > > +  |          |                            |    |                             |
-> > > +  |          v                            v    |                             |
-> > > +  |    +----------+                   +----------+                           |
-> > > +  |    |          |                   |          |         compr_stop()      |
-> > > +  +--->|   FREE   |                   |  PAUSE   |---------------------------+
-> > > +       |          |                   |          |
-> > > +       +----------+                   +----------+
-> > > +
-> 
-
-> but this makes me question PREPARE state, how do you enter it?
-
-a compr_write() moves from SETUP -> PREPARE. Fixing that above looks
-better version of mine..
-
+diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+index 309675cf6699..8fbab9c38b61 100644
+--- a/drivers/iommu/arm-smmu-impl.c
++++ b/drivers/iommu/arm-smmu-impl.c
+@@ -9,10 +9,9 @@
+ 
+ #include "arm-smmu.h"
+ 
+-
+ static int arm_smmu_gr0_ns(int offset)
+ {
+-	switch(offset) {
++	switch (offset) {
+ 	case ARM_SMMU_GR0_sCR0:
+ 	case ARM_SMMU_GR0_sACR:
+ 	case ARM_SMMU_GR0_sGFSR:
+@@ -47,7 +46,6 @@ static const struct arm_smmu_impl calxeda_impl = {
+ 	.write_reg = arm_smmu_write_ns,
+ };
+ 
+-
+ struct cavium_smmu {
+ 	struct arm_smmu_device smmu;
+ 	u32 id_base;
+@@ -103,7 +101,6 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
+ 	return &cs->smmu;
+ }
+ 
+-
+ #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+ 
+ #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
+@@ -148,7 +145,6 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
+ 	.reset = arm_mmu500_reset,
+ };
+ 
+-
+ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ {
+ 	const struct device_node *np = smmu->dev->of_node;
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
