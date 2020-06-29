@@ -2,300 +2,549 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A67C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A316120724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121CB20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EJevnq1Q"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lY94Ulj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389631AbgF2UmE (ORCPT
+        id S2389613AbgF2Uly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
+        Mon, 29 Jun 2020 16:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389625AbgF2UmB (ORCPT
+        with ESMTP id S1731662AbgF2TOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:42:01 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EE8C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id e11so16614868qkm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
+        Mon, 29 Jun 2020 15:14:06 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E76C08C5EF
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:35:52 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id t198so793606oie.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:35:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
-        b=EJevnq1Qm1fMrGg9QqwoGUo74xXnWz+OPLe22wYa8z9X7/EESR/StW4NBOVZUvfATX
-         AHN4aZzjhhGvyeJsncj0H3Q3U/a7FxJYRBUijeZOnNB1p4Tp3HUxx0EbjmjSmr9TIjP0
-         7/n3h2c0RV8GVI6qG0UNAxaWURnlnXhz3fM7E=
+        bh=7JHQxQGmyFhXkP+6wXj27/TdFuCSXwzzuyQjYWdh18c=;
+        b=lY94Ulj7viElSzv+hOuYYt4BmsElmnvQ/GLfcJWAz1EqQe+fFmdxuDxg2c8ST33iZT
+         XGvqeb+/kDIhzb4Z1wZvsMUQlQuU9XgCxVm4AAzOnMhqNM6t9px5EZB6bXRt4Nigr1TI
+         HC8pPphc4Xs537WngaNVMEdsIyWjhqWd+bQlYLx6xb6QsKh3EYcYCt6QeQVVfaSztN/A
+         9pz0kEvidEvT+ChuI6LUATljhqIZoGq/svZ8IeXHiCsNugVeM74k5EVGWbMjXsOqzCzt
+         seoXqlawX8cBDnUjFBPCz65AuuT2P9GvNYjbGYh0h9G8bemi9IM7AMCsAELcVzK0TsNB
+         gvCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
-        b=UWz38DBSbog1IyshznUjGcpg1Xeun6oSTWG7X4tG8wMPwa30yjN9HeVHYhFmWTlT7L
-         jJp/XYcmcVYbGIA41nn+mdFYS4Dylkzrgy9Y4E1MkFXEkXud68v6QmotmLiezQvRknZ6
-         HhBh204WhKHv+JytuJ8F4W/r/tlZl3GcqUFg3BTFjHsZfzZgM8b5vvH6JAYDawHnhKUw
-         gFbQ7ev0ysIU8vJu0GnU6Y4pNvGQNSfB1AWDvaUtQmbrsvX1iPyVUFHr0O+XAeZ6qquS
-         oamzAFR5l5ZSsswOq6m4P9C1iXOjRUJzrTXcl/B9fM0ofkjcMTPtlH+jp0RHQX6KC7J/
-         Ii4Q==
-X-Gm-Message-State: AOAM533lRR3qTutkGSfWjlUIHHltY0rJt0ffQy4qPkPLoHDiKsHXgLX1
-        y2v/gQ6VVN6/K1R6NBV4kGehfr5OAblTcIdAOZPmlA==
-X-Google-Smtp-Source: ABdhPJz8hrXiqyvgz2TipcXO+EtwvIq9Y5rsREXLGe5IM9Sztn7Oq3J3mOBRjpZf7CxTfMsRqJxG2qEVfDufAZ2LwDI=
-X-Received: by 2002:a37:b341:: with SMTP id c62mr16343321qkf.128.1593463320086;
- Mon, 29 Jun 2020 13:42:00 -0700 (PDT)
+        bh=7JHQxQGmyFhXkP+6wXj27/TdFuCSXwzzuyQjYWdh18c=;
+        b=KX6wo1DY3upqPJdCiA7egv3v1wyK7P9KdJSULyVJx7GB9j+XIaQ+FLfp/XzIG4B+4V
+         RKbsmESFHlvmUeKIyocwa3zBdQDWXFiNQudk/umd/izwQc/7bdhP52ny/O1dlzNZy7qR
+         je7AT4olN5lOs1nIaS1GygkeRbnWPYo6UXadk1drJsbQGnws6/2Qu8g06wYUTT9LaW/4
+         RXXzHNyxNU8SwC70iHHhbaNMKZp+A6wa1ygV9gpt0Nko+sZaxZ3RaSGYcLWUu97yBVGK
+         wMx3Nrqf/sBpw40u8VjaHW4uC4DELJknXEJWk2iorrUQVUldeNZZ53kr7Xiypoz1EQ/0
+         nwBA==
+X-Gm-Message-State: AOAM530uUwzCZvOTsMSn9TKeULj4TWnMdg3QrQ3gDuq6iD/HyMl+3uOe
+        Z2+HvydeR9iejOMG2G99stmZNclyL0+CHhOomZuRbg==
+X-Google-Smtp-Source: ABdhPJwxhY32JGNnkBShVOziFCl2TEe0maV2wevoz2EFOqi6xgwL1uy+t83UnngPFElPlawwI2mV46lSZ4O8s+Z6e1E=
+X-Received: by 2002:aca:1c05:: with SMTP id c5mr10312965oic.32.1593405351429;
+ Sun, 28 Jun 2020 21:35:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com> <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
-In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 29 Jun 2020 13:41:48 -0700
-Message-ID: <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Rob Herring <robh@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
+References: <cover.1593397455.git.zong.li@sifive.com> <8b9f52c19bdb11a4ad741ad1a3695526a1d061b8.1593397455.git.zong.li@sifive.com>
+ <CAAhSdy1Jbvs1+X5A_ej39YOevioUA7f3o2fOi=VT_AQWBgLjXw@mail.gmail.com>
+In-Reply-To: <CAAhSdy1Jbvs1+X5A_ej39YOevioUA7f3o2fOi=VT_AQWBgLjXw@mail.gmail.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Mon, 29 Jun 2020 12:35:40 +0800
+Message-ID: <CANXhq0oeDty5ec9So5cR1W3qoLgHXbMXrb_POoRYoG1E3Eiw9w@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/6] riscv: perf: Add raw event support
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Just following up on this. Would the below example align better with
-OF graph requirements?
-
-Example begins at <example_start>, but in summary:
-- port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
-goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
-role switch)
-- port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
-mode switch, 1 = goes to orientation switch)
--These end points can go through arbitrarily long paths (including
-retimers) as long as they end up at the following devices:
-    a. device with compatible string "typec-mode-switch" for endpoint 0.
-    b. device with compatible string "typec-orientation-switch" for endpoint 1.
-    c. device with compatible string "typec-data-role-switch" for endpoint 2.
-- Connector class framework will perform the traversal from
-usb-c-connector port endpoints to the "*-switch" devices.
-
-Best regards,
-
-On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
+On Mon, Jun 29, 2020 at 12:17 PM Anup Patel <anup@brainfault.org> wrote:
 >
-> Hi Rob,
->
-> Thanks as always for your help in reviewing this proposal!
->
-> Kindly see inline
->
-> (Trimming text);
-> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
-> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > >
-> > > I think the updated example handles this grouping (port@1 going to a
-> > > "SS mux") although as you said it should probably be a group of muxes,
-> > > but I think the example illustrates the point. Is that assessment
-> > > correct?
+> On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
 > >
-> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
->
-> Ack.
->
-> Let's go with "-switch" ? That's what the connector class uses and it
-> conveys the meaning (unless that is a reserved keyword in DT).
->
+> > Add support for raw events and hardware cache events. Currently, we set
+> > the events by writing the mhpmeventN CSRs, it would raise an illegal
+> > instruction exception and trap into m-mode to emulate event selector
+> > CSRs access. It doesn't make sense because we shouldn't write the
+> > m-mode CSRs in s-mode, it would be better that set events through SBI
+> > call or the shadow CSRs of s-mode. We would change it later.
 > >
-> > > Would this block the addition of the "*-switch" properties? IIUC the
-> > > two are related but not dependent on each other.
-> > >
-> > > The *-switch properties are phandles which the Type C connector class
-> > > framework expects (and uses to get handles to those switches).
-> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > ---
+> >  arch/riscv/include/asm/perf_event.h |  65 ++++++---
+> >  arch/riscv/kernel/perf_event.c      | 204 +++++++++++++++++++++++-----
+> >  2 files changed, 215 insertions(+), 54 deletions(-)
 > >
-> > You don't need them though. Walk the graph. You get the connector
-> > port@1 remote endpoint and then get its parent.
+> > diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+> > index 062efd3a1d5d..41d515a1f331 100644
+> > --- a/arch/riscv/include/asm/perf_event.h
+> > +++ b/arch/riscv/include/asm/perf_event.h
+> > @@ -14,39 +14,64 @@
 > >
+> >  #ifdef CONFIG_RISCV_BASE_PMU
+> >  #define RISCV_BASE_COUNTERS    2
+> > +#define RISCV_EVENT_COUNTERS   29
 >
-> I see; would it be something along the lines of this? (DT example
-> follows; search for "example_end" to jump to bottom):
+> Same comment as DT documentation related to naming.
+
+Change it as well. Thanks.
+
 >
-> <example_start>
+> Regards,
+> Anup
 >
-> connector@0 {
->     compatible = "usb-c-connector";
->     reg = <0>;
->     power-role = "dual";
->     data-role = "dual";
->     try-power-role = "source";
->     ....
->     ports {
->         #address-cells = <1>;
->         #size-cells = <0>;
 >
->         port@0 {
->             reg = <0>;
->             usb_con_hs: endpoint {
->                 remote-endpoint = <&foo_usb_hs_controller>;
->             };
->         };
+> > +#define RISCV_TOTAL_COUNTERS   (RISCV_BASE_COUNTERS + RISCV_EVENT_COUNTERS)
+> >
+> >  /*
+> > - * The RISCV_MAX_COUNTERS parameter should be specified.
+> > - */
+> > -
+> > -#define RISCV_MAX_COUNTERS     2
+> > -
+> > -/*
+> > - * These are the indexes of bits in counteren register *minus* 1,
+> > - * except for cycle.  It would be coherent if it can directly mapped
+> > - * to counteren bit definition, but there is a *time* register at
+> > - * counteren[1].  Per-cpu structure is scarce resource here.
+> > - *
+> >   * According to the spec, an implementation can support counter up to
+> >   * mhpmcounter31, but many high-end processors has at most 6 general
+> >   * PMCs, we give the definition to MHPMCOUNTER8 here.
+> >   */
+> > -#define RISCV_PMU_CYCLE                0
+> > -#define RISCV_PMU_INSTRET      1
+> > -#define RISCV_PMU_MHPMCOUNTER3 2
+> > -#define RISCV_PMU_MHPMCOUNTER4 3
+> > -#define RISCV_PMU_MHPMCOUNTER5 4
+> > -#define RISCV_PMU_MHPMCOUNTER6 5
+> > -#define RISCV_PMU_MHPMCOUNTER7 6
+> > -#define RISCV_PMU_MHPMCOUNTER8 7
+> > +#define RISCV_PMU_CYCLE                        0
+> > +#define RISCV_PMU_INSTRET              2
+> > +#define RISCV_PMU_HPMCOUNTER3          3
+> > +#define RISCV_PMU_HPMCOUNTER4          4
+> > +#define RISCV_PMU_HPMCOUNTER5          5
+> > +#define RISCV_PMU_HPMCOUNTER6          6
+> > +#define RISCV_PMU_HPMCOUNTER7          7
+> > +#define RISCV_PMU_HPMCOUNTER8          8
+> > +
+> > +#define RISCV_PMU_HPMCOUNTER_FIRST     3
+> > +#define RISCV_PMU_HPMCOUNTER_LAST                                      \
+> > +       (RISCV_PMU_HPMCOUNTER_FIRST + riscv_pmu->num_counters - 1)
+> >
+> >  #define RISCV_OP_UNSUPP                (-EOPNOTSUPP)
+> >
+> > +/* Hardware cache event encoding */
+> > +#define PERF_HW_CACHE_TYPE             0
+> > +#define PERF_HW_CACHE_OP               8
+> > +#define PERF_HW_CACHE_RESULT           16
+> > +#define PERF_HW_CACHE_MASK             0xff
+> > +
+> > +/* config_base encoding */
+> > +#define RISCV_PMU_TYPE_MASK            0x3
+> > +#define RISCV_PMU_TYPE_BASE            0x1
+> > +#define RISCV_PMU_TYPE_EVENT           0x2
+> > +#define RISCV_PMU_EXCLUDE_MASK         0xc
+> > +#define RISCV_PMU_EXCLUDE_USER         0x3
+> > +#define RISCV_PMU_EXCLUDE_KERNEL       0x4
+> > +
+> > +/*
+> > + * Currently, machine-mode supports emulation of mhpmeventN. Setting mhpmeventN
+> > + * to raise an illegal instruction exception to set event types in machine-mode.
+> > + * Eventually, we should set event types through standard SBI call or the shadow
+> > + * CSRs of supervisor-mode, because it is weird for writing CSR of machine-mode
+> > + * explicitly in supervisor-mode. These macro should be removed in the future.
+> > + */
+> > +#define CSR_MHPMEVENT3 0x323
+> > +#define CSR_MHPMEVENT4 0x324
+> > +#define CSR_MHPMEVENT5 0x325
+> > +#define CSR_MHPMEVENT6 0x326
+> > +#define CSR_MHPMEVENT7 0x327
+> > +#define CSR_MHPMEVENT8 0x328
+> > +
+> >  struct cpu_hw_events {
+> >         /* # currently enabled events*/
+> >         int                     n_events;
+> >         /* currently enabled events */
+> > -       struct perf_event       *events[RISCV_MAX_COUNTERS];
+> > +       struct perf_event       *events[RISCV_EVENT_COUNTERS];
+> > +       /* bitmap of used event counters */
+> > +       unsigned long           used_cntr_mask;
+> >         /* vendor-defined PMU data */
+> >         void                    *platform;
+> >  };
+> > diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
+> > index c835f0362d94..0cfcd6f1e57b 100644
+> > --- a/arch/riscv/kernel/perf_event.c
+> > +++ b/arch/riscv/kernel/perf_event.c
+> > @@ -139,6 +139,53 @@ static const int riscv_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
+> >         },
+> >  };
+> >
+> > +/*
+> > + * Methods for checking and getting PMU information
+> > + */
+> > +
+> > +static inline int is_base_counter(int idx)
+> > +{
+> > +       return (idx == RISCV_PMU_CYCLE || idx == RISCV_PMU_INSTRET);
+> > +}
+> > +
+> > +static inline int is_event_counter(int idx)
+> > +{
+> > +       return (idx >= RISCV_PMU_HPMCOUNTER_FIRST &&
+> > +               idx <= RISCV_PMU_HPMCOUNTER_LAST);
+> > +}
+> > +
+> > +static inline int get_available_counter(struct perf_event *event)
+> > +{
+> > +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> > +       struct hw_perf_event *hwc = &event->hw;
+> > +       unsigned long config_base = hwc->config_base & RISCV_PMU_TYPE_MASK;
+> > +       unsigned long mask;
+> > +       int ret;
+> > +
+> > +       switch (config_base) {
+> > +       case RISCV_PMU_TYPE_BASE:
+> > +               ret = hwc->config;
+> > +               if (WARN_ON_ONCE(!is_base_counter(ret)))
+> > +                       return -ENOSPC;
+> > +               break;
+> > +       case RISCV_PMU_TYPE_EVENT:
+> > +               mask = ~cpuc->used_cntr_mask;
+> > +               ret = find_next_bit(&mask, RISCV_PMU_HPMCOUNTER_LAST, 3);
+> > +               if (WARN_ON_ONCE(!is_event_counter(ret)))
+> > +                       return -ENOSPC;
+> > +               break;
+> > +       default:
+> > +               return -ENOENT;
+> > +       }
+> > +
+> > +       __set_bit(ret, &cpuc->used_cntr_mask);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +/*
+> > + * Map generic hardware event
+> > + */
+> >  static int riscv_map_hw_event(u64 config)
+> >  {
+> >         if (config >= riscv_pmu->max_events)
+> > @@ -147,32 +194,28 @@ static int riscv_map_hw_event(u64 config)
+> >         return riscv_pmu->hw_events[config];
+> >  }
+> >
+> > -static int riscv_map_cache_decode(u64 config, unsigned int *type,
+> > -                          unsigned int *op, unsigned int *result)
+> > -{
+> > -       return -ENOENT;
+> > -}
+> > -
+> > +/*
+> > + * Map generic hardware cache event
+> > + */
+> >  static int riscv_map_cache_event(u64 config)
+> >  {
+> >         unsigned int type, op, result;
+> > -       int err = -ENOENT;
+> > -               int code;
+> > +       int ret;
+> >
+> > -       err = riscv_map_cache_decode(config, &type, &op, &result);
+> > -       if (!riscv_pmu->cache_events || err)
+> > -               return err;
+> > +       type    = (config >> PERF_HW_CACHE_TYPE) & PERF_HW_CACHE_MASK;
+> > +       op      = (config >> PERF_HW_CACHE_OP) & PERF_HW_CACHE_MASK;
+> > +       result  = (config >> PERF_HW_CACHE_RESULT) & PERF_HW_CACHE_MASK;
+> >
+> >         if (type >= PERF_COUNT_HW_CACHE_MAX ||
+> >             op >= PERF_COUNT_HW_CACHE_OP_MAX ||
+> >             result >= PERF_COUNT_HW_CACHE_RESULT_MAX)
+> >                 return -EINVAL;
+> >
+> > -       code = (*riscv_pmu->cache_events)[type][op][result];
+> > -       if (code == RISCV_OP_UNSUPP)
+> > +       ret = riscv_cache_event_map[type][op][result];
+> > +       if (ret == RISCV_OP_UNSUPP)
+> >                 return -EINVAL;
+> >
+> > -       return code;
+> > +       return ret == RISCV_OP_UNSUPP ? -ENOENT : ret;
+> >  }
+> >
+> >  /*
+> > @@ -190,8 +233,27 @@ static inline u64 read_counter(int idx)
+> >         case RISCV_PMU_INSTRET:
+> >                 val = csr_read(CSR_INSTRET);
+> >                 break;
+> > +       case RISCV_PMU_HPMCOUNTER3:
+> > +               val = csr_read(CSR_HPMCOUNTER3);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER4:
+> > +               val = csr_read(CSR_HPMCOUNTER4);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER5:
+> > +               val = csr_read(CSR_HPMCOUNTER5);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER6:
+> > +               val = csr_read(CSR_HPMCOUNTER6);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER7:
+> > +               val = csr_read(CSR_HPMCOUNTER7);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER8:
+> > +               val = csr_read(CSR_HPMCOUNTER8);
 >
->         port@1 {
->             reg = <1>;
->             #address-cells = <1>;
->             #size-cells = <0>;
+> This is broken for RV32 because for RV32 we have to read two
+> CSRs to get a counter value.
+
+Oh yes, thanks for your reminder. Add them in the next version.
+
 >
->             usb_con0_ss_mode: endpoint@0 {
->                 reg = <0>
->                 remote-endpoint = <&mode_switch_ss_in>;
->             };
+> Also, for correctly reading a 64bit counter on RV32 we have
+> to read just like get_cycles64() does for RV32.
 >
->             usb_con0_ss_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_ss_in>;
->             };
+> static inline u64 get_cycles64(void)
+> {
+>     u32 hi, lo;
 >
->             usb_con0_ss_data_role: endpoint@2 {
->                         reg = <2>
->                         remote-endpoint = <&data_role_switch_in>;
->             };
->         };
+>     do {
+>         hi = get_cycles_hi();
+>         lo = get_cycles();
+>     } while (hi != get_cycles_hi());
 >
->         port@2 {
->             reg = <2>;
->             #address-cells = <1>;
->             #size-cells = <0>;
->             usb_con0_sbu_mode: endpoint@0 {
->                         reg = <0>
->                         remote-endpoint = <&mode_switch_sbu_in>;
->             };
->             usb_con0_sbu_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_sbu_in>;
->             };
->         };
->     };
-> };
+>     return ((u64)hi << 32) | lo;
+> }
 >
-> mode_switch {
->     compatible = "typec-mode-switch";
->     mux-controls = <&mode_mux_controller>;
->     mux-control-names = "mode";
->     #address-cells = <1>;
->     #size-cells = <0>;
+> Regards,
+> Anup
 >
->     port@0 {
->         reg = <0>;
->         mode_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_mode>
->         };
->     };
 >
->     port@1 {
->         reg = <1>;
->         mode_switch_out_usb3: endpoint {
->             remote-endpoint = <&usb3_0_ep>
->         };
->     };
->
->     port@2 {
->         reg = <2>;
->         mode_switch_out_dp: endpoint {
->             remote-endpoint = <&dp0_out_ep>
->         };
->     };
->
->     port@3 {
->         reg = <3>;
->         mode_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_mode>
->         };
->     };
->     // ... other ports similarly defined.
-> };
->
-> orientation_switch {
->     compatible = "typec-orientation-switch";
->     mux-controls = <&orientation_mux_controller>;
->     mux-control-names = "orientation";
->     #address-cells = <1>;
->     #size-cells = <0>;
->
->     port@0 {
->         reg = <0>;
->         orientation_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_orientation>
->         };
->     };
->
->     port@1
->         reg = <1>;
->         orientation_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_orientation>
->         };
->     };
->     // ... other ports similarly defined.
-> };
->
-> data_role_switch {
->     compatible = "typec-data-role-switch";
->     mux-controls = <&data_role_switch_controller>;
->     mux-control-names = "data_role";
->
->     port {
->         data_role_switch_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_data_role>
->         };
->     };
-> };
->
-> <example_end>
->
-> Would this be conformant to OF graph and usb-connector bindings
-> requirements? We'll certainly send out a format PATCH/RFC series for
-> this, but I was hoping to gauge whether we're thinking along the right lines.
->
-> So, in effect this would mean:
-> - New bindings(and compatible strings) to be added for:
->   typec-{orientation,data-role,mode}-switch.
-> - Handling in Type C connector class to parse switches from OF graph.
-> - Handling in Type C connector class for distinct switches for port@1
->   (SS lines) and port@2 (SBU lines).
->
-> The only thing I'm confused about is how we can define these switch
-> remote-endpoint bindings in usb-connector.yaml; the port can have an
-> remote-endpoint, but can we specify what the parent of the remote-endpoint
-> should have as a compatible string? Or do we not need to?
->
-> Best regards,
->
-> -Prashant
->
+> > +               break;
+> >         default:
+> > -               WARN_ON_ONCE(idx < 0 || idx > RISCV_MAX_COUNTERS);
+> > +               WARN_ON_ONCE(idx < RISCV_PMU_CYCLE ||
+> > +                            idx > RISCV_TOTAL_COUNTERS);
+> >                 return -EINVAL;
+> >         }
+> >
+> > @@ -204,6 +266,68 @@ static inline void write_counter(int idx, u64 value)
+> >         WARN_ON_ONCE(1);
+> >  }
+> >
+> > +static inline void write_event(int idx, u64 value)
+> > +{
+> > +       /* TODO: We shouldn't write CSR of m-mode explicitly here. Ideally,
+> > +        * it need to set the event selector by SBI call or the s-mode
+> > +        * shadow CSRs of them. Exploit illegal instruction exception to
+> > +        * emulate mhpmcounterN access in m-mode.
+> > +        */
+> > +       switch (idx) {
+> > +       case RISCV_PMU_HPMCOUNTER3:
+> > +               csr_write(CSR_MHPMEVENT3, value);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER4:
+> > +               csr_write(CSR_MHPMEVENT4, value);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER5:
+> > +               csr_write(CSR_MHPMEVENT5, value);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER6:
+> > +               csr_write(CSR_MHPMEVENT6, value);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER7:
+> > +               csr_write(CSR_MHPMEVENT7, value);
+> > +               break;
+> > +       case RISCV_PMU_HPMCOUNTER8:
+> > +               csr_write(CSR_MHPMEVENT8, value);
+> > +               break;
+> > +       default:
+> > +               WARN_ON_ONCE(idx < RISCV_PMU_HPMCOUNTER3 ||
+> > +                            idx > RISCV_TOTAL_COUNTERS);
+> > +               return;
+> > +       }
+> > +}
+
+I was also wondering if you have any suggestions about the PMU SBI
+extension as I mentioned in the cover letter. Currently, we set the
+event selectors by emulation of OpenSBI, so just write the m-mode CSRs
+as above.
+
+> > +
+> > +/*
+> > + * Enable and disable event counters
+> > + */
+> > +
+> > +static inline void riscv_pmu_enable_event(struct perf_event *event)
+> > +{
+> > +       struct hw_perf_event *hwc = &event->hw;
+> > +       int idx = hwc->idx;
+> > +
+> > +       if (is_event_counter(idx))
+> > +               write_event(idx, hwc->config);
+> > +
+> > +       /*
+> > +        * Since we cannot write to counters, this serves as an initialization
+> > +        * to the delta-mechanism in pmu->read(); otherwise, the delta would be
+> > +        * wrong when pmu->read is called for the first time.
+> > +        */
+> > +       local64_set(&hwc->prev_count, read_counter(hwc->idx));
+> > +}
+> > +
+> > +static inline void riscv_pmu_disable_event(struct perf_event *event)
+> > +{
+> > +       struct hw_perf_event *hwc = &event->hw;
+> > +       int idx = hwc->idx;
+> > +
+> > +       if (is_event_counter(idx))
+> > +               write_event(idx, 0);
+> > +}
+> > +
+> >  /*
+> >   * pmu->read: read and update the counter
+> >   *
+> > @@ -232,6 +356,7 @@ static void riscv_pmu_read(struct perf_event *event)
+> >          */
+> >         delta = (new_raw_count - prev_raw_count) &
+> >                 ((1ULL << riscv_pmu->counter_width) - 1);
+> > +
+> >         local64_add(delta, &event->count);
+> >         /*
+> >          * Something like local64_sub(delta, &hwc->period_left) here is
+> > @@ -252,6 +377,11 @@ static void riscv_pmu_stop(struct perf_event *event, int flags)
+> >  {
+> >         struct hw_perf_event *hwc = &event->hw;
+> >
+> > +       if (WARN_ON_ONCE(hwc->idx == -1))
+> > +               return;
+> > +
+> > +       riscv_pmu_disable_event(event);
+> > +
+> >         WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+> >         hwc->state |= PERF_HES_STOPPED;
+> >
+> > @@ -271,6 +401,9 @@ static void riscv_pmu_start(struct perf_event *event, int flags)
+> >         if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED)))
+> >                 return;
+> >
+> > +       if (WARN_ON_ONCE(hwc->idx == -1))
+> > +               return;
+> > +
+> >         if (flags & PERF_EF_RELOAD) {
+> >                 WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTODATE));
+> >
+> > @@ -281,14 +414,10 @@ static void riscv_pmu_start(struct perf_event *event, int flags)
+> >         }
+> >
+> >         hwc->state = 0;
+> > -       perf_event_update_userpage(event);
+> >
+> > -       /*
+> > -        * Since we cannot write to counters, this serves as an initialization
+> > -        * to the delta-mechanism in pmu->read(); otherwise, the delta would be
+> > -        * wrong when pmu->read is called for the first time.
+> > -        */
+> > -       local64_set(&hwc->prev_count, read_counter(hwc->idx));
+> > +       riscv_pmu_enable_event(event);
+> > +
+> > +       perf_event_update_userpage(event);
+> >  }
+> >
+> >  /*
+> > @@ -298,21 +427,18 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
+> >  {
+> >         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> >         struct hw_perf_event *hwc = &event->hw;
+> > +       int count_idx;
+> >
+> >         if (cpuc->n_events == riscv_pmu->num_counters)
+> >                 return -ENOSPC;
+> >
+> > -       /*
+> > -        * We don't have general conunters, so no binding-event-to-counter
+> > -        * process here.
+> > -        *
+> > -        * Indexing using hwc->config generally not works, since config may
+> > -        * contain extra information, but here the only info we have in
+> > -        * hwc->config is the event index.
+> > -        */
+> > -       hwc->idx = hwc->config;
+> > -       cpuc->events[hwc->idx] = event;
+> > +       count_idx = get_available_counter(event);
+> > +       if (count_idx < 0)
+> > +               return -ENOSPC;
+> > +
+> >         cpuc->n_events++;
+> > +       hwc->idx = count_idx;
+> > +       cpuc->events[hwc->idx] = event;
+> >
+> >         hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
+> >
+> > @@ -330,8 +456,10 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
+> >         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> >         struct hw_perf_event *hwc = &event->hw;
+> >
+> > -       cpuc->events[hwc->idx] = NULL;
+> >         cpuc->n_events--;
+> > +       __clear_bit(hwc->idx, &cpuc->used_cntr_mask);
+> > +
+> > +       cpuc->events[hwc->idx] = NULL;
+> >         riscv_pmu->pmu->stop(event, PERF_EF_UPDATE);
+> >         perf_event_update_userpage(event);
+> >  }
+> > @@ -385,6 +513,7 @@ static int riscv_event_init(struct perf_event *event)
+> >  {
+> >         struct perf_event_attr *attr = &event->attr;
+> >         struct hw_perf_event *hwc = &event->hw;
+> > +       unsigned long config_base = 0;
+> >         int err;
+> >         int code;
+> >
+> > @@ -406,11 +535,17 @@ static int riscv_event_init(struct perf_event *event)
+> >                 code = riscv_pmu->map_cache_event(attr->config);
+> >                 break;
+> >         case PERF_TYPE_RAW:
+> > -               return -EOPNOTSUPP;
+> > +               code = attr->config;
+> > +               break;
+> >         default:
+> >                 return -ENOENT;
+> >         }
+> >
+> > +       if (is_base_counter(code))
+> > +               config_base |= RISCV_PMU_TYPE_BASE;
+> > +       else
+> > +               config_base |= RISCV_PMU_TYPE_EVENT;
+> > +
+> >         event->destroy = riscv_event_destroy;
+> >         if (code < 0) {
+> >                 event->destroy(event);
+> > @@ -424,6 +559,7 @@ static int riscv_event_init(struct perf_event *event)
+> >          * But since we don't have such support, later in pmu->add(), we just
+> >          * use hwc->config as the index instead.
+> >          */
+> > +       hwc->config_base = config_base;
+> >         hwc->config = code;
+> >         hwc->idx = -1;
+> >
+> > --
+> > 2.27.0
+> >
