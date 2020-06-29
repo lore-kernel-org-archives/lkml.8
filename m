@@ -2,144 +2,97 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C56FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBB5F2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQQbB8OZ"
+	by mail.kernel.org (Postfix) with ESMTP id F27B520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461897;
+	bh=klIL3IOn+Sds26IUTL2F8EnYRJUx3am2hJ0RrpMsz0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kZYXXeBqTDiD+6xmRQkJ/bGLjMiiVKqoHrm5/dW11l3nWXz2Uk2+N6I/mBEzfna9m
+	 qP6anImOfHBeYLO2wnu+FLjH8vH4ehfNHv5AVbwpz1aF5QPKtHS6OhyNhNatTRS7u7
+	 wpf0BzHJ0mN24vRJIq/PMIR/3vm7LLouGSEC2t84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733265AbgF2UR6 (ORCPT
+        id S1733056AbgF2USQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732647AbgF2TZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732627AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:41 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C0AC061755;
-        Mon, 29 Jun 2020 12:25:41 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id w73so3661687ila.11;
-        Mon, 29 Jun 2020 12:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=awRqujOiMrDdEv/OOzJOIKIzdh+u8WQaaIXpTu/mSk0=;
-        b=SQQbB8OZtY8KVolOJ6QYhRlc/DURbUQ07ItMEpjAbF+W+aNVxTkluJqoo1+6a6daKx
-         ZEbfRLv9nmOVSirZ8lGn8Dav3wQCKjRCKzUoLt+tl5+9c/W+tlNYG8h/0Ib48YKCzfuu
-         lLS1MbHrqAK0VfOAEI9AO4kw3kcJ/1D8Q8X3bJ5n07fzpreXbbHU/SV6YdK3KSHl/W3a
-         /J2MYTo+x5fduZAUyqHx1tPp7RHthfbJ2VavWzQsWG5KIuozx+5d0TTh3faKtwbHhWxz
-         xGIIyN4M0G9RTV9irrAdM1B757qpwPeTGtOFc8lG+CkT0Co1yiIaUc4+fAtKCq21udCy
-         NTmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=awRqujOiMrDdEv/OOzJOIKIzdh+u8WQaaIXpTu/mSk0=;
-        b=GRqeNNSKLvLg9jMvN0hb6JI9i6s9MMC3MX7vjelROZ8l3ny/r5VzWI0X829PxciUBQ
-         DgobQgnG8HsLLX2hTbrnsBOT/ZFDkjjRMl9N0thAVNvj8PajFd47Lx7UG/sHCprZ3zYa
-         LF2jkf7/l7R9/3CrxefTxrrB8Gs8XsQiT87MDQ0JUXXx5z48VkE5QHgKL4U9RAkPC74H
-         xHpDfWRS99PYzSMecPxLytRVHymudgVaCBglIEbLTRW7SJHwKCKduIVr6+VFFZ5fLGx5
-         Ve4WX+VR8cQQGRUvqyCmfH4hKv8rluVTKGGilHl/3Nz8fWLnG4JUzo/657+J7o9kXrnj
-         Ldmw==
-X-Gm-Message-State: AOAM5328MFXXMM26V997rIxJTHatqCWAfJ7RxJ0gv+RntUZ/c4rm3O0o
-        jHO+Y77T7UWN8x44DsxvSMCQAgE33teKO8pDhW8=
-X-Google-Smtp-Source: ABdhPJw/Lp5J7VJZzWUMpKXFLNVSc2m8IqqQPvYMNlTYwBZMTO4BHXQsap8uE9Ir128HGPXlXy8p6kDi/w+RvplAavs=
-X-Received: by 2002:a92:6b05:: with SMTP id g5mr16679410ilc.120.1593458741165;
- Mon, 29 Jun 2020 12:25:41 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A05DE2558A;
+        Mon, 29 Jun 2020 16:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593447352;
+        bh=klIL3IOn+Sds26IUTL2F8EnYRJUx3am2hJ0RrpMsz0g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f9oWsTBo0LTbV90r28cXpkf0rG6Cx+kBwQhW0WyK5V7LJACKMYaXrNxLEsrfrbqfN
+         rttFp9EJzONsmvLLNJPGF4asPeiYLbxGyVKv3fe0PPtvUJH+5AuMaTzimvfWrLwNTa
+         tlcJPsSbq9Ck5M+B1LWGLoCgQEUCKcFTg/VPSd+c=
+Date:   Mon, 29 Jun 2020 18:15:42 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     sashal@kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Upstream fixes not merged in 5.4.y
+Message-ID: <20200629161542.GA683634@kroah.com>
+References: <20200629142805.28013-1-sjpark@amazon.com>
 MIME-Version: 1.0
-References: <20200629055530.3244342-1-songliubraving@fb.com>
-In-Reply-To: <20200629055530.3244342-1-songliubraving@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 29 Jun 2020 12:25:29 -0700
-Message-ID: <CAEf4BzbUh-Q=7a0cyxWm+=DA9hhovpLRcBGsq2ocXoCWpC2SUA@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 0/4] bpf: introduce bpf_get_task_stack()
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629142805.28013-1-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:54 AM Song Liu <songliubraving@fb.com> wrote:
->
-> This set introduces a new helper bpf_get_task_stack(). The primary use case
-> is to dump all /proc/*/stack to seq_file via bpf_iter__task.
->
-> A few different approaches have been explored and compared:
->
->   1. A simple wrapper around stack_trace_save_tsk(), as v1 [1].
->
->      This approach introduces new syntax, which is different to existing
->      helper bpf_get_stack(). Therefore, this is not ideal.
->
->   2. Extend get_perf_callchain() to support "task" as argument.
->
->      This approach reuses most of bpf_get_stack(). However, extending
->      get_perf_callchain() requires non-trivial changes to architecture
->      specific code. Which is error prone.
->
->   3. Current (v2) approach, leverages most of existing bpf_get_stack(), and
->      uses stack_trace_save_tsk() to handle architecture specific logic.
->
-> [1] https://lore.kernel.org/netdev/20200623070802.2310018-1-songliubraving@fb.com/
->
-> Changes v3 => v4:
-> 1. Simplify the selftests with bpf_iter.h. (Yonghong)
-> 2. Add example output to commit log of 4/4. (Yonghong)
->
-> Changes v2 => v3:
-> 1. Rebase on top of bpf-next. (Yonghong)
-> 2. Sanitize get_callchain_entry(). (Peter)
-> 3. Use has_callchain_buf for bpf_get_task_stack. (Andrii)
-> 4. Other small clean up. (Yonghong, Andrii).
->
-> Changes v1 => v2:
-> 1. Reuse most of bpf_get_stack() logic. (Andrii)
-> 2. Fix unsigned long vs. u64 mismatch for 32-bit systems. (Yonghong)
-> 3. Add %pB support in bpf_trace_printk(). (Daniel)
-> 4. Fix buffer size to bytes.
->
-> Song Liu (4):
->   perf: expose get/put_callchain_entry()
->   bpf: introduce helper bpf_get_task_stack()
->   bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
->   selftests/bpf: add bpf_iter test with bpf_get_task_stack()
->
->  include/linux/bpf.h                           |  1 +
->  include/linux/perf_event.h                    |  2 +
->  include/uapi/linux/bpf.h                      | 36 ++++++++-
->  kernel/bpf/stackmap.c                         | 75 ++++++++++++++++++-
->  kernel/bpf/verifier.c                         |  4 +-
->  kernel/events/callchain.c                     | 13 ++--
->  kernel/trace/bpf_trace.c                      | 12 ++-
->  scripts/bpf_helpers_doc.py                    |  2 +
->  tools/include/uapi/linux/bpf.h                | 36 ++++++++-
->  .../selftests/bpf/prog_tests/bpf_iter.c       | 17 +++++
->  .../selftests/bpf/progs/bpf_iter_task_stack.c | 37 +++++++++
->  11 files changed, 220 insertions(+), 15 deletions(-)
->  create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
->
-> --
-> 2.24.1
+On Mon, Jun 29, 2020 at 04:28:05PM +0200, SeongJae Park wrote:
+> Hello,
+> 
+> 
+> With my little script, I found below commits in the mainline tree are more than
+> 1 week old and fixing commits that back-ported in v5.4..v5.4.49, but not merged
+> in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
+> dealyed?
+> 
+> 9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
+> 9fecd13202f5 ("btrfs: fix a block group ref counter leak after failure to remove block group")
+> 9d964e1b82d8 ("fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"")
+> 8ab3a3812aa9 ("drm/i915/gt: Incrementally check for rewinding")
+> 6e2f83884c09 ("bnxt_en: Fix AER reset logic on 57500 chips.")
+> efb94790852a ("drm/panel-simple: fix connector type for LogicPD Type28 Display")
+> ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+> ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+> 8dbe4c5d5e40 ("net: dsa: bcm_sf2: Fix node reference count")
+> ca8826095e4d ("selftests/net: report etf errors correctly")
+> 5a8d7f126c97 ("of: of_mdio: Correct loop scanning logic")
+> d35d3660e065 ("binder: fix null deref of proc->context")
+> 
+> The script found several more commits but I exclude those here, because those
+> seems not applicable on 5.4.y or fixing trivial problems only.  If I'm not
+> following a proper process for this kind of reports, please let me know.
 
-Thanks for working on this! This will enable a whole new set of tools
-and applications.
+For commits that only have a "Fixes:" tag, and not a "cc: stable..."
+tag, wait a few weeks, or a month, for us to catch up with them.  We
+usually get to them eventually, but it takes us a while as we have lots
+more to deal with by developers and maintainers that are properly
+tagging patches for this type of thing.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Some of the above commits are queued up already, but not all of them.
+I'll take a look at the list after this next round of patches go out,
+and will let you know.
+
+And yes, we do want this type of list, it's greatly appreciated.
+
+thanks,
+
+greg k-h
