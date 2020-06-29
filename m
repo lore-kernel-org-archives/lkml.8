@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B4CC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11F9C433E1
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A31320780
+	by mail.kernel.org (Postfix) with ESMTP id DBFC520781
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgF2Xst (ORCPT
+        id S1728314AbgF2Xsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:48:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26183 "EHLO mga14.intel.com"
+        Mon, 29 Jun 2020 19:48:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20791 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbgF2Xsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:48:42 -0400
-IronPort-SDR: 63tF+INA8iKWZYLzE8p08doPU0k4wJHZTr23bMXHstR/FIzZieY1ee62qRzB5Iddk0zlt8XIYr
- edwtPs9XhMcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145172097"
+        id S1728046AbgF2Xsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:48:37 -0400
+IronPort-SDR: UeJUiyI6kFkiQHagFx4jkwU9AUui9VOQlLu65sypQoOjBTeDk7nu9acxACqUiKjxMqB8g16HhG
+ XjINgkned6gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126231412"
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="145172097"
+   d="scan'208";a="126231412"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:48:41 -0700
-IronPort-SDR: BMt7i1YF9CwoMQtjCi86Equ2aZvBB01RYfufR0Sm20hL7jkt2UdtHQPStv3hgaXXl098R04My0
- S223ofrVtQVw==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:48:33 -0700
+IronPort-SDR: rosivuZVqsR+f2mcpCVNi34KmZaj0dmcK4Th1oUitjdUfnoEQXXwVYQrB0S8Q+WvQJS6aHhxb3
+ K1Ea70Nbwg9A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="303239904"
+   d="scan'208";a="313216928"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Jun 2020 16:48:41 -0700
-Subject: [RFC][PATCH 8/8] mm/numa: new reclaim mode to enable reclaim-based migration
+  by fmsmga002.fm.intel.com with ESMTP; 29 Jun 2020 16:48:32 -0700
+Subject: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of discard
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        yang.shi@linux.alibaba.com, rientjes@google.com,
+        kbusch@kernel.org, yang.shi@linux.alibaba.com, rientjes@google.com,
         ying.huang@intel.com, dan.j.williams@intel.com
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Mon, 29 Jun 2020 16:45:17 -0700
+Date:   Mon, 29 Jun 2020 16:45:09 -0700
 References: <20200629234503.749E5340@viggo.jf.intel.com>
 In-Reply-To: <20200629234503.749E5340@viggo.jf.intel.com>
-Message-Id: <20200629234517.A7EC4BD3@viggo.jf.intel.com>
+Message-Id: <20200629234509.8F89C4EF@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,170 +53,202 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-Some method is obviously needed to enable reclaim-based migration.
+If a memory node has a preferred migration path to demote cold pages,
+attempt to move those inactive pages to that migration node before
+reclaiming. This will better utilize available memory, provide a faster
+tier than swapping or discarding, and allow such pages to be reused
+immediately without IO to retrieve the data.
 
-Just like traditional autonuma, there will be some workloads that
-will benefit like workloads with more "static" configurations where
-hot pages stay hot and cold pages stay cold.  If pages come and go
-from the hot and cold sets, the benefits of this approach will be
-more limited.
+When handling anonymous pages, this will be considered before swap if
+enabled. Should the demotion fail for any reason, the page reclaim
+will proceed as if the demotion feature was not enabled.
 
-The benefits are truly workload-based and *not* hardware-based.
-We do not believe that there is a viable threshold where certain
-hardware configurations should have this mechanism enabled while
-others do not.
+Some places we would like to see this used:
 
-To be conservative, earlier work defaulted to disable reclaim-
-based migration and did not include a mechanism to enable it.
-This propses extending the existing "zone_reclaim_mode" (now
-now really node_reclaim_mode) as a method to enable it.
+  1. Persistent memory being as a slower, cheaper DRAM replacement
+  2. Remote memory-only "expansion" NUMA nodes
+  3. Resolving memory imbalances where one NUMA node is seeing more
+     allocation activity than another.  This helps keep more recent
+     allocations closer to the CPUs on the node doing the allocating.
 
-We are open to any alternative that allows end users to enable
-this mechanism or disable it it workload harm is detected (just
-like traditional autonuma).
+Yang Shi's patches used an alternative approach where to-be-discarded
+pages were collected on a separate discard list and then discarded
+as a batch with migrate_pages().  This results in simpler code and
+has all the performance advantages of batching, but has the
+disadvantage that pages which fail to migrate never get swapped.
 
-The implementation here is pretty simple and entirely unoptimized.
-On any memory hotplug events, assume that a node was added or
-removed and recalculate all migration targets.  This ensures that
-the node_demotion[] array is always ready to be used in case the
-new reclaim mode is enabled.  This recalculation is far from
-optimal, most glaringly that it does not even attempt to figure
-out if nodes are actually coming or going.
-
+#Signed-off-by: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Keith Busch <kbusch@kernel.org>
 Cc: Yang Shi <yang.shi@linux.alibaba.com>
 Cc: David Rientjes <rientjes@google.com>
 Cc: Huang Ying <ying.huang@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 ---
 
- b/Documentation/admin-guide/sysctl/vm.rst |    9 ++++
- b/mm/migrate.c                            |   61 +++++++++++++++++++++++++++++-
- b/mm/vmscan.c                             |    7 +--
- 3 files changed, 73 insertions(+), 4 deletions(-)
+ b/include/linux/migrate.h        |    6 ++++
+ b/include/trace/events/migrate.h |    3 +-
+ b/mm/debug.c                     |    1 
+ b/mm/migrate.c                   |   52 +++++++++++++++++++++++++++++++++++++++
+ b/mm/vmscan.c                    |   25 ++++++++++++++++++
+ 5 files changed, 86 insertions(+), 1 deletion(-)
 
-diff -puN Documentation/admin-guide/sysctl/vm.rst~enable-numa-demotion Documentation/admin-guide/sysctl/vm.rst
---- a/Documentation/admin-guide/sysctl/vm.rst~enable-numa-demotion	2020-06-29 16:35:01.012312549 -0700
-+++ b/Documentation/admin-guide/sysctl/vm.rst	2020-06-29 16:35:01.021312549 -0700
-@@ -941,6 +941,7 @@ This is value OR'ed together of
- 1	(bit currently ignored)
- 2	Zone reclaim writes dirty pages out
- 4	Zone reclaim swaps pages
-+8	Zone reclaim migrates pages
- =	===================================
+diff -puN include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/linux/migrate.h
+--- a/include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.950312604 -0700
++++ b/include/linux/migrate.h	2020-06-29 16:34:38.963312604 -0700
+@@ -25,6 +25,7 @@ enum migrate_reason {
+ 	MR_MEMPOLICY_MBIND,
+ 	MR_NUMA_MISPLACED,
+ 	MR_CONTIG_RANGE,
++	MR_DEMOTION,
+ 	MR_TYPES
+ };
  
- zone_reclaim_mode is disabled by default.  For file servers or workloads
-@@ -965,3 +966,11 @@ of other processes running on other node
- Allowing regular swap effectively restricts allocations to the local
- node unless explicitly overridden by memory policies or cpuset
- configurations.
-+
-+Page migration during reclaim is intended for systems with tiered memory
-+configurations.  These systems have multiple types of memory with varied
-+performance characteristics instead of plain NUMA systems where the same
-+kind of memory is found at varied distances.  Allowing page migration
-+during reclaim enables these systems to migrate pages from fast tiers to
-+slow tiers when the fast tier is under pressure.  This migration is
-+performed before swap.
-diff -puN mm/migrate.c~enable-numa-demotion mm/migrate.c
---- a/mm/migrate.c~enable-numa-demotion	2020-06-29 16:35:01.015312549 -0700
-+++ b/mm/migrate.c	2020-06-29 16:35:01.022312549 -0700
-@@ -49,6 +49,7 @@
- #include <linux/sched/mm.h>
- #include <linux/ptrace.h>
- #include <linux/oom.h>
-+#include <linux/memory.h>
+@@ -78,6 +79,7 @@ extern int migrate_huge_page_move_mappin
+ 				  struct page *newpage, struct page *page);
+ extern int migrate_page_move_mapping(struct address_space *mapping,
+ 		struct page *newpage, struct page *page, int extra_count);
++extern int migrate_demote_mapping(struct page *page);
+ #else
  
- #include <asm/tlbflush.h>
- 
-@@ -3165,6 +3166,10 @@ void set_migration_target_nodes(void)
- 	 * Avoid any oddities like cycles that could occur
- 	 * from changes in the topology.  This will leave
- 	 * a momentary gap when migration is disabled.
-+	 *
-+	 * This is superfluous for memory offlining since
-+	 * MEM_GOING_OFFLINE does it independently, but it
-+	 * does not hurt to do it a second time.
- 	 */
- 	disable_all_migrate_targets();
- 
-@@ -3211,6 +3216,60 @@ again:
- 	/* Is another pass necessary? */
- 	if (!nodes_empty(next_pass))
- 		goto again;
-+}
- 
--	put_online_mems();
-+/*
-+ * React to hotplug events that might online or offline
-+ * NUMA nodes.
-+ *
-+ * This leaves migrate-on-reclaim transiently disabled
-+ * between the MEM_GOING_OFFLINE and MEM_OFFLINE events.
-+ * This runs whether RECLAIM_MIGRATE is enabled or not.
-+ * That ensures that the user can turn RECLAIM_MIGRATE
-+ * without needing to recalcuate migration targets.
-+ */
-+#if defined(CONFIG_MEMORY_HOTPLUG)
-+static int __meminit migrate_on_reclaim_callback(struct notifier_block *self,
-+						 unsigned long action, void *arg)
-+{
-+	switch (action) {
-+	case MEM_GOING_OFFLINE:
-+		/*
-+		 * Make sure there are not transient states where
-+		 * an offline node is a migration target.  This
-+		 * will leave migration disabled until the offline
-+		 * completes and the MEM_OFFLINE case below runs.
-+		 */
-+		disable_all_migrate_targets();
-+		break;
-+	case MEM_OFFLINE:
-+	case MEM_ONLINE:
-+		/*
-+		 * Recalculate the target nodes once the node
-+		 * reaches its final state (online or offline).
-+		 */
-+		set_migration_target_nodes();
-+		break;
-+	case MEM_CANCEL_OFFLINE:
-+		/*
-+		 * MEM_GOING_OFFLINE disabled all the migration
-+		 * targets.  Reenable them.
-+		 */
-+		set_migration_target_nodes();
-+		break;
-+	case MEM_GOING_ONLINE:
-+	case MEM_CANCEL_ONLINE:
-+		break;
-+	}
-+
-+	return notifier_from_errno(0);
+ static inline void putback_movable_pages(struct list_head *l) {}
+@@ -104,6 +106,10 @@ static inline int migrate_huge_page_move
+ 	return -ENOSYS;
  }
-+
-+static int __init migrate_on_reclaim_init(void)
+ 
++static inline int migrate_demote_mapping(struct page *page)
 +{
-+	hotplug_memory_notifier(migrate_on_reclaim_callback, 100);
-+	return 0;
++	return -ENOSYS;
 +}
-+late_initcall(migrate_on_reclaim_init);
-+#endif /* CONFIG_MEMORY_HOTPLUG */
-+
-diff -puN mm/vmscan.c~enable-numa-demotion mm/vmscan.c
---- a/mm/vmscan.c~enable-numa-demotion	2020-06-29 16:35:01.017312549 -0700
-+++ b/mm/vmscan.c	2020-06-29 16:35:01.023312549 -0700
-@@ -4165,9 +4165,10 @@ int node_reclaim_mode __read_mostly;
-  * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
-  * ABI.  New bits are OK, but existing bits can never change.
-  */
--#define RECLAIM_RSVD  (1<<0)	/* (currently ignored/unused) */
--#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
--#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
-+#define RECLAIM_RSVD	(1<<0)	/* (currently ignored/unused) */
-+#define RECLAIM_WRITE	(1<<1)	/* Writeout pages during reclaim */
-+#define RECLAIM_UNMAP	(1<<2)	/* Unmap pages during reclaim */
-+#define RECLAIM_MIGRATE	(1<<3)	/* Migrate pages during reclaim */
+ #endif /* CONFIG_MIGRATION */
+ 
+ #ifdef CONFIG_COMPACTION
+diff -puN include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/trace/events/migrate.h
+--- a/include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.952312604 -0700
++++ b/include/trace/events/migrate.h	2020-06-29 16:34:38.963312604 -0700
+@@ -20,7 +20,8 @@
+ 	EM( MR_SYSCALL,		"syscall_or_cpuset")		\
+ 	EM( MR_MEMPOLICY_MBIND,	"mempolicy_mbind")		\
+ 	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
+-	EMe(MR_CONTIG_RANGE,	"contig_range")
++	EM( MR_CONTIG_RANGE,	"contig_range")			\
++	EMe(MR_DEMOTION,	"demotion")
  
  /*
-  * Priority for NODE_RECLAIM. This determines the fraction of pages
+  * First define the enums in the above macros to be exported to userspace
+diff -puN mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/debug.c
+--- a/mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.954312604 -0700
++++ b/mm/debug.c	2020-06-29 16:34:38.963312604 -0700
+@@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPE
+ 	"mempolicy_mbind",
+ 	"numa_misplaced",
+ 	"cma",
++	"demotion",
+ };
+ 
+ const struct trace_print_flags pageflag_names[] = {
+diff -puN mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/migrate.c
+--- a/mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.956312604 -0700
++++ b/mm/migrate.c	2020-06-29 16:34:38.964312604 -0700
+@@ -1151,6 +1151,58 @@ int next_demotion_node(int node)
+ 	return node;
+ }
+ 
++static struct page *alloc_demote_node_page(struct page *page, unsigned long node)
++{
++	/*
++	 * 'mask' targets allocation only to the desired node in the
++	 * migration path, and fails fast if the allocation can not be
++	 * immediately satisfied.  Reclaim is already active and heroic
++	 * allocation efforts are unwanted.
++	 */
++	gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
++			__GFP_NOMEMALLOC | __GFP_THISNODE | __GFP_HIGHMEM |
++			__GFP_MOVABLE;
++	struct page *newpage;
++
++	if (PageTransHuge(page)) {
++		mask |= __GFP_COMP;
++		newpage = alloc_pages_node(node, mask, HPAGE_PMD_ORDER);
++		if (newpage)
++			prep_transhuge_page(newpage);
++	} else
++		newpage = alloc_pages_node(node, mask, 0);
++
++	return newpage;
++}
++
++/**
++ * migrate_demote_mapping() - Migrate this page and its mappings to its
++ *                            demotion node.
++ * @page: A locked, isolated, non-huge page that should migrate to its current
++ *        node's demotion target, if available. Since this is intended to be
++ *        called during memory reclaim, all flag options are set to fail fast.
++ *
++ * @returns: MIGRATEPAGE_SUCCESS if successful, -errno otherwise.
++ */
++int migrate_demote_mapping(struct page *page)
++{
++	int next_nid = next_demotion_node(page_to_nid(page));
++
++	VM_BUG_ON_PAGE(!PageLocked(page), page);
++	VM_BUG_ON_PAGE(PageHuge(page), page);
++	VM_BUG_ON_PAGE(PageLRU(page), page);
++
++	if (next_nid == NUMA_NO_NODE)
++		return -ENOSYS;
++	if (PageTransHuge(page) && !thp_migration_supported())
++		return -ENOMEM;
++
++	/* MIGRATE_ASYNC is the most light weight and never blocks.*/
++	return __unmap_and_move(alloc_demote_node_page, NULL, next_nid,
++				page, MIGRATE_ASYNC, MR_DEMOTION);
++}
++
++
+ /*
+  * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
+  * around it.
+diff -puN mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/vmscan.c
+--- a/mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.959312604 -0700
++++ b/mm/vmscan.c	2020-06-29 16:34:38.965312604 -0700
+@@ -1077,6 +1077,7 @@ static unsigned long shrink_page_list(st
+ 	LIST_HEAD(free_pages);
+ 	unsigned nr_reclaimed = 0;
+ 	unsigned pgactivate = 0;
++	int rc;
+ 
+ 	memset(stat, 0, sizeof(*stat));
+ 	cond_resched();
+@@ -1229,6 +1230,30 @@ static unsigned long shrink_page_list(st
+ 			; /* try to reclaim the page below */
+ 		}
+ 
++		rc = migrate_demote_mapping(page);
++		/*
++		 * -ENOMEM on a THP may indicate either migration is
++		 * unsupported or there was not enough contiguous
++		 * space. Split the THP into base pages and retry the
++		 * head immediately. The tail pages will be considered
++		 * individually within the current loop's page list.
++		 */
++		if (rc == -ENOMEM && PageTransHuge(page) &&
++		    !split_huge_page_to_list(page, page_list))
++			rc = migrate_demote_mapping(page);
++
++		if (rc == MIGRATEPAGE_SUCCESS) {
++			unlock_page(page);
++			if (likely(put_page_testzero(page)))
++				goto free_it;
++			/*
++			 * Speculative reference will free this page,
++			 * so leave it off the LRU.
++			 */
++			nr_reclaimed++;
++			continue;
++		}
++
+ 		/*
+ 		 * Anonymous process memory has backing store?
+ 		 * Try to allocate it some swap space here.
 _
