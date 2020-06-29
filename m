@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24937C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E0220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884D620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460417;
-	bh=cCvb0wU/go86K+rFchBAPCLlGwUBH2iAtLmr/T8MDiE=;
+	s=default; t=1593460420;
+	bh=PWwSGPaAWlshTJtLfUNbhAsYEOo+eXVM/5Nwvf7UQOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjdqPGnTzbCvBFkrIwbiuMzm+twiuLkbrFhwNyChtHeJOqX2XOI032DDLJay8g5SK
-	 Nym50Moe3XEqyEnWBl/PIJV+WGaDE4+X1EFe/elDaez7kXjxb+BEX9KGzuTTRrNDgN
-	 TKJO59LRAWLOsSZmyvBkgwPCdd6Y8fQvjriT9TNM=
+	b=ADMhIdZx/6OWCIbzIxBIa/mixIwrl6LHqkJItn+ZIQwRTHfE30dNbMFZyOe6hNkhV
+	 ADAXiN6/+Smn9+ILMcAhxZfWcFNN3KP6h8dnrhFDwy14yVx3uKcOSUkFLkbHKQomFF
+	 R9TXdX7pBUm6GoKq994ROlZWHvSIeFV4sHSyKYdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387790AbgF2Txf (ORCPT
+        id S1726047AbgF2Txi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387683AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387679AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D788124859;
-        Mon, 29 Jun 2020 15:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6140824842;
+        Mon, 29 Jun 2020 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444357;
-        bh=cCvb0wU/go86K+rFchBAPCLlGwUBH2iAtLmr/T8MDiE=;
+        s=default; t=1593444354;
+        bh=PWwSGPaAWlshTJtLfUNbhAsYEOo+eXVM/5Nwvf7UQOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSomqep/eITcPQH5DXe3PcvpA4D/2kVKTM6dUTGmBc+xxVR5zAcn1tj9e2qPPcyhH
-         6lismS+vW4RQfcofApQbiOWaKNJ4BBTvhqHzZxHrmQinIuIvmksHGPlGCbg4dsWK9y
-         bzr2X5JKLhx0wxAPb+jhBmyezA1Psl5qHCNa9yak=
+        b=vaWbaQ5TZSnTJh9OvBfNnXNtvczOJ1hThP9e2wrqHNsQrScGW6WB/rUrTQaagQqef
+         VnTG7g/qD0L05S011CIkchocTY4A5s5Q0KypoSQZJM8uA/MGwTFAsRvHWy53nbIuce
+         yaf1lBxT6VPbGFwA23fcJDKN1IcCTmRguhAjN46w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Todd Kjos <tkjos@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 033/178] binder: fix null deref of proc->context
-Date:   Mon, 29 Jun 2020 11:22:58 -0400
-Message-Id: <20200629152523.2494198-34-sashal@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 029/178] btrfs: fix a block group ref counter leak after failure to remove block group
+Date:   Mon, 29 Jun 2020 11:22:54 -0400
+Message-Id: <20200629152523.2494198-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,92 +67,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@google.com>
+[ Upstream commit 9fecd13202f520f3f25d5b1c313adb740fe19773 ]
 
-commit d35d3660e065b69fdb8bf512f3d899f350afce52 upstream.
+When removing a block group, if we fail to delete the block group's item
+from the extent tree, we jump to the 'out' label and end up decrementing
+the block group's reference count once only (by 1), resulting in a counter
+leak because the block group at that point was already removed from the
+block group cache rbtree - so we have to decrement the reference count
+twice, once for the rbtree and once for our lookup at the start of the
+function.
 
-The binder driver makes the assumption proc->context pointer is invariant after
-initialization (as documented in the kerneldoc header for struct proc).
-However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-proc->context is set to NULL during binder_deferred_release().
+There is a second bug where if removing the free space tree entries (the
+call to remove_block_group_free_space()) fails we end up jumping to the
+'out_put_group' label but end up decrementing the reference count only
+once, when we should have done it twice, since we have already removed
+the block group from the block group cache rbtree. This happens because
+the reference count decrement for the rbtree reference happens after
+attempting to remove the free space tree entries, which is far away from
+the place where we remove the block group from the rbtree.
 
-Another proc was in the middle of setting up a transaction to the dying
-process and crashed on a NULL pointer deref on "context" which is a local
-set to &proc->context:
+To make things less error prone, decrement the reference count for the
+rbtree immediately after removing the block group from it. This also
+eleminates the need for two different exit labels on error, renaming
+'out_put_label' to just 'out' and removing the old 'out'.
 
-    new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
-
-Here's the stack:
-
-[ 5237.855435] Call trace:
-[ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
-[ 5237.855446] binder_inc_ref_for_node+0x140/0x280
-[ 5237.855451] binder_translate_binder+0x1d0/0x388
-[ 5237.855456] binder_transaction+0x2228/0x3730
-[ 5237.855461] binder_thread_write+0x640/0x25bc
-[ 5237.855466] binder_ioctl_write_read+0xb0/0x464
-[ 5237.855471] binder_ioctl+0x30c/0x96c
-[ 5237.855477] do_vfs_ioctl+0x3e0/0x700
-[ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
-[ 5237.855488] el0_svc_common+0xb4/0x194
-[ 5237.855493] el0_svc_handler+0x74/0x98
-[ 5237.855497] el0_svc+0x8/0xc
-
-The fix is to move the kfree of the binder_device to binder_free_proc()
-so the binder_device is freed when we know there are no references
-remaining on the binder_proc.
-
-Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622200715.114382-1-tkjos@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f6033c5e333238 ("btrfs: fix block group leak when removing fails")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/android/binder.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/btrfs/block-group.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 34a6de65aa7ee..5e6586af21b71 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -4688,8 +4688,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
- 
- static void binder_free_proc(struct binder_proc *proc)
- {
-+	struct binder_device *device;
-+
- 	BUG_ON(!list_empty(&proc->todo));
- 	BUG_ON(!list_empty(&proc->delivered_death));
-+	device = container_of(proc->context, struct binder_device, context);
-+	if (refcount_dec_and_test(&device->ref)) {
-+		kfree(proc->context->name);
-+		kfree(device);
-+	}
- 	binder_alloc_deferred_release(&proc->alloc);
- 	put_task_struct(proc->tsk);
- 	binder_stats_deleted(BINDER_STAT_PROC);
-@@ -5408,7 +5415,6 @@ static int binder_node_release(struct binder_node *node, int refs)
- static void binder_deferred_release(struct binder_proc *proc)
- {
- 	struct binder_context *context = proc->context;
--	struct binder_device *device;
- 	struct rb_node *n;
- 	int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
- 
-@@ -5425,12 +5431,6 @@ static void binder_deferred_release(struct binder_proc *proc)
- 		context->binder_context_mgr_node = NULL;
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index c2dd94e1b274c..42d69e77f89d9 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -910,7 +910,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out_put_group;
++		goto out;
  	}
- 	mutex_unlock(&context->context_mgr_node_lock);
--	device = container_of(proc->context, struct binder_device, context);
--	if (refcount_dec_and_test(&device->ref)) {
--		kfree(context->name);
--		kfree(device);
--	}
--	proc->context = NULL;
- 	binder_inner_proc_lock(proc);
+ 
  	/*
- 	 * Make sure proc stays alive after we
+@@ -948,7 +948,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out_put_group;
++			goto out;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -971,13 +971,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out_put_group;
++		goto out;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out_put_group;
++			goto out;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -986,6 +986,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		 &fs_info->block_group_cache_tree);
+ 	RB_CLEAR_NODE(&block_group->cache_node);
+ 
++	/* Once for the block groups rbtree */
++	btrfs_put_block_group(block_group);
++
+ 	if (fs_info->first_logical_byte == block_group->key.objectid)
+ 		fs_info->first_logical_byte = (u64)-1;
+ 	spin_unlock(&fs_info->block_group_cache_lock);
+@@ -1094,10 +1097,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = remove_block_group_free_space(trans, block_group);
+ 	if (ret)
+-		goto out_put_group;
+-
+-	/* Once for the block groups rbtree */
+-	btrfs_put_block_group(block_group);
++		goto out;
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+ 	if (ret > 0)
+@@ -1120,10 +1120,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		free_extent_map(em);
+ 	}
+ 
+-out_put_group:
++out:
+ 	/* Once for the lookup reference */
+ 	btrfs_put_block_group(block_group);
+-out:
+ 	if (remove_rsv)
+ 		btrfs_delayed_refs_rsv_release(fs_info, 1);
+ 	btrfs_free_path(path);
 -- 
 2.25.1
 
