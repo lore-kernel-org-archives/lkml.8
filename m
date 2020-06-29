@@ -2,124 +2,136 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8122C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4002620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F27220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqGHhWSb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="te7+GFwy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XSU5vVHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbgF2Uxl (ORCPT
+        id S1731574AbgF2Uxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        Mon, 29 Jun 2020 16:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731271AbgF2TNV (ORCPT
+        with ESMTP id S1731323AbgF2TNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:21 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B96C00861F;
-        Mon, 29 Jun 2020 03:40:14 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id z17so12390218edr.9;
-        Mon, 29 Jun 2020 03:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FW5uuzpZIcFHloIfRx2mV3Q4O9gtnLF6GA6PBU0vnk8=;
-        b=iqGHhWSblMuDs6IMzv34bSi1zEjJ+bzX0WJoEVJdZL4cCExAUrdJjmtPtPjfoCRhO+
-         r4WLmmBS6fP4qQMezE4KKoQGS1BCY08B+N4uAKG0wt0+obJAlOiH7XkWYl74x3/se2dN
-         j1IHtoex6TmCkFXVORpDTrZNKYq7FaT+Bn8CtE2ZJrf08o4PXmCF6i9Trb9zlGY4EQdQ
-         beq9WOFKSogv7rPW2Vbv5qVwPDadUzb4xojHrRZ1pFPrSAF2ZEIP99a/q5VnR4JdUBw2
-         qFp8+l24efMen96u3viwb+IkkbLw1hEirYZmLCugHle5XZOb80DHb4JbOmLlv/RQ+ycF
-         c8og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FW5uuzpZIcFHloIfRx2mV3Q4O9gtnLF6GA6PBU0vnk8=;
-        b=t5fxUeHHGT5x5pBkrmiSjKdPPxePhiID9SFTtZ5SGWTVpS2qYmMsr1NB8GkOVWo6/i
-         MRs4QIoXmcif1jvAilHdsHBqOrjDIg19Yv9T5g+mEfgtbP+LQnlGLyBo9zM03Kd1R3IA
-         8AWSvFW64n1Tz8v/kDCoW9ygbS07os77WgYkChTdFEc5R3cdCXGN3cBUw44s3+XrQlI+
-         zNt2o4DV++dMJ7eTeCH+OWYbk7J4pvqeezsxP4mxuQxmb+h8L/B+j1K+jbZW/Q6iT6qs
-         R9p9b+W5v68GOAZnKHdMruCU4DIlkHwwHLSKG0GXxD2gkACvVEwmzT7CMGNRRGxPC6j4
-         0Kvw==
-X-Gm-Message-State: AOAM533eLOEMCHnIH99mFq3ZWnktCCgnsExn7QmjiHQU1W+uRZpPUjzA
-        cqN8t+cCTjyzmW4jNXysHbk=
-X-Google-Smtp-Source: ABdhPJx8yG3u2DN7M9KoPEgDVF3CYbC6iiicJVoUyynOlTfr2a28mbHZ6/emmMLVQyv6VCGIT8aO0w==
-X-Received: by 2002:aa7:db4f:: with SMTP id n15mr1292645edt.193.1593427213599;
-        Mon, 29 Jun 2020 03:40:13 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:cb8:1ada:8c2d:413])
-        by smtp.gmail.com with ESMTPSA id l4sm7443503edw.10.2020.06.29.03.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 03:40:13 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] wilc1000: let wilc_mac_xmit() return NETDEV_TX_OK
-Date:   Mon, 29 Jun 2020 12:40:09 +0200
-Message-Id: <20200629104009.84077-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <8a2f50dc-2cbe-64e4-438c-4320bb574f4f@microchip.com>
-References: <8a2f50dc-2cbe-64e4-438c-4320bb574f4f@microchip.com>
+        Mon, 29 Jun 2020 15:13:19 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F9DC008750;
+        Mon, 29 Jun 2020 01:34:11 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 08:34:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593419647;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AJ+eb7tN8ZwXkyJhRRs4yvTcir5EqoRvUR29QFQnXZE=;
+        b=te7+GFwy4Z+fQSc2EYp03TlmKzhMHvR9qWwAVYEokyZHq4HhIH/wChy58yWt8eRZ4vjOG7
+        zg70YDCHu2+QLTJfuvnymVsvbtRvGyr1L0wDZdQfOjTzs3qOM9xoosPTgOa91TO0+HA0mU
+        KfsttHI9KLu8mPIJu2rNLmVrqFiQSQjHGqw7BRO2ay1Qe9gf+glH9vOefo/V2Em7dTYcqR
+        3GF2Fx8lSRlJI2I5Wp3bgOFaNHrderXHs8CvaonMP6yOwbYi/qN1ZNdnFHg/YRIiZBjejD
+        hRLd5HVQpnYiS8Q4U/30PKkicxhrz15ijfxX++QK5EV/rj6DJhRKAHRn9OUofw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593419647;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AJ+eb7tN8ZwXkyJhRRs4yvTcir5EqoRvUR29QFQnXZE=;
+        b=XSU5vVHmE8mDWvf5VpbQMgmSrClHk9Xh0kQlLRdf9RW8gIevIzGruAXKeOaTbhxKBW/f8V
+        uPK84MOMOStRRCDA==
+From:   "tip-bot2 for Petteri Aimonen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+Cc:     Petteri Aimonen <jpa@git.mail.kapsi.fi>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200624114646.28953-2-bp@alien8.de>
+References: <20200624114646.28953-2-bp@alien8.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159341964686.4006.12217287543191255172.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type defining 'NETDEV_TX_OK' but this
-driver returns '0' instead of 'NETDEV_TX_OK'.
+The following commit has been merged into the x86/fpu branch of tip:
 
-Fix this by returning 'NETDEV_TX_OK' instead of '0'.
+Commit-ID:     7ad816762f9bf89e940e618ea40c43138b479e10
+Gitweb:        https://git.kernel.org/tip/7ad816762f9bf89e940e618ea40c43138b479e10
+Author:        Petteri Aimonen <jpa@git.mail.kapsi.fi>
+AuthorDate:    Tue, 16 Jun 2020 11:12:57 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 29 Jun 2020 10:02:00 +02:00
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+
+Previously, kernel floating point code would run with the MXCSR control
+register value last set by userland code by the thread that was active
+on the CPU core just before kernel call. This could affect calculation
+results if rounding mode was changed, or a crash if a FPU/SIMD exception
+was unmasked.
+
+Restore MXCSR to the kernel's default value.
+
+ [ bp: Carve out from a bigger patch by Petteri, add feature check, add
+   FNINIT call too (amluto). ]
+
+Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
+Link: https://lkml.kernel.org/r/20200624114646.28953-2-bp@alien8.de
 ---
- drivers/net/wireless/microchip/wilc1000/netdev.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 5 +++++
+ arch/x86/kernel/fpu/core.c          | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index fda0ab97b02c..be3ae5486f44 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -678,14 +678,14 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 42159f4..845e748 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -623,6 +623,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
+  * MXCSR and XCR definitions:
+  */
  
- 	if (skb->dev != ndev) {
- 		netdev_err(ndev, "Packet not destined to this device\n");
--		return 0;
-+		return NETDEV_TX_OK;
++static inline void ldmxcsr(u32 mxcsr)
++{
++	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
++}
++
+ extern unsigned int mxcsr_feature_mask;
+ 
+ #define XCR_XFEATURE_ENABLED_MASK	0x00000000
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 06c8189..15247b9 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -101,6 +101,12 @@ void kernel_fpu_begin(void)
+ 		copy_fpregs_to_fpstate(&current->thread.fpu);
  	}
- 
- 	tx_data = kmalloc(sizeof(*tx_data), GFP_ATOMIC);
- 	if (!tx_data) {
- 		dev_kfree_skb(skb);
- 		netif_wake_queue(ndev);
--		return 0;
-+		return NETDEV_TX_OK;
- 	}
- 
- 	tx_data->buff = skb->data;
-@@ -710,7 +710,7 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		srcu_read_unlock(&wilc->srcu, srcu_idx);
- 	}
- 
--	return 0;
-+	return NETDEV_TX_OK;
+ 	__cpu_invalidate_fpregs_state();
++
++	if (boot_cpu_has(X86_FEATURE_XMM))
++		ldmxcsr(MXCSR_DEFAULT);
++
++	if (boot_cpu_has(X86_FEATURE_FPU))
++		asm volatile ("fninit");
  }
+ EXPORT_SYMBOL_GPL(kernel_fpu_begin);
  
- static int wilc_mac_close(struct net_device *ndev)
--- 
-2.27.0
-
