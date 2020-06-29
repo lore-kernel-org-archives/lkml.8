@@ -7,124 +7,69 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65390C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7DE2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853002064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgF2Son (ORCPT
+        id S1729018AbgF2Sok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:44:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40916 "EHLO mga02.intel.com"
+        Mon, 29 Jun 2020 14:44:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34252 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgF2SoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728933AbgF2SoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:44:02 -0400
-IronPort-SDR: a+SOZ1NxVd3QEdWfn5A05yR/TJuFoBHoE9aq3qKb8KsLSD0o9HyPlbe9rqsP48BQO7HN2ErI5I
- ww7XNEoKknqA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134249545"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="134249545"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:00 -0700
-IronPort-SDR: STrvPj96RlAD7lPaaBOdSDyKih7aU1PdIQXeqvI1m6nWdHjjGCQy8LCHSPGJCI3J/c8s9USQH+
- Sn2Hajo4qAZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="294829170"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2020 02:03:56 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
-Date:   Mon, 29 Jun 2020 17:03:46 +0800
-Message-Id: <cd0692812e7f1bce365a7594b076ae0ed19d2b37.1593420979.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F38C61A1243;
+        Mon, 29 Jun 2020 12:25:36 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63CD81A123F;
+        Mon, 29 Jun 2020 12:25:29 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EC299402E7;
+        Mon, 29 Jun 2020 18:25:19 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, p.zabel@pengutronix.de, arnd@arndb.de,
+        stefan.agner@toradex.com, oleksandr.suvorov@toradex.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
+Date:   Mon, 29 Jun 2020 18:13:43 +0800
+Message-Id: <1593425623-31810-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
-which is only used to control the fan attached to the system. This
-PWM controller does not have any other consumer other than fan.
-Add DT bindings documentation for this PWM fan controller.
+i.MX7 reset driver now supports module build, it is no longer
+built in by default, need to select it explicitly for i.MX7D.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ arch/arm/mach-imx/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-new file mode 100644
-index 000000000000..bc3fbc46ec5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LGM SoC PWM fan controller
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  intel,fan-wire:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: Specifies fan mode. Default when unspecified is 2.
-+
-+  intel,max-rpm:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description:
-+      Specifies maximum RPM of fan attached to the system.
-+      Default when unspecified is 4000.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm: pwm@e0d00000 {
-+        compatible = "intel,lgm-pwm";
-+        reg = <0xe0d00000 0x30>;
-+        #pwm-cells = <2>;
-+        clocks = <&cgu0 126>;
-+        resets = <&rcu0 0x30 21>;
-+    };
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index e7d7b90..3540483 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -561,6 +561,7 @@ config SOC_IMX7D_CM4
+ config SOC_IMX7D
+ 	bool "i.MX7 Dual support"
+ 	select PINCTRL_IMX7D
++	select RESET_IMX7
+ 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
+ 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
+ 	select ARM_ERRATA_814220 if ARCH_MULTI_V7
 -- 
-2.11.0
+2.7.4
 
