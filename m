@@ -2,119 +2,117 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A549C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A42DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624A02073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CA4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466237;
+	bh=wkackI2rfYcaIhwqNMPcXwmVpxfvX7NY51JrPzFNKm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eiARCpPDHyy71+M6zG3uM3ILFgtERm4OFkJbqcf0f2y6Poth4+np8gDMFGsrtGhCZ
+	 Ry8fOXAH/EMEWiK0g+fm/DiUh6WGiIR8j+g+uCT3lz/jl0JLp7ln0F9qxB81ct+GL2
+	 zlYnELJgKiMbOixF8nIQOxCHRsZ+6QcT9vVIRSC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgF2VaX (ORCPT
+        id S2391087AbgF2Vag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:41545 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgF2VaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:30:21 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MKbPg-1jX6cV011A-00KzBD for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 14:02:39 +0200
-Received: by mail-qv1-f49.google.com with SMTP id m9so7486313qvx.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:02:38 -0700 (PDT)
-X-Gm-Message-State: AOAM531OhSZ4Zoi9/bYdMoK6biOyoO+eqbwsGGTmbZ0keiM5SDlWoVK6
-        jvLxNsogocXhhjDiosJIyLVA7aNEJN3Iu2Ozak4=
-X-Google-Smtp-Source: ABdhPJznG3KXhGobnsMvegA1SAcvtwATKB5v7VQ9LDYftJtnSRjGxsomTyailCW05ySyhsOgMimFanF2ob2IwX+YusM=
-X-Received: by 2002:a0c:f385:: with SMTP id i5mr15202056qvk.4.1593432157860;
- Mon, 29 Jun 2020 05:02:37 -0700 (PDT)
+        Mon, 29 Jun 2020 17:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728852AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:21 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD7F8255E3;
+        Mon, 29 Jun 2020 18:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593455103;
+        bh=wkackI2rfYcaIhwqNMPcXwmVpxfvX7NY51JrPzFNKm0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Blp8tuH+v0xm4gkhx5A0ISpTqN77nf36qnKbOK9TmxsqaJhHMajqjfDivu7VSTh08
+         aAMfNC9mUqwFGKrHwqGjavV7dxtzH2fuRo3vr3RAjjccgO++1NZ0z6FqxKMNjLrUNu
+         8x9sfbWrIlUXPrEXqdshhQCQ/Xw0d+XMJG9z9c3w=
+Date:   Mon, 29 Jun 2020 11:25:02 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [PATCH v2] f2fs: avoid readahead race condition
+Message-ID: <20200629182502.GF20492@sol.localdomain>
+References: <20200624012148.180050-1-jaegeuk@kernel.org>
+ <20200629150323.GA3293033@google.com>
+ <20200629160934.GA1752982@gmail.com>
+ <20200629182414.GA1117827@google.com>
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <1593425623-31810-3-git-send-email-Anson.Huang@nxp.com> <CAK8P3a2wsaS9i9BrV6o845Qx4TJrZM=+13C1haqBLg17HKVgXw@mail.gmail.com>
- <DB3PR0402MB3916E7A184549BF302C7401FF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a1qSdiKfcgXLAQ8JTWeg4_i+8+qh-7hH5rYiEjp-dJMkA@mail.gmail.com> <DB3PR0402MB3916A6B7F90D3A11AF093499F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916A6B7F90D3A11AF093499F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 14:02:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a26Z74V__7sCv6Q=ByFJs1f_8wJ9OtgxHgxndeoUCiFRw@mail.gmail.com>
-Message-ID: <CAK8P3a26Z74V__7sCv6Q=ByFJs1f_8wJ9OtgxHgxndeoUCiFRw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:l3q3mI9pQkh4SjS+dXvkIKT5eYVF8JrWprPUbEW3p4wwCMyfXFe
- ZfHtRl84B7bpttx5J2tcvJtlOKAywx4+Ydkh6Za6y0lbVZM9vHJixqjStLPjM4MjPZzGK1L
- KnOahbsge/xvleZjhRWJtv4s9SWBg0fX02UB7fNom6/O2JrCXRQfccDmkO/763/3AWapiBn
- 0e2Qi+ElsCUefFaJIbQ/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wmc4CPQsBmY=:RBuD1LHCvp2XO9aoQRAm0M
- jMdSK7uHIgbNX8kRlMUX6ieO7YzI8HZhUc25Xvkffr3Tpmq9NRsfElXDsEdWdMc2GQDEHokj6
- PLfg+vCYjJJSgjaCIf5fXhauq125u7vqS6Wh7f5S+vIkyTLWYt+Q4CYp/NUTvRn+HNbgIvmlJ
- 4zslJiYwVh8wFnywq0G8AyEuj4C4IO2HFncqxM8hLnvJuqqXGzxjL6Oj/4Wy7LLBQN1h18j9Q
- tZLY2mbcuFgGuauy6Zuyk/WDANOjgkBbmtaJAAZuZ05I5g0UeLg5yQbTtx2oc4tPENUGfpcDs
- P7E1ZI6E76Ld4Oz/d/kIEqFdAG6J1qv4en0knpaAOAPrv4T50j+Dl4hb9EYtKURXdIZfGdPyI
- a2OEaxup0NiPJUG12g4hG1eNUxdWieinbQp7WNTWzsnyQXvjHLbpENQnF1Atf+cTn4d/IZ/Kt
- ttbMyAuVLlAZaVGC4XkXQ5s/Q84MP1WQpgW1u7KItZB1Gvsggiuu1PCJQzo46zTGKzbLgbRS8
- K4oecPTPhSi5ekI0PojUo9uI5pYX2z56sCCxXq3xxbDJSmk2bJHKCOEHatoUB8IzBLnxppgwS
- x4AXC/wWoVKWxaSYEsDQSVVjWdpPW8F8Qir0wgCSMBP102hjWfsrvHfPd6TVeMjXgykQxj1Ii
- pnsf4+mhFBm0/dc1hkCIJ7lfPL0dU/07EPf1XDtQ3Rnk8vQvNOgdKaiER/pINKM1OWiidKoXs
- q8YdF7WiQn3j7j9x5QxQMP2mpp9PHb/rd3zpvI/qDDn/4jgwxioOT8k+Z4avEtof+BeDhUkBo
- 4TpkGA83tIlrS3RIhR4AJiqs5gyVfmWBSDVUy1KF9LEI76lyMc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629182414.GA1117827@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 1:54 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
-> >
-> > On Mon, Jun 29, 2020 at 1:36 PM Anson Huang <anson.huang@nxp.com>
-> > wrote:
-> > > > Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
-> > > > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang
-> > <Anson.Huang@nxp.com> wrote:
+On Mon, Jun 29, 2020 at 11:24:14AM -0700, Jaegeuk Kim wrote:
+> On 06/29, Eric Biggers wrote:
+> > On Mon, Jun 29, 2020 at 08:03:23AM -0700, Jaegeuk Kim wrote:
+> > > If two readahead threads having same offset enter in readpages, every read
+> > > IOs are split and issued to the disk which giving lower bandwidth.
+> > > 
+> > > This patch tries to avoid redundant readahead calls.
+> > > 
+> > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > > ---
+> > > v2:
+> > >  - add missing code to bypass read
+> > > 
+> > >  fs/f2fs/data.c  | 18 +++++++++++++++++-
+> > >  fs/f2fs/f2fs.h  |  1 +
+> > >  fs/f2fs/super.c |  2 ++
+> > >  3 files changed, 20 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > > index d6094b9f3916..9b69a159cc6c 100644
+> > > --- a/fs/f2fs/data.c
+> > > +++ b/fs/f2fs/data.c
+> > > @@ -2403,6 +2403,7 @@ int f2fs_mpage_readpages(struct address_space *mapping,
+> > >  #endif
+> > >  	unsigned max_nr_pages = nr_pages;
+> > >  	int ret = 0;
+> > > +	bool drop_ra = false;
+> > >  
+> > >  	map.m_pblk = 0;
+> > >  	map.m_lblk = 0;
+> > > @@ -2413,13 +2414,25 @@ int f2fs_mpage_readpages(struct address_space *mapping,
+> > >  	map.m_seg_type = NO_CHECK_TYPE;
+> > >  	map.m_may_create = false;
+> > >  
+> > > +	/*
+> > > +	 * Two readahead threads for same address range can cause race condition
+> > > +	 * which fragments sequential read IOs. So let's avoid each other.
+> > > +	 */
+> > > +	if (pages && is_readahead) {
+> > > +		page = list_last_entry(pages, struct page, lru);
+> > > +		if (F2FS_I(inode)->ra_offset == page_index(page))
+> > > +			drop_ra = true;
+> > > +		else
+> > > +			F2FS_I(inode)->ra_offset = page_index(page);
+> > > +	}
+> > 
+> > This is a data race because ra_offset can be read/written by different threads
+> > concurrently.
+> > 
+> > It either needs locking, or READ_ONCE() and WRITE_ONCE() if races are okay.
+> 
+> I just wanted to keep zero overhead, since it doesn't matter either cases of
+> skipping readahead or not.
+> 
 
-> > I don't understand. Why can't this driver be a loadable module on i.MX7?
-> > Please clarify in the changelog what the bug is on i.MX7.
-> >
-> > > ARMv7 SoCs is NOT in the plan, that is why I add this patch to make it
-> > > same as previously when this reset driver is =y by default. Without
-> > > this patch, this reset driver will NOT be enabled by default for i.MX ARMv7
-> > SoCs, function will be broken.
-> >
-> > But it's the same driver, make it work the same way on all chips!
-> >
-> > I think artificially limiting a new driver feature to one chip just because nobody
-> > asked for it on another chip is not helpful.
-> >
->
-> Understood, what if I don't select it in SOC config which is NOT flexible, but put it in
-> imx_v6_v7_defconfig, then user can select either =y or =m according their requirement?
+Okay, then it should use READ_ONCE() and WRITE_ONCE().
 
-I would recommend using a 'default m if SOC_IMX7' or 'default y if SOC_IMX7', so
-any distros and users that have their own defconfigs still get a reasonable
-default, but can choose between =m and =y based on their needs.
-
-> And in imx_v6_v7_defconfig make it =y by default.
-
-Having =y in imx_v6_v7_defconfig sounds reasonable if you go with 'default m'.
-
-     Arnd
+- Eric
