@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86987C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC28C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF932065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B1F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468268;
-	bh=7NDwsqB7TgbdnkZ66qpsR+9t4LAP6VSLYc1GeJ1+DD0=;
+	s=default; t=1593468271;
+	bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TNvmn9d6aNvm8GfL2o4vtC34qkRjsDdw28gu2l/+0HpI5Jjwukuv8+uQngRLyzY3y
-	 ygzVfVKO8r/VtRkD0lxv/bs8Cv2OK8i37n/rEkB1ipjdjYHZupeHbYobUZKT1nSFl3
-	 BaNeechRr//iwp+o9VRwmAV/7m9jSycy9Fe2gb5E=
+	b=t92mWMm5wKcE7HF0nE1PugHs5xJvfHn/T9RbQub3tXja/uDq35sbeoSFru+htzu+y
+	 HN4jffr9ZnYwLT0PY1ZdSSazC/2rzOFc/BpBSmwF7I9+NT6FmlkbQGi0nTuvaIsPw8
+	 6wpYtyv39AiwCYP/Y+niiQRRyv6cAaq11JsWQToI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbgF2WE1 (ORCPT
+        id S2388805AbgF2WEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726187AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95FC2405C;
-        Mon, 29 Jun 2020 15:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C194246B6;
+        Mon, 29 Jun 2020 15:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443930;
-        bh=7NDwsqB7TgbdnkZ66qpsR+9t4LAP6VSLYc1GeJ1+DD0=;
+        s=default; t=1593444006;
+        bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOtKi7r0hDKXkNZlA7RZ5RBdduTEYe/TO47gLPB3+t0jHJhIdUPXviQvmVWUbFQbX
-         JuSLn+r1ZcYa/aF5Ime9O5vwt//XkgT2A3RHT/+NVJ+BHpristHmW15SLqSKxw8aM7
-         M8uuO2o3luk/2YcZBYtLXPvJr5Sk2ZJyEiZqTcwY=
+        b=QYvakmDszmo3RLEw9J1c7KvLdOHdHRz5FBM9U5BWKVJXlqKeLr3Y+6m/P0+shUnud
+         LsYlJpQueODlbgzYS0FAjnUrpjbeD6EiTB5HyADSpa0BEinEOcu+ZhBiX8n2nddqun
+         w5yLAaYiLWjpJ6EyF2hkuWxUD+QNG47No14YHyOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 031/265] bnxt_en: Read VPD info only for PFs
-Date:   Mon, 29 Jun 2020 11:14:24 -0400
-Message-Id: <20200629151818.2493727-32-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 112/265] ASoC: qcom: common: set correct directions for dailinks
+Date:   Mon, 29 Jun 2020 11:15:45 -0400
+Message-Id: <20200629151818.2493727-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,37 +66,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit c55e28a8b43fcd7dc71868bd165705bc7741a7ca ]
+[ Upstream commit a2120089251f1fe221305e88df99af16f940e236 ]
 
-Virtual functions does not have VPD information. This patch modifies
-calling bnxt_read_vpd_info() only for PFs and avoids an unnecessary
-error log.
+Currently both FE and BE dai-links are configured bi-directional,
+However the DSP BE dais are only single directional,
+so set the directions as supported by the BE dais.
 
-Fixes: a0d0fd70fed5 ("bnxt_en: Read partno and serialno of the board from VPD")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes)
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200612123711.29130-2-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/qcom/common.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index c202c2a3d140d..b6fb5a1709c01 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11884,7 +11884,8 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	dev->ethtool_ops = &bnxt_ethtool_ops;
- 	pci_set_drvdata(pdev, dev);
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 6c20bdd850f33..8ada4ecba8472 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -4,6 +4,7 @@
  
--	bnxt_vpd_read_info(bp);
-+	if (BNXT_PF(bp))
-+		bnxt_vpd_read_info(bp);
+ #include <linux/module.h>
+ #include "common.h"
++#include "qdsp6/q6afe.h"
  
- 	rc = bnxt_alloc_hwrm_resources(bp);
- 	if (rc)
+ int qcom_snd_parse_of(struct snd_soc_card *card)
+ {
+@@ -101,6 +102,15 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			}
+ 			link->no_pcm = 1;
+ 			link->ignore_pmdown_time = 1;
++
++			if (q6afe_is_rx_port(link->id)) {
++				link->dpcm_playback = 1;
++				link->dpcm_capture = 0;
++			} else {
++				link->dpcm_playback = 0;
++				link->dpcm_capture = 1;
++			}
++
+ 		} else {
+ 			dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
+ 			if (!dlc)
+@@ -113,12 +123,12 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			link->codecs->dai_name = "snd-soc-dummy-dai";
+ 			link->codecs->name = "snd-soc-dummy";
+ 			link->dynamic = 1;
++			link->dpcm_playback = 1;
++			link->dpcm_capture = 1;
+ 		}
+ 
+ 		link->ignore_suspend = 1;
+ 		link->nonatomic = 1;
+-		link->dpcm_playback = 1;
+-		link->dpcm_capture = 1;
+ 		link->stream_name = link->name;
+ 		link++;
+ 
 -- 
 2.25.1
 
