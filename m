@@ -2,63 +2,137 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9069FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B670AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7374320760
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB9D207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgF3Apv (ORCPT
+        id S1727069AbgF3Asz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:45:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38336 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbgF3Apv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:45:51 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jq4P9-002ult-87; Tue, 30 Jun 2020 02:45:43 +0200
-Date:   Tue, 30 Jun 2020 02:45:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: of_mdio: count number of regitered phys
-Message-ID: <20200630004543.GB597495@lunn.ch>
-References: <1593415596-9487-1-git-send-email-claudiu.beznea@microchip.com>
+        Mon, 29 Jun 2020 20:48:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6880 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726056AbgF3Asz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:48:55 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 53CFF9DD4C284405C498;
+        Mon, 29 Jun 2020 17:01:50 +0800 (CST)
+Received: from [127.0.0.1] (10.67.76.251) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Mon, 29 Jun 2020
+ 17:01:41 +0800
+Subject: Re: [Patch v3 1/3] lib: Restrict cpumask_local_spread to houskeeping
+ CPUs
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <frederic@kernel.org>, <mtosatti@redhat.com>,
+        <juri.lelli@redhat.com>, <abelits@marvell.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <rostedt@goodmis.org>, <mingo@kernel.org>, <peterz@infradead.org>,
+        <tglx@linutronix.de>, <davem@davemloft.net>,
+        <sfr@canb.auug.org.au>, <stephen@networkplumber.org>,
+        <rppt@linux.vnet.ibm.com>, yuqi jin <jinyuqi@huawei.com>
+References: <20200623192331.215557-1-nitesh@redhat.com>
+ <20200623192331.215557-2-nitesh@redhat.com>
+ <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <e6c261a1-1fec-3faf-c49c-51a88a7f521c@hisilicon.com>
+Date:   Mon, 29 Jun 2020 17:01:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593415596-9487-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.76.251]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:26:36AM +0300, Claudiu Beznea wrote:
-> In case of_mdiobus_register_phy()/of_mdiobus_register_device()
-> returns -ENODEV for all PHYs in device tree or for all scanned
-> PHYs there is a chance that of_mdiobus_register() to
-> return success code although no PHY devices were registered.
-> Add a counter that increments every time a PHY was registered
-> to avoid the above scenario.
+Hi Andrew,
 
-Hi Claudiu
+ÔÚ 2020/6/25 3:26, Andrew Morton Ð´µÀ:
+> On Tue, 23 Jun 2020 15:23:29 -0400 Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> 
+>> From: Alex Belits <abelits@marvell.com>
+>>
+>> The current implementation of cpumask_local_spread() does not respect the
+>> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
+>> it will return it to the caller for pinning of its IRQ threads. Having
+>> these unwanted IRQ threads on an isolated CPU adds up to a latency
+>> overhead.
+>>
+>> Restrict the CPUs that are returned for spreading IRQs only to the
+>> available housekeeping CPUs.
+>>
+>> ...
+>>
+>> --- a/lib/cpumask.c
+>> +++ b/lib/cpumask.c
+>> @@ -6,6 +6,7 @@
+>>  #include <linux/export.h>
+>>  #include <linux/memblock.h>
+>>  #include <linux/numa.h>
+>> +#include <linux/sched/isolation.h>
+>>  
+>>  /**
+>>   * cpumask_next - get the next cpu in a cpumask
+>> @@ -205,22 +206,27 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>>   */
+>>  unsigned int cpumask_local_spread(unsigned int i, int node)
+>>  {
+>> -	int cpu;
+>> +	int cpu, hk_flags;
+>> +	const struct cpumask *mask;
+>>  
+>> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+>> +	mask = housekeeping_cpumask(hk_flags);
+>>  	/* Wrap: we always want a cpu. */
+>> -	i %= num_online_cpus();
+>> +	i %= cpumask_weight(mask);
+>>  
+>>  	if (node == NUMA_NO_NODE) {
+>> -		for_each_cpu(cpu, cpu_online_mask)
+>> +		for_each_cpu(cpu, mask) {
+>>  			if (i-- == 0)
+>>  				return cpu;
+>> +		}
+>>  	} else {
+>>  		/* NUMA first. */
+>> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
+>> +		for_each_cpu_and(cpu, cpumask_of_node(node), mask) {
+>>  			if (i-- == 0)
+>>  				return cpu;
+>> +		}
+>>  
+>> -		for_each_cpu(cpu, cpu_online_mask) {
+>> +		for_each_cpu(cpu, mask) {
+>>  			/* Skip NUMA nodes, done above. */
+>>  			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
+>>  				continue;
+> 
+> Are you aware of these changes to cpu_local_spread()?
+> https://lore.kernel.org/lkml/1582768688-2314-1-git-send-email-zhangshaokun@hisilicon.com/
+> 
+> I don't see a lot of overlap but it would be nice for you folks to
 
-There is a danger here this will break something. Without this patch,
-an empty bus is O.K. But with this patch, a bus without a PHY is a
-problem.
+Yeah, it's a different issue from Nitesh. About our's patch, it has been
+linux-next long time, will it be merged in Linus's tree?
 
-Take for example FEC. It often comes in pairs. Each has an MDIO
-bus. But to save pins, there are some designs which place two PHYs on
-one bus, leaving the other empty. The driver unconditionally calls
-of_mdiobus_register() and if it returns an error, it will error out
-the probe. So i would not be too surprised if you get reports of
-missing interfaces with this patch.
+Thanks,
+Shaokun
 
-	Andrew
+> check each other's homework ;)
+> 
+> 
+> 
+> .
+> 
+
