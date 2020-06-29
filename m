@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B134C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C09C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77575206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C7420780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467444;
-	bh=T2XlFw7cYAIqYBlNSB3w8BAm1u/f7UnydUIyVFS42Mw=;
+	s=default; t=1593467449;
+	bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KPX5oToZcVxcWOaI5WXtfyu43bSQAw20U4zLefdXNaFUgODeGNmQBOHqT7dQSTOTM
-	 ht0j6RXvynPcQc1FgmUvburTrdkSVCi2UYvd1mGGtliRd6J90uAIYs42/XUDJePD3I
-	 0RMpuFXobkORXuK04FNkNVve3bP3RSjISWEbDKy0=
+	b=LqjsD9zhcYBMKNJF0zsz7WEWNowniRiWoQgiWFxW6LapkeCvHLyaEZNu0Ru8C6OvB
+	 PnAsrj/ApPIG3ZgQKYaEXDDAHSYXoz8yJTfd3zl3KfHYjM05cFgf3P2xcmrv2aDsY4
+	 6pU6PwE1AvYS5YOXmNKBhE70LjUFv8CxG8BbvRpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbgF2Vun (ORCPT
+        id S2404494AbgF2Vus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726672AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAF5246BB;
-        Mon, 29 Jun 2020 15:20:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854FD24787;
+        Mon, 29 Jun 2020 15:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444012;
-        bh=T2XlFw7cYAIqYBlNSB3w8BAm1u/f7UnydUIyVFS42Mw=;
+        s=default; t=1593444093;
+        bh=FhmwB88O57CR0ErdjSaM/GnQ/TxWai5+2EiBJyy0BBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkypAtiijMw8JJ+L8PCjZx53GL+ryPv4xt+Tpmbtv/51tePdCoN8zH0kWRzWdvoMr
-         8TiOj5tulPVjWD97FeG127jelHQcYRplMwzocQH23WSbDF2Kq8S4BZUMNawW2+Lrro
-         Dw+KOmzPdYXHcrWeogAnsfomvHOGjya0g1rkyU9o=
+        b=zXSs+QkcT5DpZnoC/988wM3j/N/gWXfYrsSYXI/7KUdJtixmMlnDEKBApaLWhnh3T
+         DDEkC0BSGQIxro4eBSkZ6BsXg/6rtTDaGukqugsuc2zVPeuJwS2VCYRtUoDVuNT35r
+         xvvSoYiB0korG8Ok1n2KuUi9yUWZFFXDem6YBuqo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 118/265] samples/bpf: xdp_redirect_cpu: Set MAX_CPUS according to NR_CPUS
-Date:   Mon, 29 Jun 2020 11:15:51 -0400
-Message-Id: <20200629151818.2493727-119-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 203/265] kprobes: Suppress the suspicious RCU warning on kprobes
+Date:   Mon, 29 Jun 2020 11:17:16 -0400
+Message-Id: <20200629151818.2493727-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,159 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 6a09815428547657f3ffd2f5c31ac2a191e7fdf3 ]
+[ Upstream commit 6743ad432ec92e680cd0d9db86cb17b949cf5a43 ]
 
-xdp_redirect_cpu is currently failing in bpf_prog_load_xattr()
-allocating cpu_map map if CONFIG_NR_CPUS is less than 64 since
-cpu_map_alloc() requires max_entries to be less than NR_CPUS.
-Set cpu_map max_entries according to NR_CPUS in xdp_redirect_cpu_kern.c
-and get currently running cpus in xdp_redirect_cpu_user.c
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/374472755001c260158c4e4b22f193bdd3c56fb7.1589300442.git.lorenzo@kernel.org
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
+
+Joel suggested that we can silent that warning by passing
+lockdep_is_held() to the last argument of
+hlist_for_each_entry_rcu().
+
+Add lockdep_is_held(&kprobe_mutex) at the end of the
+hlist_for_each_entry_rcu() to suppress the warning.
+
+Link: http://lkml.kernel.org/r/158927055350.27680.10261450713467997503.stgit@devnote2
+
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/xdp_redirect_cpu_kern.c |  2 +-
- samples/bpf/xdp_redirect_cpu_user.c | 29 ++++++++++++++++-------------
- 2 files changed, 17 insertions(+), 14 deletions(-)
+ kernel/kprobes.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/samples/bpf/xdp_redirect_cpu_kern.c b/samples/bpf/xdp_redirect_cpu_kern.c
-index 313a8fe6d125c..2baf8db1f7e70 100644
---- a/samples/bpf/xdp_redirect_cpu_kern.c
-+++ b/samples/bpf/xdp_redirect_cpu_kern.c
-@@ -15,7 +15,7 @@
- #include <bpf/bpf_helpers.h>
- #include "hash_func01.h"
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 195ecb955fcc5..950a5cfd262ce 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
  
--#define MAX_CPUS 64 /* WARNING - sync with _user.c */
-+#define MAX_CPUS NR_CPUS
- 
- /* Special map type that can XDP_REDIRECT frames to another CPU */
- struct {
-diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
-index 15bdf047a2221..9b8f21abeac47 100644
---- a/samples/bpf/xdp_redirect_cpu_user.c
-+++ b/samples/bpf/xdp_redirect_cpu_user.c
-@@ -13,6 +13,7 @@ static const char *__doc__ =
- #include <unistd.h>
- #include <locale.h>
- #include <sys/resource.h>
-+#include <sys/sysinfo.h>
- #include <getopt.h>
- #include <net/if.h>
- #include <time.h>
-@@ -24,8 +25,6 @@ static const char *__doc__ =
- #include <arpa/inet.h>
- #include <linux/if_link.h>
- 
--#define MAX_CPUS 64 /* WARNING - sync with _kern.c */
--
- /* How many xdp_progs are defined in _kern.c */
- #define MAX_PROG 6
- 
-@@ -40,6 +39,7 @@ static char *ifname;
- static __u32 prog_id;
- 
- static __u32 xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
-+static int n_cpus;
- static int cpu_map_fd;
- static int rx_cnt_map_fd;
- static int redirect_err_cnt_map_fd;
-@@ -170,7 +170,7 @@ struct stats_record {
- 	struct record redir_err;
- 	struct record kthread;
- 	struct record exception;
--	struct record enq[MAX_CPUS];
-+	struct record enq[];
- };
- 
- static bool map_collect_percpu(int fd, __u32 key, struct record *rec)
-@@ -225,10 +225,11 @@ static struct datarec *alloc_record_per_cpu(void)
- static struct stats_record *alloc_stats_record(void)
- {
- 	struct stats_record *rec;
--	int i;
-+	int i, size;
- 
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	size = sizeof(*rec) + n_cpus * sizeof(struct record);
-+	rec = malloc(size);
-+	memset(rec, 0, size);
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
-@@ -237,7 +238,7 @@ static struct stats_record *alloc_stats_record(void)
- 	rec->redir_err.cpu = alloc_record_per_cpu();
- 	rec->kthread.cpu   = alloc_record_per_cpu();
- 	rec->exception.cpu = alloc_record_per_cpu();
--	for (i = 0; i < MAX_CPUS; i++)
-+	for (i = 0; i < n_cpus; i++)
- 		rec->enq[i].cpu = alloc_record_per_cpu();
- 
- 	return rec;
-@@ -247,7 +248,7 @@ static void free_stats_record(struct stats_record *r)
- {
- 	int i;
- 
--	for (i = 0; i < MAX_CPUS; i++)
-+	for (i = 0; i < n_cpus; i++)
- 		free(r->enq[i].cpu);
- 	free(r->exception.cpu);
- 	free(r->kthread.cpu);
-@@ -350,7 +351,7 @@ static void stats_print(struct stats_record *stats_rec,
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 lockdep_is_held(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
  	}
- 
- 	/* cpumap enqueue stats */
--	for (to_cpu = 0; to_cpu < MAX_CPUS; to_cpu++) {
-+	for (to_cpu = 0; to_cpu < n_cpus; to_cpu++) {
- 		char *fmt = "%-15s %3d:%-3d %'-14.0f %'-11.0f %'-10.2f %s\n";
- 		char *fm2 = "%-15s %3s:%-3d %'-14.0f %'-11.0f %'-10.2f %s\n";
- 		char *errstr = "";
-@@ -475,7 +476,7 @@ static void stats_collect(struct stats_record *rec)
- 	map_collect_percpu(fd, 1, &rec->redir_err);
- 
- 	fd = cpumap_enqueue_cnt_map_fd;
--	for (i = 0; i < MAX_CPUS; i++)
-+	for (i = 0; i < n_cpus; i++)
- 		map_collect_percpu(fd, i, &rec->enq[i]);
- 
- 	fd = cpumap_kthread_cnt_map_fd;
-@@ -549,10 +550,10 @@ static int create_cpu_entry(__u32 cpu, __u32 queue_size,
-  */
- static void mark_cpus_unavailable(void)
- {
--	__u32 invalid_cpu = MAX_CPUS;
-+	__u32 invalid_cpu = n_cpus;
- 	int ret, i;
- 
--	for (i = 0; i < MAX_CPUS; i++) {
-+	for (i = 0; i < n_cpus; i++) {
- 		ret = bpf_map_update_elem(cpus_available_map_fd, &i,
- 					  &invalid_cpu, 0);
- 		if (ret) {
-@@ -688,6 +689,8 @@ int main(int argc, char **argv)
- 	int prog_fd;
- 	__u32 qsize;
- 
-+	n_cpus = get_nprocs_conf();
-+
- 	/* Notice: choosing he queue size is very important with the
- 	 * ixgbe driver, because it's driver page recycling trick is
- 	 * dependend on pages being returned quickly.  The number of
-@@ -757,7 +760,7 @@ int main(int argc, char **argv)
- 		case 'c':
- 			/* Add multiple CPUs */
- 			add_cpu = strtoul(optarg, NULL, 0);
--			if (add_cpu >= MAX_CPUS) {
-+			if (add_cpu >= n_cpus) {
- 				fprintf(stderr,
- 				"--cpu nr too large for cpumap err(%d):%s\n",
- 					errno, strerror(errno));
 -- 
 2.25.1
 
