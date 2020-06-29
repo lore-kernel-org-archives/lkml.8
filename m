@@ -2,145 +2,117 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09979C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2372206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4110D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467181;
-	bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqYzVeamqO+5uuMRDJmUGZi5PbB4ckd97M6HOYaAxpK9jwHQ3xf+K8ZEynLmqQSdv
-	 H40YuN+0JAPxc6inxiq0B1DRwLE1Eg9Qzzfe6LgMvTqxCragWRdfi1G5y4j9o55Z8+
-	 eSpSHnWJwPeYCVUTcjV0cnBjhlRhhGnIfEp1YYQw=
+	s=default; t=1593467187;
+	bh=gF4C5IJL9Z7p1l9MBEr0x0+yhKuUVQmPfhBBdsQPwNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S16FdLrAOtqfOvcC6SFYKvk5hoa4VZk+BgZcYxlcpRN0ZQ8pyy/YgmwQWH/EeJIYL
+	 kk46chF0p/R8Gdf0mJ2NCisH4StEIyeSB9R0ddJDTxUgY1NcWQnWz/PKYZbGlpT7k+
+	 Twg7ckuRWDtopLxTM0JXgJiF6rH7b0UWlcP5R4fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404131AbgF2VqU (ORCPT
+        id S2404138AbgF2VqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:50 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEFB02476B;
-        Mon, 29 Jun 2020 15:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444085;
-        bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKvq5L/782ij95RqgY/Eb/z4sPGL/Fo6nBTHlT9nqNXcNrMDXMdc6O+DpmYMBagRG
-         hq6OHb+MQmEFwvdxazGDMX9TMvhRo/sTAX2Ar3Fohdf9Fmssgc1osWEWAqYPHHiYA7
-         GXtxjgUSL3MpfyPjfNFxlfgAGb23VnnKVni0kCTY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 195/265] s390/ptrace: return -ENOSYS when invalid syscall is supplied
-Date:   Mon, 29 Jun 2020 11:17:08 -0400
-Message-Id: <20200629151818.2493727-196-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:46:25 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44090 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403971AbgF2VqP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:46:15 -0400
+Received: by mail-il1-f193.google.com with SMTP id w73so4008872ila.11;
+        Mon, 29 Jun 2020 14:46:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uyW+jW1awHxTjKyRxm3xfnDiRBllSD4XGWQa5b78Aw8=;
+        b=bvczna650WplwrbE2t7lBZio1h82/M0jvHqMsVdFzDLnwQFT7OHKuk6ME5eHq6C7rI
+         INRc3gxByEzTCDdE1Rblvl0dRi0VUEOIiz/eUjDXGg+7xEJ2tj7qevgFZHHMV85Xvswz
+         cDvF/sAXKN8AoSqsNLHiTrwHZ++2hmE809fM+zcOpevJuL7j4TfKaJfdNTDT42MIukqU
+         w7cw0uatIu09PN4lUBHI+UxikLJQd6m2SQ5F2FChin9O56LWMKkhwVG7E3fS2QxVFScJ
+         VOm1qsH9Fspg8qd90mqmE0PoPtvpXRLndSEzDQTT2u3CPLJ84Jhddiogeou/pgHILVMX
+         GnrA==
+X-Gm-Message-State: AOAM530t+ex3qOLtQ+bOv5I1nLSdenyrJEMRcrLykP5qF6glB9Tm6xCN
+        p6h69JFn1NdGNlHJheg1bQ==
+X-Google-Smtp-Source: ABdhPJxBseoySQnNrO/ucBAVbxE8Ve40ZGwZtZVMP9DsPrIAMec0KapS8vUwFpWKDddIkdU/wn0rOw==
+X-Received: by 2002:a92:b684:: with SMTP id m4mr17425649ill.153.1593467174525;
+        Mon, 29 Jun 2020 14:46:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id z9sm612748ilz.45.2020.06.29.14.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:46:13 -0700 (PDT)
+Received: (nullmailer pid 2980772 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:46:12 -0000
+Date:   Mon, 29 Jun 2020 15:46:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: power: Convert mti,mips-cpc to DT
+ schema
+Message-ID: <20200629214612.GA2979868@bogus>
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+On Thu, 18 Jun 2020 01:31:55 +0300, Serge Semin wrote:
+> It's a Cluster Power Controller embedded into the MIPS IP cores.
+> Currently the corresponding dts node is supposed to have compatible
+> and reg properties.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> 
+> ---
+> 
+> Changelog prev:
+> - Reword the changelog summary - use shorter version.
+> - Lowercase the example hex'es.
+> ---
+>  .../bindings/power/mti,mips-cpc.txt           |  8 -----
+>  .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+>  2 files changed, 35 insertions(+), 8 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+> 
 
-[ Upstream commit cd29fa798001075a554b978df3a64e6656c25794 ]
 
-The current code returns the syscall number which an invalid
-syscall number is supplied and tracing is enabled. This makes
-the strace testsuite fail.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/ptrace.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/mti,mips-cpc.example.dt.yaml: example-0: cpc@1bde0000:reg:0: [0, 467533824, 0, 32768] is too long
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 9eee345568890..3f29646313e82 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -838,6 +838,7 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
- asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- {
- 	unsigned long mask = -1UL;
-+	long ret = -1;
- 
- 	if (is_compat_task())
- 		mask = 0xffffffff;
-@@ -854,8 +855,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 		 * debugger stored an invalid system call number. Skip
- 		 * the system call and the system call restart handling.
- 		 */
--		clear_pt_regs_flag(regs, PIF_SYSCALL);
--		return -1;
-+		goto skip;
- 	}
- 
- #ifdef CONFIG_SECCOMP
-@@ -871,7 +871,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 			sd.arch = AUDIT_ARCH_S390X;
- 		}
- 
--		sd.nr = regs->gprs[2] & 0xffff;
-+		sd.nr = regs->int_code & 0xffff;
- 		sd.args[0] = regs->orig_gpr2 & mask;
- 		sd.args[1] = regs->gprs[3] & mask;
- 		sd.args[2] = regs->gprs[4] & mask;
-@@ -880,19 +880,26 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 		sd.args[5] = regs->gprs[7] & mask;
- 
- 		if (__secure_computing(&sd) == -1)
--			return -1;
-+			goto skip;
- 	}
- #endif /* CONFIG_SECCOMP */
- 
- 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
--		trace_sys_enter(regs, regs->gprs[2]);
-+		trace_sys_enter(regs, regs->int_code & 0xffff);
- 
- 
--	audit_syscall_entry(regs->gprs[2], regs->orig_gpr2 & mask,
-+	audit_syscall_entry(regs->int_code & 0xffff, regs->orig_gpr2 & mask,
- 			    regs->gprs[3] &mask, regs->gprs[4] &mask,
- 			    regs->gprs[5] &mask);
- 
-+	if ((signed long)regs->gprs[2] >= NR_syscalls) {
-+		regs->gprs[2] = -ENOSYS;
-+		ret = -ENOSYS;
-+	}
- 	return regs->gprs[2];
-+skip:
-+	clear_pt_regs_flag(regs, PIF_SYSCALL);
-+	return ret;
- }
- 
- asmlinkage void do_syscall_trace_exit(struct pt_regs *regs)
--- 
-2.25.1
+
+See https://patchwork.ozlabs.org/patch/1311661
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
