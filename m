@@ -2,172 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E43C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296C720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4BA20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsFrigUr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KlXQ7z+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgF2T1z (ORCPT
+        id S1732716AbgF2T17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
+        Mon, 29 Jun 2020 15:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732668AbgF2T1m (ORCPT
+        with ESMTP id S1732756AbgF2T1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:27:42 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 261EEC0307A9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:51:02 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so8498391pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:51:02 -0700 (PDT)
+        Mon, 29 Jun 2020 15:27:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E678C0307A6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:49:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so17048064wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jfw7xgsCVT4+P8rZ+eOB1eWDoXiGwe+YmdSqzX3C0Y4=;
-        b=OsFrigUrq4Pn3wi9zJd39zKVZnTXtfVlYWiWLAFcBkkrEfrTqrDwN3a/RzrUPrITDV
-         KUJsfwzxBf0AcERXqQmyH3K8gn4c3AH2JVGzZHqliBqfeVLkal/91qHUGwb14sVN3kc3
-         EO4Dh00rQ9lc3BkpEnvqsP3oCB+tYCEkjVdmE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f7aeIRM/Zv/PnpeibkauplfbdEKkZND3pAUldUybN3c=;
+        b=KlXQ7z+OO3HgJ9Un57tV9gVx6v38Y/XKvz9AlO7xmfwr4IppUMv0PFlAiwZ37/XG8e
+         bMTj/UoTGc1ppjwKDrCkpJaOJtF3aVzebVxZ988qFtdrX50/8PCgwz/1S7zaJqikcJIl
+         R3rVI8GX4+TfQGhCRgpACBvNgDUU78JmgvcRimKlzn+AD2WNvd1NpVtsH1tLrFltt+u2
+         UYQTEVFWSGu/H3g9+/z1hBRh5qfzZOg7agoKeM7UqD6MSDW4iJ6LpXo/NupjOqWTzfPG
+         uDZeS9NmlqYfuZO0pmxKdx8gL7gDNk6uQAY6mrr1+dMoIQfAz3ubafgdf/utDB0u1ZQO
+         ZUyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jfw7xgsCVT4+P8rZ+eOB1eWDoXiGwe+YmdSqzX3C0Y4=;
-        b=NQSwuUFvGZJdWT2+4wUcirSYl6ccHGQSKnm3R9kTxPqPok38sxohOg1O8sWiHVyuH5
-         yLbrcVfRfZglh6BHxs06MzPDvjUIC4FT96Vmh4t/t/+7EzYoEcLTBIOd7doHgcHqfJKa
-         MCpsNQKN2CFmSy8RLhkZJM75S7sDT4z3SI7KZF8SoFKM3fsl2YJBJ8mI1y4ljuJnLlMO
-         HYMIIhNIdAyD0LLiguRh0gmxNZl163/OGcflzTEJx6867ZJTh5fFJ99Q6sh0uhLNSPfW
-         QYD+Ll56mu5NgimfkIO17s2qKMQlAP6xIKpIBOaDcUt0V+GiLDPqfnZPI+xAy0J83ngi
-         78WA==
-X-Gm-Message-State: AOAM5331+PyOaH4LSD5F0ghlD9sH5fjSwoPlOQGotwmtO9aULicVH48N
-        wl/ut3FThPX+fTdmaTICpLM0QBLK/B8=
-X-Google-Smtp-Source: ABdhPJwm48vv+qqoIOljYXXwtVlwcziTxV/OcXjiwIEmnc3wZz8EWPfxn0vWZUMCzLdUqVKL3rkizA==
-X-Received: by 2002:a62:758b:: with SMTP id q133mr1865322pfc.289.1593445861687;
-        Mon, 29 Jun 2020 08:51:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a8sm165949pfi.29.2020.06.29.08.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 08:51:00 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 08:50:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] x86/boot/compressed: Force hidden visibility for
- all symbol references
-Message-ID: <202006290849.940FAE8C9B@keescook>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200629140928.858507-3-nivedita@alum.mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f7aeIRM/Zv/PnpeibkauplfbdEKkZND3pAUldUybN3c=;
+        b=W4VT+Vytd0AXGg2/z9UYUDkZSBjxCEoHuED2vsVqbBcsL1Oop7NqsubxovaYN+XlVX
+         Y+8mZC0nHlqEWVpWMMRx4ro4nVeWtaMyL+yM/nz9O/3SKto+ZbhdLLtXftR4VaLyGMWs
+         +bmVMdUOySI5fZef0KWN8clATAWzSGQBt/8FS+qvSCLu+C84ka0KF00aL7/EHa04e6de
+         skm5bKOY8EMkwOPhsONbpvkli3vqgm0Px/p3rINIMhNha3kCzVCXQrB7yCEXXf+kjNxY
+         l6b+3wyhpGzR34vN0BmU7dD7QhsQqu+Z6T34iyJahYo6PpudN3HtsFqdBjpd/Ych57Le
+         0oRw==
+X-Gm-Message-State: AOAM530140xTGlTU8RstRxKhdVemho1Celp70QXGrXdCjyn60SHMBiem
+        t1Bw78rGtQ0+EFfGmqHLRBb9SBZJcnP0lY6NJg8d3w==
+X-Google-Smtp-Source: ABdhPJz7hf/e6M4VjuoE6JVvdJBuiyiGgShjAiNH3cgNampUZgdLoTqWr9bSP2QVhdQ9FwwTjAgnWM1TyxmQ7aKHnbI=
+X-Received: by 2002:adf:e5d0:: with SMTP id a16mr16865873wrn.48.1593445790006;
+ Mon, 29 Jun 2020 08:49:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629140928.858507-3-nivedita@alum.mit.edu>
+References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-3-jolsa@kernel.org>
+ <CAP-5=fVdSmPEYMqGqCEwZXfj=-wg6sJLQ=kuPTLaPdKiAiqTvg@mail.gmail.com> <20200628212448.GI2988321@krava>
+In-Reply-To: <20200628212448.GI2988321@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 29 Jun 2020 08:49:38 -0700
+Message-ID: <CAP-5=fWNPAwj0uH1ExGBLe+oFBinX3vPRyA4g2KiwRuc8RExsg@mail.gmail.com>
+Subject: Re: [PATCH 02/10] perf tools: Add struct expr_parse_data to keep expr value
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:09:23AM -0400, Arvind Sankar wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> Eliminate all GOT entries in the decompressor binary, by forcing hidden
-> visibility for all symbol references, which informs the compiler that
-> such references will be resolved at link time without the need for
-> allocating GOT entries.
-> 
-> To ensure that no GOT entries will creep back in, add an assertion to
-> the decompressor linker script that will fire if the .got section has
-> a non-zero size.
-> 
-> [Arvind: fixup -include hidden.h to -include $(srctree)/$(src)/hidden.h]
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> From: Ard Biesheuvel <ardb@kernel.org>
-> Link: https://lore.kernel.org/r/20200523120021.34996-3-ardb@kernel.org
-> ---
->  arch/x86/boot/compressed/Makefile      |  1 +
->  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
->  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
->  3 files changed, 21 insertions(+)
->  create mode 100644 arch/x86/boot/compressed/hidden.h
-> 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 7619742f91c9..b01c8aed0f23 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -42,6 +42,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
->  KBUILD_CFLAGS += -Wno-pointer-sign
->  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
-> +KBUILD_CFLAGS += -include $(srctree)/$(src)/hidden.h
->  
->  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  GCOV_PROFILE := n
-> diff --git a/arch/x86/boot/compressed/hidden.h b/arch/x86/boot/compressed/hidden.h
-> new file mode 100644
-> index 000000000000..49a17b6b5962
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/hidden.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * When building position independent code with GCC using the -fPIC option,
-> + * (or even the -fPIE one on older versions), it will assume that we are
-> + * building a dynamic object (either a shared library or an executable) that
-> + * may have symbol references that can only be resolved at load time. For a
-> + * variety of reasons (ELF symbol preemption, the CoW footprint of the section
-> + * that is modified by the loader), this results in all references to symbols
-> + * with external linkage to go via entries in the Global Offset Table (GOT),
-> + * which carries absolute addresses which need to be fixed up when the
-> + * executable image is loaded at an offset which is different from its link
-> + * time offset.
-> + *
-> + * Fortunately, there is a way to inform the compiler that such symbol
-> + * references will be satisfied at link time rather than at load time, by
-> + * giving them 'hidden' visibility.
-> + */
-> +
-> +#pragma GCC visibility push(hidden)
+On Sun, Jun 28, 2020 at 2:25 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Fri, Jun 26, 2020 at 01:04:41PM -0700, Ian Rogers wrote:
+> > On Fri, Jun 26, 2020 at 12:47 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > Adding struct expr_parse_data to keep expr value
+> > > instead of just simple double pointer, so we can
+> > > store more data for ID in following changes.
+> >
+> > Nit, expr_parse_data sounds a bit like data that is created just at
+> > parse time. Perhaps id_data, for data associated with an id?
+>
+> we should keep the expr prefix, expr_id_data ?
 
-Is this recognized by Clang? I'm assuming so, since I see this already
-being used in drivers/firmware/efi/libstub/hidden.h
+Sounds good to me. Thanks,
+Ian
 
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index b17d218ccdf9..4bcc943842ab 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -81,6 +81,7 @@ SECTIONS
->  	DISCARDS
->  }
->  
-> +ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
->  #ifdef CONFIG_X86_64
->  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
->  #else
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+> jirka
+>
