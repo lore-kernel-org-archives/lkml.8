@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD21C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7499FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C31E320724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CC4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465363;
-	bh=UQu+7V1cXILSqWmsj5TqeEtkMiRO+mIQRZp8rW3iTS8=;
+	s=default; t=1593465373;
+	bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOUAvtYvVNJ2gVGukIZ2Fivre8XYMmNCvW8V2aqNGYAVv53PzBzX1j4DIguUfXl+L
-	 PASast6Hrca+DVlGCBlI0jcNo1W2PcWHWncXMfwLCbtzbiL+USZhoitdnIokaE8fog
-	 TrUKOl5nb4ACMc/wKeRMGVika7T+xg7Is/BnHLBg=
+	b=0eTRKOWbAhzBZ3zLnlErL235VwKrqRU6OHB2vADUetXg2HWMvwjCuGBlAzB1W9llg
+	 2nbwrm0rjW1drArEaQf4JjbG7VGX+dwDAVEf320eknsIdCw7QgXzxWVon9UASt/ZaP
+	 euEgLrWQ7shp6lEDDSM2u0k9ILNdoO9rpWKxDc5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390693AbgF2VQD (ORCPT
+        id S2390703AbgF2VQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:16:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729942AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 680B225554;
-        Mon, 29 Jun 2020 15:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F562557D;
+        Mon, 29 Jun 2020 15:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446121;
-        bh=UQu+7V1cXILSqWmsj5TqeEtkMiRO+mIQRZp8rW3iTS8=;
+        s=default; t=1593446146;
+        bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kj1c03mM85vLRRTV/wqBIERNgmVF5l2DHJPoETr7ldr0k8birB0omqyWwOpbKWGpS
-         QurUX/qVs0l678aZzrbtfr40VZFAw9rFPxJDFTUJa+ayEQsjRJ5GQzP0cGSGyPXMDC
-         q/ZIXcfrprkLKMuR23lW/TgVxg8Mgv9kg5Wgxm8g=
+        b=bg5Jtcz0COl9dpeK6wWAFlB54hNUbA7jul0pbSijsy+R7qdSLuajiafBHp8lJe5Do
+         ed3Qvi/rCKzexdF/TfQBy3kBItFBfsLefC+S7F+f6vJZTQ5rWbdmY0MhfMmTSb4Vw9
+         Li8G0IIG1/AT2nJ7TSHwYnfIwbUC1MaBCxB7VeE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fan Guo <guofan5@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 112/135] RDMA/mad: Fix possible memory leak in ib_mad_post_receive_mads()
-Date:   Mon, 29 Jun 2020 11:52:46 -0400
-Message-Id: <20200629155309.2495516-113-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 134/135] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
+Date:   Mon, 29 Jun 2020 11:53:08 -0400
+Message-Id: <20200629155309.2495516-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -64,36 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Guo <guofan5@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a17f4bed811c60712d8131883cdba11a105d0161 ]
+commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
 
-If ib_dma_mapping_error() returns non-zero value,
-ib_mad_post_receive_mads() will jump out of loops and return -ENOMEM
-without freeing mad_priv. Fix this memory-leak problem by freeing mad_priv
-in this case.
+The quirk function snd_emuusb_set_samplerate() has a NULL check for
+the mixer element, but this is useless in the current code.  It used
+to be a check against mixer->id_elems[unitid] but it was changed later
+to the value after mixer_eleme_list_to_info() which is always non-NULL
+due to the container_of() usage.
 
-Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
-Link: https://lore.kernel.org/r/20200612063824.180611-1-guofan5@huawei.com
-Signed-off-by: Fan Guo <guofan5@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixes the check before the conversion.
+
+While we're at it, correct a typo in the comment in the function,
+too.
+
+Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/mad.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/mixer_quirks.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index 616173b7a5e8a..c26fdcb7dddf8 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -2912,6 +2912,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
- 						 DMA_FROM_DEVICE);
- 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
- 						  sg_list.addr))) {
-+			kfree(mad_priv);
- 			ret = -ENOMEM;
- 			break;
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 198515f86fcc2..9646513f4b4ad 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1168,17 +1168,17 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
+ {
+ 	struct usb_mixer_interface *mixer;
+ 	struct usb_mixer_elem_info *cval;
+-	int unitid = 12; /* SamleRate ExtensionUnit ID */
++	int unitid = 12; /* SampleRate ExtensionUnit ID */
+ 
+ 	list_for_each_entry(mixer, &chip->mixer_list, list) {
+-		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+-		if (cval) {
++		if (mixer->id_elems[unitid]) {
++			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
+ 						    cval->control << 8,
+ 						    samplerate_id);
+ 			snd_usb_mixer_notify_id(mixer, unitid);
++			break;
  		}
+-		break;
+ 	}
+ }
+ 
 -- 
 2.25.1
 
