@@ -2,196 +2,156 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD05C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7C7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IBbygPif"
+	by mail.kernel.org (Postfix) with ESMTP id 933D0204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgF2S7x (ORCPT
+        id S1730290AbgF2S77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:59:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19840 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728460AbgF2S7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:59:43 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05T5qBlq008728
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:55:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=LMXoHFeYD1SRI2JRp/FowRzsgayo8g+979xURW23qz8=;
- b=IBbygPifhYrbrDshoexHPwvlmW3AILeEaol5TYNFOaM9TG99uDrDYuHnK/LPA4DjeD5A
- 8G0RETsEg6LEIAA8R7++5oAiuJpH3EEQlsxaxEY+FdZqAlYDn5YEllMstfN/3KJvT1mh
- IuJVPGOQ7T4pjH1ZZYMVw3nI0NKEbpYnge0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31xntbjwtr-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:55:45 -0700
-Received: from intmgw004.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 28 Jun 2020 22:55:43 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id B662762E5213; Sun, 28 Jun 2020 22:55:41 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v4 bpf-next 4/4] selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-Date:   Sun, 28 Jun 2020 22:55:30 -0700
-Message-ID: <20200629055530.3244342-5-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200629055530.3244342-1-songliubraving@fb.com>
-References: <20200629055530.3244342-1-songliubraving@fb.com>
+        Mon, 29 Jun 2020 14:59:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:37358 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728460AbgF2S74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:59:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF96150C;
+        Mon, 29 Jun 2020 10:42:56 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.30])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F079E3F71E;
+        Mon, 29 Jun 2020 10:42:52 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 18:42:46 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Message-ID: <20200629174220.GA4188@bogus>
+References: <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200626143914.GE5289@sirena.org.uk>
+ <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+ <20200629125756.GC5499@sirena.org.uk>
+ <20200629134011.GA23284@bogus>
+ <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
+ <20200629150728.GA27911@bogus>
+ <20200629161450.GE5499@sirena.org.uk>
+ <20200629164207.GB27911@bogus>
+ <20200629172651.GG5499@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_04:2020-06-26,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- cotscore=-2147483648 lowpriorityscore=0 mlxscore=0 clxscore=1015
- bulkscore=0 spamscore=0 suspectscore=8 impostorscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290042
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629172651.GG5499@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new test is similar to other bpf_iter tests. It dumps all
-/proc/<pid>/stack to a seq_file. Here is some example output:
+On Mon, Jun 29, 2020 at 06:26:51PM +0100, Mark Brown wrote:
+> On Mon, Jun 29, 2020 at 05:42:07PM +0100, Sudeep Holla wrote:
+> > On Mon, Jun 29, 2020 at 05:14:50PM +0100, Mark Brown wrote:
+> > > On Mon, Jun 29, 2020 at 04:07:28PM +0100, Sudeep Holla wrote:
+> > >
+> > > > The specification states clearly:
+> > > > "... all devices in the system must be in a state that is compatible
+> > > > with entry into the system state. These preconditions are beyond the scope
+> > > > of this specification and are therefore not described here."
+> > > > "Prior to the call, the OS must disable all sources of wakeup other than
+> > > > those it needs to support for its implementation of suspend to RAM."
+>
+> > > This gets a bit circular for a generic OS since the OS needs some way to
+> > > figure out what it's supposed to do on a given platform - for example
+> > > the OS may be happy to use wakeup sources that the firmware is just
+> > > going to cut power on.
+>
+> > While I understand the sentiments here, PSCI is targeted to address CPU
+> > power state management mainly and system states like suspend/reset and
+> > poweroff which involves last CPU. This is one of the reason it is out of
+> > the scope of the specification.
+>
+> Sure, but as soon as we start talking about the last CPU stuff we're
+> inevitably talking about the system as a whole.
+>
+> > Here is my understanding. DT specifies all the wakeup sources. Linux
+> > can configure those and user may choose to enable a subset of them is
+> > wakeup. As stated in the spec and also based on what we already do in
+> > the kernel, we disable all other wakeup sources.
+>
+> > The PSCI firmware can then either read those from the interrupt controller
+> > or based on static platform understanding, must not disable those wakeup
+> > sources.
+>
+> That bit about static platform understanding isn't super helpful for the
+> OS, so long as the firmware might do that the OS is pretty much out of
+> luck.
+>
 
-pid:     2873 num_entries:        3
-[<0>] worker_thread+0xc6/0x380
-[<0>] kthread+0x135/0x150
-[<0>] ret_from_fork+0x22/0x30
+I don't disagree. That's one of the reason I wanted to gather requirement
+few years back when PSCI system suspend was introduced. I couldn't
+convince PSCI spec authors myself.
 
-pid:     2874 num_entries:        9
-[<0>] __bpf_get_stack+0x15e/0x250
-[<0>] bpf_prog_22a400774977bb30_dump_task_stack+0x4a/0xb3c
-[<0>] bpf_iter_run_prog+0x81/0x170
-[<0>] __task_seq_show+0x58/0x80
-[<0>] bpf_seq_read+0x1c3/0x3b0
-[<0>] vfs_read+0x9e/0x170
-[<0>] ksys_read+0xa7/0xe0
-[<0>] do_syscall_64+0x4c/0xa0
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > > I see nothing has been fixed in the firmware too and we are still
+> > > > discussing the same after 3 years 😄. Clearly we should start trusting
+> > > > firmware and built capability to fix and replace it if there are bugs
+> > > > just like kernel and stop hacking around in the kernel to deal with
+> > > > just broken platform/psci firmware.
+>
+> > > This isn't just an issue of buggy firmware as far as I can see, it's
+> > > also a lack of ability for the OS and firmware to communicate
+> > > information about their intentions to each other.  As things stand you'd
+> > > need to put static information in the DT.
+>
+> > It is easy for DT to get out of sync with firmware unless it is generated
+> > by the same firmware. That's the reason why I am against such multiple
+>
+> The ability for things to get out of sync also concerns me as I said
+> further back in the thread but I'm not sure we have much alternative,
+> realistically we're going to need some facility to work around firmware
+> that isn't ideal.
+>
 
-Note: To print the output, it is necessary to modify the selftest.
+I understand and I agree. That's the main reason I want to understand this
+better and provide a generic solution. The current pm_suspend_via_firmware
+seem to have different intentions(at-least that's what I grasped quickly
+reading through the document)
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- .../selftests/bpf/prog_tests/bpf_iter.c       | 17 +++++++++
- .../selftests/bpf/progs/bpf_iter_task_stack.c | 37 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
-.c
+> > sources of information. I understand ACPI has more flexibility and I did
+>
+> ACPI has a much stronger idea of what the system looks like which helps
+> it a lot here.
+>
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/te=
-sting/selftests/bpf/prog_tests/bpf_iter.c
-index 1e2e0fced6e81..fed42755416db 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-@@ -5,6 +5,7 @@
- #include "bpf_iter_netlink.skel.h"
- #include "bpf_iter_bpf_map.skel.h"
- #include "bpf_iter_task.skel.h"
-+#include "bpf_iter_task_stack.skel.h"
- #include "bpf_iter_task_file.skel.h"
- #include "bpf_iter_tcp4.skel.h"
- #include "bpf_iter_tcp6.skel.h"
-@@ -110,6 +111,20 @@ static void test_task(void)
- 	bpf_iter_task__destroy(skel);
- }
-=20
-+static void test_task_stack(void)
-+{
-+	struct bpf_iter_task_stack *skel;
-+
-+	skel =3D bpf_iter_task_stack__open_and_load();
-+	if (CHECK(!skel, "bpf_iter_task_stack__open_and_load",
-+		  "skeleton open_and_load failed\n"))
-+		return;
-+
-+	do_dummy_read(skel->progs.dump_task_stack);
-+
-+	bpf_iter_task_stack__destroy(skel);
-+}
-+
- static void test_task_file(void)
- {
- 	struct bpf_iter_task_file *skel;
-@@ -452,6 +467,8 @@ void test_bpf_iter(void)
- 		test_bpf_map();
- 	if (test__start_subtest("task"))
- 		test_task();
-+	if (test__start_subtest("task_stack"))
-+		test_task_stack();
- 	if (test__start_subtest("task_file"))
- 		test_task_file();
- 	if (test__start_subtest("tcp4"))
-diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c b/to=
-ols/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-new file mode 100644
-index 0000000000000..e40d32a2ed93d
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_stack.c
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2020 Facebook */
-+#include "bpf_iter.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") =3D "GPL";
-+
-+#define MAX_STACK_TRACE_DEPTH   64
-+unsigned long entries[MAX_STACK_TRACE_DEPTH];
-+#define SIZE_OF_ULONG (sizeof(unsigned long))
-+
-+SEC("iter/task")
-+int dump_task_stack(struct bpf_iter__task *ctx)
-+{
-+	struct seq_file *seq =3D ctx->meta->seq;
-+	struct task_struct *task =3D ctx->task;
-+	long i, retlen;
-+
-+	if (task =3D=3D (void *)0)
-+		return 0;
-+
-+	retlen =3D bpf_get_task_stack(task, entries,
-+				    MAX_STACK_TRACE_DEPTH * SIZE_OF_ULONG, 0);
-+	if (retlen < 0)
-+		return 0;
-+
-+	BPF_SEQ_PRINTF(seq, "pid: %8u num_entries: %8u\n", task->pid,
-+		       retlen / SIZE_OF_ULONG);
-+	for (i =3D 0; i < MAX_STACK_TRACE_DEPTH; i++) {
-+		if (retlen > i * SIZE_OF_ULONG)
-+			BPF_SEQ_PRINTF(seq, "[<0>] %pB\n", (void *)entries[i]);
-+	}
-+	BPF_SEQ_PRINTF(seq, "\n");
-+
-+	return 0;
-+}
---=20
-2.24.1
+Yes, I wanted something similar initially but didn't get good response
+both from community and PSCI spec authors.
 
+> > Each device or platform having its specific property in DT is not scalable.
+> > Not sure if it is a generic problem. If it is, I would like to understand
+> > more details on such lack of ability for communtication between OS and
+> > firmware.
+>
+> It seems like a generic issue from where I'm sitting.
+
+I can't disagree with that. The description of the issue and the solution
+in the thread is. We need make it more generic and provide generic solution,.
+I already see 2-3 threads addressing this in isolation as specific issue.
+Also we need to check with DT maintainers if there are fine with the idea
+of binding to address this issue.
+
+--
+Regards,
+Sudeep
