@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C648DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D28C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1B76206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE122067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462656;
-	bh=z9yTdWWDExmKZdumpqCEeq0n//HjC4fsspk4qh9Eowg=;
+	s=default; t=1593462665;
+	bh=sFN3jMxTCuTSoLS0viYpH/B0gqv0IL0UISqEiczNlm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TzKuKf0HPR9uKaFySNS5GjNZNwz/SdX5udyZgLly7lACQmo2QZqyljpELLiQwbSYz
-	 g+KlMYbAdxpBmCHTiPEIAN+dONrNUQYsTI7EhdWizv06bKztyzmHXj6lRA4yVk5ycq
-	 vTKm4mL2FX1+2lThiSDY4FZ+whPCW4jIVNb1VVk0=
+	b=PxFlkYrTL9FgdkjGFJR5Xvdz97Y7u4/dNTAj8Ksqriu0PszbbCIJs200VNBLEiLsq
+	 zWaRG8kpw1F2paFW62FH/kYXqQzRDxyvAnau4scmbwGhKKpdEyZqPHbQ8xuust69OS
+	 7i0axfbETd8zRC83fjlaHlgUvNAxsf0vHoRKRUwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732830AbgF2Uay (ORCPT
+        id S2387646AbgF2UbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732483AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732486AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDBD725426;
-        Mon, 29 Jun 2020 15:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49532536D;
+        Mon, 29 Jun 2020 15:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445375;
-        bh=z9yTdWWDExmKZdumpqCEeq0n//HjC4fsspk4qh9Eowg=;
+        s=default; t=1593445233;
+        bh=sFN3jMxTCuTSoLS0viYpH/B0gqv0IL0UISqEiczNlm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPT9F07ZsmwUSlTHoCjQv63gPVWhKbMaGc8iLx6mPOtVn0FvGmbxeuirYeo5an3Zc
-         SWZIJEGLN6ibBnH44fTbpbInPnUGSeE6cKQ0ktosXzeWlcrptwVjHSOAyv6nNbEUIE
-         sHINcleuAKCQteJkgDjxG+Ubi8On1Miefkk8J9u8=
+        b=bIhr0WGbQfNfBL5ymE+ClgmZZYfaj7FlvQjAhHBJmW/OflBR53jg7EruSnWjdM56T
+         hnz1pLZSkYZ5zCJjCiCmz/SwkE1ZEbdiiC41Al2E5rKS0EoDXZDuB7f69A3uWiIaFT
+         4Wdopd2OUVcU3rmFEHaQjEetyJKQg7p1Xn5gcYJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Longchamp <valentin@longchamp.me>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 130/191] net: sched: export __netdev_watchdog_up()
-Date:   Mon, 29 Jun 2020 11:39:06 -0400
-Message-Id: <20200629154007.2495120-131-sashal@kernel.org>
+Subject: [PATCH 4.9 018/191] clk: clk-flexgen: fix clock-critical handling
+Date:   Mon, 29 Jun 2020 11:37:14 -0400
+Message-Id: <20200629154007.2495120-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,40 +66,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
+[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
 
-Since the quiesce/activate rework, __netdev_watchdog_up() is directly
-called in the ucc_geth driver.
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-Unfortunately, this function is not available for modules and thus
-ucc_geth cannot be built as a module anymore. Fix it by exporting
-__netdev_watchdog_up().
-
-Since the commit introducing the regression was backported to stable
-branches, this one should ideally be as well.
-
-Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_generic.c | 1 +
+ drivers/clk/st/clk-flexgen.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 88ce8edf12614..04ca08f852209 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -337,6 +337,7 @@ void __netdev_watchdog_up(struct net_device *dev)
- 			dev_hold(dev);
- 	}
- }
-+EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index a485f3b284b9f..033e6062599d6 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -371,6 +371,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
  
- static void dev_watchdog_up(struct net_device *dev)
- {
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
+ 
+ 		/*
 -- 
 2.25.1
 
