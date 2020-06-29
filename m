@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF28EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2608206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7CF206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459923;
-	bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
+	s=default; t=1593459925;
+	bh=kfz40U3GJTPN7qzf2x608CXIypAWHOkTtsPZiquQHbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voWEICT3vwkKhtGaqFGYm+FkFlGuoz9cBRTBtFfBwm0m4ypj2bjsnVLV1Rxt2ajPC
-	 VJNAl630SdMT/D0UEYiQGeyDAi0Ngnp7q/A/8ooNFcQQpecJjUzhSmVFSf8DaL4i6D
-	 q5CGU0qLjp46Y8aHxe94HDlh7GAIvadW1Jv0R9+U=
+	b=wtqItgLvctbomQFTo1cRWEzLPpBZ2+Cq0naA8aygnzAlnm4JEu7KwvOqCZwrKU8Me
+	 HDqOLaJ3efJXzVDGBCqIsNfopAqI9pGbbxRHXtpXowU/ZBpnYNoSXWmyOJs3lEjCi8
+	 m6Th41ySl5Cyjp8/BqQoJZzUGfrnEa/B/Gc0qrC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbgF2TpV (ORCPT
+        id S1732223AbgF2TpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387830AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:44 -0400
+        id S2387825AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4411824916;
-        Mon, 29 Jun 2020 15:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420DE24810;
+        Mon, 29 Jun 2020 15:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444468;
-        bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
+        s=default; t=1593444331;
+        bh=kfz40U3GJTPN7qzf2x608CXIypAWHOkTtsPZiquQHbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ai8V9tMTClBM8kt+m/6HCLRMlXw8d6uK8opvwMdX5AFNy5VNhIleTBXvqVe0F0ckP
-         T5DpWCHGDJJ7P1DnVb4nBelMp0QA2PVdmoelBQzhx2o3W6uOhK0WqeXd0DVTKbbnGd
-         xhFeXcXLmrwKRxr9XOXpAh2sMU8lwRqG3YfJk/Q4=
+        b=atjNXCt1hCw73NbxiZLLgFIhTA2FIOaG8sREqSJZgRKuTI2WY7YxOmTm65vcz1gBw
+         OVF10ftOeEouYWqPXbAJGXtUA1ND0hzyfqEFs2MsHT9Gv/0ja5JZnx2+W/u4kNhPPF
+         NanFqGGtd+CC6COfF8UelmZLGwO/eiXGNHC6qGIE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@suse.de>,
+Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 149/178] x86/asm/64: Align start of __clear_user() loop to 16-bytes
-Date:   Mon, 29 Jun 2020 11:24:54 -0400
-Message-Id: <20200629152523.2494198-150-sashal@kernel.org>
+Subject: [PATCH 5.4 006/178] mvpp2: ethtool rxtx stats fix
+Date:   Mon, 29 Jun 2020 11:22:31 -0400
+Message-Id: <20200629152523.2494198-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,66 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Sven Auhagen <sven.auhagen@voleatech.de>
 
-commit bb5570ad3b54e7930997aec76ab68256d5236d94 upstream.
+[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
 
-x86 CPUs can suffer severe performance drops if a tight loop, such as
-the ones in __clear_user(), straddles a 16-byte instruction fetch
-window, or worse, a 64-byte cacheline. This issues was discovered in the
-SUSE kernel with the following commit,
+The ethtool rx and tx queue statistics are reporting wrong values.
+Fix reading out the correct ones.
 
-  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-
-which increased the code object size from 10 bytes to 15 bytes and
-caused the 8-byte copy loop in __clear_user() to be split across a
-64-byte cacheline.
-
-Aligning the start of the loop to 16-bytes makes this fit neatly inside
-a single instruction fetch window again and restores the performance of
-__clear_user() which is used heavily when reading from /dev/zero.
-
-Here are some numbers from running libmicro's read_z* and pread_z*
-microbenchmarks which read from /dev/zero:
-
-  Zen 1 (Naples)
-
-  libmicro-file
-                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
-                                                    revert-1153933703d9+               align16+
-  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
-  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
-  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
-  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
-  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
-  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
-
-Note that this doesn't affect Haswell or Broadwell microarchitectures
-which seem to avoid the alignment issue by executing the loop straight
-out of the Loop Stream Detector (verified using perf events).
-
-Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> # v4.19+
-Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/lib/usercopy_64.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index fff28c6f73a21..b0dfac3d3df71 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
- 	asm volatile(
- 		"	testq  %[size8],%[size8]\n"
- 		"	jz     4f\n"
-+		"	.align 16\n"
- 		"0:	movq $0,(%[dst])\n"
- 		"	addq   $8,%[dst]\n"
- 		"	decl %%ecx ; jnz   0b\n"
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index cf5d447af7db2..0f136f1af5d14 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1541,7 +1541,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->ntxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      MVPP22_CTRS_TX_CTR(port->id, i),
++						      MVPP22_CTRS_TX_CTR(port->id, q),
+ 						      mvpp2_ethtool_txq_regs[i].offset);
+ 
+ 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
+@@ -1550,7 +1550,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->nrxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      port->first_rxq + i,
++						      port->first_rxq + q,
+ 						      mvpp2_ethtool_rxq_regs[i].offset);
+ }
+ 
 -- 
 2.25.1
 
