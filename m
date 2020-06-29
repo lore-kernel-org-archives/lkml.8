@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76E652071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7F8206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468333;
-	bh=XjGbmrbRRRYSZINDhADAOU6AqF78SzA+WiHTDdERRUE=;
+	s=default; t=1593468340;
+	bh=f8wWRBJu0xVCp0JlyfTc7Lt1H4gqJ376r6jAqEgVev0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtfuKA7xjSiza4uWsK6SeVshra+qv9diqcE5k/eoO6TdwIjL3Kk6zlWKvJllaaeu7
-	 7pKQ3BUNIK2Bn3+YTMc3LTOQPo3s5MTpdwLjtcdh3NEVW3GX9OUYqB/riDTfKyOoiX
-	 8bed045IkYVE60MZ/L7lQgLWeMAqIx1jiugCm8kY=
+	b=NxPqMVYsWM7G81VX5kgYhTu+IuyUuH1rZtgtfhDBWQUxDwHKlfRFiJDBo297zG1P8
+	 q/tpkwQnS4Daol6pOXjoleIMTxrC22D2YtVtZubPA8I37Vl2q1sOQNPAggaG4bp1ru
+	 13wB+iZXMXSyPE4vgAXSmJU2x0mZOREQmicEYCd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgF2WFY (ORCPT
+        id S2391735AbgF2WFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:21 -0400
+        id S1726152AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C555247E6;
-        Mon, 29 Jun 2020 15:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CE4B246CE;
+        Mon, 29 Jun 2020 15:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444149;
-        bh=XjGbmrbRRRYSZINDhADAOU6AqF78SzA+WiHTDdERRUE=;
+        s=default; t=1593444020;
+        bh=f8wWRBJu0xVCp0JlyfTc7Lt1H4gqJ376r6jAqEgVev0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noR8iZBZZrgf119tWUpdH0GJzmGcJE5Ig+6URFCYvdQykF0Qt4TuygLVKJ72cQM2O
-         T2dnhgMs6716udbZKNvq1ebTwCVBRlwODYCR/AnmgzbZrkEQ5IYqyA2dufnuYwksjg
-         3NSSB4fn8oloCm/vtjIi9TcLJIpFcSvcT42+QtOM=
+        b=A/oD33WVMxmCOpXy4kav837aZr/P4NhsJU499GzZ1H4pHzCRNWXobdHtnDk9vvKeF
+         cjhRddufqTycSVpIVNsVtfBpS5xuuZxvDSx6NHhEveIfVQnYoUW7CiKiPXzTfrxqBm
+         9Tq6lz6QPOv5bKJJFl45RQJtUB/3mKolr5oJ5xKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 255/265] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
-Date:   Mon, 29 Jun 2020 11:18:08 -0400
-Message-Id: <20200629151818.2493727-256-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Xiumei Mu <xmu@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 127/265] devmap: Use bpf_map_area_alloc() for allocating hash buckets
+Date:   Mon, 29 Jun 2020 11:16:00 -0400
+Message-Id: <20200629151818.2493727-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.7.y
@@ -64,43 +68,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
+[ Upstream commit 99c51064fb06146b3d494b745c947e438a10aaa7 ]
 
-The "ie_len" variable is in the 0-255 range and it comes from the
-network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
-lead to memory corruption.
+Syzkaller discovered that creating a hash of type devmap_hash with a large
+number of entries can hit the memory allocator limit for allocating
+contiguous memory regions. There's really no reason to use kmalloc_array()
+directly in the devmap code, so just switch it to the existing
+bpf_map_area_alloc() function that is used elsewhere.
 
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200616142829.114173-1-toke@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/bpf/devmap.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index 110338dbe3728..cc60f6a28d700 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -1830,12 +1830,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
- 	if (!pIE)
- 		return _FAIL;
-+	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
-+		return _FAIL;
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 58bdca5d978a8..badf382bbd365 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -85,12 +85,13 @@ static DEFINE_PER_CPU(struct list_head, dev_flush_list);
+ static DEFINE_SPINLOCK(dev_map_lock);
+ static LIST_HEAD(dev_map_list);
  
- 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
- 	supportRateNum = ie_len;
+-static struct hlist_head *dev_map_create_hash(unsigned int entries)
++static struct hlist_head *dev_map_create_hash(unsigned int entries,
++					      int numa_node)
+ {
+ 	int i;
+ 	struct hlist_head *hash;
  
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
--	if (pIE)
-+	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
- 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
+-	hash = kmalloc_array(entries, sizeof(*hash), GFP_KERNEL);
++	hash = bpf_map_area_alloc(entries * sizeof(*hash), numa_node);
+ 	if (hash != NULL)
+ 		for (i = 0; i < entries; i++)
+ 			INIT_HLIST_HEAD(&hash[i]);
+@@ -138,7 +139,8 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+ 		return -EINVAL;
  
- 	return _SUCCESS;
+ 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
+-		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets);
++		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
++							   dtab->map.numa_node);
+ 		if (!dtab->dev_index_head)
+ 			goto free_charge;
+ 
+@@ -223,7 +225,7 @@ static void dev_map_free(struct bpf_map *map)
+ 			}
+ 		}
+ 
+-		kfree(dtab->dev_index_head);
++		bpf_map_area_free(dtab->dev_index_head);
+ 	} else {
+ 		for (i = 0; i < dtab->map.max_entries; i++) {
+ 			struct bpf_dtab_netdev *dev;
 -- 
 2.25.1
 
