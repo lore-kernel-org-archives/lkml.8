@@ -2,164 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7127C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 962FA20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1C520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="qM33i6sc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sk970az7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgF2Cmb (ORCPT
+        id S1726096AbgF2Cna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:42:31 -0400
-Received: from mail-eopbgr1400133.outbound.protection.outlook.com ([40.107.140.133]:14781
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725983AbgF2Cma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:42:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n4IyAQhN+wpqGVEnXYeXS6qdjihhvDPdO/tySoxgmw7xjfe8MwjghNt/MNHZC9Tj/9YR0lRiKE5DMt08TCU3Ypg9Ug3OJV+CgZIA6cjMcNhvCNd2fFGChtOPW4xyhiu1tylkFF1Hw9CcGaAg74AA9WXtlbXedpZt2cVIJ25aJzSKOU2yeLIaaOuooe7NYwPGITifPa+AnZHvtnym5+Xd/g15qSHPiyW+ZEwok5fJhGf/aOrtkh7ug5lr9u13d4+dwe/8V4YqKDtww8p+UXNO420A3+4s43cPPz3CGrdDvwbT4/SZogwoROGl8gFNyXStGTgf61ukI3cOExerkAnOyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxjrRQ/Xm60AUljb+ncHyTxJ18InEZucF+dgDcncihs=;
- b=ZPgTdC4aGPMEhJVObqIINQber1DShw5AL0+JpIrJVdWsQLrWwk/uMDSJdJdtd1plLchzz+uXYRJJ8z9Yq0Fi2btegqcfVoO3LOj5NVLcXCwKvwE3Gnmzv4brZEq9+t/hmW37VPrZqN4myJsPZUOlw+ni83AD7EA72r1BMqKSFEo7wjqZKcEQOOIFMeB1cfHp1Q53/lSLfIO7aYWntIngbfI2yy98Kn6pYTmev4ZzOBSUugQYKdKVr0AiBMI5qHrtmdGxLx49g8epJ2k+zmj05wCp2JOphcc0PkuBBwmu8ehs8kpzelQbvgPgI6tAwr16khAQOPxeuAPRYhqUJ+5MWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxjrRQ/Xm60AUljb+ncHyTxJ18InEZucF+dgDcncihs=;
- b=qM33i6scZNKsrIC4+H6VNZ5BodIdn7iD67hQs/zB4dS5qP9+5n8hnQFb1DYqHKXlQHXSnkMPfqCJQ3VKfT1AFkxuYh0NYoquSnjZJ7nBBOzbHMobwuaZuM3NpmTLwLJGzTuIpghNgEqOuI+jnr49rVPCaBw+af40jdKIuA/XUQo=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TYAPR01MB3645.jpnprd01.prod.outlook.com (2603:1096:404:c1::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
- 2020 02:42:26 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 02:42:26 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-Thread-Topic: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-Thread-Index: AQHWS5y220V49G6mUUOIhQjj9iWCYajq9+eAgAPnVSA=
-Date:   Mon, 29 Jun 2020 02:42:26 +0000
-Message-ID: <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143914.GE5289@sirena.org.uk>
-In-Reply-To: <20200626143914.GE5289@sirena.org.uk>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 24f1ac22-98a8-4c64-db0d-08d81bd60f67
-x-ms-traffictypediagnostic: TYAPR01MB3645:
-x-microsoft-antispam-prvs: <TYAPR01MB364508DD5850606C1D5B6FF8D86E0@TYAPR01MB3645.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wFvbADm7E9DXAZRNjVLbdT3w3bBTRH7SMbE9QWcBDD9AsEkZhLUYnsg/uXYkH0EHr/Q/8QUYWhb28TwJ+YIFsal8oNhwps1S0vjKtkJGQGH06pLaDh0752bp+wdWiVI26iXQ16pYjgUga26JDNZiG9pjT6phZfd7askaVB7etxp1e1qb8D2zktFdSAWVf9dL9JESWvCv302AvyUHkTKD39Cb95YkSAsruA+1AnCkva2XPseyh9UDY7vn2Yg48GcCxZpsfi2XhekqWdX+YAcrFoE/HpNCqREp1c+62pqhSYFQCahuPU5TfabE3clAe35mRlMIGd17xxAUXqBwddLSMhoyOv3okUG8k0QBmQq/IBsG4cyL9/31i+w346DD+gGQhmy6d4klaMtcYT9ljvkWzQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(966005)(316002)(54906003)(66476007)(26005)(6506007)(33656002)(66946007)(6916009)(2906002)(9686003)(55236004)(66556008)(76116006)(66446008)(55016002)(478600001)(64756008)(15650500001)(186003)(7696005)(86362001)(8676002)(52536014)(8936002)(4326008)(71200400001)(83380400001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Mdceu0boJZ7ajwIjuSRaV4LlfmM+5CmFumsDz7poFwP2rITsdpseCI/JY/cgJGUW+ZaHyFnwNMhOyDOv3jdHcSI2EJ/agy+BpdbieYeXAhRbMaMHIc0VHopMH1jTsKPTeF3PcVDpf/0/xXbNOug5nIBhcRxeiOCc/LMqcrVFBTjC6iGXR9RHBg0u0+eb5o6Y4PIIhHpn0sVsc598/DG2tqxGKOaegxWJzzkXirZKFPsR3AUj8wJ0mWXVAvJOHRbXopJDdKyvsJ6v3CVir08SeUGbvz+bUb8Gd0cwBnyOUQgt4gMYyXsrc0j5JWnkw8SZO3XJAOhXh4pnaPYGw1X53JaXJFR2fFbPoykCrHRHx2zZm+q34AYSSXubbqY4Zjn55AAUSN3QUbNcuIGQbj2m/I8zGrIPusBJe0rOoba60ioYw4CWjq7I9zWyUJczhZCcOJQs6pxKh+ufV/5Ckn0ryAj2L7F+ea5LT3IYkoB2mG9D3d+1oiHStxPlaoyV/FgB
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 28 Jun 2020 22:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbgF2Cna (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:43:30 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B661DC03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yQyPEA4fwxkaL2Sv58MpobbVI0aOCnfA9ig8/eIofc4=; b=Sk970az7hnYAcjWTyGRiUoVN9O
+        tQtxlUTlo/8U5dc3sGFbFmflvvI2Wex6C9zPV7+J2Gkcc9UulOy4vL3t1O6rLgHOcSR2L5HYVFVoC
+        jnupRvZRp8u78yS0A7oalZT7fRBlft4E4VVtN/Qrs24w4g81UUSDz0R1U0VvglyW2J7vymqsPbY1D
+        b1Of+pOkbouxk4ZUag321o8xceZTyxKucZR2yDMXwKc++LHrTHech+P/vm4ItfZPw6IsjIHzECCj9
+        yEx94aoZHo11vausSXGtPLPwK7cMB4ZMgmGPHL2Jsj2BnQmODaHiq76yV1gSM8JW1LmXwUDeAz7Bq
+        Ef4rDsWw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpjl0-0002B1-0p; Mon, 29 Jun 2020 02:42:54 +0000
+Date:   Mon, 29 Jun 2020 03:42:53 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Long Li <lonuxli.64@gmail.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mm:free unused pages in kmalloc_order
+Message-ID: <20200629024253.GB25523@casper.infradead.org>
+References: <20200627045507.GA57675@lilong>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24f1ac22-98a8-4c64-db0d-08d81bd60f67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 02:42:26.7241
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z0YuvJaDWUIKOB4/uw8AZlh2TW27np0WUqjR9hbx/yJbyqpUcZ3spJKkgh9G4vh+1Um/iRs3XPywiEv53YzSROQZFOF5qeuc9S3XScingldcINYnoMHkeW/MaeCUof0r
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3645
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627045507.GA57675@lilong>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Sat, Jun 27, 2020 at 04:55:07AM +0000, Long Li wrote:
+> Environment using the slub allocator, 1G memory in my ARM32.
+> kmalloc(1024, GFP_HIGHUSER) can allocate memory normally,
+> kmalloc(64*1024, GFP_HIGHUSER) will cause a memory leak, because
+> alloc_pages returns highmem physical pages, but it cannot be directly
+> converted into a virtual address and return NULL, the pages has not
+> been released. Usually driver developers will not use the
+> GFP_HIGHUSER flag to allocate memory in kmalloc, but I think this
+> memory leak is not perfect, it is best to be fixed. This is the
+> first time I have posted a patch, there may be something wrong.
 
-> From: Mark Brown, Sent: Friday, June 26, 2020 11:39 PM
->=20
-> On Fri, Jun 26, 2020 at 06:32:20PM +0900, Yoshihiro Shimoda wrote:
->=20
-> > +static int reg_is_enabled(struct regulator_dev *rdev)
-> > +{
-> > +	struct fixed_voltage_data *priv =3D rdev_get_drvdata(rdev);
-> > +
-> > +	return !priv->disabled_in_suspend;
-> > +}
->=20
-> This is broken, the state of the regualtor during system runtime need
-> have no connection with the state of the regulator during system
-> suspend.
->=20
-> > +static int reg_prepare_disable(struct regulator_dev *rdev)
-> > +{
-> > +	struct fixed_voltage_data *priv =3D rdev_get_drvdata(rdev);
-> > +
-> > +	priv->disabled_in_suspend =3D true;
-> > +
-> > +	return 0;
-> > +}
->=20
-> According to the changelog this is all about reflecting changes in the
-> system state done by firmware but there's no interaction with firmware
-> here which means this will be at best fragile.  If we need to reflect
-> changes in firmware configuration I'd expect there to be some
-> interaction with firmware about how it is configured, or at least that
-> the configuration would come from the same source.
+Slab used to disallow GFP_HIGHMEM allocations earlier than this,
+so you'd never get here.  See one moron's patch here, 20 years ago ...
+https://lore.kernel.org/lkml/20001228145801.C19693@parcelfarce.linux.theplanet.co.uk/
 
-I should have described background of previous patch series though,
-according to previous discussion [1] the firmware side (like PSCI) is
-also fragile unfortunately... So, I thought using regulator-off-in-suspend
-in a regulator was better.
+Things changed a bit since then.  SLAB_LEVEL_MASK became GFP_SLAB_BUG_MASK,
+then GFP_SLAB_BUG_MASK moved to mm/internal.h.  Nowadays, GFP_SLAB_BUG_MASK
+is checked only in new_slab(), and it is definitely skipped when we go through
+the kmalloc_large() patch.
 
-On other hand, Ulf is talking about either adding a property (perhaps like
-regulator-off-in-suspend) into a regulator or just adding a new property
-into MMC [2]. What do you think about Ulf' comment? I'm thinking
-adding a new property "full-pwr-cycle-in-suspend" is the best solution.
-This is because using a regulator property and reflecting a state of regula=
-tor without
-firmware is fragile, as you said.
+Could you send a replacement patch which checks GFP_SLAB_BUG_MASK before
+calling alloc_pages()?
 
-[1]
-https://lore.kernel.org/linux-renesas-soc/CAMuHMdXjU7N4oG89YsozGijMpjgKGN6e=
-zw2qm6FeGX=3DJyRhsvg@mail.gmail.com/
-
-[2]
-https://lore.kernel.org/linux-renesas-soc/CAPDyKFpiBU1D+a7zb+Ggm0_HZ+YR4=3D=
-LXJZ5MPytXtT=3DuBEdjPA@mail.gmail.com/
-
-Best regards,
-Yoshihiro Shimoda
-
+> +++ b/mm/slab_common.c
+> @@ -819,8 +819,12 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
+>  	page = alloc_pages(flags, order);
+>  	if (likely(page)) {
+>  		ret = page_address(page);
+> -		mod_node_page_state(page_pgdat(page), NR_SLAB_UNRECLAIMABLE_B,
+> -				    PAGE_SIZE << order);
+> +		if (ret)
+> +			mod_node_page_state(page_pgdat(page),
+> +					NR_SLAB_UNRECLAIMABLE_B,
+> +					PAGE_SIZE << order);
+> +		else
+> +			__free_pages(page, order);
+>  	}
+>  	ret = kasan_kmalloc_large(ret, size, flags);
+>  	/* As ret might get tagged, call kmemleak hook after KASAN. */
+> -- 
+> 2.17.1
+> 
+> 
