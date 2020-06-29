@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE15C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE30D206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21AC20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460891;
-	bh=LFcgnPZDwiKQtMWFFtgLw9vW/3moNMK4L7nJadX0foI=;
+	s=default; t=1593460894;
+	bh=HRSgkNNcN9hXr8UE2smMGJ57xFPxY2jHvMplTRcgQkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnyZTfDB8ET0RzwNawfw5DRdBPATV1xgQLF/sVYlHf4RXagg2F1PB6PjjYqga2xIp
-	 j5lVkAhKDIF+huZ0420sBhnryNsR9CsDXVWBRf5iwPtH51/xESW8MKECQwlLV6ShtR
-	 oghXUCFVK2/vMX9+LmCKYeqDbQp3dI1uoicdSyL8=
+	b=m3Zbm0Ezj290sUp/IBfDSSa8P3nrlmP5Cw6+mjaNm5Slk7jcGvq/M+zeR8fmaOBbD
+	 q5rHDaX9kKFdOc+0PM5QHw/Ix4d077Fpw2rOimkg1LSFDqXoce/tGzUvKPnKoM7WMX
+	 SGMZLzcCIi83xx+4lH2RxG3naPmLhYxW4BpChKDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388516AbgF2UB3 (ORCPT
+        id S2388649AbgF2UBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387553AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387547AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C6A1248F2;
-        Mon, 29 Jun 2020 15:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9325024840;
+        Mon, 29 Jun 2020 15:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444445;
-        bh=LFcgnPZDwiKQtMWFFtgLw9vW/3moNMK4L7nJadX0foI=;
+        s=default; t=1593444353;
+        bh=HRSgkNNcN9hXr8UE2smMGJ57xFPxY2jHvMplTRcgQkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JB/d4v/qECv2rh7RirulXdSIkHX97h2HNbOs5IIkYDmTn5p1g4gg7N/Rs+sXoChLB
-         rf2cZ2fNLvrxZtTvPgt8K2gX0/g1V0CuGfKfh4+SwMr8Vo4XgGkMzj6kXjpEM3HCOW
-         hOXVWD7ZPgkAmiTKlDqWG0CrYp8OntwpN+UF54A4=
+        b=TZPRF0vasjVlx7JUx2yay+l8bL1PPjMbwB60hh0o12hLrnSYGUtkz/evYT8h5GpiC
+         dd2A/IbEp6wa3M+AvnnGTYkD6BNmcGqMqafV60efBLTVWxIqUn562tpK0tRZZfPdK4
+         bf5d8ZX9iIU++v684lib2lesHChmjHkkk2rZhjxo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/178] net: alx: fix race condition in alx_remove
-Date:   Mon, 29 Jun 2020 11:24:29 -0400
-Message-Id: <20200629152523.2494198-125-sashal@kernel.org>
+Subject: [PATCH 5.4 028/178] Revert "i2c: tegra: Fix suspending in active runtime PM state"
+Date:   Mon, 29 Jun 2020 11:22:53 -0400
+Message-Id: <20200629152523.2494198-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,57 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zekun Shen <bruceshenzk@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
+[ Upstream commit 78ad73421831247e46c31899a7bead02740e4bef ]
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+This reverts commit 9f42de8d4ec2304f10bbc51dc0484f3503d61196.
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
+It's not safe to use pm_runtime_force_{suspend,resume}(), especially
+during the noirq phase of suspend. See also the guidance provided in
+commit 1e2ef05bb8cf ("PM: Limit race conditions between runtime PM
+and system sleep (v2)").
 
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index d4bbcdfd691af..aa693c8e285ab 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1249,8 +1249,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
- 
- static void __alx_stop(struct alx_priv *alx)
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index dbc43cfec19d4..331f7cca9babe 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1719,14 +1719,9 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ static int __maybe_unused tegra_i2c_suspend(struct device *dev)
  {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
- }
-@@ -1858,9 +1862,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
+ 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+-	int err;
  
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
+ 	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+ 
+-	err = pm_runtime_force_suspend(dev);
+-	if (err < 0)
+-		return err;
 -
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
+ 	return 0;
+ }
  
+@@ -1747,10 +1742,6 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+ 	if (err)
+ 		return err;
+ 
+-	err = pm_runtime_force_resume(dev);
+-	if (err < 0)
+-		return err;
+-
+ 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+ 
+ 	return 0;
 -- 
 2.25.1
 
