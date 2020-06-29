@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99896C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC892088E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0752088E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460177;
-	bh=CvlSKTTDjePQe/WKeSqrmGecE7/eSJzVRRunVyWV4SM=;
+	s=default; t=1593460178;
+	bh=6PkC7+lZGXPGXlhRK9bOQe75j3/4h5PZW8Cn6tUZsL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdeQJGO5IJolmHvXALxIi2TiA4sb3wy9+8maMh7dGPmgYkymeGZcwJvAvrs7TX39R
-	 knxIfiWdGLoR7rSrLAGVo4j2j1W5kvuluuJg2jhBvX0rWR+sookoLtHbdFXDhahLdO
-	 2cy2i/5CByymHc5EOmt5YjMVGHw34zrM3ZNiRowM=
+	b=yvvV+SgG3crHMRUzSqw1o7z+X/KK0uA5BqU2bU680GHs91t6FwolmIY8J4RQ8usbS
+	 BCCNFELpdp7lSZU9S9kpEID0QaQbLT/CqEpWBwxxWc8rkeAE2vNegzIxzxpF0ickvF
+	 g8uAEyy/NbHQnp47MQkrifheLSSbsAfAg85ewprg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388213AbgF2Tt3 (ORCPT
+        id S2388215AbgF2Tt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387754AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387751AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3797E24818;
-        Mon, 29 Jun 2020 15:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 370A524928;
+        Mon, 29 Jun 2020 15:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444335;
-        bh=CvlSKTTDjePQe/WKeSqrmGecE7/eSJzVRRunVyWV4SM=;
+        s=default; t=1593444482;
+        bh=6PkC7+lZGXPGXlhRK9bOQe75j3/4h5PZW8Cn6tUZsL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7w7scI8kHHFFqNILvAx918msEZfl1FstR6gp3JVJuDIQde7MH0x4ujMrIkjIW/Oz
-         tv8xSE8d88WBUuQyVClFhfJi+6+et9qcr8HNc7OQ0v6T3q85L/DOSNzg72r3eGBbLE
-         0aL3Z+SRpDMgp3Bfx02XSEPE6zAg/nU2clsHpyqQ=
+        b=X5wubIwOH8phwwvJwayuc8l+OfNwvXnbSHI+vJOnTlMIYgilz3js+jmHuPY5uKb6g
+         J2sLtAZy5++V04w83k/frr3zuXxEypH3N8qcT3iHz2VkI6cxpq50Lq1Zl3oOVX98Mb
+         7QeZcz0RcrZ+umZraRYw2hep5Wp2vfxhMi87cKZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Muchun Song <songmuchun@bytedance.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 010/178] net: fix memleak in register_netdevice()
-Date:   Mon, 29 Jun 2020 11:22:35 -0400
-Message-Id: <20200629152523.2494198-11-sashal@kernel.org>
+Subject: [PATCH 5.4 159/178] mm/memcontrol.c: add missed css_put()
+Date:   Mon, 29 Jun 2020 11:25:04 -0400
+Message-Id: <20200629152523.2494198-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,90 +70,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-[ Upstream commit 814152a89ed52c722ab92e9fbabcac3cb8a39245 ]
+commit 3a98990ae2150277ed34d3b248c60e68bf2244b2 upstream.
 
-I got a memleak report when doing some fuzz test:
+We should put the css reference when memory allocation failed.
 
-unreferenced object 0xffff888112584000 (size 13599):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 32 bytes):
-    74 61 70 30 00 00 00 00 00 00 00 00 00 00 00 00  tap0............
-    00 ee d9 19 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002f60ba65>] __kmalloc_node+0x309/0x3a0
-    [<0000000075b211ec>] kvmalloc_node+0x7f/0xc0
-    [<00000000d3a97396>] alloc_netdev_mqs+0x76/0xfc0
-    [<00000000609c3655>] __tun_chr_ioctl+0x1456/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888111845cc0 (size 8):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 8 bytes):
-    74 61 70 30 00 88 ff ff                          tap0....
-  backtrace:
-    [<000000004c159777>] kstrdup+0x35/0x70
-    [<00000000d8b496ad>] kstrdup_const+0x3d/0x50
-    [<00000000494e884a>] kvasprintf_const+0xf1/0x180
-    [<0000000097880a2b>] kobject_set_name_vargs+0x56/0x140
-    [<000000008fbdfc7b>] dev_set_name+0xab/0xe0
-    [<000000005b99e3b4>] netdev_register_kobject+0xc0/0x390
-    [<00000000602704fe>] register_netdevice+0xb61/0x1250
-    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff88811886d800 (size 512):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff c0 66 3d a3 ff ff ff ff  .........f=.....
-  backtrace:
-    [<0000000050315800>] device_add+0x61e/0x1950
-    [<0000000021008dfb>] netdev_register_kobject+0x17e/0x390
-    [<00000000602704fe>] register_netdevice+0xb61/0x1250
-    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-If call_netdevice_notifiers() failed, then rollback_registered()
-calls netdev_unregister_kobject() which holds the kobject. The
-reference cannot be put because the netdev won't be add to todo
-list, so it will leads a memleak, we need put the reference to
-avoid memleak.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20200614122653.98829-1-songmuchun@bytedance.com
+Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ mm/memcontrol.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 204d87e7c9b19..5b7d9c2b821d6 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9114,6 +9114,13 @@ int register_netdevice(struct net_device *dev)
- 		rcu_barrier();
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0d6f3ea867381..a3f4c35bb5fa0 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2895,8 +2895,10 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
+ 		return;
  
- 		dev->reg_state = NETREG_UNREGISTERED;
-+		/* We should put the kobject that hold in
-+		 * netdev_unregister_kobject(), otherwise
-+		 * the net device cannot be freed when
-+		 * driver calls free_netdev(), because the
-+		 * kobject is being hold.
-+		 */
-+		kobject_put(&dev->dev.kobj);
- 	}
- 	/*
- 	 *	Prevent userspace races by waiting until the network
+ 	cw = kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
+-	if (!cw)
++	if (!cw) {
++		css_put(&memcg->css);
+ 		return;
++	}
+ 
+ 	cw->memcg = memcg;
+ 	cw->cachep = cachep;
 -- 
 2.25.1
 
