@@ -2,185 +2,153 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F2AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBE4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46D6C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICVLkiQ5"
+	by mail.kernel.org (Postfix) with ESMTP id 7C45E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbgF2S6T (ORCPT
+        id S1730218AbgF2S6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:58:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730220AbgF2S6Q (ORCPT
+        Mon, 29 Jun 2020 14:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730144AbgF2S5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:58:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593457095;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Oy5l01hfztOMplxTNHhOMx7JM2vgkWGI3b7lgHWBSLA=;
-        b=ICVLkiQ5mbdv4StNz03UrThm2RjOefTyhg8tJVwN9hv9LZdmrmsbmCEfbrYURGkPy6xvdQ
-        RKgPIyovulq75JoheXAlS1AXYR2MCN8IJhB+8++bxjxzYOW0vD/BxLG16SwkR2XehmCSJJ
-        QFVRf+5abnDnK1MbrGIBb+ioOhJ+gek=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-3e0fpTl_PO2jJZ5DMEbpVw-1; Mon, 29 Jun 2020 11:57:22 -0400
-X-MC-Unique: 3e0fpTl_PO2jJZ5DMEbpVw-1
-Received: by mail-wm1-f71.google.com with SMTP id g124so18607743wmg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:57:22 -0700 (PDT)
+        Mon, 29 Jun 2020 14:57:44 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0FFC02E2E0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:33 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x62so12905359qtd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Oy5l01hfztOMplxTNHhOMx7JM2vgkWGI3b7lgHWBSLA=;
-        b=oXOoYTGWqUXK9aHrDdYJgh2corT366fDFkGwFy5ISLYp5eUbf8ax3fjaetocf/1nZx
-         IRKzRYrXybLJefo4xZc41M2DZ0ghWc3hCBKFHOpvdSyTy3320+txRVZyor38QIp7vDIb
-         yxoRvz3YWuXSDcB0XHeVUjQlTGZp8qhz3qw/JrrZzedavZ4Xrenlz47yT0Q4uJA4+zw9
-         wYsPC5tEvlRSEZFAHJXG3vggeK8+JU/0KPEj0tTUnRJYRRP92q7ZRrEAnLx1EpSKTsKz
-         gtKXc2bEdShAwsD+9RdwR8z/RSj+DLgWyOIwOUm0J0fvgvlN6C5zkO0vCB23uXAeCGYi
-         zsnA==
-X-Gm-Message-State: AOAM5308XKRSDJoULvOAriCfFRqohL9w3LLy+I7cWku4krNytzb18KA9
-        2NSf1k/r3NaE1pxTvdxV2Nd64ONwYYTeYUhA2R3/YmyI0Fgllmd7d2H01kzaMhTFzupMbYeQwAi
-        2n7IBro3BoV/04iaXAcLAWcSB
-X-Received: by 2002:a1c:a589:: with SMTP id o131mr16317487wme.12.1593446241167;
-        Mon, 29 Jun 2020 08:57:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx3Q991U1StDDA7B+9BT+HZk+cVYRj7n2VJpgHLiwVYyouUoA4w6BqhRBNFB4h0zTI9ALDIzg==
-X-Received: by 2002:a1c:a589:: with SMTP id o131mr16317466wme.12.1593446240963;
-        Mon, 29 Jun 2020 08:57:20 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id d18sm241639wrj.8.2020.06.29.08.57.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tEZERuD4U9x45d3XL5Tb2EKEgqxOltAsxA1Ga9THj/Q=;
+        b=kN62gCu1h1hmiwF5cULW4dme5DEZe6ff82I0RoZQQQecmAJdU0HankVMWbaRz8ad2E
+         54H+tr8eUi+jr6HRFqt3uop0WkF86gl6xL9H+tXhbUd0plogLpGWr4vHprlphSzN/R47
+         FPVahVX55X/dzsLbK1EqypoRri1yF7/PnZaGNq4LxSMY4oyhpvcQDQS5lvzyelBxrUJZ
+         kF6co4HOmwRHu+1Wk9JjN6gZqVhffePr5xgi0ZKab4Ryr2PS+uRSoW36yUUYv3lBIgBg
+         7cnnBAb1BAxogdjt+n8Xy7mPF+15DNUwhLuHsssFYhuwfYgaXMOdBwrODlKqkJvl7m3k
+         y1TA==
+X-Gm-Message-State: AOAM533n56sjJ4zQftf3+4wj7MQtNOSyyxuAEucep3pkzBcxf5foqaCi
+        73Efj91s8Rvn2Q+u8/ixBvw=
+X-Google-Smtp-Source: ABdhPJxKVYmAwxmHAwz6aSqzYJnqE6ZSLC25nGL860MCT/f/BlRph9L2xC5X8TXsetqrzvLN3xx9eQ==
+X-Received: by 2002:ac8:7284:: with SMTP id v4mr16251160qto.267.1593439772367;
+        Mon, 29 Jun 2020 07:09:32 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id i26sm10741461qkh.14.2020.06.29.07.09.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 08:57:17 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 11:57:14 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200629115651-mutt-send-email-mst@kernel.org>
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
- <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+        Mon, 29 Jun 2020 07:09:32 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/7] x86/boot/compressed: Force hidden visibility for all symbol references
+Date:   Mon, 29 Jun 2020 10:09:23 -0400
+Message-Id: <20200629140928.858507-3-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
-> An architecture protecting the guest memory against unauthorized host
-> access may want to enforce VIRTIO I/O device protection through the
-> use of VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Let's give a chance to the architecture to accept or not devices
-> without VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/mm/init.c     |  6 ++++++
->  drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
->  include/linux/virtio.h  |  2 ++
->  3 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 6dc7c3b60ef6..215070c03226 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -45,6 +45,7 @@
->  #include <asm/kasan.h>
->  #include <asm/dma-mapping.h>
->  #include <asm/uv.h>
-> +#include <linux/virtio.h>
->  
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->  
-> @@ -161,6 +162,11 @@ bool force_dma_unencrypted(struct device *dev)
->  	return is_prot_virt_guest();
->  }
->  
-> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev)
-> +{
-> +	return is_prot_virt_guest();
-> +}
-> +
->  /* protected virtualization */
->  static void pv_init(void)
->  {
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index a977e32a88f2..aa8e01104f86 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -167,6 +167,21 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
->  }
->  EXPORT_SYMBOL_GPL(virtio_add_status);
->  
-> +/*
-> + * arch_needs_virtio_iommu_platform - provide arch specific hook when finalizing
-> + *				      features for VIRTIO device dev
-> + * @dev: the VIRTIO device being added
-> + *
-> + * Permits the platform to provide architecture specific functionality when
-> + * devices features are finalized. This is the default implementation.
-> + * Architecture implementations can override this.
-> + */
-> +
-> +int __weak arch_needs_virtio_iommu_platform(struct virtio_device *dev)
-> +{
-> +	return 0;
-> +}
-> +
->  int virtio_finalize_features(struct virtio_device *dev)
->  {
->  	int ret = dev->config->finalize_features(dev);
-> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
->  	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->  		return 0;
->  
-> +	if (arch_needs_virtio_iommu_platform(dev) &&
-> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> +		dev_warn(&dev->dev,
-> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
->  	status = dev->config->get_status(dev);
->  	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Well don't you need to check it *before* VIRTIO_F_VERSION_1, not after?
+Eliminate all GOT entries in the decompressor binary, by forcing hidden
+visibility for all symbol references, which informs the compiler that
+such references will be resolved at link time without the need for
+allocating GOT entries.
 
+To ensure that no GOT entries will creep back in, add an assertion to
+the decompressor linker script that will fire if the .got section has
+a non-zero size.
 
+[Arvind: fixup -include hidden.h to -include $(srctree)/$(src)/hidden.h]
 
-> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> index a493eac08393..e8526ae3463e 100644
-> --- a/include/linux/virtio.h
-> +++ b/include/linux/virtio.h
-> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
->  #define module_virtio_driver(__virtio_driver) \
->  	module_driver(__virtio_driver, register_virtio_driver, \
->  			unregister_virtio_driver)
-> +
-> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev);
->  #endif /* _LINUX_VIRTIO_H */
-> -- 
-> 2.25.1
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+From: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20200523120021.34996-3-ardb@kernel.org
+---
+ arch/x86/boot/compressed/Makefile      |  1 +
+ arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
+ arch/x86/boot/compressed/vmlinux.lds.S |  1 +
+ 3 files changed, 21 insertions(+)
+ create mode 100644 arch/x86/boot/compressed/hidden.h
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 7619742f91c9..b01c8aed0f23 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -42,6 +42,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+ KBUILD_CFLAGS += -Wno-pointer-sign
+ KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
++KBUILD_CFLAGS += -include $(srctree)/$(src)/hidden.h
+ 
+ KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ GCOV_PROFILE := n
+diff --git a/arch/x86/boot/compressed/hidden.h b/arch/x86/boot/compressed/hidden.h
+new file mode 100644
+index 000000000000..49a17b6b5962
+--- /dev/null
++++ b/arch/x86/boot/compressed/hidden.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * When building position independent code with GCC using the -fPIC option,
++ * (or even the -fPIE one on older versions), it will assume that we are
++ * building a dynamic object (either a shared library or an executable) that
++ * may have symbol references that can only be resolved at load time. For a
++ * variety of reasons (ELF symbol preemption, the CoW footprint of the section
++ * that is modified by the loader), this results in all references to symbols
++ * with external linkage to go via entries in the Global Offset Table (GOT),
++ * which carries absolute addresses which need to be fixed up when the
++ * executable image is loaded at an offset which is different from its link
++ * time offset.
++ *
++ * Fortunately, there is a way to inform the compiler that such symbol
++ * references will be satisfied at link time rather than at load time, by
++ * giving them 'hidden' visibility.
++ */
++
++#pragma GCC visibility push(hidden)
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index b17d218ccdf9..4bcc943842ab 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -81,6 +81,7 @@ SECTIONS
+ 	DISCARDS
+ }
+ 
++ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+ #ifdef CONFIG_X86_64
+ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
+ #else
+-- 
+2.26.2
 
