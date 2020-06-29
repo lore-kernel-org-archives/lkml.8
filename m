@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F8B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5411620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462359;
-	bh=bK43YyasDjA+nH/El0kOebEyB1q57XCqJhlpWhWcKUY=;
+	s=default; t=1593462367;
+	bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjLmAd3ajt6++dKb6jdZpl/nXwJchYryT8/LWa60ptloxRtK/VzRGtdy2gY/gqMAL
-	 CM1g9Jezsm5Rnxrtx3Vz0mzJx94Np19b/tEpAMT8x90FVUUZ0CKbCNEhyOluatBaNT
-	 Tmt+Bs7mn37eESVJu6ZRZOriUHF2EKF0AZrUsozs=
+	b=O/U3bpZk5L8bZxreAMXVhJtvX+/45V5IpYp3goS9scB1VJDOMjWlbbK5mdThLY8Jd
+	 s39E6HfPc7cKpf5C7F2Q8P1UAzUasibEUOEans+/RAbok67qT0pFx8fIMXo0Rni5MK
+	 k86C/OkJBE1ISGey5bCuaWTgrqfZo7b8JnSv3Axc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgF2UZ5 (ORCPT
+        id S1732120AbgF2U0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732534AbgF2TZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:27 -0400
+        id S1732528AbgF2TZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 752812545D;
-        Mon, 29 Jun 2020 15:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72C7425312;
+        Mon, 29 Jun 2020 15:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445413;
-        bh=bK43YyasDjA+nH/El0kOebEyB1q57XCqJhlpWhWcKUY=;
+        s=default; t=1593445141;
+        bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IaD60DIEIVN4uHmBOaJXL5TcfoZ+VW0D4g3urksYKKlfmWLhvMvQuhmU6QkdROpIp
-         ZiCiK5T/eHyvVSpAnvO6AAREKMWpfF26XiJ0GKGMPvmtmDwXy/fT+Ywe0nz0hvd4D2
-         l75jdatXj6PJ+YaCn27dp9Zi2guIp/CMWDztzgp0=
+        b=VIMbEV7xbpV4BTWBOEN7wDhjXwnmPMstnqSPvbpzNXOy5Ru2CNJEUOWsMmt7mHfHq
+         wdiJ9W2sxabTUqCrmFr/JouEOGugJP+CHy62ybl1HOlh8SSy8TFED4z0w4xH6elLz6
+         QB5bZHhRaYp6qZqQ4iN5lYmvjOtL77DUxp/knp/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexander Lobakin <alobakin@marvell.com>,
@@ -46,19 +46,19 @@ Cc:     Alexander Lobakin <alobakin@marvell.com>,
         Michal Kalderon <michal.kalderon@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 163/191] net: qed: fix left elements count calculation
-Date:   Mon, 29 Jun 2020 11:39:39 -0400
-Message-Id: <20200629154007.2495120-164-sashal@kernel.org>
+Subject: [PATCH 4.14 46/78] net: qed: fix left elements count calculation
+Date:   Mon, 29 Jun 2020 11:37:34 -0400
+Message-Id: <20200629153806.2494953-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -91,10 +91,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 16 insertions(+), 10 deletions(-)
 
 diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 72d88cf3ca25b..5a215da57b55a 100644
+index 733fad7dfbed9..6d15040c642cb 100644
 --- a/include/linux/qed/qed_chain.h
 +++ b/include/linux/qed/qed_chain.h
-@@ -155,28 +155,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
+@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
  
  static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
  {
