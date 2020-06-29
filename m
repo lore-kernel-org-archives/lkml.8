@@ -2,100 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91831C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9871EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77436206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F6F206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG1iZpSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389851AbgF2U4W (ORCPT
+        id S2389899AbgF2U4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:56:22 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:39337 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731284AbgF2U4R (ORCPT
+        Mon, 29 Jun 2020 16:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731278AbgF2TNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:56:17 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mf0uq-1jATjC3nC6-00gVz9 for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 13:28:29 +0200
-Received: by mail-qk1-f182.google.com with SMTP id 145so12356881qke.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:28:28 -0700 (PDT)
-X-Gm-Message-State: AOAM531XpgxAB+w5fH3gfSbm+rKX69mxTCiqz6nWFprhnirr/OR+eQYW
-        DnQVWtUCdOYH68V3QlnL0ARLUNriJHyq2Ez7pPo=
-X-Google-Smtp-Source: ABdhPJx1a27SVGh6LzPXCycNokQG+CDZxoOG3UMU7wKdxdg7U0z8BdyRfM4glFcYitYHD0+6fYEnvcVI9PbQkgjt+84=
-X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr8009980qko.138.1593430107812;
- Mon, 29 Jun 2020 04:28:27 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:09 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00429C030F2E;
+        Mon, 29 Jun 2020 09:45:36 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so14214215wrw.1;
+        Mon, 29 Jun 2020 09:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y9LuaHpAJp7j99mylhwwTrgsG7QR6yXOEQqHPjHK9qA=;
+        b=YG1iZpScR2fnD/Dg0q0W5hkPvmMrLbNo9xlP1cqrwH2mupcSdQTr4LZR+9nZIKBkhS
+         vNxlDaGanRq87QIVN4EIae1EoO1LKEPYH5/TT7VqNi3dm09PLW5A18bwk8y2bP0I19Dp
+         7amp7MNjaIvmjbUVxgBphis8bQqS+Cgq4t+mDKgU46afrmUTLt1XhOjJSJj9RnUaBGVS
+         ygj++98OzqCSrPQ3NwRlILzhK+xS+zrrGXYuf8xJehhPVJI6DErMknEW/s2CXDG+9jUJ
+         FK73oiZ8EUmGLsRotn44ygJAd1jKxyLIhwh73uooLRa7ZgXTWD0Som4EYsuGKhwxeaUL
+         wFDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y9LuaHpAJp7j99mylhwwTrgsG7QR6yXOEQqHPjHK9qA=;
+        b=jvQILgQd4+Bg1f5MIOHkaUezSJ/cEF1Jb1IsWjjj74YDRGEmmKnuz9MCRz0IJpKA3B
+         Nrv/Y24LXxUvQB6vfp+fDPRO56slUNxKh9KwbDfZf7DUJXjadGJZ3IVrcwP4cVOhcd4n
+         mS0kCrLhrbpytwAUd8IMqwpleIehufaFba5nE7RSHBVbqsZ/fg07muBMht9IrRzuv+vW
+         87ovKFgueySPTAQpGaOwG7hR9iIqN7YvsCms/LTqmMuBngnDgJhA/bQXSjxGt68EG1/3
+         4PxhzpyUhQy77+2l0UKEvNpH4hcVdR15VeX4rgSFA5jde5mtq+AVE+SbUY4YA9VEHdGI
+         G8cQ==
+X-Gm-Message-State: AOAM532CkdQ9p1Gb1YN0cQTpvVenWFCJ/1pqAly4fHdYhSKcRu2DnS+u
+        udO4w6rj/7v0k8yOND92aZM=
+X-Google-Smtp-Source: ABdhPJyO9Vl/0aowtNg2HaFwebZPM9zO5kDm6GzEIHIzbBOeZOCT+P6YXcPb6Z5tEMB0sRox55sZ8g==
+X-Received: by 2002:adf:e8ce:: with SMTP id k14mr17120164wrn.93.1593449135758;
+        Mon, 29 Jun 2020 09:45:35 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x11sm371016wmc.26.2020.06.29.09.45.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:45:35 -0700 (PDT)
+Subject: Re: [PATCH 2/4] pwm: bcm-kona: Remove impossible comparison when
+ validating duty cycle
+To:     Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-3-lee.jones@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0db8ebc7-b75b-a74c-8852-b235daedaf82@gmail.com>
+Date:   Mon, 29 Jun 2020 09:45:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com> <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 13:28:11 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com>
-Message-ID: <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] reset: imx7: Support module build
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:EjVc+ogzzXXqEFzj480i0DqLvw32xnU3m5wQrDzQpck5eHfOAfG
- HRkDxl0F5CwwRdLh0Zz7Lgp/Lducn1f5siBLvS/4KwMcXoqwuo90hZnojvFkOLiUGBodhLq
- ZZDGFKb97mLmKRB+U4KX75rOUuewGHe0m3Oay4XugYVvGCSrpeiZdacjK5aBQmQabDfoHgQ
- +9Z6yBTSaH+/EdxvFRr9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oMdFggA9gVQ=:fYdvnFtJM8WbK1LXfVVpVR
- OAeV1wzLC2zNCHgCAYMSt2Uv189+iCWulXlCRf8DuSL+hTboTaQw1oSO6T5dxxvF38glH2Njr
- fpV2isTMuu3f8MzIDfFCP308dfcuRxdnMEuYePmCkOryXXf6AccriHPTjIAdIVXg/Dc7LtXvS
- sx9tfY22QDWd0d45rDV9uNzLswJ3Yn9juiKaAsxtlP9O1gQCY0ZZmFMd9+R+zzSJbA1Ne5R+l
- jJDI9glctp+R2m8tRnSP+Nl7VUgZOG7x2d+LwMVuqKqTHlFD9zknwXkXo+526VTXFSQeNdaN5
- /i3kUrbhWTfKTv91m50spkroIAK+GJaSdMglkgYtBMwpkoTqIs+MkiYMdtZX2E7hXD6WmO4qv
- 1rWbT0wH8CsG6ohyUZwa4Cc9DU/jKqcbu9IIoP+om2fNXHN8M96snYFF75PStpUhC7sTLPXO9
- hnSxSKQGx1PwpWFDhXyC9neX7W29R9frldJFqRYcL93All9UkQklFYuRmXxlUknK6pLvS2LBp
- k13wlNldLuPYtTMI4UWvqGshaJisstq42c7iQWIg4MRPBH2OjKbISvuezEIrQnnPeeS6vl3z7
- Y/YvzwHyrZt7hUle5DLV2cYCAe5VHeyaeBFwJnYvBKUETqmYRJzQwvSqMBzzLPp/yLWOKZBIm
- LwhiN/Sdx5aYuX5XpGLv44k7sIiusl0GGel/pQ83qTkOIoeLrQ+95Om3CHKj9ta3F1tFle4WP
- iwM2awJzQCTyfK9Y7zjpMdQz+d7YYhWnoxjQ+9eO8nm/teAk1h7t0X6loZveflhz60v6H64q3
- lxK1GV+VxmtO3NZZ6hTg2hyC7QsyA/wKcdhS4Z+lfqajNPEKDdIrlz+vcylo7SYDtr+OMDrCh
- UvMFeb6K4ox5M0QXURumk/eYPk/AEBSvjF/RL9WxYZyL16wdkrtRtvK8IfnK6rU6yQauguInP
- QDce767acQeU4EBaaM7dVF4lvAgqpaVojtzqT6Pv3xvN57vXhvweM
+In-Reply-To: <20200629124752.1018358-3-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:45 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH 1/3] reset: imx7: Support module build
-> > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> The reset driver normally won't be removed since it is necessary for drivers which
-> need it, it is just for Android GKI support, in this case, do we need to change it to
-> module_platform_driver()?
 
-Please at least try to do it, or explain in the changelog what went wrong
-if it doesn't work.
 
-I don't think "because Android GKI" should ever be the sole justification for
-a patch. Making drivers loadable module is a good idea regardless of GKI,
-and if you do that, then make it behave like any other loadable module.
+On 6/29/2020 5:47 AM, Lee Jones wrote:
+> 'dc' here is an unsigned long, thus checking for <0 will always
+> evaluate to false.
+> 
+> Fixes the following W=1 warning:
+> 
+>  drivers/pwm/pwm-bcm-kona.c:141:35: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+> 
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-pwm@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-        Arnd
+And similar to patch #1, DUTY_CYCLE_HIGH_MIN now gets unused, so if you
+remove it as well, you can add:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
