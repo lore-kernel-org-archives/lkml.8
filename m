@@ -2,53 +2,50 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4111C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E13AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A420E206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB6820760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467582;
-	bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
+	s=default; t=1593467585;
+	bh=h1exmCBpP4dvGL6YomoSTtUxadSu5YsmIGfU3pB2C+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzAt6nmtAIk+kxe9oGu20UvrcMl+4lVD+Hcjcuwp5NCxy6dzS6cy4wCIKWC3sFY/B
-	 QtNJ8lxzpEUq1fVGO+EONpqO0EpYJ3dNaK/7JXQqLYAamUAmxcKdJ/A14b9GP3g2FX
-	 8Wmq4zvFnR4aJPtTZjS+sxbnuRanjSWRFphCJyRM=
+	b=h1ZgzU0J0hLy7pAU6SEjL7AiOo99TibndUpzOiK3AOLTI4T8Yhiu+0CNuBrrYqbuk
+	 eiokK2rsW+qcRB8q1ypYg0VL/XRWd7BmSmsErQy4edwmyAh60nyGJEQIyi3RweG3MB
+	 lTMLYJVVPpfnUEpyfumvNVqzbIA2+F+YLckpsm24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404603AbgF2VxB (ORCPT
+        id S2391375AbgF2VxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726639AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B17B246F8;
-        Mon, 29 Jun 2020 15:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF7D2469F;
+        Mon, 29 Jun 2020 15:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444040;
-        bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
+        s=default; t=1593443995;
+        bh=h1exmCBpP4dvGL6YomoSTtUxadSu5YsmIGfU3pB2C+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmIOEF9Nbj+iWj0nCmZBq70LFii2azKhG8j1j1h7Io/t+eJfC8nf7CHe8qEwKVk8a
-         vbTXctfRj7TfLAHyymA5zhyNoMwzaXh7yItBs2JLK79lW/6ILz5x9AN9RNQNDLlcr8
-         Ic0pn4oi1gAJSjkO7itEPJsgI506meVfPeM0d+FU=
+        b=Yj6lLEgdnKqLpoOrkFRtTBimi/I0Lb1E+oPB6m+Pujc3awe15W//qyXY9PeXBQQ4r
+         xYxh9v70rWoL4NZd1WR6Led9tAYu7I2K53j/YX/AtscN9Zd4P+Bzkb9Excy4tOFDtj
+         nAepcD7hoaHfVYFYwMhAMgqa6TERCE14L8wAwuFQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Oskar Holmlund <oskar@ohdata.se>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 147/265] net: qed: fix left elements count calculation
-Date:   Mon, 29 Jun 2020 11:16:20 -0400
-Message-Id: <20200629151818.2493727-148-sashal@kernel.org>
+Subject: [PATCH 5.7 100/265] ARM: dts: Fix am33xx.dtsi ti,sysc-mask wrong softreset flag
+Date:   Mon, 29 Jun 2020 11:15:33 -0400
+Message-Id: <20200629151818.2493727-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,78 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Oskar Holmlund <oskar@ohdata.se>
 
-[ Upstream commit 97dd1abd026ae4e6a82fa68645928404ad483409 ]
+[ Upstream commit 9f872f924545324a06fa216ad38132804c20f2db ]
 
-qed_chain_get_element_left{,_u32} returned 0 when the difference
-between producer and consumer page count was equal to the total
-page count.
-Fix this by conditional expanding of producer value (vs
-unconditional). This allowed to eliminate normalizaton against
-total page count, which was the cause of this bug.
+AM335x TRM: Figure 16-23 define sysconfig register and soft_reset
+are in first position corresponding to SYSC_OMAP4_SOFTRESET defined
+in ti-sysc.h.
 
-Misc: replace open-coded constants with common defines.
-
-Fixes: a91eb52abb50 ("qed: Revisit chain implementation")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0782e8572ce4 ("ARM: dts: Probe am335x musb with ti-sysc")
+Signed-off-by: Oskar Holmlund <oskar@ohdata.se>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/qed/qed_chain.h | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 733fad7dfbed9..6d15040c642cb 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
- 
- static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
- {
-+	u16 elem_per_page = p_chain->elem_per_page;
-+	u32 prod = p_chain->u.chain16.prod_idx;
-+	u32 cons = p_chain->u.chain16.cons_idx;
- 	u16 used;
- 
--	used = (u16) (((u32)0x10000 +
--		       (u32)p_chain->u.chain16.prod_idx) -
--		      (u32)p_chain->u.chain16.cons_idx);
-+	if (prod < cons)
-+		prod += (u32)U16_MAX + 1;
-+
-+	used = (u16)(prod - cons);
- 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
--		used -= p_chain->u.chain16.prod_idx / p_chain->elem_per_page -
--		    p_chain->u.chain16.cons_idx / p_chain->elem_per_page;
-+		used -= prod / elem_per_page - cons / elem_per_page;
- 
- 	return (u16)(p_chain->capacity - used);
- }
- 
- static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
- {
-+	u16 elem_per_page = p_chain->elem_per_page;
-+	u64 prod = p_chain->u.chain32.prod_idx;
-+	u64 cons = p_chain->u.chain32.cons_idx;
- 	u32 used;
- 
--	used = (u32) (((u64)0x100000000ULL +
--		       (u64)p_chain->u.chain32.prod_idx) -
--		      (u64)p_chain->u.chain32.cons_idx);
-+	if (prod < cons)
-+		prod += (u64)U32_MAX + 1;
-+
-+	used = (u32)(prod - cons);
- 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
--		used -= p_chain->u.chain32.prod_idx / p_chain->elem_per_page -
--		    p_chain->u.chain32.cons_idx / p_chain->elem_per_page;
-+		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
- 
- 	return p_chain->capacity - used;
- }
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index be76ded7e4c0c..ed6634d34c3c7 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -335,7 +335,7 @@
+ 			      <0x47400010 0x4>;
+ 			reg-names = "rev", "sysc";
+ 			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
+-					 SYSC_OMAP2_SOFTRESET)>;
++					 SYSC_OMAP4_SOFTRESET)>;
+ 			ti,sysc-midle = <SYSC_IDLE_FORCE>,
+ 					<SYSC_IDLE_NO>,
+ 					<SYSC_IDLE_SMART>;
 -- 
 2.25.1
 
