@@ -2,118 +2,73 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C9520776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ciW8v2d9"
+	by mail.kernel.org (Postfix) with ESMTP id AA4C120780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593472524;
+	bh=/ypye1Fse2hK/0noVvmGFENb0K1hmH1QkE5HS4u5aXc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sxqnkSEduUtsfVvRvFqDzg8YkWhz6AHq0OxRctcDRMs4YhOrTlNJsGT5C13tmvjUc
+	 L/JEOD/yYQSp4KwAIjBduao5w8OCUOmogvpyqVMC9k4iD/M2X/yW9j8RFMLlZeajoA
+	 565wYfzTci5hwwV/FGahH5fXoCrIXvAY/DzA5gtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgF2XOO (ORCPT
+        id S1729333AbgF2XPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:14:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55864 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgF2XOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:14:12 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqx0C108046;
-        Mon, 29 Jun 2020 07:52:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593435179;
-        bh=LxZK6XItt8eRN8M36E8UH3WGeBppveLJV6p+zmugmTI=;
-        h=From:To:CC:Subject:Date;
-        b=ciW8v2d9+KONMCI11Nvt2pemy2FVyX1TioT/topmoboAD+JEFreQeaSFDFiJHH00V
-         Gw43BL5TtfflHc7I9JwE5SV4Y6UKpFl6RWI4v/askkCrF2Pbij/LMoQf/35+YGVDeE
-         rWLwKvUrKyVJQB4qps0HHlmopiab4pCq+1aoCSfg=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCqxJl014789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 29 Jun 2020 07:52:59 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 07:52:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 07:52:58 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugv015456;
-        Mon, 29 Jun 2020 07:52:56 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 0/6] arm64: ti: k3-j721e: Add SERDES PHY and USB3.0 support
-Date:   Mon, 29 Jun 2020 15:52:48 +0300
-Message-ID: <20200629125254.28754-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Jun 2020 19:15:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgF2XPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:15:23 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB1FF2071A;
+        Mon, 29 Jun 2020 23:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593472523;
+        bh=/ypye1Fse2hK/0noVvmGFENb0K1hmH1QkE5HS4u5aXc=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=iU8Q6q87f9oMG2D6RqRAV6bXWYJSwKlovAgIP/BpcIXxghO0qNDlwpBZ3SqWaOLoJ
+         93DQa2nXmA8F3ZpcF5BR32gUhnDy/oO3qdYyXPI6k0PBbdGRZydLecHmrTbRaemuqO
+         DpTIPiYlxEI8nSVOOXf8BfjWhyk8dxVYOYK84ojU=
+Date:   Mon, 29 Jun 2020 16:15:22 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+cc:     Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Xen Devel <Xen-devel@lists.xensource.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the xen-tip
+ tree
+In-Reply-To: <20200630083036.648a0743@canb.auug.org.au>
+Message-ID: <alpine.DEB.2.21.2006291614530.8121@sstabellini-ThinkPad-T480s>
+References: <20200630083036.648a0743@canb.auug.org.au>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tero,
+On Tue, 30 Jun 2020, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   724f239c3401 ("arm/xen: remove the unused macro GRANT_TABLE_PHYSADDR")
+> 
+> is missing a Signed-off-by from its committer.
 
-This series adds SERDES PHY support and Type-C USB Super-Speed support
-to the J721E EVM.
-
-Please queue this for -next. Thanks.
-
-cheers,
--roger
-
-Changelog:
-v4:
-- Removed redundant patch
-- used compaible string for yaml filename
-- typo fix s/mdf/mfd in patch subject
-- added simple-mfd, address-cells, size-cells and ranges
-
-v3:
-- Add new DT schema for J721E System controller.
-- Re-order system controller's compatible string i.e. most compatible to least.
-
-v2:
-- Addressed Rob's comments.
-- Changed type-C debounce delay from 300ms to 700ms as 300ms is not
-sufficient on EVM.
-
-
-Kishon Vijay Abraham I (2):
-  arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
-  arm64: dts: ti: k3-j721e-main: Add system controller node and SERDES
-    lane mux
-
-Roger Quadros (4):
-  dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system
-    controller
-  arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
-  arm64: dts: ti: k3-j721e: Enable Super-Speed support for USB0
-  arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR
-    line
-
- .../mfd/ti,j721e-system-controller.yaml       |  74 +++++
- .../dts/ti/k3-j721e-common-proc-board.dts     |  33 ++-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 275 ++++++++++++++++++
- include/dt-bindings/mux/mux-j721e-wiz.h       |  53 ++++
- 4 files changed, 433 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
- create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Fixed. Thank you so much, I love linux-next :-)
