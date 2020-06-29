@@ -4,60 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0427C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBD320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29562067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462224;
-	bh=YQvt4AgL3IdwEuFjsf6V9cIKCbQ8atShrwEL2kGC0R0=;
+	s=default; t=1593462227;
+	bh=1meGXlUEAeOL4+2fdioZu6wxr/LmQZ8/DPmYLoJYvRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ssqWPQriKcbwxlDKlXH21dD5mEeS+Mh4bHfbIa/84U2bTYwrZixv7e9WKUxEgIh/a
-	 C7B+Bl3c9rssqjN0nj3qqSiVplPcWD8YAolMI/ccHGA9ICKwbYjfnA671GDoqlGhGy
-	 l9tx0Ky1zkvTXm+5Ih0nBgzJgtcxb4jtMcqFMC2w=
+	b=c94mqAObXIbjuyTiVpDnTmF9DkhwyWAk6DGI1sjKPkFY663SAJPmyP9W5h+vksG8P
+	 AF8yOLbPD3YwpX3O2griAL3dqJ08nn5W/RTWiesyJ+n/qKdOk2mdiZjkVutYY3ebZf
+	 SpJ+d6bzNZNpVDckLjfeUhuAbI11HJA7O2tLcQLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388860AbgF2UXn (ORCPT
+        id S1730357AbgF2UXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732565AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732573AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C3225349;
-        Mon, 29 Jun 2020 15:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA8B2547C;
+        Mon, 29 Jun 2020 15:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445187;
-        bh=YQvt4AgL3IdwEuFjsf6V9cIKCbQ8atShrwEL2kGC0R0=;
+        s=default; t=1593445437;
+        bh=1meGXlUEAeOL4+2fdioZu6wxr/LmQZ8/DPmYLoJYvRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJRgmqObLbPpwstik7N+UuNz8p4VtpMz8igWBKOTViALlerLYteJFxnfLy1aB+qvR
-         yaXO6iqSwmX+Lf0oOIV415T+F99E22A/xdITmUzapP1xjvsqpR3WZ2054oiW8Hw9Mt
-         Mpt9NeGvtegSrybJ8h0UvA0RpTdYwe3qh4lQC3Yw=
+        b=bhfC8MY2w5qCotsObvgKYQdUujX35GsGN65Czkj4E/ARS+q2Me2x+Na8QiX2PUsZ9
+         0EQxQbO3bujlS55rUKH2EVInoPbrFEksYIq1rDMM259WSDRD3AZl6jkpNK29EHJ6su
+         90ApOVVqcVrC5AnGFMkVSPz9PgmJlXFKI9Iuu9Wo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>,
-        Ren Xudong <renxudong1@huawei.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 77/78] xfs: add agf freeblocks verify in xfs_agf_verify
-Date:   Mon, 29 Jun 2020 11:38:05 -0400
-Message-Id: <20200629153806.2494953-78-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 180/191] ocfs2: fix value of OCFS2_INVALID_SLOT
+Date:   Mon, 29 Jun 2020 11:39:56 -0400
+Message-Id: <20200629154007.2495120-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,110 +71,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
+commit 9277f8334ffc719fe922d776444d6e4e884dbf30 upstream.
 
-We recently used fuzz(hydra) to test XFS and automatically generate
-tmp.img(XFS v5 format, but some metadata is wrong)
+In the ocfs2 disk layout, slot number is 16 bits, but in ocfs2
+implementation, slot number is 32 bits.  Usually this will not cause any
+issue, because slot number is converted from u16 to u32, but
+OCFS2_INVALID_SLOT was defined as -1, when an invalid slot number from
+disk was obtained, its value was (u16)-1, and it was converted to u32.
+Then the following checking in get_local_system_inode will be always
+skipped:
 
-xfs_repair information(just one AG):
-agf_freeblks 0, counted 3224 in ag 0
-agf_longest 536874136, counted 3224 in ag 0
-sb_fdblocks 613, counted 3228
+ static struct inode **get_local_system_inode(struct ocfs2_super *osb,
+                                               int type,
+                                               u32 slot)
+ {
+ 	BUG_ON(slot == OCFS2_INVALID_SLOT);
+	...
+ }
 
-Test as follows:
-mount tmp.img tmpdir
-cp file1M tmpdir
-sync
-
-In 4.19-stable, sync will stuck, the reason is:
-xfs_mountfs
-  xfs_check_summary_counts
-    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
-       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
-       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
-	return 0;  -->just return, incore sb_fdblocks still be 613
-    xfs_initialize_perag_data
-
-cp file1M tmpdir -->ok(write file to pagecache)
-sync -->stuck(write pagecache to disk)
-xfs_map_blocks
-  xfs_iomap_write_allocate
-    while (count_fsb != 0) {
-      nimaps = 0;
-      while (nimaps == 0) { --> endless loop
-         nimaps = 1;
-         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
-xfs_bmapi_write
-  xfs_bmap_alloc
-    xfs_bmap_btalloc
-      xfs_alloc_vextent
-        xfs_alloc_fix_freelist
-          xfs_alloc_space_available -->fail(agf_freeblks is 0)
-
-In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
-use the latest extent at writeback delalloc conversion time") remove
-the above while, dmesg is as follows:
-[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
-
-Users do not know why this page is discard, the better soultion is:
-1. Like xfs_repair, make sure sb_fdblocks is equal to counted
-(xfs_initialize_perag_data did this, who is not called at this mount)
-2. Add agf verify, if fail, will tell users to repair
-
-This patch use the second soultion.
-
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Ren Xudong <renxudong1@huawei.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: http://lkml.kernel.org/r/20200616183829.87211-5-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/ocfs2/ocfs2_fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 516e0c57cf9c4..a10d9a3c181e4 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2529,6 +2529,13 @@ xfs_agf_verify(
- 	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
- 		return false;
+diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
+index 00b6fbc15956c..c3697cf60500c 100644
+--- a/fs/ocfs2/ocfs2_fs.h
++++ b/fs/ocfs2/ocfs2_fs.h
+@@ -304,7 +304,7 @@
+ #define OCFS2_MAX_SLOTS			255
  
-+	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
-+		return false;
-+
-+	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
-+	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
-+		return false;
-+
- 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
-@@ -2540,6 +2547,10 @@ xfs_agf_verify(
- 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
- 		return false;
+ /* Slot map indicator for an empty slot */
+-#define OCFS2_INVALID_SLOT		-1
++#define OCFS2_INVALID_SLOT		((u16)-1)
  
-+	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
-+		return false;
-+
- 	/*
- 	 * during growfs operations, the perag is not fully initialised,
- 	 * so we can't use it for any useful checking. growfs ensures we can't
-@@ -2553,6 +2564,11 @@ xfs_agf_verify(
- 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
- 		return false;
- 
-+	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_refcount_blocks) >
-+	    be32_to_cpu(agf->agf_length))
-+		return false;
-+
- 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
- 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
- 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
+ #define OCFS2_VOL_UUID_LEN		16
+ #define OCFS2_MAX_VOL_LABEL_LEN		64
 -- 
 2.25.1
 
