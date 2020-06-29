@@ -2,128 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7959C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD73206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A561B20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="pOimQYia"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FwlutL/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbgF2UpI (ORCPT
+        id S1732793AbgF2UpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        Mon, 29 Jun 2020 16:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731588AbgF2TN7 (ORCPT
+        with ESMTP id S1731546AbgF2TN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:59 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79027C014ABF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:07:55 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h22so7695207pjf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:07:55 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70612C00864C
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:04:45 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o22so2763032pjw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=OXfEAC8m7WsWKLpZr4RzDGbNAcYuuq3MdYSLZ6OlkGQ=;
-        b=pOimQYiak1CbHv7d59idxDYghN9l3G41PcKqfxGsTfgpSIyxG5bc/7aq0zT/8EvPeg
-         3WOVfr4BbAciS6IYJBubYgbglqDpFERjl3Wl6bg26bjYaNOSlNQeR4AmjHwQd+9GQt/C
-         jgxzDtTZ7Hhb1+K5YI1ZhURetiPSEU0pdNEGmQCfHWsIfXTM2c42q88OmkMzLzsvMODM
-         dDrvvtv7ewkFnHse3xS34IDEZqKUWdrKgctWslz1Yxzreg9yly1Z2Sfdk2da8yb2qdEn
-         I850t9J/guTuiDkuwX8LnGsBDrWHDkns0XP2a0AmPABHqBQD7EVY9ARZsDLGjK/WZ9+4
-         cd4g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ly6GQY518rugBZBKaypUfjaHtOs18Gvlz/xTQcFP+uo=;
+        b=FwlutL/Q/eEKYRihTTqlzWcZE7NzatpA+2aRZl4vnE+PQ+Ig5lMtw6ZACAqglZLEfo
+         yuSIol4GzaOVt6nQHLF+YD63riXx/XSOQIrc68BaP0Cw9GDXvs/1/072SiY/Mbv+WIG7
+         6ED9NmAMHgEzeBjHu2WzoZYxF6I/QKzrgiFapmGeIgP5UTs17yv0rEDiliHlkQLqDhen
+         fLrb6m/PGZD87Yiw5zsGWeyZfeW11GjUaK/4QedXpAeknQRRdB7gfHi6NyaQmOXa0e/t
+         7xpM8idGeiC4zW2IWrvgnrXun960Lkyd/5OgqGfu/0iUjZHRNyvbtFXO0RVv5BxHJCMl
+         iM7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=OXfEAC8m7WsWKLpZr4RzDGbNAcYuuq3MdYSLZ6OlkGQ=;
-        b=DgPSf633FCEHPiLPCg4QiFs55lvH2NUtQoaadzJxcbypbQYh5gO3SGL736Wa4SLbhJ
-         /bF0z6dSoN7MMgq+ko+uxlLBUVmcOjEOG56YNhD3VlZfk5bP2hcTE6X8kn1y0tno2EsY
-         XmtTqCncBOgd8t8ie36ysEshG3UcGAMF6K1DC5VOBlEyb6Kkx0BIJ1zXagUDOrNtvMlK
-         caadJs8LVCDpRBvzh68LbAalJtgGK6DBl+N9hiLa6c/70sg0SEg5Ou7L4TtrRrhNoFti
-         CMpPTln5LREZHMvFb9Ti16126UacGsQ4b+THx4m/nlSkN4V5Qb7c8iqMTOFgQ890JwVr
-         uthQ==
-X-Gm-Message-State: AOAM532sQdXlhXL6vYuPlfJbA5FQgcgZancq1swUMbKTgudMEKvskDBW
-        xHYDX8g04HkaV13kx8dDH3m9rQ==
-X-Google-Smtp-Source: ABdhPJxie99acwKP/77ZGxBZ2fXE0poRQF3nOSrZU7/tjM6WDJBL6sJEiEgmxDiYhMEZmiuSZA2KTQ==
-X-Received: by 2002:a17:90b:1103:: with SMTP id gi3mr16296490pjb.110.1593418074892;
-        Mon, 29 Jun 2020 01:07:54 -0700 (PDT)
-Received: from localhost ([2406:7400:73:703c:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id s12sm3410494pgp.54.2020.06.29.01.07.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:07:53 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Mon, 29 Jun 2020 04:07:48 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: include: odm.h: fixed a blank space
- coding style issue.
-Message-ID: <20200629080748.l4ufcpuk4cg2m725@pesu-pes-edu>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ly6GQY518rugBZBKaypUfjaHtOs18Gvlz/xTQcFP+uo=;
+        b=FwSFFdUmu43LfXk1h08tBHIgnDAB/x1uo8ctwQchUKrH2A/LLUnbGd4/ugrqtTqss4
+         +1fcfpWewxWckXx3iHzWwVEi3JBw2q7lFuXk+OAPbO7RgnIGNs4FRuvQkKf148cttaix
+         /YidEB2o8/j7BtS0TPSjtMqi6T97fSAT4w90p2Nb7mIo9UKNWElz3We6Xifnjr4rk27o
+         YM0XxXkZnhBBLpVEe52sl/63hgOWBvUwAAgzOmStqnq4ZeH8gJE9zEmh/SedJ/KUMKLc
+         oBjmza+dAitA1JBo6cVSUDZO5hVPHcO1aZ/s4/xvyYVRpADBa7W7dHsE8EhdddbT51Bw
+         MJnQ==
+X-Gm-Message-State: AOAM5336PkKoa7Bvb7XRsSLqBZbxHP50MX6vzTYPFlm7d0hg7Tya2t+z
+        cJLAbrklJEzf6QgssqNzOzyBDw==
+X-Google-Smtp-Source: ABdhPJzxTl5fVMfp7OZOK/Cxx7y/SkzGumBhYNEPOdMQyPBf1+rzq55IntET0rwpKp6rrizLK7fToA==
+X-Received: by 2002:a17:902:7483:: with SMTP id h3mr9067587pll.114.1593425084898;
+        Mon, 29 Jun 2020 03:04:44 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id z9sm25088302pgh.94.2020.06.29.03.04.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 03:04:44 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: Remove the weakly defined cpufreq_default_governor()
+Date:   Mon, 29 Jun 2020 15:34:40 +0530
+Message-Id: <2f00a5847708547a57920e24a2ec5e76b265cde9.1593425047.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ky3s2llo3bsba3pz"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The default cpufreq governor is chosen with the help of a "choice"
+option in the Kconfig which will always end up selecting one of the
+governors and so the weakly defined definition of
+cpufreq_default_governor() will never get called.
 
---ky3s2llo3bsba3pz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Moreover, this makes us skip the checking of the return value of that
+routine as it will always be non NULL.
 
-added blank space and enclosed a complex valued macro within parentheses for improved code readability.
+If the Kconfig option changes in future, then we will start getting a
+link error instead (and it won't go unnoticed as in the case of the weak
+definition).
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+Suggested-by: Quentin Perret <qperret@google.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/staging/rtl8188eu/include/odm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Based over the following series:
+- [PATCH V4 0/3] cpufreq: Allow default governor on cmdline and fix
+  locking issues
 
-diff --git a/drivers/staging/rtl8188eu/include/odm.h b/drivers/staging/rtl8188eu/include/odm.h
-index 9d39fe13626a..27bffc2ead66 100644
---- a/drivers/staging/rtl8188eu/include/odm.h
-+++ b/drivers/staging/rtl8188eu/include/odm.h
-@@ -244,7 +244,7 @@ struct odm_rate_adapt {
+ drivers/cpufreq/cpufreq.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
- #define AVG_THERMAL_NUM		8
- #define IQK_Matrix_REG_NUM	8
--#define IQK_Matrix_Settings_NUM	1+24+21
-+#define IQK_Matrix_Settings_NUM	(1 + 24 + 21)
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index ad94b1d47ddb..036f4cc42ede 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1056,11 +1056,6 @@ static int cpufreq_add_dev_interface(struct cpufreq_policy *policy)
+ 	return 0;
+ }
+ 
+-__weak struct cpufreq_governor *cpufreq_default_governor(void)
+-{
+-	return NULL;
+-}
+-
+ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ {
+ 	struct cpufreq_governor *gov = NULL;
+@@ -1079,8 +1074,6 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ 
+ 		if (!gov) {
+ 			gov = cpufreq_default_governor();
+-			if (!gov)
+-				return -ENODATA;
+ 			__module_get(gov->owner);
+ 		}
+ 
+-- 
+2.25.0.rc1.19.g042ed3e048af
 
- #define	DM_Type_ByFWi		0
- #define	DM_Type_ByDriver	1
---
-2.20.1
-
-
---ky3s2llo3bsba3pz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl75oVQACgkQ471Q5AHe
-Z2qxIwv6A7R+6jcIxfrGZmDNs1aGiG271nP9bJyOcZS3Trkc4IAghcVyMsLkQ6UE
-B7Zm32o/NMawi7DNQKowf9kMM2crNKY1vDQgxVm38zlJPjLl/QuSL2OQf9QiGw8h
-vYghWNcxiMJAqdEfXJh92KLFqzNh8Kru7CQ3DLE2XDSMDx9ohXjqRmciUL4cfj7H
-2r6PC8a1iPBKC42wC1zYu+RNhCCRgNSFRntYbdfz/wfJsFulH3Gw1X3vFa6YIVaC
-NRRvpsM6hR/gDAEGe1YoZ9VDQy5/8BKuoIa/DNbQ0zJsSE2cVFpYqLquI0nSGu1u
-DFpjyj7rZNAHdd3Vp7CXI3msFRkUHinXGww6SZfd7morZV+7+jzDEXjnX4rMwaXh
-hjLE7LrB5l7IBIL5vgbSymptwTqc0coUaW0vFEjiWoWN/FUIP+Diml+FhUkUgFi6
-4rHopvniFo2/7Lz9T0cIgEwMvoGwPxB+DUB6Av0MH2xoz7SO3Kao2U9P1eXJpLnk
-doyI6Kvx
-=SdWm
------END PGP SIGNATURE-----
-
---ky3s2llo3bsba3pz--
