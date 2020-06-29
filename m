@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65978C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C68AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41EE220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014312065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461742;
-	bh=dAQagAwGzha9ayDt2K5dc8ZwEUMXPs7HNP+abuI3+gk=;
+	s=default; t=1593461747;
+	bh=Gm6NB5OaSRX0V3apjQo3zJ4NUY4P+FuV6gxdeznFVKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9meRK7zeS0wJrjQgIzJdiiuGPQmohwdCDGqhDr00+U7Co0fim9ooS1SqQOktp8Re
-	 mnQZciL9fxKLTR5C4CIah5qx5jSI3p5pxlSppJfH0/WRkIuYh6DjBupptFtXIi82lz
-	 FkEj9luF5wrssYToJjJNgGPTsN8B8FP6WMLjFO8M=
+	b=F2I23aDAoF3FuYn+FFCs94Jgk3iS3HYu/HgKiY6vBwYdPg/oZpSIFD0BhQTiO6mdF
+	 FmJ3mry375gWoeXS5NDYQl9cupHUmbci3TA31EoiIj5vDa2IEExCBb8BDMGXIxxTue
+	 88Wix+qteeiv9FiFM0eYGcYXf1/pdAef55Lt7nhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgF2UPk (ORCPT
+        id S1730389AbgF2UPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732830AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732819AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16861252BC;
-        Mon, 29 Jun 2020 15:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A4A2527B;
+        Mon, 29 Jun 2020 15:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445028;
-        bh=dAQagAwGzha9ayDt2K5dc8ZwEUMXPs7HNP+abuI3+gk=;
+        s=default; t=1593444987;
+        bh=Gm6NB5OaSRX0V3apjQo3zJ4NUY4P+FuV6gxdeznFVKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEU5Q6EyHRf0uUq9vYkz4XZKOGl4hYNRorPI1q+AWcAm2XsCHFGSyKl4cDW5bRMXq
-         ipLLkJbomyrgVzpZ47nKZ1AZaZi7+SXYjj3e94UyFSMAULC8BAzfDvIzfMPIe8BD9u
-         LXDVKly00aOkM96UsxwJdNyjtVjwOAxmMycGZo50=
+        b=Ni8H6Nh2mNh+MpoZHBmrw9hCm2+831VE6TwAv8nMO3rLHTjmSKBSjS/DULb4mlmBG
+         4rLTWEfIeg4Ek7hhBhgG/Q+/sH73iKeeTKV6gx+V8WSp6WDwtluRtXveD2nPGAWTlz
+         /UMtj+2BBkKCxDgFdLmq5s+o/bIPbyYS5WWRJzFU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 126/131] pNFS/flexfiles: Fix list corruption if the mirror count changes
-Date:   Mon, 29 Jun 2020 11:34:57 -0400
-Message-Id: <20200629153502.2494656-127-sashal@kernel.org>
+Cc:     Mans Rullgard <mans@mansr.com>, Wolfram Sang <wsa@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 087/131] i2c: core: check returned size of emulated smbus block read
+Date:   Mon, 29 Jun 2020 11:34:18 -0400
+Message-Id: <20200629153502.2494656-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,56 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 8b04013737341442ed914b336cde866b902664ae upstream.
+[ Upstream commit 40e05200593af06633f64ab0effff052eee6f076 ]
 
-If the mirror count changes in the new layout we pick up inside
-ff_layout_pg_init_write(), then we can end up adding the
-request to the wrong mirror and corrupting the mirror->pg_list.
+If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
+them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
+on some random device to return an arbitrary value in the first
+byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
+will happily write past the end of the supplied data buffer, thus
+causing Bad Things to happen.  To prevent this, check the size
+before copying the data block and return an error if it is too large.
 
-Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 209d27c3b167 ("i2c: Emulate SMBus block read over I2C")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+[wsa: use better errno]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core-smbus.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index e0fe9a0f1bf18..d8cba46a9395c 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -915,9 +915,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 		goto out_mds;
- 
- 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
--	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
--	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
--		goto out_mds;
-+	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
-+		goto out_eagain;
- 
- 	for (i = 0; i < pgio->pg_mirror_count; i++) {
- 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, i, true);
-@@ -936,11 +935,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	}
- 
- 	return;
--
-+out_eagain:
-+	pnfs_generic_pg_cleanup(pgio);
-+	pgio->pg_error = -EAGAIN;
-+	return;
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
- 	nfs_pageio_reset_write_mds(pgio);
-+	pgio->pg_error = -EAGAIN;
- }
- 
- static unsigned int
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index 9cd66cabb84fd..8d6fad05b0c7f 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -497,6 +497,13 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 			break;
+ 		case I2C_SMBUS_BLOCK_DATA:
+ 		case I2C_SMBUS_BLOCK_PROC_CALL:
++			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
++				dev_err(&adapter->dev,
++					"Invalid block size returned: %d\n",
++					msg[1].buf[0]);
++				status = -EPROTO;
++				goto cleanup;
++			}
+ 			for (i = 0; i < msg[1].buf[0] + 1; i++)
+ 				data->block[i] = msg[1].buf[i];
+ 			break;
 -- 
 2.25.1
 
