@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F901C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEDF206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE9520702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465316;
-	bh=tj8mok7xLm3fKM3u/SqgmOgHmlyAZkKm/jdH4QAZhEs=;
+	s=default; t=1593465319;
+	bh=WbLLflRH1kjA+aX3PDTiByYeTImPHtnDXacasBWp4V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWI8vCgzCjzLAS2iLLo8yxsG9n6neo5yEFMlS6x/YVESJc+IwWJqm9rfxoUdmisvo
-	 6I+y+r6x5P6D2tS5qgGaUNNGoAw3mto1MkKnBuqMWVNaJugWe/mKlKxBjwhL9Qsw8o
-	 LjmcbwXGtrf0wrxgQPFLhMogZY853jqtSSjoTTQc=
+	b=VFMvKGxBB5Aht1tTMNu2+mjTfXewLR20TKtg0gZIiWhaxdKhw9psfiJMbnHqyJVER
+	 1DV6xkj5OOVZsctXmcCkMn5uQiCK4x4b4TZ1oeW8UKQAe2+vVoeYNnVURtdgQsjKwZ
+	 /jXttq1p9HF7DajApCFLf7nHmJ5SBGuE1dN7qqYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390496AbgF2VPP (ORCPT
+        id S2390565AbgF2VPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42432 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729958AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729956AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B0B2557F;
-        Mon, 29 Jun 2020 15:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B742555D;
+        Mon, 29 Jun 2020 15:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446145;
-        bh=tj8mok7xLm3fKM3u/SqgmOgHmlyAZkKm/jdH4QAZhEs=;
+        s=default; t=1593446122;
+        bh=WbLLflRH1kjA+aX3PDTiByYeTImPHtnDXacasBWp4V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H0RGfp3kpHfOa55bAHGvEHLEdI4JvSJtt0wEmqs91763Y2ZIhwrboZR3op/vMyBh
-         hktFsrzID9u8/nE+p3WB1hTVVmCCOp2ySQnNOKLdPja2Y3B99WFg3M1DxpzEVX/JId
-         xrvI09cxTdM5CPWgbUIXdmgDkFqLv+Py8z0Ld94E=
+        b=MkmWNwNFvBtUC0kDeLW4z9CJT5chbEmGAHhpfyCWukVMpk6kL1Uvu8OHfWqae9l9S
+         xHbN86C7PKWJR75U9IV914fAREClw06soTN3CeNsSRJTXIG94fBdS1PSK6u+1S/ySX
+         l16SSUiQSMSUbiPxDVWNvfIhAr6swywwe2zXflPo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongdong Liu <liudongdong3@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 133/135] PCI: Disable MSI for HiSilicon Hip06/Hip07 only in Root Port mode
-Date:   Mon, 29 Jun 2020 11:53:07 -0400
-Message-Id: <20200629155309.2495516-134-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 113/135] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
+Date:   Mon, 29 Jun 2020 11:52:47 -0400
+Message-Id: <20200629155309.2495516-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,42 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongdong Liu <liudongdong3@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-commit deb86999323661c019ef2740eb9d479d1e526b5c upstream.
+[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
 
-HiSilicon Hip06/Hip07 can operate as either a Root Port or an Endpoint.  It
-always advertises an MSI capability, but it can only generate MSIs when in
-Endpoint mode.
+if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
+have a corresponding put_device(). Thus add a jump target to fix the
+exception handling for this function implementation.
 
-The device has the same Vendor and Device IDs in both modes, so check the
-Class Code and disable MSI only when operating as a Root Port.
-
-[bhelgaas: changelog]
-Fixes: 72f2ff0deb87 ("PCI: Disable MSI for HiSilicon Hip06/Hip07 Root Ports")
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: stable@vger.kernel.org	# v4.11+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-imx/pm-imx5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index eeb771ecda15b..ab161bbeb4d41 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1623,8 +1623,8 @@ static void quirk_pcie_mch(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7520_MCH,	quirk_pcie_mch);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7320_MCH,	quirk_pcie_mch);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quirk_pcie_mch);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI,	0x1610,	quirk_pcie_mch);
+diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
+index 532d4b08276dc..fd996187fc5fb 100644
+--- a/arch/arm/mach-imx/pm-imx5.c
++++ b/arch/arm/mach-imx/pm-imx5.c
+@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
  
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
+ 	ocram_base = gen_pool_alloc(ocram_pool, size);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
  
- /*
-  * It's possible for the MSI to get corrupted if shpc and acpi
+ 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (virt_out)
+ 		*virt_out = virt;
+ 
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
+ 
 -- 
 2.25.1
 
