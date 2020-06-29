@@ -2,76 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F54CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E415C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19CCF2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73769206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466603;
-	bh=wgnAWwFbY+YtiY3/WCQ/zDI25aOyYPFWw5ih1aRT8jU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oVAJd8x4ftyhyb1KVnYNOEQskrJcpL9607sIv4su9nejIWtRnTltpa/+5vGcrxAk8
-	 3pyQpNlylv4D3qApyjvIgzR6TkKdo8Q9xAHiVcKtkJeljr3C02fTHGvoEV5oNTedVW
-	 t//RHDAPXcVSXEtB3w77/+SnCGeDkpAqwmSMZmfw=
+	s=default; t=1593466607;
+	bh=vBVODVLhA21VNdblvAjpiZ7aFEQkw084iJxoeDNUa4o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D6p1bmIgKh6fbc6ML7vfLdfH3L/vrU5awyXuhCR9hNKIQP4VK4c7XaSXj/zasx7Nh
+	 jYG2OYWfsdzNFUx+Lfiz72I4c1NkgjZNrJTHEIkV7Ku1jp20e96BcWTN6O7865w08T
+	 qG4y3aScHpKScvvDYPjN7K7MsztFz7EEQU2MbtQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgF2Vgm (ORCPT
+        id S2391345AbgF2Vgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:36:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgF2Skk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728431AbgF2Skk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:40 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD01623435;
-        Mon, 29 Jun 2020 09:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D765D23ED2;
+        Mon, 29 Jun 2020 15:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423980;
-        bh=wgnAWwFbY+YtiY3/WCQ/zDI25aOyYPFWw5ih1aRT8jU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gDXdItiFHFW8DxnPzmu8rgpiRQDC4lYOvcnraPiE11gz0NVE57NEYm503TJ9WPU7a
-         +rvZGhgoqcYYsaQ+76DxdY/S0+T5MsKc0/hZnRcVPWpnz5vrbohicyydkoaJgEANWy
-         UNSXxlPytNcudeJheVFImyElq+ASAP9BL+rYWlbs=
-Date:   Mon, 29 Jun 2020 15:16:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     kishon@ti.com, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org
-Subject: Re: [PATCH v3 0/2] phy: qcom-snps: Add runtime suspend and resume
- handlers
-Message-ID: <20200629094615.GE2599@vkoul-mobl>
-References: <20200625195444.15130-1-wcheng@codeaurora.org>
+        s=default; t=1593443905;
+        bh=vBVODVLhA21VNdblvAjpiZ7aFEQkw084iJxoeDNUa4o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Au2zn7RNQYYOkaeo77qsbc4A1onLRhFXjCtr+X3nWjh6S1/lo8Fg5QHTjjJtPvgYu
+         MLpbssb0nNnObjTXWLLpINBFC/PZaAMNunQohxB3YM2RyB20seEeWJC11dKHEP2Tm5
+         lQ0+SrAsvcV0BOI9/o9R9629YGs1YTFHgm10dRUo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sabrina Dubroca <sd@queasysnail.net>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 005/265] geneve: allow changing DF behavior after creation
+Date:   Mon, 29 Jun 2020 11:13:58 -0400
+Message-Id: <20200629151818.2493727-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625195444.15130-1-wcheng@codeaurora.org>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-06-20, 12:54, Wesley Cheng wrote:
-> Changes in v3:
->  - Fixed strict checkpatch warnings due to alignment
->  - Remove debug artifacts from prints
->  - Split the set mode callback addition to another patch
->  - Removed suspended parameter
-> 
-> Changes in v2:
->  - Addressed checkpatch alignment/line length warnings.
->  - Removed superfluous init in qcom_snps_hsphy_resume().
-> 
-> Adds a set mode callback and runtime suspend/resume handlers to the
-> phy-qcom-snps-femto-v2 driver.  The set mode is used to enable certain
-> power management features in the PHY during suspend/resume.
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-Applied after dropping the wrong review tag, thanks
+[ Upstream commit 56c09de347e40804fc8dad155272fb9609e0a97b ]
+
+Currently, trying to change the DF parameter of a geneve device does
+nothing:
+
+    # ip -d link show geneve1
+    14: geneve1: <snip>
+        link/ether <snip>
+        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
+    # ip link set geneve1 type geneve id 1 df unset
+    # ip -d link show geneve1
+    14: geneve1: <snip>
+        link/ether <snip>
+        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
+
+We just need to update the value in geneve_changelink.
+
+Fixes: a025fb5f49ad ("geneve: Allow configuration of DF behaviour")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/geneve.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index 75266580b586d..4661ef865807f 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -1649,6 +1649,7 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
+ 	geneve->collect_md = metadata;
+ 	geneve->use_udp6_rx_checksums = use_udp6_rx_checksums;
+ 	geneve->ttl_inherit = ttl_inherit;
++	geneve->df = df;
+ 	geneve_unquiesce(geneve, gs4, gs6);
+ 
+ 	return 0;
 -- 
-~Vinod
+2.25.1
+
