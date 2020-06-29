@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A73C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BF720768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2149F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462522;
-	bh=RmTDezy6hZt05vV+jmzma07hfeiH2tf0VjuQT1izrRM=;
+	s=default; t=1593462524;
+	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZoKzMIbiQLp8pZYUZ/FdxMCqb8vdkfXJY1xIoTEfczA/vdxVV0KUs9nTsbwLn1YkG
-	 hkhTCKhMcDuRkqTxvqqns27xlyv/kwCYtQ7zkbGkPrH8rOA+VCIaEUTPga6rLdHmVw
-	 HjZF0jz3QFCHCWGiidU3+zaWmd2hygKO2JksIbqA=
+	b=eawrZbdP5ZD1AbH+WOidXto3nGVxJnkWlqAxnS7tPpHdBL602Zyx2Wt8uNTBvcz0I
+	 lRMV3SlR09qQhNi/KnJSQOZ9H1tbCc9JZJlTklGwP8ql4iuxFJ/lP1XgQkLnMgUWlr
+	 90GUxto1NmKbR+SiJ2DKgplHADlZzIKG0AItKqdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389185AbgF2U2k (ORCPT
+        id S1729101AbgF2U2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731915AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731758AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F301253D5;
-        Mon, 29 Jun 2020 15:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CA21253CD;
+        Mon, 29 Jun 2020 15:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445313;
-        bh=RmTDezy6hZt05vV+jmzma07hfeiH2tf0VjuQT1izrRM=;
+        s=default; t=1593445301;
+        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuWU2aXHUIxXrpYixJHxBeXXTRyxPOzgFrYKBVfsqV3RiACUalbxYfnDTlvwlGUph
-         DDXcF67paeoOyv+kNwCsrtH94sGmzRkE/EO6oxCce8FjHo15h0fXArcglH8IbGkmy7
-         4DJJT1Fwx2TkctB4CRa/o94Zq2EG5VrsD4rBrAwc=
+        b=gV0tO65lk3U/jMSmJlrRExtwyPjSBL8iBOq2jWc+IZX7O8oOCpK5FLUJ47csQ0cDu
+         tFvhDhFfQXM+MGmWmkw99Cc3G1yKAgO9bojfC8E23KBv22z/PHLoOGkFltJaXgOSxq
+         pg7c7gZxaV55tbTm9TR3137bp86OnCO6TnvgnjFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/191] drm: encoder_slave: fix refcouting error for modules
-Date:   Mon, 29 Jun 2020 11:38:17 -0400
-Message-Id: <20200629154007.2495120-82-sashal@kernel.org>
+Cc:     tannerlove <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 073/191] selftests/net: in timestamping, strncpy needs to preserve null byte
+Date:   Mon, 29 Jun 2020 11:38:09 -0400
+Message-Id: <20200629154007.2495120-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.9.y
@@ -66,48 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: tannerlove <tannerlove@google.com>
 
-[ Upstream commit f78d4032de60f50fd4afaa0fb68ea03b985f820a ]
+[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
 
-module_put() balances try_module_get(), not request_module(). Fix the
-error path to match that.
+If user passed an interface option longer than 15 characters, then
+device.ifr_name and hwtstamp.ifr_name became non-null-terminated
+strings. The compiler warned about this:
 
-Fixes: 2066facca4c7 ("drm/kms: slave encoder interface.")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
+destination size [-Wstringop-truncation]
+  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
+
+Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_encoder_slave.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
-index 4484785cd9ac2..95d5a59497530 100644
---- a/drivers/gpu/drm/drm_encoder_slave.c
-+++ b/drivers/gpu/drm/drm_encoder_slave.c
-@@ -84,7 +84,7 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
+index 5cdfd743447b7..900ed4b478996 100644
+--- a/tools/testing/selftests/networking/timestamping/timestamping.c
++++ b/tools/testing/selftests/networking/timestamping/timestamping.c
+@@ -332,10 +332,16 @@ int main(int argc, char **argv)
+ 	int val;
+ 	socklen_t len;
+ 	struct timeval next;
++	size_t if_len;
  
- 	err = encoder_drv->encoder_init(client, dev, encoder);
- 	if (err)
--		goto fail_unregister;
-+		goto fail_module_put;
+ 	if (argc < 2)
+ 		usage(0);
+ 	interface = argv[1];
++	if_len = strlen(interface);
++	if (if_len >= IFNAMSIZ) {
++		printf("interface name exceeds IFNAMSIZ\n");
++		exit(1);
++	}
  
- 	if (info->platform_data)
- 		encoder->slave_funcs->set_config(&encoder->base,
-@@ -92,9 +92,10 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+ 	for (i = 2; i < argc; i++) {
+ 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
+@@ -369,12 +375,12 @@ int main(int argc, char **argv)
+ 		bail("socket");
  
- 	return 0;
+ 	memset(&device, 0, sizeof(device));
+-	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
++	memcpy(device.ifr_name, interface, if_len + 1);
+ 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
+ 		bail("getting interface IP address");
  
-+fail_module_put:
-+	module_put(module);
- fail_unregister:
- 	i2c_unregister_device(client);
--	module_put(module);
- fail:
- 	return err;
- }
+ 	memset(&hwtstamp, 0, sizeof(hwtstamp));
+-	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
++	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
+ 	hwtstamp.ifr_data = (void *)&hwconfig;
+ 	memset(&hwconfig, 0, sizeof(hwconfig));
+ 	hwconfig.tx_type =
 -- 
 2.25.1
 
