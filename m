@@ -2,82 +2,87 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D41CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F60C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B5A206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005A120724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMnRMopl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="wrrcCV/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387857AbgF2Utv (ORCPT
+        id S2387982AbgF2UuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        Mon, 29 Jun 2020 16:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731482AbgF2TNk (ORCPT
+        with ESMTP id S1731473AbgF2TNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:40 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DD0C0086DE;
-        Mon, 29 Jun 2020 02:31:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so8039614pgb.6;
-        Mon, 29 Jun 2020 02:31:46 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:37 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C59C00E3D5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so14371902wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U8LfJvZ8Suv0UU3L8Vq/myysU79XrKbzAI5mVt1upHA=;
-        b=UMnRMoplidwqa2axc+13CTf6GjvG/QKjq19NX5mr89r2PyhZPX2MmNwdhqGn5qo/AE
-         M/IV5z4/XD05V3cPZvLn0BS3/ArPV/QS+ZEH9j7MePFM4pBR9FEAf7VN6gytNgMOuzwd
-         LpJdF3e/tF391hQub1QawVUYlZHIIYXfYfAVpsYvXVu9lab+VFzIx3/ydCnJKYCUXEmR
-         VdWO4gpulSb43KzGvbLkwnqUkfIXscpggHyFGR/ixKo889mdkn9g1akJKYcwTJTY+HIS
-         VYxamiq6E56/6ub1rzvsawOCbz6kYBvFRVeo28EdhIndpB5xhclS+Eh+UmAAuX0JpzPp
-         egYQ==
+        bh=hztYQwCZoivzm5mGWlL7y58+THNI2tIqMQL/obqgBh8=;
+        b=wrrcCV/eHtEzwZIw9VBAP2zQ1gydhl0t9E8l473TWC1k05eOBumji4Os1tiblAIJzO
+         4wOzef0hZPVEX5d6XcKMyCLmyT1b7YyADt6ahskiop6YYNc4kCYECitUEPTZ2F+fGW7i
+         6y8Uvfl5xMLYsCcJdugcnS3YtHoCINKs3ujOoex6Br78sdsqIuKWAPmqQBMdtMgzZc4Z
+         IgDmjSTOStUefzpm8hIuT/c2k0/+8rBOE6qocp0QN+rhvRzXyv46oLIUH3XFLdMSc0fo
+         EpUTI/q2/srGjYzlHBIkYZyaLKmmyxTE0lK2PPy6VX9gggVCK384yzLHsG9blwPMptuJ
+         bl8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U8LfJvZ8Suv0UU3L8Vq/myysU79XrKbzAI5mVt1upHA=;
-        b=mkQHfdvKLx3SYlrbGo5wZqvZQscv0ZW16Uyr2vuEJpbElvO84wlYkjcWTrZVPdHJlY
-         eWbPwPyNcsL7gD6JhrjrqxsCHxfDbr4DwSz4/deZVmfVspAp3IivN212DDPcH3i5Zyae
-         UpBI7o/QFV9plfNaQM+hDosjaWZdp2wxODRwFbgCck4caz+NQICDX/JCeClMO0glycwm
-         EddpX1RDM6r9GJLdrv6UZYOrvdeiYbIjBan3yy/NQF5l9GQ00NURJL2+42xioF+TluDb
-         uCl4hb5dQbDCMyJdc3kJ8QIMxCkAYcf2YSFHIZiGGEUGm6KgTwDUIG4dgiXIcn1/5k05
-         OB3g==
-X-Gm-Message-State: AOAM532G9bzmjJWiHy0DRt+vYNAIfsIiLFxm/DQLhMuQwS58eJXZdSbG
-        gh69ovekFAzttowPaQdynXE=
-X-Google-Smtp-Source: ABdhPJxCrwzkJMp9WcEN5z/vEr5Xrtqg4Z1I1sF8VTyeVMLmhzbwmlekF7t0Va8jyim44rh9w5wtUA==
-X-Received: by 2002:a63:b915:: with SMTP id z21mr9981906pge.145.1593423105725;
-        Mon, 29 Jun 2020 02:31:45 -0700 (PDT)
-Received: from varodek.localdomain ([106.210.40.90])
-        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.40
+        bh=hztYQwCZoivzm5mGWlL7y58+THNI2tIqMQL/obqgBh8=;
+        b=oeaFZ5+gE0u2CuonWxqk+45S809c/JKbSdVbvgEo4IsDW21dNPadAZV4lIonxIKOmS
+         KT2bRjsM8XcHen706ptdYn+LPEFhFVUZGA6RXTB3b0d53cn7+o17d7E1v1qq/0KmjkcM
+         bt5mWOGEzK+Wz9pFKr5ZnHh4jGvpVoDdMVs7qTtbQyHvk/2JEZGK2/NJR6ujV9glpj1R
+         m+RDUMlR3/Zfvo+nCT5YGYCHTk8bvXMDnxjubG9QU2WZtuRjiD5NPIqRD0+vnj44Qkh+
+         XXNMFAldNKs5B7mPs+Z1I8RORp4kUDvesQceZh7uFkY6iJ6S2mqFD7mZOxc1T02s8WKm
+         Oo3Q==
+X-Gm-Message-State: AOAM530WfjliuWse22atnKfDMMWBMxStbm7uUEcRBwYJaSDLmXsghB1X
+        fbobx9aYvSjmeqB4vpyWOGVAgA==
+X-Google-Smtp-Source: ABdhPJwFYLtezxZPsklmDvGqxvDLuEveoshSgJPr77DKJtvQVHg9COcCXF74kUionqbzZntdIBqycg==
+X-Received: by 2002:a7b:cc8b:: with SMTP id p11mr17633011wma.180.1593432258934;
+        Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 02:31:45 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 5/5] e100: use generic power management
-Date:   Mon, 29 Jun 2020 14:59:43 +0530
-Message-Id: <20200629092943.227910-6-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
-References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
+Date:   Mon, 29 Jun 2020 14:03:41 +0200
+Message-Id: <20200629120346.4382-6-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,101 +90,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM hooks, it was the responsibility of a driver to manage PCI
-states and also the device's power state. The generic approach is to let
-PCI core handle the work.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-e100_suspend() calls __e100_shutdown() to perform intermediate tasks.
-__e100_shutdown() calls pci_save_state() which is not recommended.
+Functions should only be static inline if they're very short. This
+devres helper is already over 10 lines and it will grow soon as we'll
+be improving upon its approach. Pull it into mdio_devres.c.
 
-e100_suspend() also calls __e100_power_off() which is calling PCI helper
-functions, pci_prepare_to_sleep(), pci_set_power_state(), along with
-pci_wake_from_d3(...,false). Hence, the functin call is removed and wol is
-disabled as earlier using device_wakeup_disable().
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/ethernet/intel/e100.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ drivers/net/phy/Makefile      |  2 +-
+ drivers/net/phy/mdio_devres.c | 18 ++++++++++++++++++
+ include/linux/phy.h           | 15 ++-------------
+ 3 files changed, 21 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/net/phy/mdio_devres.c
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index 1b8d015ebfb0..7506fb5eca8f 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -2997,8 +2997,6 @@ static void __e100_shutdown(struct pci_dev *pdev, bool *enable_wake)
- 		e100_down(nic);
- 	netif_device_detach(netdev);
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index dc9e53b511d6..896afdcac437 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -3,7 +3,7 @@
  
--	pci_save_state(pdev);
+ libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
+ 				   linkmode.o
+-mdio-bus-y			+= mdio_bus.o mdio_device.o
++mdio-bus-y			+= mdio_bus.o mdio_device.o mdio_devres.o
+ 
+ ifdef CONFIG_MDIO_DEVICE
+ obj-y				+= mdio-boardinfo.o
+diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+new file mode 100644
+index 000000000000..f0b4b6cfe5e3
+--- /dev/null
++++ b/drivers/net/phy/mdio_devres.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/phy.h>
++
++int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
++{
++	int ret;
++
++	if (!bus->is_managed)
++		return -EPERM;
++
++	ret = __mdiobus_register(bus, owner);
++	if (!ret)
++		bus->is_managed_registered = 1;
++
++	return ret;
++}
++EXPORT_SYMBOL(__devm_mdiobus_register);
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index b693b609b2f5..4935867f024b 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -313,20 +313,9 @@ static inline struct mii_bus *mdiobus_alloc(void)
+ }
+ 
+ int __mdiobus_register(struct mii_bus *bus, struct module *owner);
++int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner);
+ #define mdiobus_register(bus) __mdiobus_register(bus, THIS_MODULE)
+-static inline int devm_mdiobus_register(struct mii_bus *bus)
+-{
+-	int ret;
 -
- 	if ((nic->flags & wol_magic) | e100_asf(nic)) {
- 		/* enable reverse auto-negotiation */
- 		if (nic->phy == phy_82552_v) {
-@@ -3028,24 +3026,21 @@ static int __e100_power_off(struct pci_dev *pdev, bool wake)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int e100_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused e100_suspend(struct device *dev_d)
- {
- 	bool wake;
--	__e100_shutdown(pdev, &wake);
--	return __e100_power_off(pdev, wake);
-+	__e100_shutdown(to_pci_dev(dev_d), &wake);
-+
-+	device_wakeup_disable(dev_d);
-+
-+	return 0;
- }
- 
--static int e100_resume(struct pci_dev *pdev)
-+static int __maybe_unused e100_resume(struct device *dev_d)
- {
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev_d);
- 	struct nic *nic = netdev_priv(netdev);
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	/* ack any pending wake events, disable PME */
--	pci_enable_wake(pdev, PCI_D0, 0);
+-	if (!bus->is_managed)
+-		return -EPERM;
 -
- 	/* disable reverse auto-negotiation */
- 	if (nic->phy == phy_82552_v) {
- 		u16 smartspeed = mdio_read(netdev, nic->mii.phy_id,
-@@ -3062,7 +3057,6 @@ static int e100_resume(struct pci_dev *pdev)
+-	ret = mdiobus_register(bus);
+-	if (!ret)
+-		bus->is_managed_registered = 1;
+-
+-	return ret;
+-}
++#define devm_mdiobus_register(bus) __devm_mdiobus_register(bus, THIS_MODULE)
  
- 	return 0;
- }
--#endif /* CONFIG_PM */
- 
- static void e100_shutdown(struct pci_dev *pdev)
- {
-@@ -3150,16 +3144,17 @@ static const struct pci_error_handlers e100_err_handler = {
- 	.resume = e100_io_resume,
- };
- 
-+static SIMPLE_DEV_PM_OPS(e100_pm_ops, e100_suspend, e100_resume);
-+
- static struct pci_driver e100_driver = {
- 	.name =         DRV_NAME,
- 	.id_table =     e100_id_table,
- 	.probe =        e100_probe,
- 	.remove =       e100_remove,
--#ifdef CONFIG_PM
-+
- 	/* Power Management hooks */
--	.suspend =      e100_suspend,
--	.resume =       e100_resume,
--#endif
-+	.driver.pm =	&e100_pm_ops,
-+
- 	.shutdown =     e100_shutdown,
- 	.err_handler = &e100_err_handler,
- };
+ void mdiobus_unregister(struct mii_bus *bus);
+ void mdiobus_free(struct mii_bus *bus);
 -- 
-2.27.0
+2.26.1
 
