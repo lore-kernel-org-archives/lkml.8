@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0162C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E088FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4392082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A7320885
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460150;
-	bh=KEbRq+rTPTpNKQEudz8+xyiJH24D2HCcrAN6RI92WyE=;
+	s=default; t=1593460155;
+	bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYWG+gMlngkulmc4Sw4Rc0kvgnGQ9ASn37+E7m5yo3AxDBoiTV1A0aHBZOobx2MID
-	 YH4XAs+ITbfVF/e06aja5eKEUoMpOF0IvG27M8IJBJSl11vBq/HKGrarVNTXxPctQa
-	 EBiEhvVWHFld7QUawmoj0AhB/0MbpSMIYuuIJe6c=
+	b=kEZrXM2/9hO8ULifTHjs7vpJvcUSdxU/C8jUakau0KwVuFEr7w7UMtLd2xN80LTHV
+	 44+K4so92EjqhwsphxIFkP1vCPbQqzqwIFm5IEbieGirgJKJ9otJg8R0y6zh7Hy5yg
+	 wgkoxtIhuDenq2S3Whw1P6Yk3Z4V6kpoJK/Pgraw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbgF2TtJ (ORCPT
+        id S2388201AbgF2TtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387763AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387761AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343AC24873;
-        Mon, 29 Jun 2020 15:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32235248F7;
+        Mon, 29 Jun 2020 15:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444373;
-        bh=KEbRq+rTPTpNKQEudz8+xyiJH24D2HCcrAN6RI92WyE=;
+        s=default; t=1593444449;
+        bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pcBJsqEkDfXmFrHJyWjsbGc0m38Yb54+w3S9dQ2ScQVB2EmsI8KHTlOoWa8y7kReo
-         6GxN0X90I/zL33l4lDbVhMt0v64SKkkjVdtBggoKUd6oZloYVx6G/tZXNCepqvu4Ff
-         nJHdQQBYHF/O5NbKv+vaMGzXDDWmbdtF2gwXNx58=
+        b=xe+OSSn50pmDjZBcbX9bbdtUAIlD6gEMbqhcWKmJZzG6ga1vpOPhYCpNqh3QJnvQI
+         zYBNdaU79DfewX5tUYKFhN/wKDPD1xnWCou5YVe1n3vwzFb7CGuxMn5mnxi4XC0GwO
+         4qLd+ovs7nlAZ9gzzhY7GJ2YR31k7dICjvkhA3vY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steffen Maier <maier@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 050/178] scsi: zfcp: Fix panic on ERP timeout for previously dismissed ERP action
-Date:   Mon, 29 Jun 2020 11:23:15 -0400
-Message-Id: <20200629152523.2494198-51-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 129/178] s390/ptrace: fix setting syscall number
+Date:   Mon, 29 Jun 2020 11:24:34 -0400
+Message-Id: <20200629152523.2494198-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,131 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-commit 936e6b85da0476dd2edac7c51c68072da9fb4ba2 upstream.
+[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
 
-Suppose that, for unrelated reasons, FSF requests on behalf of recovery are
-very slow and can run into the ERP timeout.
+When strace wants to update the syscall number, it sets GPR2
+to the desired number and updates the GPR via PTRACE_SETREGSET.
+It doesn't update regs->int_code which would cause the old syscall
+executed on syscall restart. As we cannot change the ptrace ABI and
+don't have a field for the interruption code, check whether the tracee
+is in a syscall and the last instruction was svc. In that case assume
+that the tracer wants to update the syscall number and copy the GPR2
+value to regs->int_code.
 
-In the case at hand, we did adapter recovery to a large degree.  However
-due to the slowness a LUN open is pending so the corresponding fc_rport
-remains blocked.  After fast_io_fail_tmo we trigger close physical port
-recovery for the port under which the LUN should have been opened.  The new
-higher order port recovery dismisses the pending LUN open ERP action and
-dismisses the pending LUN open FSF request.  Such dismissal decouples the
-ERP action from the pending corresponding FSF request by setting
-zfcp_fsf_req->erp_action to NULL (among other things)
-[zfcp_erp_strategy_check_fsfreq()].
-
-If now the ERP timeout for the pending open LUN request runs out, we must
-not use zfcp_fsf_req->erp_action in the ERP timeout handler.  This is a
-problem since v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
-timer_setup()"). Before that we intentionally only passed zfcp_erp_action
-as context argument to zfcp_erp_timeout_handler().
-
-Note: The lifetime of the corresponding zfcp_fsf_req object continues until
-a (late) response or an (unrelated) adapter recovery.
-
-Just like the regular response path ignores dismissed requests
-[zfcp_fsf_req_complete() => zfcp_fsf_protstatus_eval() => return early] the
-ERP timeout handler now needs to ignore dismissed requests.  So simply
-return early in the ERP timeout handler if the FSF request is marked as
-dismissed in its status flags.  To protect against the race where
-zfcp_erp_strategy_check_fsfreq() dismisses and sets
-zfcp_fsf_req->erp_action to NULL after our previous status flag check,
-return early if zfcp_fsf_req->erp_action is NULL.  After all, the former
-ERP action does not need to be woken up as that was already done as part of
-the dismissal above [zfcp_erp_action_dismiss()].
-
-This fixes the following panic due to kernel page fault in IRQ context:
-
-Unable to handle kernel pointer dereference in virtual kernel address space
-Failing address: 0000000000000000 TEID: 0000000000000483
-Fault in home space mode while using kernel ASCE.
-AS:000009859238c00b R2:00000e3e7ffd000b R3:00000e3e7ffcc007 S:00000e3e7ffd7000 P:000000000000013d
-Oops: 0004 ilc:2 [#1] SMP
-Modules linked in: ...
-CPU: 82 PID: 311273 Comm: stress Kdump: loaded Tainted: G            E  X   ...
-Hardware name: IBM 8561 T01 701 (LPAR)
-Krnl PSW : 0404c00180000000 001fffff80549be0 (zfcp_erp_notify+0x40/0xc0 [zfcp])
-           R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-Krnl GPRS: 0000000000000080 00000e3d00000000 00000000000000f0 0000000000030000
-           000000010028e700 000000000400a39c 000000010028e700 00000e3e7cf87e02
-           0000000010000000 0700098591cb67f0 0000000000000000 0000000000000000
-           0000033840e9a000 0000000000000000 001fffe008d6bc18 001fffe008d6bbc8
-Krnl Code: 001fffff80549bd4: a7180000            lhi     %r1,0
-           001fffff80549bd8: 4120a0f0            la      %r2,240(%r10)
-          #001fffff80549bdc: a53e0003            llilh   %r3,3
-          >001fffff80549be0: ba132000            cs      %r1,%r3,0(%r2)
-           001fffff80549be4: a7740037            brc     7,1fffff80549c52
-           001fffff80549be8: e320b0180004        lg      %r2,24(%r11)
-           001fffff80549bee: e31020e00004        lg      %r1,224(%r2)
-           001fffff80549bf4: 412020e0            la      %r2,224(%r2)
-Call Trace:
- [<001fffff80549be0>] zfcp_erp_notify+0x40/0xc0 [zfcp]
- [<00000985915e26f0>] call_timer_fn+0x38/0x190
- [<00000985915e2944>] expire_timers+0xfc/0x190
- [<00000985915e2ac4>] run_timer_softirq+0xec/0x218
- [<0000098591ca7c4c>] __do_softirq+0x144/0x398
- [<00000985915110aa>] do_softirq_own_stack+0x72/0x88
- [<0000098591551b58>] irq_exit+0xb0/0xb8
- [<0000098591510c6a>] do_IRQ+0x82/0xb0
- [<0000098591ca7140>] ext_int_handler+0x128/0x12c
- [<0000098591722d98>] clear_subpage.constprop.13+0x38/0x60
-([<000009859172ae4c>] clear_huge_page+0xec/0x250)
- [<000009859177e7a2>] do_huge_pmd_anonymous_page+0x32a/0x768
- [<000009859172a712>] __handle_mm_fault+0x88a/0x900
- [<000009859172a860>] handle_mm_fault+0xd8/0x1b0
- [<0000098591529ef6>] do_dat_exception+0x136/0x3e8
- [<0000098591ca6d34>] pgm_check_handler+0x1c8/0x220
-Last Breaking-Event-Address:
- [<001fffff80549c88>] zfcp_erp_timeout_handler+0x10/0x18 [zfcp]
-Kernel panic - not syncing: Fatal exception in interrupt
-
-Link: https://lore.kernel.org/r/20200623140242.98864-1-maier@linux.ibm.com
-Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
-Cc: <stable@vger.kernel.org> #4.15+
-Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_erp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index cb84125ab80d4..08dc2efb7d8a5 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -576,7 +576,10 @@ static void zfcp_erp_strategy_check_fsfreq(struct zfcp_erp_action *act)
- 				   ZFCP_STATUS_ERP_TIMEDOUT)) {
- 			req->status |= ZFCP_STATUS_FSFREQ_DISMISSED;
- 			zfcp_dbf_rec_run("erscf_1", act);
--			req->erp_action = NULL;
-+			/* lock-free concurrent access with
-+			 * zfcp_erp_timeout_handler()
-+			 */
-+			WRITE_ONCE(req->erp_action, NULL);
- 		}
- 		if (act->status & ZFCP_STATUS_ERP_TIMEDOUT)
- 			zfcp_dbf_rec_run("erscf_2", act);
-@@ -612,8 +615,14 @@ void zfcp_erp_notify(struct zfcp_erp_action *erp_action, unsigned long set_mask)
- void zfcp_erp_timeout_handler(struct timer_list *t)
- {
- 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
--	struct zfcp_erp_action *act = fsf_req->erp_action;
-+	struct zfcp_erp_action *act;
- 
-+	if (fsf_req->status & ZFCP_STATUS_FSFREQ_DISMISSED)
-+		return;
-+	/* lock-free concurrent access with zfcp_erp_strategy_check_fsfreq() */
-+	act = READ_ONCE(fsf_req->erp_action);
-+	if (!act)
-+		return;
- 	zfcp_erp_notify(act, ZFCP_STATUS_ERP_TIMEDOUT);
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 5a2b1501d9983..5aa786063eb3e 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -324,6 +324,25 @@ static inline void __poke_user_per(struct task_struct *child,
+ 		child->thread.per_user.end = data;
  }
  
++static void fixup_int_code(struct task_struct *child, addr_t data)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	int ilc = regs->int_code >> 16;
++	u16 insn;
++
++	if (ilc > 6)
++		return;
++
++	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
++			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
++		return;
++
++	/* double check that tracee stopped on svc instruction */
++	if ((insn >> 8) != 0xa)
++		return;
++
++	regs->int_code = 0x20000 | (data & 0xffff);
++}
+ /*
+  * Write a word to the user area of a process at location addr. This
+  * operation does have an additional problem compared to peek_user.
+@@ -335,7 +354,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 	struct user *dummy = NULL;
+ 	addr_t offset;
+ 
++
+ 	if (addr < (addr_t) &dummy->regs.acrs) {
++		struct pt_regs *regs = task_pt_regs(child);
+ 		/*
+ 		 * psw and gprs are stored on the stack
+ 		 */
+@@ -353,7 +374,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 				/* Invalid addressing mode bits */
+ 				return -EINVAL;
+ 		}
+-		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
++
++		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++			addr == offsetof(struct user, regs.gprs[2]))
++			fixup_int_code(child, data);
++		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 
+ 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
+ 		/*
+@@ -719,6 +744,10 @@ static int __poke_user_compat(struct task_struct *child,
+ 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
+ 				(__u64)(tmp & PSW32_ADDR_AMODE);
+ 		} else {
++
++			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++				addr == offsetof(struct compat_user, regs.gprs[2]))
++				fixup_int_code(child, data);
+ 			/* gpr 0-15 */
+ 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
+ 		}
 -- 
 2.25.1
 
