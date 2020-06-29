@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A80BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E445C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09EDF2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B162053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457238;
-	bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
+	s=default; t=1593457240;
+	bh=Z+lOGaPeEiSVC2XbgGFRsgc+lOH7cZOhLcUrKI7FS/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWASIKNJhPlaU+inUQZltkMTyrhLlfoXeOq4ELBNDg8nl3GMxnKcgGhmkaBZzn4yF
-	 dwRPHKtMBv/XQVMWOGYkithqQxVlrLoXGMrbHPTsciNA9p8hNrf3FeFIBxzfWUAJe6
-	 4QD685T6+ovwFkDXj0ZSFAlc+ZeIceMRqoDcFkGQ=
+	b=p7/OKLEraNKQ918zTGlm6y0szmtcUEo4xEtodEkOpE6tFBM7G7IkgbJyumpx+QHYw
+	 c7d4uOBVXFTUewn6UHmibsRlWC6bqSY1317UlJezkdeSTBNNwyR0h0koHqw0udDEWn
+	 y/BhBF1PvQ08q6kUVdwrKrvgboxfGr/qbPsF9o00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbgF2TAg (ORCPT
+        id S1730403AbgF2TAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:00:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730350AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8869254E4;
-        Mon, 29 Jun 2020 15:53:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 823392550F;
+        Mon, 29 Jun 2020 15:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446040;
-        bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
+        s=default; t=1593446070;
+        bh=Z+lOGaPeEiSVC2XbgGFRsgc+lOH7cZOhLcUrKI7FS/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKzGOSAE3CPs1q+gq4jbt3ZprKyHC59ZYtEM+Mm8ThkA1Zo9MnxTVH5cT3VZI6b8l
-         Z1hE0ydo4c2dN+cc4R/fOv/DM7xTO29d9q0XiDjWGy/teXIirHN7KvnxV7XdFmjFod
-         IoXMuWI2jCg7XHokbCeI81TcgGK/69vssAOwhCfk=
+        b=HDdyrmoUUrquJ4G725aJBSOBERL+tuVMUBsvtya7Bs6m6oXrgR7o1L/dlKxPaOn2B
+         f0LHGg0co2RI60G2mFnmgsK0EtmUiVYZZinZVnXY/Pa6yew3XUt+UZUpgZ5pVBJVNV
+         SrhCi+ur6Uo0kTn8mNK8XdJN24hj7tEQK3KdD7YE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fedor Tokarev <ftokarev@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 045/135] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
-Date:   Mon, 29 Jun 2020 11:51:39 -0400
-Message-Id: <20200629155309.2495516-46-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>, Mike Gerow <gerow@google.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        =?UTF-8?q?Kai=20L=C3=BCke?= <kai@kinvolk.io>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 069/135] crypto: algboss - don't wait during notifier callback
+Date:   Mon, 29 Jun 2020 11:52:03 -0400
+Message-Id: <20200629155309.2495516-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -65,43 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+commit 77251e41f89a813b4090f5199442f217bbf11297 upstream.
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
+When a crypto template needs to be instantiated, CRYPTO_MSG_ALG_REQUEST
+is sent to crypto_chain.  cryptomgr_schedule_probe() handles this by
+starting a thread to instantiate the template, then waiting for this
+thread to complete via crypto_larval::completion.
 
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This can deadlock because instantiating the template may require loading
+modules, and this (apparently depending on userspace) may need to wait
+for the crc-t10dif module (lib/crc-t10dif.c) to be loaded.  But
+crc-t10dif's module_init function uses crypto_register_notifier() and
+therefore takes crypto_chain.rwsem for write.  That can't proceed until
+the notifier callback has finished, as it holds this semaphore for read.
+
+Fix this by removing the wait on crypto_larval::completion from within
+cryptomgr_schedule_probe().  It's actually unnecessary because
+crypto_alg_mod_lookup() calls crypto_larval_wait() itself after sending
+CRYPTO_MSG_ALG_REQUEST.
+
+This only actually became a problem in v4.20 due to commit b76377543b73
+("crc-t10dif: Pick better transform if one becomes available"), but the
+unnecessary wait was much older.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207159
+Reported-by: Mike Gerow <gerow@google.com>
+Fixes: 398710379f51 ("crypto: algapi - Move larval completion into algboss")
+Cc: <stable@vger.kernel.org> # v3.6+
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: Kai Lüke <kai@kinvolk.io>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/algboss.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 2e0a6f92e563d..8391c27855501 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/crypto/algboss.c b/crypto/algboss.c
+index 6e39d9c05b98a..5cbc588555ca0 100644
+--- a/crypto/algboss.c
++++ b/crypto/algboss.c
+@@ -194,8 +194,6 @@ static int cryptomgr_schedule_probe(struct crypto_larval *larval)
+ 	if (IS_ERR(thread))
+ 		goto err_put_larval;
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+-	wait_for_completion_interruptible(&larval->completion);
+-
+ 	return NOTIFY_STOP;
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
- 
- 	strcat(buf, scopebuf);
+ err_put_larval:
 -- 
 2.25.1
 
