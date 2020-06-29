@@ -2,108 +2,193 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59341C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B272065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5924B20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B0UhxI61"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nwr4GodQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgF2CDX (ORCPT
+        id S1726382AbgF2CIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
+        Sun, 28 Jun 2020 22:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgF2CDX (ORCPT
+        with ESMTP id S1726071AbgF2CIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:03:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38918C03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:03:22 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p3so7595450pgh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:03:22 -0700 (PDT)
+        Sun, 28 Jun 2020 22:08:46 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F756C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:08:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so7595389pgk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:08:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QDZVkEGnIrKfbxBfohB8JpyHIKxziKsOzFFQJQW1Y2g=;
-        b=B0UhxI61raVzv+EmENSz8VpoRV7j2xH27ETZQ52gSc61GH1r/h/ezXpRdNhwEbZHtK
-         uBy8nUuY8AqprEoCZxvLTVbKPajt3AEutHfbdumpGqZF0QJpQ1Lrrjn0JqP2dW/V/vTp
-         CKJkhzsPVPftyk8Su7NczWON8qvTBXgbq0dBHTeyMy9gGvsoENibT8lhswpFsBOfz3Yx
-         N+4hBdcssVo/al2DqZvXi48JBD9Qk2UPSyY4Ann/JkDgP75TCf16LaXHVRTAdh0s4Jle
-         KNFS1cDM1sqceGyjDPKA53I4oYdjBEode/i43sgesSCkXk1R8a2UZmdcGwphqJy6W2jR
-         KmtQ==
+        bh=MDDCd788rUw0MGM5PSVbNuNM46LDcKL26lH89OKNmYM=;
+        b=nwr4GodQACkoeCYNSjdFKRwPAB+Fle2aLkM8RYCYFPfRpUHdvsoeIQiT5dVzcIKhTc
+         6BVmu4pm5vMFbEissipgoM3M4RLPnBKCfgCPz4TlAXLIu6TSUf1wgsYUvE0+EvR+ZoaA
+         F7Vo2Gu7sJ+4kcceSp7Zin0BdBnu9KOYZTxe6sdxXfwnz6YNq4H0FcaBl5xXQ+FvKpkd
+         lXQkkgdLLwD5ce0O+bt4FOQEIjV/3Bj6PdQyjpzesJsbdC9/XXgM5iJG7Nh3DNZsfNzs
+         wG5b4xsn8vGFqKlIXEO2QOYZY3kgovpv6NO96SJw6MKr8CKvMxgC3r8SuCyFgbl0bgRb
+         xOfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QDZVkEGnIrKfbxBfohB8JpyHIKxziKsOzFFQJQW1Y2g=;
-        b=Vq0yaO9m9n9O/t1l38GLU3Yeyrss0K/mkXm0YzPvgP15q8x3Qn9oZM4ACjld0ql9qr
-         WcHMpGkX3kWBCcYZmK5q30OBE5ACcIoj/puGkVILsPV/4F72W04Um3sxXuLzIzI0NjNi
-         HEHV5F3wF0tQOuXXS5Oi3q7kODx/YtMIuEozkLmuY5QJnDdx361+pEKF+HP+ooIu5v0h
-         CaIQylD0Su7M75qkJ9fzODxS6zTf5FFfG18KdV3xcvzRa79+PapxicY590uxB/Z3CMiy
-         gdib5jLkg2FttJK4cRHdOwZzZm78TAwqeT6tjiiz2bb7I6G/FOqyWeP3faZZIcUjq2YV
-         QIWg==
-X-Gm-Message-State: AOAM533ISsAPFH4df2Ek5HxmFAIhv7iehu05AM8yROSt3AC4+w2P7Chh
-        Qon28UoahLA1oiZ4llBuERKRKAyAcgc=
-X-Google-Smtp-Source: ABdhPJxxkJXjW4f5no0NjX84TxHnLzmVO8fiRUg6nyOW06GtGPhTBdBZIsVWaxOWXIxLMVXsL+WGCg==
-X-Received: by 2002:aa7:9184:: with SMTP id x4mr12338959pfa.271.1593396201686;
-        Sun, 28 Jun 2020 19:03:21 -0700 (PDT)
+        bh=MDDCd788rUw0MGM5PSVbNuNM46LDcKL26lH89OKNmYM=;
+        b=E/5dDbFr76wm8Je+95QeM/eFH9NW+2CtT2y3P0eFGi0vZHrzljXOwuErk9b1DwxV7A
+         79ejvePjuqovSffDqpdBi88PjKLqg/e/HHE6FykFXF5HfBNytw6r7K2XAGjpsUN/72OV
+         ihTdXTijcJKzXCQHBoSQToCISEZYfIbjHPDpzhnvqdxZhIcoU0VgpGREeVeTHDgUvPUq
+         mzTSMZXCIDdmmn9Wq3m24xrNLwLwsWIm+4a9bvmoPSuDuvqOflhemaIy8zR3j2Xuoi71
+         6ZuK/oua0kCK5/XmJm9Yui54delEuNDDykZrVm6Iq4n98+Zi574ujq2rs/8fR5KeVgXv
+         xlSw==
+X-Gm-Message-State: AOAM530JFcc126kaJF3upVFZgixQwqyeZoPH60vlAKq+KZQsxXknBEHq
+        Leyl7n3LqLpExxVXHwQXYsXYqQ==
+X-Google-Smtp-Source: ABdhPJxGGdi2rkcapX678iYFI17fmIJe3uE1LOCpZM7Mv2TGYUWZYnq3VSzXCH7Y/9TNa72WRe8pTg==
+X-Received: by 2002:a62:1a87:: with SMTP id a129mr12441612pfa.95.1593396525893;
+        Sun, 28 Jun 2020 19:08:45 -0700 (PDT)
 Received: from localhost ([122.172.127.76])
-        by smtp.gmail.com with ESMTPSA id s10sm4726713pjf.3.2020.06.28.19.03.20
+        by smtp.gmail.com with ESMTPSA id u12sm16708879pjy.37.2020.06.28.19.08.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jun 2020 19:03:21 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 07:33:18 +0530
+        Sun, 28 Jun 2020 19:08:45 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 07:38:43 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: spear: Align L2 cache-controller nodename with
- dtschema
-Message-ID: <20200629020318.etzz3xsju7shcglr@vireshk-i7>
-References: <20200626080557.3680-1-krzk@kernel.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 3/3] cpufreq: Specify default governor on command line
+Message-ID: <20200629020843.erntkwfprgi5ugqu@vireshk-i7>
+References: <cover.1593143118.git.viresh.kumar@linaro.org>
+ <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
+ <20200626155750.GA540785@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626080557.3680-1-krzk@kernel.org>
+In-Reply-To: <20200626155750.GA540785@google.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-06-20, 10:05, Krzysztof Kozlowski wrote:
-> Fix dtschema validator warnings like:
->     l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+On 26-06-20, 16:57, Quentin Perret wrote:
+> On Friday 26 Jun 2020 at 09:21:44 (+0530), Viresh Kumar wrote:
+> > index e798a1193bdf..93c6399c1a42 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -50,6 +50,9 @@ static LIST_HEAD(cpufreq_governor_list);
+> >  #define for_each_governor(__governor)				\
+> >  	list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
+> >  
+> > +static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
+> > +static char default_governor[CPUFREQ_NAME_LEN];
+> > +
+> >  /**
+> >   * The "cpufreq driver" - the arch- or hardware-dependent low
+> >   * level driver of CPUFreq support, and its spinlock. This lock
+> > @@ -1061,7 +1064,6 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
+> >  
+> >  static int cpufreq_init_policy(struct cpufreq_policy *policy)
+> >  {
+> > -	struct cpufreq_governor *def_gov = cpufreq_default_governor();
+> >  	struct cpufreq_governor *gov = NULL;
+> >  	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+> >  	bool put_governor = false;
+> > @@ -1071,22 +1073,29 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+> >  		/* Update policy governor to the one used before hotplug. */
+> >  		gov = get_governor(policy->last_governor);
+> >  		if (gov) {
+> > -			put_governor = true;
+> >  			pr_debug("Restoring governor %s for cpu %d\n",
+> > -				 policy->governor->name, policy->cpu);
+> > -		} else if (def_gov) {
+> > -			gov = def_gov;
+> > +				 gov->name, policy->cpu);
+> >  		} else {
+> > -			return -ENODATA;
+> > +			gov = get_governor(default_governor);
+> > +		}
+> > +
+> > +		if (gov) {
+> > +			put_governor = true;
+> > +		} else {
+> > +			gov = cpufreq_default_governor();
+> > +			if (!gov)
+> > +				return -ENODATA;
+> >  		}
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/spear13xx.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-> index f187da4485f4..c87b881b2c8b 100644
-> --- a/arch/arm/boot/dts/spear13xx.dtsi
-> +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> @@ -43,7 +43,7 @@
->  			      0 7 0x04>;
->  	};
->  
-> -	L2: l2-cache {
-> +	L2: cache-controller {
->  		    compatible = "arm,pl310-cache";
->  		    reg = <0xed000000 0x1000>;
->  		    cache-unified;
+> As mentioned on patch 01, doing put_module() below if gov != NULL would
+> avoid this dance with put_governor, but this works too, so no strong
+> opinion.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+I did it this way because the code looks buggy otherwise, even though
+it isn't as put_module() handles it just fine. And so I would like to
+keep it this way, unless there are two votes against mine :)
+
+> > +
+> >  	} else {
+> > +
+> >  		/* Use the default policy if there is no last_policy. */
+> >  		if (policy->last_policy) {
+> >  			pol = policy->last_policy;
+> > -		} else if (def_gov) {
+> > -			pol = cpufreq_parse_policy(def_gov->name);
+> > +		} else {
+> > +			pol = cpufreq_parse_policy(default_governor);
+> >  			/*
+> > -			 * In case the default governor is neiter "performance"
+> > +			 * In case the default governor is neither "performance"
+> >  			 * nor "powersave", fall back to the initial policy
+> >  			 * value set by the driver.
+> >  			 */
+> > @@ -2796,13 +2805,22 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
+> >  
+> >  static int __init cpufreq_core_init(void)
+> >  {
+> > +	struct cpufreq_governor *gov = cpufreq_default_governor();
+> > +	char *name = gov->name;
+> > +
+> >  	if (cpufreq_disabled())
+> >  		return -ENODEV;
+> >  
+> >  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+> >  	BUG_ON(!cpufreq_global_kobject);
+> >  
+> > +	if (strlen(cpufreq_param_governor))
+> > +		name = cpufreq_param_governor;
+> > +
+> > +	strncpy(default_governor, name, CPUFREQ_NAME_LEN);
+> 
+> Do we need both cpufreq_param_governor and default_governor?
+> Could we move everything to only one of them? Something a little bit
+> like that maybe?
+
+No because we want to fallback to the default governor when the
+governor shown by the cpufreq_param_governor is valid but missing.
+
+> Also, one thing to keep in mind with this version (or the one you
+> suggested) is that if the command line parameter is not valid, we will
+> not fallback on the builtin default for the ->setpolicy() case. But I
+> suppose one might argue this is a reasonable behaviour, so no objection
+> from me.
+
+Right, I did that on purpose.
+
+> Otherwise, apart from these nits, I gave this a go on my setup, with
+> builtin and modular governors & drivers, and everything worked exactly
+> as expected.
+
+Thanks for testing it out Quentin.
 
 -- 
 viresh
