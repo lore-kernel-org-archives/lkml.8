@@ -2,140 +2,300 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA317C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A06FA20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1280204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="VEtU5b+E";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L6DQtBRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgF2Svb (ORCPT
+        id S1729161AbgF2Svu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:51:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42396 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbgF2SvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:00 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49wPzW0x6Rz9tyrM;
-        Mon, 29 Jun 2020 13:15:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cKlGC0OSkxdq; Mon, 29 Jun 2020 13:15:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49wPzV70Lcz9tyqw;
-        Mon, 29 Jun 2020 13:15:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 42A3D8B7A0;
-        Mon, 29 Jun 2020 13:15:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xebvCT7XwNct; Mon, 29 Jun 2020 13:15:25 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 00C338B799;
-        Mon, 29 Jun 2020 13:15:24 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0000565B29; Mon, 29 Jun 2020 11:15:24 +0000 (UTC)
-Message-Id: <893425e32cd0a003539573b2d115e0ffa98bc26c.1593428200.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1593428200.git.christophe.leroy@csgroup.eu>
-References: <cover.1593428200.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 5/6] powerpc/32s: Kernel space starts at TASK_SIZE
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 29 Jun 2020 11:15:24 +0000 (UTC)
+        Mon, 29 Jun 2020 14:51:50 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35733 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726831AbgF2Sva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:51:30 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 14CE6580597;
+        Mon, 29 Jun 2020 11:21:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 29 Jun 2020 11:21:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=krUOveEdR6vT0SBK3qtfa5n706o
+        ryNuDtBLGwOel0Fo=; b=VEtU5b+EqJvRVoGcecDwOgK9INc1igaqGpNTrbyWjp7
+        t4GknrXv7tKctUi5JWrH2p6O6uYYIDpxpq2pM/8mTaxmakYjDGs2EQutbHreQYwd
+        fJv+kZaW3ewSRuY8FVsI1HEbFNUwl4erX42gfLwEeTg1ns00ICau45mAoNseOhbC
+        8kD0h8BGjs8fPp3YjhpxkYlwLEC/2n2D77Szii/1UwuSkmfTTqEGQnnsoyY3GpIl
+        EHBhoY9KmtyUnCsveKv0MW5JG2xy2qCB6TaqQxf0mcFwx0IB64WHhkgiQN6O0lpn
+        DT8q0Ta5pesXagJSN5DYMMpMFpbUCjfwZIr1JA4Z/0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=krUOve
+        EdR6vT0SBK3qtfa5n706oryNuDtBLGwOel0Fo=; b=L6DQtBRbaLn4l3ffIzF0Bw
+        bJfxa6fVOnQh9qO0p0mJrmSfuq9FDhIP89CuSO4gemX0ANlp8rukEIP6+d25PuP6
+        a3QSGPxF/k+Xcx7uqFlMQ2P4OF4kTh9ELsXnA5re3hD2MOlpZgMYXre6ehH5kS4a
+        cCxOeIagn8x5pSEn1VwUNGpbyjjxxHPsAy6Hdca09MtGrRJpAf6loosOhXjVBlR3
+        Ny+o5D6hqOsFi534Rc4VwRjOE/iQBXI0yjAY/wmsvZwTjr3/tXfURRfYZhIh+Mk8
+        hd14z5Ml3RtHtEw0mRB/nAAy5xb04b4c9LOIvEKkmyqZj/VrfLGJuhd6ky+jhXhA
+        ==
+X-ME-Sender: <xms:6Qb6Xs5A65jiVMk-TBJ7E6MWYyS4QOEbvSnIUioCEO_-3JMTBBRYfA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudelledgudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:6Qb6Xt7HQSIAah0eJg07s37QLKiq_njkDArZ0GZNou-AaxfXfxeVWA>
+    <xmx:6Qb6Xrflm2twAlFg4vyHYS5sN91S-uNRTR0cQNey4cTSqfSaVfk9JA>
+    <xmx:6Qb6XhKlWp2txSt5ptrbZvHChxtJtnYggh9FY3iKjY9qUnbEHvLN1w>
+    <xmx:7Qb6Xg7aRoYgPeksuOqXA0bw-zrOHrTGsRA0vVtbBGtdnNedV-Vj5g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 83B73328005E;
+        Mon, 29 Jun 2020 11:21:13 -0400 (EDT)
+Date:   Mon, 29 Jun 2020 17:21:12 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, srinivas.kandagatla@linaro.org,
+        linus.walleij@linaro.org, anarsoul@gmail.com,
+        tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+Subject: Re: [PATCH v2 09/11] arm64: allwinner: A100: add the basical
+ Allwinner A100 DTSI file
+Message-ID: <20200629152112.fo3kgcztlutj66hc@gilmour.lan>
+References: <20200622025907.32574-1-frank@allwinnertech.com>
+ <20200622025907.32574-10-frank@allwinnertech.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lbejoaecuizw4km4"
+Content-Disposition: inline
+In-Reply-To: <20200622025907.32574-10-frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel space starts at TASK_SIZE. Select kernel page table
-when address is over TASK_SIZE.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/head_32.S       | 12 ++++++------
- arch/powerpc/mm/book3s32/hash_low.S |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+--lbejoaecuizw4km4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index 705c042309d8..bbef6ce8322b 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -474,7 +474,7 @@ InstructionTLBMiss:
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_IMISS
- #if defined(CONFIG_MODULES) || defined(CONFIG_DEBUG_PAGEALLOC)
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- #endif
- 	mfspr	r2, SPRN_SPRG_PGDIR
-@@ -484,7 +484,7 @@ InstructionTLBMiss:
- 	li	r1,_PAGE_PRESENT | _PAGE_EXEC
- #endif
- #if defined(CONFIG_MODULES) || defined(CONFIG_DEBUG_PAGEALLOC)
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- #endif
-@@ -541,7 +541,7 @@ DataLoadTLBMiss:
-  */
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_DMISS
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- 	mfspr	r2, SPRN_SPRG_PGDIR
- #ifdef CONFIG_SWAP
-@@ -549,7 +549,7 @@ DataLoadTLBMiss:
- #else
- 	li	r1, _PAGE_PRESENT
- #endif
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- 112:	rlwimi	r2,r3,12,20,29		/* insert top 10 bits of address */
-@@ -621,7 +621,7 @@ DataStoreTLBMiss:
-  */
- 	/* Get PTE (linux-style) and check access */
- 	mfspr	r3,SPRN_DMISS
--	lis	r1,PAGE_OFFSET@h		/* check if kernel address */
-+	lis	r1, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r1,r3
- 	mfspr	r2, SPRN_SPRG_PGDIR
- #ifdef CONFIG_SWAP
-@@ -629,7 +629,7 @@ DataStoreTLBMiss:
- #else
- 	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT
- #endif
--	bge-	112f
-+	bgt-	112f
- 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r2, r2, (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
- 112:	rlwimi	r2,r3,12,20,29		/* insert top 10 bits of address */
-diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
-index 923ad8f374eb..1690d369688b 100644
---- a/arch/powerpc/mm/book3s32/hash_low.S
-+++ b/arch/powerpc/mm/book3s32/hash_low.S
-@@ -62,7 +62,7 @@ _GLOBAL(hash_page)
- 	isync
- #endif
- 	/* Get PTE (linux-style) and check access */
--	lis	r0,KERNELBASE@h		/* check if kernel address */
-+	lis	r0, TASK_SIZE@h		/* check if kernel address */
- 	cmplw	0,r4,r0
- 	ori	r3,r3,_PAGE_USER|_PAGE_PRESENT /* test low addresses as user */
- 	mfspr	r5, SPRN_SPRG_PGDIR	/* phys page-table root */
--- 
-2.25.0
+Hi,
 
+On Mon, Jun 22, 2020 at 10:59:05AM +0800, Frank Lee wrote:
+> Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
+> the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
+> and UART support.
+>=20
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 337 +++++++++++++++++++=
+++++++
+>  1 file changed, 337 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-a100.dtsi
+> new file mode 100644
+> index 0000000..5133897
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+> @@ -0,0 +1,337 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/sun50i-a100-ccu.h>
+> +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
+> +
+> +/ {
+> +	interrupt-parent =3D <&gic>;
+> +	#address-cells =3D <2>;
+> +	#size-cells =3D <2>;
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible =3D "arm,armv8";
+> +			device_type =3D "cpu";
+> +			reg =3D <0x0>;
+> +			enable-method =3D "psci";
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible =3D "arm,armv8";
+> +			device_type =3D "cpu";
+> +			reg =3D <0x1>;
+> +			enable-method =3D "psci";
+> +		};
+> +
+> +		cpu@2 {
+> +			compatible =3D "arm,armv8";
+> +			device_type =3D "cpu";
+> +			reg =3D <0x2>;
+> +			enable-method =3D "psci";
+> +		};
+> +
+> +		cpu@3 {
+> +			compatible =3D "arm,armv8";
+> +			device_type =3D "cpu";
+> +			reg =3D <0x3>;
+> +			enable-method =3D "psci";
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible =3D "arm,psci-1.0";
+> +		method =3D "smc";
+> +	};
+> +
+> +	iosc: internal-osc-clk {
+> +		compatible =3D "fixed-clock";
+> +		clock-frequency =3D <16000000>;
+> +		clock-accuracy =3D <300000000>;
+> +		clock-output-names =3D "iosc";
+> +		#clock-cells =3D <0>;
+> +	};
+> +
+> +	dcxo24M: dcxo24M_clk {
+
+You shouldn't have underscores in the node names.
+
+> +		compatible =3D "fixed-clock";
+> +		clock-frequency =3D <24000000>;
+> +		clock-output-names =3D "dcxo24M";
+> +		#clock-cells =3D <0>;
+> +	};
+> +
+> +	osc32k: osc32k_clk {
+
+Same thing here
+
+Also, ordering by node name here would be nice
+
+> +		compatible =3D "fixed-clock";
+> +		clock-frequency =3D <32768>;
+> +		clock-output-names =3D "osc32k";
+> +		#clock-cells =3D <0>;
+> +	};
+> +
+> +	timer {
+> +		compatible =3D "arm,armv8-timer";
+> +		interrupts =3D <GIC_PPI 13
+> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 14
+> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 11
+> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 10
+> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+
+Does it suffer from the same time instability than the one in the A64?
+If so, you probably want to enable the workaround too.
+
+> +	soc: soc {
+
+Do you really need a label for that node?
+
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+
+Why do you need cells with 2 items here? You don't seem to be using
+them.
+
+> +		r_i2c0: i2c@7081400 {
+> +			compatible =3D "allwinner,sun6i-a31-i2c";
+> +			reg =3D <0x0 0x07081400 0x0 0x400>;
+> +			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&ccu CLK_BUS_I2C0>;
+> +			resets =3D <&ccu RST_BUS_I2C0>;
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&r_i2c0_pins>;
+> +			status =3D "disabled";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +		};
+> +
+> +		r_i2c1: i2c@7081800 {
+> +			compatible =3D "allwinner,sun6i-a31-i2c";
+> +			reg =3D <0x0 0x07081800 0x0 0x400>;
+> +			interrupts =3D <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&ccu CLK_BUS_I2C1>;
+> +			resets =3D <&ccu RST_BUS_I2C1>;
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&r_i2c1_pins>;
+> +			status =3D "disabled";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +		};
+> +	};
+
+The clocks and resets phandles and IDs don't look right
+
+> +	thermal-zones {
+> +		cpu_thermal_zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 0>;
+> +		};
+
+Please add a new line here
+
+> +		gpu_thermal_zone{
+
+You should have a space here    ^=20
+
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 1>;
+> +		};
+
+newline
+
+> +		ddr_thermal_zone{
+
+space                           ^=20
+
+Thanks!
+Maxime
+
+--lbejoaecuizw4km4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvoG6AAKCRDj7w1vZxhR
+xRRCAQCSyQ9nHql6TEykxi9l3Cj8dRiNVK0CnZJ3fTQSc1l2AAD/fJV1R7VkbxZi
+OFU2QxjJ1CZU81YE8OkmeFr/wMlCsw8=
+=kgim
+-----END PGP SIGNATURE-----
+
+--lbejoaecuizw4km4--
