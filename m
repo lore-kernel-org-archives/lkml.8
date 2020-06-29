@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC36C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83643C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B431207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0DE207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461160;
-	bh=nLNVnUkhRI/NJ1/56ogLVmoCKmOrnZaaRd6qx79OxKI=;
+	s=default; t=1593461164;
+	bh=5a4vMiA89yhb7XOQaVEtSlAjPYdcO6kAdT0WJKVbJVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvY/BJc45EyAw6pj2xbpeqiceQZl7j8xX1io8Tz84IIzX5lLjlH9dG3UX7GzoUaSc
-	 PXt0a+4qgAHIru6jkQ3le499H7xXtMjlRrYvTMl+ihcqQlwjKXFyb/o7HKHgORcUXL
-	 eV51tVJixBopXK5pWGKMaaap6uJBPl+uWhtwM+E4=
+	b=phRuZaKEH9GRJzY9rXDBoyV4CsucoZOWDXNNDXjFC3st+c6Zo6H95lpn4YrYSuRxJ
+	 m2buugbUnX9kURBOhHEcSDiwEjBfHetnCO+T5mMPh+fMOVGnp+AI64iTEheKgznKvp
+	 Yv08jADuW66q6pWfmVA8rWKdhIQsym24fwP0DBBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbgF2UF6 (ORCPT
+        id S1726965AbgF2UGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732962AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732968AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 347C02531B;
-        Mon, 29 Jun 2020 15:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A01252FB;
+        Mon, 29 Jun 2020 15:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445148;
-        bh=nLNVnUkhRI/NJ1/56ogLVmoCKmOrnZaaRd6qx79OxKI=;
+        s=default; t=1593445127;
+        bh=5a4vMiA89yhb7XOQaVEtSlAjPYdcO6kAdT0WJKVbJVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFU/HkvSvv5Fr3+W0fMMw9pRK6gyek6rpVpPu47k2iNfrQ/ScN7xq4Zpjr1XXBwGK
-         t+QrAOdIEQv3k6D431B7NRb3McKe2MBHEAT9Yzx8jh/5Ifv/FPUtOOd766IqJ4Xco6
-         XKdf2ZsIshUa8CGQiHlxymAWBs6wcov4+Qaoqp6c=
+        b=CL4NGA/H4iu9of8W2N0iGxcM/a5yFDbsi6osvQVzx7Yiiu3suw7XFPqYVxW8j7/Wz
+         mWbBAdpMvhutIJGwIgo53mVHKZ+05dYx4RDT51wkmHYpNB+dpxOyI/cujNSLi3Jq+V
+         xFu+v28/81MtpjBmrXPY7Lboy5BoxkrjzdKf9hoI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Julian Scheel <julian@jusst.de>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/78] netfilter: ipset: fix unaligned atomic access
-Date:   Mon, 29 Jun 2020 11:37:39 -0400
-Message-Id: <20200629153806.2494953-52-sashal@kernel.org>
+Subject: [PATCH 4.14 34/78] ALSA: usb-audio: uac1: Invalidate ctl on interrupt
+Date:   Mon, 29 Jun 2020 11:37:22 -0400
+Message-Id: <20200629153806.2494953-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -66,55 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Julian Scheel <julian@jusst.de>
 
-[ Upstream commit 715028460082d07a7ec6fcd87b14b46784346a72 ]
+[ Upstream commit b2500b584cfd228d67e1e43daf27c8af865b499e ]
 
-When using ip_set with counters and comment, traffic causes the kernel
-to panic on 32-bit ARM:
+When an interrupt occurs, the value of at least one of the belonging
+controls should have changed. To make sure they get re-read from device
+on the next read, invalidate the cache. This was correctly implemented
+for uac2 already, but missing for uac1.
 
-Alignment trap: not handling instruction e1b82f9f at [<bf01b0dc>]
-Unhandled fault: alignment exception (0x221) at 0xea08133c
-PC is at ip_set_match_extensions+0xe0/0x224 [ip_set]
-
-The problem occurs when we try to update the 64-bit counters - the
-faulting address above is not 64-bit aligned.  The problem occurs
-due to the way elements are allocated, for example:
-
-	set->dsize = ip_set_elem_len(set, tb, 0, 0);
-	map = ip_set_alloc(sizeof(*map) + elements * set->dsize);
-
-If the element has a requirement for a member to be 64-bit aligned,
-and set->dsize is not a multiple of 8, but is a multiple of four,
-then every odd numbered elements will be misaligned - and hitting
-an atomic64_add() on that element will cause the kernel to panic.
-
-ip_set_elem_len() must return a size that is rounded to the maximum
-alignment of any extension field stored in the element.  This change
-ensures that is the case.
-
-Fixes: 95ad1f4a9358 ("netfilter: ipset: Fix extension alignment")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Julian Scheel <julian@jusst.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/mixer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-index c2b21c9c12295..5c59bbad8d193 100644
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -381,6 +381,8 @@ ip_set_elem_len(struct ip_set *set, struct nlattr *tb[], size_t len,
- 	for (id = 0; id < IPSET_EXT_ID_MAX; id++) {
- 		if (!add_extension(id, cadt_flags, tb))
- 			continue;
-+		if (align < ip_set_extensions[id].align)
-+			align = ip_set_extensions[id].align;
- 		len = ALIGN(len, ip_set_extensions[id].align);
- 		set->offset[id] = len;
- 		set->extensions |= ip_set_extensions[id].type;
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index dbbc5609b453b..33deb5ec8b7a1 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2403,9 +2403,14 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ {
+ 	struct usb_mixer_elem_list *list;
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
++	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++		struct usb_mixer_elem_info *info =
++			(struct usb_mixer_elem_info *)list;
++		/* invalidate cache, so the value is read from the device */
++		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+ 			       &list->kctl->id);
++	}
+ }
+ 
+ static void snd_usb_mixer_dump_cval(struct snd_info_buffer *buffer,
 -- 
 2.25.1
 
