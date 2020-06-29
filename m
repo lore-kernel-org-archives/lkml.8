@@ -2,104 +2,153 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB0320720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465047;
-	bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NVoufLhpLG/GLwsKQNRIWW2Ie1Q5aeNAK/6ZMyeseamNY3ZPgr8RlVatV/9g45es1
-	 SQixTqPFxMxNiMOgBJptYOMdG8A0Gda59bBYiOv8fgIzAROXYGHnZG3xPSVI4YO/Ew
-	 hQMOVjq590PGXB7hjjIVCGzQDYud07wZO6L8qAcw=
+	by mail.kernel.org (Postfix) with ESMTP id 165F7206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="DuUNS0rI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390562AbgF2VKp (ORCPT
+        id S2388390AbgF2VKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:10:50 -0400
+Received: from www.zeus03.de ([194.117.254.33]:59276 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgF2TAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9225524;
-        Mon, 29 Jun 2020 15:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446086;
-        bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSs3/Q3F7JxGz3sZv+YGnODOvdwYv0BoiOkmdWyKUyUIFc5F5r9+IWf1xq3qLqY1n
-         nUGNrTKCYFvMMGENudiInp2uJTTpBGrjXYoDP9HwILDUKpx8pyFIUeWw5ZXOxInRZX
-         Qke+WzEMdsOBpPzWbCUTe6VrTNlFkKlxv6A+SGRQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 081/135] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
-Date:   Mon, 29 Jun 2020 11:52:15 -0400
-Message-Id: <20200629155309.2495516-82-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        id S2390538AbgF2VKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:10:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=1R5VbfyjnCD0CmpFWZBQGlSYfWm+
+        NoLCMYa6SRuHNZI=; b=DuUNS0rIyBlqryiO1lADl4AQ5JfcuOPcJDV2IVFGM+pG
+        BxMC/hkT5dkyCGF6Q1HTk4aJwCOLxenQqr8CAwZ8iWxCG9hxIYJYDosJU+dNoPJO
+        Wze1Y9QWn06Sop7cYVo1anfQUotBy+ag5oUFAmqaYsB6C/ClU4FdFIxQ5eTRYoo=
+Received: (qmail 2172219 invoked from network); 29 Jun 2020 23:10:30 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Jun 2020 23:10:30 +0200
+X-UD-Smtp-Session: l3s3148p1@IvsbfT+pqsMgAwDPXwOPAI5mQFP60fXe
+Date:   Mon, 29 Jun 2020 23:10:27 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     corbet@lwn.net, aaro.koskinen@iki.fi, tony@atomide.com,
+        linux@armlinux.org.uk, daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, kgene@kernel.org, krzk@kernel.org,
+        dmitry.torokhov@gmail.com, lee.jones@linaro.org,
+        ulf.hansson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        b.zolnierkie@samsung.com, j.neuschaefer@gmx.net,
+        mchehab+samsung@kernel.org, gustavo@embeddedor.com,
+        gregkh@linuxfoundation.org, yanaijie@huawei.com,
+        daniel.vetter@ffwll.ch, rafael.j.wysocki@intel.com,
+        Julia.Lawall@inria.fr, linus.walleij@linaro.org,
+        viresh.kumar@linaro.org, arnd@arndb.de, jani.nikula@intel.com,
+        yuehaibing@huawei.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-parisc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] Remove handhelds.org links and email addresses
+Message-ID: <20200629211027.GA1481@kunai>
+References: <20200629203121.7892-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Disposition: inline
+In-Reply-To: <20200629203121.7892-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
+Hi Alexander,
 
-Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/sparc/kernel/ptrace_32.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+thanks for trying to fix this, yet I have some doubts.
 
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index 396dbdea0cfa0..2f4316c142664 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -167,12 +167,17 @@ static int genregs32_set(struct task_struct *target,
- 	if (ret || !count)
- 		return ret;
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &regs->y,
-+				 &regs->npc,
- 				 34 * sizeof(u32), 35 * sizeof(u32));
- 	if (ret || !count)
- 		return ret;
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &regs->y,
-+				 35 * sizeof(u32), 36 * sizeof(u32));
-+	if (ret || !count)
-+		return ret;
- 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
--					 35 * sizeof(u32), 38 * sizeof(u32));
-+					 36 * sizeof(u32), 38 * sizeof(u32));
- }
- 
- static int fpregs32_get(struct task_struct *target,
--- 
-2.25.1
+On Mon, Jun 29, 2020 at 10:31:21PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> https://lore.kernel.org/linux-doc/20200626110706.7b5d4a38@lwn.net/
 
+I think we need some text here. Clicking on a link to understand what a
+patch is about is not comfortable. You can add the link with a Link: tag
+for additional information.
+
+Removing stale email addresses may have some value, but removing...
+
+>  Compaq's Bootldr + John Dorsey's patch for Assabet support
+> -(http://www.handhelds.org/Compaq/bootldr.html)
+
+... information like this is not good. 'Wayback machine' still has
+copies in case someone wants to look at where the infos came from.
+
+> - * Copyright 2004-2005  Phil Blundell <pb@handhelds.org>
+> + * Copyright 2004-2005  Phil Blundell
+
+This is an OK case in my book...
+
+
+> -MODULE_AUTHOR("Phil Blundell <pb@handhelds.org>");
+> +MODULE_AUTHOR("Phil Blundell");
+
+... same here ...
+
+> @@ -435,7 +435,6 @@
+>                             case a PCI bridge (DEC chip 21152). The value of
+>                             'pb' is now only initialized if a de4x5 chip is
+>                             present.
+> -                           <france@handhelds.org>
+
+This is kind of a signature and should be kept IMO.
+
+>   * 2001/07/23: <rmk@arm.linux.org.uk>
+> - *	- Hand merge version from handhelds.org CVS tree.  See patch
+> + *	- Hand merge version from CVS tree.  See patch
+
+That information may be useful.
+
+
+>  /* SPDX-License-Identifier: GPL-2.0-only */
+>  /* -*- linux-c -*-
+> - *
+> - * (C) 2003 zecke@handhelds.org
+
+Removing copyright is a bad idea.
+
+Probably some comment blocks are cruft meanwhile and can be removed as a
+whole. That can be discussed. But removing only the handhelds.org part
+makes most parts worse IMHO.
+
+Thanks and happy hacking,
+
+   Wolfram
+
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl76WMAACgkQFA3kzBSg
+KbZgWA/+IxRkb15JXVvwYM1c4ReuUiEUrJ0KOI0M0XELe0YWelDrhgcOtSC0ozRT
+lTt8uizNNBK4bsRpoo+ghjZvNELOeMx+4VsVtMM+IoXXxIKha1jSJ1hqFDsBcCP0
+urAvhdaNyC+TWmEM2H98eb5JfdSxKxrzjIMs4tTBlZOBnu+wAoiDZv4mPf/y1bGv
+L33lwlFG6tkWpVX2veVNoTg04TG0LupAtXUyiI+Hnxt7srbugymQs0iwtd5sCt2R
+AG+BmuN5zmUS5cISCL6p1uXSxVRrs3FI02dwU7m5yvBfvHHSGVsx+f9wPpnpqNc8
+1I3oAR+Ct2K3lvu3uLBY2xDL4WbTmPobmzGLXbwB8ksPC/B1TV5LC/+TI2F+c+gk
+ROaTdQqzt4H0wfzNFOzYT8zGyZOoiPFro7jxCcH9CZjbkeDi19sJt7TQ6I1B0I9+
+bSTAb7s3yWhzUypFHzdR0PT97e8zeiK/xJUTbPkvv+JsDZZvPht423X7CYEUjaCo
+sPQ5UuDSfS4xT25PBabjhNeunmODzCE/+DrtbOSuM5AV63TOoVMB8zWBoJH17emH
+mRgD29xeEITWlq/fBWcPWIjgFDVanjDPYIW2/jnGqm7RLTaw703ajQSbD/7ELOAB
+84gr1NpIeJuhMnRnB11nHCJsUWnRqvl2rt7lretb/tFUB8LhGFE=
+=FQ9k
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
