@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E820768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E702C20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464815;
-	bh=uju4CXIp9hUg4V2WeTLkqR5HrZ3C9rep2xmyDzD2Q1w=;
+	s=default; t=1593464817;
+	bh=sI6OZG+k7ZLpyFDvFmIx4sKJg5MaVVEDi0dbKGmBi00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmMb5p/5TwwDlatwbpzctzRR3Wv/YxyHPl/3IUMnaUSer8xTrpGCdiv+0DppHKuZW
-	 qNKPNhyZvE1TuIHLMt/Qi5BuBeXXTZtfzVHpBTaGFSnvutaECvc+rstWl8vV+wYDEd
-	 nxw03QPMDvSClRKOM3t/m7LR931pQWc24cnq2hPU=
+	b=Lpc5A5XQz5fnUK1uuSfTY+CWcrc/7d08Unfxb81N4UrXf2Cm/bSvNhiVgKCf/lZHZ
+	 kqZ0pK5LOBfURtpzzFXXddbH6PUxTbBIEsUwN5Vs5B3H/tbFUwG1kx76eaiTguWduq
+	 +2Jp1z8TewGSU6F7iV+a5u3tLarxO5NXPpX8v0wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390331AbgF2VGy (ORCPT
+        id S2390339AbgF2VG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728086AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A65C254AC;
-        Mon, 29 Jun 2020 15:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEE8C254F5;
+        Mon, 29 Jun 2020 15:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446005;
-        bh=uju4CXIp9hUg4V2WeTLkqR5HrZ3C9rep2xmyDzD2Q1w=;
+        s=default; t=1593446051;
+        bh=sI6OZG+k7ZLpyFDvFmIx4sKJg5MaVVEDi0dbKGmBi00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DE7KSZu/OWLS9wPZOOG881zR8ngH2xbWvnnRMRqkLDo1XqtQbhQO8RS5Ns5tUAZB7
-         9Jdw2SvPBhQs5gIYDaTXw5AAey/9UDdPaAxtkaajclXu8K47zTMwGvyRZwrdjgQASq
-         aQVW3UurUvCyWP33K4NlujkLEs+YrHi9kjamaAhs=
+        b=uQHhyM1lQxF/EdZ8ZkwxeqL3mgJsJgaDR5LQwZSPs8IL7hE0P5d81t/s0BejoKp5G
+         ccSMKOm0XnY4b1ak/d5utC82AojcfQEgwaJyM8ojTxyg5GEEVTxEPxj9lP0vhscRMD
+         7IXELVxrLwnFAPPgQAdz8MzCB25ttH9jyBfaC+KY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Daniel Wagner <dwagner@suse.de>,
-        James Smart <james.smart@broadcom.com>,
-        Xin Tan <tanxin.ctf@gmail.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 012/135] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
-Date:   Mon, 29 Jun 2020 11:51:06 -0400
-Message-Id: <20200629155309.2495516-13-sashal@kernel.org>
+Subject: [PATCH 4.4 054/135] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+Date:   Mon, 29 Jun 2020 11:51:48 -0400
+Message-Id: <20200629155309.2495516-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -68,49 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
+[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
 
-In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
-lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
-return a reference of the specified lpfc_nodelist object to "ndlp" with
-increased refcnt.
+'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
+the 'ecardm_iomap()' calls fail.
 
-When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
-decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
-lpfc_nlp_get(), causing a refcnt leak.
-
-Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
-
-Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
+Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/arm/acornscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 530b7df21322a..315dd25a0c44e 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -7315,6 +7315,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 	spin_lock_irq(shost->host_lock);
- 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
- 		spin_unlock_irq(shost->host_lock);
-+		if (newnode)
-+			lpfc_nlp_put(ndlp);
- 		goto dropit;
- 	}
- 	spin_unlock_irq(shost->host_lock);
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index deaaf84989cd1..be595add8026b 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -2912,8 +2912,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+ 
+ 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
+ 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
+-	if (!ashost->base || !ashost->fast)
++	if (!ashost->base || !ashost->fast) {
++		ret = -ENOMEM;
+ 		goto out_put;
++	}
+ 
+ 	host->irq = ec->irq;
+ 	ashost->host = host;
 -- 
 2.25.1
 
