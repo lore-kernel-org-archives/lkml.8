@@ -2,167 +2,134 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7761EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C67E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AC12053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="N+rbp9GA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgF2TD3 (ORCPT
+        id S1730592AbgF2TDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:03:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41734 "EHLO
+        Mon, 29 Jun 2020 15:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730413AbgF2TCn (ORCPT
+        with ESMTP id S1730247AbgF2TD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:43 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600B1C02E2E7;
-        Mon, 29 Jun 2020 07:15:51 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id w17so7769603otl.4;
-        Mon, 29 Jun 2020 07:15:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=leTe6xkmfV5KnrwHpQkBH2Ot1AVMzXutDXCiCMkdL0s=;
-        b=D5bxn+vX+hJkiQ6u1hDgpe9Ubh1O0+/hI/a0YTh2p5W53gAiGr+TsqHj3R0KJjllPD
-         lAQkiUzVr7Ks2MMGvmDtt/201TPW6DPQgtEN0ILCj6hby+Haqn/hos9zgYrqHdDF6frO
-         s7ishahv4ICygo1rBBFyA21At4caf5OHAj0cqU1yVsipK1XhO+vC2gaFScs8VH3z3Gso
-         +xRQ/2qN1ZaYpTxB5Hwk45i4UZz7g3HSw8g89fC9oiINa6SzVeM7gB45FXmaKwdOopf0
-         eHkaWWOtWkxGNELgMqUROit391OAo0TnzJ8aXhREK1fdHQ7PG5VojgsdiIi9hLtDYubU
-         Fhpg==
-X-Gm-Message-State: AOAM530eVcbRLWoVhdQU8uXJztWyMEgLA6znS4rKeWlMY5YVVZhKqdVc
-        YLpC9K/bF4uBYX7CG6nVOP1RjquYytZ4pCG+MFNtp+oI
-X-Google-Smtp-Source: ABdhPJwF+ox3rAUQ3Gu09b9KiRz1EEaQAg3j/GWpph6pRu+ljyWkQE4GLirKio8p4W53YNrwzMy+Qjdw3v8DIct2tQc=
-X-Received: by 2002:a4a:b804:: with SMTP id g4mr14026744oop.40.1593440150627;
- Mon, 29 Jun 2020 07:15:50 -0700 (PDT)
+        Mon, 29 Jun 2020 15:03:26 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94700C031C40;
+        Mon, 29 Jun 2020 12:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+IitMUk+eOYapugNWdcU2qNl/SJeRY/e+GCy2zsMLo8=; b=N+rbp9GAXyeaJr2JEOHz+UXKi
+        RsSRxVTngHhTRvU12HFs410qqK0KgYvJnLV4c+gxMbCoh3lnabXdW68dUe+tiDxwUQf835ZcIukvO
+        nP+iLDAsjH6047RD10Y8a3A+vLOoAIdwFz5UwQ2vjB/iPjCPwyjp8PTOsP1erptR/bqeZGFkElxUE
+        YTaLVJEib0JGcCyLbw2ccxW1Y35fnPlTX4rz1m2859yaEtnKzdu6gF39mRrYiZLlsKQEKRCiINLWl
+        z0QldW6EbOGfQyx1S0HxtBSebUfIaVLEDFaPlc4HlkrZS+WwFMrEEJcwTNdvYY2LcRWZaTe5c6mzz
+        zvLOSXRqA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33208)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jpz3m-00088W-9q; Mon, 29 Jun 2020 20:03:18 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jpz3k-0007MT-Qr; Mon, 29 Jun 2020 20:03:16 +0100
+Date:   Mon, 29 Jun 2020 20:03:16 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 14/17] arm/build: Warn on orphan section placement
+Message-ID: <20200629190316.GY1551@shell.armlinux.org.uk>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-15-keescook@chromium.org>
+ <20200629155401.GB900899@rani.riverdale.lan>
+ <20200629180703.GX1551@shell.armlinux.org.uk>
+ <20200629181514.GA1046442@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143914.GE5289@sirena.org.uk> <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <20200629125756.GC5499@sirena.org.uk> <20200629134011.GA23284@bogus>
-In-Reply-To: <20200629134011.GA23284@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jun 2020 16:15:39 +0200
-Message-ID: <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629181514.GA1046442@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+On Mon, Jun 29, 2020 at 02:15:14PM -0400, Arvind Sankar wrote:
+> On Mon, Jun 29, 2020 at 07:07:04PM +0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Jun 29, 2020 at 11:54:01AM -0400, Arvind Sankar wrote:
+> > > On Sun, Jun 28, 2020 at 11:18:37PM -0700, Kees Cook wrote:
+> > > > We don't want to depend on the linker's orphan section placement
+> > > > heuristics as these can vary between linkers, and may change between
+> > > > versions. All sections need to be explicitly named in the linker
+> > > > script.
+> > > > 
+> > > > Specifically, this would have made a recently fixed bug very obvious:
+> > > > 
+> > > > ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
+> > > > 
+> > > > Discard unneeded sections .iplt, .rel.iplt, .igot.plt, and .modinfo.
+> > > > 
+> > > > Add missing text stub sections .vfp11_veneer and .v4_bx.
+> > > > 
+> > > > Add debug sections explicitly.
+> > > > 
+> > > > Finally enable orphan section warning.
+> > > 
+> > > This is unrelated to this patch as such, but I noticed that ARM32/64 places
+> > > the .got section inside .text -- is that expected on ARM?
+> > 
+> > Do you mean in general, in the kernel vmlinux, in the decompressor
+> > vmlinux or ... ?
+> > 
+> 
+> Sorry, in the kernel vmlinux. ARM_TEXT includes *(.got) for 32-bit, and
+> the 64-bit vmlinux.lds.S includes it in .text as well. The decompressor
+> for 32-bit keeps it separate for non-EFI stub kernel and puts it inside
+> .data for EFI stub.
 
-On Mon, Jun 29, 2020 at 3:40 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> On Mon, Jun 29, 2020 at 01:57:56PM +0100, Mark Brown wrote:
-> > On Mon, Jun 29, 2020 at 02:42:26AM +0000, Yoshihiro Shimoda wrote:
-> > > > From: Mark Brown, Sent: Friday, June 26, 2020 11:39 PM
-> > > > According to the changelog this is all about reflecting changes in the
-> > > > system state done by firmware but there's no interaction with firmware
-> > > > here which means this will be at best fragile.  If we need to reflect
-> > > > changes in firmware configuration I'd expect there to be some
-> > > > interaction with firmware about how it is configured, or at least that
-> > > > the configuration would come from the same source.
->
-> I agree.
->
-> > > I should have described background of previous patch series though,
-> > > according to previous discussion [1] the firmware side (like PSCI) is
-> > > also fragile unfortunately... So, I thought using regulator-off-in-suspend
-> > > in a regulator was better.
->
-> Please fix the firmware. You might have bigger problem than this if the
-> PSCI firmware is fragile as you state. Better to disable power management
-> on the platform if the firmware can't be fixed.
+The main 32-bit kernel image doesn't use the .got - I don't think it
+actually even exists.
 
-Saying the implementation is "fragile" might be bad wording.
-The issue is more with the specification being vague (see more below).
+The decompressor (non-EFI) uses the .got as a way of getting position
+independence, and that must be part of the binary image at a fixed
+offset from the .text section.  The decompressor self-fixes up the
+GOT entries.
 
-> > > On other hand, Ulf is talking about either adding a property (perhaps like
-> > > regulator-off-in-suspend) into a regulator or just adding a new property
-> > > into MMC [2]. What do you think about Ulf' comment? I'm thinking
-> > > adding a new property "full-pwr-cycle-in-suspend" is the best solution.
-> > > This is because using a regulator property and reflecting a state of regulator without
-> > > firmware is fragile, as you said.
->
-> I haven't followed all the threads, but if it related to the policy you
-> want in the Linux, then may be use DT property or something. I don't know.
-> But if this is to indicate something based on firmware runtime/configuration,
-> then NACK for any approaches unconditionally.
+In the case of the decompressor being flashed and executed from NOR
+flash, the decompressor must be built for the specific address(es)
+that it will reside (which does away with the .got table.)
 
-Like "arm,psci-system-suspend-is-power-down"[1]?
-
-> > TBH I worry about a property drifting out of sync with the firmware on
-> > systems where the firmware can be updated.  Personally my default
-> > assumption would always be that we're going to loose power for anything
-
-OK, so that's the "safe" way to handle this: assume power is lost.
-
-> > except the RAM and whatever is needed for wake sources during suspend so
-
-Oh, even wake-up sources may become unpowered[2] ;-)
-And thus stop working ;-(
-
-> > I find the discussion a bit surprising but in any case that seems like a
-> > better option than trying to shoehorn things in the way the series here
-> > did.  Like I said in my earlier replies if this is done through the
-> > regulator API I'd expect it to be via the suspend interface.
->
-> +1. If this platform needs Linux to keep some state on for users in the
-> firmware or anything outside Linux, it must resume back in the same state
-> as we entered the suspend state from the kernel.
-
-I think you're misunderstanding the issue: this is not related at all
-to Linux keeping state for non-Linux users.
-
-This is all about how to know what exactly PSCI is powering down during
-SYSTEM_SUSPEND.  In this specific case, it is about knowing if the eMMC
-is powered down or not, as Linux should follow a specific procedure to
-prepare the eMMC for that, and Linux should not if that isn't the case.
-
-I had a quick look at the latest revision of the PSCI specification, and
-it doesn't look like anything has changed in that area since my old patch
-series from 2017.  So it still boils down to: we don't know what a
-specific PSCI implementation will do, as basically anything is
-compliant, so the only safe thing is to assume the worst.
-
-Or am I missing something?
-Thanks!
-
-[1] "[PATCH/RFC 4/6] drivers: firmware: psci: Fix non-PMIC wake-up if
-    SYSTEM_SUSPEND cuts power"
-    https://lore.kernel.org/linux-arm-kernel/1487622809-25127-5-git-send-email-geert+renesas@glider.be/
-
-[2] [PATCH/RFC 0/6] PSCI: Fix non-PMIC wake-up if SYSTEM_SUSPEND cuts
-    power
-    https://lore.kernel.org/linux-arm-kernel/1487622809-25127-1-git-send-email-geert+renesas@glider.be/
-
-[3] https://developer.arm.com/architectures/system-architectures/software-standards/psci
-
-Gr{oetje,eeting}s,
-
-                        Geert
+For EFI, it needs to be in the .data section (which is in that case
+always a fixed offset from .text) so that it can be written to so the
+fix-ups work.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
