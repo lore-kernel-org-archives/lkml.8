@@ -1,180 +1,182 @@
-Return-Path: <SRS0=fM4p=AJ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D50EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5862076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jun 2020 23:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AE9206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 00:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qXVVp9Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgF1Xnj (ORCPT
+        id S1726637AbgF2ANg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 19:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgF1Xni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 19:43:38 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CE220768;
-        Sun, 28 Jun 2020 23:43:35 +0000 (UTC)
-Date:   Sun, 28 Jun 2020 19:43:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200628194334.6238b933@oasis.local.home>
-In-Reply-To: <20200628182842.2abb0de2@oasis.local.home>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
-        <20200624120408.12c8fa0d@oasis.local.home>
-        <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
-        <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
-        <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
-        <20200626181455.155912d9@oasis.local.home>
-        <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
-        <20200628144616.52f09152@oasis.local.home>
-        <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
-        <20200628154331.2c69d43e@oasis.local.home>
-        <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
-        <20200628182842.2abb0de2@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 28 Jun 2020 20:13:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46916 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbgF2ANg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 20:13:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05T08stq026656;
+        Mon, 29 Jun 2020 00:13:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=nf/pH693pK95+3C0v0zgkOwnWp0br/VkiuBJYye+DOw=;
+ b=qXVVp9WbDg8zgp0rUGelYosNSWBm4gPNETXuqGquCN/xCvQz+AF6IXntT5xUnzYdxSgn
+ HFsKcevUganbOiTPG16dgTXzz01oJplAGuYK9WB3HhZkhyb3WiA0WTZjLjl3k2wvEXIX
+ rWOzlkO2zUUkNjXNFrGoEk6yJVzy24MZvTkCnCswc+SqcoAYz8gnqYS+/gKLIGtEctC7
+ lxIG6UUhYtHisA0DYLjsrCOrDGpYc4c410VusE6htxPAjWr+q28kvLw0EhacVpJBrixo
+ 8FEcqly1VFjtLH5IxVLr5MApVVqJHFQ1nkuao9Kk6JhL1EPS6rMEV3enBjLnlf5okOzF hw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31wxrmupk0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Jun 2020 00:13:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05T0CXH1069935;
+        Mon, 29 Jun 2020 00:13:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 31xg0xu5rj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 00:13:28 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05T0DQNl003139;
+        Mon, 29 Jun 2020 00:13:26 GMT
+Received: from [192.168.0.110] (/183.246.145.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Jun 2020 00:11:44 +0000
+Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
+To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        open-iscsi@googlegroups.com, lduncan@suse.com,
+        michael.christie@oracle.com
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+ <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <52fa1d81-e585-37eb-55e5-0ed07ce7adc0@oracle.com>
+Date:   Mon, 29 Jun 2020 08:11:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9666 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006290000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9666 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006280181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jun 2020 18:28:42 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 6/28/20 11:54 PM, Lai Jiangshan wrote:
+> On Thu, Jun 11, 2020 at 6:29 PM Bob Liu <bob.liu@oracle.com> wrote:
+>>
+>> Current code always set 'Unbound && max_active == 1' workqueues to ordered
+>> implicitly, while this may be not an expected behaviour for some use cases.
+>>
+>> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
+>> to different cpu so as to get better isolation, but their cpumask can't be
+>> changed because WQ_ORDERED is set implicitly.
+> 
+> Hello
+> 
+> If I read the code correctly, the reason why their cpumask can't
+> be changed is because __WQ_ORDERED_EXPLICIT, not __WQ_ORDERED.
+> 
+>>
+>> This patch adds a flag __WQ_ORDERED_DISABLE and also
+>> create_singlethread_workqueue_noorder() to offer an new option.
+>>
+>> Signed-off-by: Bob Liu <bob.liu@oracle.com>
+>> ---
+>>  include/linux/workqueue.h | 4 ++++
+>>  kernel/workqueue.c        | 4 +++-
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+>> index e48554e..4c86913 100644
+>> --- a/include/linux/workqueue.h
+>> +++ b/include/linux/workqueue.h
+>> @@ -344,6 +344,7 @@ enum {
+>>         __WQ_ORDERED            = 1 << 17, /* internal: workqueue is ordered */
+>>         __WQ_LEGACY             = 1 << 18, /* internal: create*_workqueue() */
+>>         __WQ_ORDERED_EXPLICIT   = 1 << 19, /* internal: alloc_ordered_workqueue() */
+>> +       __WQ_ORDERED_DISABLE    = 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
+>>
+>>         WQ_MAX_ACTIVE           = 512,    /* I like 512, better ideas? */
+>>         WQ_MAX_UNBOUND_PER_CPU  = 4,      /* 4 * #cpus for unbound wq */
+>> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+>>  #define create_singlethread_workqueue(name)                            \
+>>         alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
+>>
+>> +#define create_singlethread_workqueue_noorder(name)                    \
+>> +       alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
+>> +                       WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
+> 
+> I think using __WQ_ORDERED without __WQ_ORDERED_EXPLICIT is what you
+> need, in which case cpumask is allowed to be changed.
+> 
 
-> You create a bpf event just like you create any other event. When a bpf
-> program that uses a bpf_trace_printk() is loaded, you can enable that
-> event from within the kernel. Yes, there's internal interfaces to
-> enabled and disable events just like echoing 1 into
-> tracefs/events/system/event/enable. See trace_set_clr_event().
+I don't think so, see function workqueue_apply_unbound_cpumask():
 
-I just started playing with what the code would look like and have
-this. It can be optimized with per-cpu sets of buffers to remove the
-spin lock. I also didn't put in the enabling of the event, but I'm sure
-you can figure that out.
+wq_unbound_cpumask_store()
+ > workqueue_set_unbound_cpumask()
+   > workqueue_apply_unbound_cpumask() {
+     ...
+5276                 /* creating multiple pwqs breaks ordering guarantee */
+5277                 if (wq->flags & __WQ_ORDERED)
+5278                         continue;
+                     	  ^^^^
+                          Here will skip apply cpumask if only __WQ_ORDERED is set.
 
-Warning, not even compiled tested.
+5280                 ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs);
 
--- Steve
+     }
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 6575bb0a0434..aeba5ee7325a 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -31,6 +31,8 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
- GCOV_PROFILE := y
- endif
- 
-+CFLAGS_bpf_trace.o := -I$(src)
-+
- CFLAGS_trace_benchmark.o := -I$(src)
- CFLAGS_trace_events_filter.o := -I$(src)
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index dc05626979b8..01bedf335b2e 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -19,6 +19,9 @@
- #include "trace_probe.h"
- #include "trace.h"
- 
-+#define CREATE_TRACE_EVENTS
-+#include "bpf_trace.h"
-+
- #define bpf_event_rcu_dereference(p)					\
- 	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
- 
-@@ -473,13 +476,29 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 		fmt_cnt++;
- 	}
- 
-+static DEFINE_SPINLOCK(trace_printk_lock);
-+#define BPF_TRACE_PRINTK_SIZE	1024
-+
-+static inline void do_trace_printk(const char *fmt, ...)
-+{
-+	static char buf[BPF_TRACE_PRINT_SIZE];
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&trace_printk_lock, flags);
-+	va_start(ap, fmt);
-+	vsnprintf(buf, BPF_TRACE_PRINT_SIZE, fmt, ap);
-+	va_end(ap);
-+
-+	trace_bpf_trace_printk(buf);
-+	spin_unlock_irqrestore(&trace_printk_lock, flags);
-+}
-+
- /* Horrid workaround for getting va_list handling working with different
-  * argument type combinations generically for 32 and 64 bit archs.
-  */
- #define __BPF_TP_EMIT()	__BPF_ARG3_TP()
- #define __BPF_TP(...)							\
--	__trace_printk(0 /* Fake ip */,					\
--		       fmt, ##__VA_ARGS__)
-+	do_trace_printk(fmt, ##__VA_ARGS__)
- 
- #define __BPF_ARG1_TP(...)						\
- 	((mod[0] == 2 || (mod[0] == 1 && __BITS_PER_LONG == 64))	\
-diff --git a/kernel/trace/bpf_trace.h b/kernel/trace/bpf_trace.h
-new file mode 100644
-index 000000000000..09088bb92fe1
---- /dev/null
-+++ b/kernel/trace/bpf_trace.h
-@@ -0,0 +1,27 @@
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM bpf_trace
-+
-+#if !defined(_TRACE_BPF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_BPF_TRACE_H
-+
-+TRACE_EVENT(bpf_trace_printk,
-+
-+	TP_PROTO(bpf_string),
-+
-+	TP_ARGS(secs, err),
-+
-+	TP_STRUCT__entry(
-+		__string(bpf_string, bpf_string)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_string(bpf_string, bpf_string);
-+	),
-+
-+	TP_printk("%s", __get_str(bpf_string))
-+);
-+
-+#endif /* _TRACE_BPF_TRACE_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
+Thanks for your review.
+Bob
+
+> Just use alloc_workqueue() with __WQ_ORDERED and max_active=1. It can
+> be wrapped as a new function or macro, but I don't think> create_singlethread_workqueue_noorder() is a good name for it.
+> 
+>>  extern void destroy_workqueue(struct workqueue_struct *wq);
+>>
+>>  struct workqueue_attrs *alloc_workqueue_attrs(void);
+>> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+>> index 4e01c44..2167013 100644
+>> --- a/kernel/workqueue.c
+>> +++ b/kernel/workqueue.c
+>> @@ -4237,7 +4237,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+>>          * on NUMA.
+>>          */
+>>         if ((flags & WQ_UNBOUND) && max_active == 1)
+>> -               flags |= __WQ_ORDERED;
+>> +               /* the caller may don't want __WQ_ORDERED to be set implicitly. */
+>> +               if (!(flags & __WQ_ORDERED_DISABLE))
+>> +                       flags |= __WQ_ORDERED;
+>>
+>>         /* see the comment above the definition of WQ_POWER_EFFICIENT */
+>>         if ((flags & WQ_POWER_EFFICIENT) && wq_power_efficient)
+>> --
+>> 2.9.5
+>>
+
