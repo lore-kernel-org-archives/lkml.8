@@ -3,141 +3,179 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC75C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D362063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5B32063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732088AbgF2TUB (ORCPT
+        id S1732092AbgF2TUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:20:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:39574 "EHLO foss.arm.com"
+        Mon, 29 Jun 2020 15:20:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:39572 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbgF2TT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730507AbgF2TT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:19:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3E111516;
-        Mon, 29 Jun 2020 08:41:20 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD4A13F73C;
-        Mon, 29 Jun 2020 08:41:18 -0700 (PDT)
-Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     maximmi@mellanox.com, konrad.wilk@oracle.com,
-        jonathan.lemon@gmail.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, davem@davemloft.net, magnus.karlsson@intel.com
-References: <20200626134358.90122-1-bjorn.topel@gmail.com>
- <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net>
- <20200627070406.GB11854@lst.de>
- <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com>
-Date:   Mon, 29 Jun 2020 16:41:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D324D1478;
+        Mon, 29 Jun 2020 05:12:44 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EECB93F73C;
+        Mon, 29 Jun 2020 05:12:42 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 13:12:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] sched/uclamp: Fix initialization of struct
+ uclamp_rq
+Message-ID: <20200629121240.pxec7mvoum6xp2z4@e107158-lin.cambridge.arm.com>
+References: <20200625154352.24767-1-qais.yousef@arm.com>
+ <20200625154352.24767-2-qais.yousef@arm.com>
+ <87eeq2nh1k.derkling@matbug.net>
 MIME-Version: 1.0
-In-Reply-To: <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87eeq2nh1k.derkling@matbug.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-28 18:16, Björn Töpel wrote:
-> 
-> On 2020-06-27 09:04, Christoph Hellwig wrote:
->> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
->>> Given there is roughly a ~5 weeks window at max where this removal could
->>> still be applied in the worst case, could we come up with a fix / 
->>> proposal
->>> first that moves this into the DMA mapping core? If there is 
->>> something that
->>> can be agreed upon by all parties, then we could avoid re-adding the 9%
->>> slowdown. :/
->>
->> I'd rather turn it upside down - this abuse of the internals blocks work
->> that has basically just missed the previous window and I'm not going
->> to wait weeks to sort out the API misuse.  But we can add optimizations
->> back later if we find a sane way.
->>
-> 
-> I'm not super excited about the performance loss, but I do get
-> Christoph's frustration about gutting the DMA API making it harder for
-> DMA people to get work done. Lets try to solve this properly using
-> proper DMA APIs.
-> 
-> 
->> That being said I really can't see how this would make so much of a
->> difference.  What architecture and what dma_ops are you using for
->> those measurements?  What is the workload?
->>
-> 
-> The 9% is for an AF_XDP (Fast raw Ethernet socket. Think AF_PACKET, but 
-> faster.) benchmark: receive the packet from the NIC, and drop it. The 
-> DMA syncs stand out in the perf top:
-> 
->    28.63%  [kernel]                   [k] i40e_clean_rx_irq_zc
->    17.12%  [kernel]                   [k] xp_alloc
->     8.80%  [kernel]                   [k] __xsk_rcv_zc
->     7.69%  [kernel]                   [k] xdp_do_redirect
->     5.35%  bpf_prog_992d9ddc835e5629  [k] bpf_prog_992d9ddc835e5629
->     4.77%  [kernel]                   [k] xsk_rcv.part.0
->     4.07%  [kernel]                   [k] __xsk_map_redirect
->     3.80%  [kernel]                   [k] dma_direct_sync_single_for_cpu
->     3.03%  [kernel]                   [k] dma_direct_sync_single_for_device
->     2.76%  [kernel]                   [k] i40e_alloc_rx_buffers_zc
->     1.83%  [kernel]                   [k] xsk_flush
-> ...
-> 
-> For this benchmark the dma_ops are NULL (dma_is_direct() == true), and
-> the main issue is that SWIOTLB is now unconditionally enabled [1] for
-> x86, and for each sync we have to check that if is_swiotlb_buffer()
-> which involves a some costly indirection.
-> 
-> That was pretty much what my hack avoided. Instead we did all the checks
-> upfront, since AF_XDP has long-term DMA mappings, and just set a flag
-> for that.
-> 
-> Avoiding the whole "is this address swiotlb" in
-> dma_direct_sync_single_for_{cpu, device]() per-packet
-> would help a lot.
+Hi Patrick
 
-I'm pretty sure that's one of the things we hope to achieve with the 
-generic bypass flag :)
-
-> Somewhat related to the DMA API; It would have performance benefits for
-> AF_XDP if the DMA range of the mapped memory was linear, i.e. by IOMMU
-> utilization. I've started hacking a thing a little bit, but it would be
-> nice if such API was part of the mapping core.
+On 06/26/20 14:32, Patrick Bellasi wrote:
 > 
-> Input: array of pages Output: array of dma addrs (and obviously dev,
-> flags and such)
+> On Thu, Jun 25, 2020 at 17:43:51 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
 > 
-> For non-IOMMU len(array of pages) == len(array of dma addrs)
-> For best-case IOMMU len(array of dma addrs) == 1 (large linear space)
+> > struct uclamp_rq was zeroed out entirely in assumption that in the first
+> > call to uclamp_rq_inc() they'd be initialized correctly in accordance to
+> > default settings.
 > 
-> But that's for later. :-)
+> Perhaps I was not clear in my previous comment:
+> 
+>    https://lore.kernel.org/lkml/87sgekorfq.derkling@matbug.net/
+> 
+> when I did say:
+> 
+>    Does not this means the problem is more likely with
+>    uclamp_rq_util_with(), which should be guarded?
+> 
+> I did not mean that we have to guard the calls to that function but
+> instead that we should just make that function aware of uclamp being
+> opted in or not.
+> 
+> > But when next patch introduces a static key to skip
+> > uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
+> > will fail to perform any frequency changes because the
+> > rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
+> > means all rqs are capped to 0 by default.
+> 
+> The initialization you wants to do here it's needed because with the
+> current approach you keep calling the same uclamp_rq_util_with() and
+> keep doing min/max aggregations even when uclamp is not opted in.
+> But this means also that we have min/max aggregation _when not really
+> required_.
+> 
+> > Fix it by making sure we do proper initialization at init without
+> > relying on uclamp_rq_inc() doing it later.
+> 
+> My proposal was as simple as:
+> 
+> ---8<---
+>   static __always_inline
+>   unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
+>   				  struct task_struct *p)
+>   {
+>   	unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
+>   	unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
+>   
+> +       if (!static_branch_unlikely(&sched_uclamp_used))
+> +               return rt_task(p) ? uclamp_none(UCLAMP_MAX) : util 
 
-FWIW you will typically get that behaviour from IOMMU-based 
-implementations of dma_map_sg() right now, although it's not strictly 
-guaranteed. If you can weather some additional setup cost of calling 
-sg_alloc_table_from_pages() plus walking the list after mapping to test 
-whether you did get a contiguous result, you could start taking 
-advantage of it as some of the dma-buf code in DRM and v4l2 does already 
-(although those cases actually treat it as a strict dependency rather 
-than an optimisation).
+This the same mistake I've done.
 
-I'm inclined to agree that if we're going to see more of these cases, a 
-new API call that did formally guarantee a DMA-contiguous mapping 
-(either via IOMMU or bounce buffering) or failure might indeed be handy.
+schedutil_cpu_util() is called by sugov_get_util() passing p as NULL.
 
-Robin.
+292 static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)                                                                                                                                               
+293 {                                                                               
+294         struct rq *rq = cpu_rq(sg_cpu->cpu);                                    
+295         unsigned long util = cpu_util_cfs(rq);                                  
+296         unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);               
+297                                                                                 
+298         sg_cpu->max = max;                                                      
+299         sg_cpu->bw_dl = cpu_bw_dl(rq);                                          
+300                                                                                 
+301         return schedutil_cpu_util(sg_cpu->cpu, util, max, FREQUENCY_UTIL, NULL);
+302 }
+
+So this will not fix the problem with RT tasks and we have to do the check
+at schedutil which is the right abstraction layer anyway. I don't think calling
+rq_rt_is_runnable() is right here and is unnecessary duplication since
+schedutil will still have to do that anyway.
+
+When p is not NULL then the function will work correctly in regards to
+uclamp_eff_get() returning the right value, including the default settings.
+Which is important when my patch to introduce sysctl for default RT boosting
+comes into play.
+
+The function deserves a comment for sure though so that users are aware that
+the function will not be useful if the static key is disabled. There's no
+aggregation done at rq level and this can certainly catch people out.
+
+We can add a static key to return util directly too. I might just do this since
+it might help with readability.
+
+Please shout if I missed something.
+
+>   
+>   	if (p) {
+>   		min_util = max(min_util, uclamp_eff_value(p, UCLAMP_MIN));
+>   		max_util = max(max_util, uclamp_eff_value(p, UCLAMP_MAX));
+>   	}
+>   
+>   	/*
+>   	 * Since CPU's {min,max}_util clamps are MAX aggregated considering
+>   	 * RUNNABLE tasks with _different_ clamps, we can end up with an
+>   	 * inversion. Fix it now when the clamps are applied.
+>   	 */
+>   	if (unlikely(min_util >= max_util))
+>   		return min_util;
+>   
+>   	return clamp(util, min_util, max_util);
+>   }
+> ---8<---
+> 
+> Such small change is more self-contained IMHO and does not remove
+> an existing optimizations like this lazy RQ's initialization at first
+
+IMHO this is a bug not an optimization. We have to write to these struct
+anyway, so why not write the right value to start with? This already caught me
+out and wasted over half a day trying to chase it.
+
+Beside what are we optimizing for here? I think correctness dictates we start
+with correct initial values if we can, no? How are you expecting this to slow
+down sched_init()?
+
+Thanks
+
+--
+Qais Yousef
+
+> usage.
+> 
+> Moreover, it can folded in the following patch, with all the other
+> static keys shortcuts.
+> 
