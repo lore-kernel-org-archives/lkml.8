@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B03C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43206206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EAC206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467611;
-	bh=SNHgSzHUpb+mls6xbyVyMZQ2/Yb4pqcP222SJAmLgKM=;
+	s=default; t=1593467621;
+	bh=drp2f25DFRE4eBQDoA2zeF7D935lnFyMT9HwmaicU8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKnu5wNpn6o96gtXNpeSk5cZsUnZUDzgmb46Nl7/KvMHGd8fHFAYgvmAgiTEVnMvj
-	 3BYlNBp9Y4wLEUVtzy351leC/+QHZwKjQ86/wxzmKyYrttm5ggkZQtMrqJT6TgGNst
-	 dc4YzRm5k4Y9ZRGZZ6YLEwPcFPwRpFIfxlPlx2Ks=
+	b=18pjRJXoiwuDy51BOtEuPRBC7FnIyCKaCzzadYDjZvR6kQkKbJ5+LP3H9MoSrrAOB
+	 P/1ArWdQVV/5FwuRypSggWmZaRJOIapRV+v6u8db8Kd8ubXBGXq+SVz0tuWJ73jLDP
+	 qCk/3sKebSFUa3qaFIs+gKLXWuCymLvu6+CbykV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404621AbgF2VxU (ORCPT
+        id S2404650AbgF2Vxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbgF2Sfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:38 -0400
+        id S1726570AbgF2Sfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E0D24735;
-        Mon, 29 Jun 2020 15:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0443924734;
+        Mon, 29 Jun 2020 15:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444055;
-        bh=SNHgSzHUpb+mls6xbyVyMZQ2/Yb4pqcP222SJAmLgKM=;
+        s=default; t=1593444053;
+        bh=drp2f25DFRE4eBQDoA2zeF7D935lnFyMT9HwmaicU8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lFDbmHUJbOpIBwqTad6KWVj6ZO7tl1eZTyBpS3d73RAVsgFjzXoBZC8c/pxYgJCb7
-         B2dg42/dGa6AjSEI+SHFzBzpFC4ofUQYGnzA3rzbNBHSuygYYFr+uszH418+4bnWR/
-         Z5jPIUc9XBcz3RH72DkXfyY+o5uOpW/TaJR2q8jE=
+        b=jiy0FHUHUyXtluBMtv8WCX8Q7HdIyxcPcNmpt6sazksGU67nbyRuzxaB3HqvuCorp
+         iKBm9yOkz7+UEEyIvUy3LeafGSd58KCzsv2uG1hLNsmM0kmR2TbrxVWPSJx83l4i29
+         RIc/LDSYRwXPG57c05yl26YqlcgkadxLh0cX00to=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 163/265] nvme-multipath: fix deadlock between ana_work and scan_work
-Date:   Mon, 29 Jun 2020 11:16:36 -0400
-Message-Id: <20200629151818.2493727-164-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 161/265] nvme-multipath: set bdi capabilities once
+Date:   Mon, 29 Jun 2020 11:16:34 -0400
+Message-Id: <20200629151818.2493727-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,132 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 489dd102a2c7c94d783a35f9412eb085b8da1aa4 ]
+[ Upstream commit b2ce4d90690bd29ce5b554e203cd03682dd59697 ]
 
-When scan_work calls nvme_mpath_add_disk() this holds ana_lock
-and invokes nvme_parse_ana_log(), which may issue IO
-in device_add_disk() and hang waiting for an accessible path.
-While nvme_mpath_set_live() only called when nvme_state_is_live(),
-a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
+The queues' backing device info capabilities don't change with each
+namespace revalidation. Set it only when each path's request_queue
+is initially added to a multipath queue.
 
-In order to recover and complete the IO ana_work on the same ctrl
-should be able to update the path state and remove NVME_NS_ANA_PENDING.
-
-The deadlock occurs because scan_work keeps holding ana_lock,
-so ana_work hangs [1].
-
-Fix:
-Now nvme_mpath_add_disk() uses nvme_parse_ana_log() to obtain a copy
-of the ANA group desc, and then calls nvme_update_ns_ana_state() without
-holding ana_lock.
-
-[1]:
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  efi_partition+0x1e6/0x708
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x249/0x400
-kernel:  kthread+0x104/0x140
-
-kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  ? __switch_to_asm+0x34/0x70
-kernel:  ? select_task_rq_fair+0x1aa/0x5c0
-kernel:  ? kvm_sched_clock_read+0x11/0x20
-kernel:  ? sched_clock+0x9/0x10
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  nvme_read_ana_log+0x3a/0x100 [nvme_core]
-kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ? process_one_work+0x380/0x380
-kernel:  ? kthread_park+0x80/0x80
-kernel:  ret_from_fork+0x35/0x40
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/nvme/host/core.c      | 7 -------
+ drivers/nvme/host/multipath.c | 8 ++++++++
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 7b4cbe2c69541..887139f8fa53b 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1910,13 +1910,6 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 	if (ns->head->disk) {
+ 		nvme_update_disk_info(ns->head->disk, ns, id);
+ 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
+-		if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
+-			struct backing_dev_info *info =
+-				ns->head->disk->queue->backing_dev_info;
+-
+-                        info->capabilities |= BDI_CAP_STABLE_WRITES;
+-		}
+-
+ 		revalidate_disk(ns->head->disk);
+ 	}
+ #endif
 diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 9f2844935fdfa..fece4654fa3e7 100644
+index 54603bd3e02de..9f2844935fdfa 100644
 --- a/drivers/nvme/host/multipath.c
 +++ b/drivers/nvme/host/multipath.c
-@@ -641,26 +641,34 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
- }
- DEVICE_ATTR_RO(ana_state);
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2017-2018 Christoph Hellwig.
+  */
  
--static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
-+static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
- 		struct nvme_ana_group_desc *desc, void *data)
- {
--	struct nvme_ns *ns = data;
-+	struct nvme_ana_group_desc *dst = data;
- 
--	if (ns->ana_grpid == le32_to_cpu(desc->grpid)) {
--		nvme_update_ns_ana_state(desc, ns);
--		return -ENXIO; /* just break out of the loop */
--	}
-+	if (desc->grpid != dst->grpid)
-+		return 0;
- 
--	return 0;
-+	*dst = *desc;
-+	return -ENXIO; /* just break out of the loop */
- }
- 
- void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- {
- 	if (nvme_ctrl_use_ana(ns->ctrl)) {
-+		struct nvme_ana_group_desc desc = {
-+			.grpid = id->anagrpid,
-+			.state = 0,
-+		};
++#include <linux/backing-dev.h>
+ #include <linux/moduleparam.h>
+ #include <trace/events/block.h>
+ #include "nvme.h"
+@@ -666,6 +667,13 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ 		nvme_mpath_set_live(ns);
+ 		mutex_unlock(&ns->head->lock);
+ 	}
 +
- 		mutex_lock(&ns->ctrl->ana_lock);
- 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
--		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
-+		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
- 		mutex_unlock(&ns->ctrl->ana_lock);
-+		if (desc.state) {
-+			/* found the group desc: update */
-+			nvme_update_ns_ana_state(&desc, ns);
-+		}
- 	} else {
- 		mutex_lock(&ns->head->lock);
- 		ns->ana_state = NVME_ANA_OPTIMIZED; 
++	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
++		struct backing_dev_info *info =
++					ns->head->disk->queue->backing_dev_info;
++
++		info->capabilities |= BDI_CAP_STABLE_WRITES;
++	}
+ }
+ 
+ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
 -- 
 2.25.1
 
