@@ -2,108 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F94C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA6A20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED05820702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UZ6FVKc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbgF2TWp (ORCPT
+        id S1730492AbgF2TXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732123AbgF2TWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:22:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59452 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732197AbgF2TVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:21:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5EB98AF2C;
-        Mon, 29 Jun 2020 15:09:54 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 04/47] staging: mmal-vchiq: Fix client_component for 64 bit kernel
-Date:   Mon, 29 Jun 2020 17:09:02 +0200
-Message-Id: <20200629150945.10720-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629150945.10720-1-nsaenzjulienne@suse.de>
-References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42945C030F34
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g75so16034291wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
+        b=UZ6FVKc7frhOr+27BqHpUSAAlW/b6bGMLjuQl7IYNjpAn9UP9nwBkgtlMucNWw5P0M
+         YTRq3+LIylKWY1EpNL4FD5Vuwel8piO0VIk6nUxpzG9Ls450pSl99qLEi2KfmUEV4fC3
+         Q0HMPnnWRd7jZFkfC02SLQXuTxIeg1aAPTOqI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
+        b=abdsggMxO0YZ8Pqga8Cb1+KTT2Ntz3U65lWasbm9CChwOUkSbykc1NEguRsF1Em7th
+         iV/0SE8rM2jzzUBZDW5+oYpterjSbdWUJsbnHMNCu5cBzlMgrznlcpplYpZk0T+Z1o+s
+         N+JaJXUlh8bKAxbeDlv2qz0Q9ARA5IVT96DzHvb5FMRif1h3wa7ljNprEGUzj4z/P+qK
+         uA7mKnrzSAQbUwrDSdJZmEUUP95ioz3Qtb+foVMkf6YqQ+5aOLcaYh7C4PV9iPwL55QD
+         kuQ4SdSfubT6eKK8OqE9UY7eEnUgafMHdywBf1WIEDX6LV3ZyjiqJw9AO6J2bAPHKoTy
+         Xttw==
+X-Gm-Message-State: AOAM530Js/HR98D7qhJvPAIMj6sqM/ZHQ6fS20h3vWk+rj2pdfITbwca
+        ErB0zlHw7g9YCEe2srOSkex/4g==
+X-Google-Smtp-Source: ABdhPJzEBOnJbI3F9fbCTkykHuYski3xJ+b+DkSQKsgVaDyTwA3/2FplB6F5M/HjmK7MhPF+FIuGjw==
+X-Received: by 2002:a05:600c:c1:: with SMTP id u1mr17895281wmm.48.1593449664783;
+        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id e8sm396022wrp.26.2020.06.29.09.54.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
+Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
+ validating duty cycle
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-2-lee.jones@linaro.org>
+ <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <76a657ca-d30e-c5f2-f057-1c1bb7c8e1bf@broadcom.com>
+Date:   Mon, 29 Jun 2020 09:54:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-The MMAL client_component field is used with the event
-mechanism to allow the client to identify the component for
-which the event is generated.
-The field is only 32bits in size, therefore we can't use a
-pointer to the component in a 64 bit kernel.
 
-Component handles are already held in an array per VCHI
-instance, so use the array index as the client_component handle
-to avoid having to create a new IDR for this purpose.
+On 2020-06-29 9:45 a.m., Florian Fainelli wrote:
+>
+> On 6/29/2020 5:47 AM, Lee Jones wrote:
+>> 'duty' here is an unsigned int, thus checking for <0 will always
+>> evaluate to false.
+>>
+>> Fixes the following W=1 warning:
+>>
+>>   drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>>
+>> Cc: Ray Jui <rjui@broadcom.com>
+>> Cc: Scott Branden <sbranden@broadcom.com>
+>> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+>> Cc: bcm-kernel-feedback-list@broadcom.com
+>> Cc: linux-pwm@vger.kernel.org
+>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> And IPROC_PWM_DUTY_CYCLE_MIN is unused after remove this single use of
+> the define, if you also remove it you can add:
+>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+We actually made this same change internally recently but hadn't 
+upstreamed it yet.
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c | 8 +++++++-
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h | 1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index 6404d4e60350..3bc04f2ea53a 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -943,7 +943,7 @@ static int create_component(struct vchiq_mmal_instance *instance,
- 
- 	/* build component create message */
- 	m.h.type = MMAL_MSG_TYPE_COMPONENT_CREATE;
--	m.u.component_create.client_component = (u32)(unsigned long)component;
-+	m.u.component_create.client_component = component->client_component;
- 	strncpy(m.u.component_create.name, name,
- 		sizeof(m.u.component_create.name));
- 
-@@ -1662,6 +1662,12 @@ int vchiq_mmal_component_init(struct vchiq_mmal_instance *instance,
- 		goto unlock;
- 	}
- 
-+	/* We need a handle to reference back to our component structure.
-+	 * Use the array index in instance->component rather than rolling
-+	 * another IDR.
-+	 */
-+	component->client_component = idx;
-+
- 	ret = create_component(instance, component, name);
- 	if (ret < 0) {
- 		pr_err("%s: failed to create component %d (Not enough GPU mem?)\n",
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-index df608585063b..1dc81ecf9268 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-@@ -92,6 +92,7 @@ struct vchiq_mmal_component {
- 	struct vchiq_mmal_port input[MAX_PORT_COUNT]; /* input ports */
- 	struct vchiq_mmal_port output[MAX_PORT_COUNT]; /* output ports */
- 	struct vchiq_mmal_port clock[MAX_PORT_COUNT]; /* clock ports */
-+	u32 client_component;	/* Used to ref back to client struct */
- };
- 
- int vchiq_mmal_init(struct vchiq_mmal_instance **out_instance);
--- 
-2.27.0
+Tested-by: Scott Branden <scott.branden@broadcom.com>
 
