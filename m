@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE48C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C52C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC9420702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBB7206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459657;
-	bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+	s=default; t=1593459664;
+	bh=Zr5itSru/+GHNNd9LHWvlnW58UoEc4Xy72bax738w/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gs7pAoO3t/mU8MUbnzLM7pIOytujH42RIB7/L8LaSDLaeDac0cCd8zg8gAdKoxh+1
-	 rFwMA+NBEo0ucLWMrAfgkTQt+kxVB33J7ie851+BdupPEfabUtjEHkTNAd2Ch5J+/J
-	 hqmBMo8gHX1BTJVGMaiX/pRUYvllseGFeb9HkG/o=
+	b=Pe89OVyxAd0AXcbvUkv1Fwe1XDU9ypM14IVr1oQwbZ9pEureaQcU1MMvBlvpJ5onP
+	 pCF+wjaS8g6OpwYxb8ts/9jLRtK+cWjQq1P/SxUtdv0FaFSRwDzYlXn+ZIUA+6ARJS
+	 tFUKNMz17z6bg2aEWn+ZUPMyVjeXIvtgOMDacbU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387887AbgF2Tk4 (ORCPT
+        id S2387902AbgF2TlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:40:56 -0400
+        Mon, 29 Jun 2020 15:41:01 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387764AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:38 -0400
+        id S2387840AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EC124807;
-        Mon, 29 Jun 2020 15:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FCF324895;
+        Mon, 29 Jun 2020 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444331;
-        bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+        s=default; t=1593444391;
+        bh=Zr5itSru/+GHNNd9LHWvlnW58UoEc4Xy72bax738w/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixagkDcaGEzpkhpmhzN9mG3o/y+zL89whkpI2p0YA0R7/iDgFSRheU+oU49hDP2hv
-         3PoO3wOPdmu6SRE4pxdo+H0p2LAxnnk9RDO6pGxm5dYxsJe7bytCl4xjtsQ4E6Dy3Q
-         vx9kygX/4kT2Ge1lHI8IOUL5eiFqL2rcJuuBowK4=
+        b=jLl63zOBCewMoi4FCXNg2OZ/kebkcFBV1UFUnlUf52Tej2WqDfWUFGoPAnj3GqIyc
+         WxtvFjVz8rl2THZhH4Gidek5/cb2zHV6QlDZxXXSk2ENcmNr6D9ToqGNHiVcJ/sS02
+         76FEgpXwhPaJCvMApGoBRVRxIgi/TwPJGzr9Nafo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 005/178] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Mon, 29 Jun 2020 11:22:30 -0400
-Message-Id: <20200629152523.2494198-6-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 068/178] ASoc: q6afe: add support to get port direction
+Date:   Mon, 29 Jun 2020 11:23:33 -0400
+Message-Id: <20200629152523.2494198-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,60 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
+[ Upstream commit 4a95737440d426e93441d49d11abf4c6526d4666 ]
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
+This patch adds support to q6afe_is_rx_port() to get direction
+of DSP BE dai port, this is useful for setting dailink
+directions correctly.
 
-Using ip6_mc_clear_src() to take care of the missing free.
-
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes)
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200612123711.29130-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/qcom/qdsp6/q6afe.c | 8 ++++++++
+ sound/soc/qcom/qdsp6/q6afe.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index eaa4c2cc2fbb2..c875c9b6edbe9 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2618,6 +2618,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
+diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
+index e0945f7a58c81..0ce4eb60f9848 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.c
++++ b/sound/soc/qcom/qdsp6/q6afe.c
+@@ -800,6 +800,14 @@ int q6afe_get_port_id(int index)
+ }
+ EXPORT_SYMBOL_GPL(q6afe_get_port_id);
  
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
++int q6afe_is_rx_port(int index)
++{
++	if (index < 0 || index >= AFE_PORT_MAX)
++		return -EINVAL;
++
++	return port_maps[index].is_rx;
++}
++EXPORT_SYMBOL_GPL(q6afe_is_rx_port);
+ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
+ 			    struct q6afe_port *port)
+ {
+diff --git a/sound/soc/qcom/qdsp6/q6afe.h b/sound/soc/qcom/qdsp6/q6afe.h
+index c7ed5422baffd..1a0f80a14afea 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.h
++++ b/sound/soc/qcom/qdsp6/q6afe.h
+@@ -198,6 +198,7 @@ int q6afe_port_start(struct q6afe_port *port);
+ int q6afe_port_stop(struct q6afe_port *port);
+ void q6afe_port_put(struct q6afe_port *port);
+ int q6afe_get_port_id(int index);
++int q6afe_is_rx_port(int index);
+ void q6afe_hdmi_port_prepare(struct q6afe_port *port,
+ 			    struct q6afe_hdmi_cfg *cfg);
+ void q6afe_slim_port_prepare(struct q6afe_port *port,
 -- 
 2.25.1
 
