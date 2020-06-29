@@ -2,117 +2,124 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A42DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C90FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CA4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4442073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466237;
-	bh=wkackI2rfYcaIhwqNMPcXwmVpxfvX7NY51JrPzFNKm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eiARCpPDHyy71+M6zG3uM3ILFgtERm4OFkJbqcf0f2y6Poth4+np8gDMFGsrtGhCZ
-	 Ry8fOXAH/EMEWiK0g+fm/DiUh6WGiIR8j+g+uCT3lz/jl0JLp7ln0F9qxB81ct+GL2
-	 zlYnELJgKiMbOixF8nIQOxCHRsZ+6QcT9vVIRSC8=
+	s=default; t=1593466241;
+	bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i6sSDEMrahmdhnwFwMB6DPvpl4L4HCcRCuePiDVBq0kiQI9sYFsgVTqezNpSg3iet
+	 rWgXL2AE+pxUnYwoz83k7gx0FTYyjoRxPIbfcAVt0PYfsBTIZHJ/BLtZvjaSjKT/b5
+	 ynMi+7sat0wqvd7uBVkz2SuRDThjQtlxggNFg6tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391087AbgF2Vag (ORCPT
+        id S2391228AbgF2Vaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728849AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:21 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7F8255E3;
-        Mon, 29 Jun 2020 18:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD86923EF3;
+        Mon, 29 Jun 2020 15:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593455103;
-        bh=wkackI2rfYcaIhwqNMPcXwmVpxfvX7NY51JrPzFNKm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Blp8tuH+v0xm4gkhx5A0ISpTqN77nf36qnKbOK9TmxsqaJhHMajqjfDivu7VSTh08
-         aAMfNC9mUqwFGKrHwqGjavV7dxtzH2fuRo3vr3RAjjccgO++1NZ0z6FqxKMNjLrUNu
-         8x9sfbWrIlUXPrEXqdshhQCQ/Xw0d+XMJG9z9c3w=
-Date:   Mon, 29 Jun 2020 11:25:02 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [PATCH v2] f2fs: avoid readahead race condition
-Message-ID: <20200629182502.GF20492@sol.localdomain>
-References: <20200624012148.180050-1-jaegeuk@kernel.org>
- <20200629150323.GA3293033@google.com>
- <20200629160934.GA1752982@gmail.com>
- <20200629182414.GA1117827@google.com>
+        s=default; t=1593443907;
+        bh=9K5dZmUCZ09b907mtuBrQymjYkfsXL2A+ZFWg/PT65I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j7PoIfcVL4IDNCIiAO0PQxKjYC7iRj6j/jzNBkYc28/cVJ7CaTQvu1eryqkVLPnO7
+         z7HJUh1o8/L6qhSeCWpQ+Bj7Iy7xdK0aIoMBTEcqKDoYn4kctHe+0QhBMhv3VXp5k8
+         VYH4jWS3Eog2hYdIxGdEyMK2kae8SV4bQWcXAuGo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 007/265] mld: fix memory leak in ipv6_mc_destroy_dev()
+Date:   Mon, 29 Jun 2020 11:14:00 -0400
+Message-Id: <20200629151818.2493727-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629182414.GA1117827@google.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:24:14AM -0700, Jaegeuk Kim wrote:
-> On 06/29, Eric Biggers wrote:
-> > On Mon, Jun 29, 2020 at 08:03:23AM -0700, Jaegeuk Kim wrote:
-> > > If two readahead threads having same offset enter in readpages, every read
-> > > IOs are split and issued to the disk which giving lower bandwidth.
-> > > 
-> > > This patch tries to avoid redundant readahead calls.
-> > > 
-> > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > > ---
-> > > v2:
-> > >  - add missing code to bypass read
-> > > 
-> > >  fs/f2fs/data.c  | 18 +++++++++++++++++-
-> > >  fs/f2fs/f2fs.h  |  1 +
-> > >  fs/f2fs/super.c |  2 ++
-> > >  3 files changed, 20 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > > index d6094b9f3916..9b69a159cc6c 100644
-> > > --- a/fs/f2fs/data.c
-> > > +++ b/fs/f2fs/data.c
-> > > @@ -2403,6 +2403,7 @@ int f2fs_mpage_readpages(struct address_space *mapping,
-> > >  #endif
-> > >  	unsigned max_nr_pages = nr_pages;
-> > >  	int ret = 0;
-> > > +	bool drop_ra = false;
-> > >  
-> > >  	map.m_pblk = 0;
-> > >  	map.m_lblk = 0;
-> > > @@ -2413,13 +2414,25 @@ int f2fs_mpage_readpages(struct address_space *mapping,
-> > >  	map.m_seg_type = NO_CHECK_TYPE;
-> > >  	map.m_may_create = false;
-> > >  
-> > > +	/*
-> > > +	 * Two readahead threads for same address range can cause race condition
-> > > +	 * which fragments sequential read IOs. So let's avoid each other.
-> > > +	 */
-> > > +	if (pages && is_readahead) {
-> > > +		page = list_last_entry(pages, struct page, lru);
-> > > +		if (F2FS_I(inode)->ra_offset == page_index(page))
-> > > +			drop_ra = true;
-> > > +		else
-> > > +			F2FS_I(inode)->ra_offset = page_index(page);
-> > > +	}
-> > 
-> > This is a data race because ra_offset can be read/written by different threads
-> > concurrently.
-> > 
-> > It either needs locking, or READ_ONCE() and WRITE_ONCE() if races are okay.
-> 
-> I just wanted to keep zero overhead, since it doesn't matter either cases of
-> skipping readahead or not.
-> 
+From: Wang Hai <wanghai38@huawei.com>
 
-Okay, then it should use READ_ONCE() and WRITE_ONCE().
+[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
 
-- Eric
+Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
+the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
+which mca_sources are leaked after ma_put().
+
+Using ip6_mc_clear_src() to take care of the missing free.
+
+BUG: memory leak
+unreferenced object 0xffff8881113d3180 (size 64):
+  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
+    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
+    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
+    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
+    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
+    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
+    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
+    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
+    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
+    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
+    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
+    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv6/mcast.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index eaa4c2cc2fbb2..c875c9b6edbe9 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2618,6 +2618,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
+ 		idev->mc_list = i->next;
+ 
+ 		write_unlock_bh(&idev->lock);
++		ip6_mc_clear_src(i);
+ 		ma_put(i);
+ 		write_lock_bh(&idev->lock);
+ 	}
+-- 
+2.25.1
+
