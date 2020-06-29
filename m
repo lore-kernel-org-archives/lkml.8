@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7E620786
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1979A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467857;
-	bh=Xv6s/hhVZVL9IE+xoCVPrgrKTX+scJkpBD1WMF/fTJM=;
+	s=default; t=1593467860;
+	bh=+lP1ivIjJCHetDSwDDW71ytRb636cQUIiBGy7Wq4WhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+D1VzsmXc7RKCyvfFY3T4u+m3HKHEeEr2rBLtYa4QCm5TPyNPbdC1B/TBTRXbGZh
-	 q4ZhGSpXFX46ZXjeLjIZyXTdLOPyM++BhXmwceyxdBtRjPqAqkJszfWB8M+Nqcaxiv
-	 5gJouhU7adyFLfwgq5IzxVaC/6AZzWL1MU6c1EKM=
+	b=GtIp0NEWeTlWsS2bTso1VGPUuZJcv+5Yv2wPZtIwtI/vuXiqPidrli4OILNnOEHO4
+	 lJxXCKITtJcvr/EiWC/p/ik0wlQdH8uso0BfTTWqBlkeR79pZhYxJkE0XEqT6LNrWG
+	 RnFePCZ2yBuLSx2c+te2ZKkCd8KX23hAFo/AaUH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404718AbgF2V5g (ORCPT
+        id S2404709AbgF2V5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726493AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5259024707;
-        Mon, 29 Jun 2020 15:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B4F247B6;
+        Mon, 29 Jun 2020 15:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444042;
-        bh=Xv6s/hhVZVL9IE+xoCVPrgrKTX+scJkpBD1WMF/fTJM=;
+        s=default; t=1593444122;
+        bh=+lP1ivIjJCHetDSwDDW71ytRb636cQUIiBGy7Wq4WhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5vHhWjRsxVbxFGuewov+aMCP6GvNe+n184vtKRxYfUDqevi+IYrJ8pdEZa4ef9OX
-         yV1EXaOOXMnzEytIEXo1iniz5JRkAhOrE9INCbmmJI0mDRzwPcZiVShkT2DbKnhAVd
-         7MLgOpHrUudpYQw7XmelSCWyTkJL/4DVr05aYOxs=
+        b=V3tU5ljD1OfTD/5R7gemaE02TVD5lSk4SFKTY43lrynpcVhMGOD9LrQ77+mQHMEGO
+         LEsAnevhHbf0fbQ6oTs7JvMsJ8iAdIIVfWZ3ESvVBFnMhdpgFrCcfplOdnKLEbGJDE
+         LF5ep+ooh/d8J17UaY1+oh8iduHdeZ1fO8zfMnqs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 149/265] net: qede: stop adding events on an already destroyed workqueue
-Date:   Mon, 29 Jun 2020 11:16:22 -0400
-Message-Id: <20200629151818.2493727-150-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 231/265] ocfs2: avoid inode removal while nfsd is accessing it
+Date:   Mon, 29 Jun 2020 11:17:44 -0400
+Message-Id: <20200629151818.2493727-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,44 +70,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 4079c7f7a2a00ab403c177ce723b560de59139c3 ]
+commit 4cd9973f9ff69e37dd0ba2bd6e6423f8179c329a upstream.
 
-Set rdma_wq pointer to NULL after destroying the workqueue and check
-for it when adding new events to fix crashes on driver unload.
+Patch series "ocfs2: fix nfsd over ocfs2 issues", v2.
 
-Fixes: cee9fbd8e2e9 ("qede: Add qedr framework")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is a series of patches to fix issues on nfsd over ocfs2.  patch 1
+is to avoid inode removed while nfsd access it patch 2 & 3 is to fix a
+panic issue.
+
+This patch (of 4):
+
+When nfsd is getting file dentry using handle or parent dentry of some
+dentry, one cluster lock is used to avoid inode removed from other node,
+but it still could be removed from local node, so use a rw lock to avoid
+this.
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-1-junxiao.bi@oracle.com
+Link: http://lkml.kernel.org/r/20200616183829.87211-2-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede_rdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/dlmglue.c | 17 ++++++++++++++++-
+ fs/ocfs2/ocfs2.h   |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-index 2d873ae8a234d..668ccc9d49f83 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -105,6 +105,7 @@ static void qede_rdma_destroy_wq(struct qede_dev *edev)
- 
- 	qede_rdma_cleanup_event(edev);
- 	destroy_workqueue(edev->rdma_info.rdma_wq);
-+	edev->rdma_info.rdma_wq = NULL;
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index 152a0fc4e9051..751bc4dc74663 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -689,6 +689,12 @@ static void ocfs2_nfs_sync_lock_res_init(struct ocfs2_lock_res *res,
+ 				   &ocfs2_nfs_sync_lops, osb);
  }
  
- int qede_rdma_dev_add(struct qede_dev *edev, bool recovery)
-@@ -325,7 +326,7 @@ static void qede_rdma_add_event(struct qede_dev *edev,
- 	if (edev->rdma_info.exp_recovery)
- 		return;
++static void ocfs2_nfs_sync_lock_init(struct ocfs2_super *osb)
++{
++	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
++	init_rwsem(&osb->nfs_sync_rwlock);
++}
++
+ void ocfs2_trim_fs_lock_res_init(struct ocfs2_super *osb)
+ {
+ 	struct ocfs2_lock_res *lockres = &osb->osb_trim_fs_lockres;
+@@ -2855,6 +2861,11 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
+ 	if (ocfs2_is_hard_readonly(osb))
+ 		return -EROFS;
  
--	if (!edev->rdma_info.qedr_dev)
-+	if (!edev->rdma_info.qedr_dev || !edev->rdma_info.rdma_wq)
- 		return;
++	if (ex)
++		down_write(&osb->nfs_sync_rwlock);
++	else
++		down_read(&osb->nfs_sync_rwlock);
++
+ 	if (ocfs2_mount_local(osb))
+ 		return 0;
  
- 	/* We don't want the cleanup flow to start while we're allocating and
+@@ -2873,6 +2884,10 @@ void ocfs2_nfs_sync_unlock(struct ocfs2_super *osb, int ex)
+ 	if (!ocfs2_mount_local(osb))
+ 		ocfs2_cluster_unlock(osb, lockres,
+ 				     ex ? LKM_EXMODE : LKM_PRMODE);
++	if (ex)
++		up_write(&osb->nfs_sync_rwlock);
++	else
++		up_read(&osb->nfs_sync_rwlock);
+ }
+ 
+ int ocfs2_trim_fs_lock(struct ocfs2_super *osb,
+@@ -3340,7 +3355,7 @@ int ocfs2_dlm_init(struct ocfs2_super *osb)
+ local:
+ 	ocfs2_super_lock_res_init(&osb->osb_super_lockres, osb);
+ 	ocfs2_rename_lock_res_init(&osb->osb_rename_lockres, osb);
+-	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
++	ocfs2_nfs_sync_lock_init(osb);
+ 	ocfs2_orphan_scan_lock_res_init(&osb->osb_orphan_scan.os_lockres, osb);
+ 
+ 	osb->cconn = conn;
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 9150cfa4df7dc..9461bd3e1c0c8 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -394,6 +394,7 @@ struct ocfs2_super
+ 	struct ocfs2_lock_res osb_super_lockres;
+ 	struct ocfs2_lock_res osb_rename_lockres;
+ 	struct ocfs2_lock_res osb_nfs_sync_lockres;
++	struct rw_semaphore nfs_sync_rwlock;
+ 	struct ocfs2_lock_res osb_trim_fs_lockres;
+ 	struct mutex obs_trim_fs_mutex;
+ 	struct ocfs2_dlm_debug *osb_dlm_debug;
 -- 
 2.25.1
 
