@@ -2,79 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F633C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED72CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30B12065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="e7yyWnk6"
+	by mail.kernel.org (Postfix) with ESMTP id D8925204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgF2SyE (ORCPT
+        id S1729888AbgF2SyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729151AbgF2SyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:54:00 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B233DC031C40
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:54:00 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6DA097AEF; Mon, 29 Jun 2020 14:53:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6DA097AEF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593456839;
-        bh=9XJ9VxQWwlxsT+F/M9dETph4iM5G18Tn6CLcQzWV/sU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e7yyWnk6AGhuKFpEIuAurEOCqZNusp5gYB9AIsu4DL3I7Rql9Tir1QZZuwzvRbm8F
-         +4fWJlEq38nHSusrh0u7hWmT3E8dfqfTl/kbcuFTuOKitlAH8NBOTMUS98F+nqKCqH
-         XOefB6ESQxFknvJeOvT266EnForDSORL8GFDkFaU=
-Date:   Mon, 29 Jun 2020 14:53:59 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the nfsd tree
-Message-ID: <20200629185359.GC2056@fieldses.org>
-References: <20200627090317.48bf2578@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627090317.48bf2578@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 29 Jun 2020 14:54:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41020 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729812AbgF2SyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:54:03 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AA4C91A12DD;
+        Mon, 29 Jun 2020 17:17:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C14031A0239;
+        Mon, 29 Jun 2020 17:17:14 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9756E402E0;
+        Mon, 29 Jun 2020 23:17:01 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        p.zabel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net, treding@nvidia.com,
+        gustavo.pimentel@synopsys.com, amurray@thegoodpenguin.co.uk,
+        vidyas@nvidia.com, xiaowei.bao@nxp.com, jonnyc@amazon.com,
+        hayashi.kunihiko@socionext.com, eswara.kota@linux.intel.com,
+        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/3] reset: imx7: Support module build
+Date:   Mon, 29 Jun 2020 23:05:27 +0800
+Message-Id: <1593443129-18766-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:03:17AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   886c4fe8bdff ("nfsd4: fix nfsdfs reference count loop")
-> 
-> Fixes tag
-> 
->   Fixes: 2c830dd720 ("nfsd: persist nfsd filesystem across mounts")
-> 
-> has these problem(s):
-> 
->   - SHA1 should be at least 12 digits long
+Add module device table, author, description and license to support
+module build, and CONFIG_RESET_IMX7 is changed to default 'y' ONLY
+for i.MX7D, other platforms need to select it in defconfig.
 
-OK, should be fixed.--b.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- make it default 'y' for SOC_IMX7D;
+	- add module author, description;
+	- use device_initcall instead of builtin_platform_driver() to support
+	  module unload.
+---
+ drivers/reset/Kconfig      |  5 +++--
+ drivers/reset/reset-imx7.c | 14 ++++++++++++--
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d9efbfd..19f9773 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -65,9 +65,10 @@ config RESET_HSDK
+ 	  This enables the reset controller driver for HSDK board.
+ 
+ config RESET_IMX7
+-	bool "i.MX7/8 Reset Driver" if COMPILE_TEST
++	tristate "i.MX7/8 Reset Driver"
+ 	depends on HAS_IOMEM
+-	default SOC_IMX7D || (ARM64 && ARCH_MXC)
++	depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
++	default y if SOC_IMX7D
+ 	select MFD_SYSCON
+ 	help
+ 	  This enables the reset controller driver for i.MX7 SoCs.
+diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+index d170fe6..c710f789 100644
+--- a/drivers/reset/reset-imx7.c
++++ b/drivers/reset/reset-imx7.c
+@@ -8,7 +8,7 @@
+  */
+ 
+ #include <linux/mfd/syscon.h>
+-#include <linux/mod_devicetable.h>
++#include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
+@@ -386,6 +386,7 @@ static const struct of_device_id imx7_reset_dt_ids[] = {
+ 	{ .compatible = "fsl,imx8mp-src", .data = &variant_imx8mp },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, imx7_reset_dt_ids);
+ 
+ static struct platform_driver imx7_reset_driver = {
+ 	.probe	= imx7_reset_probe,
+@@ -394,4 +395,13 @@ static struct platform_driver imx7_reset_driver = {
+ 		.of_match_table	= imx7_reset_dt_ids,
+ 	},
+ };
+-builtin_platform_driver(imx7_reset_driver);
++
++static int __init imx7_reset_init(void)
++{
++	return platform_driver_register(&imx7_reset_driver);
++}
++device_initcall(imx7_reset_init);
++
++MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
++MODULE_DESCRIPTION("NXP i.MX7 reset driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
