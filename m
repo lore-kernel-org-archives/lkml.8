@@ -2,121 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5147AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9B52067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67652067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgF2Tb6 (ORCPT
+        id S1732432AbgF2TcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36734 "EHLO mx2.suse.de"
+        Mon, 29 Jun 2020 15:32:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36738 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732448AbgF2Tb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733166AbgF2Tb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:31:28 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 326E3AD76;
-        Mon, 29 Jun 2020 05:17:22 +0000 (UTC)
-Subject: Re: [PATCH fsgsbase v2 4/4] x86/fsgsbase: Fix Xen PV support
-To:     Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <cover.1593192140.git.luto@kernel.org>
- <f07c08f178fe9711915862b656722a207cd52c28.1593192140.git.luto@kernel.org>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <714d4c04-5907-885f-e23b-baef662f1080@suse.com>
-Date:   Mon, 29 Jun 2020 07:17:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mx2.suse.de (Postfix) with ESMTP id 30642ACDB;
+        Mon, 29 Jun 2020 16:18:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
+Date:   Mon, 29 Jun 2020 18:18:36 +0200
+Message-Id: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <f07c08f178fe9711915862b656722a207cd52c28.1593192140.git.luto@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.06.20 19:24, Andy Lutomirski wrote:
-> On Xen PV, SWAPGS doesn't work.  Teach __rdfsbase_inactive() and
-> __wrgsbase_inactive() to use rdmsrl()/wrmsrl() on Xen PV.  The Xen
-> pvop code will understand this and issue the correct hypercalls.
-> 
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> ---
->   arch/x86/kernel/process_64.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-> index cb8e37d3acaa..457d02aa10d8 100644
-> --- a/arch/x86/kernel/process_64.c
-> +++ b/arch/x86/kernel/process_64.c
-> @@ -163,9 +163,13 @@ static noinstr unsigned long __rdgsbase_inactive(void)
->   
->   	lockdep_assert_irqs_disabled();
->   
-> -	native_swapgs();
-> -	gsbase = rdgsbase();
-> -	native_swapgs();
-> +	if (!static_cpu_has(X86_FEATURE_XENPV)) {
-> +		native_swapgs();
-> +		gsbase = rdgsbase();
-> +		native_swapgs();
-> +	} else {
-> +		rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
-> +	}
->   
->   	return gsbase;
->   }
-> @@ -182,9 +186,13 @@ static noinstr void __wrgsbase_inactive(unsigned long gsbase)
->   {
->   	lockdep_assert_irqs_disabled();
->   
-> -	native_swapgs();
-> -	wrgsbase(gsbase);
-> -	native_swapgs();
-> +	if (!static_cpu_has(X86_FEATURE_XENPV)) {
-> +		native_swapgs();
-> +		wrgsbase(gsbase);
-> +		native_swapgs();
-> +	} else {
-> +		wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
-> +	}
->   }
->   
->   /*
-> 
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series reworks how we handle this.
 
-Another possibility would be to just do (I'm fine either way):
+The previous solution makes use of PCI quirks and exporting platform
+specific functions. Albeit functional it feels pretty shoehorned. This
+proposes an alternative way of handling the triggering of the xHCI chip
+initialization trough means of a reset controller.
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index acc49fa6a097..b78dd373adbf 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -318,6 +318,8 @@ static void __init xen_init_capabilities(void)
-  		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
-  		setup_clear_cpu_cap(X86_FEATURE_OSXSAVE);
-  	}
-+
-+	setup_clear_cpu_cap(X86_FEATURE_FSGSBASE);
-  }
+The benefits are pretty evident: less platform churn in core xHCI code,
+and no explicit device dependency management in pcie-brcmstb.
 
-  static void xen_set_debugreg(int reg, unsigned long val)
+Note that patch #1 depends on another series[1], that was just applied
+into the clk maintainer's tree.
 
+The series is based on v5.8-rc3
 
-Juergen
+v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
+v2: https://lkml.org/lkml/2020/6/9/875
+v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
+
+[1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
+
+---
+
+Changes since v4:
+ - Adress Andy's comments
+
+Changes since v3:
+ - Rework dt patch to include root bridge as a separate node
+ - Update xhci-pci patch now that the xhci dev has a dt node (it was
+   getting it in the past from its bus)
+
+Changes since v2:
+ - Add reset to resume routine in xhci-pci
+ - Correct of refcount in pci-quirks
+ - Correct typos
+ - Use include file to define firmware reset IDs
+
+Changes since v1:
+ - Rework reset controller so it's less USB centric
+ - Use correct reset controller API in xhci-pci
+ - Correct typos
+
+Nicolas Saenz Julienne (9):
+  dt-bindings: reset: Add a binding for the RPi Firmware reset
+    controller
+  reset: Add Raspberry Pi 4 firmware reset controller
+  ARM: dts: bcm2711: Add firmware usb reset node
+  ARM: dts: bcm2711: Add reset controller to xHCI node
+  usb: xhci-pci: Add support for reset controllers
+  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
+  Revert "firmware: raspberrypi: Introduce vl805 init routine"
+  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  22 ++++
+ drivers/firmware/Kconfig                      |   3 +-
+ drivers/firmware/raspberrypi.c                |  61 ---------
+ drivers/pci/controller/pcie-brcmstb.c         |  17 ---
+ drivers/reset/Kconfig                         |  11 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-raspberrypi.c             | 122 ++++++++++++++++++
+ drivers/usb/host/pci-quirks.c                 |  22 ++--
+ drivers/usb/host/xhci-pci.c                   |  10 ++
+ drivers/usb/host/xhci.h                       |   2 +
+ .../reset/raspberrypi,firmware-reset.h        |  13 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
+ 13 files changed, 215 insertions(+), 97 deletions(-)
+ create mode 100644 drivers/reset/reset-raspberrypi.c
+ create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+
+-- 
+2.27.0
+
