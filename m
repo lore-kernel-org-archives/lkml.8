@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF297C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3ECA2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AEA2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457280;
-	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
+	s=default; t=1593457284;
+	bh=iTb1TmiSIxWsy6PGti5hKwlxh7Anhvbfmt0aLsL/E5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZQgEX0DIifX9oRxB2b1h6EC3/ifWn4eJHZWFivv2s85vg2ptx5P5aDSGefXxek3y
-	 4GYuwV3zDZ4l+NFlALV9iimvCxb/e0Z7HK5pJr3PzJNsQwAE8xxXxqK2PR/iXVXptx
-	 swNimc7zoxWD+zcNzPzEJ5P+rWdTpQ1MJG0XqSHE=
+	b=HSFaLnUWmlwWvlBLd+TpEQSv3+4RNFSTQEFO3I9KOhXMd8yAwrpZGb74FIB/n87zx
+	 JyxU8H+ZhevutThZNfJKTOTAkL6YgL8Q8vUWWziTLUv+2MyV74BDFW3aMfeaVZkZH4
+	 l7K7Tx9pv6H9t0qdejEbojyJGf55gbp8P+oEVa2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgF2TBS (ORCPT
+        id S1729857AbgF2TBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730364AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730362AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D7A254F2;
-        Mon, 29 Jun 2020 15:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71FD25529;
+        Mon, 29 Jun 2020 15:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446050;
-        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
+        s=default; t=1593446091;
+        bh=iTb1TmiSIxWsy6PGti5hKwlxh7Anhvbfmt0aLsL/E5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zuy4gx/Gx1fV9tsSoUzbnZw9At47H2+/K9zjy3x4AklnrvonWpR8ACJdLeadx/fSw
-         4xZXZthd218rpfCuN+PlOZdBpjlddBDesNXdjQ+HyHKyLrwj1nzpaVbq4kmJuQep2t
-         gjDgZwYTKbHMelE2UdphoPcwU/oKWye/HIuYHOQc=
+        b=ulhfYApZktX+eAG9UO01LlPxBsItGL944IDTllBtChwQZEhHlyqoWqerY4USWvJn7
+         pLg58vmpKtg9pt+3dfQ1yNd+Txces2zVReJnIJJhKBmzzNSftzHKnm5HcmeTUFeBTI
+         RjrItxYlO2xf5wB/71Bq1p0j9qqC26NG9bv4bdMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
+Cc:     Neal Cardwell <ncardwell@google.com>,
+        Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 053/135] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Mon, 29 Jun 2020 11:51:47 -0400
-Message-Id: <20200629155309.2495516-54-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 086/135] tcp_cubic: fix spurious HYSTART_DELAY exit upon drop in min RTT
+Date:   Mon, 29 Jun 2020 11:52:20 -0400
+Message-Id: <20200629155309.2495516-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -67,63 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Neal Cardwell <ncardwell@google.com>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+[ Upstream commit b344579ca8478598937215f7005d6c7b84d28aee ]
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
+Mirja Kuehlewind reported a bug in Linux TCP CUBIC Hystart, where
+Hystart HYSTART_DELAY mechanism can exit Slow Start spuriously on an
+ACK when the minimum rtt of a connection goes down. From inspection it
+is clear from the existing code that this could happen in an example
+like the following:
 
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
+o The first 8 RTT samples in a round trip are 150ms, resulting in a
+  curr_rtt of 150ms and a delay_min of 150ms.
 
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
+o The 9th RTT sample is 100ms. The curr_rtt does not change after the
+  first 8 samples, so curr_rtt remains 150ms. But delay_min can be
+  lowered at any time, so delay_min falls to 100ms. The code executes
+  the HYSTART_DELAY comparison between curr_rtt of 150ms and delay_min
+  of 100ms, and the curr_rtt is declared far enough above delay_min to
+  force a (spurious) exit of Slow start.
+
+The fix here is simple: allow every RTT sample in a round trip to
+lower the curr_rtt.
+
+Fixes: ae27e98a5152 ("[TCP] CUBIC v2.3")
+Reported-by: Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_cubic.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index 5cdfd743447b7..900ed4b478996 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -332,10 +332,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
+diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
+index 448c2615fece9..9fb3a5e83a7c7 100644
+--- a/net/ipv4/tcp_cubic.c
++++ b/net/ipv4/tcp_cubic.c
+@@ -414,6 +414,8 @@ static void hystart_update(struct sock *sk, u32 delay)
  
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
- 
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -369,12 +375,12 @@ int main(int argc, char **argv)
- 		bail("socket");
- 
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
- 
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
+ 	if (hystart_detect & HYSTART_DELAY) {
+ 		/* obtain the minimum delay of more than sampling packets */
++		if (ca->curr_rtt > delay)
++			ca->curr_rtt = delay;
+ 		if (ca->sample_cnt < HYSTART_MIN_SAMPLES) {
+ 			if (ca->curr_rtt == 0 || ca->curr_rtt > delay)
+ 				ca->curr_rtt = delay;
 -- 
 2.25.1
 
