@@ -2,83 +2,139 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F227C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE7C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7888F206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467280;
+	bh=xad0Vf4y6tkQ6kiNJkH+zGRdUliz2elF3LQs9dqu5sM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WpMZ0RcdE+C5rroE9tQAJbpIK0st8d/8mM2NQAgvjGwTmM1FqjrlF1ygld9lCyErt
+	 RxvvWoegj6swOAYlUPVUd+zn3xKNXv4cVG8SV/JH0ncDjeUGuqC1ZKaNsO7fjjro40
+	 Xs/aU035VFuh522wTpz+LrEqkHl5fIIT8SFUDfvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgF2Vry (ORCPT
+        id S2391413AbgF2Vro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46365 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391466AbgF2Vrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:47:46 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n24so14590650otr.13;
-        Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bg/8+MNYJDDCvPfevV5MmVW6eomjiYjuKJdPS9BuKRc=;
-        b=KrtLIKkstEXzLph+hH/92CRzqSHeAWo3KOzjjTkWcrVtsSr2KKh0OzcDqgOcxe8+Qp
-         b7NFKuu1zn/ZMMrPwkNhH1EkonUY88m3Bgy0luv4wlSSDt0luFg1XBcl5Ny2QHr/jFHI
-         lN25QpT2n9O4tkMAVDRIXDKcT0J9wikh9hfdxRy7euptOkW+8yJSS7TxlcfdcUpyb3oP
-         D8sdZa59FDQWJmhr3b702CrXoGaAO45EXdvR4Qa2UgBeDAmt/EKbhubG8XG0gVF33K4T
-         0Qapyhd9knt8a7LX37eArLbgVFfSJVK3nVD9mONOy09RxERJt4EAN0eL4za2Q+Won56r
-         whPg==
-X-Gm-Message-State: AOAM5335T8ZfZvTnFiUis89joIQO6t/GWXerNU4YC2r7DRXcnCkctsEl
-        wlRaSM29d/kdq6uE1xrxf62PHRBncRWszVucSjW9XjSBAFI=
-X-Google-Smtp-Source: ABdhPJyLaroA0htJgp6XAeP34onG9mo2tlAy+lOvoV/8lvJ36fwjwGDczPcQeW26SHMu76Ngn9P5yzkiLg9cpAETRvQ=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr14223999otb.107.1593467266175;
- Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
+        Mon, 29 Jun 2020 17:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 460C4246F2;
+        Mon, 29 Jun 2020 15:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444037;
+        bh=xad0Vf4y6tkQ6kiNJkH+zGRdUliz2elF3LQs9dqu5sM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0JL/hbwhrfaZLzNjeTDhr/+tr9u0enGwoiGfjUCXWfewKXrUp3hgqMUWDl2FsdC+G
+         nATXQReLlMNgNU46vNYiPHvQU69UbPo+v3GSdjIq+tC+P5H++UhWfBjhqxGOWYY+iT
+         jFhVBhUHLjTnlMjRlbx30Up/st07M4A2FzkZabfE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 144/265] iommu/vt-d: Update scalable mode paging structure coherency
+Date:   Mon, 29 Jun 2020 11:16:17 -0400
+Message-Id: <20200629151818.2493727-145-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-2-hch@lst.de>
-In-Reply-To: <20200629193947.2705954-2-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jun 2020 23:47:35 +0200
-Message-ID: <CAMuHMdXXORM_yD4bqk+MQ1yEA1jmOjO9eyfnsjxY1a5E5isEcg@mail.gmail.com>
-Subject: Re: [PATCH 01/20] nfblock: stop using ->queuedata
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        linux-nvme@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:40 PM Christoph Hellwig <hch@lst.de> wrote:
-> Instead of setting up the queuedata as well just use one private data
-> field.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+[ Upstream commit 04c00956ee3cd138fd38560a91452a804a8c5550 ]
 
-Gr{oetje,eeting}s,
+The Scalable-mode Page-walk Coherency (SMPWC) field in the VT-d extended
+capability register indicates the hardware coherency behavior on paging
+structures accessed through the pasid table entry. This is ignored in
+current code and using ECAP.C instead which is only valid in legacy mode.
+Fix this so that paging structure updates could be manually flushed from
+the cache line if hardware page walking is not snooped.
 
-                        Geert
+Fixes: 765b6a98c1de3 ("iommu/vt-d: Enumerate the scalable mode capability")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-6-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel-iommu.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index a0b9ea0805210..34b2ed91cf4d9 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -634,6 +634,12 @@ struct intel_iommu *domain_get_iommu(struct dmar_domain *domain)
+ 	return g_iommus[iommu_id];
+ }
+ 
++static inline bool iommu_paging_structure_coherency(struct intel_iommu *iommu)
++{
++	return sm_supported(iommu) ?
++			ecap_smpwc(iommu->ecap) : ecap_coherent(iommu->ecap);
++}
++
+ static void domain_update_iommu_coherency(struct dmar_domain *domain)
+ {
+ 	struct dmar_drhd_unit *drhd;
+@@ -645,7 +651,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
+ 
+ 	for_each_domain_iommu(i, domain) {
+ 		found = true;
+-		if (!ecap_coherent(g_iommus[i]->ecap)) {
++		if (!iommu_paging_structure_coherency(g_iommus[i])) {
+ 			domain->iommu_coherency = 0;
+ 			break;
+ 		}
+@@ -656,7 +662,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
+ 	/* No hardware attached; use lowest common denominator */
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
+-		if (!ecap_coherent(iommu->ecap)) {
++		if (!iommu_paging_structure_coherency(iommu)) {
+ 			domain->iommu_coherency = 0;
+ 			break;
+ 		}
+@@ -2177,7 +2183,8 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
+ 
+ 	context_set_fault_enable(context);
+ 	context_set_present(context);
+-	domain_flush_cache(domain, context, sizeof(*context));
++	if (!ecap_coherent(iommu->ecap))
++		clflush_cache_range(context, sizeof(*context));
+ 
+ 	/*
+ 	 * It's a non-present to present mapping. If hardware doesn't cache
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
