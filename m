@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC06C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3B720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C41120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461555;
-	bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
+	s=default; t=1593461571;
+	bh=lgdF+Vr6Tm668xiX0c10KvvsPSRsQV1zh/UWjozhaRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dO55RXC85Jcy8S2x/z6m6+YCaGqruAr7U2jqGSAqSppi93Iek6c7pVctKR0KUCm9g
-	 9UfJB0lEKLt7JB4UEjMC1HTCqSYmrfI6+YdN5TKSnhqW90ihW5VUrImesf7ukS7P2n
-	 ktTj+B0sbL4zgOCsH2vorgb3BRk8/l2ZljQum5+E=
+	b=YUJ35CLdG3YRCf8fq4YYh8mYKikdk3IqV/csBOerZ0qKXzuJuAMuS8J8evzwlLlK4
+	 j17LnS+pOnnS8DhnDn2zYOyVggcxBgb95KJkN6pzhbIj2LfzAe0uaZHRQmODMeAROl
+	 qKOx2W/KSnmub4gJc5o/QUftvVpIHVsxNza6EIbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgF2UMe (ORCPT
+        id S1730893AbgF2UMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732876AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732870AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6832A2528E;
-        Mon, 29 Jun 2020 15:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7D125270;
+        Mon, 29 Jun 2020 15:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445000;
-        bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
+        s=default; t=1593444982;
+        bh=lgdF+Vr6Tm668xiX0c10KvvsPSRsQV1zh/UWjozhaRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GNMiOx9V9Gjm+8VKZIUFEvrCb8xv04TKO3OcCfpQxZiIG1WxDFGBwwuRT7/qqHvvt
-         x6cFbrqEUeMObZdFSO1+gwUO531G/oceU+kci3Fc3L0IMSXH4tdKcZhcjAl9wRKfjU
-         r79UPtxZIGSFL0d5rBZIUI5Z9RtqHoTUubpKxU5w=
+        b=z7+tIpgfT2wdGFBoZxQCcER75mMtgbc/gPPjkBUdLE5wsHOrXgV4btNblRaakl4jP
+         nk8PZ3EyJGhXgopw/FndOXdP362zTLBSfBiBMp5EvgjDn7XeOvCyFUYK+VSgOl0p91
+         rCiXybUMsI5QzAFy8TKLu3rE7vhvaFyK8bo97Yfg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/131] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
-Date:   Mon, 29 Jun 2020 11:34:31 -0400
-Message-Id: <20200629153502.2494656-101-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 081/131] nvme-multipath: set bdi capabilities once
+Date:   Mon, 29 Jun 2020 11:34:12 -0400
+Message-Id: <20200629153502.2494656-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,53 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
+[ Upstream commit b2ce4d90690bd29ce5b554e203cd03682dd59697 ]
 
-When I squashed the 'allnoconfig' compiler warning about the
-set_sve_default_vl() function being defined but not used in commit
-1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
-accidentally broke the build for configs where ARM64_SVE is enabled, but
-SYSCTL is not.
+The queues' backing device info capabilities don't change with each
+namespace revalidation. Set it only when each path's request_queue
+is initially added to a multipath queue.
 
-Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
-and CONFIG_SYSCTL=y.
-
-Cc: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/fpsimd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index af59b42973141..177363abbd3e3 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -315,7 +315,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
- 	return sve_vl_from_vq(bit_to_vq(bit));
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 588864beabd80..6f584a9515f42 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -11,6 +11,7 @@
+  * more details.
+  */
+ 
++#include <linux/backing-dev.h>
+ #include <linux/moduleparam.h>
+ #include <trace/events/block.h>
+ #include "nvme.h"
+@@ -521,6 +522,13 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ 		nvme_mpath_set_live(ns);
+ 		mutex_unlock(&ns->head->lock);
+ 	}
++
++	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
++		struct backing_dev_info *info =
++					ns->head->disk->queue->backing_dev_info;
++
++		info->capabilities |= BDI_CAP_STABLE_WRITES;
++	}
  }
  
--#ifdef CONFIG_SYSCTL
-+#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
- 
- static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 				  void __user *buffer, size_t *lenp,
-@@ -361,9 +361,9 @@ static int __init sve_sysctl_init(void)
- 	return 0;
- }
- 
--#else /* ! CONFIG_SYSCTL */
-+#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- static int __init sve_sysctl_init(void) { return 0; }
--#endif /* ! CONFIG_SYSCTL */
-+#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- 
- #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
- 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
+ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
 -- 
 2.25.1
 
