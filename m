@@ -2,117 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADECC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49242206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C401C20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457941;
-	bh=6iFnLyCLXDyOVpSBa3/MoyeGT0lEkCOfwaPXDKabib0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LgUrkiVHXveJzuGe6bDNb9R9vr9Jo7Ceih+ZoKas3Mm96t+/vBdrBkEpuH+eUJ/Hi
-	 RJsirYUXNVle4VT/v2EZ4aN82XP4d/M44CrSHbsPMbUcY2+R142YZjokMmYG+ZByQF
-	 XuiJER564E9HfZk711Buqmg4+qNLO3cCcVtaCByc=
+	s=default; t=1593457943;
+	bh=xst/kAsXPq8YzNDYJKjCJPDpIasNGP3vNvVSSCZWCMM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pSTI0LwhoxTTOzJ3PxGrPtmdnf64B4uaMBsluuIIs6VmfzsQT4BBnTyvTYUHPCRdv
+	 YfAj0oYVjuCDLPEiasXOESP4SbKPyFc2TequhCO90d77GEtN/jaZkmuXxqRX9ln0OV
+	 XCM4Fmb6kqwVC7atXyBPLfX/ymJzM51qobxQR7wY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730859AbgF2TMU (ORCPT
+        id S1730942AbgF2TMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730767AbgF2TK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:57 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD56C031413
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:10:56 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y18so9773591lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tSA8ywi78rUHFSpY/Nh0QOGhLyb0fCOpr5Vs4TKLX4I=;
-        b=DdZYOk3C2gqHJgrApbFwYh4JVw30MMHLelRJPuRrFQHuCgzURGP0ySVe+bMXX7P0bc
-         HdR5v5nmxQAKjBr/BJwcCjZ0q6O5mvmktqcNB4/IlzJBckOkjWLgl4r7Ec18e7wl7SnO
-         SG0pnoDk7iVjw0PsWVE3QvC7A0cEGr6+qyrlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tSA8ywi78rUHFSpY/Nh0QOGhLyb0fCOpr5Vs4TKLX4I=;
-        b=Z8JBLSno2SK06EBW2DTglcYHwW4comG3cEDI2fmDzx4BXoPIn27NkHIHIisveIRo6C
-         1e5c/OvHMvFP43plBbx93aReQ9ltfByOsJuTBCZjtIkJ+CC3vJAAK9vmesDuHXRz5s+6
-         +eE5LruPke7okCjCX0+jXEzZM/rLFWy3c42pSvncAspBliZEaEokg4Rvo0/MTfDF5otm
-         6aeyxClHFYzElW0gWKK8NyJ8HVa7rZosVpJz1Xmh0wMLAArIV04X8FXKhUBmLXmeTjGs
-         Jutx58+pkEbdRcLHnGVKAzqVmKIDmqilyE+jVRWJfLafKi6MU59OFq/GksKw11WVnMc7
-         AgvA==
-X-Gm-Message-State: AOAM530nW9IV8YsD/EGgoyozhBfOfMfIj17qcgOtXfBPVNgxHAKatPt+
-        L5tekEsj/fx+AeMNcERGfq51hLCd7BE=
-X-Google-Smtp-Source: ABdhPJwlEfQLP1LT2BtBsFK2LnbKxSxLZGSpFRx7AAnSvI0BgxMFKQIjIfWdvqN0UTp1JUXi1mGCzA==
-X-Received: by 2002:a05:6512:682:: with SMTP id t2mr10004517lfe.101.1593457855048;
-        Mon, 29 Jun 2020 12:10:55 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id y188sm141083lfc.36.2020.06.29.12.10.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 12:10:54 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id 9so19460790ljv.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:10:53 -0700 (PDT)
-X-Received: by 2002:a2e:999a:: with SMTP id w26mr3408927lji.371.1593457853564;
- Mon, 29 Jun 2020 12:10:53 -0700 (PDT)
+        Mon, 29 Jun 2020 15:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730971AbgF2TKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:10:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33AB254CD;
+        Mon, 29 Jun 2020 15:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446025;
+        bh=xst/kAsXPq8YzNDYJKjCJPDpIasNGP3vNvVSSCZWCMM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FZ6/aPEE5gyg68Mum3S8105alDbvZpyPV93Fyfzb4mh5LupQpt3MVYjXp42KrrL9W
+         /HUJugE6HjBYvCGcF8SwR6vjFRvxEN4s6M9lTdkvjcd2lX6voJHuaHCXT+Bb6FiG8O
+         TtVVMOMr1jsEm6EB/xg24nTH+nYnPIvv1AHhDzU4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 031/135] tty: n_gsm: Fix SOF skipping
+Date:   Mon, 29 Jun 2020 11:51:25 -0400
+Message-Id: <20200629155309.2495516-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
- <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
- <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
- <20200629152912.GA26172@lst.de> <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com>
- <20200629180730.GA4600@lst.de> <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
- <20200629183636.GA6539@lst.de>
-In-Reply-To: <20200629183636.GA6539@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Jun 2020 12:10:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whE2_YcRRQhJ73s4kYqTNDkYqq2HHtieQ-R1J+Awgk=nA@mail.gmail.com>
-Message-ID: <CAHk-=whE2_YcRRQhJ73s4kYqTNDkYqq2HHtieQ-R1J+Awgk=nA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:36 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Having resurrect my work there really are tons of int cases.  Which
-> makes me thing that splitting out a setsockopt_int method which gets
-> passed value instead of a pointer, then converting all the simple cases
-> to that first and then doing the real shit later sounds like a prom=D1=96=
-sing
-> idea.
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-Try my hacky patch first, and just change the code that does
+[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
 
-                if (get_user(val, (int __user *)optval)) {
-                        err =3D -EFAULT;
+For at least some modems like the TELIT LE910, skipping SOF makes
+transfers blocking indefinitely after a short amount of data
+transferred.
 
-to do
+Given the small improvement provided by skipping the SOF (just one
+byte on about 100 bytes), it seems better to completely remove this
+"feature" than make it optional.
 
-                val =3D *(int *)optval;
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/n_gsm.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-In fact, that pattern seems to be so common that you can probably
-almost do it with a sed-script or something.
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 6060c3e8925ef..08aaf993221e7 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -685,7 +685,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+-	int skip_sof = 0;
+ 
+ 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
+ 		if (gsm->constipated && msg->addr)
+@@ -707,15 +706,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 			print_hex_dump_bytes("gsm_data_kick: ",
+ 					     DUMP_PREFIX_OFFSET,
+ 					     gsm->txframe, len);
+-
+-		if (gsm->output(gsm, gsm->txframe + skip_sof,
+-						len - skip_sof) < 0)
++		if (gsm->output(gsm, gsm->txframe, len) < 0)
+ 			break;
+ 		/* FIXME: Can eliminate one SOF in many more cases */
+ 		gsm->tx_bytes -= msg->len;
+-		/* For a burst of frames skip the extra SOF within the
+-		   burst */
+-		skip_sof = 1;
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
+-- 
+2.25.1
 
-                   Linus
