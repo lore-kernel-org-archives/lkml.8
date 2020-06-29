@@ -2,126 +2,106 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4950AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1EFB206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464911;
-	bh=f1aS4cZsNksB3LauE1ytRje/Ho2vh8OFZ9gcBrF7hoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nWFCm19aS452dV88N30fOmGe3NICbNg9RE85ySe3FTRNgr2QQp4d30Wk8BWhd8nns
-	 ac4u+6gHMqLV+OEzytseWVSzNzfRObL5tXQ56eU+/O/7negNyiByUuY7CR+OM9phez
-	 jP9yvUKnQ5Cm3Ws/A/3B0yt/B1k4schN355lRCk8=
+	by mail.kernel.org (Postfix) with ESMTP id 3591B2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390422AbgF2VIa (ORCPT
+        id S2389916AbgF2VI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:30 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38415 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390229AbgF2VIZ (ORCPT
+        Mon, 29 Jun 2020 17:08:27 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:48001 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388430AbgF2VIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:08:25 -0400
-Received: by mail-ed1-f65.google.com with SMTP id n2so5209653edr.5;
-        Mon, 29 Jun 2020 14:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WVzOc0zshIAzur/W9UldDSamNUZIg6bYwU7gViF4xjM=;
-        b=XUXYJW1YjmtF6PwxsLRs3RzxxVAxAPl7iKRiELCzxj0g2cn0itGuB0hAxZWMlVWLz9
-         mB/GxGKY1TNMXWRU3RyUPszljbezvgimuF6zmQ0AUbEHJuhn5+x1GZYaLrRDElgjbSS7
-         tr0XrGMtbul0eR19pifhTezdUkD5WSsa7vIzIGTgYm2mpC0vO3G70xoKufwmcU+2ps1k
-         7xV+f1JuuXwcGNa+V4U00pMduOQX/3MwZ5Qe+fxzAnl5SjnNtYGamDSIL8apuZ/WdfZB
-         FrgtdWnROwzVaJs8oBJco62GMCT7Gck1SN5QKUVSVVl1OdVPJVU/Ub29R1fKnBhFF6X0
-         T9vw==
-X-Gm-Message-State: AOAM531cBYxiOkNeTnLFpykwfPa4/2XJFJMFgqXxfIHsM/ztjxcTxXHk
-        eAS3ol0jBFkx/OeDL/YUclE=
-X-Google-Smtp-Source: ABdhPJz7uJ34zkR7UdIcDmO5eQD/05KE/U7ACuTf+SbkMdyaKDXIEt+RJAAp/9n0LB1FcwdSrdDevA==
-X-Received: by 2002:aa7:d6cc:: with SMTP id x12mr11487518edr.354.1593464901568;
-        Mon, 29 Jun 2020 14:08:21 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id q3sm736869eds.0.2020.06.29.14.08.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 14:08:20 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 23:08:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     corbet@lwn.net, aaro.koskinen@iki.fi, tony@atomide.com,
-        linux@armlinux.org.uk, daniel@zonque.org, haojian.zhuang@gmail.com,
-        robert.jarzmik@free.fr, kgene@kernel.org,
-        dmitry.torokhov@gmail.com, lee.jones@linaro.org,
-        wsa+renesas@sang-engineering.com, ulf.hansson@linaro.org,
-        davem@davemloft.net, kuba@kernel.org, b.zolnierkie@samsung.com,
-        j.neuschaefer@gmx.net, mchehab+samsung@kernel.org,
-        gustavo@embeddedor.com, gregkh@linuxfoundation.org,
-        yanaijie@huawei.com, daniel.vetter@ffwll.ch,
-        rafael.j.wysocki@intel.com, Julia.Lawall@inria.fr,
-        linus.walleij@linaro.org, viresh.kumar@linaro.org, arnd@arndb.de,
-        jani.nikula@intel.com, yuehaibing@huawei.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH] Remove handhelds.org links and email addresses
-Message-ID: <20200629210817.GA32399@kozik-lap>
-References: <20200629203121.7892-1-grandmaster@al2klimov.de>
+        Mon, 29 Jun 2020 17:08:23 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MO9vD-1jRJwr2z1t-00OWKv; Mon, 29 Jun 2020 13:40:44 +0200
+Received: by mail-qt1-f177.google.com with SMTP id i3so12481802qtq.13;
+        Mon, 29 Jun 2020 04:40:44 -0700 (PDT)
+X-Gm-Message-State: AOAM531MqA3YaeQ4u0gkltxA/lNCDogD8K+5A5eInGwjOcWPXBeLNSJV
+        E2nNC1GXgpQcogyW3gFvFbK7lz2rvDAsboBmnY4=
+X-Google-Smtp-Source: ABdhPJz3molUt3XhhH/gcKqW2wmJX47FKk5O6OYBrVzFJ60Zs/j1zw8wVX5Qp6lQIudUPZgdiQLCp03/RIF2vyQgt/Q=
+X-Received: by 2002:ac8:2b98:: with SMTP id m24mr15453696qtm.7.1593430843466;
+ Mon, 29 Jun 2020 04:40:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629203121.7892-1-grandmaster@al2klimov.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com> <1593410042-10598-11-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1593410042-10598-11-git-send-email-Anson.Huang@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 13:40:27 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1W4Wxj0o3dtcjGq0L5VQqsH0=ntego=jmH2Von97+H-w@mail.gmail.com>
+Message-ID: <CAK8P3a1W4Wxj0o3dtcjGq0L5VQqsH0=ntego=jmH2Von97+H-w@mail.gmail.com>
+Subject: Re: [PATCH V3 10/10] clk: imx8qxp: Support module build
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, oleksandr.suvorov@toradex.com,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:qjtlj8TGy0jLGv32fYdCmtHGDy7Bb9UeJuTTjvVFYP38Co4vuRQ
+ YxefKZD5wb7lxo2cLKCDvnFVAZVHTt1ZNTdNRXsBcBKPKShAxM0ksIzr3sD2CDLtplpIDQa
+ lacuVPdlPRkQNtbKD8zOu221RZfKPXtVMRAyi4eozYHZPqVjUmNh3w0xjIlVvWyTJVbFf9y
+ gz3MgeIZ+OfnoJrsogFMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XmOmyTZ29KU=:rbSDWbNcV72GnMWdxPDS+s
+ Qf/zf7Lrix47xUNmauLLdpWKNV6qyE/1sOX6FX5kIRVZQ0PDy8yb+4GYjnLnorIfamSXsMqOw
+ m2qUuz8/U7f1uJC5mdiqpfwwvkmhu7Aw4eBvBS5P9GnpHj88m2dBcLgEy0DaAjPBiS7Hs02DJ
+ lF3cZTr8Gg3MVBq1mcOi+e7w0c3JXQuFKjoU1ID7Ro71q6qa73iiSzg+qpRHzTGqSQZSzTuud
+ QT3W1wjrTTSPMdIiBO2W9YB7RZUN/3xbfjWYAOJT8g6LD+7RlPFBsQLNm3TDodLra/9Kg7V8r
+ s0eyTkfngEczgDggK0m7rse9H0jhLlYiQZeP2In5Q9+B/36/OaOmeYCLhkOeALkQtxJUhnbKp
+ 29thSTPXQOFzr59fA/uv3Zwi2uH3zlkFm/5tL23DDSwSoGGnl5VTq6Eb4bCFsPMgC0m7SUSmr
+ 0vMGJKRKnkgxCd/e4qcWCnfylJYR3UijhOmg84yrJaoWO8zTk7OUfJJH5hgMCLJmT+Y+TjdFa
+ 3MDH8YGwqaRt0lgFQRnt8mCgWPM96++b7ubjPp7NmkEgY1Vj+kYmZbE3A/ZNWEZmBfiDOhoPH
+ PCU7UqDDrQT8X3KZZThSM+q983yZmGLQYhFbCHxplVdbKnMZBcSyU5DHzuYLA9wS+5yso0wGF
+ ZEW7y+JpmMK8tbx9ZDeXuL4GVFVODJKLQc70E6/Lo0hr+QggVn4kOs46sF0VNn1a5ROdQ2iTR
+ CmljM009f1gl7ypDil3MkBzhorYr4slnVQkjLzEEq+Sg3yTuMNjJu+gzHLCt1mdt+BPbZpvCl
+ +5lfWcZv09W9Fh2AFhYgGyRVlpMzX4nrinSw93Ys41wovI6vxg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:31:21PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> https://lore.kernel.org/linux-doc/20200626110706.7b5d4a38@lwn.net/
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  @Jon I thought about what I said and *no*, unfortunately I *can't* automate
->  the detection of such as easy as the HTTPSifying. As you maybe see below
->  cleaning up is even "harder".
-> 
->  We have only 17 files and one domain here. Shall I split it up per subsystem
->  or can we let it as is?
-> 
->  Documentation/arm/sa1100/assabet.rst           |  2 --
->  Documentation/arm/samsung-s3c24xx/h1940.rst    | 10 ----------
->  Documentation/arm/samsung-s3c24xx/overview.rst |  3 +--
->  Documentation/arm/samsung-s3c24xx/smdk2440.rst |  4 ----
->  arch/arm/mach-omap1/Kconfig                    |  4 +---
->  arch/arm/mach-pxa/h5000.c                      |  2 +-
->  arch/arm/mach-s3c24xx/mach-h1940.c             |  2 --
->  arch/arm/mach-s3c24xx/mach-n30.c               |  3 ---
->  arch/arm/mach-s3c24xx/mach-rx3715.c            |  2 --
+On Mon, Jun 29, 2020 at 8:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Support building i.MX8QXP clock driver as module.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-For s3c24xx, I am fine taking it through docs tree:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+I would just combine the per-soc patches into one, as they all have the same
+changelog text.
 
-Otherwise, after splitting, I could take the s3c-24xx bits.
+> diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> index 04c8ee3..8afaefc 100644
+> --- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> +++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> @@ -232,3 +232,4 @@ static struct platform_driver imx8qxp_lpcg_clk_driver = {
+>  };
+>
+>  builtin_platform_driver(imx8qxp_lpcg_clk_driver);
+> +MODULE_LICENSE("GPL v2");
 
-Best regards,
-Krzysztof
+Same thing here: please try to make it possible to unload these drivers,
+and add MODULE_AUTHOR/MODULE_DESCRIPTION tags in addition
+to MODULE_LICENSE.
 
-
->  drivers/input/keyboard/gpio_keys.c             |  2 +-
->  drivers/input/keyboard/jornada720_kbd.c        |  2 +-
->  drivers/input/touchscreen/jornada720_ts.c      |  2 +-
->  drivers/mfd/asic3.c                            |  2 +-
->  drivers/mmc/host/renesas_sdhi_core.c           |  2 +-
->  drivers/net/ethernet/dec/tulip/de4x5.c         |  1 -
->  drivers/video/fbdev/sa1100fb.c                 |  2 +-
->  include/linux/apm-emulation.h                  |  2 --
->  17 files changed, 9 insertions(+), 38 deletions(-)
+          Arnd
