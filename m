@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5349C20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364C020809
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459708;
-	bh=MtaTG8QumC1aPnXXHWcPNmDac6H76aCvj0Mm1asq+0o=;
+	s=default; t=1593459711;
+	bh=MCYkuFW+5XeYXr71zGuhSH25Gd1iQl/aqkrPgJdzNhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aq4bBStMvbD/66QpDJ6Jl2lmBXqTPZXnROKcUGjxMpOtssowwvfU7yLZRU7u9OC6A
-	 FLwDYD3eeRc+mH8Irxe93dsxnLH4ROjo92fheD8A9feVS69kh515CLgrySsZo5g8Yl
-	 QRoTJ/mMcLhbcIgsd6891PWRwtpF/dWpVHTlcsQ8=
+	b=2UQF9bz4Ffs1E4rmbd2x5I/ndIuvhjpuv0YULNb7e1vI57M4yPQCgEiz1SVNLqCAd
+	 9g+0dR7b53SPW+3n971m5xMukyV8P2K4anAQZITuhPiP7AsNjnkYg+J5DxwCgS5fKG
+	 H/8sqNDATW3yQqtZTxQWqnNaJcBEWYaybINZZDjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbgF2Tlq (ORCPT
+        id S2387862AbgF2Tlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387851AbgF2Tkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387828AbgF2Tkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF0F7248C5;
-        Mon, 29 Jun 2020 15:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED0512481F;
+        Mon, 29 Jun 2020 15:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444419;
-        bh=MtaTG8QumC1aPnXXHWcPNmDac6H76aCvj0Mm1asq+0o=;
+        s=default; t=1593444339;
+        bh=MCYkuFW+5XeYXr71zGuhSH25Gd1iQl/aqkrPgJdzNhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMItiv8fb/q8EhmvUIZfvfZZubPviMzGn848n3Ju1vcyv4xh1h+KLJXVjI80NCofr
-         EEq14lCQ8z0Jpq2ESF/UI4QPO4Un+VoDXGTi/Y99+i9U528ym3R6/t1E8rv4n/6Wrb
-         GdLdy6FcPp6kPSLFxMdUHOAZv/GbM2ur3Q69PcpY=
+        b=H7VthXyju+5Thp9Rb+2p2l9eQJYZmFghR284PvvQ2ftO6tVn3OC8DnSAn+wnCkNvW
+         jcK9mbyoKm1c98MtwjDgbZ/6UqM96ZbnEq1hlDxFcwFq4rTPSrGCXzB1rFwHHUDDfV
+         UZL57C9Qkg8B6F0p15c+WJ/BmVaCRmAlB5CJH5CY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/178] net: qede: fix PTP initialization on recovery
-Date:   Mon, 29 Jun 2020 11:24:02 -0400
-Message-Id: <20200629152523.2494198-98-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 014/178] openvswitch: take into account de-fragmentation/gso_size in execute_check_pkt_len
+Date:   Mon, 29 Jun 2020 11:22:39 -0400
+Message-Id: <20200629152523.2494198-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,120 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 1c85f394c2206ea3835f43534d5675f0574e1b70 ]
+[ Upstream commit 17843655708e1941c0653af3cd61be6948e36f43 ]
 
-Currently PTP cyclecounter and timecounter are initialized only on
-the first probing and are cleaned up during removal. This means that
-PTP becomes non-functional after device recovery.
-Fix this by unconditional PTP initialization on probing and clearing
-Tx pending bit on exiting.
+ovs connection tracking module performs de-fragmentation on incoming
+fragmented traffic. Take info account if traffic has been de-fragmented
+in execute_check_pkt_len action otherwise we will perform the wrong
+nested action considering the original packet size. This issue typically
+occurs if ovs-vswitchd adds a rule in the pipeline that requires connection
+tracking (e.g. OVN stateful ACLs) before execute_check_pkt_len action.
+Moreover take into account GSO fragment size for GSO packet in
+execute_check_pkt_len routine
 
-Fixes: ccc67ef50b90 ("qede: Error recovery process")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Fixes: 4d5ec89fc8d14 ("net: openvswitch: Add a new action check_pkt_len")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c |  2 +-
- drivers/net/ethernet/qlogic/qede/qede_ptp.c  | 31 ++++++++------------
- drivers/net/ethernet/qlogic/qede/qede_ptp.h  |  2 +-
- 3 files changed, 15 insertions(+), 20 deletions(-)
+ net/openvswitch/actions.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 1da6b5bda80aa..361a1d759b0b5 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1158,7 +1158,7 @@ static int __qede_probe(struct pci_dev *pdev, u32 dp_module, u8 dp_level,
- 
- 	/* PTP not supported on VFs */
- 	if (!is_vf)
--		qede_ptp_enable(edev, (mode == QEDE_PROBE_NORMAL));
-+		qede_ptp_enable(edev);
- 
- 	edev->ops->register_ops(cdev, &qede_ll_ops, edev);
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-index f815435cf1061..2d3b2fa92df51 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-@@ -411,6 +411,7 @@ void qede_ptp_disable(struct qede_dev *edev)
- 	if (ptp->tx_skb) {
- 		dev_kfree_skb_any(ptp->tx_skb);
- 		ptp->tx_skb = NULL;
-+		clear_bit_unlock(QEDE_FLAGS_PTP_TX_IN_PRORGESS, &edev->flags);
- 	}
- 
- 	/* Disable PTP in HW */
-@@ -422,7 +423,7 @@ void qede_ptp_disable(struct qede_dev *edev)
- 	edev->ptp = NULL;
- }
- 
--static int qede_ptp_init(struct qede_dev *edev, bool init_tc)
-+static int qede_ptp_init(struct qede_dev *edev)
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index 99352f09deaac..3d96dab104490 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -1146,9 +1146,10 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+ 				 struct sw_flow_key *key,
+ 				 const struct nlattr *attr, bool last)
  {
- 	struct qede_ptp *ptp;
- 	int rc;
-@@ -443,25 +444,19 @@ static int qede_ptp_init(struct qede_dev *edev, bool init_tc)
- 	/* Init work queue for Tx timestamping */
- 	INIT_WORK(&ptp->work, qede_ptp_task);
++	struct ovs_skb_cb *ovs_cb = OVS_CB(skb);
+ 	const struct nlattr *actions, *cpl_arg;
++	int len, max_len, rem = nla_len(attr);
+ 	const struct check_pkt_len_arg *arg;
+-	int rem = nla_len(attr);
+ 	bool clone_flow_key;
  
--	/* Init cyclecounter and timecounter. This is done only in the first
--	 * load. If done in every load, PTP application will fail when doing
--	 * unload / load (e.g. MTU change) while it is running.
--	 */
--	if (init_tc) {
--		memset(&ptp->cc, 0, sizeof(ptp->cc));
--		ptp->cc.read = qede_ptp_read_cc;
--		ptp->cc.mask = CYCLECOUNTER_MASK(64);
--		ptp->cc.shift = 0;
--		ptp->cc.mult = 1;
--
--		timecounter_init(&ptp->tc, &ptp->cc,
--				 ktime_to_ns(ktime_get_real()));
--	}
-+	/* Init cyclecounter and timecounter */
-+	memset(&ptp->cc, 0, sizeof(ptp->cc));
-+	ptp->cc.read = qede_ptp_read_cc;
-+	ptp->cc.mask = CYCLECOUNTER_MASK(64);
-+	ptp->cc.shift = 0;
-+	ptp->cc.mult = 1;
+ 	/* The first netlink attribute in 'attr' is always
+@@ -1157,7 +1158,11 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+ 	cpl_arg = nla_data(attr);
+ 	arg = nla_data(cpl_arg);
  
--	return rc;
-+	timecounter_init(&ptp->tc, &ptp->cc, ktime_to_ns(ktime_get_real()));
+-	if (skb->len <= arg->pkt_len) {
++	len = ovs_cb->mru ? ovs_cb->mru + skb->mac_len : skb->len;
++	max_len = arg->pkt_len;
 +
-+	return 0;
- }
- 
--int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
-+int qede_ptp_enable(struct qede_dev *edev)
- {
- 	struct qede_ptp *ptp;
- 	int rc;
-@@ -482,7 +477,7 @@ int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
- 
- 	edev->ptp = ptp;
- 
--	rc = qede_ptp_init(edev, init_tc);
-+	rc = qede_ptp_init(edev);
- 	if (rc)
- 		goto err1;
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-index 691a14c4b2c5a..89c7f3cf3ee28 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-@@ -41,7 +41,7 @@ void qede_ptp_rx_ts(struct qede_dev *edev, struct sk_buff *skb);
- void qede_ptp_tx_ts(struct qede_dev *edev, struct sk_buff *skb);
- int qede_ptp_hw_ts(struct qede_dev *edev, struct ifreq *req);
- void qede_ptp_disable(struct qede_dev *edev);
--int qede_ptp_enable(struct qede_dev *edev, bool init_tc);
-+int qede_ptp_enable(struct qede_dev *edev);
- int qede_ptp_get_ts_info(struct qede_dev *edev, struct ethtool_ts_info *ts);
- 
- static inline void qede_ptp_record_rx_ts(struct qede_dev *edev,
++	if ((skb_is_gso(skb) && skb_gso_validate_mac_len(skb, max_len)) ||
++	    len <= max_len) {
+ 		/* Second netlink attribute in 'attr' is always
+ 		 * 'OVS_CHECK_PKT_LEN_ATTR_ACTIONS_IF_LESS_EQUAL'.
+ 		 */
 -- 
 2.25.1
 
