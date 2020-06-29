@@ -2,172 +2,161 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621D220702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F63D20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mTt0U253"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SNdaqvxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387503AbgF2Tio (ORCPT
+        id S1730468AbgF2Tiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
+        Mon, 29 Jun 2020 15:38:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387444AbgF2Tho (ORCPT
+        with ESMTP id S2387442AbgF2Tho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:37:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F6BC02F009
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:48:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so8779607wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J1b86M2kh+1MpYf87oEIYf85WBywI0oiPr8KJ9u58RI=;
-        b=mTt0U2539j5JvdQ25iF95WWG5+lHlxdXutNDjMkP6EFt+W8GZIFO426Sm6JsTMXxhV
-         H/o6hpyBaf2yA4T+L3Sd7nT9bwM3Vv4vhT9inN7nT9gCJctGewOEO4/aEjsgshwNxlL0
-         yd/9umoADm+/qvTR21Bm2NmxnIzXYoRkXoSRpoFCxj4LPf++gzBL3XnB/O/hE68fpbMS
-         CGR4YmgDO2U3f10wGrKlvP9rbyQH5jERVwTQDdBsWU/utrL8Q6eVxztVvRtdHNxP7iRX
-         5L6DXjvqD3Fi8o4Q7rhoIaIG3dZN/1nTSwTj8hGX93LicI80Y0bGgPB03XjaHX/241Av
-         6clg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J1b86M2kh+1MpYf87oEIYf85WBywI0oiPr8KJ9u58RI=;
-        b=rNkMPrfXJNHiCbIlByucGAdxXrv+qb8UJymDCNx3TryrqOUMfwmdzh5DihY8vO/Cvn
-         resEbR32Lgarfeez8XvWyRy7w3EPTAZISi4Dsa1qw6nO8t0Ok8vpLefJz+4RPYDfoJQj
-         ZV9RBakljlplsu+IAZnLnpCkizurQKUs6Ql34cSN5u9LLVFH+1iw6NvZJr7OMSHUKHSI
-         HWd/hoifR2SzpiWVbQCdPoDGSv9h0Hu7XvAEkQHOoHqA06eVz/QmTfqo9QP/btN0BL01
-         Ha+aS+NZaMX1GZpgSWmGDb8HwkL0TVWqkko7Ga98W/iRjSBVoxlHiUpnoMbBudzlJGMC
-         WJ/g==
-X-Gm-Message-State: AOAM530yWrU+hOPZaT6eh+fVnBHU6DQflpSyk20EGWZN8b8Pwr2KN6F7
-        JVUdffrVIECRdFp9Egldric/EZ9C5TjwNA==
-X-Google-Smtp-Source: ABdhPJypyIpB85cwV1ubc/hwy6qFS8nE4OliFtCHeU6Pe5uaT2kgbyEF2VtFsFp0eVpJFy98QVJ18w==
-X-Received: by 2002:a5d:4b41:: with SMTP id w1mr17884201wrs.27.1593442130685;
-        Mon, 29 Jun 2020 07:48:50 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id s8sm42786336wru.38.2020.06.29.07.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:48:50 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH v2 1/3] x86/dumpstack: Add log_lvl to show_iret_regs()
-Date:   Mon, 29 Jun 2020 15:48:45 +0100
-Message-Id: <20200629144847.492794-2-dima@arista.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629144847.492794-1-dima@arista.com>
-References: <20200629144847.492794-1-dima@arista.com>
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on20630.outbound.protection.outlook.com [IPv6:2a01:111:f400:7d00::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386D7C02F01B;
+        Mon, 29 Jun 2020 07:52:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DPXnD/EIZLhjTPgl1k7p5GB0r6xUKthbJci1JEZJh909nBABfq8NPKbD/10k10MMwAkJOLZ+kSqGHdz15/hlDJM20IJKC3Y8XSTV0tJho+ygMC7D81q+a4mmZ7Rrfm1yWt4zqUKThlHpOtjsHYvs1QdAGitMqhWXL18Ug4jEh1zesWNTqQ3xnXB5PYJisPrLG+i9/mR8dQ85HLfPRqoNzBEpuEOUu94HogVe0UsV81h1Wm5yqTUpVw9m39e1CNkXhMvwkon8F5dpYP9/Kp/P4ZPH6hiJWt+NBHlolTniOv+OcJysYG+7BEph3QFQHEq4w0zCmuh9THC+t0476OWjiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PAPcWO7VbEYvaAmLyoXT1ETqMvhrBeFgVMaMDQEHIy4=;
+ b=PbUTj1VvMFaaERxG5dAOU5xZxzViEwt8aPD81Sj4wF7ztV4WkbpF1E8cAbuP2j6Do24l50bGSlBft+84yLTzgM7Ynt5h5BOK982vRMbWkqx/BjCL5/i57btNeHL7LsaNvuy8/7vSHfJb8kOa9Fh51RhoUuqDk4yAjR2rQrcRVbu674VuT7eA8vb/eeFx2kup1A6k5dtC8h7sGYWhliOJ7SIz345QppaycuCTLDn5W9rCR6v5spFl3HpQmETPs2r+kPxrDPxIJJrGbMpitbiWCumzEJTwXlg3nFjzV/BpxYuwmkxkiBFUE+xWia0973C5GKPHwqGPAU3HUpkg1G+ABw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PAPcWO7VbEYvaAmLyoXT1ETqMvhrBeFgVMaMDQEHIy4=;
+ b=SNdaqvxIUUXmMEAHQp43KEygJW4xWN8F75vRnUlGd6ojdSCzzaqx+/k91Ksc0WJ1+1Y9SkHEV/h63o7c3xo9118hwYRGrrJYTEDMEZP7Zlkqs7ksVJS/OGLY85EV9hIm50/OvLREWfYfx52bLUAvH29E2fDAqc3dy8Xo/SMcZ1I=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB6PR04MB3125.eurprd04.prod.outlook.com (2603:10a6:6:11::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Mon, 29 Jun
+ 2020 14:52:10 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
+ 14:52:10 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 04/10] clk: imx: Support building SCU clock driver as
+ module
+Thread-Topic: [PATCH V3 04/10] clk: imx: Support building SCU clock driver as
+ module
+Thread-Index: AQHWTdthV6wfzmMopU6pSRFnxqvg3qjvd4YAgAACQ6CAABqKgIAAAHBg
+Date:   Mon, 29 Jun 2020 14:52:09 +0000
+Message-ID: <DB3PR0402MB39167D9A3897C3CE327EBDDBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
+ <1593410042-10598-5-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a2yXFbGxuSRoC5_dYBujnAtVoEMXe50V7QYjPYhqra7nA@mail.gmail.com>
+ <DB3PR0402MB39160335642AFBAC4B38C511F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0CcijnVxJws_kMiaOBbc4Uox40W4=-dX+BG6OeMYtFpw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0CcijnVxJws_kMiaOBbc4Uox40W4=-dX+BG6OeMYtFpw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3d81c5c1-b002-4beb-f8db-08d81c3c0036
+x-ms-traffictypediagnostic: DB6PR04MB3125:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR04MB312507369056695B66144D53F56E0@DB6PR04MB3125.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rphpfB/tIn22/eVV9JYkyJX5Yd8wTUymjxy/pXySrbyKorV/fB0rm8z0EFxha2mzGlO4vh6mA6t/QfEBOeXG0igDQYd/qZTsc4EPH1t4IrrPmfUvhQ92HOKaGXM84CIvMUNXPlArZAI6hv/fff0i100RaLbc7HYTAxABE+EuOQhNQvhhUjfnW85TNqNzlnK2Gjiq1k6eKVOqLuR/vrfXeOlTfXiWIAQzCpS2yYd29xCO+nIymvjpczL1FvbiRcAz1gpSh49dLJK3zATIa3g+7IudGa6qbU6Zw3hIBms8YfmQRZ2lMjZq6gqmkhi+YyRX
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(366004)(71200400001)(478600001)(55016002)(5660300002)(33656002)(7696005)(76116006)(52536014)(54906003)(316002)(9686003)(66946007)(8936002)(8676002)(7416002)(6916009)(83380400001)(4326008)(66476007)(44832011)(53546011)(86362001)(2906002)(64756008)(66556008)(6506007)(66446008)(186003)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: kLiV3osParn0uTlZH1q+zy6d0fqXUqPPKGvxLOWq6TjtZ0tYFrf8DU4DN+Hx3bXOzdN4lHCDJfE2ylx+9rvax8149M+dkRyfrHYdwPevF0dC6XAL5yQIAmk05DKZzhaFf5frh/tgzXXMgy2zr9aK9cFyChB6+mhlZTn9EX5ksNOmroEQGUykAdxZA8RGbrTnAskz238N+ZNocj0Z10OL92zYPRDdlX6kxzbQGgQtvUm006EnS5xEAy7aVj6FPsWl1spvfHnpC1k2h+Gl2xxOJtwkFWthTms2c8LxWbdjE98NDibM8iMvxWVzNT68fzi70kqvOqNZ+dicX6YnQ3WxRtXSEcP+LSjj5KqDyeLZn9HMQ513u7HokwwgWI+oXbOlabF6WOpA4ya3cdPZOmMqhdn8ZxlbNOugNyqAZNjdu4CqCwdI0TutWfy0MjwJ9dsNkrTRrttpdNtGaMHd9SGb4LuipPk1gp9AI+7lM9O9mPkzvC8VBV42JBlbV0WCkSMz
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d81c5c1-b002-4beb-f8db-08d81c3c0036
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 14:52:09.6255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X91ugvUzT3OuWFwFoYmWNip6G5TlITPogYtH11pcyU57l7dbmXs/xYDVr3vR/rtHYtxUG3c/w8d6QPIwYdOObQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-show_trace_log_lvl() provides x86 platform-specific way to unwind
-backtrace with a given log level. Unfortunately, registers dump(s) are
-not printed with the same log level - instead, KERN_DEFAULT is always
-used.
-
-Arista's switches uses quite common setup with rsyslog, where only
-urgent messages goes to console (console_log_level=KERN_ERR), everything
-else goes into /var/log/ as the console baud-rate often is indecently
-slow (9600 bps).
-
-Backtrace dumps without registers printed have proven to be as useful as
-morning standups. Furthermore, in order to introduce KERN_UNSUPPRESSED
-(which I believe is still the most elegant way to fix raciness of sysrq[1])
-the log level should be passed down the stack to register dumping
-functions. Besides, I have a potential use-case for printing traces
-with KERN_DEBUG level [2] (where registers dump shouldn't appear with
-higher log level).
-
-Add log_lvl parameter to show_iret_regs() as a preparation to add it
-to __show_regs() and show_regs_if_on_stack().
-
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/
-[2]: https://lore.kernel.org/linux-doc/20190724170249.9644-1-dima@arista.com/
-Acked-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- arch/x86/include/asm/kdebug.h | 2 +-
- arch/x86/kernel/dumpstack.c   | 8 ++++----
- arch/x86/kernel/process_64.c  | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/kdebug.h b/arch/x86/include/asm/kdebug.h
-index 247ab14c6309..da024bbda6f4 100644
---- a/arch/x86/include/asm/kdebug.h
-+++ b/arch/x86/include/asm/kdebug.h
-@@ -37,7 +37,7 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr);
- extern int __must_check __die(const char *, struct pt_regs *, long);
- extern void show_stack_regs(struct pt_regs *regs);
- extern void __show_regs(struct pt_regs *regs, enum show_regs_mode);
--extern void show_iret_regs(struct pt_regs *regs);
-+extern void show_iret_regs(struct pt_regs *regs, const char *log_lvl);
- extern unsigned long oops_begin(void);
- extern void oops_end(unsigned long, struct pt_regs *, int signr);
- 
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index b037cfa7c0c5..c36d629a25a8 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -126,10 +126,10 @@ void show_ip(struct pt_regs *regs, const char *loglvl)
- 	show_opcodes(regs, loglvl);
- }
- 
--void show_iret_regs(struct pt_regs *regs)
-+void show_iret_regs(struct pt_regs *regs, const char *log_lvl)
- {
--	show_ip(regs, KERN_DEFAULT);
--	printk(KERN_DEFAULT "RSP: %04x:%016lx EFLAGS: %08lx", (int)regs->ss,
-+	show_ip(regs, log_lvl);
-+	printk("%sRSP: %04x:%016lx EFLAGS: %08lx", log_lvl, (int)regs->ss,
- 		regs->sp, regs->flags);
- }
- 
-@@ -155,7 +155,7 @@ static void show_regs_if_on_stack(struct stack_info *info, struct pt_regs *regs,
- 		 * full pt_regs might not have been saved yet.  In that case
- 		 * just print the iret frame.
- 		 */
--		show_iret_regs(regs);
-+		show_iret_regs(regs, KERN_DEFAULT);
- 	}
- }
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 9a97415b2139..09bcb296cda6 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -69,7 +69,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
- 	unsigned int fsindex, gsindex;
- 	unsigned int ds, es;
- 
--	show_iret_regs(regs);
-+	show_iret_regs(regs, KERN_DEFAULT);
- 
- 	if (regs->orig_ax != -1)
- 		pr_cont(" ORIG_RAX: %016lx\n", regs->orig_ax);
--- 
-2.27.0
-
+SGksIEFybmQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDA0LzEwXSBjbGs6IGlteDogU3Vw
+cG9ydCBidWlsZGluZyBTQ1UgY2xvY2sgZHJpdmVyIGFzDQo+IG1vZHVsZQ0KPiANCj4gT24gTW9u
+LCBKdW4gMjksIDIwMjAgYXQgMjo1MyBQTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNv
+bT4NCj4gd3JvdGU6DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDA0LzEwXSBjbGs6IGlt
+eDogU3VwcG9ydCBidWlsZGluZyBTQ1UgY2xvY2sNCj4gPiA+IGRyaXZlciBhcyBtb2R1bGUNCj4g
+PiA+DQo+ID4gPiBPbiBNb24sIEp1biAyOSwgMjAyMCBhdCA4OjA2IEFNIEFuc29uIEh1YW5nIDxB
+bnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gPiAtLS0gYS9k
+cml2ZXJzL2Nsay9pbXgvTWFrZWZpbGUNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9jbGsvaW14L01h
+a2VmaWxlDQo+ID4gPiA+IEBAIC0yMSw5ICsyMSw5IEBAIG9iai0kKENPTkZJR19NWENfQ0xLKSAr
+PSBcDQo+ID4gPiA+ICAgICAgICAgY2xrLXNzY2ctcGxsLm8gXA0KPiA+ID4gPiAgICAgICAgIGNs
+ay1wbGwxNHh4Lm8NCj4gPiA+ID4NCj4gPiA+ID4gLW9iai0kKENPTkZJR19NWENfQ0xLX1NDVSkg
+Kz0gXA0KPiA+ID4gPiAtICAgICAgIGNsay1zY3UubyBcDQo+ID4gPiA+IC0gICAgICAgY2xrLWxw
+Y2ctc2N1Lm8NCj4gPiA+ID4gK214Yy1jbGstc2N1LW9ianMgKz0gY2xrLWxwY2ctc2N1Lm8gbXhj
+LWNsay1zY3Utb2JqcyArPSBjbGstc2N1Lm8NCj4gPiA+ID4gK29iai0kKENPTkZJR19NWENfQ0xL
+X1NDVSkgKz0gbXhjLWNsay1zY3Uubw0KPiA+ID4NCj4gPiA+IEl0IGxvb2tzIGxpa2UgdGhlIHR3
+byBtb2R1bGVzIGFyZSB0aWdodGx5IGNvbm5lY3RlZCwgb25lIGlzIHVzZWxlc3MNCj4gPiA+IHdp
+dGhvdXQgdGhlIG90aGVyLiBIb3cgYWJvdXQgbGlua2luZyB0aGVtIGludG8gYSBjb21iaW5lZCBt
+b2R1bGUgYW5kDQo+ID4gPiBkcm9wcGluZyB0aGUgZXhwb3J0IHN0YXRlbWVudD8NCj4gPiA+DQo+
+ID4NCj4gPiBGcm9tIEhXIHBlcnNwZWN0aXZlLCB0aGUgU0NVIGNsb2NrIGRyaXZlciBhbmQgTFBD
+RyBTQ1UgY2xvY2sgZHJpdmVyDQo+ID4gYXJlIGRpZmZlcmVudCwgU0NVIGNsb2NrIGRyaXZlciBp
+cyBmb3IgdGhvc2UgY2xvY2tzIGNvbnRyb2xsZWQgYnkNCj4gPiBzeXN0ZW0gY29udHJvbGxlciAo
+TTQgd2hpY2ggcnVucyBhIGZpcm13YXJlKSwgd2hpbGUgTFBDRyBTQ1UgY2xvY2sgaXMNCj4gPiBm
+b3IgdGhvc2UgY2xvY2sgZ2F0ZXMgaW5zaWRlIG1vZHVsZSwgd2hpY2ggbWVhbnMgQVAgY29yZSBj
+YW4gY29udHJvbCBpdA0KPiBkaXJlY3RseSB2aWEgcmVnaXN0ZXIgYWNjZXNzLCBubyBuZWVkIHRv
+IHZpYSBTQ1UgQVBJLg0KPiANCj4gU29ycnksIEkgbWlzcmVhZCB0aGUgcGF0Y2ggaW4gbXVsdGlw
+bGUgd2F5cy4gRmlyc3Qgb2YgYWxsLCB5b3UgYWxyZWFkeSBwdXQNCj4gY2xrLXNjdS5vIGFuZCBj
+bGstbHBjZy1zY3UubyBmaWxlcyBpbnRvIGEgY29tYmluZWQgbG9hZGFibGUgbW9kdWxlLCBhbmQg
+SSBoYWQNCj4gb25seSBsb29rZWQgYXQgY2xrLXNjdS5jLg0KPiANCj4gV2hhdCBJIGFjdHVhbGx5
+IG1lYW50IGhlcmUgd2FzIHRvIGxpbmsgY2xrLXNjdS5vIHRvZ2V0aGVyIHdpdGggY2xrLWlteDhx
+eHAubw0KPiAoYW5kIHBvc3NpYmx5IGZ1dHVyZSBjaGlwLXNwZWNpZmljIGZpbGVzKSBpbnRvIGEg
+bG9hZGFibGUgbW9kdWxlIGFuZCBkcm9wIHRoZQ0KPiBleHBvcnQuDQoNClNvcnJ5LCBjb3VsZCB5
+b3UgcGxlYXNlIGFkdmlzZSBtb3JlIGRldGFpbHMgYWJvdXQgaG93IHRvIGRvIGl0IGluIE1ha2Vm
+aWxlPw0KSSB0cmllZCBiZWxvdyBidXQgaXQgbG9va3MgbGlrZSBOT1Qgd29ya2luZy4gbXVsdGlw
+bGUgZGVmaW5pdGlvbiBvZiBtb2R1bGVfaW5pdCgpIGVycm9yIHJlcG9ydGVkLg0KDQpvYmotJChD
+T05GSUdfTVhDX0NMS19TQ1UpIDo9IGNsay1pbXgubw0KY2xrLWlteC15ICs9IGNsay1zY3UubyBj
+bGstbHBjZy1zY3Uubw0KY2xrLWlteC0kKENPTkZJR19DTEtfSU1YOFFYUCkgKz0gY2xrLWlteDhx
+eHAubyBjbGstaW14OHF4cC1scGNnLm8NCg0KVGhhbmtzLA0KQW5zb24NCg==
