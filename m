@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64088C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B32206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BF9206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460568;
-	bh=+E0bitveH20osE1qAh7Cun30LPerQPCMAvFAgZcslfA=;
+	s=default; t=1593460571;
+	bh=BXpjKMRjKVDNEazo5/y3JtFBbZ+zFAHaaJVS6tJxJAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w+X5yyZov6BMNfhDrSV8E4YAs60ry64ojhKUIOQ+4YL6kMK5kcr/UKKBwVk8/y9KU
-	 U5Xn5puRXzaCknoiVQ1ncEmwUGfftKPbEm2z31ixg/LFHUk6tGovWd+sBnmjdctPaB
-	 PK3GswChqU/m7dxkdB9AUyZ9SMbTbfb9XV6OlfZQ=
+	b=huHXrhFxyjsHNcgn4HDYqRozdbTYE9zGE50AL9jBn+hhTFGq6F9X3qL2MzdzpR9iT
+	 Zh3juh2f6BrvE6QqKbduryD2VAFJH/ZFZAbEnF7QC39IsMqHHEV5QUDC9XUCLvLHAZ
+	 rXi7jk+2RM+fvj66iWcMOUHPCAKY+Pdd9Nb+jXbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbgF2T4G (ORCPT
+        id S2388416AbgF2T4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387658AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B8D248A4;
-        Mon, 29 Jun 2020 15:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D49724907;
+        Mon, 29 Jun 2020 15:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444400;
-        bh=+E0bitveH20osE1qAh7Cun30LPerQPCMAvFAgZcslfA=;
+        s=default; t=1593444457;
+        bh=BXpjKMRjKVDNEazo5/y3JtFBbZ+zFAHaaJVS6tJxJAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcpNlfqY3bQhbX8UwegFOLAkiQ64KufLia/s9VV38yoc2fFZT3xU+LUT7DivwmjLg
-         RmBEq5C5ZlyIxJNauuhu8f6X+gcxRNGfxpbC5miWLiDad6ydyVO3U2tNqODhGwYDo4
-         HY+FyBj8e9rxWeMsQfY2adyG1pykwXdN35HQguIg=
+        b=eA7fyluAZXGGHYGSOCQ7kX4DzeWNBLq4VJA8QBl+Xuqo/JuTnfQozc2aojqUPmSkk
+         eguc1yQI6PvtUKBP0gNNZ6PdNaVSyNx/XaPLgstPl6hXehbjJishsXzmNlYH46P9ao
+         JMU2FbPuy0jN67aiK0drc7iqg42sdZ20xWIQcI0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/178] regmap: Fix memory leak from regmap_register_patch
-Date:   Mon, 29 Jun 2020 11:23:43 -0400
-Message-Id: <20200629152523.2494198-79-sashal@kernel.org>
+Subject: [PATCH 5.4 137/178] block: update hctx map when use multiple maps
+Date:   Mon, 29 Jun 2020 11:24:42 -0400
+Message-Id: <20200629152523.2494198-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,35 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Weiping Zhang <zhangweiping@didiglobal.com>
 
-[ Upstream commit 95b2c3ec4cb1689db2389c251d39f64490ba641c ]
+[ Upstream commit fe35ec58f0d339221643287bbb7cee15c93a5389 ]
 
-When a register patch is registered the reg_sequence is copied but the
-memory allocated is never freed. Add a kfree in regmap_exit to clean it
-up.
+There is an issue when tune the number for read and write queues,
+if the total queue count was not changed. The hctx->type cannot
+be updated, since __blk_mq_update_nr_hw_queues will return directly
+if the total queue count has not been changed.
 
-Fixes: 22f0d90a3482 ("regmap: Support register patch sets")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200617152129.19655-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reproduce:
+
+dmesg | grep "default/read/poll"
+[    2.607459] nvme nvme0: 48/0/0 default/read/poll queues
+cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
+     48 default
+
+tune the write queues to 24:
+echo 24 > /sys/module/nvme/parameters/write_queues
+echo 1 > /sys/block/nvme0n1/device/reset_controller
+
+dmesg | grep "default/read/poll"
+[  433.547235] nvme nvme0: 24/24/0 default/read/poll queues
+
+cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
+     48 default
+
+The driver's hardware queue mapping is not same as block layer.
+
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-mq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 59f911e577192..508bbd6ea4396 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1356,6 +1356,7 @@ void regmap_exit(struct regmap *map)
- 	if (map->hwlock)
- 		hwspin_lock_free(map->hwlock);
- 	kfree_const(map->name);
-+	kfree(map->patch);
- 	kfree(map);
- }
- EXPORT_SYMBOL_GPL(regmap_exit);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 0550366e25d8b..f1b930a300a38 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3279,7 +3279,9 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 
+ 	if (set->nr_maps == 1 && nr_hw_queues > nr_cpu_ids)
+ 		nr_hw_queues = nr_cpu_ids;
+-	if (nr_hw_queues < 1 || nr_hw_queues == set->nr_hw_queues)
++	if (nr_hw_queues < 1)
++		return;
++	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
+ 		return;
+ 
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
 -- 
 2.25.1
 
