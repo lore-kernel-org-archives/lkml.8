@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4449C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F332063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BE52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgF2Smr (ORCPT
+        id S1729119AbgF2Smv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
+        Mon, 29 Jun 2020 14:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729006AbgF2Smm (ORCPT
+        with ESMTP id S1729011AbgF2Smm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:42 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E04C033C1B;
-        Mon, 29 Jun 2020 11:26:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808C9C033C09;
+        Mon, 29 Jun 2020 11:26:30 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyUB-002Dvc-FI; Mon, 29 Jun 2020 18:26:31 +0000
+        id 1jpyU9-002DtD-0S; Mon, 29 Jun 2020 18:26:29 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
         David Miller <davem@davemloft.net>,
         Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 26/41] arm: switch to ->get2()
-Date:   Mon, 29 Jun 2020 19:26:13 +0100
-Message-Id: <20200629182628.529995-26-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 04/41] [ia64] sanitize elf_access_gpreg()
+Date:   Mon, 29 Jun 2020 19:25:51 +0100
+Message-Id: <20200629182628.529995-4-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
@@ -47,121 +47,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+The function takes the register number, finds the corresponding field
+of pt_regs for registers that are saved there or does the unwind for the
+registers that end up spilled on the kernel stack.  Then it reads from
+or writes to the resulting location.
+
+Unfortunately, finding the required pt_regs field is done by rather
+horrible switch.  It's microoptimized in all the wrong places - it
+even uses the knowledge that fields for r8..r11 follow each other
+in pt_regs layout, while r12..r13 are not adjacent to those, etc.
+
+All of that is to encode the mapping from register numbers to offsets +
+the information that r4..r7 are not to be found in pt_regs.
+
+It's deeply in nasal demon territory, at that - the games it plays
+with pointer arithmetics on addresses of structure members are
+undefined behaviour.
+
+Valid C ends up with better code in this case: just initialize a constant
+array with offsets of relevant pt_regs fields and we don't need that
+switch anymore.
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/arm/kernel/ptrace.c | 52 +++++++++++-------------------------------------
- 1 file changed, 12 insertions(+), 40 deletions(-)
+ arch/ia64/kernel/ptrace.c | 57 +++++++++++++++++++----------------------------
+ 1 file changed, 23 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index d0f7c8896c96..895388288093 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -569,14 +569,9 @@ static int ptrace_sethbpregs(struct task_struct *tsk, long num,
+diff --git a/arch/ia64/kernel/ptrace.c b/arch/ia64/kernel/ptrace.c
+index 82aaacf64583..b9d068903b98 100644
+--- a/arch/ia64/kernel/ptrace.c
++++ b/arch/ia64/kernel/ptrace.c
+@@ -1273,52 +1273,41 @@ struct regset_getset {
+ 	int ret;
+ };
  
- static int gpr_get(struct task_struct *target,
- 		   const struct user_regset *regset,
--		   unsigned int pos, unsigned int count,
--		   void *kbuf, void __user *ubuf)
-+		   struct membuf to)
++static const ptrdiff_t pt_offsets[16] =
++{
++#define R(n) offsetof(struct pt_regs, r##n)
++	[0] = -1, R(1), R(2), R(3),
++	[4] = -1, [5] = -1, [6] = -1, [7] = -1,
++	R(8), R(9), R(10), R(11), R(12), R(13), R(14), R(15),
++#undef R
++};
++
+ static int
+ access_elf_gpreg(struct task_struct *target, struct unw_frame_info *info,
+ 		unsigned long addr, unsigned long *data, int write_access)
  {
--	struct pt_regs *regs = task_pt_regs(target);
--
--	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--				   regs,
--				   0, sizeof(*regs));
-+	return membuf_write(&to, task_pt_regs(target), sizeof(struct pt_regs));
- }
- 
- static int gpr_set(struct task_struct *target,
-@@ -602,12 +597,10 @@ static int gpr_set(struct task_struct *target,
- 
- static int fpa_get(struct task_struct *target,
- 		   const struct user_regset *regset,
--		   unsigned int pos, unsigned int count,
--		   void *kbuf, void __user *ubuf)
-+		   struct membuf to)
- {
--	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--				   &task_thread_info(target)->fpstate,
--				   0, sizeof(struct user_fp));
-+	return membuf_write(&to, &task_thread_info(target)->fpstate,
-+				 sizeof(struct user_fp));
- }
- 
- static int fpa_set(struct task_struct *target,
-@@ -642,41 +635,20 @@ static int fpa_set(struct task_struct *target,
-  *	vfp_set() ignores this chunk
-  *
-  * 1 word for the FPSCR
-- *
-- * The bounds-checking logic built into user_regset_copyout and friends
-- * means that we can make a simple sequence of calls to map the relevant data
-- * to/from the specified slice of the user regset structure.
-  */
- static int vfp_get(struct task_struct *target,
- 		   const struct user_regset *regset,
--		   unsigned int pos, unsigned int count,
--		   void *kbuf, void __user *ubuf)
-+		   struct membuf to)
- {
+-	struct pt_regs *pt;
+-	unsigned long *ptr = NULL;
 -	int ret;
- 	struct thread_info *thread = task_thread_info(target);
- 	struct vfp_hard_struct const *vfp = &thread->vfpstate.hard;
--	const size_t user_fpregs_offset = offsetof(struct user_vfp, fpregs);
- 	const size_t user_fpscr_offset = offsetof(struct user_vfp, fpscr);
+-	char nat = 0;
++	struct pt_regs *pt = task_pt_regs(target);
++	unsigned reg = addr / sizeof(unsigned long);
++	ptrdiff_t d = pt_offsets[reg];
  
- 	vfp_sync_hwstate(thread);
- 
--	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--				  &vfp->fpregs,
--				  user_fpregs_offset,
--				  user_fpregs_offset + sizeof(vfp->fpregs));
--	if (ret)
--		return ret;
+-	pt = task_pt_regs(target);
+-	switch (addr) {
+-	case ELF_GR_OFFSET(1):
+-		ptr = &pt->r1;
+-		break;
+-	case ELF_GR_OFFSET(2):
+-	case ELF_GR_OFFSET(3):
+-		ptr = (void *)&pt->r2 + (addr - ELF_GR_OFFSET(2));
+-		break;
+-	case ELF_GR_OFFSET(4) ... ELF_GR_OFFSET(7):
++	if (d >= 0) {
++		unsigned long *ptr = (void *)pt + d;
++		if (write_access)
++			*ptr = *data;
++		else
++			*data = *ptr;
++		return 0;
++	} else {
++		char nat = 0;
+ 		if (write_access) {
+ 			/* read NaT bit first: */
+ 			unsigned long dummy;
 -
--	ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
--				       user_fpregs_offset + sizeof(vfp->fpregs),
--				       user_fpscr_offset);
--	if (ret)
--		return ret;
--
--	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--				   &vfp->fpscr,
--				   user_fpscr_offset,
--				   user_fpscr_offset + sizeof(vfp->fpscr));
-+	membuf_write(&to, vfp->fpregs, sizeof(vfp->fpregs));
-+	membuf_zero(&to, user_fpscr_offset - sizeof(vfp->fpregs));
-+	return membuf_store(&to, vfp->fpscr);
+-			ret = unw_get_gr(info, addr/8, &dummy, &nat);
++			int ret = unw_get_gr(info, reg, &dummy, &nat);
+ 			if (ret < 0)
+ 				return ret;
+ 		}
+-		return unw_access_gr(info, addr/8, data, &nat, write_access);
+-	case ELF_GR_OFFSET(8) ... ELF_GR_OFFSET(11):
+-		ptr = (void *)&pt->r8 + addr - ELF_GR_OFFSET(8);
+-		break;
+-	case ELF_GR_OFFSET(12):
+-	case ELF_GR_OFFSET(13):
+-		ptr = (void *)&pt->r12 + addr - ELF_GR_OFFSET(12);
+-		break;
+-	case ELF_GR_OFFSET(14):
+-		ptr = &pt->r14;
+-		break;
+-	case ELF_GR_OFFSET(15):
+-		ptr = &pt->r15;
++		return unw_access_gr(info, reg, data, &nat, write_access);
+ 	}
+-	if (write_access)
+-		*ptr = *data;
+-	else
+-		*data = *ptr;
+-	return 0;
  }
  
- /*
-@@ -739,7 +711,7 @@ static const struct user_regset arm_regsets[] = {
- 		.n = ELF_NGREG,
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
--		.get = gpr_get,
-+		.get2 = gpr_get,
- 		.set = gpr_set
- 	},
- 	[REGSET_FPR] = {
-@@ -751,7 +723,7 @@ static const struct user_regset arm_regsets[] = {
- 		.n = sizeof(struct user_fp) / sizeof(u32),
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
--		.get = fpa_get,
-+		.get2 = fpa_get,
- 		.set = fpa_set
- 	},
- #ifdef CONFIG_VFP
-@@ -764,7 +736,7 @@ static const struct user_regset arm_regsets[] = {
- 		.n = ARM_VFPREGS_SIZE / sizeof(u32),
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
--		.get = vfp_get,
-+		.get2 = vfp_get,
- 		.set = vfp_set
- 	},
- #endif /* CONFIG_VFP */
+ static int
 -- 
 2.11.0
 
