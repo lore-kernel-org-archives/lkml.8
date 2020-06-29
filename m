@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5181EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25123C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7D52065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D4F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459042;
-	bh=Lx2d3HOrYC8hQMF3kfUNLx7Tj5g3due1qmNAPhciJvk=;
+	s=default; t=1593459045;
+	bh=cduFsDcSpOjXaUOvO9o6TSsYlscfu5yN+mMa8iE+lcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evt/F6uBeshXjVUUu7A5rBWsC+dwoKeh2lkUmyVZMW95Ec3sJZ1r3hWx0ptP8T7ZP
-	 rMJJ76jG8fFGzhXXma60kkusuZtvobOQB2s0FQWWtKALrl07w1UMeNc/d9A+1ns1ai
-	 bYVYaa7b4YZx1M2ElHSsdRwtnlUzGVFf3RHb8NTI=
+	b=pAJolUrUCegxZ4ETCC9VE03CsFfU0AvndZaPv9TPvWSWpPrsDe+fJpnvAUvLPHuxq
+	 ohHCN9kaUZ5KaeGKlYhjtenzaieLAt43DysvZaBJaU9pF7WPElupoMpI83oe61Yvem
+	 DrI2AZYcX6fpt1OaIQfb8AZkqu6qNdkef1AAxdZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgF2Tal (ORCPT
+        id S1730174AbgF2Tam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732873AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732872AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A11322C9E;
-        Mon, 29 Jun 2020 15:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 666B0252AC;
+        Mon, 29 Jun 2020 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444917;
-        bh=Lx2d3HOrYC8hQMF3kfUNLx7Tj5g3due1qmNAPhciJvk=;
+        s=default; t=1593445019;
+        bh=cduFsDcSpOjXaUOvO9o6TSsYlscfu5yN+mMa8iE+lcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTzJTAKPiNKE9tkWuobDA8fhDvzqt/gCHV8jXhl8Oa5lUoNGpeUNiLRSMgIHB0Ixr
-         EyuJoLPnwa4A/4Lonvz0yDIyEvVw0wRka4cNizk29XUjSx/TrJDDu7+oZgVvF9Ptz5
-         HuX+APIfV3p5VWkjZJC3pTHVxo+AE9HuSXt7Txfg=
+        b=GMrYHXo/KCKBlfpDOu9ZAJafRKTvWddc6MYJ/tY+Xeiaa8/rgex99PfBz1vw2RqRi
+         X+5xteLpHztHvQdskcuhxJIyEGVoLZzOH3sHv6cp9uZoK7F2v8iYy2Bv5H5NWd1ASM
+         iFDuVDyFqovGu+Xn2W5P2/h2yrOVVaoUhsmYJ7YE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 013/131] ALSA: hda/realtek - Enable the headset of ASUS B9450FA with ALC294
-Date:   Mon, 29 Jun 2020 11:33:04 -0400
-Message-Id: <20200629153502.2494656-14-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 117/131] ocfs2: fix panic on nfs server over ocfs2
+Date:   Mon, 29 Jun 2020 11:34:48 -0400
+Message-Id: <20200629153502.2494656-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,61 +70,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8b33a134a9cc2a501f8fc731d91caef39237d495 ]
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-A headset on the laptop like ASUS B9450FA does not work, until quirk
-ALC294_FIXUP_ASUS_HPE is applied.
+commit e5a15e17a78d58f933d17cafedfcf7486a29f5b4 upstream.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+The following kernel panic was captured when running nfs server over
+ocfs2, at that time ocfs2_test_inode_bit() was checking whether one
+inode locating at "blkno" 5 was valid, that is ocfs2 root inode, its
+"suballoc_slot" was OCFS2_INVALID_SLOT(65535) and it was allocted from
+//global_inode_alloc, but here it wrongly assumed that it was got from per
+slot inode alloctor which would cause array overflow and trigger kernel
+panic.
+
+  BUG: unable to handle kernel paging request at 0000000000001088
+  IP: [<ffffffff816f6898>] _raw_spin_lock+0x18/0xf0
+  PGD 1e06ba067 PUD 1e9e7d067 PMD 0
+  Oops: 0002 [#1] SMP
+  CPU: 6 PID: 24873 Comm: nfsd Not tainted 4.1.12-124.36.1.el6uek.x86_64 #2
+  Hardware name: Huawei CH121 V3/IT11SGCA1, BIOS 3.87 02/02/2018
+  RIP: _raw_spin_lock+0x18/0xf0
+  RSP: e02b:ffff88005ae97908  EFLAGS: 00010206
+  RAX: ffff88005ae98000 RBX: 0000000000001088 RCX: 0000000000000000
+  RDX: 0000000000020000 RSI: 0000000000000009 RDI: 0000000000001088
+  RBP: ffff88005ae97928 R08: 0000000000000000 R09: ffff880212878e00
+  R10: 0000000000007ff0 R11: 0000000000000000 R12: 0000000000001088
+  R13: ffff8800063c0aa8 R14: ffff8800650c27d0 R15: 000000000000ffff
+  FS:  0000000000000000(0000) GS:ffff880218180000(0000) knlGS:ffff880218180000
+  CS:  e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000001088 CR3: 00000002033d0000 CR4: 0000000000042660
+  Call Trace:
+    igrab+0x1e/0x60
+    ocfs2_get_system_file_inode+0x63/0x3a0 [ocfs2]
+    ocfs2_test_inode_bit+0x328/0xa00 [ocfs2]
+    ocfs2_get_parent+0xba/0x3e0 [ocfs2]
+    reconnect_path+0xb5/0x300
+    exportfs_decode_fh+0xf6/0x2b0
+    fh_verify+0x350/0x660 [nfsd]
+    nfsd4_putfh+0x4d/0x60 [nfsd]
+    nfsd4_proc_compound+0x3d3/0x6f0 [nfsd]
+    nfsd_dispatch+0xe0/0x290 [nfsd]
+    svc_process_common+0x412/0x6a0 [sunrpc]
+    svc_process+0x123/0x210 [sunrpc]
+    nfsd+0xff/0x170 [nfsd]
+    kthread+0xcb/0xf0
+    ret_from_fork+0x61/0x90
+  Code: 83 c2 02 0f b7 f2 e8 18 dc 91 ff 66 90 eb bf 0f 1f 40 00 55 48 89 e5 41 56 41 55 41 54 53 0f 1f 44 00 00 48 89 fb ba 00 00 02 00 <f0> 0f c1 17 89 d0 45 31 e4 45 31 ed c1 e8 10 66 39 d0 41 89 c6
+  RIP   _raw_spin_lock+0x18/0xf0
+  CR2: 0000000000001088
+  ---[ end trace 7264463cd1aac8f9 ]---
+  Kernel panic - not syncing: Fatal exception
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-4-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200225072920.109199-1-jian-hong@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_realtek.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/ocfs2/suballoc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 623ebe2e7db43..9847be4349e60 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5747,7 +5747,7 @@ enum {
- 	ALC289_FIXUP_DUAL_SPK,
- 	ALC294_FIXUP_SPK2_TO_DAC1,
- 	ALC294_FIXUP_ASUS_DUAL_SPK,
--
-+	ALC294_FIXUP_ASUS_HPE,
- };
+diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
+index f7c972fbed6ae..15a89c513da2f 100644
+--- a/fs/ocfs2/suballoc.c
++++ b/fs/ocfs2/suballoc.c
+@@ -2841,9 +2841,12 @@ int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res)
+ 		goto bail;
+ 	}
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6836,7 +6836,17 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC294_FIXUP_SPK2_TO_DAC1
- 	},
--
-+	[ALC294_FIXUP_ASUS_HPE] = {
-+		.type = HDA_FIXUP_VERBS,
-+		.v.verbs = (const struct hda_verb[]) {
-+			/* Set EAPD high */
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x0f },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x7774 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6999,6 +7009,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
- 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
+-	inode_alloc_inode =
+-		ocfs2_get_system_file_inode(osb, INODE_ALLOC_SYSTEM_INODE,
+-					    suballoc_slot);
++	if (suballoc_slot == (u16)OCFS2_INVALID_SLOT)
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			GLOBAL_INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
++	else
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
+ 	if (!inode_alloc_inode) {
+ 		/* the error code could be inaccurate, but we are not able to
+ 		 * get the correct one. */
 -- 
 2.25.1
 
