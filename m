@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD50FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE00C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 991B520780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687DC206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468112;
-	bh=QzOTcZupd2bkxq8x7aWHVHFNfXkXtl9rpvhQrlewe4o=;
+	s=default; t=1593468118;
+	bh=N0ijplVvcF9uZZu2JhVQaZooxRDw2w5dSphqSIH3Ues=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12PLmVHevi1Gy2GTjglDsfzGiQfahhaxoxtVFCr4fraJ1el6Tzu3C2rUISHxG3WAn
-	 pT7rlZrLOQqFTGTNuh4XQjj3ELRKEK9aNVqYfzJ0U1m1+mTQ/thHd7JGv5ugYz9v9T
-	 NHAWhnT2gmWmGVFOm92a/GSddktP1+gAouzAYOHY=
+	b=KNXf9HqZA7NEQa9xNGVakqeEO8odYXzkddcx62hcVZ9vohDBStp5varlND7qHZDab
+	 Nz0VbvIV8ZIV28AtkOEMTouWBhraU88SPNtbzPOLWJh5B0ZZwvsODEaAi0DilFE4Sf
+	 XL9NGvENc5Vik8AyvQivxmblLFzu52PcStLtaZo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389629AbgF2WBu (ORCPT
+        id S2389741AbgF2WBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726248AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 661FE246F4;
-        Mon, 29 Jun 2020 15:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A94246F0;
+        Mon, 29 Jun 2020 15:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444038;
-        bh=QzOTcZupd2bkxq8x7aWHVHFNfXkXtl9rpvhQrlewe4o=;
+        s=default; t=1593444036;
+        bh=N0ijplVvcF9uZZu2JhVQaZooxRDw2w5dSphqSIH3Ues=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kNBdPHXDLTM5/At0rwIr6hyUiCo/15EPaR3SEaWyq93NMEP1Ou8gjOPu/jaqfPS9E
-         yFQb7JmO24Q0MksS2d/c+gn17q2lvbJSFKZRqoJwGPP44mek9v6mNIbsv0A6Yo3wjl
-         Eg+iFa+2dkgpFjSstbJ+7BqUoMTpD53VUOgGsFhc=
+        b=DNwePhBpU7mCNWm7uy37TKScrR1Rq/UbL0seA4C0ye0H3Rif3r4Ph+SUavBAMQHIl
+         HmA+odM3qR8GpOqOFsMYsvJxjzT4BWQUmGzB7IOjB5rhSAj+NugXgZVdRaSJ8IflTL
+         rBUAuouNF7xUqWqFTM6o/IU1PvvmnXUAhgbV6oR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 145/265] soc: imx8m: Correct i.MX8MP UID fuse offset
-Date:   Mon, 29 Jun 2020 11:16:18 -0400
-Message-Id: <20200629151818.2493727-146-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 143/265] iommu/vt-d: Enable PCI ACS for platform opt in hint
+Date:   Mon, 29 Jun 2020 11:16:16 -0400
+Message-Id: <20200629151818.2493727-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,59 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit c95c9693b112f312b59c5d100fd09a1349970fab ]
+[ Upstream commit 50310600ebda74b9988467e2e6128711c7ba56fc ]
 
-Correct i.MX8MP UID fuse offset according to fuse map:
+PCI ACS is disabled if Intel IOMMU is off by default or intel_iommu=off
+is used in command line. Unfortunately, Intel IOMMU will be forced on if
+there're devices sitting on an external facing PCI port that is marked
+as untrusted (for example, thunderbolt peripherals). That means, PCI ACS
+is disabled while Intel IOMMU is forced on to isolate those devices. As
+the result, the devices of an MFD will be grouped by a single group even
+the ACS is supported on device.
 
-UID_LOW: 0x420
-UID_HIGH: 0x430
+[    0.691263] pci 0000:00:07.1: Adding to iommu group 3
+[    0.691277] pci 0000:00:07.2: Adding to iommu group 3
+[    0.691292] pci 0000:00:07.3: Adding to iommu group 3
 
-Fixes: fc40200ebf82 ("soc: imx: increase build coverage for imx8m soc driver")
-Fixes: 18f662a73862 ("soc: imx: Add i.MX8MP SoC driver support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fix it by requesting PCI ACS when Intel IOMMU is detected with platform
+opt in hint.
+
+Fixes: 89a6079df791a ("iommu/vt-d: Force IOMMU on for platform opt in hint")
+Co-developed-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
+Signed-off-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-5-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/imx/soc-imx8m.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iommu/dmar.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/imx/soc-imx8m.c b/drivers/soc/imx/soc-imx8m.c
-index 719e1f189ebf2..ada0d8804d84c 100644
---- a/drivers/soc/imx/soc-imx8m.c
-+++ b/drivers/soc/imx/soc-imx8m.c
-@@ -22,6 +22,8 @@
- #define OCOTP_UID_LOW			0x410
- #define OCOTP_UID_HIGH			0x420
- 
-+#define IMX8MP_OCOTP_UID_OFFSET		0x10
-+
- /* Same as ANADIG_DIGPROG_IMX7D */
- #define ANADIG_DIGPROG_IMX8MM	0x800
- 
-@@ -88,6 +90,8 @@ static void __init imx8mm_soc_uid(void)
- {
- 	void __iomem *ocotp_base;
- 	struct device_node *np;
-+	u32 offset = of_machine_is_compatible("fsl,imx8mp") ?
-+		     IMX8MP_OCOTP_UID_OFFSET : 0;
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-ocotp");
- 	if (!np)
-@@ -96,9 +100,9 @@ static void __init imx8mm_soc_uid(void)
- 	ocotp_base = of_iomap(np, 0);
- 	WARN_ON(!ocotp_base);
- 
--	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH);
-+	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH + offset);
- 	soc_uid <<= 32;
--	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
-+	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW + offset);
- 
- 	iounmap(ocotp_base);
- 	of_node_put(np);
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index f77dae7ba7d40..7df5621bba8de 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -898,7 +898,8 @@ int __init detect_intel_iommu(void)
+ 	if (!ret)
+ 		ret = dmar_walk_dmar_table((struct acpi_table_dmar *)dmar_tbl,
+ 					   &validate_drhd_cb);
+-	if (!ret && !no_iommu && !iommu_detected && !dmar_disabled) {
++	if (!ret && !no_iommu && !iommu_detected &&
++	    (!dmar_disabled || dmar_platform_optin())) {
+ 		iommu_detected = 1;
+ 		/* Make sure ACS will be enabled */
+ 		pci_request_acs();
 -- 
 2.25.1
 
