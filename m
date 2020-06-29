@@ -2,114 +2,205 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4D8206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEF020780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfcENy/n"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xCE8MQ3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgF2XiF (ORCPT
+        id S1728394AbgF2XmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgF2XiF (ORCPT
+        Mon, 29 Jun 2020 19:42:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58800 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgF2XmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:38:05 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CCCC061755;
-        Mon, 29 Jun 2020 16:38:05 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id u8so8391754pje.4;
-        Mon, 29 Jun 2020 16:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xDmndeuf6+uwXZ1m8jycymUjCeI0m9qm4ZAV+tpUoqg=;
-        b=hfcENy/nu+8E+qPHtGgHggPo6FrtxlNt1g3/qmAgrr2o/GeOEqJpOKezxPVlV2RrRh
-         0KzMSRt54d77uU3CRpOsadNGCSfoFK6qKedJodEwFFHR0W/ZF5AQzl06oNG3A3o+KFEn
-         MzKOf00Bp6rabpwXlPL5ygB6sxRt8CRt9wZM3XAODkEaa56JTdG16bmehUOHrMm/ZX89
-         s7hvtrUVekSR3hNK4AVPO83dr5GpeL6ncNfFHhKSgoXQ+frCdgB3GxuQ0GwG1mmNoWZL
-         F5yTQyy1amwtjAv9UtHUwiQpqAWx/D64f6YQW+qYlYLJn5apqAZIQMWwX2+/etDOzU8X
-         X0Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xDmndeuf6+uwXZ1m8jycymUjCeI0m9qm4ZAV+tpUoqg=;
-        b=SRTIaQDAt2G8c/jLDMjy4gJxDjI9HqjtHDlfZ+TpfsYhYIkvjls5R5e17Uz72cSQbC
-         bJL84BVDAoDZOoi2LiokUXvbeEw1On0hZS9aZa2IsI3I4ESqIeHEUAH+of8qn7B1/WyG
-         HT0NzhOmoxXfKF/hPS/ZwPOr2G5cKYGBVqGJ85xsJQo0MZ4SW+JsK7vxvZ+9KYbGB5OV
-         CRTKvElr+6iy1QBgjpjW89tTmC2Z0uXDWVtXuouL6v/2qwVb/N6vYmi3uFqH+DQAbTbp
-         HvARRTxAi2ktXneKA9svoA3EPYlCylJJnDJ6y9LqZst2wNR/Tx113pBgawfuUcsCJQyu
-         rBjg==
-X-Gm-Message-State: AOAM530lsp0t0DB13jWjgVHMdgNI6rFCXD073tMGXzaaQtO0t0r9IZOO
-        abDSEyJ8kMj/lJtbHGBedQ8=
-X-Google-Smtp-Source: ABdhPJw6Bo4vFRwwv/fuSCRqDQFKj4SZC42yqkHiNSoyybyL4QJ4pKH13OihOF5unIFYUS8sr+jhfg==
-X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr20182148pjo.85.1593473884458;
-        Mon, 29 Jun 2020 16:38:04 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id x69sm637205pfc.144.2020.06.29.16.38.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 16:38:03 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 16:37:57 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH] usb: gadget: fix langid kernel-doc warning in usbstring.c
-Message-ID: <20200629233756.GA25245@taoren-ubuntu-R90MNF91>
-References: <b49b7e07-8986-f185-3a99-a088419a532b@infradead.org>
+        Mon, 29 Jun 2020 19:42:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gUTe007015;
+        Mon, 29 Jun 2020 01:42:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593412950;
+        bh=Pe4Py7qCB9HM1+jvt5qFl1K2y+kJ7Nz7h3KUpMZTwdY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xCE8MQ3kPKcGXZwR6FQY2tDiMBreXL2O0wRa65uuWSFimRXf4cN0IjUtPsD8F8KtJ
+         mGIqEbcB5Kdq4YRPtIS5XdkmKWvrWwZpi37bSsefjQsLMPF5RmlUDOUNsP+M8Upz7f
+         Gs8LurD+Lcdn3marIz8mP5CdZMPjKxzE75e+pY9I=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gU8s057552;
+        Mon, 29 Jun 2020 01:42:30 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
+ Jun 2020 01:42:30 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 29 Jun 2020 01:42:30 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gSLE079730;
+        Mon, 29 Jun 2020 01:42:29 -0500
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200619224334.GA7857@embeddedor>
+ <20200624055535.GX2324254@vkoul-mobl>
+ <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+ <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+ <20200626132944.GA26003@embeddedor>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <04a5fb89-37eb-2cf7-d085-aaa4c9ed284d@ti.com>
+Date:   Mon, 29 Jun 2020 09:43:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b49b7e07-8986-f185-3a99-a088419a532b@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200626132944.GA26003@embeddedor>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 08:08:03PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix spelling of the 'langid' function argument in the kernel-doc
-> notation to quieten a kernel-doc warning.
-> 
-> ../drivers/usb/gadget/usbstring.c:77: warning: Function parameter or member 'langid' not described in 'usb_validate_langid'
-> ../drivers/usb/gadget/usbstring.c:77: warning: Excess function parameter 'lang' description in 'usb_validate_langid'
-> 
-> Fixes: 17309a6a4356 ("usb: gadget: add "usb_validate_langid" function")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Tao Ren <rentao.bupt@gmail.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
 
-Thanks for the fix, Randy!
 
-Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
+On 26/06/2020 16.29, Gustavo A. R. Silva wrote:
+> Hi Peter,
+>=20
+> Please, see my comments below...
+>=20
+> On Fri, Jun 26, 2020 at 10:30:37AM +0300, Peter Ujfalusi wrote:
+>>
+>>
+>> On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
+>>> Hi Vinod,
+>>>
+>>> On 6/24/20 00:55, Vinod Koul wrote:
+>>>> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+>>>>> Make use of the struct_size() helper instead of an open-coded versi=
+on
+>>>>> in order to avoid any potential type mistakes.
+>>>>>
+>>>>> This code was detected with the help of Coccinelle and, audited and=
 
-> ---
->  drivers/usb/gadget/usbstring.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200626.orig/drivers/usb/gadget/usbstring.c
-> +++ linux-next-20200626/drivers/usb/gadget/usbstring.c
-> @@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(usb_gadget_get_string)
->  
->  /**
->   * usb_validate_langid - validate usb language identifiers
-> - * @lang: usb language identifier
-> + * @langid: usb language identifier
->   *
->   * Returns true for valid language identifier, otherwise false.
->   */
-> 
+>>>>> fixed manually.
+>>>>>
+>>>>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+>>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>>> ---
+>>>>>  drivers/dma/ti/k3-udma.c | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>>>>> index 0d5fb154b8e2..411c54b86ba8 100644
+>>>>> --- a/drivers/dma/ti/k3-udma.c
+>>>>> +++ b/drivers/dma/ti/k3-udma.c
+>>>>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, =
+struct scatterlist *sgl,
+>>>>>  	u32 ring_id;
+>>>>>  	unsigned int i;
+>>>>> =20
+>>>>> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWA=
+IT);
+>>>>> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+>>>>
+>>>> struct_size() is a * b + c but here we need, a + b * c.. the trailin=
+g
+>>>> struct is N times here..
+>>>>
+>>>
+>>> struct_size() works exactly as expected in this case. :)
+>>> Please, see:
+>>>
+>>> include/linux/overflow.h:314:
+>>> 314 #define struct_size(p, member, count)                            =
+       \
+>>> 315         __ab_c_size(count,                                       =
+       \
+>>> 316                     sizeof(*(p)->member) + __must_be_array((p)->m=
+ember),\
+>>> 317                     sizeof(*(p)))
+>>
+>> True, struct_size is for this sort of things.
+>>
+>> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>
+>> While looking it up in include/linux/overflow.h I have noticed your
+>> commit in linux-next, which adds flex_array_size()
+>>
+>> The example in the commit message contradicts with what the helper
+>=20
+> There is no contradiction here.
+>=20
+>> does imho. To be correct it should have been:
+>>
+>> struct something {
+>> 	size_t count;
+>> 	struct foo items[];
+>> };
+>>
+>> - struct something *instance;
+>> + struct something instance;
+>>
+>> - instance =3D kmalloc(struct_size(instance, items, count), GFP_KERNEL=
+);
+>> + instance.items =3D kmalloc(struct_size(instance, items, count), GFP_=
+KERNEL);
+>> instance->count =3D count;
+>> memcpy(instance->items, src, flex_array_size(instance, items, instance=
+->count));
+>>
+>=20
+> This is all wrong. Please, double check how struct_size() works.
+
+Yes, I got it mixed up, I know how struct_size works... For some reason
+I just overlooked it's use in the kmalloc().
+
+>=20
+> Thanks
+> --
+> Gustavo
+>=20
+>>>>>  	if (!d)
+>>>>>  		return NULL;
+>>>>> =20
+>>>>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc=
+, dma_addr_t buf_addr,
+>>>>>  	if (period_len >=3D SZ_4M)
+>>>>>  		return NULL;
+>>>>> =20
+>>>>> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NO=
+WAIT);
+>>>>> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+>>>>>  	if (!d)
+>>>>>  		return NULL;
+>>>>> =20
+>>>>> --=20
+>>>>> 2.27.0
+>>>>
+>>
+>> - P=C3=A9ter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunn=
+us/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
