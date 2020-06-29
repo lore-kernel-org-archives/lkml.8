@@ -7,49 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718BB20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9070D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462071;
-	bh=BLc8OZI4KI+AvMmzZ2lRJXBiqouFMEMz9A9kxJclHqg=;
+	s=default; t=1593462076;
+	bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CH8u5G1Qvb0nOo3VKTMAycVRV1n9GwlJL41GIags5eURIMMACeI1DFVTAGetYmMMx
-	 MFYSMtdAEF9TX1w9jou8JFDXDiAiWchcObokSeAUlNp6cG7POKdkL82zh4S6TVPaMR
-	 ciafHakTB0N29sUN1VaQ2duiBzBx3gjdUHKktoVQ=
+	b=sLxku9xZ40deaO4uxa1NvwE3M8fjjvYp/eZmiofsD5B2hznj6KXRu1+uDGgoeF5YS
+	 8rnvzb31IBnmhL4mUCI9/o5sbdp4hroIU9oWkcnhaaO1vtAzcgg29fyJqftMRVVeUh
+	 yt//T7A0teBql1eX13eDYoWkLYtP1JT6yqCxRARw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbgF2UVJ (ORCPT
+        id S1732853AbgF2UVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732594AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:34 -0400
+        id S1730239AbgF2TZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC5425435;
-        Mon, 29 Jun 2020 15:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD25325428;
+        Mon, 29 Jun 2020 15:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445385;
-        bh=BLc8OZI4KI+AvMmzZ2lRJXBiqouFMEMz9A9kxJclHqg=;
+        s=default; t=1593445376;
+        bh=VdR4YBb7q6E74iOpqmSSJK8A0d147iOoy9No4eOtmuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTeRVfzOaXjv5I9c7oGmTXqZHZ6CaA6UGZUKDmhEzoQOFZVCt9gAyrwZ40c1uzC8R
-         n2VMoQ1cLJxNFJqqHj5A8OjsEpdDotOg4JC5O9I0XTZg6hlhRz/ALZfuHHG6eiPYgu
-         b6vEkxrM4BUP4DCbgvv9WzruFXELZq+ekW+wHZ3o=
+        b=qlt20obUjlnb0bCL23QuUASCf3PV1+zEHYK1RIID3+TYw2a+8dfw2q+bhjq9A7cxL
+         eZA397ybwGyZbgIbVImSJuOBUAo4Cicj/BL9jSd7Jfz4Lr/wxgaX3h+H0d4vGCgfjN
+         72VeBJdaihFJ4tST6zSn7qYLqV7qDmlBsptSJyNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neal Cardwell <ncardwell@google.com>,
-        Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 139/191] tcp_cubic: fix spurious HYSTART_DELAY exit upon drop in min RTT
-Date:   Mon, 29 Jun 2020 11:39:15 -0400
-Message-Id: <20200629154007.2495120-140-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 131/191] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
+Date:   Mon, 29 Jun 2020 11:39:07 -0400
+Message-Id: <20200629154007.2495120-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -68,53 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit b344579ca8478598937215f7005d6c7b84d28aee ]
+[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
 
-Mirja Kuehlewind reported a bug in Linux TCP CUBIC Hystart, where
-Hystart HYSTART_DELAY mechanism can exit Slow Start spuriously on an
-ACK when the minimum rtt of a connection goes down. From inspection it
-is clear from the existing code that this could happen in an example
-like the following:
+lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
 
-o The first 8 RTT samples in a round trip are 150ms, resulting in a
-  curr_rtt of 150ms and a delay_min of 150ms.
-
-o The 9th RTT sample is 100ms. The curr_rtt does not change after the
-  first 8 samples, so curr_rtt remains 150ms. But delay_min can be
-  lowered at any time, so delay_min falls to 100ms. The code executes
-  the HYSTART_DELAY comparison between curr_rtt of 150ms and delay_min
-  of 100ms, and the curr_rtt is declared far enough above delay_min to
-  force a (spurious) exit of Slow start.
-
-The fix here is simple: allow every RTT sample in a round trip to
-lower the curr_rtt.
-
-Fixes: ae27e98a5152 ("[TCP] CUBIC v2.3")
-Reported-by: Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_cubic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sparc/kernel/ptrace_32.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
-index c99230efcd52d..00397c6add202 100644
---- a/net/ipv4/tcp_cubic.c
-+++ b/net/ipv4/tcp_cubic.c
-@@ -414,6 +414,8 @@ static void hystart_update(struct sock *sk, u32 delay)
+diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
+index 396dbdea0cfa0..2f4316c142664 100644
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -167,12 +167,17 @@ static int genregs32_set(struct task_struct *target,
+ 	if (ret || !count)
+ 		return ret;
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-				 &regs->y,
++				 &regs->npc,
+ 				 34 * sizeof(u32), 35 * sizeof(u32));
+ 	if (ret || !count)
+ 		return ret;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->y,
++				 35 * sizeof(u32), 36 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+-					 35 * sizeof(u32), 38 * sizeof(u32));
++					 36 * sizeof(u32), 38 * sizeof(u32));
+ }
  
- 	if (hystart_detect & HYSTART_DELAY) {
- 		/* obtain the minimum delay of more than sampling packets */
-+		if (ca->curr_rtt > delay)
-+			ca->curr_rtt = delay;
- 		if (ca->sample_cnt < HYSTART_MIN_SAMPLES) {
- 			if (ca->curr_rtt == 0 || ca->curr_rtt > delay)
- 				ca->curr_rtt = delay;
+ static int fpregs32_get(struct task_struct *target,
 -- 
 2.25.1
 
