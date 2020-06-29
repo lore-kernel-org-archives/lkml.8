@@ -2,196 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB99FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8263820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460273;
-	bh=nr8fbONF3tDpmAoLcrs3fhK3KkecQR6+CE/6sRuNh9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vIXDeIsuVoLfP2lQXUrZonqdqKku36vRgUsVxtbVA9a41wnKo68iy9sZg8iLjWLI
-	 Vi8nq0WYp9vfLPqXttnaSyFXHFBANT7dZlAlvk0lUGRgHnsymLRxGKydCOx73Nt0VX
-	 JA/PqQvqgJ7MkF4/7JImEdzYFntI71RJVG3J1s18=
+	by mail.kernel.org (Postfix) with ESMTP id 222C6206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g5ReP8+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbgF2TvL (ORCPT
+        id S1733124AbgF2TvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387731AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732493AbgF2Tkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5586624912;
-        Mon, 29 Jun 2020 15:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444467;
-        bh=nr8fbONF3tDpmAoLcrs3fhK3KkecQR6+CE/6sRuNh9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqY0pUGWsVBpx5Fk3jkajDgcQBc09OJfJm6m8cXWj6nOE+1JzhPh+SXJInmEMj+Ob
-         EiGVMHulYiJnn+ehI317ldTzQRu9P9C1pMAL/K84gTqZalQ3L2wEOPcMtebr9PqSmQ
-         oKURhF6Bw+4Yz+hHcXl6U+m102/VVOb170hlFOy4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jingqi Liu <jingqi.liu@intel.com>, Tao Xu <tao3.xu@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 147/178] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
-Date:   Mon, 29 Jun 2020 11:24:52 -0400
-Message-Id: <20200629152523.2494198-148-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B27C03E97B;
+        Mon, 29 Jun 2020 12:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=llOojDD3lqJfk9XWeWL9pqlJf45UocCmu2uEUE0dVqA=; b=g5ReP8+J7SiuD9MV4hutfiu9fF
+        LAQ6G1HKEbWQ7btY0lIlqWtQFgI+ZgvZnJdk18Czt0FPf4G7gNwRo7HcX3xI7nbdDRQ+krxs96lL5
+        +HuP7tUmxVsrvE1XkYoNMF4VXQwUOlwOTEsV2QZc176f0JIo+c2PNG4gKW3u+8BdtvAJi5oO5gJBW
+        37t8EEImIA/1JABc3HOtvByIjk1EaJNQxBOtQEExIXC6aPduMatEKzHKSwDb9fmqZG9m7UVxLhW7J
+        RQwJSo9KkIrGQPZYQe+thtllmkdKuj1wESyivOsd4SP/LW+bPGckN9Nif9YUH4KnBrFMLf2mXTQCN
+        Q80psA/w==;
+Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpzdW-0004Ls-U6; Mon, 29 Jun 2020 19:40:15 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 14/20] block: remove the NULL queue check in generic_make_request_checks
+Date:   Mon, 29 Jun 2020 21:39:41 +0200
+Message-Id: <20200629193947.2705954-15-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+All registers disks must have a valid queue pointer, so don't bother to
+log a warning for that case.
 
-commit bf09fb6cba4f7099620cc9ed32d94c27c4af992e upstream.
-
-Remove support for context switching between the guest's and host's
-desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
-required for correct functionality, e.g. KVM intercepts reads and writes
-to the MSR, and the latency effects of the settings controlled by the
-MSR are not architecturally visible.
-
-As a general rule, KVM should not allow the guest to control power
-management settings unless explicitly enabled by userspace, e.g. see
-KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
-can improve the performance of SMT siblings.  A devious guest could
-disable C0.2 so as to improve the performance of their workloads at the
-detriment to workloads running in the host or on other VMs.
-
-Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
-condition where updates from the host may cause KVM to enter the guest
-with the incorrect value.  Because updates are are propagated to all
-CPUs via IPI (SMP function callback), the value in hardware may be
-stale with respect to the cached value and KVM could enter the guest
-with the wrong value in hardware.  As above, the guest can't observe the
-bad value, but it's a weird and confusing wart in the implementation.
-
-Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
-lists.  Using the lists is only necessary for MSRs that are required for
-correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
-old hardware, or for MSRs that need to-the-uop precision, e.g. perf
-related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
-kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
-vcpu_vmx_run().  Using the atomic lists is undesirable as they are more
-expensive than direct RDMSR/WRMSR.
-
-Furthermore, even if giving the guest control of the MSR is legitimate,
-e.g. in pass-through scenarios, it's not clear that the benefits would
-outweigh the overhead.  E.g. saving and restoring an MSR across a VMX
-roundtrip costs ~250 cycles, and if the guest diverged from the host
-that cost would be paid on every run of the guest.  In other words, if
-there is a legitimate use case then it should be enabled by a new
-per-VM capability.
-
-Note, KVM still needs to emulate MSR_IA32_UMWAIT_CONTROL so that it can
-correctly expose other WAITPKG features to the guest, e.g. TPAUSE,
-UMWAIT and UMONITOR.
-
-Fixes: 6e3ba4abcea56 ("KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL")
-Cc: stable@vger.kernel.org
-Cc: Jingqi Liu <jingqi.liu@intel.com>
-Cc: Tao Xu <tao3.xu@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200623005135.10414-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/kernel/cpu/umwait.c |  6 ------
- arch/x86/kvm/vmx/vmx.c       | 18 ------------------
- arch/x86/kvm/vmx/vmx.h       |  2 --
- 3 files changed, 26 deletions(-)
+ block/blk-core.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index c222f283b4560..32b4dc9030aa9 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -17,12 +17,6 @@
-  */
- static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
- 
--u32 get_umwait_control_msr(void)
--{
--	return umwait_control_cached;
--}
--EXPORT_SYMBOL_GPL(get_umwait_control_msr);
--
- /*
-  * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
-  * hardware or BIOS before kernel boot.
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2e6d400ce0a01..10e6471896cdb 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6427,23 +6427,6 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 					msrs[i].host, false);
- }
- 
--static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
--{
--	u32 host_umwait_control;
--
--	if (!vmx_has_waitpkg(vmx))
--		return;
--
--	host_umwait_control = get_umwait_control_msr();
--
--	if (vmx->msr_ia32_umwait_control != host_umwait_control)
--		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
--			vmx->msr_ia32_umwait_control,
--			host_umwait_control, false);
--	else
--		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
--}
--
- static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 95dca74534ff73..37435d0d433564 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -973,22 +973,12 @@ static inline blk_status_t blk_check_zone_append(struct request_queue *q,
+ static noinline_for_stack bool
+ generic_make_request_checks(struct bio *bio)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -6533,7 +6516,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	pt_guest_enter(vmx);
+-	struct request_queue *q;
++	struct request_queue *q = bio->bi_disk->queue;
+ 	int nr_sectors = bio_sectors(bio);
+ 	blk_status_t status = BLK_STS_IOERR;
+-	char b[BDEVNAME_SIZE];
  
- 	atomic_switch_perf_msrs(vmx);
--	atomic_switch_umwait_control_msr(vmx);
+ 	might_sleep();
  
- 	if (enable_preemption_timer)
- 		vmx_update_hv_timer(vcpu);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 295c5f83842e5..a1919ec7fd108 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -14,8 +14,6 @@
- extern const u32 vmx_msr_index[];
- extern u64 host_efer;
- 
--extern u32 get_umwait_control_msr(void);
+-	q = bio->bi_disk->queue;
+-	if (unlikely(!q)) {
+-		printk(KERN_ERR
+-		       "generic_make_request: Trying to access "
+-			"nonexistent block-device %s (%Lu)\n",
+-			bio_devname(bio, b), (long long)bio->bi_iter.bi_sector);
+-		goto end_io;
+-	}
 -
- #define MSR_TYPE_R	1
- #define MSR_TYPE_W	2
- #define MSR_TYPE_RW	3
+ 	/*
+ 	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
+ 	 * if queue is not a request based queue.
 -- 
-2.25.1
+2.26.2
 
