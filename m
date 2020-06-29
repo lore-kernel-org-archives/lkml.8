@@ -2,156 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF42C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D20C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEB5206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iqCpFcUP"
+	by mail.kernel.org (Postfix) with ESMTP id 1E967206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459675;
+	bh=suxS3uWxS2tL0+jBGETGD3bqF3me5u0sGxXU3krztR0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YIEDpZNQnTQV4ZYdMU4fXHJDjeLbt+gsGlOMLCm/a6fsThB7ejjsdo1nOlAu3RSgH
+	 OTcMFiybou0Edd69R2cVr6Gv8GMs9C0SGKoAL4NGdhmAhgtP+SQd0swCeIftbCiBjx
+	 iJYx2A950fZfJRtiv7e/rENQsUML4bIBcBs5rzwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbgF2TlI (ORCPT
+        id S2387893AbgF2Tk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387802AbgF2Tks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:48 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA65C03E979;
-        Mon, 29 Jun 2020 12:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=k0UqCYguWovFmFEFba5t9PR/0pWK66pXhP3lJia2sr8=; b=iqCpFcUPe8uei0OvFPbjhSxNTT
-        c1T6pmYkN8tfj+ZDdjMEXdvIQY7vFCt5slbgsQaKXdo4Kd1gyEg5KFiod7RzsTbOUDePryBejrS+b
-        XXFEFR2tyS//dL6Q+58ug6ZB4kvQM0tpJCgXZE/b4COS7LM1KdTQtkcs47fw/V5vIcOdi8w3PIFn6
-        izjNKAU43WkDRSoTNfw9en7oWoxgTehMQFpejfnf1wYGPTm70qVHrpZDu9/oE/tePQHfByzG2Fs7z
-        mEAYLXz11QRgrumVZmGDa4vtwloca46yusBAa9FT9yxLk6mDaGC/rhZk+gxIjbtgIQ6ZlpbqB1mfC
-        lQc4VBXQ==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdk-0004P4-3Q; Mon, 29 Jun 2020 19:40:28 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 19/20] block: shortcut __submit_bio_noacct for blk-mq drivers
-Date:   Mon, 29 Jun 2020 21:39:46 +0200
-Message-Id: <20200629193947.2705954-20-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+        Mon, 29 Jun 2020 15:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387773AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7DC32485A;
+        Mon, 29 Jun 2020 15:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444358;
+        bh=suxS3uWxS2tL0+jBGETGD3bqF3me5u0sGxXU3krztR0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b6fjR43taMS2rKdbcoo6AIsHxmpJ8P9M4+tziiCI8gjpXTy2qy9b3naxDucx1arGy
+         xWbsszIbZc7iaZet01RA5jiAzgr4mNrpMhKjv2UjB/WkFvGgQSidJfCsLjxjS6fgWQ
+         gl1gzuIOaM29/RWvLPF0SzstM4XcIMtlHCfrWONU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 034/178] USB: ohci-sm501: Add missed iounmap() in remove
+Date:   Mon, 29 Jun 2020 11:22:59 -0400
+Message-Id: <20200629152523.2494198-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For blk-mq drivers bios can only be inserted for the same queue.  So
-bypass the complicated sorting logic in __submit_bio_noacct with
-a blk-mq simpler submission helper.
+From: Chuhong Yuan <hslester96@gmail.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+commit 07c112fb09c86c0231f6ff0061a000ffe91c8eb9 upstream.
+
+This driver misses calling iounmap() in remove to undo the ioremap()
+called in probe.
+Add the missed call to fix it.
+
+Fixes: f54aab6ebcec ("usb: ohci-sm501 driver")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200610024844.3628408-1-hslester96@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- block/blk-core.c | 50 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 15 deletions(-)
+ drivers/usb/host/ohci-sm501.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index b82f48c86e6f7a..46e3c0a37cc377 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1071,20 +1071,6 @@ static noinline_for_stack bool submit_bio_checks(struct bio *bio)
- 	return false;
- }
+diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
+index cff9652403270..b91d50da6127f 100644
+--- a/drivers/usb/host/ohci-sm501.c
++++ b/drivers/usb/host/ohci-sm501.c
+@@ -191,6 +191,7 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
+ 	struct resource	*mem;
  
--static blk_qc_t do_make_request(struct bio *bio)
--{
--	struct gendisk *disk = bio->bi_disk;
--	blk_qc_t ret = BLK_QC_T_NONE;
--
--	if (blk_crypto_bio_prep(&bio)) {
--		if (!disk->fops->submit_bio)
--			return blk_mq_submit_bio(bio);
--		ret = disk->fops->submit_bio(bio);
--	}
--	blk_queue_exit(disk->queue);
--	return ret;
--}
--
- /*
-  * The loop in this function may be a bit non-obvious, and so deserves some
-  * explanation:
-@@ -1127,7 +1113,11 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
- 		bio_list_on_stack[1] = bio_list_on_stack[0];
- 		bio_list_init(&bio_list_on_stack[0]);
- 
--		ret = do_make_request(bio);
-+		if (blk_crypto_bio_prep(&bio))
-+			ret = bio->bi_disk->fops->submit_bio(bio);
-+		else
-+			ret = BLK_QC_T_NONE;
-+		blk_queue_exit(q);
- 
- 		/*
- 		 * Sort new bios into those for a lower level and those for the
-@@ -1153,6 +1143,34 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
- 	return ret;
- }
- 
-+static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
-+{
-+	struct gendisk *disk = bio->bi_disk;
-+	struct bio_list bio_list;
-+	blk_qc_t ret = BLK_QC_T_NONE;
-+
-+	bio_list_init(&bio_list);
-+	current->bio_list = &bio_list;
-+
-+	do {
-+		WARN_ON_ONCE(bio->bi_disk != disk);
-+
-+		if (unlikely(bio_queue_enter(bio) != 0))
-+			continue;
-+
-+		if (!blk_crypto_bio_prep(&bio)) {
-+			blk_queue_exit(disk->queue);
-+			ret = BLK_QC_T_NONE;
-+			continue;
-+		}
-+
-+		ret = blk_mq_submit_bio(bio);
-+	} while ((bio = bio_list_pop(&bio_list)));
-+
-+	current->bio_list = NULL;
-+	return ret;
-+}
-+
- /**
-  * submit_bio_noacct - re-submit a bio to the block device layer for I/O
-  * @bio:  The bio describing the location in memory and on the device.
-@@ -1182,6 +1200,8 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
- 		return BLK_QC_T_NONE;
- 	}
- 
-+	if (bio->bi_disk->queue->mq_ops)
-+		return __submit_bio_noacct_mq(bio);
- 	return __submit_bio_noacct(bio);
- }
- EXPORT_SYMBOL(submit_bio_noacct);
+ 	usb_remove_hcd(hcd);
++	iounmap(hcd->regs);
+ 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+ 	usb_put_hcd(hcd);
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 -- 
-2.26.2
+2.25.1
 
