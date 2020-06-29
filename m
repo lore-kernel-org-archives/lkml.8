@@ -2,114 +2,109 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8016C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4161C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83056206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467531;
-	bh=/vwdFd68ku5X8FDTyvttuCf0a4x6PHDje4Hk3/9e3+U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1gMx2Ze8BhQ8gVd+Vpy3nkPZSvorVYo0oIi5oT6FvCBETAfPS5BOxeeMDY1KFs9Se
-	 fm1JMTxJzm2sJGkVjJ37TJy5kIWthyVx2H1PJcsVRKxvLmI9DMep13Xx14IS2HsmNr
-	 H0m+vmue76l0YEJYR20Ru351F3iqgOwxiXL7jYng=
+	by mail.kernel.org (Postfix) with ESMTP id 9A275206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khSkOa1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404596AbgF2VwK (ORCPT
+        id S2404010AbgF2VwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEDA1246DF;
-        Mon, 29 Jun 2020 15:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444024;
-        bh=/vwdFd68ku5X8FDTyvttuCf0a4x6PHDje4Hk3/9e3+U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BvsTXjmM2aF+HgC6I4SVHbfXTQr53/injJrL7olqfL+PXa0nmgvGuEmNgVOeCt1mt
-         07QaNsu6bi2Tks5qvo7a6eUFqO6oXtn7B/opodhph+UOME7ibzChluy7EV2ETHCg0w
-         00jBPxP70X8pYrs4YH2TeLVpFL8/uB0+tSz2F71c=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 131/265] RDMA/rvt: Fix potential memory leak caused by rvt_alloc_rq
-Date:   Mon, 29 Jun 2020 11:16:04 -0400
-Message-Id: <20200629151818.2493727-132-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404581AbgF2Vv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:51:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09482C061755;
+        Mon, 29 Jun 2020 14:51:58 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j12so8457123pfn.10;
+        Mon, 29 Jun 2020 14:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RvMj5yET6zod7vEbQyQ+dyCF/KGdDXqpRazv7Nh0/qE=;
+        b=khSkOa1iOR9sKq/l2Lwg2R+70F1qzc3rAWzT1DL81iYJKmfl0OXAKmLaQcEHYh75HD
+         Dim7FCtnFG0m3Y7kmHUxgsykRsUHZT5JQ3g87aZYI4UDZCCTRHwPIe67iXeMWm5sEQfb
+         S3DB34IC0Dv9F409Wj8gM0iG9PKhXAsgikpd3QtZ0pNSzZcG6ZPjeTArTudFcF1akU6m
+         eYGILAK+dTr82RFhdBeh3NutZ5dWsG+VNNMJoyuEh2Ok8m/Rse1bW+zrHLKD0opEhiNz
+         FdieyEh5ErWKSTF9nDD3gmex2heXZGcC2WmHB7o+O5FROMQJFQSgrf+aYMzwv6arrIWW
+         yfQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RvMj5yET6zod7vEbQyQ+dyCF/KGdDXqpRazv7Nh0/qE=;
+        b=HSsi7Fq8hp9gkuwklbw1hKl22Tt/NzIJr2bwDAzPYWU+LDW/9Nr/8Su7a8UWdqgF4X
+         mHh9YqMsIWMtTO83LkVn2dYmhkIWKrhWapHQ4z71kS7eqH62QgTo8R2Ao5WsEDp8dwjZ
+         UfPI4gBqoUZeHOy9ykLa8cMX5P3kFNSnYa1P4spKBrIdR6sZkHyMA9JTMqK28/dDeJ+X
+         qMRukOgzSy5MEng0wRZfVZm0WuPoJ+29TmkBoxYsZPGGcgMe5N8WINZg2K93c3oyXuKF
+         T5Onr/L1rcUCN1Tk6F5mup284eEnS7cEHovRt0/NNAzKyN6nIjRVloDWr2BZ9Z6PXpOC
+         nupw==
+X-Gm-Message-State: AOAM5317Gpx/3R5rDrwoE61vAqlLp5KTssLYOifpC1QAUTozxUDod+JM
+        fSwbXFnTi2nqY4nVNL7MfLQ=
+X-Google-Smtp-Source: ABdhPJxC8Fgjn8RTlD0SKk0xsVZpbiGlo9R3VT7A5mIZwpCLggeB5EdfCEKblPcw3+omhGtZUjddyQ==
+X-Received: by 2002:a63:f903:: with SMTP id h3mr12511677pgi.437.1593467517533;
+        Mon, 29 Jun 2020 14:51:57 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id p189sm542487pfb.217.2020.06.29.14.51.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 14:51:57 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:51:24 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, treding@nvidia.com, yhsu@nvidia.com,
+        snikam@nvidia.com, praithatha@nvidia.com, talho@nvidia.com,
+        bbiswas@nvidia.com, mperttunen@nvidia.com, nicolinc@nvidia.com,
+        bhuntsman@nvidia.com
+Subject: Re: [PATCH v7 1/3] iommu/arm-smmu: add NVIDIA implementation for
+ dual ARM MMU-500 usage
+Message-ID: <20200629215124.GD27967@Asurada-Nvidia>
+References: <20200629022838.29628-1-vdumpa@nvidia.com>
+ <20200629022838.29628-2-vdumpa@nvidia.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629022838.29628-2-vdumpa@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+On Sun, Jun 28, 2020 at 07:28:36PM -0700, Krishna Reddy wrote:
+> NVIDIA's Tegra194 SoC uses two ARM MMU-500s together to interleave
+> IOVA accesses across them.
+> Add NVIDIA implementation for dual ARM MMU-500s and add new compatible
+> string for Tegra194 SoC SMMU topology.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 
-[ Upstream commit 90a239ee25fa3a483facec3de7c144361a3d3a51 ]
+> +static inline void __iomem *nvidia_smmu_page(struct arm_smmu_device *smmu,
+> +			       unsigned int inst, int page)
+> +{
+> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+> +
+> +	if (!nvidia_smmu->bases[0])
+> +		nvidia_smmu->bases[0] = smmu->base;
+> +
+> +	return nvidia_smmu->bases[inst] + (page << smmu->pgshift);
+> +}
 
-In case of failure of alloc_ud_wq_attr(), the memory allocated by
-rvt_alloc_rq() is not freed. Fix it by calling rvt_free_rq() using the
-existing clean-up code.
+Not critical -- just a nit: why not put the bases[0] in init()?
 
-Fixes: d310c4bf8aea ("IB/{rdmavt, hfi1, qib}: Remove AH refcount for UD QPs")
-Link: https://lore.kernel.org/r/20200614041148.131983-1-pakki001@umn.edu
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/sw/rdmavt/qp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Everything else looks good to me:
 
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index 500a7ee04c44e..ca29954a54ac3 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -1196,7 +1196,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
- 		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
- 		if (err) {
- 			ret = (ERR_PTR(err));
--			goto bail_driver_priv;
-+			goto bail_rq_rvt;
- 		}
- 
- 		err = alloc_qpn(rdi, &rdi->qp_dev->qpn_table,
-@@ -1300,9 +1300,11 @@ bail_qpn:
- 	rvt_free_qpn(&rdi->qp_dev->qpn_table, qp->ibqp.qp_num);
- 
- bail_rq_wq:
--	rvt_free_rq(&qp->r_rq);
- 	free_ud_wq_attr(qp);
- 
-+bail_rq_rvt:
-+	rvt_free_rq(&qp->r_rq);
-+
- bail_driver_priv:
- 	rdi->driver_f.qp_priv_free(rdi, qp);
- 
--- 
-2.25.1
-
+Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
