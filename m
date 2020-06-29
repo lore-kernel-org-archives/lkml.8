@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92577C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5964C433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71CA9206A5
+	by mail.kernel.org (Postfix) with ESMTP id B94F9206A5
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593460199;
-	bh=ZsO/Gz2btHq/e4G43/KKmYyVu0Zy/snV+DU8BBNW4Mg=;
+	bh=u5J6/w7nXVFSdEDy9CHpEXoG5nI+WM56tguUkFYQr60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnLLSMCMgHGcPmYN2JYmc6h16/Y2uLAUFM1k+S2+pmh/0Wl6oSnWMTQKkocpDYLHJ
-	 je3LP8PemVS9rnn531jcpR/uQj+pn137jqfK16pZlV6cfnDG2SB8qSY0ZV9oI4hVlx
-	 j9HAi0buHVZiJda9P0Bbs1kxf991Vf3K1wfQuD4s=
+	b=jEqCorYOr0HL2ooxlHFoYn6907j90dTc4bBTUob9KpJown8+PrIAwv45CCbeMduIk
+	 lBMYjX3X9i2FG7orQmmFBxEbLs+3lmUixycmpD4meahxU1ZcazQp3iaxB0Af2CBPkJ
+	 GKY3X7XP6fpWUFFOHpIY+ywXVtSGPkcvLUI23AGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbgF2Tty (ORCPT
+        id S2388228AbgF2Tts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387744AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387755AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B1902489C;
-        Mon, 29 Jun 2020 15:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3668A251DA;
+        Mon, 29 Jun 2020 15:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444395;
-        bh=ZsO/Gz2btHq/e4G43/KKmYyVu0Zy/snV+DU8BBNW4Mg=;
+        s=default; t=1593444499;
+        bh=u5J6/w7nXVFSdEDy9CHpEXoG5nI+WM56tguUkFYQr60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxV7QZpmf5SaKrzpNPHLg03NRdFGgeLPgRMwdH+xQZ0SnQgn4JLklroAp2/EDlFsF
-         lJmFSzJF7qpqZI0yn6Q61XHdsC7T6lsbk5jZc9rmyqzrVMGFKu51HmsE0N7v9//l/E
-         wkwSSegyEU+gzTG7IyvLSt0FTnOH6wWU4snV45f0=
+        b=pqeYDMXi2WQ50+7Vk7rQ2mTDFyuqcjuwWrxiZvvJVrpwrjCUVFPOtNEXzSmceZcLK
+         tkcQi/vvETpQHP3Pc1tQaUF2woacR0a6STwUMmEMPIae8MgzC+SjRTkwFWcSqsL9H1
+         BGktNLnyVtTaY8dHsIRGWsqt7ybcExOt8yRe59nw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Zheng Bin <zhengbin13@huawei.com>,
+        Ren Xudong <renxudong1@huawei.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/178] ASoC: fsl_ssi: Fix bclk calculation for mono channel
-Date:   Mon, 29 Jun 2020 11:23:37 -0400
-Message-Id: <20200629152523.2494198-73-sashal@kernel.org>
+Subject: [PATCH 5.4 177/178] xfs: add agf freeblocks verify in xfs_agf_verify
+Date:   Mon, 29 Jun 2020 11:25:22 -0400
+Message-Id: <20200629152523.2494198-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,68 +66,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit ed1220df6e666500ebf58c4f2fccc681941646fb ]
+[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
 
-For mono channel, SSI will switch to Normal mode.
+We recently used fuzz(hydra) to test XFS and automatically generate
+tmp.img(XFS v5 format, but some metadata is wrong)
 
-In Normal mode and Network mode, the Word Length Control bits
-control the word length divider in clock generator, which is
-different with I2S Master mode (the word length is fixed to
-32bit), it should be the value of params_width(hw_params).
+xfs_repair information(just one AG):
+agf_freeblks 0, counted 3224 in ag 0
+agf_longest 536874136, counted 3224 in ag 0
+sb_fdblocks 613, counted 3228
 
-The condition "slots == 2" is not good for I2S Master mode,
-because for Network mode and Normal mode, the slots can also
-be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
-to check if it is I2S Master mode.
+Test as follows:
+mount tmp.img tmpdir
+cp file1M tmpdir
+sync
 
-So we refine the formula for mono channel, otherwise there
-will be sound issue for S24_LE.
+In 4.19-stable, sync will stuck, the reason is:
+xfs_mountfs
+  xfs_check_summary_counts
+    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
+       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
+       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
+	return 0;  -->just return, incore sb_fdblocks still be 613
+    xfs_initialize_perag_data
 
-Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+cp file1M tmpdir -->ok(write file to pagecache)
+sync -->stuck(write pagecache to disk)
+xfs_map_blocks
+  xfs_iomap_write_allocate
+    while (count_fsb != 0) {
+      nimaps = 0;
+      while (nimaps == 0) { --> endless loop
+         nimaps = 1;
+         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
+xfs_bmapi_write
+  xfs_bmap_alloc
+    xfs_bmap_btalloc
+      xfs_alloc_vextent
+        xfs_alloc_fix_freelist
+          xfs_alloc_space_available -->fail(agf_freeblks is 0)
+
+In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
+use the latest extent at writeback delalloc conversion time") remove
+the above while, dmesg is as follows:
+[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
+
+Users do not know why this page is discard, the better soultion is:
+1. Like xfs_repair, make sure sb_fdblocks is equal to counted
+(xfs_initialize_perag_data did this, who is not called at this mount)
+2. Add agf verify, if fail, will tell users to repair
+
+This patch use the second soultion.
+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Ren Xudong <renxudong1@huawei.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 537dc69256f0e..a4ebd6ddaba10 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
- 	struct regmap *regs = ssi->regs;
- 	u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
- 	unsigned long clkrate, baudrate, tmprate;
--	unsigned int slots = params_channels(hw_params);
--	unsigned int slot_width = 32;
-+	unsigned int channels = params_channels(hw_params);
-+	unsigned int slot_width = params_width(hw_params);
-+	unsigned int slots = 2;
- 	u64 sub, savesub = 100000;
- 	unsigned int freq;
- 	bool baudclk_is_used;
-@@ -688,10 +689,14 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
- 	/* Override slots and slot_width if being specifically set... */
- 	if (ssi->slots)
- 		slots = ssi->slots;
--	/* ...but keep 32 bits if slots is 2 -- I2S Master mode */
--	if (ssi->slot_width && slots != 2)
-+	if (ssi->slot_width)
- 		slot_width = ssi->slot_width;
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 533b04aaf6f6b..0a36f532cf86c 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2598,6 +2598,13 @@ xfs_agf_verify(
+ 	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
+ 		return __this_address;
  
-+	/* ...but force 32 bits for stereo audio using I2S Master Mode */
-+	if (channels == 2 &&
-+	    (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) == SSI_SCR_I2S_MODE_MASTER)
-+		slot_width = 32;
++	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
++		return __this_address;
 +
- 	/* Generate bit clock based on the slot number and slot width */
- 	freq = slots * slot_width * params_rate(hw_params);
++	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
++	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
++		return __this_address;
++
+ 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
+@@ -2609,6 +2616,10 @@ xfs_agf_verify(
+ 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
+ 		return __this_address;
  
++	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
++		return __this_address;
++
+ 	/*
+ 	 * during growfs operations, the perag is not fully initialised,
+ 	 * so we can't use it for any useful checking. growfs ensures we can't
+@@ -2622,6 +2633,11 @@ xfs_agf_verify(
+ 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
+ 		return __this_address;
+ 
++	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_refcount_blocks) >
++	    be32_to_cpu(agf->agf_length))
++		return __this_address;
++
+ 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
+ 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
+ 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
 -- 
 2.25.1
 
