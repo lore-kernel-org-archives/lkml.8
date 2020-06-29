@@ -2,86 +2,143 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7A5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="issiWcVc"
+	by mail.kernel.org (Postfix) with ESMTP id 74117206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbgF2UBI (ORCPT
+        id S2388639AbgF2UBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730861AbgF2TkP (ORCPT
+        Mon, 29 Jun 2020 16:01:15 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:33746 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgF2UBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:15 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718B8C03E97A;
-        Mon, 29 Jun 2020 12:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=KYQPEhMrWwbjunajTA0tfrHgAEeVrpu9W222AN41VOw=; b=issiWcVcE17rTXmc/emvZD3eU6
-        jUfqFX9yWi33QJVwNQeR+afNEP+LekYRpvYkthsYMa1a8Yu7FI3nAO0YArSteyHbLZmgZWUyasS0v
-        LBHBv2oANz+Tpo/dhdp2qOFdN28GZvbxKtroCwuKozpo6kyW2ncugiXtpeEBJncpnUHLQ545MRMKX
-        3RQc6lcNRw7+0xkawJY+p0gEJZR/SKfS+LPhz5fU0kYnZAGAHX5xscHtJTWOVUpvh3kO/7+0AGkEl
-        +wQg6H27UfZ39ULPAmNtial/bGcKcS15zOGxvFnUKMEY3l3Kd23P9THR9KMB3a4ELRWQvnj+fSolb
-        MhJ0MnxQ==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdE-0004FI-Vs; Mon, 29 Jun 2020 19:39:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 04/20] null_blk: stop using ->queuedata for bio mode
-Date:   Mon, 29 Jun 2020 21:39:31 +0200
-Message-Id: <20200629193947.2705954-5-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+        Mon, 29 Jun 2020 16:01:12 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jpzxn-0002lW-5c; Mon, 29 Jun 2020 14:01:11 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jpzxl-0003O1-TR; Mon, 29 Jun 2020 14:01:10 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 14:56:38 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <875zb97iix.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-XM-SPF: eid=1jpzxl-0003O1-TR;;;mid=<875zb97iix.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+rW0kJ/Nu0di7F1+PvK/unH2VPrQ43lAM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 01/15] umh: Capture the pid in umh_pipe_setup
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of setting up the queuedata as well just use one private data
-field.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The pid in struct subprocess_info is only used by umh_clean_and_save_pid to
+write the pid into umh_info.
+
+Instead always capture the pid on struct umh_info in umh_pipe_setup, removing
+code that is specific to user mode drivers from the common user path of
+user mode helpers.
+
+Link: https://lkml.kernel.org/r/87h7uygf9i.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- drivers/block/null_blk_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/umh.h | 1 -
+ kernel/umh.c        | 5 ++---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 82259242b9b5c9..93ce0a00b2ae01 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1392,7 +1392,7 @@ static blk_qc_t null_queue_bio(struct request_queue *q, struct bio *bio)
- {
- 	sector_t sector = bio->bi_iter.bi_sector;
- 	sector_t nr_sectors = bio_sectors(bio);
--	struct nullb *nullb = q->queuedata;
-+	struct nullb *nullb = bio->bi_disk->private_data;
- 	struct nullb_queue *nq = nullb_to_queue(nullb);
- 	struct nullb_cmd *cmd;
+diff --git a/include/linux/umh.h b/include/linux/umh.h
+index 0c08de356d0d..aae16a0ebd0f 100644
+--- a/include/linux/umh.h
++++ b/include/linux/umh.h
+@@ -25,7 +25,6 @@ struct subprocess_info {
+ 	struct file *file;
+ 	int wait;
+ 	int retval;
+-	pid_t pid;
+ 	int (*init)(struct subprocess_info *info, struct cred *new);
+ 	void (*cleanup)(struct subprocess_info *info);
+ 	void *data;
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 79f139a7ca03..c2a582b3a2bf 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -102,7 +102,6 @@ static int call_usermodehelper_exec_async(void *data)
  
+ 	commit_creds(new);
+ 
+-	sub_info->pid = task_pid_nr(current);
+ 	if (sub_info->file) {
+ 		retval = do_execve_file(sub_info->file,
+ 					sub_info->argv, sub_info->envp);
+@@ -468,6 +467,7 @@ static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
+ 
+ 	umh_info->pipe_to_umh = to_umh[1];
+ 	umh_info->pipe_from_umh = from_umh[0];
++	umh_info->pid = task_pid_nr(current);
+ 	return 0;
+ }
+ 
+@@ -476,13 +476,12 @@ static void umh_clean_and_save_pid(struct subprocess_info *info)
+ 	struct umh_info *umh_info = info->data;
+ 
+ 	/* cleanup if umh_pipe_setup() was successful but exec failed */
+-	if (info->pid && info->retval) {
++	if (info->retval) {
+ 		fput(umh_info->pipe_to_umh);
+ 		fput(umh_info->pipe_from_umh);
+ 	}
+ 
+ 	argv_free(info->argv);
+-	umh_info->pid = info->pid;
+ }
+ 
+ /**
 -- 
-2.26.2
+2.25.0
 
