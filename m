@@ -2,199 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4416C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2282DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9463B206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F83206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GV0KvGGX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXfK6rQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390017AbgF2U6a (ORCPT
+        id S2390029AbgF2U6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
+        Mon, 29 Jun 2020 16:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731255AbgF2TNE (ORCPT
+        with ESMTP id S1731250AbgF2TNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A4CC0086DD;
-        Mon, 29 Jun 2020 02:31:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so8039474pgb.6;
-        Mon, 29 Jun 2020 02:31:40 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BCAC030F2D;
+        Mon, 29 Jun 2020 09:45:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r12so17156687wrj.13;
+        Mon, 29 Jun 2020 09:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ayAl0LoNSdRH5ysQrzi9ZVtfNrMXxNYN9qeSjnl571U=;
-        b=GV0KvGGX4dJpz/Wcl9nBaTIGm6slYAAJClid5ntya+hSHoQshp9o8aro6FvFHtt3QY
-         D9DNF1s9O9XiHhwhAk1gjjifrTGvawv6ZbQnHsxHHkOIrK/rt38r+iaZuYejiSFv8f0H
-         vXzVPrjXgzjvl0Bp0LmYH9HKRbWmihJ5KuF1g6LUH/03IsCMryUbichVVlfjSFPpRPw5
-         x3fnnUnUovLSp/DqQgHTAMju1MG1BQ2HLkpTYlydRrgeYoPA8ijwr/94gfGkUgRH5N2N
-         I7gdEp+00LPtV+avLCRnOgYhiR4Ieg3y5ys2aUj3PM2SGrSB8vccHGahSoNMSpfSa8/Q
-         /ctw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u9fUuABIS2EcFjNrVGvmrkgcrL3UypNwy9u+b06+fm8=;
+        b=RXfK6rQ+SzRHAAVPuZgSCcwjrzUnceasBHQrhHMlYQ5I1SwpWIBR7DK1d9z7HkvSKk
+         MEVg1EeIlqmjYTk5OsFBriXDewcGgPjdcNafq5kaZpPfePyEgRPZ9KR/zL8lyFUCczsQ
+         fiExr9g3JvIkRHCN4gf/kV7o6tI1lGDyqRUhkanPryvVXw1bR3kmf0rsFUEju8am7/2o
+         acuoJOCiMPtfkQ7D4wkqcUG6x3gCNCcsrnehQs1HTEiitZpPTqeKgDEHzc4SsrmYh7qT
+         V8kuot39HNtGZAe2xXp6kdzpSV1Fyy0OAUiP6MDKv4mmLUHNtkngmP/upBmbE0yXLUev
+         PKRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ayAl0LoNSdRH5ysQrzi9ZVtfNrMXxNYN9qeSjnl571U=;
-        b=MsNT4uTYh2vU5aoEmOwFCpI0PIXML4H7xYovOQtCkiwg7UX/5kND1U8O/jIeDcZM+G
-         OOOq2v2ygGUow58UTSRo6w5kA2T+1wXMYcF4TFP9p6uT4Gey2nIOsrQX6bG3d2PifDsr
-         DNV3fYaLP793vnHLfRQCdOx7FVZGcTcod7CnmAb8Rdlb5HbSx27Nn1C9/RR4symzvc5o
-         eyADLfk4GjucOO+aH0l0r3++V27S7cqtBvH8rYry/a8PK6slNYtAzWXV6g26B15sbP7Z
-         iIR23T48wJ/2t7NlxiO/2msmjum3DSCQnnnSwvQYxakVJLfuevSWqf0Euy+2K1qDuaHq
-         AG/w==
-X-Gm-Message-State: AOAM5300omtjR31ClpjJJjcUx3O2TvYbammPwWscDCviOJg6WndIG+gR
-        leY5da+JmyXlBYWwNNhlrII=
-X-Google-Smtp-Source: ABdhPJwRDli2Y2bH5K3wrG95jVuSEXZnknlpezTd2aULIFClM3Bmo5xukNXS6A/E8xgqSTqHNHa17A==
-X-Received: by 2002:a63:5623:: with SMTP id k35mr10075750pgb.325.1593423099692;
-        Mon, 29 Jun 2020 02:31:39 -0700 (PDT)
-Received: from varodek.localdomain ([106.210.40.90])
-        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 02:31:39 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 4/5] ixgbevf: use generic power management
-Date:   Mon, 29 Jun 2020 14:59:42 +0530
-Message-Id: <20200629092943.227910-5-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
-References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u9fUuABIS2EcFjNrVGvmrkgcrL3UypNwy9u+b06+fm8=;
+        b=ctbcJyWcYp9E2dElxV6cbbkwCnyGNzhb0PprjSBjlMZg1P9RrEZgHtqB8TyEJtxyF6
+         sfT6CHXiCWoKEWgotJs8AeZHvkvW/C1P/yGDsen9I7lJwXbCQzqgXcqQiqR7U0GX3hZz
+         1v97sQlNGFWndu0bH4eVNeG/BGKIKJN0hDk/oIJR490ITX5GKAp9or7Go6e0e+ZgwUo0
+         julmu6Ap0NdH7PPp8GJvcj1jxehu0WZRBatozVkhhrQKTOAWP+G/tQwkGw++qsLUDfVF
+         ws7Ww1LLKTivRLsZfHoRKN2Q8sDMVfZsyYppN3/Hl2VCOZ7rcyALlSvMVZqfyevwpmas
+         M2lA==
+X-Gm-Message-State: AOAM532h0um9XRLkGswTxYbxI1WEP0uG3V4dPG1j3F9yjhyz/XxGZLsM
+        G3sfccVvsWk2UCzjVzz6ke8=
+X-Google-Smtp-Source: ABdhPJwgDtmaZGJrtNa0zEf2BklM+msP3P7Rk7sYX4yUbVAN3Av14f+0EZj5nhMLZ6sMh6IJblncLA==
+X-Received: by 2002:adf:f608:: with SMTP id t8mr18108260wrp.308.1593449121909;
+        Mon, 29 Jun 2020 09:45:21 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p29sm438013wmi.43.2020.06.29.09.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:45:21 -0700 (PDT)
+Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
+ validating duty cycle
+To:     Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-2-lee.jones@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+Date:   Mon, 29 Jun 2020 09:45:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629124752.1018358-2-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
 
-The driver was invoking PCI helper functions like pci_save/restore_state(),
-and pci_enable/disable_device(), which is not recommended.
+On 6/29/2020 5:47 AM, Lee Jones wrote:
+> 'duty' here is an unsigned int, thus checking for <0 will always
+> evaluate to false.
+> 
+> Fixes the following W=1 warning:
+> 
+>  drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+> 
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-pwm@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Compile-tested only.
+And IPROC_PWM_DUTY_CYCLE_MIN is unused after remove this single use of
+the define, if you also remove it you can add:
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../net/ethernet/intel/ixgbevf/ixgbevf_main.c | 44 +++++--------------
- 1 file changed, 10 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index a39e2cb384dd..988345aeae4a 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -4300,13 +4300,10 @@ static int ixgbevf_change_mtu(struct net_device *netdev, int new_mtu)
- 	return 0;
- }
- 
--static int ixgbevf_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused ixgbevf_suspend(struct device *dev_d)
- {
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev_d);
- 	struct ixgbevf_adapter *adapter = netdev_priv(netdev);
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
- 
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -4317,37 +4314,16 @@ static int ixgbevf_suspend(struct pci_dev *pdev, pm_message_t state)
- 	ixgbevf_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	retval = pci_save_state(pdev);
--	if (retval)
--		return retval;
--
--#endif
--	if (!test_and_set_bit(__IXGBEVF_DISABLED, &adapter->state))
--		pci_disable_device(pdev);
--
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int ixgbevf_resume(struct pci_dev *pdev)
-+static int __maybe_unused ixgbevf_resume(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct ixgbevf_adapter *adapter = netdev_priv(netdev);
- 	u32 err;
- 
--	pci_restore_state(pdev);
--	/* pci_restore_state clears dev->state_saved so call
--	 * pci_save_state to restore it.
--	 */
--	pci_save_state(pdev);
--
--	err = pci_enable_device_mem(pdev);
--	if (err) {
--		dev_err(&pdev->dev, "Cannot enable PCI device from suspend\n");
--		return err;
--	}
--
- 	adapter->hw.hw_addr = adapter->io_addr;
- 	smp_mb__before_atomic();
- 	clear_bit(__IXGBEVF_DISABLED, &adapter->state);
-@@ -4368,10 +4344,9 @@ static int ixgbevf_resume(struct pci_dev *pdev)
- 	return err;
- }
- 
--#endif /* CONFIG_PM */
- static void ixgbevf_shutdown(struct pci_dev *pdev)
- {
--	ixgbevf_suspend(pdev, PMSG_SUSPEND);
-+	ixgbevf_suspend(&pdev->dev);
- }
- 
- static void ixgbevf_get_tx_ring_stats(struct rtnl_link_stats64 *stats,
-@@ -4891,16 +4866,17 @@ static const struct pci_error_handlers ixgbevf_err_handler = {
- 	.resume = ixgbevf_io_resume,
- };
- 
-+static SIMPLE_DEV_PM_OPS(ixgbevf_pm_ops, ixgbevf_suspend, ixgbevf_resume);
-+
- static struct pci_driver ixgbevf_driver = {
- 	.name		= ixgbevf_driver_name,
- 	.id_table	= ixgbevf_pci_tbl,
- 	.probe		= ixgbevf_probe,
- 	.remove		= ixgbevf_remove,
--#ifdef CONFIG_PM
-+
- 	/* Power Management Hooks */
--	.suspend	= ixgbevf_suspend,
--	.resume		= ixgbevf_resume,
--#endif
-+	.driver.pm	= &ixgbevf_pm_ops,
-+
- 	.shutdown	= ixgbevf_shutdown,
- 	.err_handler	= &ixgbevf_err_handler
- };
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.27.0
-
+Florian
