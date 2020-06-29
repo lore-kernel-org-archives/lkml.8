@@ -2,99 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 027DB20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EFB206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464906;
-	bh=fgtjaYDMo1aVgKIYzqGWElnEGe7SANQWeDGk2abn22M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5kJshghnu1v61YQ/uiSRc0qt/uqhgrHnNWNuj0A/fmlOr1EpxR5B6hExIG5GVbv3
-	 9O5rdxW0Stk/bIjE5MMxfCbPOb2T7NGNaq7NGmDbQn4BqFriyelWqSn4GbnZ6Fm9cb
-	 W/dyFsXMj3tj8WA31wY9xMOO/nyS14TfnNMFuKnk=
+	s=default; t=1593464911;
+	bh=f1aS4cZsNksB3LauE1ytRje/Ho2vh8OFZ9gcBrF7hoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nWFCm19aS452dV88N30fOmGe3NICbNg9RE85ySe3FTRNgr2QQp4d30Wk8BWhd8nns
+	 ac4u+6gHMqLV+OEzytseWVSzNzfRObL5tXQ56eU+/O/7negNyiByUuY7CR+OM9phez
+	 jP9yvUKnQ5Cm3Ws/A/3B0yt/B1k4schN355lRCk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390243AbgF2VIL (ORCPT
+        id S2390422AbgF2VIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C6725539;
-        Mon, 29 Jun 2020 15:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446101;
-        bh=fgtjaYDMo1aVgKIYzqGWElnEGe7SANQWeDGk2abn22M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ky8IIC+1B/1cCg8O1hPy4zox4KMDNJTByUHlWl5e0i/+dAAGi96ODkWD2rmmHGRCJ
-         Lc0K4TZqhzXj4JzH0qo6XfPksQW7/gJsDm1G/h95RSivCWZIROctckDUeDmTIS/9Ow
-         MJ/AS3xqIC6xId/GHY7uZgsMEBPMW8fXC9HlLkVk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 094/135] USB: ohci-sm501: Add missed iounmap() in remove
-Date:   Mon, 29 Jun 2020 11:52:28 -0400
-Message-Id: <20200629155309.2495516-95-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:08:30 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38415 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390229AbgF2VIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:08:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id n2so5209653edr.5;
+        Mon, 29 Jun 2020 14:08:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WVzOc0zshIAzur/W9UldDSamNUZIg6bYwU7gViF4xjM=;
+        b=XUXYJW1YjmtF6PwxsLRs3RzxxVAxAPl7iKRiELCzxj0g2cn0itGuB0hAxZWMlVWLz9
+         mB/GxGKY1TNMXWRU3RyUPszljbezvgimuF6zmQ0AUbEHJuhn5+x1GZYaLrRDElgjbSS7
+         tr0XrGMtbul0eR19pifhTezdUkD5WSsa7vIzIGTgYm2mpC0vO3G70xoKufwmcU+2ps1k
+         7xV+f1JuuXwcGNa+V4U00pMduOQX/3MwZ5Qe+fxzAnl5SjnNtYGamDSIL8apuZ/WdfZB
+         FrgtdWnROwzVaJs8oBJco62GMCT7Gck1SN5QKUVSVVl1OdVPJVU/Ub29R1fKnBhFF6X0
+         T9vw==
+X-Gm-Message-State: AOAM531cBYxiOkNeTnLFpykwfPa4/2XJFJMFgqXxfIHsM/ztjxcTxXHk
+        eAS3ol0jBFkx/OeDL/YUclE=
+X-Google-Smtp-Source: ABdhPJz7uJ34zkR7UdIcDmO5eQD/05KE/U7ACuTf+SbkMdyaKDXIEt+RJAAp/9n0LB1FcwdSrdDevA==
+X-Received: by 2002:aa7:d6cc:: with SMTP id x12mr11487518edr.354.1593464901568;
+        Mon, 29 Jun 2020 14:08:21 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id q3sm736869eds.0.2020.06.29.14.08.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 14:08:20 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 23:08:17 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     corbet@lwn.net, aaro.koskinen@iki.fi, tony@atomide.com,
+        linux@armlinux.org.uk, daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, kgene@kernel.org,
+        dmitry.torokhov@gmail.com, lee.jones@linaro.org,
+        wsa+renesas@sang-engineering.com, ulf.hansson@linaro.org,
+        davem@davemloft.net, kuba@kernel.org, b.zolnierkie@samsung.com,
+        j.neuschaefer@gmx.net, mchehab+samsung@kernel.org,
+        gustavo@embeddedor.com, gregkh@linuxfoundation.org,
+        yanaijie@huawei.com, daniel.vetter@ffwll.ch,
+        rafael.j.wysocki@intel.com, Julia.Lawall@inria.fr,
+        linus.walleij@linaro.org, viresh.kumar@linaro.org, arnd@arndb.de,
+        jani.nikula@intel.com, yuehaibing@huawei.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-parisc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] Remove handhelds.org links and email addresses
+Message-ID: <20200629210817.GA32399@kozik-lap>
+References: <20200629203121.7892-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200629203121.7892-1-grandmaster@al2klimov.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+On Mon, Jun 29, 2020 at 10:31:21PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> https://lore.kernel.org/linux-doc/20200626110706.7b5d4a38@lwn.net/
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  @Jon I thought about what I said and *no*, unfortunately I *can't* automate
+>  the detection of such as easy as the HTTPSifying. As you maybe see below
+>  cleaning up is even "harder".
+> 
+>  We have only 17 files and one domain here. Shall I split it up per subsystem
+>  or can we let it as is?
+> 
+>  Documentation/arm/sa1100/assabet.rst           |  2 --
+>  Documentation/arm/samsung-s3c24xx/h1940.rst    | 10 ----------
+>  Documentation/arm/samsung-s3c24xx/overview.rst |  3 +--
+>  Documentation/arm/samsung-s3c24xx/smdk2440.rst |  4 ----
+>  arch/arm/mach-omap1/Kconfig                    |  4 +---
+>  arch/arm/mach-pxa/h5000.c                      |  2 +-
+>  arch/arm/mach-s3c24xx/mach-h1940.c             |  2 --
+>  arch/arm/mach-s3c24xx/mach-n30.c               |  3 ---
+>  arch/arm/mach-s3c24xx/mach-rx3715.c            |  2 --
 
-commit 07c112fb09c86c0231f6ff0061a000ffe91c8eb9 upstream.
+For s3c24xx, I am fine taking it through docs tree:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-This driver misses calling iounmap() in remove to undo the ioremap()
-called in probe.
-Add the missed call to fix it.
+Otherwise, after splitting, I could take the s3c-24xx bits.
 
-Fixes: f54aab6ebcec ("usb: ohci-sm501 driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200610024844.3628408-1-hslester96@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/host/ohci-sm501.c | 1 +
- 1 file changed, 1 insertion(+)
+Best regards,
+Krzysztof
 
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index a8b8d8b8d9f39..a960d2bb8dd1e 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -196,6 +196,7 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
- 	struct resource	*mem;
- 
- 	usb_remove_hcd(hcd);
-+	iounmap(hcd->regs);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- 	usb_put_hcd(hcd);
- 	dma_release_declared_memory(&pdev->dev);
--- 
-2.25.1
 
+>  drivers/input/keyboard/gpio_keys.c             |  2 +-
+>  drivers/input/keyboard/jornada720_kbd.c        |  2 +-
+>  drivers/input/touchscreen/jornada720_ts.c      |  2 +-
+>  drivers/mfd/asic3.c                            |  2 +-
+>  drivers/mmc/host/renesas_sdhi_core.c           |  2 +-
+>  drivers/net/ethernet/dec/tulip/de4x5.c         |  1 -
+>  drivers/video/fbdev/sa1100fb.c                 |  2 +-
+>  include/linux/apm-emulation.h                  |  2 --
+>  17 files changed, 9 insertions(+), 38 deletions(-)
