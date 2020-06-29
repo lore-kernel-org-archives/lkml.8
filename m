@@ -2,96 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61944C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4F82064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C382063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593456206;
+	bh=joxDTKR8NyITh5hj0bUUqfSyS5rJlgFhvTKbYzozqtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YvbfMzo7kdN5UKFc8l5ig3q7BpW60Q16/VS/I0hvH3TYY2JCcToK2Kyiud6H95tWm
+	 JBvlHt5L1xKYxg6t6A0GuNagA2BbL3GWaeFMTy6b0ztdsv754fA9ZKJdoNpjO/VjzN
+	 R0QwFqRgpqwzb2heE2zC46ECKYkRHodCgS2HRMcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgF2SnW (ORCPT
+        id S1727913AbgF2SnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38412 "EHLO
+        Mon, 29 Jun 2020 14:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgF2Smx (ORCPT
+        with ESMTP id S1729146AbgF2Smw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:53 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBC9C033C23;
-        Mon, 29 Jun 2020 11:26:33 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyU8-002Dt7-Tw; Mon, 29 Jun 2020 18:26:28 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 03/41] x86: kill dump_fpu()
-Date:   Mon, 29 Jun 2020 19:25:50 +0100
-Message-Id: <20200629182628.529995-3-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+        Mon, 29 Jun 2020 14:42:52 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FA2C02A57F;
+        Mon, 29 Jun 2020 06:56:47 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id o38so12855166qtf.6;
+        Mon, 29 Jun 2020 06:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LrEjvuOin918PAofPsAgLqEkYaBJUx4P898a1Pb6YYM=;
+        b=JsskD35qz0tKWuO+mM+x0GiX77OCsGGD4vVCBnK6DOfFQsQR9uocw+MWCsVcLjFD/l
+         uVT5fFqZckHiENcqGHRdTsCXwE6L9gIvEROpH+ej4xid3FM9It6v9BUHunTC3MK/j3/2
+         TOdOUR9CVZSfBRkUZY9Od9x2BSf/eU/kgwwYswE3hg5EY0/jz385OEfhFGrTYLOf8nlq
+         xnUbq5WJsd1oWvXr53EdHHZHwXG5g1p6167gqIJvrXO/Qz59KyepI7sdAiXoXS5aZ1Rt
+         HTdttPbGp8H2jq7D7QfAoVhc2MJkN5zTVcmye06vcv9hAzgrOnnRVm08SpGDZwuPdBLs
+         rLEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=LrEjvuOin918PAofPsAgLqEkYaBJUx4P898a1Pb6YYM=;
+        b=Kacyb3PTGLOD+hxsmQQu2V6yL+PlhqjHb4GIaAALPfJM0WXCpu22lL5zs+2CYKN3QE
+         lGmoiYskqPx0JjfPBnHes4bjFdnr/YPgbMR1hQmq4fIrGVn8UKKEXhE1TkdufBulficu
+         rIGhncdmDYNkCqsPvsxgKM91sT8Q+0+OMfVHaJAs3W9e2pTGbJ5rnnxwacAL+J1hiY38
+         oT9OAJ0/D/tszk26j13mZ9ImsaO+6SmwtG6c4uHxKTrP/exulPHEo0cz03cK9bvfpOBU
+         qHZ40P48MSka+o9iGaN3UQgRtdqWsNvRStTqS8Lc8kRxAVGPeMVxzAQBv2m50amtQbGo
+         zPWA==
+X-Gm-Message-State: AOAM5338uaouzKgOJzb8rOYAYdGA5sq50C49VxoRpUvC96ovECKJa73R
+        v/TtQahl7g+wvCkp0GuLmhR3U2kttvE=
+X-Google-Smtp-Source: ABdhPJzVW9rKTRYYquAhom+ajTl8S5hOknpLXTSQ3LijLTqXn91ePIJzb9xDmTsfRnCr1uRKtQrd2Q==
+X-Received: by 2002:ac8:154:: with SMTP id f20mr14767600qtg.331.1593439005608;
+        Mon, 29 Jun 2020 06:56:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:26be])
+        by smtp.gmail.com with ESMTPSA id f22sm19861844qko.89.2020.06.29.06.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 06:56:44 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:56:43 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Dennis Zhou <dennis@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: drive-by blk-cgroup cleanups
+Message-ID: <20200629135643.GA233973@mtj.thefacebook.com>
+References: <20200627073159.2447325-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627073159.2447325-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Sat, Jun 27, 2020 at 09:31:45AM +0200, Christoph Hellwig wrote:
+> Hi all,
+> 
+> while looking into another "project" I ended up wading through the
+> blkcq code for research and found a bunch of lose ends.  So here is
+> a bunch of drive-by cleanups for the code.
 
-dead since the removal of aout coredump support...
+The whole series looks great to me.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/x86/include/asm/fpu/internal.h |  1 -
- arch/x86/kernel/fpu/regset.c        | 16 ----------------
- 2 files changed, 17 deletions(-)
+Acked-by: Tejun Heo <tj@kernel.org>
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 42159f45bf9c..0c85a08176c0 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -34,7 +34,6 @@ extern int  fpu__copy(struct task_struct *dst, struct task_struct *src);
- extern void fpu__clear_user_states(struct fpu *fpu);
- extern void fpu__clear_all(struct fpu *fpu);
- extern int  fpu__exception_code(struct fpu *fpu, int trap_nr);
--extern int  dump_fpu(struct pt_regs *ptregs, struct user_i387_struct *fpstate);
- 
- /*
-  * Boot time FPU initialization functions:
-diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c
-index bd1d0649f8ce..91f80aca27fb 100644
---- a/arch/x86/kernel/fpu/regset.c
-+++ b/arch/x86/kernel/fpu/regset.c
-@@ -356,20 +356,4 @@ int fpregs_set(struct task_struct *target, const struct user_regset *regset,
- 	return ret;
- }
- 
--/*
-- * FPU state for core dumps.
-- * This is only used for a.out dumps now.
-- * It is declared generically using elf_fpregset_t (which is
-- * struct user_i387_struct) but is in fact only used for 32-bit
-- * dumps, so on 64-bit it is really struct user_i387_ia32_struct.
-- */
--int dump_fpu(struct pt_regs *regs, struct user_i387_struct *ufpu)
--{
--	struct task_struct *tsk = current;
--
--	return !fpregs_get(tsk, NULL, 0, sizeof(struct user_i387_ia32_struct),
--			   ufpu, NULL);
--}
--EXPORT_SYMBOL(dump_fpu);
--
- #endif	/* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
+Thanks.
+
 -- 
-2.11.0
-
+tejun
