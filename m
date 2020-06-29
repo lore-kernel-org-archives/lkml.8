@@ -4,59 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB27C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1CA8206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9087E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462250;
-	bh=jxeRtGUTFudl/LcXwdaL28++ML6w0W2mxLCRMjSy+eM=;
+	s=default; t=1593462263;
+	bh=FMapCmLQRxuzVHtsvICUMvntIMnbv6WNgbDo+FCNfWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MG1fXE0CrtN2sAF1x6aM2y2ew0GfjDq3eA1nbS+Eye9v53o6eTz/dGWMRXox0iWyT
-	 4eA8QW2p/vAFbqUigGawWEHXQi8F4YZTL2DXjsDFqrBbbKnr0AOb8pU7+LUQuDEkQl
-	 fVsNjxassQzuypvoGAZ/gFn4gqWXVrALP0SZlh6o=
+	b=lc7SZNpMAs+ssURVaIGBa4V43aDBOVJdHXRitrqx6AcOavYhp7c0tIq6IDQ0YBbgx
+	 V7TriYuJGLSUTQ7osEbbs5wPHSBlAzhD7hQhnupns+BxH9vkX9J+TMSxmsYxxzDamJ
+	 W1Im0QYZWd+fwlOcih+PEuEjq3OKvc9R5mlcMPJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388937AbgF2UYF (ORCPT
+        id S2388950AbgF2UYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732292AbgF2TZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:30 -0400
+        id S1732549AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599472544E;
-        Mon, 29 Jun 2020 15:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B51C25334;
+        Mon, 29 Jun 2020 15:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445402;
-        bh=jxeRtGUTFudl/LcXwdaL28++ML6w0W2mxLCRMjSy+eM=;
+        s=default; t=1593445173;
+        bh=FMapCmLQRxuzVHtsvICUMvntIMnbv6WNgbDo+FCNfWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/BQd/9G2tQgUzEVSFyX4bK8uJt+jcF2ho5iiBEVm5a395e2i/rxQxPm78TVC79aY
-         nRqtOo7uUmw8k5UtQmjNzRypsa/Bg8nC8AVOHvy9K/HKRAQu83p/QAt1NRH5iVXXSe
-         C8mWDFGaXg2AuoGvWvZ2M9fHRxgFphXI1DdoPsIg=
+        b=ZI9V3WS5pb78AkQ9J1cAtp+skO3DIcTWxvyre5jVrwXKjfNk+yiA8QkUKrX2zirVg
+         m6hQi1B89fiZi2Bp4q7QDAs6BE/6sI2oFRj4avcfMCYGF2I4tPbbhTgbcn8u00xj28
+         0StGM6T4+lcVcd8ois7MOjctRkvlred8ABF2Iw0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
-        Oliver Neukum <oneukum@suse.com>,
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 154/191] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
-Date:   Mon, 29 Jun 2020 11:39:30 -0400
-Message-Id: <20200629154007.2495120-155-sashal@kernel.org>
+Subject: [PATCH 4.14 66/78] ocfs2: fix value of OCFS2_INVALID_SLOT
+Date:   Mon, 29 Jun 2020 11:37:54 -0400
+Message-Id: <20200629153806.2494953-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,36 +71,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
+commit 9277f8334ffc719fe922d776444d6e4e884dbf30 upstream.
 
-USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
-causing garbage chars on the TTY causing stray input to the shell
-and/or login prompt.
+In the ocfs2 disk layout, slot number is 16 bits, but in ocfs2
+implementation, slot number is 32 bits.  Usually this will not cause any
+issue, because slot number is converted from u16 to u32, but
+OCFS2_INVALID_SLOT was defined as -1, when an invalid slot number from
+disk was obtained, its value was (u16)-1, and it was converted to u32.
+Then the following checking in get_local_system_inode will be always
+skipped:
 
-Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
-Cc: stable@vger.kernel.org
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
+ static struct inode **get_local_system_inode(struct ocfs2_super *osb,
+                                               int type,
+                                               u32 slot)
+ {
+ 	BUG_ON(slot == OCFS2_INVALID_SLOT);
+	...
+ }
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-5-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/class/cdc-acm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/ocfs2/ocfs2_fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-index 5b0bffba4aac0..2dc563b61b88a 100644
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1627,6 +1627,8 @@ static int acm_reset_resume(struct usb_interface *intf)
+diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
+index 7a3866d7fc36c..0773c774e2bfe 100644
+--- a/fs/ocfs2/ocfs2_fs.h
++++ b/fs/ocfs2/ocfs2_fs.h
+@@ -303,7 +303,7 @@
+ #define OCFS2_MAX_SLOTS			255
  
- static const struct usb_device_id acm_ids[] = {
- 	/* quirky and broken devices */
-+	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
-+	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
- 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
- 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
- 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
+ /* Slot map indicator for an empty slot */
+-#define OCFS2_INVALID_SLOT		-1
++#define OCFS2_INVALID_SLOT		((u16)-1)
+ 
+ #define OCFS2_VOL_UUID_LEN		16
+ #define OCFS2_MAX_VOL_LABEL_LEN		64
 -- 
 2.25.1
 
