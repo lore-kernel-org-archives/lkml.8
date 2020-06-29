@@ -2,138 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C325DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07531C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26AF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D8820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hW0bjXJ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqyEV5/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389662AbgF2Uwq (ORCPT
+        id S2389886AbgF2Uww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 16:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731344AbgF2TNY (ORCPT
+        with ESMTP id S1730527AbgF2TNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:24 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BB7C00877F
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:30:30 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id o38so12300989qtf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:30:30 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:23 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD43EC0005E1;
+        Mon, 29 Jun 2020 04:49:34 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id w16so16268548ejj.5;
+        Mon, 29 Jun 2020 04:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UWVs7He7VNIcTh2C2GcW0olT9jljSKgU/1oAwOuPtj8=;
-        b=hW0bjXJ0rtdgLiAay3FdknLQeHjtZqzeYHE69L5wxoXNmFXvK+g5OpTMUhJwRHwb7q
-         bvbox0QHDiD0SWD3kx0HYahntB4q1cNXNRlDC0/R9t7yEOw5ekE67FmcALSsiLzjg3+f
-         VL/UgX+94SeirX9eASNqOzglpF/GB/ckHbGUEubGz6b0wAx0SKVBnANLxN/gaYoMo2Yc
-         X6pSS5Lirm3fN4cisNuiLIMKseewP65b30sMVYmnNDQwpy+Yd8O8q/HJ/TxZAZcgU9Bh
-         Do9DkbjBCxyJAw9Q953X/t9ZOnwnvkOC5h6FffoGecyxugFrYB5FmJHH2EO9vzhEErtB
-         s/VQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GLjynTsVrR6VbalMpEbWa6xOYmDXyiUF5lBzn2Cag8M=;
+        b=eqyEV5/8wo72dYbOmPN4wgCvRYBqfaAoyfDWTA/CziIDDGjlgp5AMb9qLoJ1vL2AN7
+         hmGOj1A/wyNdaKWhtlgIZLRLxiX2fEpb4IOPAhSdmzJ7oGaVY+axBuEfBypjDhCz/Zg8
+         EXIfHry5/6cYajE3ATmDROKLRJ4k3bYc/6CrcuWhsgyAlMAHp3ZnckE0m+pMIEZhymLz
+         P26GvXuz2urtiK7i65JWdY1i9xYu2sbgLPUcqRMzLNuBZXzatJWsx+KkjjF3QXnjNKOl
+         75gpg48B6xD+z5UzuML/n8RJdX2buPaYyuSPKy05xio8NsmF4TxI8sHXJJ75QnI+f38e
+         HCQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UWVs7He7VNIcTh2C2GcW0olT9jljSKgU/1oAwOuPtj8=;
-        b=RXAd/lXTPAjLgMwLjSa+mMx7h6VAM6xNv3btNYcjSm2TOPcWnUWVBpnSMQ/AV5KBuR
-         YnORPVzQcTknjT1zCJoLqDDRZrkoN+7DLO+dC7L0QTXXqrauDQHd7my9z3VvND+TLfjR
-         DXPqoM90+iTWxU/M2AzS+5HObFgaHioPTVQgMtT5rV/p+m3vvJij3fN9QuKvh5Idr7n/
-         eTJDFCsLjDzDvEaSNlwQ6sFsJb6PKTSnsY2fgYPR3qFd6Nq0WKAkCi5BhXFTULG6xJpI
-         9MCuS7LXUFt83+TwGRudh0I0RgE+/ciQV8TcbjZJJpzZnP/iyPoTMNnWJBJZlO1pu6ZT
-         wR9Q==
-X-Gm-Message-State: AOAM533/Msp56ODdvi//2EzYSOW5MadcRyK4zWCv9k1ju9MqAl5cdqTk
-        AQO25qCZjI20rSpqD7ArCXh05t3N6w7922w4ekKjiQ==
-X-Google-Smtp-Source: ABdhPJypLWJGj9IRMTQXEPocCDXObCcTTrMC0Y9v+HHaQ4Ic+KR82mGBzixOF6s8j9FAdyeyxr4vPoEu5a71J2jx/OI=
-X-Received: by 2002:ac8:3470:: with SMTP id v45mr15134731qtb.51.1593423029840;
- Mon, 29 Jun 2020 02:30:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GLjynTsVrR6VbalMpEbWa6xOYmDXyiUF5lBzn2Cag8M=;
+        b=pxQYIkMZjc3LEJjjFcTk9hHmDgTJPLSGCu9LCU+jj+6NYZ8LDP1FZ4Z3tM7SRDG2bC
+         xm/MNNI7PATOfVzvTw4NvCUT2GG+Vr3qRS4g7AF4x6wfsGcRY1N7MHxUPH3oiJ1uDhz5
+         uNHIDztFPkjVhiJbq27atZkEZVTPDZwxWkciiybXV5GT90zVUVv1KpiUSTfDn+loGjt1
+         1LqYdybqxBJI6JdsU+4aiITHoXz0rwk02aIJpLz55qNiWJm3HyPw+im3N8fEWo8q3E5A
+         DrlEVjmYCvH03QDVfZEc/8w0qhPSjaadWnpU2SsJcbr8zR58O9fPTivYJAOfpqkIKHqc
+         qjkA==
+X-Gm-Message-State: AOAM530+ECgnXufHSdHz6mFbIIZd9SHCHNOSOOhgdzNd1KowT2esqq/Y
+        eQjSTje4tyt+dYTdtrXh2v0wxViityE=
+X-Google-Smtp-Source: ABdhPJwqTPpW4lJkydjKNl2Ck5Ak3OQZa+r9ZAz2vMIOcNY6+NsQKHqERgvNSE0oQIqUe9KpwlAafg==
+X-Received: by 2002:a17:906:fc20:: with SMTP id ov32mr12827208ejb.531.1593431373396;
+        Mon, 29 Jun 2020 04:49:33 -0700 (PDT)
+Received: from xps13.lan (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
+        by smtp.googlemail.com with ESMTPSA id z20sm9818006edq.97.2020.06.29.04.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 04:49:32 -0700 (PDT)
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Bruno Thomsen <bruno.thomsen@gmail.com>
+Subject: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of Kamstrup DTS
+Date:   Mon, 29 Jun 2020 13:49:27 +0200
+Message-Id: <20200629114927.17379-3-bruno.thomsen@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
 MIME-Version: 1.0
-References: <1592308864-30205-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1592308864-30205-1-git-send-email-yash.shah@sifive.com>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Mon, 29 Jun 2020 17:30:18 +0800
-Message-ID: <CAHCEeh+X+0m_oprdS+frRkfbmW7EvWF63xWeJFcQB4_Zc_RUgw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Dynamic CPU frequency switching for the HiFive
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, robh+dt@kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, sachin.ghadi@sifive.com,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>, lollivier@baylibre.com,
-        Green Wan <green.wan@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>, alistair.francis@wdc.com,
-        deepa.kernel@gmail.com, bmeng.cn@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yash Shah <yash.shah@sifive.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8816=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=888:01=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> The patch series adds the support for dynamic CPU frequency switching
-> for FU540-C000 SoC on the HiFive Unleashed board. All the patches are
-> based on Paul Walmsley's work.
->
-> This series is based on Linux v5.7 and tested on HiFive unleashed board.
->
-> Yash Shah (3):
->   riscv: defconfig, Kconfig: enable CPU power management
->   riscv: dts: fu540-c000: define hart clocks
->   riscv: dts: HiFive Unleashed: define a default set of CPU OPPs
->
->  arch/riscv/Kconfig                                 |  8 +++++
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi         |  5 +++
->  .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 38 ++++++++++++++++=
-++++++
->  arch/riscv/configs/defconfig                       |  5 +++
->  4 files changed, 56 insertions(+)
->
+Add myself as reviewer of device trees for Kamstrup
+Concentrators.
 
-Hi Yash,
+Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thank you for the patch. It works for me to test with cpufreq-ljt-stress-te=
-st.
-Here is my log.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 496fd4eafb68..97fc112309af 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9282,6 +9282,11 @@ S:	Maintained
+ F:	Documentation/hwmon/k8temp.rst
+ F:	drivers/hwmon/k8temp.c
+ 
++KAMSTRUP CONCENTRATORS
++R:	Bruno Thomsen <bruno.thomsen@gmail.com>
++S:	Maintained
++F:	arch/arm/boot/dts/imx7d-flex-concentrator*.dts
++
+ KASAN
+ M:	Andrey Ryabinin <aryabinin@virtuozzo.com>
+ R:	Alexander Potapenko <glider@google.com>
+-- 
+2.26.2
 
-CPU stress test, which is doing JPEG decoding by libjpeg-turbo
-at different cpufreq operating points.
-
-Testing CPU 0
- 1400 MHz ............................................................ OK
-  999 MHz ............................................................ OK
-  700 MHz ............................................................ OK
-  350 MHz ............................................................ OK
-
-Testing CPU 1
- 1400 MHz ............................................................ OK
-  999 MHz ............................................................ OK
-  700 MHz ............................................................ OK
-  350 MHz ............................................................ OK
-
-Testing CPU 2
- 1400 MHz ............................................................ OK
-  999 MHz ............................................................ OK
-  700 MHz ............................................................ OK
-  350 MHz ............................................................ OK
-
-Testing CPU 3
- 1400 MHz ............................................................ OK
-  999 MHz ............................................................ OK
-  700 MHz ............................................................ OK
-  350 MHz ............................................................ OK
-
-Overall result : PASSED
-
-Tested-by: Greentime Hu <greentime.hu@sifive.com>
