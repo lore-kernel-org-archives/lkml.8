@@ -2,81 +2,87 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B39C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB81C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852A120720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A548E20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZKdu8bO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DI7brhSn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390102AbgF2VAk (ORCPT
+        id S1729867AbgF2VAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        Mon, 29 Jun 2020 17:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731215AbgF2TM7 (ORCPT
+        with ESMTP id S1731223AbgF2TM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:12:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0BAC014A4B
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:17:22 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id c1so444047pja.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:17:22 -0700 (PDT)
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E81C08EAF4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so5417566pfu.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4TjEWlxkCQ6jKCxDwmv47XB9uFr9TMvZOX5G8CmUuAM=;
-        b=EZKdu8bOP57qq+jePoS28spu6jXDUcNKNX/SqDXKCfUs8XTvsWvvaNtuGhMo461lk8
-         8aiEOOLQOfQQZjjdrS3fCnhBHwgQ0IfKCzscQILS+N8cn4a213SmONNRyXr8IWaqvSC1
-         1+E/LTN3bLQVeASon4K2bizVn77Gx5msFa7EaVu+5UIUrctOyOmlWbHKIZZM5Obj/bY4
-         eQcioLZ/eF8ImQQ/GfZAr7s8/VZ2yfaOpZLo4wthmacuL0PsdV43B9RhZtwpUcp4O2r+
-         /iGOO5VqbkL30LC8Tv8O6rLTYEiGVf/UvJg3I+ygwajstoSEAEczB5j3dmdx+tWm44h9
-         QSMw==
+        bh=RpUogxOiAtRCZJbpj/Xg6f5qeGiNnaYs3fJRPX/karM=;
+        b=DI7brhSnHEPnBP9EF9Z149tETyybTm/vRuuRi3kQWF9laFLVbRO/B6ZFFy2PkayzvX
+         qgx3F8e8SkuKXWe2A3IX2ProSRkfDVOaK8mA4F+DyfAsVYLwYcBEByyEiOgr1O2AbpW0
+         znz0jgmgOzhpF8f9lW/RNJGa3YYwNNvYQnG4w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4TjEWlxkCQ6jKCxDwmv47XB9uFr9TMvZOX5G8CmUuAM=;
-        b=umZ4RYQa/eVNqXuYAgsISkfzNGHetIoDZs+tzO1lkJcsojPjAK2M6CkOkQpeBACRf3
-         fcngPqcVAmkQq7DRStq6O50kXbCp5HuNPcWk+HGTSy/ny3Qd/tXoeyItnmifUWAaJMqu
-         uJ+KyId87/2+8xkXtyYkHh4xa/w1rJ5zZqhq3tdqxpceQ1Pr1DEJC1yp8wgphutL4FSN
-         +ZL4yFrigqxu0Yh2IDIOKZ/NB29teloL2Yii5VVW0J98iS3psEWELAwH4iXP9OJ1juEK
-         Da5PNyFovoiE3HnvpfW89btRn2OLmd1bjOmQM9m+qLQA3MiJVFiMi5htL8iuL7ZfV/gw
-         ZyjQ==
-X-Gm-Message-State: AOAM532nFmgb275nTG+AR3JIvJt+xCR72NBkQgtpCyjd3KibjtAMYIHm
-        /apfSKf6lGRAxMQzUMS9GMA=
-X-Google-Smtp-Source: ABdhPJygQ8DmbhA4ifvNfZdy5+PSbPTWeeSFEQp1uqWB8k23uWji2yFChpuajG9uZYSsbsiBFQB8Cg==
-X-Received: by 2002:a17:90a:c295:: with SMTP id f21mr3800489pjt.208.1593418641726;
-        Mon, 29 Jun 2020 01:17:21 -0700 (PDT)
-Received: from varodek.localdomain ([106.210.40.90])
-        by smtp.gmail.com with ESMTPSA id co1sm3345154pjb.34.2020.06.29.01.17.16
+        bh=RpUogxOiAtRCZJbpj/Xg6f5qeGiNnaYs3fJRPX/karM=;
+        b=PfK25BI7RFLmXTX/0KF+HzjkYE4UHniLS+vNL3sEoHIh04j4inD3QStV2GD8+oQdFz
+         GmeiVxX3Hjp3JuCj+Eotc87vukBqd5jdn6j4UIqVLUda2av8x4UOM9eE6Rn4jlVJSk1e
+         eDE3xh236DVFpWBsPaKi/6dcnIhdj5QVzZeKsa7DOqrb0VQ+EO9AtSNrDRjbko+ieGDC
+         ihltBypIGyHm18brFV1W4QEhc1mzA08LIC57UnUPNj4TAieCsisJh7Yq4FEZigo7mUD6
+         nms1Gw/L3vEgNTwvKxv+zvKMUy7COiePRPlEq5cyWVvoS7mOiBEHw3m4f9Fvnx/BO6oE
+         dzWg==
+X-Gm-Message-State: AOAM5321delJLvw6Ktm0Sjq/ZBKVQbSa+OurpQS45bpTMnqJ3tfGjeMy
+        rKXiH/BUjqHvlqDtydmHtu39rQ==
+X-Google-Smtp-Source: ABdhPJyNl9M0hTPrxGqQML+GMiPdMMkdmcUuHH+RPVHgnToWI0RwZQKETihD6gi3OjkvTsW/Fi4SHQ==
+X-Received: by 2002:a63:fc1f:: with SMTP id j31mr9226331pgi.104.1593411526749;
+        Sun, 28 Jun 2020 23:18:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id nv9sm19380828pjb.6.2020.06.28.23.18.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:17:21 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@gmail.com>, Alex Dubov <oakad@yahoo.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 1/5] cb710/core.c: use generic power management
-Date:   Mon, 29 Jun 2020 13:45:27 +0530
-Message-Id: <20200629081531.214734-2-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629081531.214734-1-vaibhavgupta40@gmail.com>
-References: <20200629081531.214734-1-vaibhavgupta40@gmail.com>
+        Sun, 28 Jun 2020 23:18:44 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 04/17] vmlinux.lds.h: Add .symtab, .strtab, and .shstrtab to ELF_DETAILS
+Date:   Sun, 28 Jun 2020 23:18:27 -0700
+Message-Id: <20200629061840.4065483-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
+References: <20200629061840.4065483-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,86 +90,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(), etc.
+When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
+and .shstrtab are listed as orphaned. Add them to the ELF_DETAILS section
+so there will be no warnings when --orphan-handling=warn is used more
+widely. (They are added above comment as it is the more common
+order[1].)
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
+ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
+ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
+ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
 
-Compile-tested only.
+[1] https://lore.kernel.org/lkml/20200622224928.o2a7jkq33guxfci4@google.com/
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Reported-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/cb710/core.c | 28 +++++++---------------------
- 1 file changed, 7 insertions(+), 21 deletions(-)
+ include/asm-generic/vmlinux.lds.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/cb710/core.c b/drivers/misc/cb710/core.c
-index b290bc2ee240..55b7ee0e8f93 100644
---- a/drivers/misc/cb710/core.c
-+++ b/drivers/misc/cb710/core.c
-@@ -166,37 +166,24 @@ void cb710_set_irq_handler(struct cb710_slot *slot,
- }
- EXPORT_SYMBOL_GPL(cb710_set_irq_handler);
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index c5d10bc53996..9477359278a2 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -796,7 +796,10 @@
  
--#ifdef CONFIG_PM
--
--static int cb710_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused cb710_suspend(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct cb710_chip *chip = pci_get_drvdata(pdev);
+ /* Required sections not related to debugging. */
+ #define ELF_DETAILS							\
+-		.comment 0 : { *(.comment) }
++		.comment 0 : { *(.comment) }				\
++		.symtab 0 : { *(.symtab) }				\
++		.strtab 0 : { *(.strtab) }				\
++		.shstrtab 0 : { *(.shstrtab) }
  
- 	devm_free_irq(&pdev->dev, pdev->irq, chip);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	if (state.event & PM_EVENT_SLEEP)
--		pci_set_power_state(pdev, PCI_D3hot);
- 	return 0;
- }
- 
--static int cb710_resume(struct pci_dev *pdev)
-+static int __maybe_unused cb710_resume(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct cb710_chip *chip = pci_get_drvdata(pdev);
--	int err;
--
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	err = pcim_enable_device(pdev);
--	if (err)
--		return err;
- 
- 	return devm_request_irq(&pdev->dev, pdev->irq,
- 		cb710_irq_handler, IRQF_SHARED, KBUILD_MODNAME, chip);
- }
- 
--#endif /* CONFIG_PM */
--
- static int cb710_probe(struct pci_dev *pdev,
- 	const struct pci_device_id *ent)
- {
-@@ -312,15 +299,14 @@ static const struct pci_device_id cb710_pci_tbl[] = {
- 	{ 0, }
- };
- 
-+static SIMPLE_DEV_PM_OPS(cb710_pm_ops, cb710_suspend, cb710_resume);
-+
- static struct pci_driver cb710_driver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = cb710_pci_tbl,
- 	.probe = cb710_probe,
- 	.remove = cb710_remove_one,
--#ifdef CONFIG_PM
--	.suspend = cb710_suspend,
--	.resume = cb710_resume,
--#endif
-+	.driver.pm = &cb710_pm_ops,
- };
- 
- static int __init cb710_init_module(void)
+ #ifdef CONFIG_GENERIC_BUG
+ #define BUG_TABLE							\
 -- 
-2.27.0
+2.25.1
 
