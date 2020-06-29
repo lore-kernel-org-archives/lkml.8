@@ -2,146 +2,185 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B190EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A35C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC9320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvr4JcpP"
+	by mail.kernel.org (Postfix) with ESMTP id 5157620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461851;
+	bh=X2R+j2ZdNZt6t0CmdutaIa9okM3nECUW4GKc5aL0RiU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SCMsPp1cL0Jlkllzn8/BuDvcNkM58X9VXiCmer+rWYZ6/SN6o6UPFLJK25XeIE+5x
+	 tD0ZFJkQpLZRTagVXhwSD+knAAX9oF/NxS9+J0jU6+thyG5+Fqi854LC2OzvZaKq3m
+	 lmcYhbm4CBuTjFYf4tB6vcMCXealiIhgGLvnL34g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733088AbgF2URY (ORCPT
+        id S1731048AbgF2TaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47418 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732800AbgF2TaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593459006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h8YsmMSc+uzBm3Tq2wPliCvFYeKmpScCtqag1mgAOwg=;
-        b=bvr4JcpPlYQtxmf2w9p804yueqCmImcWAf2GCQVWea977pNyT5MDKvDJWW8hCYiI2gJ7Dw
-        rKOgYsp97RI7OX7zqufJUjCP7jk5KoE5+J22JvzD2pUpDaNj52EIPcWvJEAXTDvg7B+1pE
-        GNfJh92yIHnIlF9Y2w06Nf1KJ4ycUVM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-m22mztghMl2x5yB5BPQSkw-1; Mon, 29 Jun 2020 11:25:32 -0400
-X-MC-Unique: m22mztghMl2x5yB5BPQSkw-1
-Received: by mail-wm1-f72.google.com with SMTP id g6so12743524wmk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:25:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h8YsmMSc+uzBm3Tq2wPliCvFYeKmpScCtqag1mgAOwg=;
-        b=Lhv6Xh3HBtYSHFfkGrMbctx7W98orIW+ZkJt7po+tz+CBq9qiWtDg7/Xd8o1dVn93h
-         Zve7ACHX+NCySfhVVmMQNI3/BaRbYOWWBX1+2LTTdVetEq+C3EOjomqsG0SwRi1WSiFO
-         2W/XyUBDvZh94KTXVgy9z2wm910kEPAX9yEJQ2YPn+K1A8vhM+rBJUD2R5hAF+3Vb6tM
-         G5tUZtBPudDtdthKfiwq/IIh8mctx2FXAmNSDWJb1QzBYu9RLqduQ8vz/7dfdwKpFxLP
-         /KfD0Vtgh1cySOPVKNg2e/fF2gze9xbKnSTY2gTD3t9zUh0fUthDdK3TWG4R28DqS68l
-         Ej4g==
-X-Gm-Message-State: AOAM532c8NAgk7JvphXGbN5b9ud9+szqjve8H8k3THxlzif75M6gQyNu
-        Xl+U0EqE87JxcvjVOOlJLuOigQo19n/i09ZGQjBF8p9SdzcnrvfNOcA6X2Wa2ARchdxo4viFpgS
-        7uQGK+gsMb0VL7+5BT6a9wGmS
-X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr18595471wmj.117.1593444330179;
-        Mon, 29 Jun 2020 08:25:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy5S/sa8P6liiPedMfDgcEMB4JDiBtcXYBUqvs6MOq7NCpJOsBsi1tIcIuRMKcNnUvLGRGqdw==
-X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr18595450wmj.117.1593444329937;
-        Mon, 29 Jun 2020 08:25:29 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b0e5:c632:a580:8b9a? ([2001:b07:6468:f312:b0e5:c632:a580:8b9a])
-        by smtp.gmail.com with ESMTPSA id q7sm91034wrs.27.2020.06.29.08.25.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 08:25:29 -0700 (PDT)
-Subject: Re: KASAN: out-of-bounds Read in kvm_arch_hardware_setup
-To:     syzbot <syzbot+e0240f9c36530bda7130@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, sean.j.christopherson@intel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-References: <000000000000a0784a05a916495e@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <04786ba2-4934-c544-63d1-4d5d36dc5822@redhat.com>
-Date:   Mon, 29 Jun 2020 17:25:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 29 Jun 2020 15:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732620AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD0122535A;
+        Mon, 29 Jun 2020 15:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445218;
+        bh=X2R+j2ZdNZt6t0CmdutaIa9okM3nECUW4GKc5aL0RiU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X6Gh7UbTAid3iF/jVW/ZjOtMCoXlumQIsUSDd1+SuQjX4eQzZiAk/FDpY+jiZLn4R
+         W2yy6P66AT5J1CkwtFX5Lkuohl9RsGhMals9fB/25EJfjERFIkOMC5zPX70+DrklOt
+         B9aUnGOcYrVcH938fO0Dc+pP8YEe5piLoQk08XZU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 006/191] backlight: lp855x: Ensure regulators are disabled on probe failure
+Date:   Mon, 29 Jun 2020 11:37:02 -0400
+Message-Id: <20200629154007.2495120-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <000000000000a0784a05a916495e@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reproducer has nothing to do with KVM:
+From: Jon Hunter <jonathanh@nvidia.com>
 
-	# https://syzkaller.appspot.com/bug?id=c356395d480ca736b00443ad89cd76fd7d209013
-	# See https://goo.gl/kgGztJ for information about syzkaller reproducers.
-	#{"repeat":true,"procs":1,"sandbox":"","fault_call":-1,"close_fds":false,"segv":true}
-	r0 = openat$fb0(0xffffffffffffff9c, &(0x7f0000000180)='/dev/fb0\x00', 0x0, 0x0)
-	ioctl$FBIOPUT_VSCREENINFO(r0, 0x4601, &(0x7f0000000000)={0x0, 0x80, 0xc80, 0x0, 0x2, 0x1, 0x4, 0x0, {0x0, 0x0, 0x1}, {0x0, 0x0, 0xfffffffc}, {}, {}, 0x0, 0x40})
+[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
 
-but the stack trace does.  On the other hand, the address seems okay:
+If probing the LP885x backlight fails after the regulators have been
+enabled, then the following warning is seen when releasing the
+regulators ...
 
-	kvm_cpu_caps+0x24/0x50
+ WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
+ Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
+ CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
 
-and there are tons of other kvm_cpu_cap_get calls that aren't causing
-KASAN to complain.  The variable is initialized from
+ ...
 
-	kvm_arch_hardware_setup
-	  hardware_setup (in arch/x86/kvm/vmx/vmx.c)
-	    vmx_set_cpu_caps
-	      kvm_set_cpu_caps
+ Call trace:
+  _regulator_put.part.28+0x158/0x160
+  regulator_put+0x34/0x50
+  devm_regulator_release+0x10/0x18
+  release_nodes+0x12c/0x230
+  devres_release_all+0x34/0x50
+  really_probe+0x1c0/0x370
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x78
+  __driver_attach+0xb0/0xf0
+  bus_for_each_dev+0x68/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x160/0x1f0
+  driver_register+0x60/0x110
+  i2c_register_driver+0x40/0x80
+  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
+  do_one_initcall+0x58/0x1a0
+  do_init_module+0x54/0x1d0
+  load_module+0x1d80/0x21c8
+  __do_sys_finit_module+0xe8/0x100
+  __arm64_sys_finit_module+0x18/0x20
+  el0_svc_common.constprop.3+0xb0/0x168
+  do_el0_svc+0x20/0x98
+  el0_sync_handler+0xf4/0x1b0
+  el0_sync+0x140/0x180
 
-with a simple memcpy that writes the entire array.  Does anyone understand
-what is going on here?
+Fix this by ensuring that the regulators are disabled, if enabled, on
+probe failure.
 
-Paolo
+Finally, ensure that the vddio regulator is disabled in the driver
+remove handler.
 
-On 27/06/20 22:01, syzbot wrote:
-> BUG: KASAN: out-of-bounds in kvm_cpu_cap_get arch/x86/kvm/cpuid.h:292 [inline]
-> BUG: KASAN: out-of-bounds in kvm_cpu_cap_has arch/x86/kvm/cpuid.h:297 [inline]
-> BUG: KASAN: out-of-bounds in kvm_init_msr_list arch/x86/kvm/x86.c:5362 [inline]
-> BUG: KASAN: out-of-bounds in kvm_arch_hardware_setup+0xb05/0xf40 arch/x86/kvm/x86.c:9802
-> Read of size 4 at addr ffffffff896c3134 by task syz-executor614/6786
-> 
-> CPU: 1 PID: 6786 Comm: syz-executor614 Not tainted 5.7.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
->  print_address_description+0x66/0x5a0 mm/kasan/report.c:383
->  __kasan_report mm/kasan/report.c:513 [inline]
->  kasan_report+0x132/0x1d0 mm/kasan/report.c:530
->  kvm_cpu_cap_get arch/x86/kvm/cpuid.h:292 [inline]
->  kvm_cpu_cap_has arch/x86/kvm/cpuid.h:297 [inline]
->  kvm_init_msr_list arch/x86/kvm/x86.c:5362 [inline]
->  kvm_arch_hardware_setup+0xb05/0xf40 arch/x86/kvm/x86.c:9802
->  </IRQ>
-> 
-> The buggy address belongs to the variable:
->  kvm_cpu_caps+0x24/0x50
-> 
-> Memory state around the buggy address:
->  ffffffff896c3000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  ffffffff896c3080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> ffffffff896c3100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->                                         ^
->  ffffffff896c3180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  ffffffff896c3200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ==================================================================
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index 939f057836e19..4cdc7a3f6dc5c 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -460,7 +460,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 		ret = regulator_enable(lp->enable);
+ 		if (ret < 0) {
+ 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
+-			return ret;
++			goto disable_supply;
+ 		}
+ 
+ 		/*
+@@ -475,24 +475,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 	ret = lp855x_configure(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev, "device config err: %d", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = lp855x_backlight_register(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev,
+ 			"failed to register backlight. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
+ 	if (ret) {
+ 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	backlight_update_status(lp->bl);
++
+ 	return 0;
++
++disable_vddio:
++	if (lp->enable)
++		regulator_disable(lp->enable);
++disable_supply:
++	if (lp->supply)
++		regulator_disable(lp->supply);
++
++	return ret;
+ }
+ 
+ static int lp855x_remove(struct i2c_client *cl)
+@@ -501,6 +511,8 @@ static int lp855x_remove(struct i2c_client *cl)
+ 
+ 	lp->bl->props.brightness = 0;
+ 	backlight_update_status(lp->bl);
++	if (lp->enable)
++		regulator_disable(lp->enable);
+ 	if (lp->supply)
+ 		regulator_disable(lp->supply);
+ 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
+-- 
+2.25.1
 
