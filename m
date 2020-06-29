@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0342067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9401B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462052;
-	bh=Q4Lswz6i6II4qFDhrgBuB9RG8nq8AdjQIpsfofTTtPQ=;
+	s=default; t=1593462057;
+	bh=2WCO/bxMMjPr3Vtr9iWPQFZiUO2tw/ioc0Unv3TduXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5ZrfKcB+OddzmlwKEtUjcUYrrcHK3B5BzUz/V53FVe0t19xxwbPz3w4Uixlkhf59
-	 XjPG3x3plL7GzEzT4Z01UQvLl1TiHMwvD9lMFvzOyiEG6oy8Nb5O0OcaqqyXbihmyo
-	 T+JIFsT51t8eCK6eAwXxsVDBRIBnwmCft8zH9iR4=
+	b=YZu56spKOkcoem3W0mjdLJOg4JkilJWYextOsXDXQsjsKVXJXbny+PPjlAlPJtSzn
+	 VB25AvCIk/JNvOdfcP8OiDeJVl2We+qJB2GAyO9mcCEjjgY7EPQBqSMvYXMdFfqs9j
+	 IOn1gD61cnCc3ZLtw9vGVxwQ1lckSHBW/UjjzRD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgF2UUu (ORCPT
+        id S1732268AbgF2UU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731890AbgF2TZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:36 -0400
+        id S1732597AbgF2TZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8352530A;
-        Mon, 29 Jun 2020 15:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD51125305;
+        Mon, 29 Jun 2020 15:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445136;
-        bh=Q4Lswz6i6II4qFDhrgBuB9RG8nq8AdjQIpsfofTTtPQ=;
+        s=default; t=1593445133;
+        bh=2WCO/bxMMjPr3Vtr9iWPQFZiUO2tw/ioc0Unv3TduXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yC6MAI3zfu5iQF43cKskBxXXwR2IWsZDhcDnhbIebSfC8yxiblm2VaPtF0xfspyAW
-         iVQOz9r54XARpfBwM2MwAPBjI6m5H1zFxrNTlpDzPCt6N996kX/Zf4QIAfP5AEBIfP
-         GY3QBbiuMz0Z7R9EGE/u8jFvjIJvSkDiaw8I5gX4=
+        b=mw70aPuoSZY9ToajR2HpXHcpy6bvth3J1GZOVG+UXsyL2nM+lsx7KKfGSpVH7pvJw
+         YxvtRZXS21p4SnmVXXd7WjCXqrXNxTGWUqsLCqMGHvojwNL+q8wcnR9qQ5SVr7WvU0
+         uklk8fastQS2EmrkpFUo26z3PxMcviP1e3iNbpQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/78] rxrpc: Fix handling of rwind from an ACK packet
-Date:   Mon, 29 Jun 2020 11:37:30 -0400
-Message-Id: <20200629153806.2494953-43-sashal@kernel.org>
+Subject: [PATCH 4.14 39/78] cifs/smb3: Fix data inconsistent when zero file range
+Date:   Mon, 29 Jun 2020 11:37:27 -0400
+Message-Id: <20200629153806.2494953-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -64,51 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit a2ad7c21ad8cf1ce4ad65e13df1c2a1c29b38ac5 ]
+[ Upstream commit 6b69040247e14b43419a520f841f2b3052833df9 ]
 
-The handling of the receive window size (rwind) from a received ACK packet
-is not correct.  The rxrpc_input_ackinfo() function currently checks the
-current Tx window size against the rwind from the ACK to see if it has
-changed, but then limits the rwind size before storing it in the tx_winsize
-member and, if it increased, wake up the transmitting process.  This means
-that if rwind > RXRPC_RXTX_BUFF_SIZE - 1, this path will always be
-followed.
+CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
+remote file to zero, but local page cache not update, then the data
+inconsistent with server, which leads the xfstest generic/008 failed.
 
-Fix this by limiting rwind before we compare it to tx_winsize.
+So we need to remove the local page caches before send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
+re-cache it.
 
-The effect of this can be seen by enabling the rxrpc_rx_rwind_change
-tracepoint.
-
-Fixes: 702f2ac87a9a ("rxrpc: Wake up the transmitter if Rx window size increases on the peer")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Cc: stable@vger.kernel.org # v3.17
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/input.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/cifs/smb2ops.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 18ce6f97462b6..98285b117a7c0 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -664,13 +664,12 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
- 	       ntohl(ackinfo->rxMTU), ntohl(ackinfo->maxMTU),
- 	       rwind, ntohl(ackinfo->jumbo_max));
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 61ea429e1210b..b46fdb2b8d349 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1755,6 +1755,12 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
+ 	inode = d_inode(cfile->dentry);
+ 	cifsi = CIFS_I(inode);
  
-+	if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
-+		rwind = RXRPC_RXTX_BUFF_SIZE - 1;
- 	if (call->tx_winsize != rwind) {
--		if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
--			rwind = RXRPC_RXTX_BUFF_SIZE - 1;
- 		if (rwind > call->tx_winsize)
- 			wake = true;
--		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial,
--					    ntohl(ackinfo->rwind), wake);
-+		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial, rwind, wake);
- 		call->tx_winsize = rwind;
- 	}
- 
++	/*
++	 * We zero the range through ioctl, so we need remove the page caches
++	 * first, otherwise the data may be inconsistent with the server.
++	 */
++	truncate_pagecache_range(inode, offset, offset + len - 1);
++
+ 	/* if file not oplocked can't be sure whether asking to extend size */
+ 	if (!CIFS_CACHE_READ(cifsi))
+ 		if (keep_size == false) {
 -- 
 2.25.1
 
