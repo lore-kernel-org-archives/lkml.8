@@ -2,52 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D96620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377DA2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458794;
-	bh=WT6xECJGm+sjFVPUvvaqa7ohhhGNu4HSaUjNDH84s/g=;
+	s=default; t=1593458802;
+	bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WwFyTBo9zgJyFBIRp9P233VLJLQ4kXcdfTmQm1v6JaujoGqbFoi4xQlCPg9+lA8B
-	 sKg8OmHbCZ3kRM3/gwcP1oQ9YdhPzMmgcOB+JSjXSsABrL7J2X3iEb+IrAm3/3/sFv
-	 e61Pz0HXd5cU693P6B5q60aKptcVW5Cq5N/UwXuU=
+	b=rgxX3vfV+M6EWRuHWDPxBMMYsjMxUIrAh8d6CbFOtOCCFSrMXDKPPjsElYw7bPeVg
+	 UbQb2gP1qb9iscJV08UJq1IQ5BR0hzSKWZDN6Qh6WUNa9/4hHRPzUcQ/mTS9dtUcW6
+	 88g8S7WV4Fnk2nLLsq2nn9HQSWACGUONq49a4f7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732471AbgF2TZy (ORCPT
+        id S1729978AbgF2T0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732608AbgF2TZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:39 -0400
+        id S1732679AbgF2TZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C02253B4;
-        Mon, 29 Jun 2020 15:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E49E1253C2;
+        Mon, 29 Jun 2020 15:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445279;
-        bh=WT6xECJGm+sjFVPUvvaqa7ohhhGNu4HSaUjNDH84s/g=;
+        s=default; t=1593445294;
+        bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxHWt/k2WM0hvpUaMmKOKEvRLWrWD+eJNPq5dgzDg0P3TskheO0kdmoiq4wbg2K1y
-         hev80n3ixZXfg+ApAxST4mDqrfCLHgNlqcTngtd0pRUiEgy1N6GS/OfpBdyWPd4jMM
-         1bq1674L5L7zj4ymV30vg7Mc5kH5wK1SKGwAcFLM=
+        b=pwWLF9GpE/r/VfO0yegDTmm0hzYPk37d40WO4VqZj3pU2YP+5c1iWaWU7TxnQmcTP
+         fLN2ireX0K30tYld6cqn0ydI5y8mfN4nutb/8/reOBHOcq9Xae/5h1Bk/Gxcf/z38Y
+         MJWFV9YXdnfE8TanV2x6etNJqPX9ZsG6zGf6eWc0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pawel Laszczak <pawell@cadence.com>,
-        Jayshri Pawar <jpawar@cadence.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 058/191] usb: gadget: Fix issue with config_ep_by_speed function
-Date:   Mon, 29 Jun 2020 11:37:54 -0400
-Message-Id: <20200629154007.2495120-59-sashal@kernel.org>
+Subject: [PATCH 4.9 069/191] lib/zlib: remove outdated and incorrect pre-increment optimization
+Date:   Mon, 29 Jun 2020 11:38:05 -0400
+Message-Id: <20200629154007.2495120-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,224 +67,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Laszczak <pawell@cadence.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 5d363120aa548ba52d58907a295eee25f8207ed2 ]
+[ Upstream commit acaab7335bd6f0c0b54ce3a00bd7f18222ce0f5f ]
 
-This patch adds new config_ep_by_speed_and_alt function which
-extends the config_ep_by_speed about alt parameter.
-This additional parameter allows to find proper usb_ss_ep_comp_descriptor.
+The zlib inflate code has an old micro-optimization based on the
+assumption that for pre-increment memory accesses, the compiler will
+generate code that fits better into the processor's pipeline than what
+would be generated for post-increment memory accesses.
 
-Problem has appeared during testing f_tcm (BOT/UAS) driver function.
+This optimization was already removed in upstream zlib in 2016:
+https://github.com/madler/zlib/commit/9aaec95e8211
 
-f_tcm function for SS use array of headers for both  BOT/UAS alternate
-setting:
+This optimization causes UB according to C99, which says in section 6.5.6
+"Additive operators": "If both the pointer operand and the result point to
+elements of the same array object, or one past the last element of the
+array object, the evaluation shall not produce an overflow; otherwise, the
+behavior is undefined".
 
-static struct usb_descriptor_header *uasp_ss_function_desc[] = {
-        (struct usb_descriptor_header *) &bot_intf_desc,
-        (struct usb_descriptor_header *) &uasp_ss_bi_desc,
-        (struct usb_descriptor_header *) &bot_bi_ep_comp_desc,
-        (struct usb_descriptor_header *) &uasp_ss_bo_desc,
-        (struct usb_descriptor_header *) &bot_bo_ep_comp_desc,
+This UB is not only a theoretical concern, but can also cause trouble for
+future work on compiler-based sanitizers.
 
-        (struct usb_descriptor_header *) &uasp_intf_desc,
-        (struct usb_descriptor_header *) &uasp_ss_bi_desc,
-        (struct usb_descriptor_header *) &uasp_bi_ep_comp_desc,
-        (struct usb_descriptor_header *) &uasp_bi_pipe_desc,
-        (struct usb_descriptor_header *) &uasp_ss_bo_desc,
-        (struct usb_descriptor_header *) &uasp_bo_ep_comp_desc,
-        (struct usb_descriptor_header *) &uasp_bo_pipe_desc,
-        (struct usb_descriptor_header *) &uasp_ss_status_desc,
-        (struct usb_descriptor_header *) &uasp_status_in_ep_comp_desc,
-        (struct usb_descriptor_header *) &uasp_status_pipe_desc,
-        (struct usb_descriptor_header *) &uasp_ss_cmd_desc,
-        (struct usb_descriptor_header *) &uasp_cmd_comp_desc,
-        (struct usb_descriptor_header *) &uasp_cmd_pipe_desc,
-        NULL,
-};
+According to the zlib commit, this optimization also is not optimal
+anymore with modern compilers.
 
-The first 5 descriptors are associated with BOT alternate setting,
-and others are associated with UAS.
+Replace uses of OFF, PUP and UP_UNALIGNED with their definitions in the
+POSTINC case, and remove the macro definitions, just like in the upstream
+patch.
 
-During handling UAS alternate setting f_tcm driver invokes
-config_ep_by_speed and this function sets incorrect companion endpoint
-descriptor in usb_ep object.
-
-Instead setting ep->comp_desc to uasp_bi_ep_comp_desc function in this
-case set ep->comp_desc to uasp_ss_bi_desc.
-
-This is due to the fact that it searches endpoint based on endpoint
-address:
-
-        for_each_ep_desc(speed_desc, d_spd) {
-                chosen_desc = (struct usb_endpoint_descriptor *)*d_spd;
-                if (chosen_desc->bEndpoitAddress == _ep->address)
-                        goto ep_found;
-        }
-
-And in result it uses the descriptor from BOT alternate setting
-instead UAS.
-
-Finally, it causes that controller driver during enabling endpoints
-detect that just enabled endpoint for bot.
-
-Signed-off-by: Jayshri Pawar <jpawar@cadence.com>
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20200507123112.252723-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 78 ++++++++++++++++++++++++++--------
- include/linux/usb/composite.h  |  3 ++
- 2 files changed, 64 insertions(+), 17 deletions(-)
+ lib/zlib_inflate/inffast.c | 91 +++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 2e545d0250309..5a1723d99fe51 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -100,40 +100,43 @@ function_descriptors(struct usb_function *f,
+diff --git a/lib/zlib_inflate/inffast.c b/lib/zlib_inflate/inffast.c
+index 2c13ecc5bb2c7..ed1f3df272602 100644
+--- a/lib/zlib_inflate/inffast.c
++++ b/lib/zlib_inflate/inffast.c
+@@ -10,17 +10,6 @@
+ 
+ #ifndef ASMINF
+ 
+-/* Allow machine dependent optimization for post-increment or pre-increment.
+-   Based on testing to date,
+-   Pre-increment preferred for:
+-   - PowerPC G3 (Adler)
+-   - MIPS R5000 (Randers-Pehrson)
+-   Post-increment preferred for:
+-   - none
+-   No measurable difference:
+-   - Pentium III (Anderson)
+-   - M68060 (Nikl)
+- */
+ union uu {
+ 	unsigned short us;
+ 	unsigned char b[2];
+@@ -38,16 +27,6 @@ get_unaligned16(const unsigned short *p)
+ 	return mm.us;
  }
  
- /**
-- * next_ep_desc() - advance to the next EP descriptor
-+ * next_desc() - advance to the next desc_type descriptor
-  * @t: currect pointer within descriptor array
-+ * @desc_type: descriptor type
-  *
-- * Return: next EP descriptor or NULL
-+ * Return: next desc_type descriptor or NULL
-  *
-- * Iterate over @t until either EP descriptor found or
-+ * Iterate over @t until either desc_type descriptor found or
-  * NULL (that indicates end of list) encountered
-  */
- static struct usb_descriptor_header**
--next_ep_desc(struct usb_descriptor_header **t)
-+next_desc(struct usb_descriptor_header **t, u8 desc_type)
- {
- 	for (; *t; t++) {
--		if ((*t)->bDescriptorType == USB_DT_ENDPOINT)
-+		if ((*t)->bDescriptorType == desc_type)
- 			return t;
- 	}
- 	return NULL;
- }
- 
+-#ifdef POSTINC
+-#  define OFF 0
+-#  define PUP(a) *(a)++
+-#  define UP_UNALIGNED(a) get_unaligned16((a)++)
+-#else
+-#  define OFF 1
+-#  define PUP(a) *++(a)
+-#  define UP_UNALIGNED(a) get_unaligned16(++(a))
+-#endif
+-
  /*
-- * for_each_ep_desc()- iterate over endpoint descriptors in the
-- *		descriptors list
-- * @start:	pointer within descriptor array.
-- * @ep_desc:	endpoint descriptor to use as the loop cursor
-+ * for_each_desc() - iterate over desc_type descriptors in the
-+ * descriptors list
-+ * @start: pointer within descriptor array.
-+ * @iter_desc: desc_type descriptor to use as the loop cursor
-+ * @desc_type: wanted descriptr type
-  */
--#define for_each_ep_desc(start, ep_desc) \
--	for (ep_desc = next_ep_desc(start); \
--	      ep_desc; ep_desc = next_ep_desc(ep_desc+1))
-+#define for_each_desc(start, iter_desc, desc_type) \
-+	for (iter_desc = next_desc(start, desc_type); \
-+	     iter_desc; iter_desc = next_desc(iter_desc + 1, desc_type))
+    Decode literal, length, and distance codes and write out the resulting
+    literal and match bytes until either not enough input or output is
+@@ -115,9 +94,9 @@ void inflate_fast(z_streamp strm, unsigned start)
  
- /**
-- * config_ep_by_speed() - configures the given endpoint
-+ * config_ep_by_speed_and_alt() - configures the given endpoint
-  * according to gadget speed.
-  * @g: pointer to the gadget
-  * @f: usb function
-  * @_ep: the endpoint to configure
-+ * @alt: alternate setting number
-  *
-  * Return: error code, 0 on success
-  *
-@@ -146,11 +149,13 @@ next_ep_desc(struct usb_descriptor_header **t)
-  * Note: the supplied function should hold all the descriptors
-  * for supported speeds
-  */
--int config_ep_by_speed(struct usb_gadget *g,
--			struct usb_function *f,
--			struct usb_ep *_ep)
-+int config_ep_by_speed_and_alt(struct usb_gadget *g,
-+				struct usb_function *f,
-+				struct usb_ep *_ep,
-+				u8 alt)
- {
- 	struct usb_endpoint_descriptor *chosen_desc = NULL;
-+	struct usb_interface_descriptor *int_desc = NULL;
- 	struct usb_descriptor_header **speed_desc = NULL;
+     /* copy state to local variables */
+     state = (struct inflate_state *)strm->state;
+-    in = strm->next_in - OFF;
++    in = strm->next_in;
+     last = in + (strm->avail_in - 5);
+-    out = strm->next_out - OFF;
++    out = strm->next_out;
+     beg = out - (start - strm->avail_out);
+     end = out + (strm->avail_out - 257);
+ #ifdef INFLATE_STRICT
+@@ -138,9 +117,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+        input data or output space */
+     do {
+         if (bits < 15) {
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+         }
+         this = lcode[hold & lmask];
+@@ -150,14 +129,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+         bits -= op;
+         op = (unsigned)(this.op);
+         if (op == 0) {                          /* literal */
+-            PUP(out) = (unsigned char)(this.val);
++            *out++ = (unsigned char)(this.val);
+         }
+         else if (op & 16) {                     /* length base */
+             len = (unsigned)(this.val);
+             op &= 15;                           /* number of extra bits */
+             if (op) {
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                 }
+                 len += (unsigned)hold & ((1U << op) - 1);
+@@ -165,9 +144,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 bits -= op;
+             }
+             if (bits < 15) {
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+             }
+             this = dcode[hold & dmask];
+@@ -180,10 +159,10 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 dist = (unsigned)(this.val);
+                 op &= 15;                       /* number of extra bits */
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                     if (bits < op) {
+-                        hold += (unsigned long)(PUP(in)) << bits;
++                        hold += (unsigned long)(*in++) << bits;
+                         bits += 8;
+                     }
+                 }
+@@ -205,13 +184,13 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         state->mode = BAD;
+                         break;
+                     }
+-                    from = window - OFF;
++                    from = window;
+                     if (write == 0) {           /* very common case */
+                         from += wsize - op;
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+@@ -222,14 +201,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from end of window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+-                            from = window - OFF;
++                            from = window;
+                             if (write < len) {  /* some from start of window */
+                                 op = write;
+                                 len -= op;
+                                 do {
+-                                    PUP(out) = PUP(from);
++                                    *out++ = *from++;
+                                 } while (--op);
+                                 from = out - dist;      /* rest from output */
+                             }
+@@ -240,21 +219,21 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+                     }
+                     while (len > 2) {
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
++                        *out++ = *from++;
++                        *out++ = *from++;
+                         len -= 3;
+                     }
+                     if (len) {
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
+                         if (len > 1)
+-                            PUP(out) = PUP(from);
++                            *out++ = *from++;
+                     }
+                 }
+                 else {
+@@ -264,29 +243,29 @@ void inflate_fast(z_streamp strm, unsigned start)
+                     from = out - dist;          /* copy direct from output */
+ 		    /* minimum length is three */
+ 		    /* Align out addr */
+-		    if (!((long)(out - 1 + OFF) & 1)) {
+-			PUP(out) = PUP(from);
++		    if (!((long)(out - 1) & 1)) {
++			*out++ = *from++;
+ 			len--;
+ 		    }
+-		    sout = (unsigned short *)(out - OFF);
++		    sout = (unsigned short *)(out);
+ 		    if (dist > 2) {
+ 			unsigned short *sfrom;
  
- 	struct usb_ss_ep_comp_descriptor *comp_desc = NULL;
-@@ -186,8 +191,21 @@ int config_ep_by_speed(struct usb_gadget *g,
- 	default:
- 		speed_desc = f->fs_descriptors;
- 	}
-+
-+	/* find correct alternate setting descriptor */
-+	for_each_desc(speed_desc, d_spd, USB_DT_INTERFACE) {
-+		int_desc = (struct usb_interface_descriptor *)*d_spd;
-+
-+		if (int_desc->bAlternateSetting == alt) {
-+			speed_desc = d_spd;
-+			goto intf_found;
-+		}
-+	}
-+	return -EIO;
-+
-+intf_found:
- 	/* find descriptors */
--	for_each_ep_desc(speed_desc, d_spd) {
-+	for_each_desc(speed_desc, d_spd, USB_DT_ENDPOINT) {
- 		chosen_desc = (struct usb_endpoint_descriptor *)*d_spd;
- 		if (chosen_desc->bEndpointAddress == _ep->address)
- 			goto ep_found;
-@@ -240,6 +258,32 @@ int config_ep_by_speed(struct usb_gadget *g,
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(config_ep_by_speed_and_alt);
-+
-+/**
-+ * config_ep_by_speed() - configures the given endpoint
-+ * according to gadget speed.
-+ * @g: pointer to the gadget
-+ * @f: usb function
-+ * @_ep: the endpoint to configure
-+ *
-+ * Return: error code, 0 on success
-+ *
-+ * This function chooses the right descriptors for a given
-+ * endpoint according to gadget speed and saves it in the
-+ * endpoint desc field. If the endpoint already has a descriptor
-+ * assigned to it - overwrites it with currently corresponding
-+ * descriptor. The endpoint maxpacket field is updated according
-+ * to the chosen descriptor.
-+ * Note: the supplied function should hold all the descriptors
-+ * for supported speeds
-+ */
-+int config_ep_by_speed(struct usb_gadget *g,
-+			struct usb_function *f,
-+			struct usb_ep *_ep)
-+{
-+	return config_ep_by_speed_and_alt(g, f, _ep, 0);
-+}
- EXPORT_SYMBOL_GPL(config_ep_by_speed);
+-			sfrom = (unsigned short *)(from - OFF);
++			sfrom = (unsigned short *)(from);
+ 			loops = len >> 1;
+ 			do
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+-			    PUP(sout) = PUP(sfrom);
++			    *sout++ = *sfrom++;
+ #else
+-			    PUP(sout) = UP_UNALIGNED(sfrom);
++			    *sout++ = get_unaligned16(sfrom++);
+ #endif
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
+-			from = (unsigned char *)sfrom + OFF;
++			out = (unsigned char *)sout;
++			from = (unsigned char *)sfrom;
+ 		    } else { /* dist == 1 or dist == 2 */
+ 			unsigned short pat16;
  
- /**
-diff --git a/include/linux/usb/composite.h b/include/linux/usb/composite.h
-index 667d20454a21d..0ec7185e5ddfd 100644
---- a/include/linux/usb/composite.h
-+++ b/include/linux/usb/composite.h
-@@ -248,6 +248,9 @@ int usb_function_activate(struct usb_function *);
+-			pat16 = *(sout-1+OFF);
++			pat16 = *(sout-1);
+ 			if (dist == 1) {
+ 				union uu mm;
+ 				/* copy one char pattern to both bytes */
+@@ -296,12 +275,12 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 			}
+ 			loops = len >> 1;
+ 			do
+-			    PUP(sout) = pat16;
++			    *sout++ = pat16;
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
++			out = (unsigned char *)sout;
+ 		    }
+ 		    if (len & 1)
+-			PUP(out) = PUP(from);
++			*out++ = *from++;
+                 }
+             }
+             else if ((op & 64) == 0) {          /* 2nd level distance code */
+@@ -336,8 +315,8 @@ void inflate_fast(z_streamp strm, unsigned start)
+     hold &= (1U << bits) - 1;
  
- int usb_interface_id(struct usb_configuration *, struct usb_function *);
- 
-+int config_ep_by_speed_and_alt(struct usb_gadget *g, struct usb_function *f,
-+				struct usb_ep *_ep, u8 alt);
-+
- int config_ep_by_speed(struct usb_gadget *g, struct usb_function *f,
- 			struct usb_ep *_ep);
- 
+     /* update state and return */
+-    strm->next_in = in + OFF;
+-    strm->next_out = out + OFF;
++    strm->next_in = in;
++    strm->next_out = out;
+     strm->avail_in = (unsigned)(in < last ? 5 + (last - in) : 5 - (in - last));
+     strm->avail_out = (unsigned)(out < end ?
+                                  257 + (end - out) : 257 - (out - end));
 -- 
 2.25.1
 
