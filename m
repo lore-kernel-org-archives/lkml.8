@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E994FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4077DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9AD420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D42220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460676;
-	bh=0ojqZ3xSEL6DtPWJWKShNDGexKeRTIPRH9yGm9GLi8U=;
+	s=default; t=1593460684;
+	bh=OdrbbhhWQZGnY0NNBfY4QgSV2sGEsBiGQfBbE3xbNg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKW6QU1VX7HG6eTtn/UBti78YpLPnjQK58fkO8BBEPt9qm+Bggm5JkL3QWlQRhbOA
-	 oguy3KdEXsFwt1ww+uVBezgBJMs+CRBqGd/wcXAgHdJ3iCljNpD0VEpEQ9Cz4Jcpx4
-	 AxEH3DRsj/caL1yhU1dKG4A5fkEktsFUdQ0WGga0=
+	b=k9aOcUIL/iK6/7XacmnMTb/h66pQYQgdOfn2ht00C1lJzoVc9ArD7vBOyLw4DfBPT
+	 zTpIolBYg3LQH16bcxWtlkIRWMuzf8L2ftZo0HyDJlaej9J2msECQ/azkq/1DxTdps
+	 pSa3jc0GeImHxDDLLIbIfoRFoyg2P/ElYqmH8yfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgF2T5x (ORCPT
+        id S1729977AbgF2T6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbgF2TkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:21 -0400
+        id S2387602AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5C52487D;
-        Mon, 29 Jun 2020 15:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC7224903;
+        Mon, 29 Jun 2020 15:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444379;
-        bh=0ojqZ3xSEL6DtPWJWKShNDGexKeRTIPRH9yGm9GLi8U=;
+        s=default; t=1593444453;
+        bh=OdrbbhhWQZGnY0NNBfY4QgSV2sGEsBiGQfBbE3xbNg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=utWAqH3o3s2ijbdR3AoguaIoBDYiID+B0jNZbTcagb4SAtUDZH6uP1kSwCo12cB1n
-         Nv4KDm46K+10dWJAg5FUkknbBLXq7GUh5AXiXjQ1b2Fv18gg3iQSWwgHfebppflBY8
-         nXrOan6l/Iw0R90LTYEImXzEGi0fkjrFZB5Kilyw=
+        b=UvXWiqSgRHSIoBo06AtrHYazTRa6nOg541bQLQ/DGun+M9hHq1mwEgn1XJ/IG21+y
+         tAqwf/RVE2yCy1+8RveTQ9AqP0GeSShOBayD1XH/VVBtFPcbv4HW8M6Wwb1LrWrcQJ
+         FwvML9iW37TLezJK1x2OS1dTLjS0SGFbBp9QFGho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 056/178] xhci: Return if xHCI doesn't support LPM
-Date:   Mon, 29 Jun 2020 11:23:21 -0400
-Message-Id: <20200629152523.2494198-57-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 133/178] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:24:38 -0400
+Message-Id: <20200629152523.2494198-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,50 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit f0c472a6da51f9fac15e80fe2fd9c83b68754cff upstream.
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-Just return if xHCI is quirked to disable LPM. We can save some time
-from reading registers and doing spinlocks.
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-Add stable tag as we want this patch together with the next one,
-"Poll for U0 after disabling USB2 LPM" which fixes a suspend issue
-for some USB2 LPM devices
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-5-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+For example, -gsplit-dwarf creates a .dwo file.
+
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
+
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 13d2971c35445..11a65854d3f09 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4391,6 +4391,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 	int		hird, exit_latency;
- 	int		ret;
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index d1dd4a6b6adb6..7da10afc92c61 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -82,20 +82,21 @@ cc-cross-prefix = $(firstword $(foreach c, $(1), \
+ 			$(if $(shell command -v -- $(c)gcc 2>/dev/null), $(c))))
  
-+	if (xhci->quirks & XHCI_HW_LPM_DISABLE)
-+		return -EPERM;
-+
- 	if (hcd->speed >= HCD_USB3 || !xhci->hw_lpm_support ||
- 			!udev->lpm_capable)
- 		return -EPERM;
-@@ -4413,7 +4416,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
- 			enable ? "enable" : "disable", port_num + 1);
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
--	if (enable && !(xhci->quirks & XHCI_HW_LPM_DISABLE)) {
-+	if (enable) {
- 		/* Host supports BESL timeout instead of HIRD */
- 		if (udev->usb2_hw_lpm_besl_capable) {
- 			/* if device doesn't have a preferred BESL value use a
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" serves as a temporary file and is
+ # automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
+ 
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
