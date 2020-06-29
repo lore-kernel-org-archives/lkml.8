@@ -2,151 +2,157 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3AA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2BF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YN5nfLhH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+6OvY9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgF2Srx (ORCPT
+        id S1729252AbgF2Sr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
+        Mon, 29 Jun 2020 14:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbgF2Srq (ORCPT
+        with ESMTP id S1729347AbgF2Srp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:47:46 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA80C02E2C2;
-        Mon, 29 Jun 2020 06:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qWyNxceE1HxDR9dXe27zL2Runx7nsY5emtD94N5b97s=; b=YN5nfLhHtwAS5bza4algxyhr3
-        6ldxxk2+Hq3tRFjkQMCxV8cQsvoEhWZt9/PN9SG8360DvtYKHX1oxrz3Ur9oAM5hhskUF4KiYfEWX
-        CSFMYP7pm9SOn8nnSVcTO46vMYVSiqGsSBiLR5HvhrUTWss1B7chmVvaXYnYJ+UCY00CoUT4lW5Ej
-        b4f7DRoLGKoGp1FICS/Fq59Ku4k14U9e/ndBjLuJhoCUTHXxQ4cLt0DBRd8i8K02b8A3YtRXjflsx
-        6qw9FNQTxUBiG/PsY9W93rkyr36N60B6TZtbC5ly3vYr2Le3wHaFJL5kKKTQjpNvtGnHkIkl0NXY/
-        JRlhlr9VA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33104)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jpuJ4-0007h0-CS; Mon, 29 Jun 2020 14:58:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jpuJ0-0007AW-Al; Mon, 29 Jun 2020 14:58:42 +0100
-Date:   Mon, 29 Jun 2020 14:58:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florinel Iordache <florinel.iordache@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver support
-Message-ID: <20200629135842.GU1551@shell.armlinux.org.uk>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
- <20200622142430.GP279339@lunn.ch>
- <AM6PR04MB397677E90EFBD9749D01B061EC970@AM6PR04MB3976.eurprd04.prod.outlook.com>
- <7b12d7f1-9e36-e3ee-7a51-d8d8628e2e6f@gmail.com>
+        Mon, 29 Jun 2020 14:47:45 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E1C4C02F03B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:08:19 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so2525840ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4y8exEch/tKRaBNQLAYeMwPWRyiMK4ptsIMntud+MXQ=;
+        b=b+6OvY9YlTc7zqY/dztuJpoG/Rv3+LKyJYRaT9JZUTlOOz5S6O+nibuvuEAc7YH4R5
+         p59Xsu5A4V+/Qsk1kPh/N9fgolUhsZ+2QA+HeMokBeO282fNXdRE/jANuB5jHB192oEv
+         PMTWsCVzoYA9gu3qEVo1Hha7S/egJkuclC6IqoKGdIo++WnYpU1Nyt5aIJcJwsivQ6Ik
+         q/tumWzrZitYPNEG/gjTnW8ntJZLaOIdAxPYtdDxrUXvpUE9EIrhHfdPRZLqkG77NRZb
+         zgROIf7E1KgZT6xHXEK5dY8ZmHHPSKVpM/Ko4YGOPgD4iv1cF8wg0NKgbYDsn/4mOTf2
+         K4mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4y8exEch/tKRaBNQLAYeMwPWRyiMK4ptsIMntud+MXQ=;
+        b=B/a2plcfwJpQRBd1OdRUxU3XyvuQ2yhNtmMrw2WiFrSLK2mFH7Q1h6bYHsFs0ye0u4
+         Cq8MvGmJaFf7KcAbvFYwsg62ELTznlpojOmygBiQSOfhBVPRKzzSF4QTiV46D0STMy96
+         IRqZ6nB6xrELZJZ49ezPipjYNUJx67X1nwNSaRyBt+IkbQLcadyS/EeHu0RpFoM/FfGy
+         15H6YygVWQZxGrQoUwaI/pQWRJPudlLbuXdgb4hK1cPrR0WlngEpNNe6uQ723Su7wn0Y
+         J2Y/VvUtt87BwuwHPztVSrzTnqza26q204S5O/FBMxv6/8o74kIqMm7K6gszMjP1wJ/G
+         md/w==
+X-Gm-Message-State: AOAM533gCg20nu0pTqe460UwRRz7ecXxHMBhU8gjCZIUBDsfE7jUNZ+u
+        BrJU+vTQQmYbgJpbK6KWEdZo1JRijkrqTJjG25Y=
+X-Google-Smtp-Source: ABdhPJyzuVnCp/IYxWb/rQdTa6stFTpO6vvTzoA5WVDttSSlYl7UQTLv5fL2Anu57Te3t2p3SwVk9oc4eWWgyBGD/T8=
+X-Received: by 2002:a2e:b4ec:: with SMTP id s12mr8535217ljm.155.1593443297962;
+ Mon, 29 Jun 2020 08:08:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b12d7f1-9e36-e3ee-7a51-d8d8628e2e6f@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
+ <20200629123215.1014747-5-lee.jones@linaro.org> <20200629130644.GU3334@localhost>
+ <20200629140137.GK177734@dell> <CADBw62r_tkGEr9kHpojAi+fJ+qUqbsc-DQgG1TUAwOdbDXTgNQ@mail.gmail.com>
+ <20200629144325.GV3334@localhost>
+In-Reply-To: <20200629144325.GV3334@localhost>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 29 Jun 2020 23:08:06 +0800
+Message-ID: <CADBw62oFcDVcQMRx+F3omCsYYGeuw+-X2zGt_tm+T5mJ6Vaqjw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] mfd: sprd-sc27xx-spi: Fix divide by zero when
+ allocating register offset/mask
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Orson Zhai <orsonzhai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:02:05PM -0700, Florian Fainelli wrote:
-> On 6/22/20 8:08 AM, Madalin Bucur (OSS) wrote:
-> > Hi Andrew, the reasons behind this selection:
-> > 
-> > - the PCS that is controlled by the backplane driver belongs to the PHY
-> > layer so the representation as a PHY device is legitimate
-> 
-> That argument makes sense.
+On Mon, Jun 29, 2020 at 10:43 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 10:35:06PM +0800, Baolin Wang wrote:
+> > On Mon, Jun 29, 2020 at 10:01 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Mon, 29 Jun 2020, Johan Hovold wrote:
+> > >
+> > > > On Mon, Jun 29, 2020 at 01:32:14PM +0100, Lee Jones wrote:
+> > > > > Since ddata->irqs[] is already zeroed when allocated by devm_kcalloc() and
+> > > > > dividing 0 by anything is still 0, there is no need to re-assign
+> > > > > ddata->irqs[i].* values.  Instead, it should be safe to begin at 1.
+> > > > >
+> > > > > This fixes the following W=1 warning:
+> > > > >
+> > > > >  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
+> > > > >
+> > > > > Cc: Orson Zhai <orsonzhai@gmail.com>
+> > > > > Cc: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > > ---
+> > > > >  drivers/mfd/sprd-sc27xx-spi.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> > > > > index c305e941e435c..694a7d429ccff 100644
+> > > > > --- a/drivers/mfd/sprd-sc27xx-spi.c
+> > > > > +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> > > > > @@ -251,7 +251,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+> > > > >             return -ENOMEM;
+> > > > >
+> > > > >     ddata->irq_chip.irqs = ddata->irqs;
+> > > > > -   for (i = 0; i < pdata->num_irqs; i++) {
+> > > > > +   for (i = 1; i < pdata->num_irqs; i++) {
+> > > > >             ddata->irqs[i].reg_offset = i / pdata->num_irqs;
+> > > > >             ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
+> > > > >     }
+> > > >
+> > > > This doesn't look right either.
+> > > >
+> > > > First, the loop is never executed if num_irqs is zero.
+> > >
+> > > The point of the patch is that 0 entries are never processed.
+>
+> So what's the problem? There's no division by zero here.
+>
+> And what compiler are you using, Lee? Seems broken.
+>
+> > > > Second, the current code looks bogus too as reg_offset is always set to
+> > > > zero and mask to BIT(i)...
+> >
+> > Now the result is correct, since all PMIC irq mask bits are in one
+> > register now, which means the reg_offset is always 0 can work well.
+> > But I think the logics still can be improved if our PMIC irq numbers
+> > are larger than 32 in future.
+>
+> The code is still bogus as pointed out above. Why do you bother to
+> divide by num_irqs at all?
 
-It doesn't when you also are subjected to other parts of NXP arguing
-that the PCS is tightly bound inside the SoC and therefore should be
-effectively a library - as has been discussed in the threads about
-the Lynx PCS.
+Right, no need to divide by num_irqs, can be simplified as below. Lee,
+care to resend your patch with simplifying the code? Or you want me to
+send a patch?
+diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+index 33336cde4724..2ed5f3a4e79c 100644
+--- a/drivers/mfd/sprd-sc27xx-spi.c
++++ b/drivers/mfd/sprd-sc27xx-spi.c
+@@ -250,10 +250,8 @@ static int sprd_pmic_probe(struct spi_device *spi)
+                return -ENOMEM;
 
-> > - the PHY driver provides the state machine that is required, not using
-> > this representation backplane would need to add a separate, duplicate
-> > state machine
-> 
-> Which is entirely permissible according to the PHY library
-> documentation, not that we have seen many people do it though, even less
-> so when the PHY driver is providing the state machine.
-
-It seems the PHYlib state machine is getting smaller and smaller
-as we move forward; phy_state_machine() is now looking very bare
-compared to what it used to look like.  I think it's not that far
-off being eliminated.
-
-> > - the limitation, that only one PHY layer entity can be managed by the
-> > PHYLib, is a known limitation that always existed, is not introduced by
-> > the backplane support; the unsupported scenario with a backplane connection
-> > to a PHY entity that needs to be managed relates to that limitation and
-> > a solution for it should not be added through the backplane support
-> > - afaik, Russell and Ioana are discussing the PCS representation in the
-> > context of PHYLink, this submission is using PHYLib. If we are to discuss
-> > about the PCS representation, it's the problem of the simplistic "one device
-> > in the PHY layer" issue that needs to be addressed to have a proper PCS
-> > representation at all times.
-> 
-> So would not it make sense for the PCS representation to be settled and
-> then add the backplane driver implementation such that there is no
-> double work happening for Florinel and for reviewers and the PCS
-> implementation als factors in the backplane use case and requirements?
-
-Yes, that is my assessment; there's a lot of work going on in different
-areas in QoriQ networking, and it seems people are pulling things in
-quite diverse directions.
-
-If we're not careful, we're going to end up with the Lynx PCS being
-implemented one way, and backplane PCS being implemented completely
-differently and preventing any hope of having a backplane PCS
-connected to a conventional copper PHY.
-
-I think folk at NXP need to stop, stand back, and look at the bigger
-picture about how they want to integrate all these individual,
-independent strands of development into the kernel, and come up with
-a common approach that also satisfies the mainline kernel, rather
-than having individual discussions with mainline kernel maintainers
-on public lists.  What I'm saying is, it isn't our job to co-ordinate
-between the different parts of NXP - that's fairly and squarely
-NXP's problem to sort out themselves.
-
-So, I think, further progress in public on backplane support needs to
-wait until we have the general situation for PCS resolved.
-
-Makes sense?
+        ddata->irq_chip.irqs = ddata->irqs;
+-       for (i = 0; i < pdata->num_irqs; i++) {
+-               ddata->irqs[i].reg_offset = i / pdata->num_irqs;
+-               ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
+-       }
++       for (i = 0; i < pdata->num_irqs; i++)
++               ddata->irqs[i].mask = BIT(i);
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Baolin Wang
