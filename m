@@ -2,136 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6697BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46FD0208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8269208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZbIN+JQ/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CgyZRCI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391122AbgF2V1b (ORCPT
+        id S2391129AbgF2V1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:27:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
+        Mon, 29 Jun 2020 17:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729068AbgF2Smo (ORCPT
+        with ESMTP id S1729065AbgF2Smo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47258C030F07
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:13:53 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so3240859pfq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XxKoXEPuBlTQyUvZurMXJpDKgGIiS8L+c8IX0bHvw0I=;
-        b=ZbIN+JQ//n3EjgqTOkxX8ekliUEAwjrDiPxXO8sdYMv3PjsHgAP1nHlnBoXEVQUQo+
-         6yx/lX1lGZmAt5N4ds9sj0kru9/aQaEzthHpzQWl7eAn49ZkUvpOItVzAIn954A1VV9b
-         BpATBvCE9AahTLjS0sYbh7C3vxW2VdR8SCeOc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XxKoXEPuBlTQyUvZurMXJpDKgGIiS8L+c8IX0bHvw0I=;
-        b=JxKyGgV/EBD8hCIBPjA+RzF8V3/1IsU+fJZLN4HqCB7Q0LGZBaZlwJIruiDkXdlSZN
-         zf5tvi/i3MmlAXQWphzNGJ9ra4N/JA2Xkn49qaqcZKFDDD3Go7IUu9ApNgrByB/WR8CL
-         Z2VJxUhyGHNYWcsLp9+5VXjy88CL1ZL7LWr1bGgg6FxGRG5WMd3iEmr4FxnI84IyDXQA
-         A6p3MXHY5BxRNE0wxqHUToDENK0IS8ZR/V7Ti92V/10dwJwoSQabOAF+rChOSL8SEKYF
-         boBwBmL5rZ+UxhQ3cVvPWiRUxyW6wRQ7Pue5/GW9ke4qP1d36oK9xER7ztSz7L+wrJ8u
-         BFWg==
-X-Gm-Message-State: AOAM531XdqrMpJjv2dV9HbH0R/T53ynifUqiauLH4YBnN0fhCotGoZUA
-        0HdTX1bDJE3uQ4FQQPxHVnM4IQwAb/U=
-X-Google-Smtp-Source: ABdhPJywueBWqoLIhuqMQ7cBJU/+OGOIL8B8/25cx6FoSvyPEwkSCIAK1vwBSUZrloSGjTfbYI58gw==
-X-Received: by 2002:a63:bf04:: with SMTP id v4mr11418563pgf.212.1593447232551;
-        Mon, 29 Jun 2020 09:13:52 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id d5sm188462pfa.71.2020.06.29.09.13.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:13:52 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Add PM support
-Date:   Mon, 29 Jun 2020 09:13:34 -0700
-Message-Id: <20200629161333.2110327-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-In-Reply-To: <20200629161333.2110327-1-pmalani@chromium.org>
-References: <20200629161333.2110327-1-pmalani@chromium.org>
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABD4C031C74;
+        Mon, 29 Jun 2020 11:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5qVKDp30/o2rhfTCB6YKi/X0MnGqhZlFhKf1/sMhnOc=; b=CgyZRCI4LA3ZIBmBTLhhJaCjB
+        v+dLBN+EIMBJ+kp5cXefs7t3bDeFQwm1dVq1GicK/1jVj7WRwJc3dnu1mm4R0BFdlkhXP5ZsMNvqM
+        585hpcaQtg7rdkcssVVSfAhHri4VeOT2gV3Z9yepFXNURJOoPR10+80dX2RukN013cTiMNVU37aqw
+        fEasyRNBT497sRnoX2sEPoIy3v0kBHvjMQhbC34LtZG+YGjzoZpsXllkkZcEN/0rG8qJx3Z+Cn7y7
+        m02by0DGgYu5kRUuQo2fynWL4sM9hJC4SdiPwI3AdJoz5rbUottEx4Avv0VVcnZc/DR7sLTgb7jJm
+        xqEe+rQzA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33188)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jpyBO-00086P-1w; Mon, 29 Jun 2020 19:07:06 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jpyBM-0007KD-3O; Mon, 29 Jun 2020 19:07:04 +0100
+Date:   Mon, 29 Jun 2020 19:07:04 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 14/17] arm/build: Warn on orphan section placement
+Message-ID: <20200629180703.GX1551@shell.armlinux.org.uk>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-15-keescook@chromium.org>
+ <20200629155401.GB900899@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629155401.GB900899@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define basic suspend resume functions for cros-ec-typec. On suspend, we
-simply ensure that any pending port update work is completed, and on
-resume, we re-poll the port state to account for any
-changes/disconnections that might have occurred during suspend.
+On Mon, Jun 29, 2020 at 11:54:01AM -0400, Arvind Sankar wrote:
+> On Sun, Jun 28, 2020 at 11:18:37PM -0700, Kees Cook wrote:
+> > We don't want to depend on the linker's orphan section placement
+> > heuristics as these can vary between linkers, and may change between
+> > versions. All sections need to be explicitly named in the linker
+> > script.
+> > 
+> > Specifically, this would have made a recently fixed bug very obvious:
+> > 
+> > ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
+> > 
+> > Discard unneeded sections .iplt, .rel.iplt, .igot.plt, and .modinfo.
+> > 
+> > Add missing text stub sections .vfp11_veneer and .v4_bx.
+> > 
+> > Add debug sections explicitly.
+> > 
+> > Finally enable orphan section warning.
+> 
+> This is unrelated to this patch as such, but I noticed that ARM32/64 places
+> the .got section inside .text -- is that expected on ARM?
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
+Do you mean in general, in the kernel vmlinux, in the decompressor
+vmlinux or ... ?
 
-Changes in v2:
-- Remove #ifdef-ery, add __maybe_unused tag to functions.
-
- drivers/platform/chrome/cros_ec_typec.c | 26 +++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 630170fb2cbe..b2e7e928e788 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -725,11 +725,37 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __maybe_unused cros_typec_suspend(struct device *dev)
-+{
-+	struct cros_typec_data *typec = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&typec->port_work);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused cros_typec_resume(struct device *dev)
-+{
-+	struct cros_typec_data *typec = dev_get_drvdata(dev);
-+
-+	/* Refresh port state. */
-+	schedule_work(&typec->port_work);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops cros_typec_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
-+};
-+
-+#define DEV_PM_OPS	(&cros_typec_pm_ops)
-+
- static struct platform_driver cros_typec_driver = {
- 	.driver	= {
- 		.name = DRV_NAME,
- 		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
- 		.of_match_table = of_match_ptr(cros_typec_of_match),
-+		.pm = DEV_PM_OPS,
- 	},
- 	.probe = cros_typec_probe,
- };
 -- 
-2.27.0.212.ge8ba1cc988-goog
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
