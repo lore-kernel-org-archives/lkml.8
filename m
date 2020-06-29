@@ -2,224 +2,105 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D4520885
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Zb+p9V5X"
+	by mail.kernel.org (Postfix) with ESMTP id 308AB2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459870;
+	bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PCs4DaE3sg02WgfXZWF8N0taw6yJGb1AJ8Snb7mi6U9b1pZ6xKVw0M9sFcTo3K1+R
+	 3Du1EeNaYWpT34teVuU00NEOTkKKOI3n68doLsywPXbYMSGd+aO1fhxnayHp/GI0QE
+	 PldSzkhvCdsYjJ3wnqjP6Z18DBEqeOfrXe88zp80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbgF2ToF (ORCPT
+        id S1730496AbgF2To2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:44:05 -0400
-Received: from mail.efficios.com ([167.114.26.124]:33194 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732797AbgF2Tn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:43:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 57E8026BE90;
-        Mon, 29 Jun 2020 15:43:57 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jKS2OsRBiPF4; Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E456326BE04;
-        Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E456326BE04
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593459836;
-        bh=iP3PjzJ6XSqU6iD5jcFMqznuwbwfOTCeMrtF+SzoIxA=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Zb+p9V5XcwPNNTTPWdcilNsn2aGU2lz7a7/PgtBKt1e2OjYnYtasalPhFQHv4ygdd
-         RkRpqOQNC5cXdmRmS+PZ+1R70E4ZmDs7Kr6tVw3oCykO7aRMtPklSP9nCYfccmzCjG
-         F2OOszRVIlpNIL5uFP2fU24d5we1PKVV4hiBKQULZhBQqUY9y7EnArJF+Blx+eNaVf
-         ooV5Bm2ZGojLC+Ntbfp1RjN3+t6syLAin22SMllmW5brKuATpfFUqnwjhk2EWNmQGm
-         l5o5b5rOJXwzFqhFaW60/Vp7e4OvpH0Iw4TnlBzKuxIKzi+iibJankV9mFCenWMIwS
-         tekm46Nbemxyg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QlU3a6Iszu31; Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id D147626B9F3;
-        Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
-Date:   Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com>
-References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com> <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com> <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
+        Mon, 29 Jun 2020 15:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387842AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C0A24801;
+        Mon, 29 Jun 2020 15:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444327;
+        bh=NbIIanRtOQq4orleKOc5/qazWwvR7o3ndILm16qvPZQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ilP09Z4xeKf6zQt/Kzs6SQYpSA6iiCNtLvk9gc1onS2BlBOOXkSgh96XU7EP0NhLa
+         bNxoZe9i1G9XrxRs2FqNnvNEaM7lKVun7sq0LIC2bc1DV7KVSn14OcpYftf0Ukwxa3
+         fqz6PDZGdybJge8aAJAlF4cE/5LlST9Eeq4ey8Sc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 001/178] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
+Date:   Mon, 29 Jun 2020 11:22:26 -0400
+Message-Id: <20200629152523.2494198-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: TCP_MD5SIG on established sockets
-Thread-Index: 0Jvbhp6DCumjwNDk8z7Y2feQgYejnA==
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 13, 2020, at 3:56 PM, Eric Dumazet edumazet@google.com wrote:
+From: yu kuai <yukuai3@huawei.com>
 
-> On Wed, May 13, 2020 at 12:49 PM Eric Dumazet <edumazet@google.com> wrote:
->>
->>
->> On Wed, May 13, 2020 at 12:38 PM Mathieu Desnoyers
->> <mathieu.desnoyers@efficios.com> wrote:
->> >
->> > Hi,
->> >
->> > I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
->> > on established sockets. It is observed by a customer.
->> >
->> > This issue is introduced by this commit:
->> >
->> > commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on
->> > established sockets"
->> >
->> > The intent of this commit appears to be to fix a use of uninitialized value in
->> > tcp_parse_options(). The change introduced by this commit is to disallow setting
->> > the TCP_MD5SIG{,_EXT} socket options on an established socket.
->> >
->> > The justification for this change appears in the commit message:
->> >
->> >    "I believe this was caused by a TCP_MD5SIG being set on live
->> >     flow.
->> >
->> >     This is highly unexpected, since TCP option space is limited.
->> >
->> >     For instance, presence of TCP MD5 option automatically disables
->> >     TCP TimeStamp option at SYN/SYNACK time, which we can not do
->> >     once flow has been established.
->> >
->> >     Really, adding/deleting an MD5 key only makes sense on sockets
->> >     in CLOSE or LISTEN state."
->> >
->> > However, reading through RFC2385 [1], this justification does not appear
->> > correct. Quoting to the RFC:
->> >
->> >    "This password never appears in the connection stream, and the actual
->> >     form of the password is up to the application. It could even change
->> >     during the lifetime of a particular connection so long as this change
->> >     was synchronized on both ends"
->> >
->> > The paragraph above clearly underlines that changing the MD5 signature of
->> > a live TCP socket is allowed.
->> >
->> > I also do not understand why it would be invalid to transition an established
->> > TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
->> > RFC:
->> >
->> >   "The total header size is also an issue.  The TCP header specifies
->> >    where segment data starts with a 4-bit field which gives the total
->> >    size of the header (including options) in 32-byte words.  This means
->> >    that the total size of the header plus option must be less than or
->> >    equal to 60 bytes -- this leaves 40 bytes for options."
->> >
->> > The paragraph above seems to be the only indication that some TCP options
->> > cannot be combined on a given TCP socket: if the resulting header size does
->> > not fit. However, I do not see anything in the specification preventing any
->> > of the following use-cases on an established TCP socket:
->> >
->> > - Transition from no-MD5 to MD5,
->> > - Transition from MD5 to no-MD5,
->> > - Changing the MD5 key associated with a socket.
->> >
->> > As long as the resulting combination of options does not exceed the available
->> > header space.
->> >
->> > Can we please fix this KASAN report in a way that does not break user-space
->> > applications expectations about Linux' implementation of RFC2385 ?
-[...]
->> > [1] RFC2385: https://tools.ietf.org/html/rfc2385
->>
->>
->> I do not think we want to transition sockets in the middle. since
->> packets can be re-ordered in the network.
->>
->> MD5 is about security (and a loose form of it), so better make sure
->> all packets have it from the beginning of the flow.
->>
->> A flow with TCP TS on can not suddenly be sending packets without TCP TS.
->>
->> Clearly, trying to support this operation is a can of worms, I do not
->> want to maintain such atrocity.
->>
->> RFC can state whatever it wants, sometimes reality forces us to have
->> sane operations.
->>
->> Thanks.
->>
-> Also the RFC states :
-> 
-> "This password never appears in the connection stream, and the actual
->    form of the password is up to the application. It could even change
->    during the lifetime of a particular connection so long as this change
->    was synchronized on both ends"
-> 
-> It means the key can be changed, but this does not imply the option
-> can be turned on/off dynamically.
-> 
+commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
 
-The change discussed previously (introduced by commit 721230326891 "tcp:
-md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets") breaks
-user-space ABI. As an example, the following BGP application uses
-setsockopt TCP_MD5SIG on a live TCP socket:
+commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
+a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
+the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+'bio->bi_integrity' were set previousy in bio_integrity_alloc().
 
-https://github.com/IPInfusion/SDN-IP
+Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ block/bio-integrity.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-In addition to break user-space, it also breaks network protocol
-expectations for network equipment vendors implementing RFC2385.
-Considering that the goal of these protocols is interaction between
-different network equipment, breaking compatibility on that side
-is unexpected as well. Requiring to bring down/up the connection
-just to change the TCP MD5 password is a no-go in networks with
-high availability requirements. Changing the BGP authentication
-password must be allowed without tearing down and re-establishing
-the TCP sockets. Otherwise it doesn't scale for large network
-operators to have to individually manage each individual TCP socket
-in their network. However, based on the feedback I received, it
-would be acceptable to tear-down the TCP connections and re-establish
-them when enabling or disabling the MD5 option.
-
-Here is a list of a few network vendors along with their behavior
-with respect to TCP MD5:
-
-- Cisco: Allows for password to be changed, but within the hold-down
-timer (~180 seconds).
-- Juniper: When password is initially set on active connection it will
-reset, but after that any subsequent password changes no network
-resets.
-- Nokia: No notes on if they flap the tcp connection or not.
-- Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
-both sides are ok with new passwords.
-- Meta-Switch: Expects the password to be set before a connection is
-attempted, but no further info on whether they reset the TCP
-connection on a change.
-- Avaya: Disable the neighbor, then set password, then re-enable.
-- Zebos: Would normally allow the change when socket connected.
-
-Thanks,
-
-Mathieu
-
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index bf62c25cde8f4..ae07dd78e9518 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -278,7 +278,6 @@ bool bio_integrity_prep(struct bio *bio)
+ 
+ 		if (ret == 0) {
+ 			printk(KERN_ERR "could not attach integrity payload\n");
+-			kfree(buf);
+ 			status = BLK_STS_RESOURCE;
+ 			goto err_end_io;
+ 		}
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.25.1
+
