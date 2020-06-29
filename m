@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C45BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D357DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2A72076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEE820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468360;
-	bh=ez/Xza8UAdQdL+cOs3YfVkwIynKjFgX2omR/0GaZb1Y=;
+	s=default; t=1593468366;
+	bh=34dyPVdeFg/qO3TlEhfhP7V9iu5OMl+FVa3uPJqFPrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qzhy8QqdjnJfXuPXmR6gBfMN3y0EBt2XZ8CZewAIV1eqd22eTD+vWLcAayR0M0UWg
-	 HqNp5XK/OHrn6NqsqEkJYOdUGN82GVeobLiUxJJx7RoUd4pwD0KaQM63ah085UYmba
-	 A0jwFaUZEzgT5mhAT8iXXSnFthKrdG6AddYupqFw=
+	b=nBXpiSd8rWPX0wTUdcsrVX2Fy2FXjCLWOERu8Y/rPqS0sn6PZkq+huhEpG/78oBVe
+	 dkDHcnPFX5YhorOcp59qLqPGgnNQQ0XEUSPtOnPOp73yqEvDDtduwpjomGAGKPE7XZ
+	 9Cior/T4D+ypKwppEVp4O8Xj+AvizXM4pD2ciVFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404767AbgF2WF6 (ORCPT
+        id S2391892AbgF2WGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726150AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C5AF24757;
-        Mon, 29 Jun 2020 15:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A1D24170;
+        Mon, 29 Jun 2020 15:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444072;
-        bh=ez/Xza8UAdQdL+cOs3YfVkwIynKjFgX2omR/0GaZb1Y=;
+        s=default; t=1593443947;
+        bh=34dyPVdeFg/qO3TlEhfhP7V9iu5OMl+FVa3uPJqFPrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AUWMbIW/UDbfVVPtABk1o0h2ntRkuehxdxEs+2ao8/uOlGI8BC2vEt8Tr8WTCTdk1
-         lw+/llLhLVRWKc7gVGZZWj6heq0Wy9Q8NMH+JhOO3ts7ZgIamvZMNMGL0kg8WDXbye
-         JaXZv32ZEoYfkHKyb9xvaL5cxqe+6rjJMHZ/zOXg=
+        b=upSYItexZM6D2ivENzSY+dn1AUqvg4fgriaByFQFXAeAxoICzpa3MT9UJCCl8/in9
+         Aol4MCrCtLHnVJ4J8M+dONlN2BR91FSSSzchZIvqQtrPbeUIjdozu42ExmGjzcjw0l
+         9m7Dd2GCl8VYh9xD2pE34xX5QnMAiFoEyiHHBmNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 181/265] sched/cfs: change initial value of runnable_avg
-Date:   Mon, 29 Jun 2020 11:16:54 -0400
-Message-Id: <20200629151818.2493727-182-sashal@kernel.org>
+Cc:     Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 049/265] ionic: update the queue count on open
+Date:   Mon, 29 Jun 2020 11:14:42 -0400
+Message-Id: <20200629151818.2493727-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,44 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit e21cf43406a190adfcc4bfe592768066fb3aaa9b ]
+[ Upstream commit fa48494cce5f6360b0f8683cdf258fb45c666287 ]
 
-Some performance regression on reaim benchmark have been raised with
-  commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+Let the network stack know the real number of queues that
+we are using.
 
-The problem comes from the init value of runnable_avg which is initialized
-with max value. This can be a problem if the newly forked task is finally
-a short task because the group of CPUs is wrongly set to overloaded and
-tasks are pulled less agressively.
+v2: added error checking
 
-Set initial value of runnable_avg equals to util_avg to reflect that there
-is no waiting time so far.
-
-Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200624154422.29166-1-vincent.guittot@linaro.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 49d3b493673a ("ionic: disable the queues on link down")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2ae7e30ccb33c..5725199b32dcf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -807,7 +807,7 @@ void post_init_entity_util_avg(struct task_struct *p)
- 		}
- 	}
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 7aa037c3fe020..2729b0bb12739 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -1653,6 +1653,14 @@ int ionic_open(struct net_device *netdev)
+ 	if (err)
+ 		goto err_out;
  
--	sa->runnable_avg = cpu_scale;
-+	sa->runnable_avg = sa->util_avg;
- 
- 	if (p->sched_class != &fair_sched_class) {
- 		/*
++	err = netif_set_real_num_tx_queues(netdev, lif->nxqs);
++	if (err)
++		goto err_txrx_deinit;
++
++	err = netif_set_real_num_rx_queues(netdev, lif->nxqs);
++	if (err)
++		goto err_txrx_deinit;
++
+ 	/* don't start the queues until we have link */
+ 	if (netif_carrier_ok(netdev)) {
+ 		err = ionic_start_queues(lif);
 -- 
 2.25.1
 
