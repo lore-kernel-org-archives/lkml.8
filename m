@@ -2,74 +2,161 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F72C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB47C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF9A3206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D8F206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731960AbgF2TTf (ORCPT
+        id S1731823AbgF2TTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:19:35 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59760 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbgF2TT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:19:29 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jpoHV-0003h7-On; Mon, 29 Jun 2020 17:32:46 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 29 Jun 2020 17:32:45 +1000
-Date:   Mon, 29 Jun 2020 17:32:45 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] lockdep: Move list.h inclusion into lockdep.h
-Message-ID: <20200629073245.GA30001@gondor.apana.org.au>
-References: <20200621131554.5a662afe@canb.auug.org.au>
- <20200623102655.6d16e610@canb.auug.org.au>
- <20200623121637.GA8444@alley>
- <20200623121937.GA9671@gondor.apana.org.au>
- <20200623142858.GB8444@alley>
- <20200624124212.GA17350@gondor.apana.org.au>
- <20200625101119.GG8444@alley>
+        Mon, 29 Jun 2020 15:19:40 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:49941 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730507AbgF2TTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:19:34 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 15:19:33 EDT
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 29 Jun 2020 06:52:10 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jun 2020 06:52:08 -0700
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 29 Jun 2020 19:21:47 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 31D671FC2; Mon, 29 Jun 2020 19:21:46 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v4] arm64: dts: sc7180: add nodes for idp display
+Date:   Mon, 29 Jun 2020 19:21:44 +0530
+Message-Id: <20200629135144.8265-1-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625101119.GG8444@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 12:11:19PM +0200, Petr Mladek wrote:
->
-> It works with allmodconfig here, so feel free to use:
-> 
-> Tested-by: Petr Mladek <pmladek@suse.com>
-> 
-> Of course, it does not have much value. There might still be another
-> configuration or architecture that does not work but I would leave
-> this for test bots.
+Add nodes for IDP display. The display is Visionox RM69299.
 
-Thanks Petr!
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+Changes in v2:
+	- Adding dependency patchwork series
+	- Removing suspend configuration
+	- Adding blank before space curly brace
+Changes in v3:
+	- Updating status for mdp and mdss node to get the
+	display working
+	- Change in commit text
+Changes in v4:
+	- Added pinconf subnode
+	- Using macros for function and drive-strength
 
-Peter Z, could you please apply this patch on top of the existing
-one in tip/locking/header?
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 65 +++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-Thanks,
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 39dbfc89689e..5e0b7e4b2545 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -9,6 +9,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include "sc7180.dtsi"
+ #include "pm6150.dtsi"
+ #include "pm6150l.dtsi"
+@@ -287,6 +288,57 @@ vreg_bob: bob {
+ 	};
+ };
+ 
++&dsi0 {
++	status = "okay";
++
++	vdda-supply = <&vreg_l3c_1p2>;
++
++	panel@0 {
++		compatible = "visionox,rm69299-1080p-display";
++		reg = <0>;
++
++		vdda-supply = <&vreg_l8c_1p8>;
++		vdd3p3-supply = <&vreg_l18a_2p8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&disp_pins>;
++
++		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				panel0_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++		};
++	};
++
++	ports {
++		port@1 {
++			endpoint {
++				remote-endpoint = <&panel0_in>;
++				data-lanes = <0 1 2 3>;
++			};
++		};
++	};
++};
++
++&dsi_phy {
++	status = "okay";
++};
++
++&mdp {
++	status = "okay";
++};
++
++&mdss {
++	status = "okay";
++};
++
+ &qspi {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+@@ -402,6 +454,19 @@ wifi-firmware {
+ 
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
++&pm6150l_gpio {
++	disp_pins: disp-pins {
++		pinconf {
++			pins = "gpio3";
++			function = PMIC_GPIO_FUNC_FUNC1;
++			qcom,drive-strength = <PMIC_GPIO_STRENGTH_MED>;
++			power-source = <0>;
++			bias-disable;
++			output-low;
++		};
++	};
++};
++
+ &qspi_clk {
+ 	pinconf {
+ 		pins = "gpio63";
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.27.0
+
