@@ -2,141 +2,152 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0470C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A46C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879A020702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457663;
-	bh=qq7ZcimKgcvZGSbhjx5SCcEVvBKM4tarWe+r5yLEdX4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oxarPXGP3xtdT+KYOXwknWiwV9nx8/BNqGQqq0YSAoMIxFzBwtgKaJeh+UWQm3bcG
-	 /YSz/zO7N49W8A9eMLZeVQwolg3+lN2YrmeS2jwnJB/OQrfy8w6+MNO33RWxm7xcih
-	 VboceOvHMcvxki/dzuajKttRgmqtjjyXoEx5xiHc=
+	by mail.kernel.org (Postfix) with ESMTP id AC54320899
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O5LrA0hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgF2TG2 (ORCPT
+        id S1730832AbgF2THq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
+        Mon, 29 Jun 2020 15:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbgF2TCn (ORCPT
+        with ESMTP id S1729786AbgF2THm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40136C030F23
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:36:52 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so18712789ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:36:52 -0700 (PDT)
+        Mon, 29 Jun 2020 15:07:42 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8F6C030F29
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o1so734193plk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tI71Ydu+pOwgXlMgU1oRf0sUNNr5tt035+vZPAuuAlc=;
-        b=aUdFRUhudS+xPjPDQJSELxYOf4pJLDIm4+/ROEP7p1wsB51Uh2J9psit34O0WmSaxJ
-         OYVP5cGLT9NFbqYH97fpKyzYqtetDtgEQMyQ95b1c8KZXih8pZxMfCuFO6cesNCcfyUh
-         MZ+KwA8V96MowogGQxiP9Tmg7PvYg8Xa4kdsA=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WwUSLGARJc0tc0i7e9PAJ1aEIwQmah2Mj+7/Lw4GWVQ=;
+        b=O5LrA0hvh6pdSNYojIfuGO/VrkNKrM+IJqkHmMn4yck9UH4KIOfGZ880eO68An1QrF
+         pqMdoHrQrlzvSd7H5nTCyPiX3zdnX4gvVQZCrr6gRBFxqzAcC4zmzK9J3FECjM1JAo4i
+         tdb5Mpm6Rm+PiwgvaQZ3UxOSezJDzGlrQFIAU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tI71Ydu+pOwgXlMgU1oRf0sUNNr5tt035+vZPAuuAlc=;
-        b=kh0Vcv1FifW2nMOWChn+SO/tdMR6fD35t4jqa9lTxydmEtNzaKLGkp/WVx5D2N7Cgb
-         lbPxGCqWVbz0jo3HGFKqMqKiH0itzRcrhlnF3rkBnRDr4RrzObTfOSs7cngY6a23orkX
-         gnEid/7eSrEts3hk8dXWqOmucl2lbweVUxpz5MnhA+gVcEditBTXJtMLfjjv4LHPXXQY
-         tG6ySvOLteprJ1zT8KT2oiGCP48EzrKZruqQy2PSHOIGFry/Ndvlgcf6wyad/xSa3Wsg
-         PKvJ48QgPUK74J98thEZPoyUgxSjA3X98YlWMfwWvI+hREGXgT1L58VzHS/R19l3WiYu
-         oK8Q==
-X-Gm-Message-State: AOAM533ojN0Pn37p54TSWuXd23xxu7lktKVmHfdAsy3xj4I7upf5z+Wb
-        GwQUaXqgu6MdtbagjveUD7dZ1GgbZkQ=
-X-Google-Smtp-Source: ABdhPJxgB18vHifK/fLWhdVGFdE+3JqppPYalnPYumYqYevAlih/Og2IBuVHZgf4eYqIbN5uQuaxjg==
-X-Received: by 2002:a2e:99c6:: with SMTP id l6mr1064609ljj.220.1593448610367;
-        Mon, 29 Jun 2020 09:36:50 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id w24sm42617lfl.17.2020.06.29.09.36.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:36:49 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id n23so18773020ljh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:36:49 -0700 (PDT)
-X-Received: by 2002:a2e:991:: with SMTP id 139mr8131159ljj.314.1593448608820;
- Mon, 29 Jun 2020 09:36:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WwUSLGARJc0tc0i7e9PAJ1aEIwQmah2Mj+7/Lw4GWVQ=;
+        b=lpHlgJC7czyIXDbso2D3a+weSyKcpGP70IEqrtSxSjRyuC9Abtca69WIqAfnO8l7Cl
+         C5fkJwtnyknMfWsi3YVzMg4EPgBuMiUzNZZ/gjFcL2EtKf2bhdtwZiatXMdiKkqRrzYq
+         XBQRomaPDktLvTlgcaZ99ujOk/2n+knMyf2yD6G1nMlWur9qtBXYOHlKrumB0jtDIPTx
+         UAttujJEx4DyD7ppaOScrodg3l6CYFvvu3M5Bo92u4y0EJPT6Ic1eyro954p5rqFtBh8
+         RhnuYZW95G9mb5kYqmP9bJggBApcutMjbEBa9QLgaD0y6ur/K7PXf2+Rmd8GM/mBfnXW
+         v1fQ==
+X-Gm-Message-State: AOAM532zMw9KBcb5kw8FgrqaVg4kl8t8VB8H2Q3pplYvzhMtugyRtyXI
+        CCY9RIWFM9ZgyTCi9zhl2atjwUztBCw=
+X-Google-Smtp-Source: ABdhPJxiDSxzoFZlOF1LR3M+87QWIqODfOOJoQ3pC0z7sFyrqvYTX8eG16fEZIV3H1/WdJdnQ3CMfg==
+X-Received: by 2002:a17:90a:d587:: with SMTP id v7mr7889439pju.29.1593448737198;
+        Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id s6sm79060pfd.20.2020.06.29.09.38.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 09:38:56 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v3 1/2] platform/chrome: cros_ec_typec: Use workqueue for port update
+Date:   Mon, 29 Jun 2020 09:38:50 -0700
+Message-Id: <20200629163851.2130450-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-References: <20200624161142.GA12184@redhat.com> <20200624162042.GA12238@redhat.com>
- <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
- <20200626154313.GI4817@hirez.programming.kicks-ass.net> <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
- <1593396958.ydiznwsuu8.astroid@bobo.none> <1593436373.x8otyji40u.astroid@bobo.none>
-In-Reply-To: <1593436373.x8otyji40u.astroid@bobo.none>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Jun 2020 09:36:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjJKicPgmvf7atx=h6Li7ez9nFrpJdgTSRm5aUEnuVH6w@mail.gmail.com>
-Message-ID: <CAHk-=wjJKicPgmvf7atx=h6Li7ez9nFrpJdgTSRm5aUEnuVH6w@mail.gmail.com>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss wakeup?
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 6:16 AM Nicholas Piggin <npiggin@gmail.com> wrote:
->
-> No, ignore this part (which you explained well it was just a thinko,
-> and your patch of course would not have worked if this was the case):
-> the exclusive wake up doesn't get lost if schedule() was called because
-> state goes back to running regardless of what woke it.
+Use a work queue to call the port update routines, instead of doing it
+directly in the PD notifier callback. This will prevent other drivers
+with PD notifier callbacks from being blocked on the port update routine
+completing.
 
-Right.
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-The normal pattern for a wait-loop is
+Changes in v3:
+- Use new 100 character line length limit.
 
- - add yourself to the wait-queue and set yourself "sleeping" with a
-memory barrier.
+Changes in v2:
+- No changes.
 
- - test for the condition, exit if ok
+ drivers/platform/chrome/cros_ec_typec.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
- - go to sleep
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 0c041b79cbba..0beb62bf5adf 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -58,6 +58,7 @@ struct cros_typec_data {
+ 	/* Array of ports, indexed by port number. */
+ 	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+ 	struct notifier_block nb;
++	struct work_struct port_work;
+ };
+ 
+ static int cros_typec_parse_port_props(struct typec_capability *cap,
+@@ -619,18 +620,26 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+ 	return 0;
+ }
+ 
+-static int cros_ec_typec_event(struct notifier_block *nb,
+-			       unsigned long host_event, void *_notify)
++static void cros_typec_port_work(struct work_struct *work)
+ {
+-	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+-						     nb);
+-	int ret, i;
++	struct cros_typec_data *typec = container_of(work, struct cros_typec_data, port_work);
++	int ret;
++	int i;
+ 
+ 	for (i = 0; i < typec->num_ports; i++) {
+ 		ret = cros_typec_port_update(typec, i);
+ 		if (ret < 0)
+ 			dev_warn(typec->dev, "Update failed for port: %d\n", i);
+ 	}
++}
++
++
++static int cros_ec_typec_event(struct notifier_block *nb,
++			       unsigned long host_event, void *_notify)
++{
++	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data, nb);
++
++	schedule_work(&typec->port_work);
+ 
+ 	return NOTIFY_OK;
+ }
+@@ -689,6 +698,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	INIT_WORK(&typec->port_work, cros_typec_port_work);
++
++	/*
++	 * Safe to call port update here, since we haven't registered the
++	 * PD notifier yet.
++	 */
+ 	for (i = 0; i < typec->num_ports; i++) {
+ 		ret = cros_typec_port_update(typec, i);
+ 		if (ret < 0)
+-- 
+2.27.0.212.ge8ba1cc988-goog
 
-and that pattern doesn't have the race.
-
-The other common pattern is to check for the "do I need to sleep at
-all" at the *top* of the function, long before you bother with any
-wait-queues at all. This code does that odd "let's check in the middle
-if we need to sleep" instead, which then caused the bug.
-
-So we had an odd setup because of three different wait conditions that
-had different rules for what they could/should do before sleeping, and
-then not sleeping reliably at all.
-
-We could also fix it by just splitting out the three cases into their
-own wait routines that match the normal pattern. The bug really
-happened because that wait-loop is doing things such an odd way due to
-all the different cases..
-
-I actually think it would be a lot more readable if it was three
-different cases instead of trying to be one "common" routine.
-
-The *common* parts is the special PG_locked logic at the top, and the
-thrashing/delayacct code at the bottom.
-
-And *that* could be a true common helper, but the wait loop (which
-isn't even a loop for the DROP case) are fundamentally different and
-probably should be separate functions.
-
-So I think my "one-liner" fixes the problem, but I'd certainly be open
-to somebody cleaning this up properly.
-
-Anybody?
-
-             Linus
