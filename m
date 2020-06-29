@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B292065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7535520786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458757;
-	bh=u314JV8aP83voVdS8Gl+CQxWvm9z33DEWt3bwT9HRuA=;
+	s=default; t=1593458760;
+	bh=keHXIWG4WmeoqHIOPMk3MCnR5w3BYmgRSNYF33aViCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LyOgBt+JUGh6D/vSJTGUKSeMWPYFO2Z6g/XXHI5vsdYamUvXVhwlYl65EH4K/LB33
-	 ieQDxuc3oiGUnmkutWmq/dGgj12D15DVIsCkfAGCBpXdp293zkEBC+lUYtRPPGP8LK
-	 dmwnqH+JQwGbxS2/23zI8Og4RPM4SEvXhBwXfy/Y=
+	b=rNwceS1Fs7iVY8Z4u4ucbdGYmNhzxKgjC8AI05rScDeMmNcBIUtlWn2mL1k4NbfR6
+	 qdsevSNF0n9//w85C7S2/HuXO/f1uhTz5aVx6qtH67hHhFAIMnthNwNIYu9scqNYxv
+	 hqS9ZhxKmjp8HrgupA6JPlIy7U9M1PpciO5YAVgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732210AbgF2TZ4 (ORCPT
+        id S1732707AbgF2TZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732613AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87C4D253A7;
-        Mon, 29 Jun 2020 15:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FAF925392;
+        Mon, 29 Jun 2020 15:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445273;
-        bh=u314JV8aP83voVdS8Gl+CQxWvm9z33DEWt3bwT9HRuA=;
+        s=default; t=1593445260;
+        bh=keHXIWG4WmeoqHIOPMk3MCnR5w3BYmgRSNYF33aViCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13IZbcVrUZb+wMWIxkAnG6zTpl06aK2yfgnHjfsqQ4uKbYrQdILI/oDK3JNcN6TFs
-         cY/Vcf0bD4wj35L6JBXy6SmWU4wP7Fk86keDs8grO/UwlLnQ+8/DEy7wdtr9SjbJIg
-         NSvXwUK60gh6Rp1HhCJy1p2GYe5BnpK4UIVQ5yM8=
+        b=otacwNlmDV22nCPR9NA8HirD4jRyfkdCAyCz5G9M1OT9KEpEFYi0F605D1+hetDnr
+         CTqWMRTUBefgJRZImCy+kINkBHykKoZRFcEz2c35pcgrHU+KrW0HStHHm2xJJbDyE2
+         hZn5lY1jcF0/mAVqJQfExEfLIS39PXSCJoRgV7cM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 052/191] IB/cma: Fix ports memory leak in cma_configfs
-Date:   Mon, 29 Jun 2020 11:37:48 -0400
-Message-Id: <20200629154007.2495120-53-sashal@kernel.org>
+Subject: [PATCH 4.9 041/191] tty: n_gsm: Fix waking up upper tty layer when room available
+Date:   Mon, 29 Jun 2020 11:37:37 -0400
+Message-Id: <20200629154007.2495120-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,52 +65,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 63a3345c2d42a9b29e1ce2d3a4043689b3995cea ]
+[ Upstream commit 01dbb362f0a114fbce19c8abe4cd6f4710e934d5 ]
 
-The allocated ports structure in never freed. The free function should be
-called by release_cma_ports_group, but the group is never released since
-we don't remove its default group.
+Warn the upper layer when n_gms is ready to receive data
+again. Without this the associated virtual tty remains blocked
+indefinitely.
 
-Remove default groups when device group is deleted.
-
-Fixes: 045959db65c6 ("IB/cma: Add configfs for rdma_cm")
-Link: https://lore.kernel.org/r/20200521072650.567908-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-4-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma_configfs.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma_configfs.c b/drivers/infiniband/core/cma_configfs.c
-index 41573df1d9fcc..692fc42255c90 100644
---- a/drivers/infiniband/core/cma_configfs.c
-+++ b/drivers/infiniband/core/cma_configfs.c
-@@ -277,8 +277,21 @@ static struct config_group *make_cma_dev(struct config_group *group,
- 	return ERR_PTR(err);
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index d5efacd27b15c..56716f5250303 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -681,7 +681,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+  *	FIXME: lock against link layer control transmissions
+  */
+ 
+-static void gsm_data_kick(struct gsm_mux *gsm)
++static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+@@ -713,6 +713,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
++
++		if (dlci) {
++			tty_port_tty_wakeup(&dlci->port);
++		} else {
++			int i = 0;
++
++			for (i = 0; i < NUM_DLCI; i++) {
++				struct gsm_dlci *dlci;
++
++				dlci = gsm->dlci[i];
++				if (dlci == NULL) {
++					i++;
++					continue;
++				}
++
++				tty_port_tty_wakeup(&dlci->port);
++			}
++		}
+ 	}
  }
  
-+static void drop_cma_dev(struct config_group *cgroup, struct config_item *item)
-+{
-+	struct config_group *group =
-+		container_of(item, struct config_group, cg_item);
-+	struct cma_dev_group *cma_dev_group =
-+		container_of(group, struct cma_dev_group, device_group);
-+
-+	configfs_remove_default_groups(&cma_dev_group->ports_group);
-+	configfs_remove_default_groups(&cma_dev_group->device_group);
-+	config_item_put(item);
-+}
-+
- static struct configfs_group_operations cma_subsys_group_ops = {
- 	.make_group	= make_cma_dev,
-+	.drop_item	= drop_cma_dev,
- };
+@@ -764,7 +782,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
+ 	/* Add to the actual output queue */
+ 	list_add_tail(&msg->list, &gsm->tx_list);
+ 	gsm->tx_bytes += msg->len;
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, dlci);
+ }
  
- static struct config_item_type cma_subsys_type = {
+ /**
+@@ -1225,7 +1243,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
+ 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
+ 		/* Kick the link in case it is idling */
+ 		spin_lock_irqsave(&gsm->tx_lock, flags);
+-		gsm_data_kick(gsm);
++		gsm_data_kick(gsm, NULL);
+ 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
+ 		break;
+ 	case CMD_FCOFF:
+@@ -2408,7 +2426,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
+ 	/* Queue poll */
+ 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
+ 	spin_lock_irqsave(&gsm->tx_lock, flags);
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, NULL);
+ 	if (gsm->tx_bytes < TX_THRESH_LO) {
+ 		gsm_dlci_data_sweep(gsm);
+ 	}
 -- 
 2.25.1
 
