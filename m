@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41935C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DED1206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA5D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467426;
-	bh=wcQcA47lG8JO3J8wMkcFyxnxenbxyubQuyfqn2fKReY=;
+	s=default; t=1593467428;
+	bh=PubSyzXcRX96TmBkcmiWN+8QzQTbnj2lvtz2yyYNxAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ol6Vh7ah7cDvxp9d4I/AQ8KDvUvbdxj1ORYvWNVmrHl0VWNcj6mfScEz4LHeN3uym
-	 cpQRsP7gANau4GXtZLtoXL1ynjL7j9yMnhh6DLr02T+ERU1Z4XUOV0TpNsjmzrHbfa
-	 qoOAJK7wZgtJ5gcDNADgemsaAJuxDpMVjYVcMM1g=
+	b=v7LURdHmJpDtYA8PDKIgaO/X82dTat9bWJ/54+tR27pF9SsqNu9FG0AQ4hqDzV//G
+	 Q4HORkNlFAoiWYYzvrQg9pa6r2OEsLTczVyRwY749sdSL8qoMAMb31JVNFzTIANtdH
+	 ZPf4i5vVl3lVfG+AcPX8uodZ2DfavvZ91gRv1Fzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404176AbgF2VuY (ORCPT
+        id S2404453AbgF2Vu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726684AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83AF02468C;
-        Mon, 29 Jun 2020 15:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82C50246A8;
+        Mon, 29 Jun 2020 15:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443989;
-        bh=wcQcA47lG8JO3J8wMkcFyxnxenbxyubQuyfqn2fKReY=;
+        s=default; t=1593444001;
+        bh=PubSyzXcRX96TmBkcmiWN+8QzQTbnj2lvtz2yyYNxAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EntbLoIQmj52KqixuMUqSvyp0w+KUj94pfcllsrdNmPm2S//qbzhxHhMPuzpx/DWB
-         MeZistJ0FeUC+EVW2tG7/wdK5UcQGdTIu9N0K16zD5vaiH9hmi/HuCsrKPbY03bLFC
-         4C4bJfHvAMPRR33peK/efvPv1VGqOXvyC03MGfXE=
+        b=CQU5Uxf0zkXsujOx1L5sbgpWqydSnHwaJEqPeL8K5L8xJkKh0stUuiyHdMwwKea81
+         XGGz1uEpzduT4iwWFu10J7U1ShfNBwRyhBbR+UevrXiyxvDdC5AfQLMPklE+MC0ruT
+         rjFDwXkbGQLNRSDQz3RDagHrJOGLy/OvyAX1/gW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 093/265] bus: ti-sysc: Flush posted write on enable and disable
-Date:   Mon, 29 Jun 2020 11:15:26 -0400
-Message-Id: <20200629151818.2493727-94-sashal@kernel.org>
+Cc:     Reinette Chatre <reinette.chatre@intel.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 106/265] x86/resctrl: Support CPUID enumeration of MBM counter width
+Date:   Mon, 29 Jun 2020 11:15:39 -0400
+Message-Id: <20200629151818.2493727-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -63,57 +64,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
 
-[ Upstream commit 5ce8aee81be6c8bc19051d7c7b0d3cbb7ac5fc3f ]
+[ Upstream commit f3d44f18b0662327c42128b9d3604489bdb6e36f ]
 
-Looks like we're missing flush of posted write after module enable and
-disable. I've seen occasional errors accessing various modules, and it
-is suspected that the lack of posted writes can also cause random reboots.
+The original Memory Bandwidth Monitoring (MBM) architectural
+definition defines counters of up to 62 bits in the
+IA32_QM_CTR MSR while the first-generation MBM implementation
+uses statically defined 24 bit counters.
 
-The errors we can see are similar to the one below from spi for example:
+Expand the MBM CPUID enumeration properties to include the MBM
+counter width. The previously undefined EAX output register contains,
+in bits [7:0], the MBM counter width encoded as an offset from
+24 bits. Enumerating this property is only specified for Intel
+CPUs.
 
-44000000.ocp:L3 Custom Error: MASTER MPU TARGET L4CFG (Read): Data Access
-in User mode during Functional access
-...
-mcspi_wait_for_reg_bit
-omap2_mcspi_transfer_one
-spi_transfer_one_message
-...
-
-We also want to also flush posted write for disable. The clkctrl clock
-disable happens after module disable, and we don't want to have the
-module potentially stay active while we're trying to disable the clock.
-
-Fixes: d59b60564cbf ("bus: ti-sysc: Add generic enable/disable functions")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/afa3af2f753f6bc301fb743bc8944e749cb24afa.1588715690.git.reinette.chatre@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/include/asm/processor.h   | 3 ++-
+ arch/x86/kernel/cpu/resctrl/core.c | 5 +++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index e5f5f48d69d2f..369c97c3e0c0b 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -991,6 +991,9 @@ set_autoidle:
- 		sysc_write_sysconfig(ddata, reg);
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 3bcf27caf6c9f..c4e8fd709cf67 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -113,9 +113,10 @@ struct cpuinfo_x86 {
+ 	/* in KB - valid for CPUS which support this call: */
+ 	unsigned int		x86_cache_size;
+ 	int			x86_cache_alignment;	/* In bytes */
+-	/* Cache QoS architectural values: */
++	/* Cache QoS architectural values, valid only on the BSP: */
+ 	int			x86_cache_max_rmid;	/* max index */
+ 	int			x86_cache_occ_scale;	/* scale to bytes */
++	int			x86_cache_mbm_width_offset;
+ 	int			x86_power;
+ 	unsigned long		loops_per_jiffy;
+ 	/* cpuid returned max cores value: */
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 49599733fa94d..d242e864726c0 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -963,6 +963,7 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
+ 	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
+ 		c->x86_cache_max_rmid  = -1;
+ 		c->x86_cache_occ_scale = -1;
++		c->x86_cache_mbm_width_offset = -1;
+ 		return;
  	}
  
-+	/* Flush posted write */
-+	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
-+
- 	if (ddata->module_enable_quirk)
- 		ddata->module_enable_quirk(ddata);
+@@ -979,6 +980,10 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
  
-@@ -1071,6 +1074,9 @@ set_sidle:
- 		reg |= 1 << regbits->autoidle_shift;
- 	sysc_write_sysconfig(ddata, reg);
- 
-+	/* Flush posted write */
-+	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
-+
- 	return 0;
+ 		c->x86_cache_max_rmid  = ecx;
+ 		c->x86_cache_occ_scale = ebx;
++		if (c->x86_vendor == X86_VENDOR_INTEL)
++			c->x86_cache_mbm_width_offset = eax & 0xff;
++		else
++			c->x86_cache_mbm_width_offset = -1;
+ 	}
  }
  
 -- 
