@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F4221D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5050521D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455757;
-	bh=uHwno3Ld8wXdlBKVMBd9bJucUtSHlJ/IkWB1iABEIdo=;
+	s=default; t=1593455759;
+	bh=PRg3gNddfPH321cMWS/GHKOJAHMlEJ564PRUx9ZgBvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njEf49loDA7yX6k+v2PSs7DrTFU54mQJ+dv7bT72oq22VqioH2A/a0uvkUrRygrn/
-	 cuhPmDU6Crbg5WDh7btYZ4zUhwqTw5YB0c9scEGayF+CwXQ0LB+bZ6pTHsYv2xtpur
-	 GFrTX0eru7cydiTNfAOHLa9+GmBXaTcFJt11KtPw=
+	b=zkGxkl9whmcs7qNUL59cVbI8TGmPZbckMyzVzSajBmW9qUGZC1aP9SOka8oQA1sf+
+	 URtmcOmvYK+inifGYtMPsPhxRXBQXMXUzo8JxASAdFaZrgHBlw+Tr6Ctn3zpT/XXFS
+	 H9OyVHkH7Ux4VAfbDwkPqgikqpYXD9iARAiLElTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgF2Sf4 (ORCPT
+        id S1726875AbgF2Sf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:56 -0400
+        Mon, 29 Jun 2020 14:35:58 -0400
 Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:24 -0400
+        id S1726459AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF162478E;
-        Mon, 29 Jun 2020 15:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CBCA241A4;
+        Mon, 29 Jun 2020 15:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444099;
-        bh=uHwno3Ld8wXdlBKVMBd9bJucUtSHlJ/IkWB1iABEIdo=;
+        s=default; t=1593443957;
+        bh=PRg3gNddfPH321cMWS/GHKOJAHMlEJ564PRUx9ZgBvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSmdIZJV1dxHgnj9oRK5gV+MRlHIYgdk5b6s1AqzpMcTV5hPP/LF8lGvcYOaJO+aS
-         Wqg6xbXQ+7RUwiCHmrhM+y5YA+Basn8l2p8YlOO3ArOjdsTeHWIBfdHh/ExbdZkuw1
-         jIhaJ2r4cJMnqWipXz4fsFlVsOIa+cB/WHWAPzPI=
+        b=TqYS5MwwTVnA0fu3hOQ366bTClZ9w+34e0YHy0gUcC6GFZsRBdyNp450Lv+FR5b0G
+         wG+rwneJonRZSSqkgg1tlriGDB63a5IhfjPs07tkjsR9TYTJXncO02BBv9lzEOa8Qm
+         uKOlitPmcj47dgCQVD+LycLWIxTCHjVWROybLmXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Plattner <aplattner@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>,
+Cc:     Todd Kjos <tkjos@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 209/265] ALSA: hda: Add NVIDIA codec IDs 9a & 9d through a0 to patch table
-Date:   Mon, 29 Jun 2020 11:17:22 -0400
-Message-Id: <20200629151818.2493727-210-sashal@kernel.org>
+Subject: [PATCH 5.7 059/265] binder: fix null deref of proc->context
+Date:   Mon, 29 Jun 2020 11:14:52 -0400
+Message-Id: <20200629151818.2493727-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,38 +65,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Plattner <aplattner@nvidia.com>
+From: Todd Kjos <tkjos@google.com>
 
-commit adb36a8203831e40494a92095dacd566b2ad4a69 upstream.
+commit d35d3660e065b69fdb8bf512f3d899f350afce52 upstream.
 
-These IDs are for upcoming NVIDIA chips with audio functions that are largely
-similar to the existing ones.
+The binder driver makes the assumption proc->context pointer is invariant after
+initialization (as documented in the kerneldoc header for struct proc).
+However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+proc->context is set to NULL during binder_deferred_release().
 
-Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200611180845.39942-1-aplattner@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Another proc was in the middle of setting up a transaction to the dying
+process and crashed on a NULL pointer deref on "context" which is a local
+set to &proc->context:
+
+    new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
+
+Here's the stack:
+
+[ 5237.855435] Call trace:
+[ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
+[ 5237.855446] binder_inc_ref_for_node+0x140/0x280
+[ 5237.855451] binder_translate_binder+0x1d0/0x388
+[ 5237.855456] binder_transaction+0x2228/0x3730
+[ 5237.855461] binder_thread_write+0x640/0x25bc
+[ 5237.855466] binder_ioctl_write_read+0xb0/0x464
+[ 5237.855471] binder_ioctl+0x30c/0x96c
+[ 5237.855477] do_vfs_ioctl+0x3e0/0x700
+[ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
+[ 5237.855488] el0_svc_common+0xb4/0x194
+[ 5237.855493] el0_svc_handler+0x74/0x98
+[ 5237.855497] el0_svc+0x8/0xc
+
+The fix is to move the kfree of the binder_device to binder_free_proc()
+so the binder_device is freed when we know there are no references
+remaining on the binder_proc.
+
+Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622200715.114382-1-tkjos@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/android/binder.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 93760a3564cfa..137d655fed8f8 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -4145,6 +4145,11 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index e47c8a4c83db5..f50c5f182bb52 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -4686,8 +4686,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
+ 
+ static void binder_free_proc(struct binder_proc *proc)
+ {
++	struct binder_device *device;
++
+ 	BUG_ON(!list_empty(&proc->todo));
+ 	BUG_ON(!list_empty(&proc->delivered_death));
++	device = container_of(proc->context, struct binder_device, context);
++	if (refcount_dec_and_test(&device->ref)) {
++		kfree(proc->context->name);
++		kfree(device);
++	}
+ 	binder_alloc_deferred_release(&proc->alloc);
+ 	put_task_struct(proc->tsk);
+ 	binder_stats_deleted(BINDER_STAT_PROC);
+@@ -5406,7 +5413,6 @@ static int binder_node_release(struct binder_node *node, int refs)
+ static void binder_deferred_release(struct binder_proc *proc)
+ {
+ 	struct binder_context *context = proc->context;
+-	struct binder_device *device;
+ 	struct rb_node *n;
+ 	int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
+ 
+@@ -5423,12 +5429,6 @@ static void binder_deferred_release(struct binder_proc *proc)
+ 		context->binder_context_mgr_node = NULL;
+ 	}
+ 	mutex_unlock(&context->context_mgr_node_lock);
+-	device = container_of(proc->context, struct binder_device, context);
+-	if (refcount_dec_and_test(&device->ref)) {
+-		kfree(context->name);
+-		kfree(device);
+-	}
+-	proc->context = NULL;
+ 	binder_inner_proc_lock(proc);
+ 	/*
+ 	 * Make sure proc stays alive after we
 -- 
 2.25.1
 
