@@ -2,95 +2,139 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5285CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815C1206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593469520;
-	bh=C3uK0AawPBlRj3h5rLZEMB4h7uh8raDLrF/WWBuYeW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=INIpTf4Pdio7/vmZMJHyKFC65pbQHXf5OAclhM4uTLo4f5ka4THfVWY+iqwE3hOuk
-	 NX+L4J2g3R6ePePKN9DQKnhdGdEo+brNiMlp6olxX+EasFSJ3uyjis4t5oCYfr7/4t
-	 a6X+8L0hP0ahLDXlnrSYamo8s9fohFFygDHiRHew=
+	by mail.kernel.org (Postfix) with ESMTP id 3386D20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljl6F57/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgF2WZT (ORCPT
+        id S1730982AbgF2W0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:25:19 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46521 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgF2WZR (ORCPT
+        Mon, 29 Jun 2020 18:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgF2W0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:25:17 -0400
-Received: by mail-io1-f67.google.com with SMTP id a12so18939676ion.13;
-        Mon, 29 Jun 2020 15:25:17 -0700 (PDT)
+        Mon, 29 Jun 2020 18:26:16 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D749C061755;
+        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w6so18450736ejq.6;
+        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
+        b=ljl6F57/XOyWQURIpW+SYGe4bHNcdPifrgDCw24RC+hnGGqwpRlyGiY/mzZuA4sSbx
+         TeYo3z8Ufl89Li/087qtQtJ9yTEh++OJ9m71n+SXhpzAK2T4jGhl7JXDxspZyWsnKxBu
+         k7P9M0GtxOH6/gRBRnh9oUvWtpzmGljW6RVoQ3oU9OPOlmiVnyvdkhXZAVXFvXUf/tCr
+         Tzz4eNbn/yV6INdTYHThjjxpw+43Ld5UmMcnks2I9V2HJlS/jAGLCxbe9ppqLydxFDLg
+         8MRFCWGFJ3/f7cwHeSirkNItjyDGoJY5aXLch5LHVxMUKjAivXcrodHjiWs9Zq1Gpc5A
+         iGeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0GaZbixLs4tdiexpjmK+wsDoVQ+ulRxV3n7j6s3bMUM=;
-        b=SDWG5qGkLfTamB37lLzs1KLfSBXl/JAxfj8ayGHior+Mu5ZFe11/9FmCVZTwezIwhQ
-         G+dzg2Ym0IT3DYgt4S6ZTIL/4nVkyCwsVlgU4Xb1tY651txpV60t9PlzzHxh9bzi6HVy
-         LGhmVFZjxlkwsGOnXa5q67kIItzz1Z6y8NPl/MPRSuLEdPVB0wy1qCi+MEU8hes4kVCS
-         8zQ3wiYNIOwbSP8EhKuxL3IoD9PvZcdxzDGuxCFaVmgi2bqJOn3z+N13HWKxcWRebPN3
-         8PiwY/Vq2GRbJh5o479RYpA23Y+JiEWzq5n9aMRqQoMSeVbhUv/NuILGUIOFbYvuFE+d
-         jEWw==
-X-Gm-Message-State: AOAM532ZOb/Bk8SJXRxMuw/XfTBSYOn/9J+J7bKtFys8EjC5660mzVKK
-        DbR8cUHSzyTt7HO+UZRx0w==
-X-Google-Smtp-Source: ABdhPJyCa6IC1Q0r9mfL04iJCZkfDwuIr8IDoWfJy5unmGOizFjyiU2kQ1Sv0NOU7j76tBdlpGPy7A==
-X-Received: by 2002:a02:cd28:: with SMTP id h8mr8069309jaq.40.1593469516683;
-        Mon, 29 Jun 2020 15:25:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id x1sm656615ilh.29.2020.06.29.15.25.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
+        b=Af+WQLx3TfmbH2C3ZDRuyfL7mruSENAq54LDCIs1wOZXiHtH6tNKU7oBGNR48xrwmz
+         qNJNkuPnhgC0jnrc2dqSsOdSfqwbO2s18Nrq7g6P6Is6F1IuFJF+Xk47PU1CiwXSktdF
+         2rf3A/iuOzCK7Tu2ryWSXNoIFu1qYR27HtSSMR3Y7kXNRBK0QhNH2lURoWv7AbHpihR7
+         NyEfTHDzWvcRkUC+4vebU+B/k3ry07g3KVNQzXC5TyADiWXer8w3OKShIGr7SpPG6W/X
+         jrf4Z6hKEbpxv658FojQ9AMaxvuW7vYLsMrx/5fdzXAu4GrwEjchIRS0iDGAcwcIbYma
+         fF8w==
+X-Gm-Message-State: AOAM530ll0wd8ObgTeTBBNLjQ74DdfZzBEkFiEtHfGEy+G1eHulfpEmY
+        wY0JGVtpB3h9BlFxNenHKSg=
+X-Google-Smtp-Source: ABdhPJxu0f3tnqjZ6HdE27eVb1JqxXjsWLvQl9OFzp7badrN8VqEab5KFGVI1t8l0ZpWVCoHu0dtXA==
+X-Received: by 2002:a17:906:12cd:: with SMTP id l13mr16230422ejb.96.1593469574315;
+        Mon, 29 Jun 2020 15:26:14 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id y21sm592877ejo.4.2020.06.29.15.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:25:16 -0700 (PDT)
-Received: (nullmailer pid 3067288 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:25:13 -0000
-Date:   Mon, 29 Jun 2020 16:25:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     sboyd@kernel.org, mturquette@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org,
-        Linux-imx@nxp.com, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
-        festevam@gmail.com, s.trumtrar@pengutronix.de,
+        Mon, 29 Jun 2020 15:26:13 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 3/3] dt-bindings: clock: Correct example in i.MX8QXP
- LPCG binding
-Message-ID: <20200629222513.GA3067129@bogus>
-References: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
- <1592450578-30140-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH -next] arm64: dts: sdm630: Temporarily disable SMMUs by default
+Date:   Tue, 30 Jun 2020 00:26:10 +0200
+Message-Id: <20200629222610.168511-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592450578-30140-3-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 11:22:58 +0800, Anson Huang wrote:
-> In i.MX8QXP LPCG binding's example, "fsl,imx7d-usdhc" as fallback
-> compatible is incorrect, remove it to avoid below build error:
-> 
-> Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml:
-> mmc@5b010000: compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
-> Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml:
-> mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch, to fix build error when patch #1 is added.
-> ---
->  Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+There happens to be an issue between how kernel handles
+qcom-smmuv2 and how the hypervisor would like it to be
+handled. That results in the platform hanging completely
+after the SMMUs are probed.
 
-Applied, thanks!
+Hence, disable the SMMU nodes temporarily, until the
+issue is rectified.
+
+This has been overlooked by me in the initial
+porting stage, as my defconfig has SMMU disabled.
+
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/sdm630.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+index 88efe8200c80..deb928d303c2 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+@@ -518,6 +518,8 @@ anoc2_smmu: iommu@16c0000 {
+ 				<GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>;
++
++			status = "disabled";
+ 		};
+ 
+ 		tcsr_mutex_regs: syscon@1f40000 {
+@@ -749,6 +751,8 @@ kgsl_smmu: iommu@5040000 {
+ 				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 350 IRQ_TYPE_LEVEL_HIGH>;
++
++			status = "disabled";
+ 		};
+ 
+ 		lpass_smmu: iommu@5100000 {
+@@ -778,6 +782,8 @@ lpass_smmu: iommu@5100000 {
+ 				<GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>;
++
++			status = "disabled";
+ 		};
+ 
+ 		spmi_bus: spmi@800f000 {
+@@ -1074,6 +1080,8 @@ mmss_smmu: iommu@cd00000 {
+ 				<GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>;
++
++			status = "disabled";
+ 		};
+ 
+ 		apcs_glb: mailbox@17911000 {
+-- 
+2.27.0
+
