@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E291FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4229A2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33802065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458983;
-	bh=wKVojw3v10HVgEldxDQ8d8OdOl9ZfBVivKKmRcFWmq4=;
+	s=default; t=1593458986;
+	bh=xla0wtMSjnMhxORYMrMe5StIcLOTwWq49SnoT0hOzYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9Xuhs+fhKALvSqEkn4CkiHUDTpgEcfjKfM3vvvq96WyeBitSU7lA+yOwknhCgLtN
-	 Vfh8xf1QG/v1s5RzAfVh21bTpRMRy9d0vTZqCiDCHD7OSaTCLfPms4Qu0DhuPAufEU
-	 M0rpmERfoowixK1s5T6758r81yooq7apT3Oks6u4=
+	b=h8f0YRSAOSLApLpPvxPBy+WSTbDMlsiNoWIc0fI4DWDDLkfsJtiTOGpVRyP5xjb6X
+	 xXFng0y3T/qNGw98QfOVNfS46BhaJGwCKp4OL4jKq1567nI4j2BZr8n4Ri9TrNvAi1
+	 cepXZ8N9vtMr2SPxxaBfidT2oMglTzZX826ziygE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732654AbgF2T3l (ORCPT
+        id S1732795AbgF2T3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732657AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732653AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4533525416;
-        Mon, 29 Jun 2020 15:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D10C2546E;
+        Mon, 29 Jun 2020 15:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445367;
-        bh=wKVojw3v10HVgEldxDQ8d8OdOl9ZfBVivKKmRcFWmq4=;
+        s=default; t=1593445425;
+        bh=xla0wtMSjnMhxORYMrMe5StIcLOTwWq49SnoT0hOzYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKcGVSdKs2Fbqt+k2nFzqrU46+6k3ZEXv9GQfqbsOZT41QoRXJYjCrUQ4RwEPPx/Z
-         TskONi364b8mb/q8NCjuGzSgTw4SfW3PvCXlcWmDt6jjDwlPlvB6irCN/0Vkr16lfI
-         dNF1TNbNVg1oTS1zbAiJhKe/mltlJOvb7+qI66kk=
+        b=09QYBIJNXPYIyAaiUZ7r6pcTbI9vGQ+1GFqSfScoibh7q/4KSARrjNF/GN5XxBDp8
+         aQwrLiK+jje0iVqJCj2XlZXT5elakIfdYoi/4+VQ6S+kDmZ31fsY1pcxNyTewmzsMN
+         L/u1h7vcmy/4uGu8Ouuq+q+hapQaIEJxuLS/a7fY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 122/191] mtd: rawnand: xway: Fix the probe error path
-Date:   Mon, 29 Jun 2020 11:38:58 -0400
-Message-Id: <20200629154007.2495120-123-sashal@kernel.org>
+Subject: [PATCH 4.9 173/191] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:39:49 -0400
+Message-Id: <20200629154007.2495120-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,42 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 34531be5e804a8e1abf314a6c3a19fe342e4a154 ]
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
 
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-61-miquel.raynal@bootlin.com
+For example, -gsplit-dwarf creates a .dwo file.
+
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
+
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/xway_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/nand/xway_nand.c b/drivers/mtd/nand/xway_nand.c
-index d374a0007960a..3d51b8fc5aafe 100644
---- a/drivers/mtd/nand/xway_nand.c
-+++ b/drivers/mtd/nand/xway_nand.c
-@@ -211,7 +211,7 @@ static int xway_nand_probe(struct platform_device *pdev)
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 558dea61db114..1920b9e2d2514 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -82,20 +82,21 @@ cc-cross-prefix =  \
+ 		fi)))
  
- 	err = mtd_device_register(mtd, NULL, 0);
- 	if (err)
--		nand_release(&data->chip);
-+		nand_cleanup(&data->chip);
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
- 	return err;
- }
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" is can be used as temporary file and
+ # is automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
+ 
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
