@@ -2,157 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697D1C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B83C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48450204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A86204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lsC6H/V5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qxupq2wL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgF2Syj (ORCPT
+        id S1728024AbgF2Sym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:39 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19316 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbgF2Syg (ORCPT
+        Mon, 29 Jun 2020 14:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729804AbgF2Swv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:54:36 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05T5rQ0R017254
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:58:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=dENfKnXYbsHOcz7F13wDWYONmbIkZMqgoSy0hLH3dwo=;
- b=lsC6H/V5z5418Bql/1TvOEV1MO4WtIGPZhLoyUjSIfNn+v1rcb5ym86hBHJKaDOwSDnr
- CjpDxzVIIQ+xwC5L9UTnWAUh3PEk0QAsPdWjdN+NTsSNCZrYh7pBFPlvnsqEi7UXAfHS
- 9LDsdM4b5YTIcbLaXxLMQ6oipkNsv3xH47M= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31x3xgne5h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 22:58:21 -0700
-Received: from intmgw002.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 28 Jun 2020 22:58:20 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 75B1362E505E; Sun, 28 Jun 2020 22:55:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v4 bpf-next 1/4] perf: expose get/put_callchain_entry()
-Date:   Sun, 28 Jun 2020 22:55:27 -0700
-Message-ID: <20200629055530.3244342-2-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200629055530.3244342-1-songliubraving@fb.com>
-References: <20200629055530.3244342-1-songliubraving@fb.com>
+        Mon, 29 Jun 2020 14:52:51 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DACC02E2C8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so16252078wml.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D4QVWBt78fjc/zXuQ5WSrvh+bVzw9oMxw1mvQFTNt5A=;
+        b=qxupq2wL0vtzmROyM6U/2Nn/WQWmm2e6F12+dsmst5VVlWuoK6gtTr3MIXepH5bo7N
+         Si7Pq+RVqNpQiFxQ2RbG+oCRPYq/cAsadGi/Cx5C0m2OH32nEKmkCgw6kIWLdzlkO8sz
+         eASMM3fslN2LgCjhj34gtUu9hg9uPAn/UhPI1o2umQb7efYohrsJs3Mvj+Q1zve0pRm5
+         nICui8Id6ipARNed0tcwgPy8yFVwW04/m0h4bIMwEzATPNfgcaOKdekX6DREKRSEIaEU
+         bQMqCj8IctrGk5rNU1bbS38PhOQyP25s7K4pFFZrVVRLaG0eRTvOwK2WSKw+NvLReQYV
+         0e0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D4QVWBt78fjc/zXuQ5WSrvh+bVzw9oMxw1mvQFTNt5A=;
+        b=M9MMF48gSWtMVUTkCkokMe/J/eVM/KehtXdpLLfco3n6DHmCYlFEZcuTCorgHh8zSv
+         5NCGkHD6+PqI96GaBlxA42aON39P/Kz1/Uz8HYCrTa2jJFaUFl8hQ6TLhBp4/ohoLOwI
+         poo71qwdaSNJt6gUOMkb/K3I5vvaZtbHLZfPzw5QgHq1i8HpvkuwxdIbhdn2kclHcRW8
+         B5u0fN4rsCvYrPVg0GRMcqc+qjZPMNfQEQe5cSg4OrD6TNULmCdgJERmSf7wHD57W56K
+         0qwN3l7Es6oKgIVUclVO6xFaYHsLC2eJbJa411flvm93zXkc141Pqmp0DCxIxaMT6X2x
+         yaww==
+X-Gm-Message-State: AOAM530jqQf/1ZEOWo6FAH/433nL0MbIXZTFTYo+bOItDVLULdM0LD3Y
+        hGy1bboO2nWsEFny/qQv09T3Kw==
+X-Google-Smtp-Source: ABdhPJyp48RXpvoyDA2gEGM2KF9GnBJlHMy5DHzF0QNr7HDDu6Tv7Xsp8Ip73vOozav0VKOAuIk7HA==
+X-Received: by 2002:a1c:9ad8:: with SMTP id c207mr15916307wme.45.1593439486087;
+        Mon, 29 Jun 2020 07:04:46 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 07:04:45 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 00/20] Fix a bunch more W=1 warnings in Misc
+Date:   Mon, 29 Jun 2020 15:04:22 +0100
+Message-Id: <20200629140442.1043957-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_04:2020-06-26,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=8 mlxlogscore=999
- bulkscore=0 priorityscore=1501 mlxscore=0 impostorscore=0 spamscore=0
- clxscore=1015 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290042
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sanitize and expose get/put_callchain_entry(). This would be used by bpf
-stack map.
+Attempting to clean-up W=1 kernel builds, which are currently
+overwhelmingly riddled with niggly little warnings.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- include/linux/perf_event.h |  2 ++
- kernel/events/callchain.c  | 13 ++++++-------
- 2 files changed, 8 insertions(+), 7 deletions(-)
+Lee Jones (20):
+  misc: pti: Repair kerneldoc formatting issues
+  misc: pti: Remove unparsable empty line in function header
+  misc: habanalabs: firmware_if: Add missing 'fw_name' and 'dst' entries
+    to function header
+  misc: habanalabs: pci: Fix a variety of kerneldoc issues
+  misc: habanalabs: irq: Repair kerneldoc formatting issues
+  misc: habanalabs: goya: Omit pointless check ensuring addr is >=0
+  misc: habanalabs: pci: Scrub documentation for non-present function
+    argument
+  misc: habanalabs: goya: goya_coresight: Remove set but unused variable
+    'val'
+  misc: habanalabs: gaudi: Remove ill placed asterisk from kerneldoc
+    header
+  misc: habanalabs: gaudi: gaudi_security: Repair incorrectly named
+    function arg
+  misc: enclosure: Fix some kerneldoc anomalies
+  misc: lattice-ecp3-config: Remove set but clearly unused variable
+    'ret'
+  misc: pch_phub: Provide descriptions for 'chip' argument
+  misc: pch_phub: Remove superfluous descriptions to non-existent args
+    'offset_address'
+  misc: enclosure: Update enclosure_remove_device() documentation to
+    match reality
+  misc: genwqe: card_base: Remove set but unused variable 'rc'
+  misc: genwqe: card_base: Do not	pass unused argument 'fatal_err'
+  misc: genwqe: card_base: Whole host of kerneldoc fixes
+  misc: genwqe: card_dev: Whole host of kerneldoc fixes
+  misc: genwqe: card_utils: Whole a plethora of documentation issues
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index b4bb32082342c..00ab5efa38334 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1244,6 +1244,8 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
-r, bool kernel, bool user,
- extern struct perf_callchain_entry *perf_callchain(struct perf_event *ev=
-ent, struct pt_regs *regs);
- extern int get_callchain_buffers(int max_stack);
- extern void put_callchain_buffers(void);
-+extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
-+extern void put_callchain_entry(int rctx);
-=20
- extern int sysctl_perf_event_max_stack;
- extern int sysctl_perf_event_max_contexts_per_stack;
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 334d48b16c36d..c6ce894e4ce94 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -149,7 +149,7 @@ void put_callchain_buffers(void)
- 	}
- }
-=20
--static struct perf_callchain_entry *get_callchain_entry(int *rctx)
-+struct perf_callchain_entry *get_callchain_entry(int *rctx)
- {
- 	int cpu;
- 	struct callchain_cpus_entries *entries;
-@@ -159,8 +159,10 @@ static struct perf_callchain_entry *get_callchain_en=
-try(int *rctx)
- 		return NULL;
-=20
- 	entries =3D rcu_dereference(callchain_cpus_entries);
--	if (!entries)
-+	if (!entries) {
-+		put_recursion_context(this_cpu_ptr(callchain_recursion), *rctx);
- 		return NULL;
-+	}
-=20
- 	cpu =3D smp_processor_id();
-=20
-@@ -168,7 +170,7 @@ static struct perf_callchain_entry *get_callchain_ent=
-ry(int *rctx)
- 		(*rctx * perf_callchain_entry__sizeof()));
- }
-=20
--static void
-+void
- put_callchain_entry(int rctx)
- {
- 	put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
-@@ -183,11 +185,8 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr=
-, bool kernel, bool user,
- 	int rctx;
-=20
- 	entry =3D get_callchain_entry(&rctx);
--	if (rctx =3D=3D -1)
--		return NULL;
--
- 	if (!entry)
--		goto exit_put;
-+		return NULL;
-=20
- 	ctx.entry     =3D entry;
- 	ctx.max_stack =3D max_stack;
---=20
-2.24.1
+ drivers/misc/enclosure.c                      |  8 ++--
+ drivers/misc/genwqe/card_base.c               | 46 ++++++++++---------
+ drivers/misc/genwqe/card_dev.c                | 24 +++++++---
+ drivers/misc/genwqe/card_utils.c              | 30 ++++++++++--
+ drivers/misc/habanalabs/firmware_if.c         |  3 ++
+ drivers/misc/habanalabs/gaudi/gaudi.c         |  2 +-
+ .../misc/habanalabs/gaudi/gaudi_security.c    |  3 +-
+ drivers/misc/habanalabs/goya/goya.c           | 16 +++----
+ drivers/misc/habanalabs/goya/goya_coresight.c |  3 +-
+ drivers/misc/habanalabs/irq.c                 | 22 ++++-----
+ drivers/misc/habanalabs/pci.c                 | 13 ++++--
+ drivers/misc/lattice-ecp3-config.c            | 19 ++++----
+ drivers/misc/pch_phub.c                       |  9 +++-
+ drivers/misc/pti.c                            | 11 ++---
+ 14 files changed, 126 insertions(+), 83 deletions(-)
+
+-- 
+2.25.1
 
