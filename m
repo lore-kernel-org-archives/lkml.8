@@ -2,98 +2,193 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF4520672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OQ0O/ji3"
+	by mail.kernel.org (Postfix) with ESMTP id 02FD920724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593463627;
+	bh=Pu/0To4uEisqeiZLoEdchRbUIf4ajQDQZCMPElPY+rQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Akrq5D80R71QoSLRttFkGsJ1Hctj7xhizc4pZfKWYzZDqJqk6B5nVoz5bNG3eLXgl
+	 JZ2+UZHiWqX0os3+tjf8rB44+nm242DtyfX+Y5NfkBt6S+lbGo2+2BDql4cWkCf9M/
+	 k9P1D7shSWf+YmP3IKL2yrnTj57f5OmqXpBePCiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389461AbgF2UrB (ORCPT
+        id S2389764AbgF2UrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730650AbgF2TNw (ORCPT
+        Mon, 29 Jun 2020 16:47:06 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35671 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732940AbgF2Uq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:52 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623DAC014AFF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:04:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h5so15519279wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wJu5T05EGIesmOT82QcK4tvM42NAPTrHSyac4x7F7pM=;
-        b=OQ0O/ji3YWaPUA5LVTl2z+7oIv8oHPXXajbTo7gN+ypY32l7m2S8IHDthtPNy8PmUI
-         3/RB2boMvLnFXERxlvImDeRSrAmCnr84vqbj+hoK2UVr5jSFPlXCeqfbMYmnw1DtZoCz
-         wfz1yX5KxVKQ6+reINQnT84GX4kzt3f1463mWC00vcmx89o7eIJH2WBtTTb6QhFyW9zQ
-         hvK7Bmre+NIIGJTAvrlFsQZAcOAzcIg6D0DdL6rfZhqpV/wAzAA6fh29DpdZ9ZNAxsLf
-         s3cb2tlXJHAcIrAd+N8AfFxDQm6sFD8UFJa97ojLl9pmTExTdys+BJ+NBS1K6M7wPhlo
-         e2TQ==
+        Mon, 29 Jun 2020 16:46:57 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g18so17996675wrm.2;
+        Mon, 29 Jun 2020 13:46:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wJu5T05EGIesmOT82QcK4tvM42NAPTrHSyac4x7F7pM=;
-        b=XIlg3zrQx9VX+LG+x2yoYXGKhd/r/lk5fh886ffSZ02EGNe9ytsd/hbn0odpgKUbRP
-         jdduuYfFWD4LZxjHGQZiJTy5KUz6P0vGIwde3TwBdtDBlRvZp2zyBmJ5tNuv6tOUZvhF
-         a7fyqZiZL/C8a7QV2vNE4QziO/TijM6mdGejDnnHRtrFZja4Qhj9qGJxc6thz6JxFq76
-         iDESWcNVxPA3quIz0ku/BD2rfEo3RSai7WPZQFDRCU2vXPbGbFI1DiPPver+xKmeXI/j
-         62mnk5V4ySO/t7u5451c1Bvdew0ih8LgHY0p5FnrXkZ24r2lMouM59Sx0b1TUEeBCrBU
-         EEOw==
-X-Gm-Message-State: AOAM533aeYbpBwwnIBOxt4dDy10yUZzwKwt36tbt2Lc8NaFKqghQwQ+a
-        ykNb25XF8FwMyZULrRiSpyrIPw==
-X-Google-Smtp-Source: ABdhPJxjhHOLK/OLS+QpmEsbDw2KsR8ghE7pxziLY6KM8n7B0r5tY5LBX2zBH+b5fLJzKBlhjiImZg==
-X-Received: by 2002:a5d:6a01:: with SMTP id m1mr16758755wru.115.1593417842938;
-        Mon, 29 Jun 2020 01:04:02 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a2sm31496362wrn.68.2020.06.29.01.04.02
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7B3b2pBNzZdwKMzrzlsX2I3eoakSivJkPodIWcuujkg=;
+        b=fW+SnvRyi7VKbM8KtWX/EO15B0SBjRffG/Odue+cS1UymPPA8k6eW3mSzqFiITb2u0
+         Gocix24S1s+ZcZDMNepQRf7+gxj1u358NYhWXrFihe3I7mWc2/n7R9B1VA8L2rX6zjxa
+         Xp3FYzuQloJ2ovpAFmOOoe6FtSPKljIRdAaxBQk9emnaacet3SiAwd3PFkKE/Fx3K4W2
+         VQ1nXmFgGk2MnQC7Zhj0ZWbiX6dNboENmZ/MxE/7ESOzV9m/F2dIZUPWbwTqmlTmQftp
+         TV+LXmLZNzCky+c51f6yFf/iGsusFC9859cRMM02AJ11R+xqrYsB5J+WFoe6+wfsWX08
+         7D1A==
+X-Gm-Message-State: AOAM530wbfzhxTw/C91C0IkQfXp8I8xI8UqKJ4yYyshiulB80EFcTR2N
+        lp81RfZlTNuh3BX0wZ33UgM=
+X-Google-Smtp-Source: ABdhPJyTQzsvY9UTZXZpGaoSPj9qQo2aDDpJP8RGi6+4kz9ZQ+mhGEvD1IWlImXuk16Q5SQVGOWyTQ==
+X-Received: by 2002:adf:f20a:: with SMTP id p10mr19802378wro.41.1593463615117;
+        Mon, 29 Jun 2020 13:46:55 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z2sm1152694wmc.2.2020.06.29.13.46.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:04:02 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:03:58 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 3/3] cpufreq: Specify default governor on command line
-Message-ID: <20200629080358.GA1217385@google.com>
-References: <cover.1593143118.git.viresh.kumar@linaro.org>
- <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
- <20200626155750.GA540785@google.com>
- <20200629020843.erntkwfprgi5ugqu@vireshk-i7>
+        Mon, 29 Jun 2020 13:46:54 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 20:46:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     t-mabelt@microsoft.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        parri.andrea@gmail.com, Andres Beltran <lkmlabelt@gmail.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Message-ID: <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com>
+ <20200629200227.1518784-2-lkmlabelt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629020843.erntkwfprgi5ugqu@vireshk-i7>
+In-Reply-To: <20200629200227.1518784-2-lkmlabelt@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 29 Jun 2020 at 07:38:43 (+0530), Viresh Kumar wrote:
-> On 26-06-20, 16:57, Quentin Perret wrote:
-> > Do we need both cpufreq_param_governor and default_governor?
-> > Could we move everything to only one of them? Something a little bit
-> > like that maybe?
+On Mon, Jun 29, 2020 at 04:02:25PM -0400, Andres Beltran wrote:
+> Currently, VMbus drivers use pointers into guest memory as request IDs
+> for interactions with Hyper-V. To be more robust in the face of errors
+> or malicious behavior from a compromised Hyper-V, avoid exposing
+> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> bad request ID that is then treated as the address of a guest data
+> structure with no validation. Instead, encapsulate these memory
+> addresses and provide small integers as request IDs.
 > 
-> No because we want to fallback to the default governor when the
-> governor shown by the cpufreq_param_governor is valid but missing.
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> ---
+> Changes in v2:
+> 	- Get rid of "rqstor" variable in __vmbus_open().
+> 
+>  drivers/hv/channel.c   | 146 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/hyperv.h |  21 ++++++
+>  2 files changed, 167 insertions(+)
+> 
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 3ebda7707e46..c89d57d0c2d2 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
+>  }
+>  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
+>  
+> +/**
+> + * request_arr_init - Allocates memory for the requestor array. Each slot
+> + * keeps track of the next available slot in the array. Initially, each
+> + * slot points to the next one (as in a Linked List). The last slot
+> + * does not point to anything, so its value is U64_MAX by default.
+> + * @size The size of the array
+> + */
+> +static u64 *request_arr_init(u32 size)
+> +{
+> +	int i;
+> +	u64 *req_arr;
+> +
+> +	req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
+> +	if (!req_arr)
+> +		return NULL;
+> +
+> +	for (i = 0; i < size - 1; i++)
+> +		req_arr[i] = i + 1;
+> +
+> +	/* Last slot (no more available slots) */
+> +	req_arr[i] = U64_MAX;
+> +
+> +	return req_arr;
+> +}
+> +
+> +/*
+> + * vmbus_alloc_requestor - Initializes @rqstor's fields.
+> + * Slot at index 0 is the first free slot.
+> + * @size: Size of the requestor array
+> + */
+> +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
+> +{
+> +	u64 *rqst_arr;
+> +	unsigned long *bitmap;
+> +
+> +	rqst_arr = request_arr_init(size);
+> +	if (!rqst_arr)
+> +		return -ENOMEM;
+> +
+> +	bitmap = bitmap_zalloc(size, GFP_KERNEL);
+> +	if (!bitmap) {
+> +		kfree(rqst_arr);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	rqstor->req_arr = rqst_arr;
+> +	rqstor->req_bitmap = bitmap;
+> +	rqstor->size = size;
+> +	rqstor->next_request_id = 0;
+> +	spin_lock_init(&rqstor->req_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * vmbus_free_requestor - Frees memory allocated for @rqstor
+> + * @rqstor: Pointer to the requestor struct
+> + */
+> +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
+> +{
+> +	kfree(rqstor->req_arr);
+> +	bitmap_free(rqstor->req_bitmap);
+> +}
+> +
+>  static int __vmbus_open(struct vmbus_channel *newchannel,
+>  		       void *userdata, u32 userdatalen,
+>  		       void (*onchannelcallback)(void *context), void *context)
+> @@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+>  	if (newchannel->state != CHANNEL_OPEN_STATE)
+>  		return -EINVAL;
+>  
+> +	/* Create and init requestor */
+> +	if (newchannel->rqstor_size) {
+> +		if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_size))
+> +			return -ENOMEM;
+> +	}
+> +
 
-But that would still work with my suggestion no? You still fallback to
-calling cpufreq_default_governor() in cpufreq_init_policy() if
-get_governor(default_governor) doesn't succeed, so we should be covered.
+Sorry for not noticing this in the last round: this infrastructure is
+initialized conditionally but used unconditionally.
 
-Thanks,
-Quentin
+I can think of two options here:
+
+  1. Mandate rqstor_size to be non-zero. Always initialize this
+     infra.
+  2. Modify vmbus_next_request_id and vmbus_request_addr to deal with
+     uninitialized state.
+
+For #2, you can simply check rqstor->size _before_ taking the lock
+(because it may be uninitialized, and the assumption is ->size will not
+change during the channel's lifetime, hence no lock is needed) and
+simply return the same value to the caller.
+
+Wei.
