@@ -2,52 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E93C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A7F206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095B3206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465379;
-	bh=2qdwtnfk1SUhFeYfae1as9fBqfBH+TrhrvBXhvh7SZk=;
+	s=default; t=1593465386;
+	bh=cyEEX7langD+kxupY1vGoQ4pXWIJ4cY38zwZzOrtK4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5F9FO0J8dceRjKe3TwmfUmUAihc1ICYGDoQfn7R8bZ65YxU3Q+RuwmO+3/HzFQyJ
-	 4IUUugM51KfAi4R6BuLCBEjOeWhgesg1wDnge5oEro61VCazvE6HVUFsz+NBor5Bq8
-	 PGYCcy7Id8v9B5ybYTgmUGLJc9/LR0tKZkiFXp0o=
+	b=wjyi/3uxeNG+ZmszxC5gOO5DWxAQzRH3dlJvRCeNKOmjSixl/6hzc1EltEBd61G0l
+	 opfyu7Kw6YQdL3yt3sufkgB2HAhbU5w3mQJ8pFqeaDBpdPFm5GzU/LAjUIhHmlmrWm
+	 qPYbvszcS92u94ZJKB1UxwejW90d9RpXcrNW/60o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390711AbgF2VQS (ORCPT
+        id S2390371AbgF2VQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:16:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729939AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AB452556B;
-        Mon, 29 Jun 2020 15:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CE025567;
+        Mon, 29 Jun 2020 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446129;
-        bh=2qdwtnfk1SUhFeYfae1as9fBqfBH+TrhrvBXhvh7SZk=;
+        s=default; t=1593446126;
+        bh=cyEEX7langD+kxupY1vGoQ4pXWIJ4cY38zwZzOrtK4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mq2Q2253kHtDwkvG5znddMAhFCO+qsUrjfHsEX0wxV9CMKZXfzP7f5kscqCfm+3jD
-         wlgSRjXnB6f5NYI1MXCbHKB4yC1N0AsroYvVR0Eupva5hn/CkCB6hv+hvk8nkVyXB/
-         wwU/rfah894W/tqIBYv4sVHo0qA1nfRFJ8prNmLk=
+        b=rYJoxsbX09+rN3PlT3czUVkjCx3MMS1QyZCQNoa+SznA60NvKSc5DnBGTeovbrDl3
+         oYm/jL0k11l5dQBQBpY3EK1zo/JaeaoaZeyEqZbP7sLNIC+sSBXrohXTeVnty7kujZ
+         wd0Y5v7S+BnQNrulR8SP91kFshgM6ErVkjMyMtyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        yuu ichii <byahu140@heisei.be>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 120/135] ACPI: sysfs: Fix pm_profile_attr type
-Date:   Mon, 29 Jun 2020 11:52:54 -0400
-Message-Id: <20200629155309.2495516-121-sashal@kernel.org>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 117/135] net: alx: fix race condition in alx_remove
+Date:   Mon, 29 Jun 2020 11:52:51 -0400
+Message-Id: <20200629155309.2495516-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,96 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-When running a kernel with Clang's Control Flow Integrity implemented,
-there is a violation that happens when accessing
-/sys/firmware/acpi/pm_profile:
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-$ cat /sys/firmware/acpi/pm_profile
-0
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
 
-$ dmesg
-...
-[   17.352564] ------------[ cut here ]------------
-[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
-[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
-[   17.352573] Modules linked in:
-[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
-[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
-[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
-[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
-[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
-[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
-[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
-[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
-[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
-[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
-[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
-[   17.352584] Call Trace:
-[   17.352586]  ? rev_id_show+0x8/0x8
-[   17.352587]  ? __cfi_check+0x45bac/0x4b640
-[   17.352589]  ? kobj_attr_show+0x73/0x80
-[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
-[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
-[   17.352593]  ? seq_read+0x180/0x600
-[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
-[   17.352596]  ? tlbflush_read_file+0x8/0x8
-[   17.352597]  ? __vfs_read+0x6b/0x220
-[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
-[   17.352599]  ? vfs_read+0xa2/0x130
-[   17.352599]  ? ksys_read+0x6a/0xd0
-[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
-[   17.352602]  ? do_syscall_64+0x72/0x120
-[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
-
-When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
-which in turn calls kobj_attr_show, which gets the ->show callback
-member by calling container_of on attr (casting it to struct
-kobj_attribute) then calls it.
-
-There is a CFI violation because pm_profile_attr is of type
-struct device_attribute but kobj_attr_show calls ->show expecting it
-to be from struct kobj_attribute. CFI checking ensures that function
-pointer types match when doing indirect calls. Fix pm_profile_attr to
-be defined in terms of kobj_attribute so there is no violation or
-mismatch.
-
-Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1051
-Reported-by: yuu ichii <byahu140@heisei.be>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/sysfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-index ef3dfc90e8171..13c308323e94c 100644
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -776,13 +776,13 @@ static void __exit interrupt_stats_exit(void)
- }
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index df54475d163bf..43bcc19c90680 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -872,8 +872,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
  
- static ssize_t
--acpi_show_profile(struct device *dev, struct device_attribute *attr,
-+acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
- 		  char *buf)
+ static void __alx_stop(struct alx_priv *alx)
  {
- 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
++
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
  }
  
--static const struct device_attribute pm_profile_attr =
-+static const struct kobj_attribute pm_profile_attr =
- 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
+@@ -1406,9 +1410,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
  
- static ssize_t hotplug_enabled_show(struct kobject *kobj,
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
 -- 
 2.25.1
 
