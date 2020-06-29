@@ -2,103 +2,82 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD80C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61030C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C197A206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFD6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463054;
-	bh=xO3sT6IgS2WbwSMz1EvA1CyywwKU3wgEYZVabJJbBPI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4H+8BtjUeROPCDWXIuc2Myz5q1AB/IrxiOHvOs1a5j0CoksBO0DWbaJo7jONKULd
-	 EU+Vn4I7wgAvpwySKaixLw8i7U63FLmxfRUtCMSGK0TeBl/62KfGS5SRlMn+9fbl6H
-	 8agLFlpD8O53EoooDaFr2/Ae8nvm/RoMJEFsqNxI=
+	s=default; t=1593463059;
+	bh=fixPM011IXmV72KayBjsTcKueDK/xQBWs4YyvLISZOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H1i9PvrSfps8dU7MCMhqAa8z5lHBHebGyjByp9sEmRDEnwidOqNt8L8P90ayu6e7D
+	 152/iaWdmcVyGAmy7c4qaUlCXUJRBZqzCUSECs0JAG7iL/i6pfMblYks2B3xx6AIdJ
+	 8NHLMGdqhFYbLJXp6SGGtt8l80FeLjDmNow+6w4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387932AbgF2Uhc (ORCPT
+        id S2389513AbgF2Uhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732093AbgF2TUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732095AbgF2TUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:20:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 687A725461;
-        Mon, 29 Jun 2020 15:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6738C25511;
+        Mon, 29 Jun 2020 16:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445416;
-        bh=xO3sT6IgS2WbwSMz1EvA1CyywwKU3wgEYZVabJJbBPI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwrPpZPH7FfNMI59Ict/opxS+7icrRs/ctfMixUzXtkqP0crbb7f9/6UnwlP7KF/L
-         aK/DyEghgFhsrpNP5bDtsBQXJaCGBnoSc6pKC4pU0ShLJ6G1E1v9g3ftDJP8gP6+sB
-         WkPl6eXWv3dq3bVw5/m/N313IKjuHVauCxb4tMXU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 165/191] net: qed: fix excessive QM ILT lines consumption
-Date:   Mon, 29 Jun 2020 11:39:41 -0400
-Message-Id: <20200629154007.2495120-166-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+        s=default; t=1593449416;
+        bh=fixPM011IXmV72KayBjsTcKueDK/xQBWs4YyvLISZOc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VS/WIVM4nxT0BS2eahmSB3tmX3H1+D4UhP993lN9x/5qDz6hB/TqPP6O4zB2S0Vvy
+         tIpwpM5pdGqgybGvXIqCjExLWwzzKA5FAzAZQlt0Q0TOq4uUB+q7kSkfwPPbmnJVAZ
+         NIW29k8ysfe/gv8mW85SS2idLgTXLzNN8+r1Bzxg=
+Date:   Mon, 29 Jun 2020 09:50:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vfs: don't unnecessarily clone write access for
+ writable fds
+Message-ID: <20200629165014.GA20492@sol.localdomain>
+References: <20200611160534.55042-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611160534.55042-1-ebiggers@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+On Thu, Jun 11, 2020 at 09:05:34AM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> There's no need for mnt_want_write_file() to increment mnt_writers when
+> the file is already open for writing, provided that
+> mnt_drop_write_file() is changed to conditionally decrement it.
+> 
+> We seem to have ended up in the current situation because
+> mnt_want_write_file() used to be paired with mnt_drop_write(), due to
+> mnt_drop_write_file() not having been added yet.  So originally
+> mnt_want_write_file() had to always increment mnt_writers.
+> 
+> But later mnt_drop_write_file() was added, and all callers of
+> mnt_want_write_file() were paired with it.  This makes the compatibility
+> between mnt_want_write_file() and mnt_drop_write() no longer necessary.
+> 
+> Therefore, make __mnt_want_write_file() and __mnt_drop_write_file() skip
+> incrementing mnt_writers on files already open for writing.  This
+> removes the only caller of mnt_clone_write(), so remove that too.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit d434d02f7e7c24c721365fd594ed781acb18e0da ]
+Al, any thoughts on this patch?
 
-This is likely a copy'n'paste mistake. The amount of ILT lines to
-reserve for a single VF was being multiplied by the total VFs count.
-This led to a huge redundancy in reservation and potential lines
-drainouts.
-
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index f1956c4d02a01..d026da36e47e6 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -339,7 +339,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
- 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
- 	}
- 
--	iids->vf_cids += vf_cids * p_mngr->vf_count;
-+	iids->vf_cids = vf_cids;
- 	iids->tids += vf_tids * p_mngr->vf_count;
- 
- 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
--- 
-2.25.1
-
+- Eric
