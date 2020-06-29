@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E51FA207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218A420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461254;
-	bh=m8R7Cg1KJead1vQgeNRh3B18Pdr1dvqBOejLktU59HA=;
+	s=default; t=1593461256;
+	bh=3rNnnkQvxgqmhcMErzisHMd6/5gUFMS/6cR9myII+UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiqAiPP0Z8vzon94DEWYnvEGnqZ4xOEv7CTTYJFcQndTceqa9LQ2bVk+rjgtUfNd6
-	 s+Zp40/nZPbcmTyfUKJeo7zwQk3H4Du1cMJaBa25pUaC5BjBSviOAz7sdIseEtYiBV
-	 9+oHQCO7J2CNUbk4cuZCDH3uWA+Jzs8ayn/ny/T8=
+	b=gzXRjwF8wYz9ULk65iG/DfE1KLihB1RdArHZTdRw1k3vXhVZeR7GXrbcGJQbqjaL+
+	 zFvkZoe28S1+ADKNafDMo+4+MDZpylw+/txKPUdrNW9GY86VjCozgkXtotQ91kHUqI
+	 AMgdbZQTWd838IHMO0aUmFAq8QTiuv2NShnt92Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388901AbgF2UHd (ORCPT
+        id S2388896AbgF2UHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732949AbgF2TaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732946AbgF2TaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3853325209;
-        Mon, 29 Jun 2020 15:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BCA125248;
+        Mon, 29 Jun 2020 15:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444924;
-        bh=m8R7Cg1KJead1vQgeNRh3B18Pdr1dvqBOejLktU59HA=;
+        s=default; t=1593444962;
+        bh=3rNnnkQvxgqmhcMErzisHMd6/5gUFMS/6cR9myII+UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hiTQzkjt9R2myUtp+sNNVYrmvcQN/bGJaegQAGpDazpHkTwqNn3agAjScZ/Kp5X1P
-         QQ2mbEGT25a2ueCQDFE3H8VHrzDFRxfVmywdV+myIs5xySLRYpaLtqMWUJ5i9uVFkc
-         VF7UmVfRfAR0n4whthQddGYBnkWXBt6GPYlNpY88=
+        b=PnTDbUEqlLY0LOg9f1pIYC/OG4uTP9CuZfT5BxHyFH1hn3glkqp7eeHqpILWwoEAC
+         +IQHVv4r9Iyd7BHJO5CHVFt5KPx3FWb+/g14BJsWfSYbSJu3FRXY8zkvXBjkNWKdz6
+         /RqSvA2A36g1x9uGgbyEM/fETfJ6inuru5A7Jk3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 021/131] net: place xmit recursion in softnet data
-Date:   Mon, 29 Jun 2020 11:33:12 -0400
-Message-Id: <20200629153502.2494656-22-sashal@kernel.org>
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 060/131] cifs/smb3: Fix data inconsistent when zero file range
+Date:   Mon, 29 Jun 2020 11:33:51 -0400
+Message-Id: <20200629153502.2494656-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,157 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 97cdcf37b57e3f204be3000b9eab9686f38b4356 upstream.
+[ Upstream commit 6b69040247e14b43419a520f841f2b3052833df9 ]
 
-This fills a hole in softnet data, so no change in structure size.
+CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
+remote file to zero, but local page cache not update, then the data
+inconsistent with server, which leads the xfstest generic/008 failed.
 
-Also prepares for xmit_more placement in the same spot;
-skb->xmit_more will be removed in followup patch.
+So we need to remove the local page caches before send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
+re-cache it.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Cc: stable@vger.kernel.org # v3.17
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h | 40 +++++++++++++++++++++++++++++++--------
- net/core/dev.c            | 10 +++-------
- net/core/filter.c         |  6 +++---
- 3 files changed, 38 insertions(+), 18 deletions(-)
+ fs/cifs/smb2ops.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 84bbdcbb199a9..41beebcc61f45 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -2620,14 +2620,6 @@ void netdev_freemem(struct net_device *dev);
- void synchronize_net(void);
- int init_dummy_netdev(struct net_device *dev);
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 0b830ac8a9e72..2a523139a05fb 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2180,6 +2180,12 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
+ 	inode = d_inode(cfile->dentry);
+ 	cifsi = CIFS_I(inode);
  
--DECLARE_PER_CPU(int, xmit_recursion);
--#define XMIT_RECURSION_LIMIT	10
--
--static inline int dev_recursion_level(void)
--{
--	return this_cpu_read(xmit_recursion);
--}
--
- struct net_device *dev_get_by_index(struct net *net, int ifindex);
- struct net_device *__dev_get_by_index(struct net *net, int ifindex);
- struct net_device *dev_get_by_index_rcu(struct net *net, int ifindex);
-@@ -2967,6 +2959,11 @@ struct softnet_data {
- #ifdef CONFIG_XFRM_OFFLOAD
- 	struct sk_buff_head	xfrm_backlog;
- #endif
-+	/* written and read only by owning cpu: */
-+	struct {
-+		u16 recursion;
-+		u8  more;
-+	} xmit;
- #ifdef CONFIG_RPS
- 	/* input_queue_head should be written by cpu owning this struct,
- 	 * and only read by other cpus. Worth using a cache line.
-@@ -3002,6 +2999,28 @@ static inline void input_queue_tail_incr_save(struct softnet_data *sd,
- 
- DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
- 
-+static inline int dev_recursion_level(void)
-+{
-+	return __this_cpu_read(softnet_data.xmit.recursion);
-+}
++	/*
++	 * We zero the range through ioctl, so we need remove the page caches
++	 * first, otherwise the data may be inconsistent with the server.
++	 */
++	truncate_pagecache_range(inode, offset, offset + len - 1);
 +
-+#define XMIT_RECURSION_LIMIT	10
-+static inline bool dev_xmit_recursion(void)
-+{
-+	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
-+			XMIT_RECURSION_LIMIT);
-+}
-+
-+static inline void dev_xmit_recursion_inc(void)
-+{
-+	__this_cpu_inc(softnet_data.xmit.recursion);
-+}
-+
-+static inline void dev_xmit_recursion_dec(void)
-+{
-+	__this_cpu_dec(softnet_data.xmit.recursion);
-+}
-+
- void __netif_schedule(struct Qdisc *q);
- void netif_schedule_queue(struct netdev_queue *txq);
- 
-@@ -4314,6 +4333,11 @@ static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops *ops,
- 	return ops->ndo_start_xmit(skb, dev);
- }
- 
-+static inline bool netdev_xmit_more(void)
-+{
-+	return __this_cpu_read(softnet_data.xmit.more);
-+}
-+
- static inline netdev_tx_t netdev_start_xmit(struct sk_buff *skb, struct net_device *dev,
- 					    struct netdev_queue *txq, bool more)
- {
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 5e668d3b1e717..8f9a8b009a238 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3534,9 +3534,6 @@ static void skb_update_prio(struct sk_buff *skb)
- #define skb_update_prio(skb)
- #endif
- 
--DEFINE_PER_CPU(int, xmit_recursion);
--EXPORT_SYMBOL(xmit_recursion);
--
- /**
-  *	dev_loopback_xmit - loop back @skb
-  *	@net: network namespace this loopback is happening in
-@@ -3827,8 +3824,7 @@ static int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
- 		int cpu = smp_processor_id(); /* ok because BHs are off */
- 
- 		if (txq->xmit_lock_owner != cpu) {
--			if (unlikely(__this_cpu_read(xmit_recursion) >
--				     XMIT_RECURSION_LIMIT))
-+			if (dev_xmit_recursion())
- 				goto recursion_alert;
- 
- 			skb = validate_xmit_skb(skb, dev, &again);
-@@ -3838,9 +3834,9 @@ static int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
- 			HARD_TX_LOCK(dev, txq, cpu);
- 
- 			if (!netif_xmit_stopped(txq)) {
--				__this_cpu_inc(xmit_recursion);
-+				dev_xmit_recursion_inc();
- 				skb = dev_hard_start_xmit(skb, dev, txq, &rc);
--				__this_cpu_dec(xmit_recursion);
-+				dev_xmit_recursion_dec();
- 				if (dev_xmit_complete(rc)) {
- 					HARD_TX_UNLOCK(dev, txq);
- 					goto out;
-diff --git a/net/core/filter.c b/net/core/filter.c
-index b5521b60a2d4f..636e67a928477 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2002,7 +2002,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
- {
- 	int ret;
- 
--	if (unlikely(__this_cpu_read(xmit_recursion) > XMIT_RECURSION_LIMIT)) {
-+	if (dev_xmit_recursion()) {
- 		net_crit_ratelimited("bpf: recursion limit reached on datapath, buggy bpf program?\n");
- 		kfree_skb(skb);
- 		return -ENETDOWN;
-@@ -2011,9 +2011,9 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
- 	skb->dev = dev;
- 	skb->tstamp = 0;
- 
--	__this_cpu_inc(xmit_recursion);
-+	dev_xmit_recursion_inc();
- 	ret = dev_queue_xmit(skb);
--	__this_cpu_dec(xmit_recursion);
-+	dev_xmit_recursion_dec();
- 
- 	return ret;
- }
+ 	/* if file not oplocked can't be sure whether asking to extend size */
+ 	if (!CIFS_CACHE_READ(cifsi))
+ 		if (keep_size == false) {
 -- 
 2.25.1
 
