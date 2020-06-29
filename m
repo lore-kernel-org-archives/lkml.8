@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CE120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7585E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460597;
-	bh=1+Nu6MuUBTW3BOlVA/Y9jOm5rWUIfLwpB4nC3oDiAdQ=;
+	s=default; t=1593460600;
+	bh=HfZiEGyAU4+9OTJfIbM4lsIBBzpqkTQDxAY0fLZh2EA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgQ2S+ZVyH75/jC3v4Hq2rDXf8h2+md/sthYe3mGVTk6yzWenYKohlArow48Ii4Zn
-	 gCbSMarfzXu1rS1B1aZcNjrNnQK/d+RWaa68mb3chsx76LG9ur10xwgHzet8AetS3l
-	 ntuBjeL4ZccOMmgchMd2+eC6BMpbzoe9hk/LngUU=
+	b=UZUF8zz+klrfWXAAZX+0/M8EUhY980zzCAeLgCN9loCz2dQvogbN7dwt3IO02DZ1V
+	 LKQ94wRnHENlSFbvLBy1Rk3P6zixxR0kYnoxpsejk1wYOUFSysuQ6BnYHlRbDL6rvb
+	 UAbvJz/KNGVWmDPzaSjcAoH94YjCNy1ajvabDnfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbgF2T4f (ORCPT
+        id S1732321AbgF2T4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387644AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387639AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C915F251BD;
-        Mon, 29 Jun 2020 15:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE0824885;
+        Mon, 29 Jun 2020 15:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444492;
-        bh=1+Nu6MuUBTW3BOlVA/Y9jOm5rWUIfLwpB4nC3oDiAdQ=;
+        s=default; t=1593444384;
+        bh=HfZiEGyAU4+9OTJfIbM4lsIBBzpqkTQDxAY0fLZh2EA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZ99LQDNdHbSeH7arLcxJjQVQTEVgXrZdmk1f2c70MQ1ACki/ucU67UgPnpE/KAGJ
-         2sYVD8uyouNU4cqZkj67gizBSnQ1g36k8EYB3NuHL0Vdi3yyiEHUh8syXFR8MRfsBI
-         I43I5yMo2R3ftzrtmzBw2H/gIeJ6FrJxQCgpYCio=
+        b=oLB+hVjhKjxQJlOACGtD1QUwShZKee7Vs+L6o2fAVU2RzHXl4dNwjGehuiKEpYhy8
+         afcf0QyrCf5OvxrzmdZSnIqU0aWg0FH0ee8YjrpDPuFNwc6efAHgjARx4UzxEkOoPM
+         zcSSZDrok0nfuB1E1XUgkXyl9DgcPbGX+R5b53pU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 169/178] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
-Date:   Mon, 29 Jun 2020 11:25:14 -0400
-Message-Id: <20200629152523.2494198-170-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/178] bus: ti-sysc: Flush posted write on enable and disable
+Date:   Mon, 29 Jun 2020 11:23:26 -0400
+Message-Id: <20200629152523.2494198-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -64,43 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
+[ Upstream commit 5ce8aee81be6c8bc19051d7c7b0d3cbb7ac5fc3f ]
 
-The "ie_len" variable is in the 0-255 range and it comes from the
-network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
-lead to memory corruption.
+Looks like we're missing flush of posted write after module enable and
+disable. I've seen occasional errors accessing various modules, and it
+is suspected that the lack of posted writes can also cause random reboots.
 
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The errors we can see are similar to the one below from spi for example:
+
+44000000.ocp:L3 Custom Error: MASTER MPU TARGET L4CFG (Read): Data Access
+in User mode during Functional access
+...
+mcspi_wait_for_reg_bit
+omap2_mcspi_transfer_one
+spi_transfer_one_message
+...
+
+We also want to also flush posted write for disable. The clkctrl clock
+disable happens after module disable, and we don't want to have the
+module potentially stay active while we're trying to disable the clock.
+
+Fixes: d59b60564cbf ("bus: ti-sysc: Add generic enable/disable functions")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bus/ti-sysc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index ea3ea2a6b3142..f6678ba6d4bc7 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -1845,12 +1845,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
- 	if (!pIE)
- 		return _FAIL;
-+	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
-+		return _FAIL;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index f0bc0841cbc40..c088c6f4adcff 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -938,6 +938,9 @@ static int sysc_enable_module(struct device *dev)
+ 		sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
+ 	}
  
- 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
- 	supportRateNum = ie_len;
++	/* Flush posted write */
++	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
++
+ 	if (ddata->module_enable_quirk)
+ 		ddata->module_enable_quirk(ddata);
  
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
--	if (pIE)
-+	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
- 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
+@@ -1018,6 +1021,9 @@ static int sysc_disable_module(struct device *dev)
+ 		reg |= 1 << regbits->autoidle_shift;
+ 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
  
- 	return _SUCCESS;
++	/* Flush posted write */
++	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
++
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
