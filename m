@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5601F206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0613920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461710;
-	bh=NDjWpEVOqcrwfOoS0J3bTaePGj2M8pGgeS5pPPXAN8I=;
+	s=default; t=1593461724;
+	bh=GT2VB5Iqd6Zk1iaUTAJN6eBdprg2RUo19uhmtJmufp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AfYI5Culx/tzGoe7AJfGqubdfZ+luQU979+uMc73Jat/D995+7s+lBrUTg+vWFFFd
-	 9qPNC07VMD+gTZDqYULsq/HHFt0B3TFQDx1ZLxwZLZIMpv4WAgfI3HcFpK2aB1lfvw
-	 kGl+8O2CNtXUAlM0TiF8A3S4OevQ2jojMMczE6mw=
+	b=YRN7Xn4WY1/2nRKl4Zf1SoAZzhnZL6qFqDL8aKu8FEwqX0ApGQN5XxS261rvi7N+0
+	 ki4pTrqKV2qtBMRBNnkDTZgqGajgoaJiQGxqwHduwg7vJ6Z/yTG1TfZSC7ZRb8P/iP
+	 r1r6Wk/ySqVwp10qXi5Vn9BtCHZi+V63/wnl4yeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgF2UPJ (ORCPT
+        id S1732085AbgF2UPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732835AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:18 -0400
+        id S1732820AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0ED25309;
-        Mon, 29 Jun 2020 15:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EAE251EC;
+        Mon, 29 Jun 2020 15:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445135;
-        bh=NDjWpEVOqcrwfOoS0J3bTaePGj2M8pGgeS5pPPXAN8I=;
+        s=default; t=1593444909;
+        bh=GT2VB5Iqd6Zk1iaUTAJN6eBdprg2RUo19uhmtJmufp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWiM1QtpNtnqsmErOa6HR53jlFHNPKg9/0WHMetkDbum2D+qZh26He6PgjtrPHQ8r
-         kBWDmVg2+/oYRld9mL+SZ5Mw+ouKXOJd253J7SeM5Ho/PbT7CsPhqfz4QdTNdAel6J
-         /KlwGbs92Lyrqmwombg0BusZS+qxmcP+z6I7iPWw=
+        b=zDatoSSaIU5rMUil7BBYc7jvGSo1As0zTyXTmGF5ZVr4n6Pf7nFZ1xiRzR2WNU3Dg
+         vk2ZupmapWbSh9MBk5gmbZOqZ0XonC+MeAY6iL2Wm/+XDJLV29tx9jxWSaEm8nQFA6
+         rxbUfEbiJ3/CtxHBBL8FuZzKsogncfabwB9ozlKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Hagan <mnhagan88@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Doug Berger <opendmb@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/78] ARM: dts: NSP: Correct FA2 mailbox node
-Date:   Mon, 29 Jun 2020 11:37:29 -0400
-Message-Id: <20200629153806.2494953-42-sashal@kernel.org>
+Subject: [PATCH 4.19 005/131] net: bcmgenet: remove HFB_CTRL access
+Date:   Mon, 29 Jun 2020 11:32:56 -0400
+Message-Id: <20200629153502.2494656-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,40 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Hagan <mnhagan88@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit ac4e106d8934a5894811fc263f4b03fc8ed0fb7a ]
+[ Upstream commit 24d476db6dfb0f85130e348ca1bbd14afb73a8be ]
 
-The FA2 mailbox is specified at 0x18025000 but should actually be
-0x18025c00, length 0x400 according to socregs_nsp.h and board_bu.c. Also
-the interrupt was off by one and should be GIC SPI 151 instead of 150.
+Commit c5a54bbcecec ("net: bcmgenet: abort suspend on error")
+mistakenly introduced register accesses that should not occur
+in bcmgenet_wol_power_up_cfg().
 
-Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
-Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: c5a54bbcecec ("net: bcmgenet: abort suspend on error")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 1792192001a22..e975f9cabe84b 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -249,10 +249,10 @@ amac2: ethernet@24000 {
- 			status = "disabled";
- 		};
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index b3596e0ee47ba..57582efa362df 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -191,10 +191,6 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
+ 	reg &= ~MPD_EN;
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
  
--		mailbox: mailbox@25000 {
-+		mailbox: mailbox@25c00 {
- 			compatible = "brcm,iproc-fa2-mbox";
--			reg = <0x25000 0x445>;
--			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x25c00 0x400>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
+-	reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
+-	reg &= ~(RBUF_HFB_EN | RBUF_ACPI_EN);
+-	bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
+-
+ 	/* Disable CRC Forward */
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+ 	reg &= ~CMD_CRC_FWD;
 -- 
 2.25.1
 
