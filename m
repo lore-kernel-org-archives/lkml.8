@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55358206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B76206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462305;
-	bh=g4LR6Vh9bVVWevxF9IDlTa7+J/ZEmCI5rGAagLTX8Fw=;
+	s=default; t=1593462319;
+	bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IO5yBPFyicyAvEx7MQAaZpVGGq4c/Z/wM0eyTv18xp0UBoBez4AkWnEmDcrDMwAWx
-	 m0EG/Kl59Kj3jZK1LiS/4BfmSYvfNU0qnazTm2MbubvseTd+6rJ8Koel2tFfTc4vAm
-	 GOQmSoVPZGT+v9ZBFk5l6PSrCEhisvu3Mi3ETtPM=
+	b=v8Zp/6zVDsbWwyyYue4u8M7HFAR8qXCBR/dM5XQ8tgLahn8Fi3imlWRgKq5Ld+Vyg
+	 M1RaSfvJwTwoKvkidssx+cJyUdYiKkANt9boHFEz/Epk/xi/ZYlXoFQRC/2yySclMI
+	 xRgJvkiadM7rTnb9X2maRBH3dpJZcB+NBYb7tj8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389004AbgF2UZE (ORCPT
+        id S2388284AbgF2UZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732543AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732542AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7F125414;
-        Mon, 29 Jun 2020 15:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72DD925364;
+        Mon, 29 Jun 2020 15:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445368;
-        bh=g4LR6Vh9bVVWevxF9IDlTa7+J/ZEmCI5rGAagLTX8Fw=;
+        s=default; t=1593445225;
+        bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlZm9LTHPmY8NS16zdlozKa3f/6aKe0ifhlRMSsUQfpfGs3tFv+ROCtutUb23Ut1f
-         49NTbGH/rcJhxv74E+zIL8IIGEiN+x44lRlkFBJc6hy/jmgE48Zn2BOkbJV/MzT4N3
-         0A/GX63en7sLhjud/pHSXPGwt/nPxeE+kN+UU+2U=
+        b=E0FJ6abUCdFrKK5oNtQO7a2KlIPv0MOtL3UFSimPCcJfBv8qTp4wzpdJzMZNnC9he
+         17gn0PR5asVGLXPeBuY7CMa8QAqlJ5ZdjPHx6R0t9cdwvU7KhS0f974ZvMKc1JKjUT
+         FYhfk9DF2XSHrf0HtzL1s+RCYsu9yqpYSuvIXGH8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 123/191] mtd: rawnand: orion: Fix the probe error path
-Date:   Mon, 29 Jun 2020 11:38:59 -0400
-Message-Id: <20200629154007.2495120-124-sashal@kernel.org>
+Subject: [PATCH 4.9 012/191] usblp: poison URBs upon disconnect
+Date:   Mon, 29 Jun 2020 11:37:08 -0400
+Message-Id: <20200629154007.2495120-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,41 +66,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit be238fbf78e4c7c586dac235ab967d3e565a4d1a ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
-
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-34-miquel.raynal@bootlin.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/orion_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index cfd53f0ba6c31..0acfc0a7d8e08 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -167,7 +167,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	mtd->name = "orion_nand";
- 	ret = mtd_device_register(mtd, board->parts, board->nr_parts);
- 	if (ret) {
--		nand_release(nc);
-+		nand_cleanup(nc);
- 		goto no_dev;
- 	}
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 07c3c3449147f..c578d64edc153 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
+ 
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
++
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
+ }
+@@ -1397,9 +1398,11 @@ static void usblp_disconnect(struct usb_interface *intf)
+ 
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
+ }
  
 -- 
 2.25.1
