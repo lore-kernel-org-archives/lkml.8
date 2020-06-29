@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71785C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCEB20656
+	by mail.kernel.org (Postfix) with ESMTP id F1CA8206A1
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462249;
-	bh=iP1gvP2wcog21wU62DHuRmBJpMwxw/tfhY0+y8VJY7Q=;
+	s=default; t=1593462250;
+	bh=jxeRtGUTFudl/LcXwdaL28++ML6w0W2mxLCRMjSy+eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXRrCOkjMpq6gukP+bjsugqJD514HjMyyGMtQFo4zNtWA3KcyurTXoN0lGCcFJMxT
-	 VG5KNbXCPCVcji4ii27uhFK1uvXwm7jpv/nvwZ8ZKTeMW1qJoeQq+pV/glZc2U5U2V
-	 2B1L9kMBwhJHXrxrJNL1NwWFlsTnkzfb2uLYvDeY=
+	b=MG1fXE0CrtN2sAF1x6aM2y2ew0GfjDq3eA1nbS+Eye9v53o6eTz/dGWMRXox0iWyT
+	 4eA8QW2p/vAFbqUigGawWEHXQi8F4YZTL2DXjsDFqrBbbKnr0AOb8pU7+LUQuDEkQl
+	 fVsNjxassQzuypvoGAZ/gFn4gqWXVrALP0SZlh6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387828AbgF2UYI (ORCPT
+        id S2388937AbgF2UYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbgF2TZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732292AbgF2TZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57C69253F9;
-        Mon, 29 Jun 2020 15:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 599472544E;
+        Mon, 29 Jun 2020 15:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445344;
-        bh=iP1gvP2wcog21wU62DHuRmBJpMwxw/tfhY0+y8VJY7Q=;
+        s=default; t=1593445402;
+        bh=jxeRtGUTFudl/LcXwdaL28++ML6w0W2mxLCRMjSy+eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HZjGBlLqDE8otOf+atEWMRj5qqGm7xJkrLdpBcN/u07F6ag8goVOQ6qJXpO8SgmX
-         e2Pqeh71M2S5V66bMj9KQhxC+Gr88StjrsjttlCF726u2PnqFKTo5eULdcMVUwQUmM
-         F+A8lz9GF05HeXr9q/SjItPKyaP3khKZOyo+5/2g=
+        b=B/BQd/9G2tQgUzEVSFyX4bK8uJt+jcF2ho5iiBEVm5a395e2i/rxQxPm78TVC79aY
+         nRqtOo7uUmw8k5UtQmjNzRypsa/Bg8nC8AVOHvy9K/HKRAQu83p/QAt1NRH5iVXXSe
+         C8mWDFGaXg2AuoGvWvZ2M9fHRxgFphXI1DdoPsIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Michael Ira Krufky <mkrufky@linuxtv.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
+        Oliver Neukum <oneukum@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 102/191] media: dvb_frontend: get rid of get_property() callback
-Date:   Mon, 29 Jun 2020 11:38:38 -0400
-Message-Id: <20200629154007.2495120-103-sashal@kernel.org>
+Subject: [PATCH 4.9 154/191] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
+Date:   Mon, 29 Jun 2020 11:39:30 -0400
+Message-Id: <20200629154007.2495120-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,114 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
 
-commit 8f8a19fcc1a89b83d0ab6d7cf2bcdd272dbd4334 upstream
+commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
 
-Only lg2160 implement gets_property, but there's no need for that,
-as no other driver calls this callback, as get_frontend() does the
-same, and set_frontend() also calls lg2160 get_frontend().
+USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
+causing garbage chars on the TTY causing stray input to the shell
+and/or login prompt.
 
-So, get rid of it.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Michael Ira Krufky <mkrufky@linuxtv.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+Cc: stable@vger.kernel.org
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c |  9 +--------
- drivers/media/dvb-core/dvb_frontend.h |  3 ---
- drivers/media/dvb-frontends/lg2160.c  | 14 --------------
- 3 files changed, 1 insertion(+), 25 deletions(-)
+ drivers/usb/class/cdc-acm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 7eeb5d302c9c5..97c825f97b15e 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -1306,7 +1306,7 @@ static int dtv_property_process_get(struct dvb_frontend *fe,
- 				    struct dtv_property *tvp,
- 				    struct file *file)
- {
--	int r, ncaps;
-+	int ncaps;
+diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
+index 5b0bffba4aac0..2dc563b61b88a 100644
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1627,6 +1627,8 @@ static int acm_reset_resume(struct usb_interface *intf)
  
- 	switch(tvp->cmd) {
- 	case DTV_ENUM_DELSYS:
-@@ -1517,13 +1517,6 @@ static int dtv_property_process_get(struct dvb_frontend *fe,
- 		return -EINVAL;
- 	}
- 
--	/* Allow the frontend to override outgoing properties */
--	if (fe->ops.get_property) {
--		r = fe->ops.get_property(fe, tvp);
--		if (r < 0)
--			return r;
--	}
--
- 	dtv_property_dump(fe, false, tvp);
- 
- 	return 0;
-diff --git a/drivers/media/dvb-core/dvb_frontend.h b/drivers/media/dvb-core/dvb_frontend.h
-index fb6e84811504d..57cedbe5c2c79 100644
---- a/drivers/media/dvb-core/dvb_frontend.h
-+++ b/drivers/media/dvb-core/dvb_frontend.h
-@@ -399,8 +399,6 @@ struct dtv_frontend_properties;
-  * @analog_ops:		pointer to struct analog_demod_ops
-  * @set_property:	callback function to allow the frontend to validade
-  *			incoming properties. Should not be used on new drivers.
-- * @get_property:	callback function to allow the frontend to override
-- *			outcoming properties. Should not be used on new drivers.
-  */
- struct dvb_frontend_ops {
- 
-@@ -463,7 +461,6 @@ struct dvb_frontend_ops {
- 	struct analog_demod_ops analog_ops;
- 
- 	int (*set_property)(struct dvb_frontend* fe, struct dtv_property* tvp);
--	int (*get_property)(struct dvb_frontend* fe, struct dtv_property* tvp);
- };
- 
- #ifdef __DVB_CORE__
-diff --git a/drivers/media/dvb-frontends/lg2160.c b/drivers/media/dvb-frontends/lg2160.c
-index f51a3a0b3949a..1b640651531d0 100644
---- a/drivers/media/dvb-frontends/lg2160.c
-+++ b/drivers/media/dvb-frontends/lg2160.c
-@@ -1052,16 +1052,6 @@ static int lg216x_get_frontend(struct dvb_frontend *fe,
- 	return ret;
- }
- 
--static int lg216x_get_property(struct dvb_frontend *fe,
--			       struct dtv_property *tvp)
--{
--	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--
--	return (DTV_ATSCMH_FIC_VER == tvp->cmd) ?
--		lg216x_get_frontend(fe, c) : 0;
--}
--
--
- static int lg2160_set_frontend(struct dvb_frontend *fe)
- {
- 	struct lg216x_state *state = fe->demodulator_priv;
-@@ -1372,8 +1362,6 @@ static struct dvb_frontend_ops lg2160_ops = {
- 	.init                 = lg216x_init,
- 	.sleep                = lg216x_sleep,
- #endif
--	.get_property         = lg216x_get_property,
--
- 	.set_frontend         = lg2160_set_frontend,
- 	.get_frontend         = lg216x_get_frontend,
- 	.get_tune_settings    = lg216x_get_tune_settings,
-@@ -1400,8 +1388,6 @@ static struct dvb_frontend_ops lg2161_ops = {
- 	.init                 = lg216x_init,
- 	.sleep                = lg216x_sleep,
- #endif
--	.get_property         = lg216x_get_property,
--
- 	.set_frontend         = lg2160_set_frontend,
- 	.get_frontend         = lg216x_get_frontend,
- 	.get_tune_settings    = lg216x_get_tune_settings,
+ static const struct usb_device_id acm_ids[] = {
+ 	/* quirky and broken devices */
++	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
++	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
+ 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
+ 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
+ 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
 -- 
 2.25.1
 
