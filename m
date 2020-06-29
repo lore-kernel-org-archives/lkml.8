@@ -2,208 +2,157 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5873C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F9020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1783820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="v9Zl362z"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AmBn7Z1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389705AbgF2Unj (ORCPT
+        id S2389049AbgF2Uni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        Mon, 29 Jun 2020 16:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731626AbgF2TOC (ORCPT
+        with ESMTP id S1731625AbgF2TOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:02 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BA6C00874B
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:31:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j4so13161262wrp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0a0BV57yL5ficDtUjeioVVS7bAcbhc1pkjbiChvtOqw=;
-        b=v9Zl362zUqiASgib07aYF9GS74MB9McYmwsWwm7+u0JHRuQpa3JpFxQp5HKSqBu5bV
-         hME65OV8FA+Sv55A0o4GVkl+ixCjmwUWNfVgy2z+8TBssXcPIOrmWDGWt9+sbHHr66Cy
-         dM9KjCpllKI8bYvqw4vjCkcohZDHEXPCojjgMyUv3H0v/ZQ/Ab2RvpAS/l5oLbHEdRCh
-         Y8vGhsyLmEBHT1hNaD6YBQU0S1rBOZQIB71ttneeUsPFIOdHJQJWpRvbKjeQxIc/+3Jb
-         UnGZ9ogeuxEtE7BFE+LdxkUttNlG6vIAePCjPL+gxVgRW3uY9YQM0VODgnxR7MZj68lM
-         H9GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0a0BV57yL5ficDtUjeioVVS7bAcbhc1pkjbiChvtOqw=;
-        b=UTzH8TFN7RQmU/psLg2F9vjwRlQgRYEl4ghMHIqnto2HrooIYp1mijiK8D4ce+WB3D
-         b3VMOPWb00Gpf1AZeQKm9vUV/4D+sv85+m4l5jCwCE1f8gdbiGe39qr+wBRBZmXC/+yA
-         rylXfJqiJ8+fwNmo35l2Kp8o+ZI6EEQiW8y2y4wTClRKV0MJtO/zohw3GVWZpzrYP93N
-         pdrsVtFqwwIHufjLkxwqmxyOAmemDcWvNQ2HNYqe89ADWUpA2RUwOZBJU4lh4UJtjl2F
-         1O4Lxl0mQCRdxLmEc4dFYXAGTKVNg/OunDfCEPWB4/VbjkoJpp60xY5TUTWBvzeYGa5C
-         VF9g==
-X-Gm-Message-State: AOAM533b5Pv2FHmrrMuBPRiUVy312fmhD/L7/kh0xbDnkp9hfjSR0f2r
-        lm3+8j+tDp15CU1D//yuntZrEMqhkM/NaXdO0/rJng==
-X-Google-Smtp-Source: ABdhPJzYtZ0h83Rb5WNqf3L2Z5EidEEuCHUWCZ3RyjUvGssx1mKVKMQW6Z3EnvrO6S8+Wt/rD5qZ1q2bxYtlg5kacQY=
-X-Received: by 2002:adf:aa90:: with SMTP id h16mr16128490wrc.356.1593419513242;
- Mon, 29 Jun 2020 01:31:53 -0700 (PDT)
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on0630.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0e::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4AEC08EB2F
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:35:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gzr/k4oCbcvEW7AiZGYcqOtnZAuZ87sdUvtk2U1+45np+2XqI2wkn+fFSSxJpPvBzvIfY95CTvIOq74St4++o8KZSmmblZNTye/HXpATwTRNThRGDatoR7ljUseNIFLWjftAAYrgrzzhTocZ/TiG3sCYqAeB1r2A0QBTr/A1BuQsislJYxR8T/fhQB79nJpgE5K96HOZEwU801Bn2jlsjNAYE4K+uG3LRDRjpBayLVgvveyp4ZZSzCLH0nB8khiVoZOn2Ld67ikv6ce9mfoHwXG40rdyS7MF+wCGem4kduqbS3hMeLpWkcEFDTQUvYhDSTh8Df04Ob2TLaJwJ8gtaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jt9aKkcohM+VBBAMcQ1zSn0OzkcLoXfaQdNHqrsc8go=;
+ b=I19SIRA9E+ml4KlImtDM2f6dT2GjHOpm/8bQAdGCULUf7DUSebu1q6C/JEQQ0ZoD5czHKgShajRH6E8quwskYdXQrzJfn+BWOHsgk/ylOAEslvjCLUXnqiYfrr31rvAWJsumKBYEoB53GLwvctI0j8ms0CZg5nttGNUPix2ZLACLyf8/jdtFuC95JbVqXotqdhbEoV0cgmf+v07H7UuHofCgk1ft3b8hZnXEyEeIUp23T10ZYTN/LgLHpL7WsN/+yuJc5e+M2O/sjq6bnvSKohrrNhgmA8xyXA7NlZAZkvgt3wCT/sr95qbheSpOaRlE434mT7ymF9kj/VMpYltmvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jt9aKkcohM+VBBAMcQ1zSn0OzkcLoXfaQdNHqrsc8go=;
+ b=AmBn7Z1Vgx95lJz5b3JxDQb7dpR0/wYgFEuq3Qzew0A79iEejI01TsVFHzD149IWXAhzENJq8qJnyaImapEQolKWf0QRGEawwdDBkZNk1rzw+FT+BwyKqToGmCXB7v+rtFqIIzKTJNTMt9LLg+JmWqc28jUbdUiyQym7kw7s8VU=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB7PR04MB4764.eurprd04.prod.outlook.com (2603:10a6:10:15::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Mon, 29 Jun
+ 2020 06:35:48 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 06:35:48 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Stefano Stabellini <sstabellini@kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] xen: introduce xen_vring_use_dma
+Thread-Topic: [PATCH] xen: introduce xen_vring_use_dma
+Thread-Index: AQHWSgTusARd8c8cRkWwDit233DtZajneYoAgACU6oCAAC7QAIAAEpoAgAAGSwCAAUK2gIABcSaAgAPk6cCAADgrAIAAAH5wgAAC0YCAAABHUA==
+Date:   Mon, 29 Jun 2020 06:35:48 +0000
+Message-ID: <DB6PR0402MB27606A2A6308135D62476D80886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <20200624050355-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
+ <20200624163940-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
+ <20200626110629-mutt-send-email-mst@kernel.org>
+ <DB6PR0402MB27601CA74B85DA5A9F5E5DD6886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200629022124-mutt-send-email-mst@kernel.org>
+ <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200629023225-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200629023225-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e07dc2d3-9155-49ce-2410-08d81bf6a91d
+x-ms-traffictypediagnostic: DB7PR04MB4764:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4764AE24947258994AB8A440886E0@DB7PR04MB4764.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fK08amyxZaUi4JckED6/kpeUqMMw5buBVlalapbUcm+JSQK4QI84PEPgIYnkjkipS0xD9ABwB8ZcXtU/h/Y1OsDKtAVt4k4y7yMsyjn1Oa5BSHHepcIY7m4GIwnbEVNJJuthC4iVCMt+doQZU+ZAh26iGubJ/DeuGuOOXyNv4oM6PLJurQOiHffS1g7sdTacZiTsr+zppsy1C/3VBuisiyRVGG4KfeS0ux+2g8v3UsA7a2J/kgVZnBPHi2P5+10HIdKRjvpPPZ6yxmJFe43F3T3WeOuT1xkhR6Zi6ivDSCaAWVO+op7BLHTy95nrWHskMjgKfYQDmudAalEtAL7cIA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(66946007)(8936002)(8676002)(7416002)(9686003)(83380400001)(86362001)(44832011)(26005)(64756008)(2906002)(66556008)(6916009)(4326008)(66476007)(6506007)(66446008)(186003)(76116006)(4744005)(71200400001)(5660300002)(33656002)(478600001)(55016002)(316002)(7696005)(52536014)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 63k2owGulhusPRazW46hh/2a+efDxnw5Ak9iGbwd161buaq9mmMSZvvaGZMS87V5f2GDrg3WF4Oh7JXqPRgBE5SUGQmUoXnhTBOO19GPSMYZt+Lrlj0OpzO0Jql3BMWWSQplbol/Q+Z80+e4LL7EIQWzIhSBfPZjbEjV39ucPFLEIFEwTFsCsyK+6WFjKMeIrepcXL+MG+tAEIdcaugN7F9Y6LGblmbsvcCe/CTmqDsMDIq57bI+0chNC+fJQj24C3V+DPYtwKLJHwkrD0Wc90v8IQhcMJg4hjUp3lDEDbgI6vqOpEIfN4t2Zpxl16NFJ9+EvD5RN4ilnaa84iCF5iOkD+KQIlMPB5ex8az2GvDte+xkV4Mzg2p3SWTOKf0qsk3HKvh74vTDX2Bk1B+Zqsz+Z1harUbTpuDLx2jAEA5kih/aoXOqjQRM5mrc1peNTAo9qYuTNWsaSiK1sRsVD0Qc9Nun+TWq/L5HOWc68O5MhgpgJvac9kppMJ+CTTA4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <3de3a480517d167a3faae086aa8ab0c0c7141d99.1593397455.git.zong.li@sifive.com>
- <CAAhSdy3VBUTMg_b2tO12cTYuvHYtH=4dj9-qT-at35Whf3w_7w@mail.gmail.com>
- <CANXhq0pV87oSzyAt80ySoXGRXp26bCnahPW0r27J+wjj5yc=nw@mail.gmail.com>
- <CAAhSdy3BUfPCS+LUWp9GKdnf960N-UkxtUtRArgkVd-1cGZxhQ@mail.gmail.com> <CANXhq0rvjJ6yAcOq=bc7O_rYGDcbRfp7DJhcM0RBQ8q2x7xH0A@mail.gmail.com>
-In-Reply-To: <CANXhq0rvjJ6yAcOq=bc7O_rYGDcbRfp7DJhcM0RBQ8q2x7xH0A@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 29 Jun 2020 14:01:41 +0530
-Message-ID: <CAAhSdy1NE2yd1gGZBjEdUSt0cZy6b+pLH5sqLBmUafzryqd4iA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] dt-bindings: riscv: Add YAML documentation for PMU
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e07dc2d3-9155-49ce-2410-08d81bf6a91d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 06:35:48.4429
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NmRyPfTWtT9tmgZRVPpOrkiU+mkQIwuldVriqMockyAX0T7RoLpPgZZtv1zNbSJXKaVO8ByTSQcBW7CQ4G2crw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4764
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:06 PM Zong Li <zong.li@sifive.com> wrote:
->
-> On Mon, Jun 29, 2020 at 12:38 PM Anup Patel <anup@brainfault.org> wrote:
+> Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+>=20
+> On Mon, Jun 29, 2020 at 06:25:41AM +0000, Peng Fan wrote:
+> > > > > > Anyway, re-reading the last messages of the original thread
+> > > > > > [1], it looks like Peng had a clear idea on how to fix the gene=
+ral issue.
+> > > > > > Peng, what happened with that?
+> > > >
+> > > > We shrinked the rpmsg reserved area to workaround the issue.
+> > > > So still use the dma apis in rpmsg.
+> > > >
+> > > > But here I am going to address domu android trusty issue using virt=
+io.
+> > >
+> > > My suggestion is to first of all fix DMA API so it works properly.
 > >
-> > On Mon, Jun 29, 2020 at 9:58 AM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > On Mon, Jun 29, 2020 at 12:09 PM Anup Patel <anup@brainfault.org> wrote:
-> > > >
-> > > > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > > > >
-> > > > > Add device tree bindings for performance monitor unit. And it passes the
-> > > > > dt_binding_check verification.
-> > > > >
-> > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > > > ---
-> > > > >  .../devicetree/bindings/riscv/pmu.yaml        | 59 +++++++++++++++++++
-> > > > >  1 file changed, 59 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/riscv/pmu.yaml b/Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..f55ccbc6c685
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > > @@ -0,0 +1,59 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/riscv/pmu.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: RISC-V Performance Monitor Units
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Zong Li <zong.li@sifive.com>
-> > > > > +  - Paul Walmsley <paul.walmsley@sifive.com>
-> > > > > +  - Palmer Dabbelt <palmer@dabbelt.com>
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    items:
-> > > > > +      - const: riscv,pmu
-> > > > > +
-> > > > > +  riscv,width-base-cntr:
-> > > > > +    description: The width of cycle and instret CSRs.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > > +
-> > > > > +  riscv,width-event-cntr:
-> > > > > +    description: The width of hpmcounter CSRs.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > >
-> > > > The terms "base" and "event" is confusing because
-> > > > we only have counters with no interrupt associated with it.
-> > > >
-> > > > The RISC-V spec defines 3 counters and rest are all
-> > > > implementation specific counters.
-> > >
-> > > As I know, there are 2 counters of spec definition: cycle and instret.
-> > > What is the 3rd counter you mentioned?
+> > Could you please elaborate more details?
 > >
-> > TIME is a counter CSR.
+> > You mean the DMA API usage of rpmsg? Or xen domu dma_ops?
 > >
-> > >
-> > > >
-> > > > I suggest using the terms "spec counters" and "impl counters"
-> > > > instead of "base counters" and "event counters".
-> > >
-> > > OK, they are good to me. Let me change it.
-> > >
-> > >
-> > > >
-> > > > Further, "riscv,width" properties are redundant because
-> > > > RISC-V spec clearly tells that counters are 64bit for both
-> > > > RV32 and RV64.
-> > > >
->
-> Sorry for the lost replying. The maximum length of counters is 64, but
-> it doesn't require to implement all bits. A real case is that
-> unleashed board only implements 40 bit for mhpmcounters.
+> > Thanks,
+> > Peng.
+>=20
+> Not 100% sure but I think xen dma ops.
 
-The "3.1.11 Hardware Performance Monitor" clearly states that
-all counters are 64bit
+Sorry to ask again, could you explain more details about what issues
+do you see of current xen ARM domu dma_ops?=20
+Or Dom0 swiotlb xen dma_ops?
 
-To take care of the unleashed board, the "riscv,width-xyz" DT properties
-should be optional. Whenever these properties are not present, we
-should assume 64bit counter width.
+Thanks,
+Pen.g
 
->
-> > > > > +
-> > > > > +  riscv,n-event-cntr:
-> > > > > +    description: The number of hpmcounter CSRs.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > > +
-> > > > > +  riscv,hw-event-map:
-> > > > > +    description: The mapping of generic hardware events. Default is no mapping.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > +
-> > > > > +  riscv,hw-cache-event-map:
-> > > > > +    description: The mapping of generic hardware cache events.
-> > > > > +      Default is no mapping.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > +
-> > > > > +required:
-> > > > > +  - compatible
-> > > > > +  - riscv,width-base-cntr
-> > > > > +  - riscv,width-event-cntr
-> > > > > +  - riscv,n-event-cntr
-> > > > > +
-> > > > > +additionalProperties: false
-> > > > > +
-> > > > > +examples:
-> > > > > +  - |
-> > > > > +    pmu {
-> > > > > +      compatible = "riscv,pmu";
-> > > > > +      riscv,width-base-cntr = <64>;
-> > > > > +      riscv,width-event-cntr = <40>;
-> > > > > +      riscv,n-event-cntr = <2>;
-> > > > > +      riscv,hw-event-map = <0x0 0x0 0x1 0x1 0x3 0x0202 0x4 0x4000>;
-> > > > > +      riscv,hw-cache-event-map = <0x010201 0x0102 0x010204 0x0802>;
-> > > > > +    };
-> > > > > +
-> > > > > +...
-> > > > > --
-> > > > > 2.27.0
-> > > > >
-> > > >
-> > > > Regards,
-> > > > Anup
+>=20
+> --
+> MST
 
-Regards,
-Anup
