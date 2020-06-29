@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69165C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A97B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB7620702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460485;
-	bh=5b51oaYGmv5UdBU3iUqjQk4VeeXYAZTpru5VbdHQqGo=;
+	s=default; t=1593460489;
+	bh=19OlWGj9RaBxGlKCog2wC6rU/8KlpvB7Sp/c+ntoFhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+LDYYyLd15EghQbNfgRJPgOMzEsoncyM7X82rS6SKWfhDjtbNnvqPmiJpCVjgFfr
-	 1YxbcaBXzqagSqGBSGY64jjoXIpW66abuSOUeCYlLhGEeoMNUfLEuLPPxh5+aiupnt
-	 mecbVvH0wScg+/QwKqRrTbB/fenzNZxUVY57exLs=
+	b=btLgRGzuE8yG18B82o9wua1aIyExFogMvCnstHh2+4MjfisCFbycljfLuQ4Lndb2y
+	 r108b7hTqkS2z8IiLDplMGQhkrlc1cveYlOY2blJiY/TJ5AdmWOA4bQAi6NvjziuCn
+	 K3tb6KH5KEeiHKe3H81aIJHmvvbzXWiJ9TFLTrrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388241AbgF2Tyn (ORCPT
+        id S1731973AbgF2Tys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387671AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387670AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646DC251C6;
-        Mon, 29 Jun 2020 15:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6158924915;
+        Mon, 29 Jun 2020 15:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444497;
-        bh=5b51oaYGmv5UdBU3iUqjQk4VeeXYAZTpru5VbdHQqGo=;
+        s=default; t=1593444468;
+        bh=19OlWGj9RaBxGlKCog2wC6rU/8KlpvB7Sp/c+ntoFhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdK1hu/sjEyX4S9bgdbXcZCbV2hYXNrYgdsKUhuiwQhg9zi6wcUMCAuyzdmpQ/c2I
-         27kA0/o4SsnMKj5V8Q41ngzMnYBE2P+2l0adtQmgbu6C49H9HdZxUoYS0Ex+Bp1awr
-         UK71rr2iQeysqdmZlAFLOarmn+1ze3PQEVfHtPx0=
+        b=wgnqs/X0GiJy8r0Z5PqG+yCIBxOtvbIIWEyXjP9MqTGK+p0OPVpyknJ4tw+0U+gG4
+         HzrWmrSFLDMHcUbDRdJhDP2NWfHQRpOlWhkXGMfHXsAQXoBWNJUgnRS6XH4Su9cDvK
+         AyZyVL/juNWvWOIUZcnamtDwOrK2u82F4E7csn6U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, stable@kernel.vger.org,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 174/178] xprtrdma: Fix handling of RDMA_ERROR replies
-Date:   Mon, 29 Jun 2020 11:25:19 -0400
-Message-Id: <20200629152523.2494198-175-sashal@kernel.org>
+Subject: [PATCH 5.4 148/178] x86/cpu: Use pinning mask for CR4 bits needing to be 0
+Date:   Mon, 29 Jun 2020 11:24:53 -0400
+Message-Id: <20200629152523.2494198-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,58 +65,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 7b2182ec381f8ea15c7eb1266d6b5d7da620ad93 upstream.
+commit a13b9d0b97211579ea63b96c606de79b963c0f47 upstream.
 
-The RPC client currently doesn't handle ERR_CHUNK replies correctly.
-rpcrdma_complete_rqst() incorrectly passes a negative number to
-xprt_complete_rqst() as the number of bytes copied. Instead, set
-task->tk_status to the error value, and return zero bytes copied.
+The X86_CR4_FSGSBASE bit of CR4 should not change after boot[1]. Older
+kernels should enforce this bit to zero, and newer kernels need to
+enforce it depending on boot-time configuration (e.g. "nofsgsbase").
+To support a pinned bit being either 1 or 0, use an explicit mask in
+combination with the expected pinned bit values.
 
-In these cases, return -EIO rather than -EREMOTEIO. The RPC client's
-finite state machine doesn't know what to do with -EREMOTEIO.
+[1] https://lore.kernel.org/lkml/20200527103147.GI325280@hirez.programming.kicks-ass.net
 
-Additional clean ups:
-- Don't double-count RDMA_ERROR replies
-- Remove a stale comment
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@kernel.vger.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/202006082013.71E29A42@keescook
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/common.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index ef5102b605895..c56e6cfc4a623 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1246,8 +1246,7 @@ rpcrdma_decode_error(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
- 			be32_to_cpup(p), be32_to_cpu(rep->rr_xid));
- 	}
- 
--	r_xprt->rx_stats.bad_reply_count++;
--	return -EREMOTEIO;
-+	return -EIO;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 650df6d210496..9b3f25e146087 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -366,6 +366,9 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+ 	cr4_clear_bits(X86_CR4_UMIP);
  }
  
- /* Perform XID lookup, reconstruction of the RPC reply, and
-@@ -1284,13 +1283,11 @@ void rpcrdma_complete_rqst(struct rpcrdma_rep *rep)
- 	spin_unlock(&xprt->queue_lock);
- 	return;
++/* These bits should not change their value after CPU init is finished. */
++static const unsigned long cr4_pinned_mask =
++	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
+ static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+ static unsigned long cr4_pinned_bits __ro_after_init;
  
--/* If the incoming reply terminated a pending RPC, the next
-- * RPC call will post a replacement receive buffer as it is
-- * being marshaled.
-- */
- out_badheader:
- 	trace_xprtrdma_reply_hdr(rep);
- 	r_xprt->rx_stats.bad_reply_count++;
-+	rqst->rq_task->tk_status = status;
-+	status = 0;
- 	goto out;
+@@ -390,20 +393,20 @@ EXPORT_SYMBOL(native_write_cr0);
+ 
+ void native_write_cr4(unsigned long val)
+ {
+-	unsigned long bits_missing = 0;
++	unsigned long bits_changed = 0;
+ 
+ set_register:
+ 	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
+ 
+ 	if (static_branch_likely(&cr_pinning)) {
+-		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+-			bits_missing = ~val & cr4_pinned_bits;
+-			val |= bits_missing;
++		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
++			bits_changed = (val & cr4_pinned_mask) ^ cr4_pinned_bits;
++			val = (val & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 			goto set_register;
+ 		}
+-		/* Warn after we've set the missing bits. */
+-		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+-			  bits_missing);
++		/* Warn after we've corrected the changed bits. */
++		WARN_ONCE(bits_changed, "pinned CR4 bits changed: 0x%lx!?\n",
++			  bits_changed);
+ 	}
+ }
+ EXPORT_SYMBOL(native_write_cr4);
+@@ -415,7 +418,7 @@ void cr4_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_PCID))
+ 		cr4 |= X86_CR4_PCIDE;
+ 	if (static_branch_likely(&cr_pinning))
+-		cr4 |= cr4_pinned_bits;
++		cr4 = (cr4 & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 
+ 	__write_cr4(cr4);
+ 
+@@ -430,10 +433,7 @@ void cr4_init(void)
+  */
+ static void __init setup_cr_pinning(void)
+ {
+-	unsigned long mask;
+-
+-	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
+-	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
++	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & cr4_pinned_mask;
+ 	static_key_enable(&cr_pinning.key);
  }
  
 -- 
