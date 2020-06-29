@@ -4,145 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3138C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D13206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CA3206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466639;
-	bh=wGa+qBV2V1GP8GCaDKNfsF9c/pokG/wFsofWOOaD/1A=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=P9EFCE7A64MxRA7utBPF59iyIfQuFUPiCnlSv6dv+mvN5MzmbKxQTkQf7Y8VN/3VC
-	 Ch9I7bG3ADG7zbfH/S+ghS//T4BG0B0aObwF23iBUcCWrkAzK8qaexWAZTP1W6tgZY
-	 ezj67VKnIOraEHuXkl4GWcAzVHxFfvbBEbq7ioNk=
+	s=default; t=1593466644;
+	bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mCPReNjPgIB7lgt2ZXeF6CADc7wuVbDzMcahkavJ+sLLQzVHP9hK53Dzd9DffP0kD
+	 Hx7zP6hPIFDgu5bEqAwfdXAPug9J3ayNd16yL2BZAcmrESQwK60ysgqHfA2h8Mskmr
+	 MHlGWEDlGBFuQ961hDjeSMy0mcMaGgtwFapuDP30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391355AbgF2VhS (ORCPT
+        id S1732752AbgF2VhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgF2Ski (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728411AbgF2Ski (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:38 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D89233FA;
-        Mon, 29 Jun 2020 09:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAA723358;
+        Mon, 29 Jun 2020 08:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423343;
-        bh=wGa+qBV2V1GP8GCaDKNfsF9c/pokG/wFsofWOOaD/1A=;
+        s=default; t=1593418624;
+        bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1d8+pOd8qlUbq9Lf6Tv9SgdKv325LXF70tWFmB1u1Oy/VYEknAoL1KTkyUaW524Wt
-         NceffM3cUwmzpAomZGl0ISQwzj1hmI/Ow5CNDG+oY+juEoas4OQkRTcYw04Zr4w2Qn
-         WnwzvL0VObe0zqRSLthfSjypbYDrwOkFeJsz49CU=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jpqCS-006cAF-Eg; Mon, 29 Jun 2020 11:35:40 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] kconfig: qconf: cleanup includes
-Date:   Mon, 29 Jun 2020 11:35:35 +0200
-Message-Id: <c138cd9af908952a85a0fc0f0ff30c57b0e547ba.1593423060.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593423060.git.mchehab+huawei@kernel.org>
-References: <cover.1593423060.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        b=M3w/jW0sfpY78qC1W4n6OjPGfllVKlWaaK7SOpQVQopV6Em32krY/i5WIrgMV3qLk
+         vp14DQthtenP6sNr7r3+P61E3WmqI0okr9qg/iwMv2dcxDNmy3nxgzrPaz9GmOZpnA
+         NyZeEKzl1pngW5YhOIISNKGHKp+p8Au1+oLpdHvA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: hisilicon: Align UART nodename with dtschema
+Date:   Mon, 29 Jun 2020 10:16:57 +0200
+Message-Id: <20200629081657.13821-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629081657.13821-1-krzk@kernel.org>
+References: <20200629081657.13821-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of c-like include is deprecated on modern Qt
-versions. Use the c++ style includes.
+Fix dtschema validator warnings like:
+    uart@f8015000: $nodename:0: 'uart@f8015000' does not match '^serial(@[0-9a-f,]+)*$'
 
-While here, remove uneeded and redundant ones, sorting
-them on alphabetic order.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 27 +++++++++------------------
- scripts/kconfig/qconf.h  | 14 +++++++-------
- 2 files changed, 16 insertions(+), 25 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index c0ac8f7b5f1a..0e06afa08908 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -4,27 +4,18 @@
-  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
-  */
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 2072b637b5af..3d189d9f0d24 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -302,7 +302,7 @@
+ 			mboxes = <&mailbox 1 0 11>;
+ 		};
  
--#include <qglobal.h>
--
--#include <QMainWindow>
--#include <QList>
--#include <qtextbrowser.h>
- #include <QAction>
-+#include <QApplication>
-+#include <QCloseEvent>
-+#include <QDesktopWidget>
- #include <QFileDialog>
-+#include <QLabel>
-+#include <QLayout>
-+#include <QList>
- #include <QMenu>
--
--#include <qapplication.h>
--#include <qdesktopwidget.h>
--#include <qtoolbar.h>
--#include <qlayout.h>
--#include <qsplitter.h>
--#include <qlineedit.h>
--#include <qlabel.h>
--#include <qpushbutton.h>
--#include <qmenubar.h>
--#include <qmessagebox.h>
--#include <qregexp.h>
--#include <qevent.h>
-+#include <QMenuBar>
-+#include <QMessageBox>
-+#include <QToolBar>
+-		uart0: uart@f8015000 {	/* console */
++		uart0: serial@f8015000 {	/* console */
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf8015000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+@@ -311,7 +311,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- #include <stdlib.h>
+-		uart1: uart@f7111000 {
++		uart1: serial@f7111000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7111000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+@@ -325,7 +325,7 @@
+ 			status = "disabled";
+ 		};
  
-diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index c879d79ce817..d913a02967ae 100644
---- a/scripts/kconfig/qconf.h
-+++ b/scripts/kconfig/qconf.h
-@@ -3,17 +3,17 @@
-  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
-  */
+-		uart2: uart@f7112000 {
++		uart2: serial@f7112000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7112000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+@@ -337,7 +337,7 @@
+ 			status = "disabled";
+ 		};
  
--#include <QTextBrowser>
--#include <QTreeWidget>
--#include <QMainWindow>
-+#include <QCheckBox>
-+#include <QDialog>
- #include <QHeaderView>
--#include <qsettings.h>
-+#include <QLineEdit>
-+#include <QMainWindow>
- #include <QPushButton>
- #include <QSettings>
--#include <QLineEdit>
- #include <QSplitter>
--#include <QCheckBox>
--#include <QDialog>
-+#include <QTextBrowser>
-+#include <QTreeWidget>
-+
- #include "expr.h"
+-		uart3: uart@f7113000 {
++		uart3: serial@f7113000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7113000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+@@ -349,7 +349,7 @@
+ 			status = "disabled";
+ 		};
  
- class ConfigView;
+-		uart4: uart@f7114000 {
++		uart4: serial@f7114000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7114000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.26.2
+2.17.1
 
