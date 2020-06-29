@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E247AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C445620780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6312078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467206;
-	bh=Uf1bd+6LsOrQ0zPDM+2/FRJU4EgTQQASMeTpIMW2X7U=;
+	s=default; t=1593467215;
+	bh=bnLnIf/d+NGHn7mvXEL2xulT0w4PmpuJ11tRjWmHk3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oay/0rUEYvmYeJIPaiZjyO4AKJTd8t3xVKAAk2XY0Z/Duq72G6hDqBBZD65RvuRc9
-	 TAlG/YZQyZxoqZRf106xp8EQfoeizFcFpRSdJVd9gmp0x0gnbzwIvULf9ovt80qrrW
-	 vu2cS7wvFVqOKsMwqQP8Ic+6r+xMv0mJmbmexsac=
+	b=uUjLhq/MkZBMFR7ES8WPGGa2cfjkqW/GKCVOTBvtQjFfS5RlQIu9XqQBHQByjA19e
+	 pHknT14psHIOCw6y+HOqrgQJkTVJrUGU6A15sb4xyuLBetvoZLcrMa9bnhoTy9FJ7L
+	 lWOq0PDc4ZX7lkjgVbPECbQg0rJKNnm0o3P8hjzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404153AbgF2Vqc (ORCPT
+        id S2404172AbgF2Vqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:46:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgF2Sft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:49 -0400
+        id S1726743AbgF2Sfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44588246AD;
-        Mon, 29 Jun 2020 15:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5F824695;
+        Mon, 29 Jun 2020 15:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444002;
-        bh=Uf1bd+6LsOrQ0zPDM+2/FRJU4EgTQQASMeTpIMW2X7U=;
+        s=default; t=1593443990;
+        bh=bnLnIf/d+NGHn7mvXEL2xulT0w4PmpuJ11tRjWmHk3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/Fe4r+oKb+qdG6RWJf/yWYgFA0Q0+iZGRIqD7vEnOGvgvR6pVvJEN2yCS4Eh6M0p
-         wQlU5WxpGbEA4kxkEmhEaXYvZ0ID3kuqKbz8XRfSF78XRgLoYgLlcGucm668LLmGiW
-         MXToBlJ69fVQ7uZ62rGi2BUjwqIN7ESmpNAfFPyU=
+        b=WA+TfD/0D7Vso5RmC7ZgFtuNRxuNfMThY9DKgeNyVXVQO6M8wqcHWNz9FgEqHrg6t
+         GyGg+gAp4JTMsGU3wOrhg0HQ6NavYD9YDsZzwMnIDInwJt+UpAssSC1xK8KUhxUSxB
+         e4VSaDsel8jfl5k+Q2JaLksWSATS+p0oVdLFW1t8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabian Vogt <fvogt@suse.de>, Ard Biesheuvel <ardb@kernel.org>,
+Cc:     Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 108/265] efi/tpm: Verify event log header before parsing
-Date:   Mon, 29 Jun 2020 11:15:41 -0400
-Message-Id: <20200629151818.2493727-109-sashal@kernel.org>
+Subject: [PATCH 5.7 094/265] bus: ti-sysc: Use optional clocks on for enable and wait for softreset bit
+Date:   Mon, 29 Jun 2020 11:15:27 -0400
+Message-Id: <20200629151818.2493727-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,81 +66,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabian Vogt <fvogt@suse.de>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 7dfc06a0f25b593a9f51992f540c0f80a57f3629 ]
+[ Upstream commit d46f9fbec71997420e4fb83c04d9affdf423f879 ]
 
-It is possible that the first event in the event log is not actually a
-log header at all, but rather a normal event. This leads to the cast in
-__calc_tpm2_event_size being an invalid conversion, which means that
-the values read are effectively garbage. Depending on the first event's
-contents, this leads either to apparently normal behaviour, a crash or
-a freeze.
+Some modules reset automatically when idled, and when re-enabled, we must
+wait for the automatic OCP softreset to complete. And if optional clocks
+are configured, we need to keep the clocks on while waiting for the reset
+to complete.
 
-While this behaviour of the firmware is not in accordance with the
-TCG Client EFI Specification, this happens on a Dell Precision 5510
-with the TPM enabled but hidden from the OS ("TPM On" disabled, state
-otherwise untouched). The EFI firmware claims that the TPM is present
-and active and that it supports the TCG 2.0 event log format.
+Let's fix the issue by moving the OCP softreset code to a separate
+function sysc_wait_softreset(), and call it also from sysc_enable_module()
+with the optional clocks enabled.
 
-Fortunately, this can be worked around by simply checking the header
-of the first event and the event log header signature itself.
+This is based on what we're already doing for legacy platform data booting
+in _enable_sysc().
 
-Commit b4f1874c6216 ("tpm: check event log version before reading final
-events") addressed a similar issue also found on Dell models.
-
-Fixes: 6b0326190205 ("efi: Attempt to get the TCG2 event log in the boot stub")
-Signed-off-by: Fabian Vogt <fvogt@suse.de>
-Link: https://lore.kernel.org/r/1927248.evlx2EsYKh@linux-e202.suse.de
-Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1165773
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
+Reported-by: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/tpm_eventlog.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/bus/ti-sysc.c | 80 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index c253461b1c4e6..96d36b7a13440 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -81,6 +81,8 @@ struct tcg_efi_specid_event_algs {
- 	u16 digest_size;
- } __packed;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 369c97c3e0c0b..a3a2c269e9ad7 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -221,6 +221,35 @@ static u32 sysc_read_sysstatus(struct sysc *ddata)
+ 	return sysc_read(ddata, offset);
+ }
  
-+#define TCG_SPECID_SIG "Spec ID Event03"
++/* Poll on reset status */
++static int sysc_wait_softreset(struct sysc *ddata)
++{
++	u32 sysc_mask, syss_done, rstval;
++	int syss_offset, error = 0;
 +
- struct tcg_efi_specid_event_head {
- 	u8 signature[16];
- 	u32 platform_class;
-@@ -171,6 +173,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	int i;
- 	int j;
- 	u32 count, event_type;
-+	const u8 zero_digest[sizeof(event_header->digest)] = {0};
- 
- 	marker = event;
- 	marker_start = marker;
-@@ -198,10 +201,19 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	count = READ_ONCE(event->count);
- 	event_type = READ_ONCE(event->event_type);
- 
-+	/* Verify that it's the log header */
-+	if (event_header->pcr_idx != 0 ||
-+	    event_header->event_type != NO_ACTION ||
-+	    memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
-+		size = 0;
-+		goto out;
++	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
++	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
++
++	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
++		syss_done = 0;
++	else
++		syss_done = ddata->cfg.syss_mask;
++
++	if (syss_offset >= 0) {
++		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
++					   (rstval & ddata->cfg.syss_mask) ==
++					   syss_done,
++					   100, MAX_MODULE_SOFTRESET_WAIT);
++
++	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
++		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
++					   !(rstval & sysc_mask),
++					   100, MAX_MODULE_SOFTRESET_WAIT);
 +	}
 +
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
++	return error;
++}
++
+ static int sysc_add_named_clock_from_child(struct sysc *ddata,
+ 					   const char *name,
+ 					   const char *optfck_name)
+@@ -925,8 +954,34 @@ static int sysc_enable_module(struct device *dev)
+ 	struct sysc *ddata;
+ 	const struct sysc_regbits *regbits;
+ 	u32 reg, idlemodes, best_mode;
++	int error;
  
- 	/* Check if event is malformed. */
--	if (count > efispecid->num_algs) {
-+	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
-+		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
- 		size = 0;
- 		goto out;
- 	}
+ 	ddata = dev_get_drvdata(dev);
++
++	/*
++	 * Some modules like DSS reset automatically on idle. Enable optional
++	 * reset clocks and wait for OCP softreset to complete.
++	 */
++	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET) {
++		error = sysc_enable_opt_clocks(ddata);
++		if (error) {
++			dev_err(ddata->dev,
++				"Optional clocks failed for enable: %i\n",
++				error);
++			return error;
++		}
++	}
++	error = sysc_wait_softreset(ddata);
++	if (error)
++		dev_warn(ddata->dev, "OCP softreset timed out\n");
++	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET)
++		sysc_disable_opt_clocks(ddata);
++
++	/*
++	 * Some subsystem private interconnects, like DSS top level module,
++	 * need only the automatic OCP softreset handling with no sysconfig
++	 * register bits to configure.
++	 */
+ 	if (ddata->offsets[SYSC_SYSCONFIG] == -ENODEV)
+ 		return 0;
+ 
+@@ -1828,11 +1883,10 @@ static int sysc_legacy_init(struct sysc *ddata)
+  */
+ static int sysc_reset(struct sysc *ddata)
+ {
+-	int sysc_offset, syss_offset, sysc_val, rstval, error = 0;
+-	u32 sysc_mask, syss_done;
++	int sysc_offset, sysc_val, error;
++	u32 sysc_mask;
+ 
+ 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
+-	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
+ 
+ 	if (ddata->legacy_mode ||
+ 	    ddata->cap->regbits->srst_shift < 0 ||
+@@ -1841,11 +1895,6 @@ static int sysc_reset(struct sysc *ddata)
+ 
+ 	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
+ 
+-	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
+-		syss_done = 0;
+-	else
+-		syss_done = ddata->cfg.syss_mask;
+-
+ 	if (ddata->pre_reset_quirk)
+ 		ddata->pre_reset_quirk(ddata);
+ 
+@@ -1862,18 +1911,9 @@ static int sysc_reset(struct sysc *ddata)
+ 	if (ddata->post_reset_quirk)
+ 		ddata->post_reset_quirk(ddata);
+ 
+-	/* Poll on reset status */
+-	if (syss_offset >= 0) {
+-		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
+-					   (rstval & ddata->cfg.syss_mask) ==
+-					   syss_done,
+-					   100, MAX_MODULE_SOFTRESET_WAIT);
+-
+-	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
+-		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
+-					   !(rstval & sysc_mask),
+-					   100, MAX_MODULE_SOFTRESET_WAIT);
+-	}
++	error = sysc_wait_softreset(ddata);
++	if (error)
++		dev_warn(ddata->dev, "OCP softreset timed out\n");
+ 
+ 	if (ddata->reset_done_quirk)
+ 		ddata->reset_done_quirk(ddata);
 -- 
 2.25.1
 
