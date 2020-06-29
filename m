@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7142FC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142DF206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B61A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460537;
-	bh=LsChXUfa76rgOs4ON74QxPzms7W8ZkQq88VChCLshvM=;
+	s=default; t=1593460542;
+	bh=Ns+pjNwAt2eg2gvkWrtMbOxSuSIh9hDgxTHLsPwdHLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOYJucg8PqQXjWC5eb9OYcb48CC+IlSmTzN5gF11HKRjuUwkoD3F9X6CZ8qhwdudc
-	 GW1pwep8ZjgWjVbfmRhqeYlCLTX3DiAiqTlV1tLTENqT3lHG7GCgmqRlzF6w1ejG4x
-	 vg8vqF/6hJQjf+/hpLbIQca3XaQpHGfTjDb97Pl0=
+	b=JGdInEr51o29CNIjvugTMu7MlhcKgbWjL1x3TkAkcEnYmhFrLm0w9utJxfWtwqmqL
+	 0tJwC2mwT3SmmxopGVAmbq2b1T6hDJq0gstsdFpr9TlDje96cDcnaLYaandX9a78YK
+	 IYsMZn/NJplAWVFjONB4BIodkGS5ObxUm9SAXPcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388377AbgF2Tz1 (ORCPT
+        id S2388389AbgF2Tzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387652AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:25 -0400
+        id S2387651AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F1F24919;
-        Mon, 29 Jun 2020 15:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23C4D2481B;
+        Mon, 29 Jun 2020 15:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444469;
-        bh=LsChXUfa76rgOs4ON74QxPzms7W8ZkQq88VChCLshvM=;
+        s=default; t=1593444337;
+        bh=Ns+pjNwAt2eg2gvkWrtMbOxSuSIh9hDgxTHLsPwdHLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e82AnL/SoFAT07qIi+Bz9AZGUznNDOQ2eZLxcCJUzCWVEwcm+c66h18KHLVf2SYNx
-         vqJW7wgoASM295M9JMo1FqNMD1si3H5vbsBQE22VQmuLO6wsMDAco7lquckNzx4oka
-         5CnZ1HIRVB/nqP93Ienssj3VKE+bMMNpvjhTjezo=
+        b=r2Kg3LfRFijVIRt5UzEqnrKkOxsHps5JSDLgNS/zhqWpL5W9fjIH6PPapPEnC5aR9
+         GrHSbyL2GIkqTYbY0E82wlh4rnjyWHd6wKNqZSq4ddCWCcxvnUD9U6NlUo4eZQiFTk
+         UYLJREkfnIonkvTw3HlLDVyQIhaVrxIweF1Bjmow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 150/178] btrfs: fix bytes_may_use underflow when running balance and scrub in parallel
-Date:   Mon, 29 Jun 2020 11:24:55 -0400
-Message-Id: <20200629152523.2494198-151-sashal@kernel.org>
+Subject: [PATCH 5.4 012/178] net: increment xmit_recursion level in dev_direct_xmit()
+Date:   Mon, 29 Jun 2020 11:22:37 -0400
+Message-Id: <20200629152523.2494198-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,153 +66,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 6bd335b469f945f75474c11e3f577f85409f39c3 upstream.
+[ Upstream commit 0ad6f6e767ec2f613418cbc7ebe5ec4c35af540c ]
 
-When balance and scrub are running in parallel it is possible to end up
-with an underflow of the bytes_may_use counter of the data space_info
-object, which triggers a warning like the following:
+Back in commit f60e5990d9c1 ("ipv6: protect skb->sk accesses
+from recursive dereference inside the stack") Hannes added code
+so that IPv6 stack would not trust skb->sk for typical cases
+where packet goes through 'standard' xmit path (__dev_queue_xmit())
 
-   [134243.793196] BTRFS info (device sdc): relocating block group 1104150528 flags data
-   [134243.806891] ------------[ cut here ]------------
-   [134243.807561] WARNING: CPU: 1 PID: 26884 at fs/btrfs/space-info.h:125 btrfs_add_reserved_bytes+0x1da/0x280 [btrfs]
-   [134243.808819] Modules linked in: btrfs blake2b_generic xor (...)
-   [134243.815779] CPU: 1 PID: 26884 Comm: kworker/u8:8 Tainted: G        W         5.6.0-rc7-btrfs-next-58 #5
-   [134243.816944] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-   [134243.818389] Workqueue: writeback wb_workfn (flush-btrfs-108483)
-   [134243.819186] RIP: 0010:btrfs_add_reserved_bytes+0x1da/0x280 [btrfs]
-   [134243.819963] Code: 0b f2 85 (...)
-   [134243.822271] RSP: 0018:ffffa4160aae7510 EFLAGS: 00010287
-   [134243.822929] RAX: 000000000000c000 RBX: ffff96159a8c1000 RCX: 0000000000000000
-   [134243.823816] RDX: 0000000000008000 RSI: 0000000000000000 RDI: ffff96158067a810
-   [134243.824742] RBP: ffff96158067a800 R08: 0000000000000001 R09: 0000000000000000
-   [134243.825636] R10: ffff961501432a40 R11: 0000000000000000 R12: 000000000000c000
-   [134243.826532] R13: 0000000000000001 R14: ffffffffffff4000 R15: ffff96158067a810
-   [134243.827432] FS:  0000000000000000(0000) GS:ffff9615baa00000(0000) knlGS:0000000000000000
-   [134243.828451] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-   [134243.829184] CR2: 000055bd7e414000 CR3: 00000001077be004 CR4: 00000000003606e0
-   [134243.830083] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-   [134243.830975] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-   [134243.831867] Call Trace:
-   [134243.832211]  find_free_extent+0x4a0/0x16c0 [btrfs]
-   [134243.832846]  btrfs_reserve_extent+0x91/0x180 [btrfs]
-   [134243.833487]  cow_file_range+0x12d/0x490 [btrfs]
-   [134243.834080]  fallback_to_cow+0x82/0x1b0 [btrfs]
-   [134243.834689]  ? release_extent_buffer+0x121/0x170 [btrfs]
-   [134243.835370]  run_delalloc_nocow+0x33f/0xa30 [btrfs]
-   [134243.836032]  btrfs_run_delalloc_range+0x1ea/0x6d0 [btrfs]
-   [134243.836725]  ? find_lock_delalloc_range+0x221/0x250 [btrfs]
-   [134243.837450]  writepage_delalloc+0xe8/0x150 [btrfs]
-   [134243.838059]  __extent_writepage+0xe8/0x4c0 [btrfs]
-   [134243.838674]  extent_write_cache_pages+0x237/0x530 [btrfs]
-   [134243.839364]  extent_writepages+0x44/0xa0 [btrfs]
-   [134243.839946]  do_writepages+0x23/0x80
-   [134243.840401]  __writeback_single_inode+0x59/0x700
-   [134243.841006]  writeback_sb_inodes+0x267/0x5f0
-   [134243.841548]  __writeback_inodes_wb+0x87/0xe0
-   [134243.842091]  wb_writeback+0x382/0x590
-   [134243.842574]  ? wb_workfn+0x4a2/0x6c0
-   [134243.843030]  wb_workfn+0x4a2/0x6c0
-   [134243.843468]  process_one_work+0x26d/0x6a0
-   [134243.843978]  worker_thread+0x4f/0x3e0
-   [134243.844452]  ? process_one_work+0x6a0/0x6a0
-   [134243.844981]  kthread+0x103/0x140
-   [134243.845400]  ? kthread_create_worker_on_cpu+0x70/0x70
-   [134243.846030]  ret_from_fork+0x3a/0x50
-   [134243.846494] irq event stamp: 0
-   [134243.846892] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-   [134243.847682] hardirqs last disabled at (0): [<ffffffffb2abdedf>] copy_process+0x74f/0x2020
-   [134243.848687] softirqs last  enabled at (0): [<ffffffffb2abdedf>] copy_process+0x74f/0x2020
-   [134243.849913] softirqs last disabled at (0): [<0000000000000000>] 0x0
-   [134243.850698] ---[ end trace bd7c03622e0b0a96 ]---
-   [134243.851335] ------------[ cut here ]------------
+Alas af_packet had a dev_direct_xmit() path that was not
+dealing yet with xmit_recursion level.
 
-When relocating a data block group, for each extent allocated in the
-block group we preallocate another extent with the same size for the
-data relocation inode (we do it at prealloc_file_extent_cluster()).
-We reserve space by calling btrfs_check_data_free_space(), which ends
-up incrementing the data space_info's bytes_may_use counter, and
-then call btrfs_prealloc_file_range() to allocate the extent, which
-always decrements the bytes_may_use counter by the same amount.
+Also change sk_mc_loop() to dump a stack once only.
 
-The expectation is that writeback of the data relocation inode always
-follows a NOCOW path, by writing into the preallocated extents. However,
-when starting writeback we might end up falling back into the COW path,
-because the block group that contains the preallocated extent was turned
-into RO mode by a scrub running in parallel. The COW path then calls the
-extent allocator which ends up calling btrfs_add_reserved_bytes(), and
-this function decrements the bytes_may_use counter of the data space_info
-object by an amount corresponding to the size of the allocated extent,
-despite we haven't previously incremented it. When the counter currently
-has a value smaller then the allocated extent we reset the counter to 0
-and emit a warning, otherwise we just decrement it and slowly mess up
-with this counter which is crucial for space reservation, the end result
-can be granting reserved space to tasks when there isn't really enough
-free space, and having the tasks fail later in critical places where
-error handling consists of a transaction abort or hitting a BUG_ON().
+Without this patch, syzbot was able to trigger :
 
-Fix this by making sure that if we fallback to the COW path for a data
-relocation inode, we increment the bytes_may_use counter of the data
-space_info object. The COW path will then decrement it at
-btrfs_add_reserved_bytes() on success or through its error handling part
-by a call to extent_clear_unlock_delalloc() (which ends up calling
-btrfs_clear_delalloc_extent() that does the decrement operation) in case
-of an error.
+[1]
+[  153.567378] WARNING: CPU: 7 PID: 11273 at net/core/sock.c:721 sk_mc_loop+0x51/0x70
+[  153.567378] Modules linked in: nfnetlink ip6table_raw ip6table_filter iptable_raw iptable_nat nf_nat nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 iptable_filter macsec macvtap tap macvlan 8021q hsr wireguard libblake2s blake2s_x86_64 libblake2s_generic udp_tunnel ip6_udp_tunnel libchacha20poly1305 poly1305_x86_64 chacha_x86_64 libchacha curve25519_x86_64 libcurve25519_generic netdevsim batman_adv dummy team bridge stp llc w1_therm wire i2c_mux_pca954x i2c_mux cdc_acm ehci_pci ehci_hcd mlx4_en mlx4_ib ib_uverbs ib_core mlx4_core
+[  153.567386] CPU: 7 PID: 11273 Comm: b159172088 Not tainted 5.8.0-smp-DEV #273
+[  153.567387] RIP: 0010:sk_mc_loop+0x51/0x70
+[  153.567388] Code: 66 83 f8 0a 75 24 0f b6 4f 12 b8 01 00 00 00 31 d2 d3 e0 a9 bf ef ff ff 74 07 48 8b 97 f0 02 00 00 0f b6 42 3a 83 e0 01 5d c3 <0f> 0b b8 01 00 00 00 5d c3 0f b6 87 18 03 00 00 5d c0 e8 04 83 e0
+[  153.567388] RSP: 0018:ffff95c69bb93990 EFLAGS: 00010212
+[  153.567388] RAX: 0000000000000011 RBX: ffff95c6e0ee3e00 RCX: 0000000000000007
+[  153.567389] RDX: ffff95c69ae50000 RSI: ffff95c6c30c3000 RDI: ffff95c6c30c3000
+[  153.567389] RBP: ffff95c69bb93990 R08: ffff95c69a77f000 R09: 0000000000000008
+[  153.567389] R10: 0000000000000040 R11: 00003e0e00026128 R12: ffff95c6c30c3000
+[  153.567390] R13: ffff95c6cc4fd500 R14: ffff95c6f84500c0 R15: ffff95c69aa13c00
+[  153.567390] FS:  00007fdc3a283700(0000) GS:ffff95c6ff9c0000(0000) knlGS:0000000000000000
+[  153.567390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  153.567391] CR2: 00007ffee758e890 CR3: 0000001f9ba20003 CR4: 00000000001606e0
+[  153.567391] Call Trace:
+[  153.567391]  ip6_finish_output2+0x34e/0x550
+[  153.567391]  __ip6_finish_output+0xe7/0x110
+[  153.567391]  ip6_finish_output+0x2d/0xb0
+[  153.567392]  ip6_output+0x77/0x120
+[  153.567392]  ? __ip6_finish_output+0x110/0x110
+[  153.567392]  ip6_local_out+0x3d/0x50
+[  153.567392]  ipvlan_queue_xmit+0x56c/0x5e0
+[  153.567393]  ? ksize+0x19/0x30
+[  153.567393]  ipvlan_start_xmit+0x18/0x50
+[  153.567393]  dev_direct_xmit+0xf3/0x1c0
+[  153.567393]  packet_direct_xmit+0x69/0xa0
+[  153.567394]  packet_sendmsg+0xbf0/0x19b0
+[  153.567394]  ? plist_del+0x62/0xb0
+[  153.567394]  sock_sendmsg+0x65/0x70
+[  153.567394]  sock_write_iter+0x93/0xf0
+[  153.567394]  new_sync_write+0x18e/0x1a0
+[  153.567395]  __vfs_write+0x29/0x40
+[  153.567395]  vfs_write+0xb9/0x1b0
+[  153.567395]  ksys_write+0xb1/0xe0
+[  153.567395]  __x64_sys_write+0x1a/0x20
+[  153.567395]  do_syscall_64+0x43/0x70
+[  153.567396]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  153.567396] RIP: 0033:0x453549
+[  153.567396] Code: Bad RIP value.
+[  153.567396] RSP: 002b:00007fdc3a282cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  153.567397] RAX: ffffffffffffffda RBX: 00000000004d32d0 RCX: 0000000000453549
+[  153.567397] RDX: 0000000000000020 RSI: 0000000020000300 RDI: 0000000000000003
+[  153.567398] RBP: 00000000004d32d8 R08: 0000000000000000 R09: 0000000000000000
+[  153.567398] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004d32dc
+[  153.567398] R13: 00007ffee742260f R14: 00007fdc3a282dc0 R15: 00007fdc3a283700
+[  153.567399] ---[ end trace c1d5ae2b1059ec62 ]---
 
-Test case btrfs/061 from fstests could sporadically trigger this.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+f60e5990d9c1 ("ipv6: protect skb->sk accesses from recursive dereference inside the stack")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/btrfs/inode.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ net/core/dev.c  | 2 ++
+ net/core/sock.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 127cdecbe8726..48c8e5a4c9120 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -1328,6 +1328,8 @@ static int fallback_to_cow(struct inode *inode, struct page *locked_page,
- 			   int *page_started, unsigned long *nr_written)
- {
- 	const bool is_space_ino = btrfs_is_free_space_inode(BTRFS_I(inode));
-+	const bool is_reloc_ino = (BTRFS_I(inode)->root->root_key.objectid ==
-+				   BTRFS_DATA_RELOC_TREE_OBJECTID);
- 	const u64 range_bytes = end + 1 - start;
- 	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
- 	u64 range_start = start;
-@@ -1358,18 +1360,23 @@ static int fallback_to_cow(struct inode *inode, struct page *locked_page,
- 	 *    data space info, which we incremented in the step above.
- 	 *
- 	 * If we need to fallback to cow and the inode corresponds to a free
--	 * space cache inode, we must also increment bytes_may_use of the data
--	 * space_info for the same reason. Space caches always get a prealloc
-+	 * space cache inode or an inode of the data relocation tree, we must
-+	 * also increment bytes_may_use of the data space_info for the same
-+	 * reason. Space caches and relocated data extents always get a prealloc
- 	 * extent for them, however scrub or balance may have set the block
--	 * group that contains that extent to RO mode.
-+	 * group that contains that extent to RO mode and therefore force COW
-+	 * when starting writeback.
- 	 */
- 	count = count_range_bits(io_tree, &range_start, end, range_bytes,
- 				 EXTENT_NORESERVE, 0);
--	if (count > 0 || is_space_ino) {
--		const u64 bytes = is_space_ino ? range_bytes : count;
-+	if (count > 0 || is_space_ino || is_reloc_ino) {
-+		u64 bytes = count;
- 		struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
- 		struct btrfs_space_info *sinfo = fs_info->data_sinfo;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 5b7d9c2b821d6..727965565d311 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3832,10 +3832,12 @@ int dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
  
-+		if (is_space_ino || is_reloc_ino)
-+			bytes = range_bytes;
-+
- 		spin_lock(&sinfo->lock);
- 		btrfs_space_info_update_bytes_may_use(fs_info, sinfo, bytes);
- 		spin_unlock(&sinfo->lock);
+ 	local_bh_disable();
+ 
++	dev_xmit_recursion_inc();
+ 	HARD_TX_LOCK(dev, txq, smp_processor_id());
+ 	if (!netif_xmit_frozen_or_drv_stopped(txq))
+ 		ret = netdev_start_xmit(skb, dev, txq, false);
+ 	HARD_TX_UNLOCK(dev, txq);
++	dev_xmit_recursion_dec();
+ 
+ 	local_bh_enable();
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 0a2aef870d002..078791a6649a2 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -709,7 +709,7 @@ bool sk_mc_loop(struct sock *sk)
+ 		return inet6_sk(sk)->mc_loop;
+ #endif
+ 	}
+-	WARN_ON(1);
++	WARN_ON_ONCE(1);
+ 	return true;
+ }
+ EXPORT_SYMBOL(sk_mc_loop);
 -- 
 2.25.1
 
