@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB9C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3306C433E1
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18683206A1
+	by mail.kernel.org (Postfix) with ESMTP id C8C61206A1
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593465095;
-	bh=t9zzV/CyhZ4bPii2Izp8Lv2PwTTnEZksXP9gnh6vTMg=;
+	bh=N1s8XlJlVL3RmDycmudIzlEB6NDK7Cq5DmwaM/Jn0bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjHjp8bYKUurT0Fdkk9RUkaY0zXEzwJxQz+RJoXDcgHF0DHSA5GgzMdxDZwnT6neo
-	 3C3w85oHPjdogi7PRxX/kPsqVCpfuMvO5GtOU/JUjIEi2yC+CLYJV6THiuk14Trd1V
-	 ygBRDFZz4jfJfAusQq7QfKml5stz0izc0uzNTWMg=
+	b=LUYUYHttA6fo7RBswI5YwFXIe3Ht7dIIGfCmTr5xvyPMh0DNySLLyjRhUL6puzkWX
+	 anCj1GCJunzkwfKXuYTH0XB58qd1Iev0SMbAq1QSsyYIzmyGRBcvZFwttBNijE8+Je
+	 h2k6Et8iZVLE9hsBnid1W7XU4Bjnd2NH1V5q/JYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390382AbgF2VL3 (ORCPT
+        id S1730858AbgF2VLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:11:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgF2TAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730304AbgF2TAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8802550B;
-        Mon, 29 Jun 2020 15:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962C625500;
+        Mon, 29 Jun 2020 15:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446068;
-        bh=t9zzV/CyhZ4bPii2Izp8Lv2PwTTnEZksXP9gnh6vTMg=;
+        s=default; t=1593446064;
+        bh=N1s8XlJlVL3RmDycmudIzlEB6NDK7Cq5DmwaM/Jn0bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pj3AF0bqTdglDtGaY+9rLbkvZi0bbfxfoY43roUTUYGwxsTDUrMN4zFvQZK8aKrJ3
-         lYvtwZaUK0Vnn4dZfxgmemfo0aEsKzICmHwFmPJ3wVHS0n/nTPrr8rYFtCgttis6uQ
-         1gU+7kOr2y54IKGCfBlsfHIGSUJO9gTDlresDmSc=
+        b=pK+eIeLIfAFTDrTWg9LfJ5pQLdwRc62jn7sOIdsHbbRlm+JP9CM82ahkRVhor7NF/
+         uh26qo554rGenbLfqTq3vN+yaO5gTJvlt7FijvEYEmCpJgUpGnBlvae7CjX7wOi9/b
+         KrwtWHeN5LrJy+hOjTZVch+riXlRTIR7QmqekFpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, stable@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/135] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
-Date:   Mon, 29 Jun 2020 11:52:01 -0400
-Message-Id: <20200629155309.2495516-68-sashal@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>, Gerd Hoffmann <kraxel@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 063/135] drm/qxl: Use correct notify port address when creating cursor ring
+Date:   Mon, 29 Jun 2020 11:51:57 -0400
+Message-Id: <20200629155309.2495516-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -64,55 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 ]
+commit 80e5f89da3ab949fbbf1cae01dfaea29f5483a75 upstream.
 
-We do need access_process_vm() to access the target's reg_window.
-However, access to caller's memory (storing the result in
-genregs32_get(), fetching the new values in case of genregs32_set())
-should be done by normal uaccess primitives.
+The command ring and cursor ring use different notify port addresses
+definition: QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR. However, in
+qxl_device_init() we use QXL_IO_NOTIFY_CMD to create both command ring
+and cursor ring. This doesn't cause any problems now, because QEMU's
+behaviors on QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR are the same.
+However, QEMU's behavior may be change in future, so let's fix it.
 
-Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
-Cc: stable@kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+P.S.: In the X.org QXL driver, the notify port address of cursor ring
+      is correct.
+
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Cc: <stable@vger.kernel.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/1585635488-17507-1-git-send-email-chenhc@lemote.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/sparc/kernel/ptrace_64.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/qxl/qxl_kms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sparc/kernel/ptrace_64.c b/arch/sparc/kernel/ptrace_64.c
-index c1566170964f3..829592d5efe0b 100644
---- a/arch/sparc/kernel/ptrace_64.c
-+++ b/arch/sparc/kernel/ptrace_64.c
-@@ -534,13 +534,8 @@ static int genregs32_get(struct task_struct *target,
- 						      &reg, sizeof(reg), 0)
- 				    != sizeof(reg))
- 					return -EFAULT;
--				if (access_process_vm(target,
--						      (unsigned long) u,
--						      &reg, sizeof(reg), 1)
--				    != sizeof(reg))
-+				if (put_user(reg, u++))
- 					return -EFAULT;
--				pos++;
--				u++;
- 			}
- 		}
- 	}
-@@ -639,11 +634,7 @@ static int genregs32_set(struct task_struct *target,
- 			}
- 		} else {
- 			for (; count > 0 && pos < 32; count--) {
--				if (access_process_vm(target,
--						      (unsigned long)
--						      u,
--						      &reg, sizeof(reg), 0)
--				    != sizeof(reg))
-+				if (get_user(reg, u++))
- 					return -EFAULT;
- 				if (access_process_vm(target,
- 						      (unsigned long)
+diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
+index b2977a1819358..e8664a9f1e770 100644
+--- a/drivers/gpu/drm/qxl/qxl_kms.c
++++ b/drivers/gpu/drm/qxl/qxl_kms.c
+@@ -199,7 +199,7 @@ static int qxl_device_init(struct qxl_device *qdev,
+ 				&(qdev->ram_header->cursor_ring_hdr),
+ 				sizeof(struct qxl_command),
+ 				QXL_CURSOR_RING_SIZE,
+-				qdev->io_base + QXL_IO_NOTIFY_CMD,
++				qdev->io_base + QXL_IO_NOTIFY_CURSOR,
+ 				false,
+ 				&qdev->cursor_event);
+ 
 -- 
 2.25.1
 
