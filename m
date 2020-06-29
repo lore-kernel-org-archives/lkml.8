@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4631AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC2020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2795020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461473;
-	bh=jI2fGmYPwaAl3xVuOHptjhQ0C2N8hoO2htzF4IITZMo=;
+	s=default; t=1593461481;
+	bh=KwUthee85k0qWpGQUMSuG9b58Qni8eJRnQLLVWUWWRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCKvVIfLVU/EQg4233iXdL32vSA74YN8l4LD5PoTSFtoIGZK8+ZC/EH6f6t0OLOHt
-	 Coo3mqbpiBiLzXtr/W+5AS3+cWX7Uz5R//NPnQZujUcQ6sbsVlM9ej6c/67Mq1Z+V7
-	 kaldHu7nK0yeu01dWtpp5AelpnuW9UtbgbX1t8Us=
+	b=kzREweAkS4uvjWnZdE5e1msEjmHqXjg3SN4K/60DVZIMrq91LJOppHCRzNJehcDdF
+	 x+Kv5w0Z0KTOQDrYPSUeseoArQXHmCabIzpOMiYvunlieduNiEdEc76xD/ulKPA2Tk
+	 plqktRuehs8nWt2LRlRxLS0yiUDFNMt6WXOkuLpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgF2ULE (ORCPT
+        id S1729878AbgF2ULT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732899AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732901AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C44B252D6;
-        Mon, 29 Jun 2020 15:38:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28AF252D5;
+        Mon, 29 Jun 2020 15:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445102;
-        bh=jI2fGmYPwaAl3xVuOHptjhQ0C2N8hoO2htzF4IITZMo=;
+        s=default; t=1593445100;
+        bh=KwUthee85k0qWpGQUMSuG9b58Qni8eJRnQLLVWUWWRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6u2jp3eae5pQz3++iggxRDLDEPXh8NhBNZwozwBr1beG1MPPSLiNSMEm6JrD9eUY
-         BgPV5rUCWj6UgXgi2rieurAez1+5Ts4UEa8vNYeeR7mtzIOgHXRNA+d1futYDDRhW5
-         etGAX+fRDWDo4tG02CwLb1kRJP49e+r0YLm4/h1M=
+        b=dADZVgG+Lb/mLXOoekxlyWe/yMFf3d5oTZkS06TtSLQoR7AVSKcShfeakhyUmq9Bt
+         c6ij9CdDYwyS752PPfBFZr0M8LnGtAZSbIVFP9z72GlZOGIq8wEknE+ImUgxZbNREh
+         fPaEZpo5IbNR7MRJJQed4DXT5dfoSPzDN0edjUxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
+Cc:     Thomas Martitz <t.martitz@avm.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Felix Fietkau <nbd@nbd.name>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 11/78] net: usb: ax88179_178a: fix packet alignment padding
-Date:   Mon, 29 Jun 2020 11:36:59 -0400
-Message-Id: <20200629153806.2494953-12-sashal@kernel.org>
+Subject: [PATCH 4.14 09/78] net: bridge: enfore alignment for ethernet address
+Date:   Mon, 29 Jun 2020 11:36:57 -0400
+Message-Id: <20200629153806.2494953-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -65,72 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Thomas Martitz <t.martitz@avm.de>
 
-[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
+[ Upstream commit db7202dec92e6caa2706c21d6fc359af318bde2e ]
 
-Using a AX88179 device (0b95:1790), I see two bytes of appended data on
-every RX packet. For example, this 48-byte ping, using 0xff as a
-payload byte:
+The eth_addr member is passed to ether_addr functions that require
+2-byte alignment, therefore the member must be properly aligned
+to avoid unaligned accesses.
 
-  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
-	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
-	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
-	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
-	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
-	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0060:  ffff 961f
+The problem is in place since the initial merge of multicast to unicast:
+commit 6db6f0eae6052b70885562e1733896647ec1d807 bridge: multicast to unicast
 
-Those last two bytes - 96 1f - aren't part of the original packet.
-
-In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
-'alignment pseudo header' from the start of the packet, and sets the
-length from a per-packet field populated by hardware. It looks like that
-length field *includes* the 2-byte header; the current driver assumes
-that it's excluded.
-
-This change trims the 2-byte alignment header after we've set the packet
-length, so the resulting packet length is correct. While we're moving
-the comment around, this also fixes the spelling of 'pseudo'.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Fixes: 6db6f0eae605 ("bridge: multicast to unicast")
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Martitz <t.martitz@avm.de>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/ax88179_178a.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/bridge/br_private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 0f69b77e8502b..875639b0e9d56 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1400,10 +1400,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		}
+diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+index e870cfc85b147..14ff034e561c5 100644
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -190,8 +190,8 @@ struct net_bridge_port_group {
+ 	struct rcu_head			rcu;
+ 	struct timer_list		timer;
+ 	struct br_ip			addr;
++	unsigned char			eth_addr[ETH_ALEN] __aligned(2);
+ 	unsigned char			flags;
+-	unsigned char			eth_addr[ETH_ALEN];
+ };
  
- 		if (pkt_cnt == 0) {
--			/* Skip IP alignment psudo header */
--			skb_pull(skb, 2);
- 			skb->len = pkt_len;
--			skb_set_tail_pointer(skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(skb, 2);
-+			skb_set_tail_pointer(skb, skb->len);
- 			skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(skb, pkt_hdr);
- 			return 1;
-@@ -1412,8 +1412,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		ax_skb = skb_clone(skb, GFP_ATOMIC);
- 		if (ax_skb) {
- 			ax_skb->len = pkt_len;
--			ax_skb->data = skb->data + 2;
--			skb_set_tail_pointer(ax_skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(ax_skb, 2);
-+			skb_set_tail_pointer(ax_skb, ax_skb->len);
- 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(ax_skb, pkt_hdr);
- 			usbnet_skb_return(dev, ax_skb);
+ struct net_bridge_mdb_entry
 -- 
 2.25.1
 
