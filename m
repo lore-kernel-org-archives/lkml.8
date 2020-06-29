@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46249C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D14C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2496D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D9920702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460613;
-	bh=+bMoGyWP/fESpWZ9O9+RuWU1Hnmv1KyLI11MaGLeVQ8=;
+	s=default; t=1593460616;
+	bh=bFiSsjGfjHqZFs1IdDoWv8IHc8C3Jrkn+G/VfOZ8JG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HgSKFpXQPYSdpzsfUnPFlPX7brN2EkRdvC0JG1Q0CtCNCV3yfDguftr2Nrh9qWI4E
-	 4OfI4dkn2EYojPpYijvm33cguveV2MPOENtG2LkrEoRdDCESYnuFVXSoWbAdVkgiJy
-	 rruIokI2J5vFFMHjOms2LZo5P9brE4I3KFezmw1k=
+	b=TXhC6SzBjOTlTqNsnaAArOK2pT6j0kwS4BAXie2/TMIBIGYWWF3Icnm1dXOm2hIle
+	 MeeAY7o/Ld6B0k6+mmTkakZBkRp5r7kelWjTwpzN0P2GOlKtOhH9bgPWj5E7lm4DgW
+	 fKRAelL5HOhgLJkcdXu+pbMMxW33t4cH2j1NAq10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388346AbgF2T4v (ORCPT
+        id S2388331AbgF2T4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387638AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7CBD24835;
-        Mon, 29 Jun 2020 15:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19062486B;
+        Mon, 29 Jun 2020 15:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444347;
-        bh=+bMoGyWP/fESpWZ9O9+RuWU1Hnmv1KyLI11MaGLeVQ8=;
+        s=default; t=1593444367;
+        bh=bFiSsjGfjHqZFs1IdDoWv8IHc8C3Jrkn+G/VfOZ8JG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fGMcYR6qLZobgBGrmvVNJD7VYrdQZuL8sZHrMlbLSdhP9Xnq9rI09Z634z1hN6CUu
-         /EnmmLAbOFMAaaeL9BB8PNmTwzmyOGZrp7XTor5VikHljE374wY+3cskTnR/6Q3Szn
-         IERFqpVsJBXCxnXu8sJDpKhWSpasyy27L2QZb2NQ=
+        b=OgMU7YOmc3LNZxiwkX9iUuD2IXhtqjyfmDUO8MQkSdp0aYFTpFZL4xTKybLTFZwKb
+         1tk2njDepx4bVtLr9YE4UqWC7xsQ80JKxcAjljxIXYsawe115QE8dsiveYtzy7UJCD
+         nEWWjgx/KXYXc2DScGmupQQSfliAyFXF3Ek0n/Hc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Chihhao Chen <chihhao.chen@mediatek.com>,
+        Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 022/178] net: phy: Check harder for errors in get_phy_id()
-Date:   Mon, 29 Jun 2020 11:22:47 -0400
-Message-Id: <20200629152523.2494198-23-sashal@kernel.org>
+Subject: [PATCH 5.4 044/178] ALSA: usb-audio: add quirk for Samsung USBC Headset (AKG)
+Date:   Mon, 29 Jun 2020 11:23:09 -0400
+Message-Id: <20200629152523.2494198-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,53 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Macpaul Lin <macpaul.lin@mediatek.com>
 
-[ Upstream commit b2ffc75e2e990b09903f9d15ccd53bc5f3a4217c ]
+commit a32a1fc99807244d920d274adc46ba04b538cc8a upstream.
 
-Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
-phys") added a special condition to return -ENODEV in case -ENODEV or
--EIO was returned from the first read of the MII_PHYSID1 register.
+We've found Samsung USBC Headset (AKG) (VID: 0x04e8, PID: 0xa051)
+need a tiny delay after each class compliant request.
+Otherwise the device might not be able to be recognized each times.
 
-In case the MDIO bus data line pull-up is not strong enough, the MDIO
-bus controller will not flag this as a read error. This can happen when
-a pluggable daughter card is not connected and weak internal pull-ups
-are used (since that is the only option, otherwise the pins are
-floating).
-
-The second read of MII_PHYSID2 will be correctly flagged an error
-though, but now we will return -EIO which will be treated as a hard
-error, thus preventing MDIO bus scanning loops to continue succesfully.
-
-Apply the same logic to both register reads, thus allowing the scanning
-logic to proceed.
-
-Fixes: 02a6efcab675 ("net: phy: allow scanning busses with missing phys")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chihhao Chen <chihhao.chen@mediatek.com>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/phy_device.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/usb/quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 0907c3d8d94a2..dba52a5c378ad 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -797,8 +797,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index eb3da0b71269c..bf5083a20b6d5 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1603,6 +1603,14 @@ void snd_usb_ctl_msg_quirk(struct usb_device *dev, unsigned int pipe,
+ 	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
+ 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		usleep_range(1000, 2000);
++
++	/*
++	 * Samsung USBC Headset (AKG) need a tiny delay after each
++	 * class compliant request. (Model number: AAM625R or AAM627R)
++	 */
++	if (chip->usb_id == USB_ID(0x04e8, 0xa051) &&
++	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
++		usleep_range(5000, 6000);
+ }
  
- 	/* Grab the bits from PHYIR2, and put them in the lower half */
- 	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
--	if (phy_reg < 0)
--		return -EIO;
-+	if (phy_reg < 0) {
-+		/* returning -ENODEV doesn't stop bus scanning */
-+		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-+	}
- 
- 	*phy_id |= phy_reg;
- 
+ /*
 -- 
 2.25.1
 
