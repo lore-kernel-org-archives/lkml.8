@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6132C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF132082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DF12082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460051;
-	bh=Brifg5H2GM2UzNR684NMp71BfyWKASxXhfyy9IO3azY=;
+	s=default; t=1593460060;
+	bh=HBXY920oo0pacrv3V9t54CQyy7bpNG+4WV0uWzGTL84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vn37ccjrciOIlNHsS9661q7yYoxXOVqT3HkmsQELIFL+J1tiA2Txs3im4hXsz/Wqu
-	 zZk45F7R9wWVypgUhCt6yNNMd/tWuwUdGX2+RfhSdij75mpR0+UihykWGcKRSf2DiU
-	 i8nW94FqL/+rIskMfhAdOyEkeSXN9EGaW08ZcKrk=
+	b=KkbpQ72r44c50/gLxvZiBkadeqgpiD9IhjdVqOwTHAG6b77MvfRVSvo7EsTylITxD
+	 E6ffHC2EsWNckFL73178bSY7wMPNCiFS28cqAnZBtQiQJyvxUGrtk9fVg81/FskRJ4
+	 WsYe86gah1ZOOS/z3axPTwhm38uHG/fTsAs1RN9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388142AbgF2Tr2 (ORCPT
+        id S2388155AbgF2Tri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387791AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387786AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AD71248D5;
-        Mon, 29 Jun 2020 15:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81A07248BA;
+        Mon, 29 Jun 2020 15:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444430;
-        bh=Brifg5H2GM2UzNR684NMp71BfyWKASxXhfyy9IO3azY=;
+        s=default; t=1593444413;
+        bh=HBXY920oo0pacrv3V9t54CQyy7bpNG+4WV0uWzGTL84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jh5soXBGnjw5RJTd/hDaoZVOvvsgm20yf6HSJqfnqXH2MJxLjAY3h81QUGUuQuScH
-         8F1wZBUbXMgj2Xn8l9RENkOJAc/LfTxMxIrRPl6Mu60q3xJBvIuRhKkSb1ORbqGoAW
-         ac2lHaOeYWQQiytU2NyU+zM3lmAl2MFyp9rBPhAI=
+        b=NIOsk5RPNmZH++/GnW9j9Ma9aEXOarIGPsuSV7Pihhtl+/7dH5yXIl4atkcArqfjO
+         L8Ys0rq6YWH/3u5iFSiFlW31ZeoQi4uVecylkQ3HR4lQzWUihSQlsY3Sip1jCQTGg2
+         RGB98aCPJ6ScuQ3ybJcwmtg1Oo58Un1l6xgROe50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 108/178] nvme-multipath: fix deadlock due to head->lock
-Date:   Mon, 29 Jun 2020 11:24:13 -0400
-Message-Id: <20200629152523.2494198-109-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 091/178] iommu/vt-d: Update scalable mode paging structure coherency
+Date:   Mon, 29 Jun 2020 11:23:56 -0400
+Message-Id: <20200629152523.2494198-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,122 +67,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit d8a22f85609fadb46ba699e0136cc3ebdeebff79 ]
+[ Upstream commit 04c00956ee3cd138fd38560a91452a804a8c5550 ]
 
-In the following scenario scan_work and ana_work will deadlock:
+The Scalable-mode Page-walk Coherency (SMPWC) field in the VT-d extended
+capability register indicates the hardware coherency behavior on paging
+structures accessed through the pasid table entry. This is ignored in
+current code and using ECAP.C instead which is only valid in legacy mode.
+Fix this so that paging structure updates could be manually flushed from
+the cache line if hardware page walking is not snooped.
 
-When scan_work calls nvme_mpath_add_disk() this holds ana_lock
-and invokes nvme_parse_ana_log(), which may issue IO
-in device_add_disk() and hang waiting for an accessible path.
-
-While nvme_mpath_set_live() only called when nvme_state_is_live(),
-a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
-
-Since nvme_mpath_set_live() holds ns->head->lock, an ana_work on
-ANY ctrl will not be able to complete nvme_mpath_set_live()
-on the same ns->head, which is required in order to update
-the new accessible path and remove NVME_NS_ANA_PENDING..
-Therefore IO never completes: deadlock [1].
-
-Fix:
-Move device_add_disk out of the head->lock and protect it with an
-atomic test_and_set for a new NVME_NS_HEAD_HAS_DISK bit.
-
-[1]:
-kernel: INFO: task kworker/u8:2:160 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:2    D    0   160      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  nvme_update_ns_ana_state+0x22/0x60 [nvme_core]
-kernel:  nvme_update_ana_state+0xca/0xe0 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  nvme_read_ana_log+0x76/0x100 [nvme_core]
-kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-kernel: INFO: task kworker/u8:4:439 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:4    D    0   439      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  efi_partition+0x1e6/0x708
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_mpath_add_disk+0xbe/0x100 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  nvme_scan_work+0x256/0x390 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 765b6a98c1de3 ("iommu/vt-d: Enumerate the scalable mode capability")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-6-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 4 ++--
- drivers/nvme/host/nvme.h      | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 18f0a05c74b56..574b52e911f08 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -417,11 +417,11 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 	if (!head->disk)
- 		return;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 773ac2b0d6068..6366b5fbb3a46 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -611,6 +611,12 @@ struct intel_iommu *domain_get_iommu(struct dmar_domain *domain)
+ 	return g_iommus[iommu_id];
+ }
  
--	mutex_lock(&head->lock);
--	if (!(head->disk->flags & GENHD_FL_UP))
-+	if (!test_and_set_bit(NVME_NSHEAD_DISK_LIVE, &head->flags))
- 		device_add_disk(&head->subsys->dev, head->disk,
- 				nvme_ns_id_attr_groups);
++static inline bool iommu_paging_structure_coherency(struct intel_iommu *iommu)
++{
++	return sm_supported(iommu) ?
++			ecap_smpwc(iommu->ecap) : ecap_coherent(iommu->ecap);
++}
++
+ static void domain_update_iommu_coherency(struct dmar_domain *domain)
+ {
+ 	struct dmar_drhd_unit *drhd;
+@@ -622,7 +628,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
  
-+	mutex_lock(&head->lock);
- 	if (nvme_path_is_optimized(ns)) {
- 		int node, srcu_idx;
+ 	for_each_domain_iommu(i, domain) {
+ 		found = true;
+-		if (!ecap_coherent(g_iommus[i]->ecap)) {
++		if (!iommu_paging_structure_coherency(g_iommus[i])) {
+ 			domain->iommu_coherency = 0;
+ 			break;
+ 		}
+@@ -633,7 +639,7 @@ static void domain_update_iommu_coherency(struct dmar_domain *domain)
+ 	/* No hardware attached; use lowest common denominator */
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
+-		if (!ecap_coherent(iommu->ecap)) {
++		if (!iommu_paging_structure_coherency(iommu)) {
+ 			domain->iommu_coherency = 0;
+ 			break;
+ 		}
+@@ -2090,7 +2096,8 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
  
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 22e8401352c22..ed02260862cb5 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -345,6 +345,8 @@ struct nvme_ns_head {
- 	spinlock_t		requeue_lock;
- 	struct work_struct	requeue_work;
- 	struct mutex		lock;
-+	unsigned long		flags;
-+#define NVME_NSHEAD_DISK_LIVE	0
- 	struct nvme_ns __rcu	*current_path[];
- #endif
- };
+ 	context_set_fault_enable(context);
+ 	context_set_present(context);
+-	domain_flush_cache(domain, context, sizeof(*context));
++	if (!ecap_coherent(iommu->ecap))
++		clflush_cache_range(context, sizeof(*context));
+ 
+ 	/*
+ 	 * It's a non-present to present mapping. If hardware doesn't cache
 -- 
 2.25.1
 
