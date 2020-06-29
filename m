@@ -2,110 +2,133 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2059C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA56BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A36E720C56
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PLNdPqDK"
+	by mail.kernel.org (Postfix) with ESMTP id CA8BA21941
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390631AbgF2VW2 (ORCPT
+        id S2388815AbgF2VWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbgF2Swl (ORCPT
+        Mon, 29 Jun 2020 17:22:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64878 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726158AbgF2Swk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:41 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7099C00F818
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:23 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so15207038wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CmcV70ImeDYyJH0D86nMAPNtLmoBDPn40YdPz8GKRXM=;
-        b=PLNdPqDKMGgcPUcP/wj6XHcodfWWaUwahn0fM8Nis0Z3g+IGDBQuQgfwhl+tvscw66
-         0bWgg6XdXtXwj55wGKpPWE+CustOveiTYiE53BAPkQbfbUaak384QEuw3hTxZ0NTFH4e
-         sUo6fniQ1atpO9eouosuvMdnPlGHmhCwHjmlrMt7uYm6ES9Kl/4oIlOaR9X+8svJhfai
-         1XGu3s+iyX/dGMIHx1IM6fPCrW+YgvcUW9QGvkpS5zMlClxPVVl0cGmF4Mu3xsL8wtHN
-         JqHNNRW6XasBi59uDasZ1MFEoJ7O1UEgOnyCUBjWfkvGYS/iSqIOALVNIP89ar/AU1dv
-         RxeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CmcV70ImeDYyJH0D86nMAPNtLmoBDPn40YdPz8GKRXM=;
-        b=dpxk/2tjfBOxVWeQWGXOqRW2gMN4IYpDlrzXWASYixfPa5av/7QDXSTVNFPO1IPxqD
-         bo3dkSsHumK7TuObl682k3YQJ5HKZOhGDFXsMygtyUmrMEj6qQbT0pUlD9ueHFQm69Qm
-         A2RXkqWWUs9ti8Gd2+uxMRUH/V/+mh2QbCPBBjEEzwzePq3BOUwh7hRBRytWA39ch8RB
-         xIgdi4B6BrrjwhHiqRS6kX9kMGOG3rSdiZ546x5tBtTpIlEKKEAab0cdcJIOUvntFd2g
-         Z8k1DuMCxnJ2Pt3JvRG4HY+YOndreNBtJpzPUcergWT59nDenvT+fPFqKX+GGHdeDmtq
-         NWJQ==
-X-Gm-Message-State: AOAM533v6DIjw0Bm2QyiU/ZzhS1sZZVpGr7ndpVH95G3TUFRD/QmVTww
-        wMdQBI+VS3P45VWR+ShNTnr+DQ==
-X-Google-Smtp-Source: ABdhPJwt4s91RdM3HeV0ZjKpyywC+1yJrTUvPF1DKQrW4lw5NbJj9Mco8JDQ6isSDIY1/hJbYjX7fQ==
-X-Received: by 2002:a1c:e18a:: with SMTP id y132mr16196622wmg.27.1593433942722;
-        Mon, 29 Jun 2020 05:32:22 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id d201sm28064111wmd.34.2020.06.29.05.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 3/5] mfd: rave-sp: Fix mistake in 'struct rave_sp_deframer's kerneldoc
-Date:   Mon, 29 Jun 2020 13:32:13 +0100
-Message-Id: <20200629123215.1014747-4-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629123215.1014747-1-lee.jones@linaro.org>
-References: <20200629123215.1014747-1-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 14:52:40 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TCaS58133515;
+        Mon, 29 Jun 2020 08:44:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31xmxf2cda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 08:44:40 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TCafKU134876;
+        Mon, 29 Jun 2020 08:44:40 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31xmxf2cck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 08:44:39 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TCTnpM001503;
+        Mon, 29 Jun 2020 12:44:37 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 31wwr893s7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 12:44:37 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TCiY8U51445968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 12:44:34 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39F1911C05B;
+        Mon, 29 Jun 2020 12:44:34 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFA3911C052;
+        Mon, 29 Jun 2020 12:44:33 +0000 (GMT)
+Received: from osiris (unknown [9.171.82.53])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Jun 2020 12:44:33 +0000 (GMT)
+Date:   Mon, 29 Jun 2020 14:44:32 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH RFC 2/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
+Message-ID: <20200629124432.GE4468@osiris>
+References: <20200417150151.17239-1-david@redhat.com>
+ <20200417150151.17239-3-david@redhat.com>
+ <20200626163215.GA4268@osiris>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626163215.GA4268@osiris>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ mlxlogscore=813 lowpriorityscore=0 suspectscore=2 bulkscore=0 phishscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006290088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argument 'received' was incorrectly named by its struct type 'completion'
-instead of its name.
+On Fri, Jun 26, 2020 at 06:32:15PM +0200, Heiko Carstens wrote:
+> On Fri, Apr 17, 2020 at 05:01:51PM +0200, David Hildenbrand wrote:
+> > Commit 50be63450728 ("s390/mm: Convert bootmem to memblock") mentions
+> > 	"The original bootmem allocator is getting replaced by memblock. To
+> > 	cover the needs of the s390 kdump implementation the physical
+> > 	memory list is used."
+> > 
+> > zcore was converted to use resources instead of memblocks.
+> > memblock_discard() will *not* mess with "physmem", only with "memory" and
+> > "reserved" memblocks. So, that data will stay after early boot, to be
+> > used in arch/s390/kernel/crash_dump.c to create the ELF header from
+> > inside the 2nd (a.k.a. dumping) kernel.
+> > 
+> > We no longer need ARCH_KEEP_MEMBLOCK.
+> > 
+> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  arch/s390/Kconfig | 1 -
+> >  1 file changed, 1 deletion(-)
+> 
+> Applied, thanks!
 
-Fixes the following W=1 warning:
+Hmm, this triggers:
 
- drivers/mfd/rave-sp.c:107: warning: Function parameter or member 'received' not described in 'rave_sp_reply'
+WARNING: modpost: vmlinux.o(.text+0x1e7c2): Section mismatch in reference from the function elfcorehdr_alloc() to the variable .meminit.data:memblock
+The function elfcorehdr_alloc() references
+the variable __meminitdata memblock.
+This is often because elfcorehdr_alloc lacks a __meminitdata 
+annotation or the annotation of memblock is wrong.
 
-Cc: Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/rave-sp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+WARNING: modpost: vmlinux.o(.text+0x1e800): Section mismatch in reference from the function elfcorehdr_alloc() to the function .meminit.text:__next_mem_range()
+The function elfcorehdr_alloc() references
+the function __meminit __next_mem_range().
+This is often because elfcorehdr_alloc lacks a __meminit 
+annotation or the annotation of __next_mem_range is wrong.
 
-diff --git a/drivers/mfd/rave-sp.c b/drivers/mfd/rave-sp.c
-index 26c7b63e008a8..abaab541df19d 100644
---- a/drivers/mfd/rave-sp.c
-+++ b/drivers/mfd/rave-sp.c
-@@ -96,7 +96,7 @@ struct rave_sp_deframer {
-  * @data:	Buffer to store reply payload in
-  * @code:	Expected reply code
-  * @ackid:	Expected reply ACK ID
-- * @completion: Successful reply reception completion
-+ * @received:   Successful reply reception completion
-  */
- struct rave_sp_reply {
- 	size_t length;
--- 
-2.25.1
+WARNING: modpost: vmlinux.o(.text+0x1e844): Section mismatch in reference from the function elfcorehdr_alloc() to the function .meminit.text:__next_mem_range()
+The function elfcorehdr_alloc() references
+the function __meminit __next_mem_range().
+This is often because elfcorehdr_alloc lacks a __meminit 
+annotation or the annotation of __next_mem_range is wrong.
 
+So, reverted again ;)
