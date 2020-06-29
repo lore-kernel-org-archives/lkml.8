@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE78C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2756C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8970E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1950206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460382;
-	bh=nEt41+L6I/iykkT5L7QHCFrEli9hUrXRjbuM6cER2BY=;
+	s=default; t=1593460389;
+	bh=O3Sl3Zmj13GtombGOkybZSX876YS3KMgO+6+2EF6B1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4mXn1WpraDry17m6v1ADcz7XCmM4RZMjfsmg6dLjMnTNWtDBRoZod2EmMtnmJ+gO
-	 i/bcy4xRB/zY6m74n/surhGpjt7G21mKIoEpwfGeW3KD5Rhj8Mi2Hq+NSH+rdb8j6b
-	 Yhn9VELOvArFTe6jcaNZOrMMCZIcEnwiXdmMxE7c=
+	b=znZxJlmPjt5hZloTvVoASzHzxDbhoiwbnasi11zsc/TzeMdC0nxnBCxtgPzOxOvzE
+	 Vv7VkEdk1towA/muLKZ2z8hdC1oFH6QZaLgo+po+yI67Ba5Zfp1l+uAUbfYAG1gOaE
+	 lcqOC70XeRQq6Yx0FRLubPO33zHJ7l2lek88sPmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388323AbgF2Twh (ORCPT
+        id S2387689AbgF2TxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387706AbgF2Tk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:29 -0400
+        id S2387690AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747F2248E7;
-        Mon, 29 Jun 2020 15:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D537C248C2;
+        Mon, 29 Jun 2020 15:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444439;
-        bh=nEt41+L6I/iykkT5L7QHCFrEli9hUrXRjbuM6cER2BY=;
+        s=default; t=1593444417;
+        bh=O3Sl3Zmj13GtombGOkybZSX876YS3KMgO+6+2EF6B1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYVY/Apk/FCEMU+DZCZt/HLOliWfUiPS32deypIchDr6rXMmcd2slOLfBwdDkcSOS
-         SdLrrU3HXMkFkS76MIbqbW4fs3+wh+ClLEyk1Mx7+tKR6uba4brZ3HDlRZAVASV10R
-         HzWEdEckGRCp6uyhi6wjKO7HKBysU6iDOomWFoPo=
+        b=CN6cXVxv4UMRi7X1sQNKBt6Wi0esZS+0lrQ4HFEY19bvVSyboauTj5UfygSShkNKD
+         vjiejswDzKpgXrgCp3fIQsAcDtMybQ7PIvMsIVs5dQqWyqaB3IgE3/H5YMVjgXMqp6
+         1xsPd6b9rKvYNQuAYewBkjAZhhEfDLDrHNhupubk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/178] sata_rcar: handle pm_runtime_get_sync failure cases
-Date:   Mon, 29 Jun 2020 11:24:22 -0400
-Message-Id: <20200629152523.2494198-118-sashal@kernel.org>
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 095/178] net: qed: fix NVMe login fails over VFs
+Date:   Mon, 29 Jun 2020 11:24:00 -0400
+Message-Id: <20200629152523.2494198-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -64,66 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
+[ Upstream commit ccd7c7ce167a21dbf2b698ffcf00f11d96d44f9b ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+25ms sleep cycles in waiting for PF response are excessive and may lead
+to different timeout failures.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Start to wait with short udelays, and in most cases polling will end
+here. If the time was not sufficient, switch to msleeps.
+usleep_range() may go far beyond 100us depending on platform and tick
+configuration, hence atomic udelays for consistency.
+
+Also add explicit DMA barriers since 'done' always comes from a shared
+request-response DMA pool, and note that in the comment nearby.
+
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/sata_rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_vf.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index 3495e1733a8e6..c35b7b993133e 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -905,7 +905,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0)
--		goto err_pm_disable;
-+		goto err_pm_put;
- 
- 	host = ata_host_alloc(dev, 1);
- 	if (!host) {
-@@ -935,7 +935,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 
- err_pm_put:
- 	pm_runtime_put(dev);
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	return ret;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index 856051f50eb75..adc2c8f3d48ef 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -81,12 +81,17 @@ static void qed_vf_pf_req_end(struct qed_hwfn *p_hwfn, int req_status)
+ 	mutex_unlock(&(p_hwfn->vf_iov_info->mutex));
  }
-@@ -989,8 +988,10 @@ static int sata_rcar_resume(struct device *dev)
- 	int ret;
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
++#define QED_VF_CHANNEL_USLEEP_ITERATIONS	90
++#define QED_VF_CHANNEL_USLEEP_DELAY		100
++#define QED_VF_CHANNEL_MSLEEP_ITERATIONS	10
++#define QED_VF_CHANNEL_MSLEEP_DELAY		25
++
+ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
+ {
+ 	union vfpf_tlvs *p_req = p_hwfn->vf_iov_info->vf2pf_request;
+ 	struct ustorm_trigger_vf_zone trigger;
+ 	struct ustorm_vf_zone *zone_data;
+-	int rc = 0, time = 100;
++	int iter, rc = 0;
+ 
+ 	zone_data = (struct ustorm_vf_zone *)PXP_VF_BAR0_START_USDM_ZONE_B;
+ 
+@@ -126,11 +131,19 @@ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
+ 	REG_WR(p_hwfn, (uintptr_t)&zone_data->trigger, *((u32 *)&trigger));
+ 
+ 	/* When PF would be done with the response, it would write back to the
+-	 * `done' address. Poll until then.
++	 * `done' address from a coherent DMA zone. Poll until then.
+ 	 */
+-	while ((!*done) && time) {
+-		msleep(25);
+-		time--;
++
++	iter = QED_VF_CHANNEL_USLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		udelay(QED_VF_CHANNEL_USLEEP_DELAY);
++		dma_rmb();
 +	}
++
++	iter = QED_VF_CHANNEL_MSLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		msleep(QED_VF_CHANNEL_MSLEEP_DELAY);
++		dma_rmb();
+ 	}
  
- 	if (priv->type == RCAR_GEN3_SATA) {
- 		sata_rcar_init_module(priv);
-@@ -1015,8 +1016,10 @@ static int sata_rcar_restore(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	sata_rcar_setup_port(host);
- 
+ 	if (!*done) {
 -- 
 2.25.1
 
