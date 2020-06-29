@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FE8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B68EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7559621D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A56D21D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KN/J4ROR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BxIAXn9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgF2Sjo (ORCPT
+        id S1728134AbgF2Sju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:39:44 -0400
+        Mon, 29 Jun 2020 14:39:50 -0400
 Received: from lelv0143.ext.ti.com ([198.47.23.248]:54506 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728106AbgF2Sjl (ORCPT
+        with ESMTP id S1726084AbgF2Sjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:39:41 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCr4Ph015342;
-        Mon, 29 Jun 2020 07:53:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593435184;
-        bh=prnwTOgxqOwaVzHicWh00ZrdSrVyEiINn+lOenIn0iI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KN/J4ROR/oI5Az5/BT4HzEw3lmfTgU9XuuKif52wr4+knLyt8ZqQ53HDp0MRiyuXr
-         VKuqfawTMNL0HmyO0GpHpR6onydb7AT2EqQyU3aOccmijzvJ+7s8VuEunDX+lg9qFe
-         lF/r2rSe3H9fB1x/q5Wxm6+imz5T/SWjIEbPuD4o=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCr4RE111295
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 29 Jun 2020 07:53:04 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 07:53:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 07:53:03 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugx015456;
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCr25O015325;
         Mon, 29 Jun 2020 07:53:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593435182;
+        bh=P0UG0v9WZr2hySBskVuVNfPW+YNPbGGZZJtra3qz4wQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=BxIAXn9pA9SiL6e4p4eWsaoij0Hi+deiYTP2BN+gMGn9VYWWL8h+a8QtUv12ocBWT
+         ia1rvJwuMw5xlXW+2Qcp23rIjoi6WqaI1lKFDDQTbRbkhwReU4auk/olLTRmX7wp79
+         589Web2cMuwMWtPDEhaxXItGi5nSBXxPSNyiVRr0=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCr2NU111046
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Jun 2020 07:53:02 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
+ Jun 2020 07:53:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 29 Jun 2020 07:53:01 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugw015456;
+        Mon, 29 Jun 2020 07:52:59 -0500
 From:   Roger Quadros <rogerq@ti.com>
 To:     <t-kristo@ti.com>
 CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 2/6] arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
-Date:   Mon, 29 Jun 2020 15:52:50 +0300
-Message-ID: <20200629125254.28754-3-rogerq@ti.com>
+Subject: [PATCH v4 1/6] dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system controller
+Date:   Mon, 29 Jun 2020 15:52:49 +0300
+Message-ID: <20200629125254.28754-2-rogerq@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200629125254.28754-1-rogerq@ti.com>
 References: <20200629125254.28754-1-rogerq@ti.com>
@@ -67,275 +67,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+Add DT binding schema for J721e system controller.
 
-Add DT nodes for all instances of WIZ and SERDES modules.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 241 ++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
+ .../mfd/ti,j721e-system-controller.yaml       | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 96c929da639d..b11cb51af747 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
-  */
-+#include <dt-bindings/phy/phy.h>
- 
- &cbass_main {
- 	msmc_ram: sram@70000000 {
-@@ -277,6 +278,246 @@
- 		pinctrl-single,function-mask = <0xffffffff>;
- 	};
- 
-+	dummy_cmn_refclk: dummy-cmn-refclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <100000000>;
-+	};
+diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+new file mode 100644
+index 000000000000..03d0a232c75e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/ti,j721e-system-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	dummy_cmn_refclk1: dummy-cmn-refclk1 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <100000000>;
-+	};
++title: TI J721e System Controller Registers R/W Device Tree Bindings
 +
-+	serdes_wiz0: wiz@5000000 {
-+		compatible = "ti,j721e-wiz-16g";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
-+		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-+		assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
-+		assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
-+		num-lanes = <2>;
-+		#reset-cells = <1>;
-+		ranges = <0x5000000 0x0 0x5000000 0x10000>;
++description: |
++  This represents the Control Module registers (CTRL_MMR0) on the SoC.
++  System controller node represents a register region containing a set
++  of miscellaneous registers. The registers are not cohesive enough to
++  represent as any specific type of device. The typical use-case is
++  for some other node's driver, or platform-specific code, to acquire
++  a reference to the syscon node (e.g. by phandle, node path, or
++  search using a specific compatible value), interrogate the node (or
++  associated OS driver) to determine the location of the registers,
++  and access the registers directly.
 +
-+		wiz0_pll0_refclk: pll0-refclk {
-+			clocks = <&k3_clks 292 11>, <&dummy_cmn_refclk>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz0_pll0_refclk>;
-+			assigned-clock-parents = <&k3_clks 292 11>;
-+		};
++maintainers:
++  - Kishon Vijay Abraham I <kishon@ti.com>
++  - Roger Quadros <rogerq@ti.com
 +
-+		wiz0_pll1_refclk: pll1-refclk {
-+			clocks = <&k3_clks 292 0>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz0_pll1_refclk>;
-+			assigned-clock-parents = <&k3_clks 292 0>;
-+		};
++properties:
++  compatible:
++    anyOf:
++      - items:
++        - enum:
++           - ti,j721e-system-controller
++        - const: syscon
++        - const: simple-mfd
 +
-+		wiz0_refclk_dig: refclk-dig {
-+			clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz0_refclk_dig>;
-+			assigned-clock-parents = <&k3_clks 292 11>;
-+		};
++  "#address-cells":
++    const: 1
 +
-+		wiz0_cmn_refclk_dig_div: cmn-refclk-dig-div {
-+			clocks = <&wiz0_refclk_dig>;
-+			#clock-cells = <0>;
-+		};
++  "#size-cells":
++    const: 1
 +
-+		wiz0_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
-+			clocks = <&wiz0_pll1_refclk>;
-+			#clock-cells = <0>;
-+		};
++  ranges: true
 +
-+		serdes0: serdes@5000000 {
-+			compatible = "ti,sierra-phy-t0";
-+			reg-names = "serdes";
-+			reg = <0x5000000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&serdes_wiz0 0>;
-+			reset-names = "sierra_reset";
-+			clocks = <&wiz0_cmn_refclk_dig_div>, <&wiz0_cmn_refclk1_dig_div>;
-+			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
-+		};
-+	};
++# Optional children
 +
-+	serdes_wiz1: wiz@5010000 {
-+		compatible = "ti,j721e-wiz-16g";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		power-domains = <&k3_pds 293 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 293 5>, <&k3_clks 293 13>, <&dummy_cmn_refclk>;
-+		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-+		assigned-clocks = <&k3_clks 293 13>, <&k3_clks 293 0>;
-+		assigned-clock-parents = <&k3_clks 293 17>, <&k3_clks 293 4>;
-+		num-lanes = <2>;
-+		#reset-cells = <1>;
-+		ranges = <0x5010000 0x0 0x5010000 0x10000>;
++  "^serdes-ln-ctrl@[0-9a-f]+$":
++    type: object
++    description: |
++      This is the SERDES lane control mux. It should follow the bindings
++      specified in
++      Documentation/devicetree/bindings/mux/reg-mux.txt
 +
-+		wiz1_pll0_refclk: pll0-refclk {
-+			clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz1_pll0_refclk>;
-+			assigned-clock-parents = <&k3_clks 293 13>;
-+		};
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
 +
-+		wiz1_pll1_refclk: pll1-refclk {
-+			clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz1_pll1_refclk>;
-+			assigned-clock-parents = <&k3_clks 293 0>;
-+		};
++unevaluatedProperties: false
 +
-+		wiz1_refclk_dig: refclk-dig {
-+			clocks = <&k3_clks 293 13>, <&k3_clks 293 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz1_refclk_dig>;
-+			assigned-clock-parents = <&k3_clks 293 13>;
-+		};
++examples:
++  - |
++    scm_conf: scm-conf@100000 {
++        compatible = "ti,j721e-system-controller", "syscon", "simple-mfd";
++        reg = <0x00100000 0x1c000>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges;
 +
-+		wiz1_cmn_refclk_dig_div: cmn-refclk-dig-div{
-+			clocks = <&wiz1_refclk_dig>;
-+			#clock-cells = <0>;
-+		};
-+
-+		wiz1_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
-+			clocks = <&wiz1_pll1_refclk>;
-+			#clock-cells = <0>;
-+		};
-+
-+		serdes1: serdes@5010000 {
-+			compatible = "ti,sierra-phy-t0";
-+			reg-names = "serdes";
-+			reg = <0x5010000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&serdes_wiz1 0>;
-+			reset-names = "sierra_reset";
-+			clocks = <&wiz1_cmn_refclk_dig_div>, <&wiz1_cmn_refclk1_dig_div>;
-+			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
-+		};
-+	};
-+
-+	serdes_wiz2: wiz@5020000 {
-+		compatible = "ti,j721e-wiz-16g";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		power-domains = <&k3_pds 294 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 294 5>, <&k3_clks 294 11>, <&dummy_cmn_refclk>;
-+		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-+		assigned-clocks = <&k3_clks 294 11>, <&k3_clks 294 0>;
-+		assigned-clock-parents = <&k3_clks 294 15>, <&k3_clks 294 4>;
-+		num-lanes = <2>;
-+		#reset-cells = <1>;
-+		ranges = <0x5020000 0x0 0x5020000 0x10000>;
-+
-+		wiz2_pll0_refclk: pll0-refclk {
-+			clocks = <&k3_clks 294 11>, <&dummy_cmn_refclk>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz2_pll0_refclk>;
-+			assigned-clock-parents = <&k3_clks 294 11>;
-+		};
-+
-+		wiz2_pll1_refclk: pll1-refclk {
-+			clocks = <&k3_clks 294 0>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz2_pll1_refclk>;
-+			assigned-clock-parents = <&k3_clks 294 0>;
-+		};
-+
-+		wiz2_refclk_dig: refclk-dig {
-+			clocks = <&k3_clks 294 11>, <&k3_clks 294 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz2_refclk_dig>;
-+			assigned-clock-parents = <&k3_clks 294 11>;
-+		};
-+
-+		wiz2_cmn_refclk_dig_div: cmn-refclk-dig-div {
-+			clocks = <&wiz2_refclk_dig>;
-+			#clock-cells = <0>;
-+		};
-+
-+		wiz2_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
-+			clocks = <&wiz2_pll1_refclk>;
-+			#clock-cells = <0>;
-+		};
-+
-+		serdes2: serdes@5020000 {
-+			compatible = "ti,sierra-phy-t0";
-+			reg-names = "serdes";
-+			reg = <0x5020000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&serdes_wiz2 0>;
-+			reset-names = "sierra_reset";
-+			clocks = <&wiz2_cmn_refclk_dig_div>, <&wiz2_cmn_refclk1_dig_div>;
-+			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
-+		};
-+	};
-+
-+	serdes_wiz3: wiz@5030000 {
-+		compatible = "ti,j721e-wiz-16g";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		power-domains = <&k3_pds 295 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 295 5>, <&k3_clks 295 9>, <&dummy_cmn_refclk>;
-+		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-+		assigned-clocks = <&k3_clks 295 9>, <&k3_clks 295 0>;
-+		assigned-clock-parents = <&k3_clks 295 13>, <&k3_clks 295 4>;
-+		num-lanes = <2>;
-+		#reset-cells = <1>;
-+		ranges = <0x5030000 0x0 0x5030000 0x10000>;
-+
-+		wiz3_pll0_refclk: pll0-refclk {
-+			clocks = <&k3_clks 295 9>, <&dummy_cmn_refclk>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz3_pll0_refclk>;
-+			assigned-clock-parents = <&k3_clks 295 9>;
-+		};
-+
-+		wiz3_pll1_refclk: pll1-refclk {
-+			clocks = <&k3_clks 295 0>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz3_pll1_refclk>;
-+			assigned-clock-parents = <&k3_clks 295 0>;
-+		};
-+
-+		wiz3_refclk_dig: refclk-dig {
-+			clocks = <&k3_clks 295 9>, <&k3_clks 295 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-+			#clock-cells = <0>;
-+			assigned-clocks = <&wiz3_refclk_dig>;
-+			assigned-clock-parents = <&k3_clks 295 9>;
-+		};
-+
-+		wiz3_cmn_refclk_dig_div: cmn-refclk-dig-div {
-+			clocks = <&wiz3_refclk_dig>;
-+			#clock-cells = <0>;
-+		};
-+
-+		wiz3_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
-+			clocks = <&wiz3_pll1_refclk>;
-+			#clock-cells = <0>;
-+		};
-+
-+		serdes3: serdes@5030000 {
-+			compatible = "ti,sierra-phy-t0";
-+			reg-names = "serdes";
-+			reg = <0x5030000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&serdes_wiz3 0>;
-+			reset-names = "sierra_reset";
-+			clocks = <&wiz3_cmn_refclk_dig_div>, <&wiz3_cmn_refclk1_dig_div>;
-+			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
-+		};
-+	};
-+
- 	main_uart0: serial@2800000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02800000 0x00 0x100>;
++        serdes_ln_ctrl: serdes-ln-ctrl@4080 {
++            compatible = "mmio-mux";
++            reg = <0x00004080 0x50>;
++        };
++    };
++...
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
