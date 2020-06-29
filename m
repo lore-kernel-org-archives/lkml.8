@@ -2,51 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0862CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D74C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB7E20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB5120780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467338;
-	bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
+	s=default; t=1593467345;
+	bh=oCoaaWGr5MOoT2sXVLSno5YS0mBX7CG2YT0Ne6tRkVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IU/YYrCj6mIdFqFZmnVQXJjEQjCwMHHmZpjBT6KBF1AoJHmD6qT8gcMnpd4Tpx94W
-	 LnJxbcqG7YvoUSU2qawGhxOSbBNM2PZohe6ABVFSI/iXiGb615BLXFoxkofRoG+Kiz
-	 AinaIIvFkt9GRrqjTpveVhXgI/gfVKTREbWRbMwk=
+	b=g2HeoWxpjCsF9ceWJWTvUwSJoBf0eQSF1o9dDZqsioxkX8nd/yfGXwogEtjPewTiH
+	 +nG2dl9lrY+xCpHW0droQJnRCop5Kq2dnZhGirfgZbBlhVzf9zmcm3u5InWFKFl4nn
+	 5oGGbECbOlX9lVfV7tq+BpjlgMdPNzxqM/CxMb/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404331AbgF2Vs5 (ORCPT
+        id S2404339AbgF2VtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:49:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726705AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49DB2475B;
-        Mon, 29 Jun 2020 15:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A31246E4;
+        Mon, 29 Jun 2020 15:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444076;
-        bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
+        s=default; t=1593444029;
+        bh=oCoaaWGr5MOoT2sXVLSno5YS0mBX7CG2YT0Ne6tRkVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fAyOaYDO4sCeU91wdoQCwloPogmSHJfismcEPDzp+jvNRzwLltu9qLk40XYyELH8a
-         PvK86sqFVKT8EtCz8D9ey30KcvgDSR9HcISKthfb3Cyz6H8dVc5oihe+q3XXNaxBEL
-         oyeyrsYM7UUrB05oXm0ww4fL9p7680RJ4x/CHtQA=
+        b=aoOGrBiRKEHPYyV1MC3ml2gvdQ7NnMV43FnXZRF2jrQ78UJh6iAjSU/Y++yQwRj2P
+         S7EIDxFq0BsV87bOX7wsDVL6VGreCnwjlGhsRHKHsyhlRwFsbQ6ofRNBFB7EEnJpuZ
+         MbNpoIUqcy7++6+ta9zfbCcOIKhw8gLRR2gJVClQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+Cc:     Qiushi Wu <wu000273@umn.edu>, Heiko Stuebner <heiko@sntech.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 185/265] riscv/atomic: Fix sign extension for RV64I
-Date:   Mon, 29 Jun 2020 11:16:58 -0400
-Message-Id: <20200629151818.2493727-186-sashal@kernel.org>
+Subject: [PATCH 5.7 136/265] ASoC: rockchip: Fix a reference count leak.
+Date:   Mon, 29 Jun 2020 11:16:09 -0400
+Message-Id: <20200629151818.2493727-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,65 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
+[ Upstream commit f141a422159a199f4c8dedb7e0df55b3b2cf16cd ]
 
-The argument passed to cmpxchg is not guaranteed to be sign
-extended, but lr.w sign extends on RV64I. This makes cmpxchg
-fail on clang built kernels when __old is negative.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-To fix this, we just cast __old to long which sign extends on
-RV64I. With this fix, clang built RISC-V kernels now boot.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/867
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Fixes: fc05a5b22253 ("ASoC: rockchip: add support for pdm controller")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200613205158.27296-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/cmpxchg.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/rockchip/rockchip_pdm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index d969bab4a26b5..262e5bbb27760 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -179,7 +179,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -224,7 +224,7 @@
- 			RISCV_ACQUIRE_BARRIER				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -270,7 +270,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -316,7 +316,7 @@
- 			"	fence rw, rw\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
+diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+index 7cd42fcfcf38a..1707414cfa921 100644
+--- a/sound/soc/rockchip/rockchip_pdm.c
++++ b/sound/soc/rockchip/rockchip_pdm.c
+@@ -590,8 +590,10 @@ static int rockchip_pdm_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 
+ 	ret = regcache_sync(pdm->regmap);
+ 
 -- 
 2.25.1
 
