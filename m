@@ -7,44 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80206C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4F620702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EB7206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460769;
-	bh=ENQIO5wrC+XRqt1kOyEpZFTVoNYxGj9I27rIK7yKMmo=;
+	s=default; t=1593460773;
+	bh=VuUUdGb2TlywTniT2NGwwtwLzk6Fre6Oz1qh+7xJ8YY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQ/EKiEuOwiNAYdcMQNh2s/pMU/A/fON7y7q7Dw99hkYuMws4JM9vyO2rywto67Uz
-	 N64CGwTocru8lNs9VLwjket4ReZdga4wG/IVBF/39cdBlC7FHigSU1P4vugJBXxyHr
-	 VBhhKh2lPak/ijm5F6A4rNsr5wEqXn1bxNUQuB20=
+	b=uD0e2dnkXbeZ2DP8RNhcJQKz4aqaieoces4iB8BbnOYnVP8+lCBMVFuoj+fwWhR99
+	 x+jAA9mUddMy5IUSv88nrR49VVvgJOe6sHQXwb8qtZg5HpvPD8k5HKMJ2vhtHlPMnY
+	 esgRyedQWu8eE1IqSKDAa/jITS0eXlmiGGuMsfrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388539AbgF2T72 (ORCPT
+        id S2388546AbgF2T7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:59:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387575AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186A824858;
-        Mon, 29 Jun 2020 15:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B06324934;
+        Mon, 29 Jun 2020 15:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444356;
-        bh=ENQIO5wrC+XRqt1kOyEpZFTVoNYxGj9I27rIK7yKMmo=;
+        s=default; t=1593444484;
+        bh=VuUUdGb2TlywTniT2NGwwtwLzk6Fre6Oz1qh+7xJ8YY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AO6Q3/UdS92AI8yxHB4aojF/Go4brSvnccYlolxNbvjwx48BZrRGCKKx8EFbt2eHE
-         +qEQ6LsRIKwbd/KUZ0Xj0GVn0NM4lbhivg9VvE7baUBPoPobkeNr9a8GKdM8PXqjhz
-         LeHZso9/So4D/Fs43WZYRwKLA3eT5mIArS8yzc5A=
+        b=AGCRF58eAWqIpiPOoSzHFULLNGh9Fncj31ae29CDA6n7LI8/JSjAj29xI2oFL3plw
+         13v5C37PHqNPogcWqCaxp56EjK66ZbjkBi0nvIZGSiwxyxbV9krTqJEjk2eYCZ5Atm
+         gLpnBkdQQETp4U1dnUrW7tq5md2vaHaAeuOkP470=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/178] ALSA: usb-audio: Fix potential use-after-free of streams
-Date:   Mon, 29 Jun 2020 11:22:57 -0400
-Message-Id: <20200629152523.2494198-33-sashal@kernel.org>
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 161/178] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
+Date:   Mon, 29 Jun 2020 11:25:06 -0400
+Message-Id: <20200629152523.2494198-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -63,40 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit ff58bbc7b9704a5869204176f804eff57307fef0 ]
+commit 4fd6b5735c03c0955d93960d31f17d7144f5578f upstream.
 
-With the recent full-duplex support of implicit feedback streams, an
-endpoint can be still running after closing the capture stream as long
-as the playback stream with the sync-endpoint is running.  In such a
-state, the URBs are still be handled and they may call retire_data_urb
-callback, which tries to transfer the data from the PCM buffer.  Since
-the PCM stream gets closed, this may lead to use-after-free.
+Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
+(1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mm
+datasheet as the below warning log in kernel:
 
-This patch adds the proper clearance of the callback at stopping the
-capture stream for addressing the possible UAF above.
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-Fixes: 10ce77e4817f ("ALSA: usb-audio: Add duplex sound support for USB devices using implicit feedback")
-Link: https://lore.kernel.org/r/20200616120921.12249-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 78cc25fa265d ("arm64: dts: imx8mm-evk: Add BD71847 PMIC")
+Cc: stable@vger.kernel.org
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 6c391e5fad2a7..c36e6c97d09ae 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1778,6 +1778,7 @@ static int snd_usb_substream_capture_trigger(struct snd_pcm_substream *substream
- 		return 0;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 		stop_endpoints(subs, false);
-+		subs->data_endpoint->retire_data_urb = NULL;
- 		subs->running = 0;
- 		return 0;
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 13137451b438a..b9f8b7aac8ff1 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -231,7 +231,7 @@
+ 
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -239,7 +239,7 @@
+ 
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
 -- 
 2.25.1
 
