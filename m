@@ -2,125 +2,157 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA259C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283AA20781
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9908220780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kY++gC7/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wE7nxuQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgF2XUk (ORCPT
+        id S1729740AbgF2XVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
+        Mon, 29 Jun 2020 19:21:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgF2XUj (ORCPT
+        with ESMTP id S1728706AbgF2XVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:20:39 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB69C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:20:39 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d10so7695505pls.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:20:39 -0700 (PDT)
+        Mon, 29 Jun 2020 19:21:06 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFDEC03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:21:06 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so9001255pge.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=4oysdzb7v6IjFtwys8EcTgUxYFXoq8Z+j+gWVwzv1dQ=;
-        b=kY++gC7/oVtoEI3QWyNnXuXoEXxAEA2nTU3YlmgvY/0mf+SMZpD2fFQnAa4f+xvpK3
-         6Rc7yfFh4ZaIdSv+Fk5yqUo51V/aIDEqOw9AKCw6TkIhCbcXMqo0LruxuuFOmfn1nKnU
-         05Bs2EYZafI2+O/3itmbrK3qJAnoB6PwKPwPvBseg3b5vEa2pE/KP0CAH55y7Uc8mNsa
-         2jbBI+8Y5FvY0uE3lAGLw1Q88cz+e8Fg4yd8WUDpgnMljs6qzpAj/um78EbpbMTbbjFG
-         Lsz5Y8VAkYatWEY/Ypy4bNc2JhrI2ahqojPFsCJK44xUvdvY+/m/UaoGV1QV7FFR+Xdw
-         V6CQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Y3eOZWqjsfvFABJlAWadxHNb9WOoW2QZW11FNR7qgIM=;
+        b=wE7nxuQQ8Ee1SyIlOGu96foC1kguVLhQnWfsM449qkfn/VoKBCtsVMOqOmKx7IZI4C
+         RVaEjdafrzkZKrdHnHpUfIuUaR+nDUOQdXro+nnJx5XibnwFB04m0UpfLU8lcAfNzunK
+         FH4vq/4AmRKx0OXYjTpIwOSmyWjemlGQQrsAim9D+osZfnHYYrMcyKBMOA6AcmZTCt7D
+         SC8HEZlX2KwR8OsKRbEGGGO82nQHiO6QrFnPdGaYVsrLOIGowYuaQm3rOF21PeyeGPnP
+         uhJe537nfOotmxkifcJzP2KlYRs06hCp+YYdixCMO/J34Bhc2jSz49ZJoQbscAlwSyYN
+         PnZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=4oysdzb7v6IjFtwys8EcTgUxYFXoq8Z+j+gWVwzv1dQ=;
-        b=ghlXmsIQvP6V5o0EWq3q6tN7Hqjr7f20ld+ADp9i8+N1ziBzKzidrQ3C2f5YrcmcGX
-         XHIimRTlLGtGEU+8IOMCV6ioGiBtl+WoafmzrJzRkv8xEXo/ly2zhViP98geKL8ZAR3g
-         W1sE+5CjKDB4wEmzlzozmQIgj2ULKkT8lykF7gk1LlzEDxxhrUgNrdtQow9fPoRKkLBr
-         q8dIKtFr6V7XJueGs2+5sMU6HGvURIxGn6cnF882zgwuT6r9sxUloOGGPBpLEnaaSVsl
-         mS5l2nfchMYVyPu7dkG/mdQT5m4JqqBDtPkLozqcHURc6bIRbLgUC5x8uZlAfbkwIoPX
-         7eCQ==
-X-Gm-Message-State: AOAM531N241hGSWGj1THD1qYW7fImv+362HskDukboAlAa7j87tMhzec
-        GDHrgqxx0BpDAPQkYZDqiCws8w==
-X-Google-Smtp-Source: ABdhPJxQTf8wjO/mn2ucKqdyXqqCoF0Y4f+jAWeV0yB3xAAop7UcdKgo12tstmYn+/zmxK8nmZRSdQ==
-X-Received: by 2002:a17:902:be06:: with SMTP id r6mr15673490pls.310.1593472838955;
-        Mon, 29 Jun 2020 16:20:38 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id z11sm634202pfg.169.2020.06.29.16.20.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y3eOZWqjsfvFABJlAWadxHNb9WOoW2QZW11FNR7qgIM=;
+        b=uGZvWq3NCJeK8nzruyfsKDyamO8A2vkpYfbJUqD23yOsVKIAy88WqYIT6uWrY4GsO3
+         nbBfp9BBSAB2ZWS5LOn3hKAokCOzarqcvf73i/YodsxiqrX9tJ4zHMaaC1tTYXUiiWJq
+         PDY5M3RN/T5PEyUl5um2Ud/IyaW3CjeeapKiCahy/ZLPJqe2a+f5QCbpFSpyUk6IlAjD
+         Z5vArZYHeF+8xEn77H4kMj2keE2Sz33Jse1jsXa/1pCIkjuBCk47EVdLeYSvEf/vGtn5
+         NY+rR0znijZPVZ6cBMQp/Y/TcV8lO17H1Sjx9K1gJM//7tn9Cn3HH/Oh649SpY2aD0Z1
+         w8Kg==
+X-Gm-Message-State: AOAM530N6aMSyfmhH8+pioGbHHod6+fMCTwy2/J+4rIkXamzHJLRcnJH
+        rT0oYaSWYeBqsIwf4xMcv+khIA==
+X-Google-Smtp-Source: ABdhPJyWjBAVW07I/bBTVGZOBkIjcBIoUitijR4kfg05/memnxRwz5hP6QJZ8z5KUGyU1tHG6QOWdA==
+X-Received: by 2002:a62:ce48:: with SMTP id y69mr15584876pfg.208.1593472865320;
+        Mon, 29 Jun 2020 16:21:05 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id d9sm722596pgg.74.2020.06.29.16.21.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 16:20:38 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905X3 and S905D3 ID's
-In-Reply-To: <8757c066-2590-ff24-ebcc-2a9508fd9968@baylibre.com>
-References: <20200609081318.28023-1-christianshewitt@gmail.com> <8757c066-2590-ff24-ebcc-2a9508fd9968@baylibre.com>
-Date:   Mon, 29 Jun 2020 16:20:37 -0700
-Message-ID: <7hv9j9jw6y.fsf@baylibre.com>
+        Mon, 29 Jun 2020 16:21:04 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 16:20:59 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200629232059.GA3787278@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi Masahiro,
 
-> On 09/06/2020 10:13, Christian Hewitt wrote:
->> Correct the SoC revision and package bits/mask values for S905D3/X3 to detect
->> a wider range of observed SoC IDs, and tweak sort order for A311D/S922X.
->> 
->> S905X3 05 0000 0101  (SEI610 initial devices)
->> S905X3 10 0001 0000  (ODROID-C4 and recent Android boxes)
->> S905X3 50 0101 0000  (SEI610 later revisions)
->> S905D3 04 0000 0100  (VIM3L devices in kernelci)
->> S905D3 b0 1011 0000  (VIM3L initial production)
->> 
->> Fixes commit c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs")
->> Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->> ---
->>  drivers/soc/amlogic/meson-gx-socinfo.c | 8 +++++---
->>  1 file changed, 5 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
->> index 01fc0d20a70d..6f54bd832c8b 100644
->> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
->> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
->> @@ -66,10 +66,12 @@ static const struct meson_gx_package_id {
->>  	{ "A113D", 0x25, 0x22, 0xff },
->>  	{ "S905D2", 0x28, 0x10, 0xf0 },
->>  	{ "S905X2", 0x28, 0x40, 0xf0 },
->> -	{ "S922X", 0x29, 0x40, 0xf0 },
->>  	{ "A311D", 0x29, 0x10, 0xf0 },
->> -	{ "S905X3", 0x2b, 0x5, 0xf },
->> -	{ "S905D3", 0x2b, 0xb0, 0xf0 },
->> +	{ "S922X", 0x29, 0x40, 0xf0 },
->> +	{ "S905D3", 0x2b, 0x4, 0xf5 },
->> +	{ "S905X3", 0x2b, 0x5, 0xf5 },
->> +	{ "S905X3", 0x2b, 0x10, 0x3f },
->> +	{ "S905D3", 0x2b, 0x30, 0x3f },
->>  	{ "A113L", 0x2c, 0x0, 0xf8 },
->>  };
->>  
->> 
->
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, Jun 29, 2020 at 01:56:19AM +0900, Masahiro Yamada wrote:
+> On Thu, Jun 25, 2020 at 5:32 AM 'Sami Tolvanen' via Clang Built Linux
+> <clang-built-linux@googlegroups.com> wrote:
+> >
+> > This patch series adds support for building x86_64 and arm64 kernels
+> > with Clang's Link Time Optimization (LTO).
+> >
+> > In addition to performance, the primary motivation for LTO is to allow
+> > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM bitcode,
+> > which Clang produces with LTO instead of ELF object files, postponing
+> > ELF processing until a later stage, and ensuring initcall ordering.
+> >
+> > Note that first objtool patch in the series is already in linux-next,
+> > but as it's needed with LTO, I'm including it also here to make testing
+> > easier.
+> 
+> 
+> I put this series on a testing branch,
+> and 0-day bot started reporting some issues.
 
-Queued as a fix for v5.8,
+Yes, I'll fix those issues in v2.
 
-Thanks,
+> (but 0-day bot is quieter than I expected.
+> Perhaps, 0-day bot does not turn on LLVM=1 ?)
 
-Kevin
+In order for it to test an LTO build, it would need to enable LTO_CLANG
+explicitly though, in addition to LLVM=1.
+
+> I also got an error for
+> ARCH=arm64 allyesconfig + CONFIG_LTO_CLANG=y
+> 
+> 
+> 
+> $ make ARCH=arm64 LLVM=1 LLVM_IAS=1
+> CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+> -j24
+> 
+>   ...
+> 
+>   GEN     .version
+>   CHK     include/generated/compile.h
+>   UPD     include/generated/compile.h
+>   CC      init/version.o
+>   AR      init/built-in.a
+>   GEN     .tmp_initcalls.lds
+>   GEN     .tmp_symversions.lds
+>   LTO     vmlinux.o
+>   MODPOST vmlinux.symvers
+>   MODINFO modules.builtin.modinfo
+>   GEN     modules.builtin
+>   LD      .tmp_vmlinux.kallsyms1
+> ld.lld: error: undefined symbol: __compiletime_assert_905
+> >>> referenced by irqbypass.c
+> >>>               vmlinux.o:(jeq_imm)
+> make: *** [Makefile:1161: vmlinux] Error 1
+
+I can reproduce this with ToT LLVM and it's BUILD_BUG_ON_MSG(..., "value
+too large for the field") in drivers/net/ethernet/netronome/nfp/bpf/jit.c.
+Specifically, the FIELD_FIT / __BF_FIELD_CHECK macro in ur_load_imm_any.
+
+This compiles just fine with an earlier LLVM revision, so it could be a
+relatively recent regression. I'll take a look. Thanks for catching this!
+
+Sami
