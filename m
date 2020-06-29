@@ -2,66 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B59C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEECDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD5FD20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C900020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="OJM4aI1c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="cm1hnmf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404128AbgF2VtN (ORCPT
+        id S2404366AbgF2VtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:49:13 -0400
+        Mon, 29 Jun 2020 17:49:17 -0400
 Received: from a80-127-99-228.adsl.xs4all.nl ([80.127.99.228]:54600 "EHLO
         hetgrotebos.org" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404335AbgF2VtC (ORCPT
+        with ESMTP id S2404344AbgF2VtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:49:02 -0400
+        Mon, 29 Jun 2020 17:49:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
-        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=yYf/4uioxwUJRWditCtSogal4Oh2sBPAPwofmyk83yw=; b=OJM4aI1cX/AKmwFJh9uqrq3T39
-        SG2V5EIUhlUHaxxaauiqH+DmP0Nreqh15pF8gW6PTeC7CA6cLbxXkQy094TrCVsSsI7GgFiT5swJe
-        hAl8kSZGEfcJnkjxNn00oR5ugXjY4MkunDNFMHTKVhcx4wx+P8Xz/rXppv4Mzbo4fOI2JZgktt2Bh
-        ipLPwLY7WwrbiSeUZsR13kxE272WvorNLSQJ+EXoNymUFvSbnGvghBElw8T50GvqZTsoBkL3fKePN
-        /D1OrbzSp/H+BG4I3CDrmjMEV4anJzi/YjiFEGRo8SDGdumI3ODEWv0teRzAcWJUwnVOBbwsyxKFc
-        cYkYKpCQ==;
+         s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:
+        Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=SE9zB6pigyIUcMFEDRhGqQ2LKODweAry7KNzefAkRW4=; b=cm1hnmf83CKe2Y+SMSqHm9F+kh
+        otp/+gY6yV8bMBSuC6ImREgm4fKX8PWkyz4/OGgorgPsSXD90Ucaab5TGkwCHtoGOudCz4nWnNk+A
+        UXNgRJwGy/fmhaa0UQVxuavdaPRwco5fvq5W9pbx5W+WWlReYbudE4Z/ENVvFcnN1+wsaFgqzrisp
+        zrI4Mbr2wpsGUTHiE+N9gvqWb7V/Aq1Mdqq4rrHCYLZvoaKl4P/Dj2LdaKXKOzX3PVSr8T1YlSTJJ
+        oAxD4D37vw138B712UUJ9PGYNHvqS50CRpMnh3N1HKF1JCuzMAiaMVpGKku+zDWCUlbfVSQ9CFk0B
+        nTB7Z+OQ==;
 Received: from deepwater.fritz.box ([192.168.178.25] helo=[0.0.0.0])
         by hetgrotebos.org with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <merlijn@wizzup.org>)
-        id 1jpruQ-0000p4-V1; Mon, 29 Jun 2020 11:25:10 +0000
-Subject: Re: [PATCH 1/2] Input: add `SW_MACHINE_COVER`
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Beno??t Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mark Gross <mgross@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>
-References: <20200612125402.18393-1-merlijn@wizzup.org>
- <20200612125402.18393-2-merlijn@wizzup.org> <20200616105045.GB1718@bug>
+        id 1jpxUa-0001G1-Et; Mon, 29 Jun 2020 17:22:52 +0000
+Subject: Re: [PATCH] rtc: cpcap: fix range
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dev Null <devnull@uvos.xyz>
+Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-rtc@vger.kernel.org, "Sicelo A . Mhlongo" <absicsz@gmail.com>
+References: <20200629002917.0a2045380a0fe022f852e067@uvos.xyz>
+ <20200629114123.27956-1-sebastian.reichel@collabora.com>
 From:   Merlijn Wajer <merlijn@wizzup.org>
 Autocrypt: addr=merlijn@wizzup.org; prefer-encrypt=mutual; keydata=
  mQINBFESzAkBEACuLy46KxYl4IfKuNhz3UWXSlA1GqMwgOhGUJw/ineKS6T1FiRqcbhO/Zj8
@@ -124,74 +111,35 @@ Autocrypt: addr=merlijn@wizzup.org; prefer-encrypt=mutual; keydata=
  auuXY5GfVPDcxjPwzm4Yjj4YvbfRLpAiQOOciMgiJlbn4A+BhvSSS54scJMln1Jh7KkDgeqz
  aP0nj9EfQy1vMXGp1i0sYzhMKaM9nsmV/q1Iisqc8ojjpmR00jVnz/aSX3eHexXOlB3Y6Qs+
  /XslHw==
-Message-ID: <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
-Date:   Mon, 29 Jun 2020 13:27:34 +0200
+Message-ID: <9e3215d6-d103-7ed0-c65a-e5483d11f3ae@wizzup.org>
+Date:   Mon, 29 Jun 2020 19:25:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200616105045.GB1718@bug>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="L9nXZWfLgDBc19pVr702UfFy2pqPFtyAn"
+In-Reply-To: <20200629114123.27956-1-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---L9nXZWfLgDBc19pVr702UfFy2pqPFtyAn
-Content-Type: multipart/mixed; boundary="EqbQqHPlILTDAUo6V7sORgxEpUBvBrTyA"
-
---EqbQqHPlILTDAUo6V7sORgxEpUBvBrTyA
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-Looks like we're blocking on this input patch.
+On 29/06/2020 13:41, Sebastian Reichel wrote:
+> Unbreak CPCAP driver, which has one more bit in the day counter
+> increasing the max. range from 2014 to 2058. The original commit
+> introducing the range limit was obviously wrong, since the driver
+> has only been written in 2017 (3 years after 14 bits would have
+> run out).
 
-On 16/06/2020 12:50, Pavel Machek wrote:
-> On Fri 2020-06-12 14:53:58, Merlijn Wajer wrote:
->> This event code represents the state of a removable cover of a device.=
+This seems to work for me, thanks.
 
->> Value 0 means that the cover is open or removed, value 1 means that th=
-e
->> cover is closed.
->>
->> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com> Acked=
--by: Tony Lindgren=20
->> <tony@atomide.com> Signed-off-by: Merlijn Wajer <merlijn@wizzup.org> -=
---
->=20
-> Dmitry, can we get some kind of comment here, or better yet can we get =
-you to apply this?
+Please add as you deem appropriate:
 
-This is part of a patch series to resolve problems with the Nokia N900
-not booting when the cover is removed (making the cover be the card
-detect was also just weird IMHO). Just removing the card-detect from the
-DTS is fine, but it was suggested that we expose the data instead as
-input event. And that's gotten no response for about four months.
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Acked-by: Merlijn Wajer <merlijn@wizzup.org>
 
-Should we just drop the feature and only remove the cd-gpios line from
-the DTS, assuming upstream doesn't want this SW_MACHINE_COVER code?
-
+Cheers,
 Merlijn
-
-
---EqbQqHPlILTDAUo6V7sORgxEpUBvBrTyA--
-
---L9nXZWfLgDBc19pVr702UfFy2pqPFtyAn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXvnQKAAKCRAGN09rynK8
-WgE7AP9fyxHZYvAwf0BX3mGGRxMa++9Yz8UqZbcxLpGyR89XPgEAkRwyWpSwCu4o
-8hYneNbhz/Wg4AUBuPfSi9aG+QuQdwc=
-=tGXY
------END PGP SIGNATURE-----
-
---L9nXZWfLgDBc19pVr702UfFy2pqPFtyAn--
